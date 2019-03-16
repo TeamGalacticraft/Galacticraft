@@ -1,0 +1,17 @@
+{
+  "id": "galacticraft-fabric",
+  "name": "Galacticraft Fabric",
+  "description": "FabricMC port of Galacticraft",
+  "version": "${version}",
+  "side": "universal",
+  "initializers": [
+    "io.github.teamgalacticraft.galacticraft.Galacticraft"
+  ],
+  "requires": {
+    "fabric": "*"
+  },
+  "mixins": {
+    "client": "galacticraft-fabric.client.json",
+    "common": "galacticraft-fabric.common.json"
+  }
+}

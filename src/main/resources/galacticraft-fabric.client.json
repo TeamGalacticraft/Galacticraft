@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "io.github.teamgalacticraft.galacticraft.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "TestMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
