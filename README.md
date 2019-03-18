@@ -14,7 +14,7 @@ If you are running Windows you need to remove the `./` that is in front of the c
 
 ### Eclipse
 ```
-./gradlew genSrouce eclipse
+./gradlew genSource eclipse
 ```
 
 ### Other IDEs
