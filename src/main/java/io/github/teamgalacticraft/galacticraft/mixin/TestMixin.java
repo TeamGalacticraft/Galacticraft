@@ -15,6 +15,6 @@ public class TestMixin {
 
     @Inject(at = @At("HEAD"), method = "init()V")
     private void init(CallbackInfo info) {
-        Galacticraft.logger.info("Loaded Mixin");
+        Galacticraft.logger.info("Loaded Galacticraft Init Mixin");
     }
 }
