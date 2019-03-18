@@ -5,11 +5,13 @@ import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
+import net.minecraft.block.MaterialColor;
 import net.minecraft.block.OreBlock;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.block.BlockItem;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Marker;
@@ -23,34 +25,32 @@ public class GalacticraftBlocks {
     private static final Marker BLOCKS = MarkerManager.getMarker("Blocks"); // Galacticraft/Blocks
 
     // Blocks
-    public static final Block MOON_TURF_BLOCK = new Block(FabricBlockSettings.of(Material.ORGANIC).build());
-    public static final Block MOON_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block MOON_DIRT_BLOCK = new Block(FabricBlockSettings.of(Material.EARTH).build());
-    public static final Block MOON_DUNGEON_BRICK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block MARS_SURFACE_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block MARS_SUB_SURFACE_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block MARS_STONE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block MARS_COBBLESTONE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block MARS_DUNGEON_BRICK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block DENSE_ICE_BLOCK = new Block(FabricBlockSettings.of(Material.PACKED_ICE).build());
-    public static final Block ASTEROID_ROCK_BLOCK = new AsteroidRockBlock(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block VENUS_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block VOLCANIC_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block SCORCHED_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block PUMICE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-    public static final Block VAPOR_SPOUT_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build());
-
-    //What used to be block_basic_core
-    public static final Block TIN_DECORATION_BLOCK = new OreBlock(Block.Settings.of(Material.STONE).strength(2.0F, 2.0F));
-    public static final Block TIN_WALL_BLOCK = new OreBlock(Block.Settings.of(Material.STONE).strength(2.0F, 2.0F));
-    public static final Block COPPER_ORE_BLOCK = new OreBlock(Block.Settings.of(Material.STONE).strength(5.0F, 3.0F));
-    public static final Block TIN_ORE_BLOCK = new OreBlock(Block.Settings.of(Material.STONE).strength(5.0F, 3.0F));
-    public static final Block ALUMINUM_ORE_BLOCK = new OreBlock(Block.Settings.of(Material.STONE).strength(5.0F, 3.0F));
-    public static final Block SILICON_ORE_BLOCK = new SiliconOreBlock(Block.Settings.of(Material.STONE).strength(5.0F, 3.0F));
-    public static final Block COPPER_BLOCK = new  Block(Block.Settings.of(Material.METAL).strength(5.0F, 6.0F));
-    public static final Block TIN_BLOCK = new  Block(Block.Settings.of(Material.METAL).strength(5.0F, 6.0F));
-    public static final Block ALUMINUM_BLOCK = new  Block(Block.Settings.of(Material.METAL).strength(5.0F, 6.0F));
-    public static final Block SILICON_BLOCK = new  Block(Block.Settings.of(Material.METAL).strength(5.0F, 6.0F));
+    public static final Block MOON_TURF_BLOCK = new Block(FabricBlockSettings.of(Material.ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build());
+    public static final Block MOON_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F).build());
+    public static final Block MOON_DIRT_BLOCK = new Block(FabricBlockSettings.of(Material.EARTH, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build());
+    public static final Block MOON_DUNGEON_BRICK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(4.0F, 40.0F).build());
+    public static final Block MARS_SURFACE_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).hardness(2.2F).build());
+    public static final Block MARS_SUB_SURFACE_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.6F).build());
+    public static final Block MARS_STONE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(3.0F).build());
+    public static final Block MARS_COBBLESTONE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8F).build());
+    public static final Block MARS_DUNGEON_BRICK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(4.0F, 40.0F).build());
+    public static final Block DENSE_ICE_BLOCK = new Block(FabricBlockSettings.of(Material.ICE, MaterialColor.ICE).friction(0.90F).sounds(BlockSoundGroup.GLASS).build());
+    public static final Block ASTEROID_ROCK_BLOCK = new AsteroidRockBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
+    public static final Block VENUS_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
+    public static final Block VOLCANIC_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build().strength(2.2F, 0.5F));
+    public static final Block SCORCHED_ROCK_BLOCK = new ScorcherdRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build());
+    public static final Block PUMICE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).resistance(1.0F).build());
+    public static final Block VAPOR_SPOUT_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build());
+    public static final Block TIN_DECORATION_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
+    public static final Block TIN_WALL_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
+    public static final Block COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block ALUMINUM_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block SILICON_ORE_BLOCK = new SiliconOreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block COPPER_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block TIN_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block ALUMINUM_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block SILICON_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
 
 
     // Block Items
