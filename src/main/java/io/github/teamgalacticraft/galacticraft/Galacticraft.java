@@ -9,19 +9,20 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.MarkerManager;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class Galacticraft implements ModInitializer {
 
-    public static Logger logger = LogManager.getLogger("Galacticraft");
-
-
+    public static Logger logger = LogManager.getLogger("Galacticraft-Fabric");
+    private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     @Override
     public void onInitialize() {
-        logger.info("Initializing Galacticraft");
+        logger.info(GALACTICRAFT, "Initializing Galacticraft");
         GalacticraftBlocks.init();
     }
 }
