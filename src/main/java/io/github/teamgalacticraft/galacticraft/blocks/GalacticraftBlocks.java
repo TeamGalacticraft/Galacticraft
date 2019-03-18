@@ -1,7 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.netty.util.Constant;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.Block;
@@ -147,7 +146,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COPPER_BLOCK), COPPER_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_BLOCK), TIN_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_BLOCK), ALUMINUM_BLOCK);
-        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.SILICAON_BLOCK), SILICON_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.SILICON_BLOCK), SILICON_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK), TIN_DECORATION_BLOCK_ITEM);
@@ -159,7 +158,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COPPER_BLOCK), COPPER_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_BLOCK), TIN_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_BLOCK), ALUMINUM_BLOCK_ITEM);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.SILICAON_BLOCK), SILICON_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.SILICON_BLOCK), SILICON_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_ROCK), MOON_ROCK_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DIRT), MOON_DIRT_BLOCK_ITEM);

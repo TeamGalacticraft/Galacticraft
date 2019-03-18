@@ -36,7 +36,7 @@ public class Constants {
         public static final String COPPER_BLOCK = "copper_block";
         public static final String TIN_BLOCK = "tin_block";
         public static final String ALUMINUM_BLOCK = "aluminum_block";
-        public static final String SILICAON_BLOCK = "silicon_block";
+        public static final String SILICON_BLOCK = "silicon_block";
     }
 
     //Items
