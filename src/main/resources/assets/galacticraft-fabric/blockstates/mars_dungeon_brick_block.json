@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:mars_dungeon_brick_block"
+      "model": "galacticraft-fabric:block/mars_dungeon_brick_block"
     }
   }
 }
