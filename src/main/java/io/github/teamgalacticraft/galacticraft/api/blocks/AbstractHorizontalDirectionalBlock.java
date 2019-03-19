@@ -1,5 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.blocks.base;
-
+package io.github.teamgalacticraft.galacticraft.api.blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -11,7 +10,7 @@ import net.minecraft.state.property.Properties;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class HorizontalDirectionalBlock extends Block {
+public class AbstractHorizontalDirectionalBlock extends Block {
     public static DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 
     @Override
@@ -25,7 +24,7 @@ public class HorizontalDirectionalBlock extends Block {
         return this.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
     }
 
-    public HorizontalDirectionalBlock(Settings settings) {
+    public AbstractHorizontalDirectionalBlock(Settings settings) {
         super(settings);
     }
 }
