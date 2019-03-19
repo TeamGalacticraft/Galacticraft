@@ -14,6 +14,7 @@ import java.util.Random;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class SiliconOreBlock extends OreBlock {
+
     public SiliconOreBlock(Settings settings) {
         super(settings);
     }
@@ -25,7 +26,7 @@ public class SiliconOreBlock extends OreBlock {
         //    bonus = 1;
         //}
 
-        return new ItemStack(/*GalacticraftItems.SILICON*/Items.IRON_INGOT, new Random().nextInt(4) + 2 + bonus);
+        return new ItemStack(GalacticraftItems.RAW_SILICON, new Random().nextInt(4) + 2 + bonus);
 
     }
 }

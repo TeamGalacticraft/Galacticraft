@@ -1,12 +1,8 @@
 package io.github.teamgalacticraft.galacticraft;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -24,5 +20,6 @@ public class Galacticraft implements ModInitializer {
     public void onInitialize() {
         logger.info(GALACTICRAFT, "Initializing Galacticraft");
         GalacticraftBlocks.init();
+        GalacticraftItems.init();
     }
 }
