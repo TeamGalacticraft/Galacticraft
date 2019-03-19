@@ -47,17 +47,29 @@ public class GalacticraftBlocks {
     public static final Block SCORCHED_ROCK_BLOCK = new ScorcherdRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build());
     public static final Block PUMICE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).resistance(1.0F).build());
     public static final Block VAPOR_SPOUT_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build());
+
     public static final Block TIN_DECORATION_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block TIN_WALL_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
-    public static final Block COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
-    public static final Block TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
-    public static final Block ALUMINUM_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
-    public static final Block SILICON_ORE_BLOCK = new SiliconOreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block COPPER_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block TIN_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block ALUMINUM_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block SILICON_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
 
+    public static final Block COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block ALUMINUM_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block SILICON_ORE_BLOCK = new SiliconOreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block ASTEROID_ALUMINUM_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block CHEESE_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block MOON_COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block MARS_COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block DESH_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block ILMENITE_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block MARS_IRON_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block ASTEROID_IRON_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block MOON_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block MARS_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+    public static final Block GALENA_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
 
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings());
@@ -83,13 +95,24 @@ public class GalacticraftBlocks {
     public static final BlockItem PUMICE_BLOCK_ITEM = new BlockItem(PUMICE_BLOCK, new Item.Settings());
     public static final BlockItem VAPOR_SPOUT_BLOCK_ITEM = new BlockItem(VAPOR_SPOUT_BLOCK, new Item.Settings());
 
-
-    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings());
     public static final BlockItem COPPER_ORE_BLOCK_ITEM = new BlockItem(COPPER_ORE_BLOCK, new Item.Settings());
     public static final BlockItem TIN_ORE_BLOCK_ITEM = new BlockItem(TIN_ORE_BLOCK, new Item.Settings());
     public static final BlockItem ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ALUMINUM_ORE_BLOCK, new Item.Settings());
     public static final BlockItem SILICON_ORE_BLOCK_ITEM = new BlockItem(SILICON_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem ASTEROID_ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ASTEROID_ALUMINUM_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem CHEESE_ORE_BLOCK_ITEM = new BlockItem(CHEESE_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_COPPER_ORE_BLOCK_ITEM = new BlockItem(MOON_COPPER_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_COPPER_ORE_BLOCK_ITEM = new BlockItem(MARS_COPPER_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem DESH_ORE_BLOCK_ITEM = new BlockItem(DESH_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem ILMENITE_ORE_BLOCK_ITEM = new BlockItem(ILMENITE_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_IRON_ORE_BLOCK_ITEM = new BlockItem(MARS_IRON_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem ASTEROID_IRON_ORE_BLOCK_ITEM = new BlockItem(ASTEROID_IRON_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_TIN_ORE_BLOCK_ITEM = new BlockItem(MOON_TIN_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_TIN_ORE_BLOCK_ITEM = new BlockItem(MARS_TIN_ORE_BLOCK, new Item.Settings());
+    public static final BlockItem GALENA_ORE_BLOCK_ITEM = new BlockItem(GALENA_ORE_BLOCK, new Item.Settings());
+
+    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings());
+    public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings());
     public static final BlockItem COPPER_BLOCK_ITEM = new BlockItem(COPPER_BLOCK, new Item.Settings());
     public static final BlockItem TIN_BLOCK_ITEM = new BlockItem(TIN_BLOCK, new Item.Settings());
     public static final BlockItem ALUMINUM_BLOCK_ITEM = new BlockItem(ALUMINUM_BLOCK, new Item.Settings());
@@ -123,13 +146,27 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(VAPOR_SPOUT_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_DECORATION_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM));
+                itemStack.add(new ItemStack(ALUMINUM_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(COPPER_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(SILICON_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(ASTEROID_ALUMINUM_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(CHEESE_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MOON_COPPER_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_COPPER_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(DESH_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(ILMENITE_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_IRON_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(ASTEROID_IRON_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MOON_TIN_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_TIN_ORE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(GALENA_ORE_BLOCK_ITEM));
+
                 itemStack.add(new ItemStack(COPPER_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_BLOCK_ITEM));
                 itemStack.add(new ItemStack(ALUMINUM_BLOCK_ITEM));
                 itemStack.add(new ItemStack(SILICON_BLOCK_ITEM));
+
                 // add blocks to creative menu
             })
             // Set the tab icon
@@ -171,6 +208,17 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_BLOCK), TIN_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_BLOCK), ALUMINUM_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.SILICON_BLOCK), SILICON_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ASTEROID_ALUMINUM_ORE_BLOCK), ASTEROID_ALUMINUM_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CHEESE_ORE_BLOCK), CHEESE_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_COPPER_ORE_BLOCK), MOON_COPPER_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COPPER_ORE_BLOCK), MARS_COPPER_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.DESH_ORE_BLOCK), DESH_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ILMENITE_ORE_BLOCK), ILMENITE_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_IRON_ORE_BLOCK), MARS_IRON_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ASTEROID_IRON_ORE_BLOCK), ASTEROID_IRON_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_TIN_ORE_BLOCK), MARS_TIN_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TIN_ORE_BLOCK), MOON_TIN_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GALENA_ORE_BLOCK), GALENA_ORE_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
@@ -205,5 +253,16 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_BLOCK), TIN_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_BLOCK), ALUMINUM_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.SILICON_BLOCK), SILICON_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ASTEROID_ALUMINUM_ORE_BLOCK), ASTEROID_ALUMINUM_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CHEESE_ORE_BLOCK), CHEESE_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_COPPER_ORE_BLOCK), MOON_COPPER_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COPPER_ORE_BLOCK), MARS_COPPER_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.DESH_ORE_BLOCK), DESH_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ILMENITE_ORE_BLOCK), ILMENITE_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_IRON_ORE_BLOCK), MARS_IRON_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ASTEROID_IRON_ORE_BLOCK), ASTEROID_IRON_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_TIN_ORE_BLOCK), MARS_TIN_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TIN_ORE_BLOCK), MOON_TIN_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GALENA_ORE_BLOCK), GALENA_ORE_BLOCK_ITEM);
     }
 }
