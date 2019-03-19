@@ -1,6 +1,7 @@
 {
-  "itemGroup.galacticraft-fabric.block": "Galacticraft Blocks",
-  "itemGroup.galacticraft-fabric.item": "Galacticraft Items",
+  "itemGroup.galacticraft-fabric.blocks": "Galacticraft Blocks",
+  "itemGroup.galacticraft-fabric.items": "Galacticraft Items",
+
   "block.galacticraft-fabric.moon_turf_block": "Moon Turf",
   "block.galacticraft-fabric.moon_rock_block": "Moon Rock",
   "block.galacticraft-fabric.moon_dirt_block": "Moon Dirt",
