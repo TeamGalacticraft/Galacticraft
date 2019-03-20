@@ -34,7 +34,7 @@ public class GalacticraftBlocks {
     public static final Block MARS_STONE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(3.0F).build());
     public static final Block MARS_COBBLESTONE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8F).build());
     public static final Block MARS_DUNGEON_BRICK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(4.0F, 40.0F).build());
-    public static final Block DENSE_ICE_BLOCK = new Block(FabricBlockSettings.of(Material.ICE, MaterialColor.ICE).friction(0.90F).sounds(BlockSoundGroup.GLASS).build());
+    public static final Block DENSE_ICE_BLOCK = new Block(FabricBlockSettings.of(Material.ICE, MaterialColor.ICE).hardness(1.0F).friction(0.90F).sounds(BlockSoundGroup.GLASS).build());
     public static final Block ASTEROID_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
     public static final Block ASTEROID_ROCK_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
     public static final Block ASTEROID_ROCK_BLOCK_2 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
