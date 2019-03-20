@@ -1,6 +1,6 @@
 {
   "id": "galacticraft-fabric",
-  "name": "Galacticraft Fabric",
+  "name": "Galacticraft: Rewoven",
   "description": "FabricMC port of Galacticraft",
   "version": "${version}",
   "side": "universal",
