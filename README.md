@@ -9,12 +9,12 @@ If you are running Windows you need to remove the `./` that is in front of the c
 
 ### Intellij IDEA
 ```
-./gradlew genSource idea
+./gradlew genSources idea
 ```
 
 ### Eclipse
 ```
-./gradlew genSource eclipse
+./gradlew genSources eclipse
 ```
 
 ### Other IDEs
