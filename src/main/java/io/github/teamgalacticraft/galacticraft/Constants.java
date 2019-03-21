@@ -46,7 +46,7 @@ public class Constants {
         public static final String ILMENITE_ORE_BLOCK = "ilmenite_ore_block";
         public static final String MARS_IRON_ORE_BLOCK = "mars_iron_ore_block";
         public static final String ASTEROID_IRON_ORE_BLOCK = "asteroid_iron_ore_block";
-        public static final String SILICON_ORE_BLOCk = "silicon_ore_block";
+        public static final String SILICON_ORE_BLOCK = "silicon_ore_block";
         public static final String TIN_ORE_BLOCK = "tin_ore_block";
         public static final String MOON_TIN_ORE_BLOCK = "moon_tin_ore_block";
         public static final String MARS_TIN_ORE_BLOCK = "mars_tin_ore_block";
