@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
+import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,5 +24,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBlocks.init();
         GalacticraftItems.init();
         GalacticraftFluids.init();
+        GalacticraftSounds.init();
     }
 }
