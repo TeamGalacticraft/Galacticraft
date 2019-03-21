@@ -211,7 +211,7 @@ public class Constants {
         public static final String OXYGEN_FAN = "oxygen_fan";
         public static final String OXYGEN_VENT = "oxygen_vent";
         public static final String SENSOR_LENS = "sensor_lens";
-        public static final String BLUE_SOLAR_PANEL = "blue_solar_panel";
+        public static final String BLUE_SOLAR_WAFER = "blue_solar_wafer";
         public static final String STEEL_POLE = "steel_pole";
         public static final String COPPER_CANISTER = "copper_canister";
         public static final String TIN_CANISTER = "tin_canister";

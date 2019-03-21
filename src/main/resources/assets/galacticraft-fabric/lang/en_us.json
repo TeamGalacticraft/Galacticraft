@@ -1,11 +1,36 @@
 {
-  "itemGroup.galacticraft-fabric.blocks": "Galacticraft Blocks",
-  "itemGroup.galacticraft-fabric.items": "Galacticraft Items",
+    "itemGroup.galacticraft-fabric.blocks": "Galacticraft Blocks",
+    "itemGroup.galacticraft-fabric.items": "Galacticraft Items",
 
-  "block.galacticraft-fabric.moon_turf_block": "Moon Turf",
-  "block.galacticraft-fabric.moon_rock_block": "Moon Rock",
-  "block.galacticraft-fabric.moon_dirt_block": "Moon Dirt",
-  "block.galacticraft-fabric.moon_dungeon_brick_block": "Moon Dungeon Brick",
-  "block.galacticraft-fabric.mars_surface_rock_block": "Mars Surface Rock",
-  "block.galacticraft-fabric.mars_sub_surface_rock_block": "Mars Sub-Surface Rock"
+    "block.galacticraft-fabric.moon_turf_block": "Moon Turf",
+    "block.galacticraft-fabric.moon_rock_block": "Moon Rock",
+    "block.galacticraft-fabric.moon_dirt_block": "Moon Dirt",
+    "block.galacticraft-fabric.moon_dungeon_brick_block": "Moon Dungeon Brick",
+    "block.galacticraft-fabric.mars_surface_rock_block": "Mars Surface Rock",
+    "block.galacticraft-fabric.mars_sub_surface_rock_block": "Mars Sub-Surface Rock",
+    
+    "item.galacticraft-fabric.aluminum_ingot": "Aluminum Ingot",
+    "item.galacticraft-fabric.copper_ingot": "Copper Ingot",
+    "item.galacticraft-fabric.lunar_sapphire": "Lunar Sapphire",
+    "item.galacticraft-fabric.meteoric_iron_ingot": "Meteoric Iron Ingot",
+    "item.galacticraft-fabric.raw_meteoric_iron": "Raw Meteoric Iron",
+    "item.galacticraft-fabric.raw_silicon": "Raw Silicon",
+    "item.galacticraft-fabric.tin_ingot": "Tin Ingot",
+    "item.galacticraft-fabric.basic_wafer": "Basic Wafer",
+    "item.galacticraft-fabric.advanced_wafer": "Advanced Wafer",
+    "item.galacticraft-fabric.blue_solar_wafer": "Blue Solar Wafer",
+    "item.galacticraft-fabric.compressed_tin": "Compressed Tin",
+    "item.galacticraft-fabric.compressed_aluminum": "Compressed Aluminum",
+    "item.galacticraft-fabric.compressed_bronze": "Compressed Bronze",
+    "item.galacticraft-fabric.compressed_copper": "Compressed Copper",
+    "item.galacticraft-fabric.compressed_iron": "Compressed Iron",
+    "item.galacticraft-fabric.compressed_meteoric_iron": "Compressed Meteoric Iron",
+    "item.galacticraft-fabric.compressed_steel": "Compressed Steel",
+    "item.galacticraft-fabric.titanium_ingot": "Titanium Ingot",
+    "item.galacticraft-fabric.desh_ingot": "Desh Ingot",
+    "item.galacticraft-fabric.lead_ingot": "Lead Ingot",
+    "item.galacticraft-fabric.compressed_desh": "Compressed Desh",
+    "item.galacticraft-fabric.compressed_titanium": "Compressed Titanium"
+    
+    
 }
