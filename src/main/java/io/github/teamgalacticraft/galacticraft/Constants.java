@@ -197,12 +197,12 @@ public class Constants {
         public static final String RAW_METEORIC_IRON = "raw_meteoric_iron";
         public static final String METEORIC_IRON_INGOT = "meteoric_iron_ingot";
         public static final String LUNAR_SAPPHIRE = "lunar_sapphire";
-        public static final String RAW_DESH = "raw_desh";
+        public static final String UNREFINED_DESH = "raw_desh";
         public static final String DESH_INGOT = "desh_ingot";
         public static final String DESH_STICK = "desh_stick";
         public static final String CARBON_FRAGMENTS = "fragmented_carbon";
-        public static final String IRON_SHARD = "iron_shard";
-        public static final String TITANIUM_SHARD = "titanium_shard";
+        public static final String IRON_SHARD = "shard_iron";
+        public static final String TITANIUM_SHARD = "shard_titanium";
         public static final String TITANIUM_INGOT = "titanium_ingot";
         public static final String TITANIUM_DUST = "titanium_dust";
         public static final String BASIC_WAFER = "basic_wafer";
