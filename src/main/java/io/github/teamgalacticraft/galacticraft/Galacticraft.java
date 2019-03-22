@@ -21,6 +21,7 @@ public class Galacticraft implements ModInitializer {
     @Override
     public void onInitialize() {
         logger.info(GALACTICRAFT, "Initializing Galacticraft");
+        
         GalacticraftBlocks.init();
         GalacticraftItems.init();
         GalacticraftFluids.init();
