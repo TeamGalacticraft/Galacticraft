@@ -225,8 +225,8 @@ public class Constants {
         public static final String SENSOR_LENS = "sensor_lens";
         public static final String BLUE_SOLAR_WAFER = "blue_solar_wafer";
         public static final String STEEL_POLE = "steel_pole";
-        public static final String COPPER_CANISTER = "copper_canister";
-        public static final String TIN_CANISTER = "tin_canister";
+        public static final String CANISTER_COPPER = "canister_copper";
+        public static final String CANISTER_TIN = "canister_tin";
         public static final String THERMAL_CLOTH = "thermal_cloth";
         public static final String ISOTHERMAL_FABRIC = "isothermal_fabric";
         public static final String ORION_DRIVE = "orion_drive";
