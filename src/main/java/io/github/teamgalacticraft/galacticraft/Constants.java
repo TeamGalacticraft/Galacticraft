@@ -228,8 +228,9 @@ public class Constants {
         public static final String CANISTER_COPPER = "canister_copper";
         public static final String CANISTER_TIN = "canister_tin";
         public static final String THERMAL_CLOTH = "thermal_cloth";
-        public static final String ISOTHERMAL_FABRIC = "isothermal_fabric";
+        public static final String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
         public static final String ORION_DRIVE = "orion_drive";
+        public static final String ATMOSPHERIC_VALVE = "atmospheric_valve";
         //FOOD
         public static final String CHEESE_CURD = "cheese_curd";
         public static final String CHEESE_SLICE = "cheese_slice";

@@ -42,5 +42,8 @@
     "item.galacticraft-fabric.oxygen_fan": "Oxygen Fan",
     "item.galacticraft-fabric.oxygen_vent": "Oxygen Vent",
     "item.galacticraft-fabric.sensor_lens": "Sensor Lens",
-    "item.galacticraft-fabric.steel_pole": "Steel Pole"
+    "item.galacticraft-fabric.steel_pole": "Steel Pole",
+    "item.galacticraft-fabric.thermal_cloth": "Thermal Cloth",
+    "item.galacticraft-fabric.isothermal_fabric": "Isothermal Fabric",
+    "item.galacticraft-fabric.orion_drive": "Orion Drive"
 }
