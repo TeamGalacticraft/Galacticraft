@@ -30,7 +30,8 @@
     "item.galacticraft-fabric.desh_ingot": "Desh Ingot",
     "item.galacticraft-fabric.lead_ingot": "Lead Ingot",
     "item.galacticraft-fabric.compressed_desh": "Compressed Desh",
-    "item.galacticraft-fabric.compressed_titanium": "Compressed Titanium"
-    
-    
+    "item.galacticraft-fabric.compressed_titanium": "Compressed Titanium",
+    "item.galacticraft-fabric.raw_desh": "Raw Desh",
+    "item.galacticraft-fabric.desh_stick": "Desh Stick",
+    "item.galacticraft-fabric.carbon_fragments": "Carbon Fragments"
 }
