@@ -67,7 +67,6 @@ public class GalacticraftItems {
     //public static final Item GROUND_BEEF = new FoodItem(3, 0.6F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
     //public static final Item BEEF_PATTY = new FoodItem(4, 0.8F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
     //public static final Item CHEESEBURGER = new FoodItem(14, 4.0F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-
     //public static final Item DEHYDRATED_APPLE = new CannedFoodItem(8, 0.3F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
     //public static final Item DEHYDRATED_CARROT = new CannedFoodItem(8, 0.6F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
     //public static final Item DEHYDRATED_MELON = new CannedFoodItem(4, 0.3F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -75,7 +74,6 @@ public class GalacticraftItems {
     //public static final Item CANNED_BEEF = new CannedFoodItem(8, 0.6F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
 
     //ROCKET PARTS
-
     public static final Item TIER_1_HEAVY_DUTY_PLATE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TIER_3_HEAVY_DUTY_PLATE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -89,7 +87,7 @@ public class GalacticraftItems {
 
     //BUGGY PARTS
     public static final Item BUGGY_SEAT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item BUGGY_STORAGE_BOX = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BUGGY_STORAGE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BUGGY_WHEEL = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
     public static void init() {
@@ -161,7 +159,7 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_BOOSTER), TIER_1_BOOSTER);
         //BUGGY
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_SEAT), BUGGY_SEAT);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE_BOX), BUGGY_STORAGE_BOX);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE), BUGGY_STORAGE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_WHEEL), BUGGY_WHEEL);
     }
 }

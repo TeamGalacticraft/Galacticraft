@@ -45,5 +45,18 @@
     "item.galacticraft-fabric.steel_pole": "Steel Pole",
     "item.galacticraft-fabric.thermal_cloth": "Thermal Cloth",
     "item.galacticraft-fabric.isothermal_fabric": "Isothermal Fabric",
-    "item.galacticraft-fabric.orion_drive": "Orion Drive"
+    "item.galacticraft-fabric.orion_drive": "Orion Drive",
+    "item.galacticraft-fabric.tier_1_heavy_duty_plate": "Heavy Plating",
+    "item.galacticraft-fabric.tier_2_heavy_duty_plate": "Thick Heavy Plating",
+    "item.galacticraft-fabric.tier_3_heavy_duty_plate": "Reinforced Heavy Plating",
+    "item.galacticraft-fabric.nose_cone": "Nose Cone",
+    "item.galacticraft-fabric.heavy_nose_cone": "Heavy Nose Cone",
+    "item.galacticraft-fabric.rocket_engine": "Rocket Engine",
+    "item.galacticraft-fabric.heavy_rocket_engine": "Heavy Rocket Engine",
+    "item.galacticraft-fabric.rocket_fin": "Rocket Fin",
+    "item.galacticraft-fabric.heavy_rocket_fin": "Heavy Rocket Fin",
+    "item.galacticraft-fabric.tier_1_booster": "Rocket Booster",
+    "item.galacticraft-fabric.buggy_seat": "Buggy Seat",
+    "item.galacticraft-fabric.buggy_storage": "Buggy Storage",
+    "item.galacticraft-fabric.buggy_wheel": "Buggy Wheel"
 }

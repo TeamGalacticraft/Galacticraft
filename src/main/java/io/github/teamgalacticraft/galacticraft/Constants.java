@@ -245,19 +245,19 @@ public class Constants {
         public static final String DEHYDRATED_POTATO = "dehydrated_potato";
         public static final String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
-        public static final String TIER_1_HEAVY_DUTY_PLATE = "tier_1_heavy_duty_plate";
-        public static final String TIER_2_HEAVY_DUTY_PLATE = "tier_2_heavy_duty_plate";
-        public static final String TIER_3_HEAVY_DUTY_PLATE = "tier_3_heavy_duty_plate";
+        public static final String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
+        public static final String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
+        public static final String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
         public static final String NOSE_CONE = "nose_cone";
         public static final String HEAVY_NOSE_CONE = "heavy_nose_cone";
-        public static final String ROCKET_ENGINE = "rocket_engine";
-        public static final String HEAVY_ROCKET_ENGINE = "heavy_rocket_engine";
-        public static final String ROCKET_FIN = "rocket_fin";
-        public static final String HEAVY_ROCKET_FIN = "heavy_rocket_fin";
-        public static final String TIER_1_BOOSTER = "tier_1_booster";
+        public static final String ROCKET_ENGINE = "engine_t1";
+        public static final String HEAVY_ROCKET_ENGINE = "engine_t2";
+        public static final String ROCKET_FIN = "rocket_fins";
+        public static final String HEAVY_ROCKET_FIN = "rocket_fins_t2";
+        public static final String TIER_1_BOOSTER = "engine_t1booster";
         //BUGGY
         public static final String BUGGY_SEAT = "buggy_seat";
-        public static final String BUGGY_STORAGE_BOX = "buggy_storage_box";
+        public static final String BUGGY_STORAGE = "buggy_storage";
         public static final String BUGGY_WHEEL = "buggy_wheel";
     }
 
