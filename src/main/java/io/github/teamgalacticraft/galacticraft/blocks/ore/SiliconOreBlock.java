@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.blocks;
+package io.github.teamgalacticraft.galacticraft.blocks.ore;
 
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.BlockState;

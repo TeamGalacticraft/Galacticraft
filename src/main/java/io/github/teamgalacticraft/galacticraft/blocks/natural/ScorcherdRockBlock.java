@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.blocks;
+package io.github.teamgalacticraft.galacticraft.blocks.natural;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

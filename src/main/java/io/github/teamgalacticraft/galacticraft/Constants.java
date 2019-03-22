@@ -64,14 +64,24 @@ public class Constants {
 
         // Decorative BLocks
         public static final String TIN_DECORATION_BLOCK = "tin_decoration_block";
+        public static final String TIN_DECORATION_BLOCK_1 = "tin_decoration_block_1";
         public static final String DARK_DECORATION_BLOCK = "dark_decoration_block";
         public static final String GRATING_BLOCK = "grating_block";
-        public static final String LIGHTING_PANEL_BLOCK = "lighting_panel_block";
+        public static final String LIGHTING_PANEL_BLOCK_SQUARE = "lighting_panel_block_square";
+        public static final String LIGHTING_PANEL_BLOCK_SPOTLIGHT = "lighting_panel_block_spotlight";
+        public static final String LIGHTING_PANEL_BLOCK_LINEAR = "lighting_panel_block_linear";
+        public static final String LIGHTING_PANEL_BLOCK_DARK = "lighting_panel_block_dark";
+        public static final String LIGHTING_PANEL_BLOCK_DARK_ANGLE = "lighting_panel_block_dark_angle";
         public static final String VACUUM_GLASS_BLOCK = "vacuum_glass_block";
         public static final String VACUUM_GLASS_BLOCK_CLEAR = "vacuum_glass_block_clear_block";
         public static final String VACUUM_GLASS_BLOCK_TIN = "vacuum_glass_block_tin_block";
         public static final String VACUUM_GLASS_BLOCK_STRONG = "vacuum_glass_block_strong_block";
         public static final String WALKWAY_BLOCK = "walkway_block";
+        public static final String WALKWAY_BLOCK_WIRE = "walkway_block_wire";
+        public static final String WALKWAY_BLOCK_PIPE = "walkway_block_pipe";
+        public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
+        public static final String TIN_DECORATION_SLAB_1 = "tin_decoration_slab_1";
+        public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
         public static final String MARS_COBBLESTONE_SLAB_BLOCK = "mars_cobblestone_slab";
         public static final String MARS_DUNGEON_BRICK_SLAB_BLOCK = "mars_dungeon_brick_slab";
         public static final String MOON_DUNGEON_BRICK_SLAB_BLOCK = "moon_dungeon_brick_slab";
@@ -79,9 +89,11 @@ public class Constants {
         public static final String MOON_STONE_STAIRS = "moon_stone_stairs";
         public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
+        public static final String TIN_DECORATION_STAIRS_1 = "tin_decoration_stairs_1";
         public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
         public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
+        public static final String TIN_DECORATION_WALL_1 = "tin_decoration_wall_1";
         public static final String MOON_STONE_WALL = "moon_stone_wall";
         public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
@@ -246,5 +258,16 @@ public class Constants {
         public static final String BUGGY_SEAT = "buggy_seat";
         public static final String BUGGY_STORAGE_BOX = "buggy_storage_box";
         public static final String BUGGY_WHEEL = "buggy_wheel";
+    }
+
+    public static class Config {
+        public static final String TITLE = "ui.galacticraft-fabric.config.title";
+        public static final String GENERAL = "ui.galacticraft-fabric.config.general";
+        public static final String BOOLEAN = "ui.galacticraft-fabric.config.boolean";
+        public static final String DOUBLE = "ui.galacticraft-fabric.config.double";
+        public static final String FLOAT = "ui.galacticraft-fabric.config.float";
+        public static final String INT = "ui.galacticraft-fabric.config.int";
+        public static final String LONG = "ui.galacticraft-fabric.config.long";
+        public static final String STRING = "ui.galacticraft-fabric.config.string";
     }
 }

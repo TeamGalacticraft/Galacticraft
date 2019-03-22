@@ -1,12 +1,14 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.api.blocks.GCStairsBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.decoration.LightingPanelBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorcherdRockBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.block.MaterialColor;
-import net.minecraft.block.OreBlock;
+import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -49,12 +51,33 @@ public class GalacticraftBlocks {
     public static final Block PUMICE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).resistance(1.0F).build());
     public static final Block VAPOR_SPOUT_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build());
 
-    public static final Block TIN_DECORATION_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
-    public static final Block TIN_WALL_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
-    public static final Block COPPER_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-    public static final Block TIN_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-    public static final Block ALUMINUM_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-    public static final Block SILICON_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block TIN_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
+    public static final Block TIN_DECORATION_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
+    public static final Block DARK_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build());
+    public static final Block GRATING_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(2.0F, 2.0F).build());
+    public static final Block LIGHTING_PANEL_BLOCK_SQUARE = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block LIGHTING_PANEL_BLOCK_SPOTLIGHT = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 3.0f);
+    public static final Block LIGHTING_PANEL_BLOCK_LINEAR = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 5.0f);
+    public static final Block LIGHTING_PANEL_BLOCK_DARK = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 1.0f);
+    public static final Block LIGHTING_PANEL_BLOCK_DARK_ANGLE = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 1.0f);
+    public static final Block VACUUM_GLASS_BLOCK = new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).build());
+    public static final Block VACUUM_GLASS_BLOCK_CLEAR = new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).build());
+    public static final Block VACUUM_GLASS_BLOCK_TIN = new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).build());
+    public static final Block VACUUM_GLASS_BLOCK_STRONG = new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).build());
+    public static final Block WALKWAY_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).build());
+    public static final Block WALKWAY_BLOCK_WIRE = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).build());
+    public static final Block WALKWAY_BLOCK_PIPE = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).build());
+    public static final Block TIN_DECORATION_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
+    public static final Block TIN_DECORATION_SLAB_BLOCK_1 = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
+    public static final Block DARK_DECORATION_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
+    public static final Block MARS_COBBLESTONE_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
+    public static final Block MARS_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
+    public static final Block MOON_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
+    public static final Block MOON_STONE_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
+    public static final Block MOON_STONE_STAIRS_BLOCK = new GCStairsBlock(MOON_ROCK_BLOCK.getDefaultState(),FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
+
+    public static final Block TIN_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
+
 
     public static final Block COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
@@ -71,6 +94,16 @@ public class GalacticraftBlocks {
     public static final Block MOON_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block MARS_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block GALENA_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
+
+    public static final Block COPPER_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block TIN_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block ALUMINUM_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block SILICON_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block SOLID_METEORIC_IRON_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block DESH_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block TITANIUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block LEAD_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+
 
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings());
@@ -112,12 +145,41 @@ public class GalacticraftBlocks {
     public static final BlockItem MARS_TIN_ORE_BLOCK_ITEM = new BlockItem(MARS_TIN_ORE_BLOCK, new Item.Settings());
     public static final BlockItem GALENA_ORE_BLOCK_ITEM = new BlockItem(GALENA_ORE_BLOCK, new Item.Settings());
 
-    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings());
     public static final BlockItem COPPER_BLOCK_ITEM = new BlockItem(COPPER_BLOCK, new Item.Settings());
     public static final BlockItem TIN_BLOCK_ITEM = new BlockItem(TIN_BLOCK, new Item.Settings());
     public static final BlockItem ALUMINUM_BLOCK_ITEM = new BlockItem(ALUMINUM_BLOCK, new Item.Settings());
     public static final BlockItem SILICON_BLOCK_ITEM = new BlockItem(SILICON_BLOCK, new Item.Settings());
+    public static final BlockItem SOLID_METEORIC_IRON_BLOCK_ITEM = new BlockItem(SOLID_METEORIC_IRON_BLOCK, new Item.Settings());
+    public static final BlockItem DESH_BLOCK_ITEM = new BlockItem(DESH_BLOCK, new Item.Settings());
+    public static final BlockItem TITANIUM_BLOCK_ITEM = new BlockItem(TITANIUM_BLOCK, new Item.Settings());
+    public static final BlockItem LEAD_BLOCK_ITEM = new BlockItem(LEAD_BLOCK, new Item.Settings());
+
+    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings());
+    public static final BlockItem TIN_DECORATION_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_1, new Item.Settings());
+    public static final BlockItem DARK_DECORATION_BLOCK_ITEM = new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings());
+    public static final BlockItem GRATING_BLOCK_ITEM = new BlockItem(GRATING_BLOCK, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_SQUARE_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_SQUARE, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_SPOTLIGHT, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_LINEAR_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_LINEAR, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_DARK, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_DARK_ANGLE, new Item.Settings());
+    public static final BlockItem VACUUM_GLASS_BLOCK_ITEM = new BlockItem(VACUUM_GLASS_BLOCK, new Item.Settings());
+    public static final BlockItem VACUUM_GLASS_BLOCK_CLEAR_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_CLEAR, new Item.Settings());
+    public static final BlockItem VACUUM_GLASS_BLOCK_TIN_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_TIN, new Item.Settings());
+    public static final BlockItem VACUUM_GLASS_BLOCK_STRONG_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_STRONG, new Item.Settings());
+    public static final BlockItem WALKWAY_BLOCK_ITEM = new BlockItem(WALKWAY_BLOCK, new Item.Settings());
+    public static final BlockItem WALKWAY_BLOCK_WIRE_ITEM = new BlockItem(WALKWAY_BLOCK_WIRE, new Item.Settings());
+    public static final BlockItem WALKWAY_BLOCK_PIPE_ITEM = new BlockItem(WALKWAY_BLOCK_PIPE, new Item.Settings());
+    public static final BlockItem TIN_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(TIN_DECORATION_SLAB_BLOCK, new Item.Settings());
+    public static final BlockItem TIN_DECORATION_SLAB_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_SLAB_BLOCK_1, new Item.Settings());
+    public static final BlockItem DARK_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(DARK_DECORATION_SLAB_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_COBBLESTONE_SLAB_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_SLAB_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_STONE_SLAB_BLOCK_ITEM = new BlockItem(MOON_STONE_SLAB_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_STONE_STAIRS_BLOCK_ITEM = new BlockItem(MOON_STONE_STAIRS_BLOCK, new Item.Settings());
+
+    public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings());
 
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP))
@@ -145,8 +207,6 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(SCORCHED_ROCK_BLOCK_ITEM));
                 itemStack.add(new ItemStack(PUMICE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(VAPOR_SPOUT_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM));
                 itemStack.add(new ItemStack(ALUMINUM_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(COPPER_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_ORE_BLOCK_ITEM));
@@ -162,11 +222,40 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(MOON_TIN_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(MARS_TIN_ORE_BLOCK_ITEM));
                 itemStack.add(new ItemStack(GALENA_ORE_BLOCK_ITEM));
-
                 itemStack.add(new ItemStack(COPPER_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_BLOCK_ITEM));
                 itemStack.add(new ItemStack(ALUMINUM_BLOCK_ITEM));
                 itemStack.add(new ItemStack(SILICON_BLOCK_ITEM));
+                itemStack.add(new ItemStack(SOLID_METEORIC_IRON_BLOCK_ITEM));
+                itemStack.add(new ItemStack(DESH_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TITANIUM_BLOCK_ITEM));
+                itemStack.add(new ItemStack(LEAD_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TIN_DECORATION_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TIN_DECORATION_BLOCK_ITEM_1));
+                itemStack.add(new ItemStack(DARK_DECORATION_BLOCK_ITEM));
+                itemStack.add(new ItemStack(GRATING_BLOCK_ITEM));
+                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_SQUARE_ITEM));
+                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM));
+                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_LINEAR_ITEM));
+                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_DARK_ITEM));
+                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM));
+                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_ITEM));
+                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_CLEAR_ITEM));
+                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_TIN_ITEM));
+                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_STRONG_ITEM));
+                itemStack.add(new ItemStack(WALKWAY_BLOCK_ITEM));
+                itemStack.add(new ItemStack(WALKWAY_BLOCK_WIRE_ITEM));
+                itemStack.add(new ItemStack(WALKWAY_BLOCK_PIPE_ITEM));
+                itemStack.add(new ItemStack(TIN_DECORATION_SLAB_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TIN_DECORATION_SLAB_BLOCK_ITEM_1));
+                itemStack.add(new ItemStack(DARK_DECORATION_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_COBBLESTONE_SLAB_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MOON_STONE_SLAB_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MOON_STONE_STAIRS_BLOCK_ITEM));
+
+                itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM));
 
                 // add blocks to creative menu
             })
@@ -200,6 +289,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.PUMICE_BLOCK), PUMICE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.VAPOR_SPOUT_BLOCK), VAPOR_SPOUT_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK), TIN_DECORATION_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK_1), TIN_DECORATION_BLOCK_1);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_WALL), TIN_WALL_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COPPER_ORE_BLOCK), COPPER_ORE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_ORE_BLOCK), TIN_ORE_BLOCK);
@@ -220,6 +310,32 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_TIN_ORE_BLOCK), MARS_TIN_ORE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TIN_ORE_BLOCK), MOON_TIN_ORE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GALENA_ORE_BLOCK), GALENA_ORE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.SOLID_METEORIC_IRON_BLOCK), SOLID_METEORIC_IRON_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.DESH_BLOCK), DESH_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TITANIUM_BLOCK), TITANIUM_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LEAD_BLOCK), LEAD_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.DARK_DECORATION_BLOCK), DARK_DECORATION_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GRATING_BLOCK), GRATING_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SQUARE), LIGHTING_PANEL_BLOCK_SQUARE);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SPOTLIGHT), LIGHTING_PANEL_BLOCK_SPOTLIGHT);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_LINEAR), LIGHTING_PANEL_BLOCK_LINEAR);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_DARK), LIGHTING_PANEL_BLOCK_DARK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_DARK_ANGLE), LIGHTING_PANEL_BLOCK_DARK_ANGLE);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK), VACUUM_GLASS_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK_CLEAR), VACUUM_GLASS_BLOCK_CLEAR);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK_TIN), VACUUM_GLASS_BLOCK_TIN);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK_STRONG), VACUUM_GLASS_BLOCK_STRONG);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.WALKWAY_BLOCK), WALKWAY_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.WALKWAY_BLOCK_WIRE), WALKWAY_BLOCK_WIRE);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.WALKWAY_BLOCK_PIPE), WALKWAY_BLOCK_PIPE);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_SLAB), TIN_DECORATION_SLAB_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_SLAB_1), TIN_DECORATION_SLAB_BLOCK_1);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.DARK_DECORATION_SLAB), DARK_DECORATION_SLAB_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COBBLESTONE_SLAB_BLOCK), MARS_COBBLESTONE_SLAB_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_DUNGEON_BRICK_SLAB_BLOCK), MARS_DUNGEON_BRICK_SLAB_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_SLAB_BLOCK), MOON_DUNGEON_BRICK_SLAB_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_SLAB_BLOCK), MOON_STONE_SLAB_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_STAIRS), MOON_STONE_STAIRS_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
@@ -245,6 +361,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.PUMICE_BLOCK), PUMICE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.VAPOR_SPOUT_BLOCK), VAPOR_SPOUT_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK), TIN_DECORATION_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK_1), TIN_DECORATION_BLOCK_ITEM_1);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_WALL), TIN_WALL_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COPPER_ORE_BLOCK), COPPER_ORE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_ORE_BLOCK), TIN_ORE_BLOCK_ITEM);
@@ -265,5 +382,31 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_TIN_ORE_BLOCK), MARS_TIN_ORE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TIN_ORE_BLOCK), MOON_TIN_ORE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GALENA_ORE_BLOCK), GALENA_ORE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.SOLID_METEORIC_IRON_BLOCK), SOLID_METEORIC_IRON_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.DESH_BLOCK), DESH_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TITANIUM_BLOCK), TITANIUM_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LEAD_BLOCK), LEAD_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.DARK_DECORATION_BLOCK), DARK_DECORATION_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GRATING_BLOCK), GRATING_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SQUARE), LIGHTING_PANEL_BLOCK_SQUARE_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SPOTLIGHT), LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_LINEAR), LIGHTING_PANEL_BLOCK_LINEAR_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_DARK), LIGHTING_PANEL_BLOCK_DARK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_DARK_ANGLE), LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK), VACUUM_GLASS_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK_CLEAR), VACUUM_GLASS_BLOCK_CLEAR_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK_TIN), VACUUM_GLASS_BLOCK_TIN_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.VACUUM_GLASS_BLOCK_STRONG), VACUUM_GLASS_BLOCK_STRONG_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.WALKWAY_BLOCK), WALKWAY_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.WALKWAY_BLOCK_WIRE), WALKWAY_BLOCK_WIRE_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.WALKWAY_BLOCK_PIPE), WALKWAY_BLOCK_PIPE_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_SLAB), TIN_DECORATION_SLAB_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_SLAB_1), TIN_DECORATION_SLAB_BLOCK_ITEM_1);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.DARK_DECORATION_SLAB), DARK_DECORATION_SLAB_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COBBLESTONE_SLAB_BLOCK), MARS_COBBLESTONE_SLAB_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_DUNGEON_BRICK_SLAB_BLOCK), MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_SLAB_BLOCK), MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_SLAB_BLOCK), MOON_STONE_SLAB_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_STAIRS), MOON_STONE_STAIRS_BLOCK_ITEM);
     }
 }
