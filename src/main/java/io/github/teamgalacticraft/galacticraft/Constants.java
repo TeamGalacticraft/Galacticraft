@@ -200,11 +200,11 @@ public class Constants {
         public static final String UNREFINED_DESH = "raw_desh";
         public static final String DESH_INGOT = "desh_ingot";
         public static final String DESH_STICK = "desh_stick";
-        public static final String CARBON_FRAGMENTS = "fragmented_carbon";
+        public static final String CARBON_FRAGMENTS = "carbon_fragments";
         public static final String IRON_SHARD = "shard_iron";
         public static final String TITANIUM_SHARD = "shard_titanium";
         public static final String TITANIUM_INGOT = "titanium_ingot";
-        public static final String TITANIUM_DUST = "titanium_dust";
+        public static final String TITANIUM_DUST = "dust_titanium";
         public static final String BASIC_WAFER = "basic_wafer";
         public static final String ADVANCED_WAFER = "advanced_wafer";
         public static final String BEAM_CORE = "beam_core";
@@ -220,8 +220,8 @@ public class Constants {
         public static final String COMPRESSED_TITANIUM = "compressed_titanium";
         public static final String FLUID_MANIPULATOR = "fluid_manipulator";
         public static final String OXYGEN_CONCENTRATOR = "oxygen_concentrator";
-        public static final String OXYGEN_FAN = "oxygen_fan";
-        public static final String OXYGEN_VENT = "oxygen_vent";
+        public static final String OXYGEN_FAN = "air_fan";
+        public static final String OXYGEN_VENT = "air_vent";
         public static final String SENSOR_LENS = "sensor_lens";
         public static final String BLUE_SOLAR_WAFER = "blue_solar_wafer";
         public static final String STEEL_POLE = "steel_pole";

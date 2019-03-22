@@ -28,9 +28,6 @@ public class GalacticraftItems {
     public static final Item DESH_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item DESH_STICK = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item CARBON_FRAGMENTS = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-
-    // THE FOLLOWING IS NOT COMPLETE -----------------------------------------------------------------
-
     public static final Item IRON_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -53,6 +50,7 @@ public class GalacticraftItems {
     public static final Item OXYGEN_FAN = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item OXYGEN_VENT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item SENSOR_LENS = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+
     public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item STEEL_POLE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COPPER_CANISTER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
