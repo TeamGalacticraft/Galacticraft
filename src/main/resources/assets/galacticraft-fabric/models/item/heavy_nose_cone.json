@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "galacticraftfabric:item/heavy_nose_cone_joined"
+        "layer0": "galacticraft-fabric:item/heavy_nose_cone_joined"
     }
 }
