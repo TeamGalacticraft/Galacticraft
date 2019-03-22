@@ -24,10 +24,13 @@ public class GalacticraftItems {
     public static final Item RAW_METEORIC_IRON = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item METEORIC_IRON_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item LUNAR_SAPPHIRE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item UNREFINED_DESH = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item RAW_DESH = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item DESH_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item DESH_STICK = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item FRAGMENTED_CARBON = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item CARBON_FRAGMENTS = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+
+    // THE FOLLOWING IS NOT COMPLETE -----------------------------------------------------------------
+
     public static final Item IRON_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -96,10 +99,10 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RAW_METEORIC_IRON), RAW_METEORIC_IRON);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.METEORIC_IRON_INGOT), METEORIC_IRON_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LUNAR_SAPPHIRE), LUNAR_SAPPHIRE);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.UNREFINED_DESH), UNREFINED_DESH);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RAW_DESH), RAW_DESH);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_INGOT), DESH_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_STICK), DESH_STICK);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FRAGMENTED_CARBON), FRAGMENTED_CARBON);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CARBON_FRAGMENTS), CARBON_FRAGMENTS);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.IRON_SHARD), IRON_SHARD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SHARD), TITANIUM_SHARD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_INGOT), TITANIUM_INGOT);

@@ -38,6 +38,7 @@ public class GalacticraftBlocks {
     public static final Block ASTEROID_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
     public static final Block ASTEROID_ROCK_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
     public static final Block ASTEROID_ROCK_BLOCK_2 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
+
     public static final Block VENUS_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VENUS_ROCK_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VENUS_ROCK_BLOCK_2 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
