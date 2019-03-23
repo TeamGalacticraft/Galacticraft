@@ -6,11 +6,20 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
+ext {
+	buildNum = (System.getProperty("BUILD_NUMBER") != null) ? System.getProperty("BUILD_NUMBER").toString() : "0"
+}
+
 archivesBaseName = project.archives_base_name
-version = project.mod_version
+version = project.mod_version + "+" + buildNum
 group = project.maven_group
 
+
 minecraft {
+}
+
+repositories {
+	maven { url "https://minecraft.curseforge.com/api/maven"}
 }
 
 dependencies {
@@ -21,6 +30,8 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modCompile "net.fabricmc:fabric:${project.fabric_version}"
+	modCompile "cloth:Cloth:${project.cloth_version}"
+	modCompile "io.github.prospector.modmenu:ModMenu:${modmenu_version}"
 }
 
 processResources {

@@ -268,7 +268,9 @@ public class Constants {
         public static final String DOUBLE = "ui.galacticraft-fabric.config.double";
         public static final String FLOAT = "ui.galacticraft-fabric.config.float";
         public static final String INT = "ui.galacticraft-fabric.config.int";
+        public static final String INT_SLIDER = "ui.galacticraft-fabric.config.intslider";
         public static final String LONG = "ui.galacticraft-fabric.config.long";
+        public static final String LONG_SLIDER = "ui.galacticraft-fabric.config.longslider";
         public static final String STRING = "ui.galacticraft-fabric.config.string";
     }
 }
