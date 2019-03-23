@@ -7,7 +7,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 ext {
-	buildNum = (System.getProperty("BUILD_NUMBER") != null) ? System.getProperty("BUILD_NUMBER").toString() : "0"
+	buildNum = (System.getenv("BUILD_NUMBER") != null) ? System.getenv("BUILD_NUMBER") : "0"
 }
 
 archivesBaseName = project.archives_base_name
