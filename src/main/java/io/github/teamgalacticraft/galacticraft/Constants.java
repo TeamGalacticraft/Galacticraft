@@ -95,6 +95,7 @@ public class Constants {
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
         public static final String TIN_DECORATION_WALL_1 = "tin_decoration_wall_1";
         public static final String MOON_STONE_WALL = "moon_stone_wall";
+
         public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
         public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";

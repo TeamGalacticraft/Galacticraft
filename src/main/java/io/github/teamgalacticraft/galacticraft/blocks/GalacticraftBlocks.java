@@ -4,6 +4,9 @@ import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.api.blocks.GCStairsBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.LightingPanelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.environment.CavernoursVineBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.environment.GlowstoneTorchBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.environment.UnlitTorchBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorcherdRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -75,8 +78,17 @@ public class GalacticraftBlocks {
     public static final Block MOON_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_STONE_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_STONE_STAIRS_BLOCK = new GCStairsBlock(MOON_ROCK_BLOCK.getDefaultState(),FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
-
+    public static final Block MOON_DUNGEON_BRICK_STAIRS_BLOCK = new GCStairsBlock(MOON_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build());
+    public static final Block TIN_DECORATION_BLOCK_STAIRS = new GCStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
+    public static final Block TIN_DECORATION_BLOCK_STAIRS_1 = new GCStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
+    public static final Block MARS_DUNGEON_BRICK_STAIRS_BLOCK = new GCStairsBlock(MARS_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build());
+    public static final Block MARS_COBBLESTONE_STAIRS_BLOCK = new GCStairsBlock(MARS_COBBLESTONE_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build());
     public static final Block TIN_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
+    public static final Block TIN_WALL_BLOCK_1 = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
+    public static final Block MOON_STONE_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
+    public static final Block MOON_DUNGEON_BRICK_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0F, 5.0F).build());
+    public static final Block MARS_COBBLESTONE_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
+    public static final Block MARS_DUNGEON_BRICK_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0F, 5.0F).build());
 
 
     public static final Block COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
@@ -103,6 +115,11 @@ public class GalacticraftBlocks {
     public static final Block DESH_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block TITANIUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block LEAD_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+
+    public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
+    public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
+    public static final Block CAVERNOURS_VINE_BLOCK = new CavernoursVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).noCollision().build());
+
 
 
     // Block Items
@@ -178,8 +195,21 @@ public class GalacticraftBlocks {
     public static final BlockItem MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings());
     public static final BlockItem MOON_STONE_SLAB_BLOCK_ITEM = new BlockItem(MOON_STONE_SLAB_BLOCK, new Item.Settings());
     public static final BlockItem MOON_STONE_STAIRS_BLOCK_ITEM = new BlockItem(MOON_STONE_STAIRS_BLOCK, new Item.Settings());
-
+    public static final BlockItem MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings());
+    public static final BlockItem TIN_DECORATION_STAIRS_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK_STAIRS, new Item.Settings());
+    public static final BlockItem TIN_DECORATION_STAIRS_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_STAIRS_1, new Item.Settings());
+    public static final BlockItem MARS_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_COBBLESTONE_STAIRS_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_STAIRS_BLOCK, new Item.Settings());
     public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings());
+    public static final BlockItem TIN_WALL_BLOCK_ITEM_1 = new BlockItem(TIN_WALL_BLOCK_1, new Item.Settings());
+    public static final BlockItem MOON_STONE_WALL_BLOCK_ITEM = new BlockItem(MOON_STONE_WALL_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_COBBLESTONE_WALL_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_WALL_BLOCK, new Item.Settings());
+    public static final BlockItem MARS_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
+
+    public static final BlockItem UNLIT_TORCH_BLOCK_ITEM = new BlockItem(UNLIT_TORCH_BLOCK, new Item.Settings());
+    public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new BlockItem(GLOWSTONE_TORCH_BLOCK, new Item.Settings());
+    public static final BlockItem CAVERNOURS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOURS_VINE_BLOCK, new Item.Settings());
 
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP))
@@ -254,8 +284,20 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM));
                 itemStack.add(new ItemStack(MOON_STONE_SLAB_BLOCK_ITEM));
                 itemStack.add(new ItemStack(MOON_STONE_STAIRS_BLOCK_ITEM));
-
+                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TIN_DECORATION_STAIRS_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TIN_DECORATION_STAIRS_BLOCK_ITEM_1));
+                itemStack.add(new ItemStack(MARS_DUNGEON_BRICK_STAIRS_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_COBBLESTONE_STAIRS_BLOCK_ITEM));
                 itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM));
+                itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM_1));
+                itemStack.add(new ItemStack(MOON_STONE_STAIRS_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_COBBLESTONE_WALL_BLOCK_ITEM));
+                itemStack.add(new ItemStack(MARS_COBBLESTONE_WALL_BLOCK_ITEM));
+                itemStack.add(new ItemStack(UNLIT_TORCH_BLOCK_ITEM));
+                itemStack.add(new ItemStack(GLOWSTONE_TORCH_BLOCK_ITEM));
+                itemStack.add(new ItemStack(CAVERNOURS_VINE_BLOCK_ITEM));
 
                 // add blocks to creative menu
             })
@@ -291,6 +333,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK), TIN_DECORATION_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK_1), TIN_DECORATION_BLOCK_1);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_WALL), TIN_WALL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_WALL_1), TIN_WALL_BLOCK_1);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COPPER_ORE_BLOCK), COPPER_ORE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_ORE_BLOCK), TIN_ORE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_ORE_BLOCK), ALUMINUM_ORE_BLOCK);
@@ -336,6 +379,18 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_SLAB_BLOCK), MOON_DUNGEON_BRICK_SLAB_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_SLAB_BLOCK), MOON_STONE_SLAB_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_STAIRS), MOON_STONE_STAIRS_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS), MOON_DUNGEON_BRICK_STAIRS_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_STAIRS), TIN_DECORATION_BLOCK_STAIRS);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_STAIRS_1), TIN_DECORATION_BLOCK_STAIRS_1);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS), MARS_DUNGEON_BRICK_STAIRS_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COBBLESTONE_STAIRS), MARS_COBBLESTONE_STAIRS_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_WALL), MOON_STONE_WALL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_WALL), MOON_DUNGEON_BRICK_WALL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COBBLESTONE_WALL), MARS_COBBLESTONE_WALL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_DUNGEON_BRICK_WALL), MARS_DUNGEON_BRICK_WALL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), UNLIT_TORCH_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOURS_VINE_BLOCK), CAVERNOURS_VINE_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
@@ -363,6 +418,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK), TIN_DECORATION_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_BLOCK_1), TIN_DECORATION_BLOCK_ITEM_1);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_WALL), TIN_WALL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_WALL_1), TIN_WALL_BLOCK_ITEM_1);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COPPER_ORE_BLOCK), COPPER_ORE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_ORE_BLOCK), TIN_ORE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_ORE_BLOCK), ALUMINUM_ORE_BLOCK_ITEM);
@@ -408,5 +464,17 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_SLAB_BLOCK), MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_SLAB_BLOCK), MOON_STONE_SLAB_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_STAIRS), MOON_STONE_STAIRS_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS), MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_STAIRS), TIN_DECORATION_STAIRS_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.TIN_DECORATION_STAIRS_1), TIN_DECORATION_STAIRS_BLOCK_ITEM_1);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS), MARS_DUNGEON_BRICK_STAIRS_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COBBLESTONE_STAIRS), MARS_COBBLESTONE_STAIRS_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_STONE_WALL), MOON_STONE_WALL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DUNGEON_BRICK_WALL), MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_COBBLESTONE_WALL), MARS_COBBLESTONE_WALL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MARS_DUNGEON_BRICK_WALL), MARS_DUNGEON_BRICK_WALL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), UNLIT_TORCH_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOURS_VINE_BLOCK), CAVERNOURS_VINE_BLOCK_ITEM);
     }
 }

@@ -33,7 +33,7 @@ public class ConfigHandler {
         try {
             loadConfig();
         } catch (IOException e) {
-            e.printStackTrace();
+            Galacticraft.logger.error("[Galacticraft] Failed to load config, using default.", e);
         }
     }
 
@@ -42,6 +42,14 @@ public class ConfigHandler {
      * @return the loaded config file
      */
     public Config getConfig() {
+        if(config == null) {
+            try {
+                loadConfig();
+            } catch (IOException e) {
+                Galacticraft.logger.error("[Galacticraft] Failed to load config, using default.", e);
+                return new Config();
+            }
+        }
         return config;
     }
 
@@ -75,9 +83,8 @@ public class ConfigHandler {
     public void openConfigScreen() {
         Screen parentScreen = MinecraftClient.getInstance().currentScreen;
         ClothConfigScreen.Builder builder = new ClothConfigScreen.Builder(parentScreen, I18n.translate(Constants.Config.TITLE), null);
-        AtomicBoolean atomicBoolean = new AtomicBoolean(false);
         ConfigScreenBuilder.CategoryBuilder general = builder.addCategory(I18n.translate(Constants.Config.GENERAL));
-        general.addOption(new BooleanListEntry(Constants.Config.BOOLEAN, atomicBoolean.get(), atomicBoolean::set));
+        general.addOption(new BooleanListEntry(Constants.Config.BOOLEAN, config.aBoolean, aBoolean -> config.aBoolean = aBoolean));
         general.addOption(new DoubleListEntry(Constants.Config.DOUBLE, config.aDouble, aDouble -> config.aDouble = aDouble));
         general.addOption(new FloatListEntry(Constants.Config.FLOAT, config.aFloat, aFloat -> config.aFloat = aFloat));
         general.addOption(new IntegerListEntry(Constants.Config.INT, config.anInt, anInt -> config.anInt = anInt));
@@ -86,11 +93,8 @@ public class ConfigHandler {
         general.addOption(new IntegerSliderEntry(Constants.Config.INT_SLIDER, 100, 0, config.anIntS, anInt -> config.anIntS = anInt));
         general.addOption(new LongSliderEntry(Constants.Config.LONG_SLIDER, 100, 0, Math.toIntExact(config.aLongS), aLong -> config.aLongS = aLong));
 
-
-        builder.setDoesConfirmSave(true);
         builder.setOnSave(savedConfig -> {
             try{
-                config.aBoolean = atomicBoolean.get();
                 ConfigHandler.this.saveConfig();
             } catch (IOException e) {
                 e.printStackTrace();

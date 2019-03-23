@@ -1,7 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.config;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
