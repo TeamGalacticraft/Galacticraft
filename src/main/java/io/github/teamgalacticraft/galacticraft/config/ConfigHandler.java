@@ -37,6 +37,22 @@ public class ConfigHandler {
         }
     }
 
+    /**
+     *
+     * @return the loaded config file
+     */
+    public Config getConfig() {
+        return config;
+    }
+
+    /**
+     *
+     * @return the config file.
+     */
+    public File getConfigFile() {
+        return configFile;
+    }
+
     public void loadConfig() throws IOException {
         configFile.getParentFile().mkdirs();
         if(!configFile.exists()) {
