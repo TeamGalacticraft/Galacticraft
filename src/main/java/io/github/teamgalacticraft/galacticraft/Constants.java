@@ -181,10 +181,14 @@ public class Constants {
 
     // Fluids
     public static class Fluids {
-        public static final String CRUDE_OIL_FLUID = "crude_oil_fluid";
-        public static final String FUEL_FLUID = "fuel_fluid";
-        public static final String BACTERIAL_ACID_FLUID = "bacterial_acid_fluid";
-        public static final String SULFURIC_ACID_FLUID = "sulfuric_acid_fluid";
+        public static final String CRUDE_OIL_FLUID_FLOWING = "crude_oil_fluid_flowing";
+        public static final String CRUDE_OIL_FLUID_STILL = "crude_oil_fluid_still";
+        public static final String FUEL_FLUID_FLOWING = "fuel_fluid_flowing";
+        public static final String FUEL_FLUID_STILL = "fuel_fluid_still";
+        public static final String BACTERIAL_ACID_FLUID_FLOWING = "bacterial_acid_fluid_flowing";
+        public static final String BACTERIAL_ACID_FLUID_STILL = "bacterial_acid_fluid_still";
+        public static final String SULFURIC_ACID_FLUID_FLOWING = "sulfuric_acid_fluid_flowing";
+        public static final String SULFURIC_ACID_FLUID_STILL = "sulfuric_acid_fluid_still";
     }
 
     //Items
