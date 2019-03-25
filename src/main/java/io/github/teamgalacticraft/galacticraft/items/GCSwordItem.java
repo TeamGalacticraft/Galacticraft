@@ -8,6 +8,9 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GCSwordItem extends SwordItem {
 
     public GCSwordItem(ToolMaterial material, int additionalDamage, float cooldown, Settings settings) {

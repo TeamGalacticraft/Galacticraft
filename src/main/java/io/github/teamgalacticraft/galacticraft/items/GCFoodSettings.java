@@ -2,6 +2,9 @@ package io.github.teamgalacticraft.galacticraft.items;
 
 import net.minecraft.item.FoodItemSetting;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GCFoodSettings {
     public static final FoodItemSetting CHEESE_CURD = new FoodItemSetting.Builder().hunger(1).saturationModifier(0.1F).build();
     public static final FoodItemSetting CHEESE_SLICE = new FoodItemSetting.Builder().hunger(2).saturationModifier(0.1F).build();

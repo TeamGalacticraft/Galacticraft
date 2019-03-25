@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft.items;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-//import net.minecraft.item.FoodItem;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

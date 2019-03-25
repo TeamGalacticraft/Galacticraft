@@ -3,6 +3,9 @@ package io.github.teamgalacticraft.galacticraft.items;
 import net.minecraft.item.PickaxeItem;
 import net.minecraft.item.ToolMaterial;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GCPickaxeItem extends PickaxeItem {
 
     protected GCPickaxeItem(ToolMaterial toolMaterial_1, int int_1, float float_1, Settings item$Settings_1) {

@@ -6,6 +6,9 @@ import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Lazy;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 import java.util.function.Supplier;
 
 public enum GCToolMaterials implements ToolMaterial {
