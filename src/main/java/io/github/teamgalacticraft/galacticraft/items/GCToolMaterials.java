@@ -1,7 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
-import io.github.teamgalacticraft.galacticraft.tag.GCItemTags;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.Lazy;
 
@@ -9,12 +10,16 @@ import java.util.function.Supplier;
 
 public enum GCToolMaterials implements ToolMaterial {
 
+    STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getBlockBreakingSpeed(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
+    }),
+
     DESH(3, 1024, 5.0F, 2.5F, 10, () -> {
-        return Ingredient.fromTag(GCItemTags.DESH_INGOT);
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.DESH_INGOT));
     }),
 
     TITANIUM(4, 760, 14.0F, 4.0F, 16, () -> {
-        return Ingredient.fromTag(GCItemTags.TITANIUM_INGOT);
+        return Ingredient.ofStacks(new ItemStack(GalacticraftItems.TITANIUM_INGOT));
     });
 
 
