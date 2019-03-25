@@ -3,10 +3,7 @@ package io.github.teamgalacticraft.galacticraft.items;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 //import net.minecraft.item.FoodItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tag.ItemTags;
+import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -93,7 +90,23 @@ public class GalacticraftItems {
     public static final Item BUGGY_WHEEL = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
     //TOOLS + WEAPONS
-    public static final Item DESH_SWORD = new DeshSwordItem(GCToolMaterials.DESH, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_SWORD = new GCSwordItem(GCToolMaterials.STEEL, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_SHOVEL = new ShovelItem(GCToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_PICKAXE = new GCPickaxeItem(GCToolMaterials.STEEL, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_AXE = new GCAxeItem(GCToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_HOE = new HoeItem(GCToolMaterials.STEEL, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+
+    public static final Item DESH_SWORD = new GCSwordItem(GCToolMaterials.DESH, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_SHOVEL = new ShovelItem(GCToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_PICKAXE = new GCPickaxeItem(GCToolMaterials.DESH, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_AXE = new GCAxeItem(GCToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_HOE = new HoeItem(GCToolMaterials.DESH, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+
+    public static final Item TITANIUM_SWORD = new GCSwordItem(GCToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_SHOVEL = new ShovelItem(GCToolMaterials.TITANIUM, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_PICKAXE = new GCPickaxeItem(GCToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_AXE = new GCAxeItem(GCToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterials.TITANIUM, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
 
     public static void register() {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ALUMINUM_INGOT), ALUMINUM_INGOT);
@@ -167,6 +180,22 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE), BUGGY_STORAGE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_WHEEL), BUGGY_WHEEL);
         //TOOLS + WEAPONS
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_SWORD), STEEL_SWORD);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_SHOVEL), STEEL_SHOVEL);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_PICKAXE), STEEL_PICKAXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_AXE), STEEL_AXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_HOE), STEEL_HOE);
+
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SWORD), DESH_SWORD);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SHOVEL), DESH_SHOVEL);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_PICKAXE), DESH_PICKAXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_AXE), DESH_AXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_HOE), DESH_HOE);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SWORD), TITANIUM_SWORD);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SHOVEL), TITANIUM_SHOVEL);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_PICKAXE), TITANIUM_PICKAXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_AXE), TITANIUM_AXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HOE), TITANIUM_HOE);
     }
 }
