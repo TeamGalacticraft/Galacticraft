@@ -11,7 +11,7 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftItems {
 
-    public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP)).icon(() -> new ItemStack(GalacticraftItems.RAW_SILICON)).build();
+    public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP)).icon(() -> new ItemStack(GalacticraftItems.CANVAS)).build();
 
     // MATERIALS
     public static final Item ALUMINUM_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
