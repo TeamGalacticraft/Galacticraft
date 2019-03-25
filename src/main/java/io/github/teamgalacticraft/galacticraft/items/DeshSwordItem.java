@@ -10,8 +10,8 @@ import net.minecraft.world.World;
 
 public class DeshSwordItem extends SwordItem {
 
-    public DeshSwordItem(ToolMaterial toolMaterial_1, int cooldown, float additionalDamage, Settings settings) {
-        super(toolMaterial_1, cooldown, additionalDamage, settings);
+    public DeshSwordItem(ToolMaterial toolMaterial_1, int additionalDamage, float cooldown, Settings settings) {
+        super(toolMaterial_1, additionalDamage, cooldown, settings);
         settings.durabilityIfNotSet(toolMaterial_1.getDurability());
     }
 
