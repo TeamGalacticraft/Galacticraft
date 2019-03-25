@@ -25,7 +25,7 @@ public class GalacticraftSounds {
     public static final SoundEvent AMBIENCE_SCARYSCAPE = new SoundEvent(new Identifier(Constants.MOD_ID, "ambience.scaryscape"));
     public static final SoundEvent SHUTTLE_SHUTTLE = new SoundEvent(new Identifier(Constants.MOD_ID, "shuttle.shuttle"));
 
-    public static void init() {
+    public static void register() {
         Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, MUSIC_MUSIC_SPACE);
         Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, PLAYER_UNLOCKCHEST);
         Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, PLAYER_PARACHUTE);

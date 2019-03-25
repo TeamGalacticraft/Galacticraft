@@ -30,10 +30,10 @@ public class Galacticraft implements ModInitializer {
     public void onInitialize() {
         logger.info(GALACTICRAFT, "Initializing Galacticraft");
         
-        GalacticraftBlocks.init();
-        GalacticraftItems.init();
-        GalacticraftFluids.init();
-        GalacticraftSounds.init();
+        GalacticraftBlocks.register();
+        GalacticraftItems.register();
+        GalacticraftFluids.register();
+        GalacticraftSounds.register();
 
         /* This currently crashes the game when it tries to load the config menu.
         if(FabricLoader.getInstance().isModLoaded("modmenu")) {

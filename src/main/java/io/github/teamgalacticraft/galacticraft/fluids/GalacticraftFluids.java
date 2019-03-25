@@ -14,7 +14,7 @@ public class GalacticraftFluids {
     //public static final Block CRUDE_OIL_FLUID = new FluidBlock(FabricBlockSettings.of(Material.WATER).build());
 
 
-    public static void init() {
+    public static void register() {
 
     }
 

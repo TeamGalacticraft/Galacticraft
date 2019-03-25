@@ -61,17 +61,18 @@ public class GalacticraftItems {
     public static final Item ATMOSPHERIC_VALVE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
     ////FOOD
-    //public static final Item CHEESE_CURD = new FoodItem(1, 0.1F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item CHEESE_SLICE = new FoodItem(2, 0.1F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item BURGER_BUN = new FoodItem(2, 0.3F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item GROUND_BEEF = new FoodItem(3, 0.6F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item BEEF_PATTY = new FoodItem(4, 0.8F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item CHEESEBURGER = new FoodItem(14, 4.0F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item DEHYDRATED_APPLE = new CannedFoodItem(8, 0.3F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item DEHYDRATED_CARROT = new CannedFoodItem(8, 0.6F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item DEHYDRATED_MELON = new CannedFoodItem(4, 0.3F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item DEHYDRATED_POTATO = new CannedFoodItem(2, 0.3F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
-    //public static final Item CANNED_BEEF = new CannedFoodItem(8, 0.6F, false, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item CHEESE_CURD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CHEESE_CURD));
+    public static final Item CHEESE_SLICE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CHEESE_SLICE));
+    public static final Item BURGER_BUN = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.BURGER_BUN));
+    public static final Item GROUND_BEEF = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.GROUND_BEEF));
+    public static final Item BEEF_PATTY = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.BEEF_PATTY));
+    public static final Item CHEESEBURGER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CHEESEBURGER));
+
+    public static final Item DEHYDRATED_APPLE = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_APPLE));
+    public static final Item DEHYDRATED_CARROT = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_CARROT));
+    public static final Item DEHYDRATED_MELON = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_MELON));
+    public static final Item DEHYDRATED_POTATO = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_POTATO));
+    public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CANNED_BEEF));
 
     //ROCKET PARTS
     public static final Item TIER_1_HEAVY_DUTY_PLATE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -90,7 +91,7 @@ public class GalacticraftItems {
     public static final Item BUGGY_STORAGE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BUGGY_WHEEL = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static void init() {
+    public static void register() {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ALUMINUM_INGOT), ALUMINUM_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.COPPER_INGOT), COPPER_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIN_INGOT), TIN_INGOT);
@@ -134,7 +135,7 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ORION_DRIVE), ORION_DRIVE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ATMOSPHERIC_VALVE), ATMOSPHERIC_VALVE);
         //FOOD
-        /*Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_CURD), CHEESE_CURD);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_CURD), CHEESE_CURD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_SLICE), CHEESE_SLICE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BURGER_BUN), BURGER_BUN);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.GROUND_BEEF), GROUND_BEEF);
@@ -145,7 +146,7 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_CARROT), DEHYDRATED_CARROT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_MELON), DEHYDRATED_MELON);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_POTATO), DEHYDRATED_POTATO);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_BEEF), CANNED_BEEF);*/
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_BEEF), CANNED_BEEF);
         //ROCKET PARTS
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_HEAVY_DUTY_PLATE), TIER_1_HEAVY_DUTY_PLATE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_2_HEAVY_DUTY_PLATE), TIER_2_HEAVY_DUTY_PLATE);

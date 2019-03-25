@@ -306,7 +306,7 @@ public class GalacticraftBlocks {
             .build();
 
 
-    public static void init() {
+    public static void register() {
         // Register Blocks
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_ROCK), MOON_ROCK_BLOCK);
