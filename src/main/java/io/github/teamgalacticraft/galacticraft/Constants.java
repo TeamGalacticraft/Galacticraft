@@ -282,6 +282,8 @@ public class Constants {
         public static final String TITANIUM_PICKAXE = "titanium_pickaxe";
         public static final String TITANIUM_AXE = "titanium_axe";
         public static final String TITANIUM_HOE = "titanium_hoe";
+
+        public static final String STANDARD_WRENCH = "standard_wrench";
     }
 
     public static class Config {
