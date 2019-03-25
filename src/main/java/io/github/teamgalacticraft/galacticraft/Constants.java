@@ -264,6 +264,8 @@ public class Constants {
         public static final String BUGGY_SEAT = "buggy_seat";
         public static final String BUGGY_STORAGE = "buggy_storage";
         public static final String BUGGY_WHEEL = "buggy_wheel";
+        //TOOLS + WEAPONS
+        public static final String DESH_SWORD = "desh_sword";
     }
 
     public static class Config {
