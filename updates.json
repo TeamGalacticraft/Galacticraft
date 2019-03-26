@@ -1,13 +1,32 @@
 {
   "mod_id": "galacticraft-fabric",
-  "download_page": "https://github.com/TeamGalacticraft/galacticraft-fabric/releases",
+  "download_page": "http://ci.joezwet.me:8080/job/Galacticraft-Fabric/",
   "mc_versions": {
     "19w12b": {
-      "latest": "0.1.0-alpha+7",
-      "recommended": "0.1.0-alpha+7"
+      "latest": "0.1.0-alpha+26",
+      "recommended": "0.1.0-alpha+26"
     }
   },
   "mod_versions": [
+    "0.1.0-alpha+26",
+    "0.1.0-alpha+25",
+    "0.1.0-alpha+24",
+    "0.1.0-alpha+23",
+    "0.1.0-alpha+22",
+    "0.1.0-alpha+21",
+    "0.1.0-alpha+20",
+    "0.1.0-alpha+19",
+    "0.1.0-alpha+18",
+    "0.1.0-alpha+17",
+    "0.1.0-alpha+16",
+    "0.1.0-alpha+15",
+    "0.1.0-alpha+14",
+    "0.1.0-alpha+13",
+    "0.1.0-alpha+12",
+    "0.1.0-alpha+11",
+    "0.1.0-alpha+10",
+    "0.1.0-alpha+9",
+    "0.1.0-alpha+8",
     "0.1.0-alpha+7",
     "0.1.0-alpha+6",
     "0.1.0-alpha+5",
