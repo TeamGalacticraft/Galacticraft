@@ -7,7 +7,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidBlock;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -15,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.particle.ParticleParameters;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateFactory;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -47,7 +45,6 @@ public class CrudeOilFluid extends BaseFluid {
         return null;
     }
 
-    @Nullable
     @Environment(EnvType.CLIENT)
     public ParticleParameters getParticle() {
         return ParticleTypes.DRIPPING_WATER;
