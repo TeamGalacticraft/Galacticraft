@@ -284,6 +284,24 @@ public class Constants {
         public static final String TITANIUM_HOE = "titanium_hoe";
 
         public static final String STANDARD_WRENCH = "standard_wrench";
+
+        //MISC
+        public static final String PARACHUTE = "parachute";
+        public static final String ORANGE_PARACHUTE = "orange_parachute";
+        public static final String MAGENTA_PARACHUTE = "magenta_parachute";
+        public static final String LIGHT_BLUE_PARACHUTE = "light_blue_parachute";
+        public static final String YELLOW_PARACHUTE = "yellow_parachute";
+        public static final String LIME_PARACHUTE = "lime_parachute";
+        public static final String PINK_PARACHUTE = "pink_parachute";
+        public static final String GRAY_PARACHUTE = "gray_parachute";
+        public static final String LIGHT_GRAY_PARACHUTE = "light_gray_parachute";
+        public static final String CYAN_PARACHUTE = "cyan_parachute";
+        public static final String PURPLE_PARACHUTE = "purple_parachute";
+        public static final String BLUE_PARACHUTE = "blue_parachute";
+        public static final String BROWN_PARACHUTE = "brown_parachute";
+        public static final String GREEN_PARACHUTE = "green_parachute";
+        public static final String RED_PARACHUTE = "red_parachute";
+        public static final String BLACK_PARACHUTE = "black_parachute";
     }
 
     public static class Config {

@@ -35,9 +35,9 @@ public class GalacticraftItems {
     public static final Item BEAM_CORE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item CANVAS = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COMPRESSED_ALUMINUM = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item COMPRESSED_COPPER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COMPRESSED_TIN = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COMPRESSED_BRONZE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item COMPRESSED_COPPER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COMPRESSED_IRON = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COMPRESSED_STEEL = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COMPRESSED_METEORIC_IRON = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -109,7 +109,27 @@ public class GalacticraftItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 
+    //MISC
+    public static final Item PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item ORANGE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item MAGENTA_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item LIGHT_BLUE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item YELLOW_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item LIME_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item PINK_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item GRAY_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item LIGHT_GRAY_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item CYAN_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item PURPLE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BLUE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BROWN_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item GREEN_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item RED_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BLACK_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+
     public static void register() {
+
+        //MATERIALS
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ALUMINUM_INGOT), ALUMINUM_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.COPPER_INGOT), COPPER_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIN_INGOT), TIN_INGOT);
@@ -152,6 +172,7 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ISOTHERMAL_FABRIC), ISOTHERMAL_FABRIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ORION_DRIVE), ORION_DRIVE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ATMOSPHERIC_VALVE), ATMOSPHERIC_VALVE);
+
         //FOOD
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_CURD), CHEESE_CURD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_SLICE), CHEESE_SLICE);
@@ -159,12 +180,14 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.GROUND_BEEF), GROUND_BEEF);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BEEF_PATTY), BEEF_PATTY);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESEBURGER), CHEESEBURGER);
+
         //CANNED FOOD
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_APPLE), DEHYDRATED_APPLE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_CARROT), DEHYDRATED_CARROT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_MELON), DEHYDRATED_MELON);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_POTATO), DEHYDRATED_POTATO);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_BEEF), CANNED_BEEF);
+
         //ROCKET PARTS
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_HEAVY_DUTY_PLATE), TIER_1_HEAVY_DUTY_PLATE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_2_HEAVY_DUTY_PLATE), TIER_2_HEAVY_DUTY_PLATE);
@@ -176,10 +199,12 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_FIN), ROCKET_FIN);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_ROCKET_FIN), HEAVY_ROCKET_FIN);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_BOOSTER), TIER_1_BOOSTER);
+
         //BUGGY
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_SEAT), BUGGY_SEAT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE), BUGGY_STORAGE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_WHEEL), BUGGY_WHEEL);
+
         //TOOLS + WEAPONS
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_SWORD), STEEL_SWORD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_SHOVEL), STEEL_SHOVEL);
@@ -200,5 +225,24 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HOE), TITANIUM_HOE);
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), STANDARD_WRENCH);
+
+        //MISC
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PARACHUTE), PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ORANGE_PARACHUTE), ORANGE_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MAGENTA_PARACHUTE), MAGENTA_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LIGHT_BLUE_PARACHUTE), LIGHT_BLUE_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.YELLOW_PARACHUTE), YELLOW_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LIME_PARACHUTE), LIME_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PINK_PARACHUTE), PINK_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.GRAY_PARACHUTE), GRAY_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LIGHT_GRAY_PARACHUTE), LIGHT_GRAY_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CYAN_PARACHUTE), CYAN_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PURPLE_PARACHUTE), PURPLE_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLUE_PARACHUTE), BLUE_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BROWN_PARACHUTE), BROWN_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.GREEN_PARACHUTE), GREEN_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RED_PARACHUTE), RED_PARACHUTE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLACK_PARACHUTE), BLACK_PARACHUTE);
+
     }
 }
