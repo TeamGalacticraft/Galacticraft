@@ -17,11 +17,12 @@ group = project.maven_group
 
 minecraft {
 }
-
-repositories {
-	maven { url "https://minecraft.curseforge.com/api/maven"}
-	maven { url 'http://server.bbkr.space:8081/artifactory/libs-snapshot/' }
-	maven { url "https://jitpack.io"}
+allprojects {
+	repositories {
+		maven { url "https://minecraft.curseforge.com/api/maven" }
+		maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
+		maven { url "https://jitpack.io" }
+	}
 }
 
 dependencies {
