@@ -11,6 +11,9 @@ import net.minecraft.util.Lazy;
  */
 import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public enum GCToolMaterials implements ToolMaterial {
 
     STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getBlockBreakingSpeed(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {

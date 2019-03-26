@@ -38,7 +38,7 @@ public class ConfigHandler {
     }
 
     /**
-     *
+     * Gets the config instance
      * @return the loaded config file
      */
     public Config getConfig() {
@@ -54,7 +54,7 @@ public class ConfigHandler {
     }
 
     /**
-     *
+     * Gets the config file
      * @return the config file.
      */
     public File getConfigFile() {
@@ -73,6 +73,10 @@ public class ConfigHandler {
         }
     }
 
+    /**
+     * Saves the config
+     * @throws IOException
+     */
     public void saveConfig() throws IOException {
         configFile.getParentFile().mkdirs();
         FileWriter writer = new FileWriter(configFile);
