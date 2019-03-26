@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CavernoursVineBlock extends Block implements Waterloggable {
+public class CavernousVineBlock extends Block implements Waterloggable {
 
-    public CavernoursVineBlock(Settings settings) {
+    public CavernousVineBlock(Settings settings) {
         super(settings);
         settings.noCollision();
     }
