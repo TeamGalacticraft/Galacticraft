@@ -297,7 +297,7 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(MARS_COBBLESTONE_WALL_BLOCK_ITEM));
                 itemStack.add(new ItemStack(UNLIT_TORCH_BLOCK_ITEM));
                 itemStack.add(new ItemStack(GLOWSTONE_TORCH_BLOCK_ITEM));
-                itemStack.add(new ItemStack(CAVERNOURS_VINE_BLOCK_ITEM));
+                itemStack.add(new ItemStack(CAVERNOUS_VINE_BLOCK_ITEM));
 
                 // add blocks to creative menu
             })
