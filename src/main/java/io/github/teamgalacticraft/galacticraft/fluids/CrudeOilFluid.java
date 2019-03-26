@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.fluids;
 
-import com.sun.istack.internal.Nullable;
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.fabricmc.api.EnvType;
