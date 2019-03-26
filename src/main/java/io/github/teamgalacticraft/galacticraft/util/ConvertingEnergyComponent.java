@@ -4,8 +4,6 @@ import io.github.cottonmc.energy.impl.SimpleEnergyComponent;
 import io.github.prospector.silk.util.ActionType;
 import io.github.teamgalacticraft.galacticraft.Constants;
 
-import javax.annotation.Nonnull;
-
 //Energy component that will convert Cotton Work Units to Galacticraft Joules.
 public class ConvertingEnergyComponent extends SimpleEnergyComponent {
 
@@ -13,7 +11,6 @@ public class ConvertingEnergyComponent extends SimpleEnergyComponent {
 		super(maxEnergy);
 	}
 
-	@Nonnull
 	public int insertEnergy(int amount, ActionType actionType) {
 		//converts WU to GJ
 		int convertedAmount = amount * Constants.Conversion.WU_GJ_CONVERSION;
@@ -29,7 +26,6 @@ public class ConvertingEnergyComponent extends SimpleEnergyComponent {
 		return insertAmount;
 	}
 
-	@Nonnull
 	public int extractEnergy(int amount, ActionType actionType) {
 		//converts GJ to WU
 		int convertedAmount = Math.floorDiv(amount,  Constants.Conversion.WU_GJ_CONVERSION);

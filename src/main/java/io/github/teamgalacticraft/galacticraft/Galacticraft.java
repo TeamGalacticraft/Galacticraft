@@ -1,35 +1,39 @@
 package io.github.teamgalacticraft.galacticraft;
 
-import io.github.prospector.modmenu.api.ModMenuApi;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.config.ConfigHandler;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
+import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
+import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
+import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class Galacticraft implements ModInitializer {
+public class Galacticraft implements ModInitializer, ModUpdateListener {
 
     public static Logger logger = LogManager.getLogger("Galacticraft-Fabric");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
     private static ConfigHandler configHandler = new ConfigHandler();
+    private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
+            Constants.MOD_ID,
+            "https://raw.githubusercontent.com/teamgalacticraft/galacticraft-fabric/0.1.0-alpha/updates.json",
+            true
+    );
 
     @Override
     public void onInitialize() {
         logger.info(GALACTICRAFT, "Initializing Galacticraft");
-        
+
+        modUpdateChecker.register(this);
+
         GalacticraftBlocks.register();
         GalacticraftItems.register();
         GalacticraftFluids.register();
@@ -46,5 +50,12 @@ public class Galacticraft implements ModInitializer {
             }
         }
         */
+    }
+
+    @Override
+    public void onUpdate(UpdateInfo updateInfo) {
+        if(updateInfo.getStatus() == UpdateInfo.VersionStatus.OUTDATED) {
+            logger.info("Galacticraft: Rewoven is outdated.");
+        }
     }
 }

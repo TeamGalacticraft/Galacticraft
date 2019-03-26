@@ -1,0 +1,13 @@
+{
+  "mod_id": "galacticraft-fabric",
+  "download_page": "https://github.com/TeamGalacticraft/galacticraft-fabric/releases",
+  "mc_versions": {
+    "19w12b": {
+      "latest": "0.1.0-alpha",
+      "recommended": "0.1.0-alpha"
+    }
+  },
+  "mod_versions": [
+    "0.1.0-alpha"
+  ]
+}

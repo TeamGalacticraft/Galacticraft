@@ -21,6 +21,7 @@ minecraft {
 repositories {
 	maven { url "https://minecraft.curseforge.com/api/maven"}
 	maven { url 'http://server.bbkr.space:8081/artifactory/libs-snapshot/' }
+	maven { url "https://jitpack.io"}
 }
 
 dependencies {
@@ -36,6 +37,8 @@ dependencies {
 	modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
 	modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
 	modCompile "io.github.cottonmc:cotton-ecs:${project.ecs_version}"
+	modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
+	modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
 }
 
 processResources {
