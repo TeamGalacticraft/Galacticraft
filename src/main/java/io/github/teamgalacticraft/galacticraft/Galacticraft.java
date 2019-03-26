@@ -24,7 +24,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
     private static ConfigHandler configHandler = new ConfigHandler();
     private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
             Constants.MOD_ID,
-            "https://raw.githubusercontent.com/teamgalacticraft/galacticraft-fabric/0.1.0-alpha/updates.json",
+            "https://raw.githubusercontent.com/teamgalacticraft/Galacticraft-Fabric/master/updates.json",
             true
     );
 
