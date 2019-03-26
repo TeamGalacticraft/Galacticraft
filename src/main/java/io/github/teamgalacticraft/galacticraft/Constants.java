@@ -298,4 +298,9 @@ public class Constants {
         public static final String LONG_SLIDER = "ui.galacticraft-fabric.config.longslider";
         public static final String STRING = "ui.galacticraft-fabric.config.string";
     }
+
+    public static class Conversion {
+        //240 Galacticraft Joules per one Cotton Energy Work Unit.
+        public static final int WU_GJ_CONVERSION = 240;
+    }
 }
