@@ -73,7 +73,7 @@ public class StandardWrenchItem extends Item {
         return state.with(property, method_7760(property.getValues(), state.get(property), sneaking));
     }
 
-    private static <T> T method_7760(Iterable<T> iterable_1, @Nullable T object_1, boolean sneaking) {
+    private static <T> T method_7760(Iterable<T> iterable_1, T object_1, boolean sneaking) {
         return sneaking ? SystemUtil.method_645(iterable_1, object_1) : SystemUtil.method_660(iterable_1, object_1);
     }
 }
