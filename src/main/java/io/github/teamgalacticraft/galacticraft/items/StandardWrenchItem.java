@@ -29,6 +29,14 @@ public class StandardWrenchItem extends Item {
         settings.durability(256);
     }
 
+    private static <T extends Comparable<T>> BlockState method_7758(BlockState state, Property<T> property, boolean sneaking) {
+        return state.with(property, method_7760(property.getValues(), state.get(property), sneaking));
+    }
+
+    private static <T> T method_7760(Iterable<T> iterable_1, T object_1, boolean sneaking) {
+        return sneaking ? SystemUtil.method_645(iterable_1, object_1) : SystemUtil.method_660(iterable_1, object_1);
+    }
+
     public boolean beforeBlockBreak(BlockState state, World world_1, BlockPos pos, PlayerEntity player) {
         if (!world_1.isClient) {
             this.method_7759(player, state, world_1, pos, player.getStackInHand(Hand.MAIN));
@@ -66,13 +74,5 @@ public class StandardWrenchItem extends Item {
                 stack.applyDamage(1, player);
             }
         }
-    }
-
-    private static <T extends Comparable<T>> BlockState method_7758(BlockState state, Property<T> property, boolean sneaking) {
-        return state.with(property, method_7760(property.getValues(), state.get(property), sneaking));
-    }
-
-    private static <T> T method_7760(Iterable<T> iterable_1, T object_1, boolean sneaking) {
-        return sneaking ? SystemUtil.method_645(iterable_1, object_1) : SystemUtil.method_660(iterable_1, object_1);
     }
 }

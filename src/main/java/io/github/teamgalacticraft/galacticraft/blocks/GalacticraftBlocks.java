@@ -43,7 +43,6 @@ public class GalacticraftBlocks {
     public static final Block ASTEROID_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
     public static final Block ASTEROID_ROCK_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
     public static final Block ASTEROID_ROCK_BLOCK_2 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build());
-
     public static final Block VENUS_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VENUS_ROCK_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VENUS_ROCK_BLOCK_2 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
@@ -53,7 +52,6 @@ public class GalacticraftBlocks {
     public static final Block SCORCHED_ROCK_BLOCK = new ScorcherdRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build());
     public static final Block PUMICE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).resistance(1.0F).build());
     public static final Block VAPOR_SPOUT_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build());
-
     public static final Block TIN_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block TIN_DECORATION_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block DARK_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build());
@@ -89,8 +87,6 @@ public class GalacticraftBlocks {
     public static final Block MOON_DUNGEON_BRICK_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0F, 5.0F).build());
     public static final Block MARS_COBBLESTONE_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block MARS_DUNGEON_BRICK_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0F, 5.0F).build());
-
-
     public static final Block COPPER_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block ALUMINUM_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
@@ -106,7 +102,6 @@ public class GalacticraftBlocks {
     public static final Block MOON_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block MARS_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block GALENA_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
-
     public static final Block COPPER_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block TIN_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block ALUMINUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
@@ -115,12 +110,9 @@ public class GalacticraftBlocks {
     public static final Block DESH_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block TITANIUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block LEAD_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-
     public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
-
-
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings());
     public static final BlockItem MOON_ROCK_BLOCK_ITEM = new BlockItem(MOON_ROCK_BLOCK, new Item.Settings());
@@ -144,7 +136,6 @@ public class GalacticraftBlocks {
     public static final BlockItem SCORCHED_ROCK_BLOCK_ITEM = new BlockItem(SCORCHED_ROCK_BLOCK, new Item.Settings());
     public static final BlockItem PUMICE_BLOCK_ITEM = new BlockItem(PUMICE_BLOCK, new Item.Settings());
     public static final BlockItem VAPOR_SPOUT_BLOCK_ITEM = new BlockItem(VAPOR_SPOUT_BLOCK, new Item.Settings());
-
     public static final BlockItem COPPER_ORE_BLOCK_ITEM = new BlockItem(COPPER_ORE_BLOCK, new Item.Settings());
     public static final BlockItem TIN_ORE_BLOCK_ITEM = new BlockItem(TIN_ORE_BLOCK, new Item.Settings());
     public static final BlockItem ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ALUMINUM_ORE_BLOCK, new Item.Settings());
@@ -160,7 +151,6 @@ public class GalacticraftBlocks {
     public static final BlockItem MOON_TIN_ORE_BLOCK_ITEM = new BlockItem(MOON_TIN_ORE_BLOCK, new Item.Settings());
     public static final BlockItem MARS_TIN_ORE_BLOCK_ITEM = new BlockItem(MARS_TIN_ORE_BLOCK, new Item.Settings());
     public static final BlockItem GALENA_ORE_BLOCK_ITEM = new BlockItem(GALENA_ORE_BLOCK, new Item.Settings());
-
     public static final BlockItem COPPER_BLOCK_ITEM = new BlockItem(COPPER_BLOCK, new Item.Settings());
     public static final BlockItem TIN_BLOCK_ITEM = new BlockItem(TIN_BLOCK, new Item.Settings());
     public static final BlockItem ALUMINUM_BLOCK_ITEM = new BlockItem(ALUMINUM_BLOCK, new Item.Settings());
@@ -169,7 +159,6 @@ public class GalacticraftBlocks {
     public static final BlockItem DESH_BLOCK_ITEM = new BlockItem(DESH_BLOCK, new Item.Settings());
     public static final BlockItem TITANIUM_BLOCK_ITEM = new BlockItem(TITANIUM_BLOCK, new Item.Settings());
     public static final BlockItem LEAD_BLOCK_ITEM = new BlockItem(LEAD_BLOCK, new Item.Settings());
-
     public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings());
     public static final BlockItem TIN_DECORATION_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_1, new Item.Settings());
     public static final BlockItem DARK_DECORATION_BLOCK_ITEM = new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings());
@@ -205,7 +194,6 @@ public class GalacticraftBlocks {
     public static final BlockItem MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
     public static final BlockItem MARS_COBBLESTONE_WALL_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_WALL_BLOCK, new Item.Settings());
     public static final BlockItem MARS_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
-
     public static final BlockItem UNLIT_TORCH_BLOCK_ITEM = new BlockItem(UNLIT_TORCH_BLOCK, new Item.Settings());
     public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new BlockItem(GLOWSTONE_TORCH_BLOCK, new Item.Settings());
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings());

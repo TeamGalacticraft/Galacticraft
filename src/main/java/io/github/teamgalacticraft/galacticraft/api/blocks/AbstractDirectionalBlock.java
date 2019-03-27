@@ -13,12 +13,12 @@ public class AbstractDirectionalBlock extends Block {
 
     public static DirectionProperty FACING = Properties.FACING;
 
+    public AbstractDirectionalBlock(Settings settings) {
+        super(settings);
+    }
+
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
-    }
-
-    public AbstractDirectionalBlock(Settings settings) {
-        super(settings);
     }
 }

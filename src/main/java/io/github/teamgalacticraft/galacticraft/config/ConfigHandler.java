@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -39,10 +38,11 @@ public class ConfigHandler {
 
     /**
      * Gets the config instance
+     *
      * @return the loaded config file
      */
     public Config getConfig() {
-        if(config == null) {
+        if (config == null) {
             try {
                 loadConfig();
             } catch (IOException e) {
@@ -55,6 +55,7 @@ public class ConfigHandler {
 
     /**
      * Gets the config file
+     *
      * @return the config file.
      */
     public File getConfigFile() {
@@ -63,7 +64,7 @@ public class ConfigHandler {
 
     public void loadConfig() throws IOException {
         configFile.getParentFile().mkdirs();
-        if(!configFile.exists()) {
+        if (!configFile.exists()) {
             Galacticraft.logger.error("[Galacticraft] Unable to find config file, creating one for you.");
             config = new Config();
             saveConfig();
@@ -75,6 +76,7 @@ public class ConfigHandler {
 
     /**
      * Saves the config
+     *
      * @throws IOException
      */
     public void saveConfig() throws IOException {
@@ -98,7 +100,7 @@ public class ConfigHandler {
         general.addOption(new LongSliderEntry(Constants.Config.LONG_SLIDER, 100, 0, Math.toIntExact(config.aLongS), aLong -> config.aLongS = aLong));
 
         builder.setOnSave(savedConfig -> {
-            try{
+            try {
                 ConfigHandler.this.saveConfig();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -13,6 +13,10 @@ import net.minecraft.state.property.Properties;
 public class AbstractHorizontalDirectionalBlock extends Block {
     public static DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 
+    public AbstractHorizontalDirectionalBlock(Settings settings) {
+        super(settings);
+    }
+
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> blockStateBuilder) {
         super.appendProperties(blockStateBuilder);
@@ -22,9 +26,5 @@ public class AbstractHorizontalDirectionalBlock extends Block {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
-    }
-
-    public AbstractHorizontalDirectionalBlock(Settings settings) {
-        super(settings);
     }
 }
