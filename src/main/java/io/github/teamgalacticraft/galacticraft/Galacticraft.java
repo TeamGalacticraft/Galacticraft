@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
@@ -26,6 +27,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftItems.register();
         GalacticraftFluids.register();
         GalacticraftSounds.register();
+        GalacticraftEnergy.register();
 
         /* This currently crashes the game when it tries to load the config menu.
         if(FabricLoader.getInstance().isModLoaded("modmenu")) {

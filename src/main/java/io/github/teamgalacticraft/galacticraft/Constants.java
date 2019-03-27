@@ -317,7 +317,8 @@ public class Constants {
         public static final String STRING = "ui.galacticraft-fabric.config.string";
     }
 
-    public static class Conversion {
+    public static class Energy {
+        public static final String GALACTICRAFT_JOULES = "galacticraft_joules";
         //30 Galacticraft Joules per one Cotton Energy Work Unit.
         //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
         public static final int WU_GJ_CONVERSION = 30;

@@ -92,5 +92,10 @@
     "item.galacticraft-fabric.cheese_slice": "Cheese Slice",
     "item.galacticraft-fabric.burger_bun": "Burger Bun",
     "item.galacticraft-fabric.beef_patty_cooked": "Cooked Beef Patty",
-    "item.galacticraft-fabric.beef_patty_raw": "Raw Beef Patty"
+    "item.galacticraft-fabric.beef_patty_raw": "Raw Beef Patty",
+
+    "tooltip.galacticraft-fabric.energy": "$d GJ",
+    "tooltip.galacticraft-fabric.energy.k": "$.3fK GJ",
+    "tooltip.galacticraft-fabric.energy.m": "$.3fM GJ",
+    "tooltip.galacticraft-fabric.energy.g": "$.3G GJ"
 }
