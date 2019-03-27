@@ -47,4 +47,8 @@ public class ConvertingEnergyComponent extends SimpleEnergyComponent {
 
         return extractAmount;
     }
+
+    public void emp(int strength) {
+        //remove EMP behavior for Galacricraft machines
+    }
 }
