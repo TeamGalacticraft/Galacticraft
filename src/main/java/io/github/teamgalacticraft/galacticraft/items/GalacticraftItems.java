@@ -57,7 +57,7 @@ public class GalacticraftItems {
     public static final Item ORION_DRIVE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ATMOSPHERIC_VALVE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    ////FOOD
+    //FOOD
     public static final Item CHEESE_CURD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CHEESE_CURD));
     public static final Item CHEESE_SLICE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CHEESE_SLICE));
     public static final Item BURGER_BUN = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.BURGER_BUN));
@@ -65,10 +65,10 @@ public class GalacticraftItems {
     public static final Item BEEF_PATTY = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.BEEF_PATTY));
     public static final Item CHEESEBURGER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CHEESEBURGER));
 
-    public static final Item DEHYDRATED_APPLE = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_APPLE));
-    public static final Item DEHYDRATED_CARROT = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_CARROT));
-    public static final Item DEHYDRATED_MELON = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_MELON));
-    public static final Item DEHYDRATED_POTATO = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_POTATO));
+    public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_APPLE));
+    public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_CARROT));
+    public static final Item CANNED_DEHYDRATED_MELON = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_MELON));
+    public static final Item CANNED_DEHYDRATED_POTATO = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.DEHYDRATED_POTATO));
     public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Settings().itemGroup(ITEMS_GROUP).food(GCFoodSettings.CANNED_BEEF));
 
     //ROCKET PARTS
@@ -182,10 +182,10 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESEBURGER), CHEESEBURGER);
 
         //CANNED FOOD
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_APPLE), DEHYDRATED_APPLE);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_CARROT), DEHYDRATED_CARROT);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_MELON), DEHYDRATED_MELON);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_POTATO), DEHYDRATED_POTATO);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_BEEF), CANNED_BEEF);
 
         //ROCKET PARTS
