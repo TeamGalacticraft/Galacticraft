@@ -28,7 +28,7 @@ public class ConversionWrapper implements EnergyComponent {
     public int extractEnergy(int amount, ActionType action) {
         //converts GJ to WU
         int convertedAmount = Math.floorDiv(amount, conversionRate);
-       return component.extractEnergy(convertedAmount, action);
+        return component.extractEnergy(convertedAmount, action);
     }
 
     @Override
