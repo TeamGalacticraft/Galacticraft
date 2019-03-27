@@ -318,7 +318,8 @@ public class Constants {
     }
 
     public static class Conversion {
-        //240 Galacticraft Joules per one Cotton Energy Work Unit.
-        public static final int WU_GJ_CONVERSION = 240;
+        //30 Galacticraft Joules per one Cotton Energy Work Unit.
+        //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
+        public static final int WU_GJ_CONVERSION = 30;
     }
 }
