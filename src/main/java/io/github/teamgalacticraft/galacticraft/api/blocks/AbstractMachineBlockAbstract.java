@@ -8,14 +8,14 @@ import net.minecraft.state.property.EnumProperty;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class AbstactMachineBlockAbstract extends AbstractHorizontalDirectionalBlock {
+public class AbstractMachineBlockAbstract extends AbstractHorizontalDirectionalBlock {
 
     /**
      * Set {@link MachineBlockStatus} as a block property.
      */
     public final EnumProperty<MachineBlockStatus> MACHINE_STATUS = EnumProperty.create("status", MachineBlockStatus.class);
 
-    public AbstactMachineBlockAbstract(Settings settings) {
+    public AbstractMachineBlockAbstract(Settings settings) {
         super(settings);
     }
 
