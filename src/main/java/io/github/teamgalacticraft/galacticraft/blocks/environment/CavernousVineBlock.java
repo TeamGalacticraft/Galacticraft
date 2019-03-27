@@ -34,14 +34,12 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity entity, ItemStack stack) {
-        BlockPos pos2 = pos;
-        BlockPos pos3 = pos;
-        pos2 = pos2.add(0, -1, 0);
-        pos3 = pos3.add(0, 1, 0);
-        if (!world.getBlockState(pos2).getBlock().equals(Blocks.AIR) && !world.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.CAVERNOUS_VINE_BLOCK)) { //If on ground
+        BlockPos pos2 = pos.add(0, -1, 0);
+        BlockPos pos3 = pos.add(0, 1, 0);
+        if (!world.getBlockState(pos2).getBlock().equals(Blocks.AIR) && !world.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.CAVERNOUS_VINE_BLOCK)) {
             world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
-        if (world.getBlockState(pos3).getBlock().equals(Blocks.AIR)) { //If not below block
+        if (world.getBlockState(pos3).getBlock().equals(Blocks.AIR)) {
             world.setBlockState(pos, Blocks.AIR.getDefaultState());
         }
     }
