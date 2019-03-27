@@ -7,9 +7,14 @@ import net.minecraft.util.StringRepresentable;
  */
 public enum MachineBlockStatus implements StringRepresentable {
     /**
+     * The machine block has been turned off, making it use even less power
+     * TODO: Make machines that are "off" have to warm up or start up again.
+     */
+    OFF("off"),
+    /**
      * The machine block has power but isn't running
      */
-    INACTIVE("inactive"),
+    IDLE("idle"),
 
     /**
      * The machine block has power and is running.
