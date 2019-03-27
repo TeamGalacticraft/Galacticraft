@@ -24,7 +24,12 @@ public enum MachineBlockStatus implements StringRepresentable {
     /**
      * The machine block has no power.
      */
-    UNPOWERED("unpowered");
+    UNPOWERED("unpowered"),
+
+    /**
+     * Something has gone wrong in the code
+     */
+    ERROR("error");
 
     String name;
 
