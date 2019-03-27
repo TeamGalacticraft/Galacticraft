@@ -27,7 +27,6 @@ allprojects {
 			url "http://server.bbkr.space:8081/artifactory/libs-snapshot"
 			artifactUrls "https://maven.fabricmc.net"
 			artifactUrls "https://minecraft.curseforge.com"
-			artifactUrls "http://server.bbkr.space:8081/artifactory/libs-snapshot"
 			artifactUrls "https://jitpack.io"
 		}
 	}
