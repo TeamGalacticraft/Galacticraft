@@ -20,7 +20,7 @@ public class CannedFoodItem extends Item {
     @Override
     public ItemStack onItemFinishedUsing(ItemStack stack, World world, LivingEntity entity) {
         if (entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity)entity;
+            PlayerEntity player = (PlayerEntity) entity;
             player.eatFood(world, stack);
             world.playSound(null, player.x, player.y, player.z, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYER, 0.5F, world.random.nextFloat() * 0.1F + 0.9F);
             player.dropStack(new ItemStack(GalacticraftItems.CANISTER_TIN));

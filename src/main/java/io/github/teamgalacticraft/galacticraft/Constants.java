@@ -135,7 +135,7 @@ public class Constants {
         public static final String DECONSTRUCTOR_BLOCK = "deconstructor_block";
         public static final String WATER_ELECTROLYZER_BLOCK = "water_electrolyzer_block";
         public static final String METHANE_SYNTHESIZIER_BLOCK = "methane_synthesizer_block";
-        public static final String GAS_LIQUEFIER_BLOCK ="gas_liquefier_block";
+        public static final String GAS_LIQUEFIER_BLOCK = "gas_liquefier_block";
 
         // Pad Blocks
         public static final String BUGGY_FUELING_PAD_BLOCK = "buggy_fueling_block";

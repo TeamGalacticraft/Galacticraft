@@ -1,8 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

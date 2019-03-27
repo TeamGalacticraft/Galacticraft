@@ -22,15 +22,16 @@ public enum MachineBlockStatus implements StringRepresentable {
     ACTIVE("active"),
 
     /**
-     *  The machine block has no power.
+     * The machine block has no power.
      */
-    UNPOWERED("unpowered"),
-    ;
+    UNPOWERED("unpowered");
 
     String name;
+
     MachineBlockStatus(String name) {
         this.name = name;
     }
+
     @Override
     public String asString() {
         return name;

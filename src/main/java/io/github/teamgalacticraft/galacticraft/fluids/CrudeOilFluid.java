@@ -1,7 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.fluids;
 
-import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderLayer;

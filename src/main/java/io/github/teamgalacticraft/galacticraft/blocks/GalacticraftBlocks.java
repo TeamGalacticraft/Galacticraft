@@ -77,7 +77,7 @@ public class GalacticraftBlocks {
     public static final Block MARS_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_STONE_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
-    public static final Block MOON_STONE_STAIRS_BLOCK = new GCStairsBlock(MOON_ROCK_BLOCK.getDefaultState(),FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
+    public static final Block MOON_STONE_STAIRS_BLOCK = new GCStairsBlock(MOON_ROCK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_DUNGEON_BRICK_STAIRS_BLOCK = new GCStairsBlock(MOON_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build());
     public static final Block TIN_DECORATION_BLOCK_STAIRS = new GCStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
     public static final Block TIN_DECORATION_BLOCK_STAIRS_1 = new GCStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
@@ -107,10 +107,10 @@ public class GalacticraftBlocks {
     public static final Block MARS_TIN_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
     public static final Block GALENA_ORE_BLOCK = new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build());
 
-    public static final Block COPPER_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-    public static final Block TIN_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-    public static final Block ALUMINUM_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
-    public static final Block SILICON_BLOCK = new  Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block COPPER_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block TIN_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block ALUMINUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
+    public static final Block SILICON_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block SOLID_METEORIC_IRON_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block DESH_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block TITANIUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
@@ -119,7 +119,6 @@ public class GalacticraftBlocks {
     public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
-
 
 
     // Block Items
@@ -175,11 +174,11 @@ public class GalacticraftBlocks {
     public static final BlockItem TIN_DECORATION_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_1, new Item.Settings());
     public static final BlockItem DARK_DECORATION_BLOCK_ITEM = new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings());
     public static final BlockItem GRATING_BLOCK_ITEM = new BlockItem(GRATING_BLOCK, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_SQUARE_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_SQUARE, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_SPOTLIGHT, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_LINEAR_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_LINEAR, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_DARK, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM = new BlockItem( LIGHTING_PANEL_BLOCK_DARK_ANGLE, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_SQUARE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SQUARE, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SPOTLIGHT, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_LINEAR_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_LINEAR, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_DARK, new Item.Settings());
+    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_DARK_ANGLE, new Item.Settings());
     public static final BlockItem VACUUM_GLASS_BLOCK_ITEM = new BlockItem(VACUUM_GLASS_BLOCK, new Item.Settings());
     public static final BlockItem VACUUM_GLASS_BLOCK_CLEAR_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_CLEAR, new Item.Settings());
     public static final BlockItem VACUUM_GLASS_BLOCK_TIN_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_TIN, new Item.Settings());
