@@ -25,10 +25,3 @@ run/
 
 # eclipse
 *.launch
-src/main/java/io/github/teamgalacticraft/galacticraft/util/ConvertingEnergyComponent.java
-src/main/java/io/github/teamgalacticraft/galacticraft/util/ConvertingEnergyComponent.java
-src/main/java/io/github/teamgalacticraft/galacticraft/Galacticraft.java
-src/main/java/io/github/teamgalacticraft/galacticraft/config/ConfigHandler.java
-src/main/java/io/github/teamgalacticraft/galacticraft/config/Config.java
-src/main/java/io/github/teamgalacticraft/galacticraft/util/ConvertingEnergyComponent.java
-src/main/java/io/github/teamgalacticraft/galacticraft/util/FileUtils.java
