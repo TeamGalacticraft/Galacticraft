@@ -5,6 +5,7 @@ import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
+import io.github.teamgalacticraft.galacticraft.util.Capes;
 import net.fabricmc.api.ModInitializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,11 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluids.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
+
+        Capes.updateCapeList();
+        for (String s : Capes.getCapeUsers()) {
+            logger.info(s);
+        }
 
         /* This currently crashes the game when it tries to load the config menu.
         if(FabricLoader.getInstance().isModLoaded("modmenu")) {
