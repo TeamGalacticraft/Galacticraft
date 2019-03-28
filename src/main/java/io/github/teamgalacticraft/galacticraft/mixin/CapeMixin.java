@@ -38,15 +38,11 @@ public abstract class CapeMixin {
 
     @Inject(at = @At("RETURN"), method = "method_2969")
     private void method_2969(CallbackInfo info) {
-        //Galacticraft.logger.info("Loaded Galacticraft Mixindahsdfhdshdfdhddfhjdfxknulacticraft Mixindahsdfhdshdfdhddfhjdfxknulacticraft Mixindahsdfhdshdfdhddfhjdfxknulacticraft Mixindahsdfhdshdfdhddfhjdfxknulacticraft Mixindahsdfhdshdfdhddfhjdfxknulacticraft Mixindahsdfhdshdfdhddfhjdfxknulacticraft Mixindahsdfhdshdfdhddfhjdfxknu");
         for (Entity r : MinecraftClient.getInstance().world.getPlayers()) {
-            System.out.println("got entity");
             if (r instanceof PlayerEntity) {
-                System.out.println("instanceof PE");
                 for (String uuid : Capes.getCapeUsers()) {
                     if (uuid.equals(r.getUuidAsString().replace("-", ""))) {
-                        System.out.println("put entity in map");
-                        field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "aijdksl"));
+                        field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/cape_" + /*ConfigHandler.capeType*/ "earth" + ".png"));
                     }
                 }
             }
