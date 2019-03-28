@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.util;
+package io.github.teamgalacticraft.galacticraft.misc;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;

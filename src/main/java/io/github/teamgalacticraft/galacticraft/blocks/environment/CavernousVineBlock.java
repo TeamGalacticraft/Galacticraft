@@ -1,7 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import io.github.teamgalacticraft.galacticraft.entity.damage.GCDamageSource;
+import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -24,7 +24,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onEntityCollision(BlockState blockState_1, World world_1, BlockPos blockPos_1, Entity entity_1) {
-        entity_1.damage(GCDamageSource.VINE_POISON, 5.0f);
+        entity_1.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
         if (entity_1.getVelocity().y < 0.15) {
             entity_1.addVelocity(entity_1.getVelocity().x, 0.2D, entity_1.getVelocity().z);
         } else {

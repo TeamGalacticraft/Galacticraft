@@ -4,12 +4,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
 
 /**
- * Because Mojang is stupid and set the constructor of GCStairsBlock to protected
+ * Because Mojang is stupid and set the constructor of GalacticraftStairsBlock to protected
  *
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class GCStairsBlock extends StairsBlock {
-    public GCStairsBlock(BlockState state, Settings settings) {
+public class GalacticraftStairsBlock extends StairsBlock {
+    public GalacticraftStairsBlock(BlockState state, Settings settings) {
         super(state, settings);
     }
 }

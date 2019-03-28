@@ -2,31 +2,20 @@ package io.github.teamgalacticraft.galacticraft.mixin;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import io.github.teamgalacticraft.galacticraft.util.Capes;
-import net.minecraft.advancement.criterion.EntityHurtPlayerCriterion;
+import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.ScoreboardEntry;
-import net.minecraft.datafixers.fixes.EntityStringUuidFix;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TextComponent;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.core.config.plugins.convert.TypeConverters;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>

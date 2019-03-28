@@ -1,7 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.api.blocks.GCStairsBlock;
+import io.github.teamgalacticraft.galacticraft.api.blocks.GalacticraftStairsBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.LightingPanelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.CavernousVineBlock;
@@ -75,12 +75,12 @@ public class GalacticraftBlocks {
     public static final Block MARS_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_DUNGEON_BRICK_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build());
     public static final Block MOON_STONE_SLAB_BLOCK = new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
-    public static final Block MOON_STONE_STAIRS_BLOCK = new GCStairsBlock(MOON_ROCK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
-    public static final Block MOON_DUNGEON_BRICK_STAIRS_BLOCK = new GCStairsBlock(MOON_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build());
-    public static final Block TIN_DECORATION_BLOCK_STAIRS = new GCStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
-    public static final Block TIN_DECORATION_BLOCK_STAIRS_1 = new GCStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
-    public static final Block MARS_DUNGEON_BRICK_STAIRS_BLOCK = new GCStairsBlock(MARS_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build());
-    public static final Block MARS_COBBLESTONE_STAIRS_BLOCK = new GCStairsBlock(MARS_COBBLESTONE_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build());
+    public static final Block MOON_STONE_STAIRS_BLOCK = new GalacticraftStairsBlock(MOON_ROCK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build());
+    public static final Block MOON_DUNGEON_BRICK_STAIRS_BLOCK = new GalacticraftStairsBlock(MOON_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build());
+    public static final Block TIN_DECORATION_BLOCK_STAIRS = new GalacticraftStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
+    public static final Block TIN_DECORATION_BLOCK_STAIRS_1 = new GalacticraftStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build());
+    public static final Block MARS_DUNGEON_BRICK_STAIRS_BLOCK = new GalacticraftStairsBlock(MARS_DUNGEON_BRICK_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build());
+    public static final Block MARS_COBBLESTONE_STAIRS_BLOCK = new GalacticraftStairsBlock(MARS_COBBLESTONE_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build());
     public static final Block TIN_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
     public static final Block TIN_WALL_BLOCK_1 = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
     public static final Block MOON_STONE_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
