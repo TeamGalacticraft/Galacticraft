@@ -18,27 +18,28 @@ group = project.maven_group
 minecraft {
 }
 allprojects {
-	repositories {
-		maven { url "https://minecraft.curseforge.com/api/maven" }
-		maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
-		maven { url "https://jitpack.io" }
-	}
+    repositories {
+        maven { url "https://minecraft.curseforge.com/api/maven" }
+        mavenLocal()
+        maven { url uri("file:///C:/Users/Owner/.m2/repository/")}
+        maven { url "https://jitpack.io" }
+    }
 }
 
 dependencies {
-	//to change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+    //to change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+    modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modCompile "net.fabricmc:fabric:${project.fabric_version}"
-	modCompile "cloth:Cloth:${project.cloth_version}"
-	modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
-	modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
-	modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
-	modCompile "io.github.cottonmc:cotton-ecs:${project.ecs_version}"
-	modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modCompile "net.fabricmc:fabric:${project.fabric_version}"
+    modCompile "cloth:Cloth:${project.cloth_version}"
+    modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
+    modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
+    modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
+    modCompile "io.github.cottonmc:cotton-ecs:${project.ecs_version}"
+    modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
 }
 
 processResources {

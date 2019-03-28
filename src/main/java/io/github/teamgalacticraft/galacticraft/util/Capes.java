@@ -1,6 +1,12 @@
 package io.github.teamgalacticraft.galacticraft.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
+import net.minecraft.entity.Entity;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -10,8 +16,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Capes {
 
@@ -66,6 +74,7 @@ public class Capes {
                     capeUsers.add(line);
                 }
             }
+
         }
         catch (IOException ignored) {}
         finally
@@ -75,5 +84,21 @@ public class Capes {
             }
             catch (IOException ignored) {}
         }
+    }
+
+    public static String getName(String uuid) { //Use this sparingly
+        String url = "https://api.mojang.com/user/profiles/"+uuid.replace("-", "")+"/names";
+        try {
+            JsonParser parser = new JsonParser();
+            @SuppressWarnings("deprecation")
+            String nameJson = IOUtils.toString(new URL(url));
+            JsonArray nameValue = (JsonArray) parser.parse(nameJson);
+            String playerSlot = nameValue.get(nameValue.size()-1).toString();
+            JsonObject nameObject = (JsonObject) parser.parse(playerSlot);
+            return nameObject.get("name").toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "error";
     }
 }
