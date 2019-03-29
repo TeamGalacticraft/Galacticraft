@@ -22,7 +22,9 @@ allprojects {
         maven { url "https://minecraft.curseforge.com/api/maven" }
         mavenLocal()
         maven { url uri("file:///C:/Users/Owner/.m2/repository/")}
+        maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://jitpack.io" }
+        maven { url "https://mod-buildcraft.com/maven" }
     }
 }
 
@@ -37,8 +39,8 @@ dependencies {
     modCompile "cloth:Cloth:${project.cloth_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
-    //modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
-    //modCompile "io.github.cottonmc:cotton-ecs:${project.ecs_version}"
+    modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
+    modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
     modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
 }
 
