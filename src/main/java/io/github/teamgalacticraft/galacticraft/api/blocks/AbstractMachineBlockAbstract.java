@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.api.blocks;
 
+import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.StateFactory;
@@ -8,7 +9,7 @@ import net.minecraft.state.property.EnumProperty;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class AbstractMachineBlockAbstract extends AbstractHorizontalDirectionalBlock {
+public class AbstractMachineBlockAbstract extends AbstractHorizontalDirectionalBlock implements Rotatable {
 
     /**
      * Set {@link MachineBlockStatus} as a block property.

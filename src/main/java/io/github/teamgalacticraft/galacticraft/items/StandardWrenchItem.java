@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
+import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -58,20 +59,22 @@ public class StandardWrenchItem extends Item {
 
     private void method_7759(PlayerEntity player, BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
-        StateFactory<Block, BlockState> stateFactory = block.getStateFactory();
-        Collection<Property<?>> collection = stateFactory.getProperties();
-        String string_1 = Registry.BLOCK.getId(block).toString();
-        if (!collection.isEmpty()) {
-            CompoundTag compoundTag_1 = stack.getOrCreateSubCompoundTag("wrenchProp");
-            String string_2 = compoundTag_1.getString(string_1);
-            Property<?> property = stateFactory.getProperty(string_2);
-            if (property == null) {
-                property = collection.iterator().next();
-            }
-            if (property.getName().equals("facing")) {
-                BlockState blockState_2 = method_7758(state, property, player.isSneaking());
-                iWorld.setBlockState(pos, blockState_2, 18);
-                stack.applyDamage(1, player);
+        if (block instanceof Rotatable) {
+            StateFactory<Block, BlockState> stateFactory = block.getStateFactory();
+            Collection<Property<?>> collection = stateFactory.getProperties();
+            String string_1 = Registry.BLOCK.getId(block).toString();
+            if (!collection.isEmpty()) {
+                CompoundTag compoundTag_1 = stack.getOrCreateSubCompoundTag("wrenchProp");
+                String string_2 = compoundTag_1.getString(string_1);
+                Property<?> property = stateFactory.getProperty(string_2);
+                if (property == null) {
+                    property = collection.iterator().next();
+                }
+                if (property.getName().equals("facing")) {
+                    BlockState blockState_2 = method_7758(state, property, player.isSneaking());
+                    iWorld.setBlockState(pos, blockState_2, 18);
+                    stack.applyDamage(1, player);
+                }
             }
         }
     }

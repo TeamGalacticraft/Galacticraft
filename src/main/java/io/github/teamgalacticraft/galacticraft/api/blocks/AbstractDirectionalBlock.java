@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.api.blocks;
 
+import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.StateFactory;
@@ -9,7 +10,7 @@ import net.minecraft.state.property.Properties;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class AbstractDirectionalBlock extends Block {
+public class AbstractDirectionalBlock extends Block implements Rotatable {
 
     public static DirectionProperty FACING = Properties.FACING;
 
