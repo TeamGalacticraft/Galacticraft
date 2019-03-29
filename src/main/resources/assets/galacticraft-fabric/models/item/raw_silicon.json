@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "galacticraft-fabric:item/raw_silicon"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "galacticraft-fabric:item/raw_silicon"
+  }
 }

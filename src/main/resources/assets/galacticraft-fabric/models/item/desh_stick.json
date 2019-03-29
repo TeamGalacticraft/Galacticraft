@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "galacticraft-fabric:item/desh_stick"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "galacticraft-fabric:item/desh_stick"
+  }
 }

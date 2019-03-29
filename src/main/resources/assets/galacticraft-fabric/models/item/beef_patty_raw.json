@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "galacticraft-fabric:item/beef_patty_raw"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "galacticraft-fabric:item/beef_patty_raw"
+  }
 }

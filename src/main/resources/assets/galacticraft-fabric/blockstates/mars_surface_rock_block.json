@@ -1,6 +1,6 @@
 {
   "variants": {
-    "" : {
+    "": {
       "model": "galacticraft-fabric:block/mars_surface_rock_block"
     }
   }

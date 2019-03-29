@@ -1,6 +1,6 @@
 {
-    "parent": "item/handheld",
-    "textures": {
-        "layer0": "galacticraft-fabric:item/standard_wrench"
-    }
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "galacticraft-fabric:item/standard_wrench"
+  }
 }

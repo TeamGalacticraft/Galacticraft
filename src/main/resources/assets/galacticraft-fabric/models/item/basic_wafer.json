@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "galacticraft-fabric:item/basic_wafer"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "galacticraft-fabric:item/basic_wafer"
+  }
 }

@@ -11,7 +11,7 @@ cache:
     - '$HOME/.m2'
     - '$HOME/.gradle'
 before_cache:
-    - rm -f $HOME/.gradle/caches/*/*.lock
+  - rm -f $HOME/.gradle/caches/*/*.lock
 script: ./gradlew build
 after_success:
   - wget https://raw.githubusercontent.com/DiscordHooks/travis-ci-discord-webhook/master/send.sh
