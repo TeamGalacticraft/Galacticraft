@@ -2,13 +2,17 @@
   "id": "galacticraft-fabric",
   "name": "Galacticraft: Rewoven",
   "description": "FabricMC port of Galacticraft",
-  "version": "${version}",
+  "version": "0.1.0",
   "side": "universal",
   "initializers": [
     "io.github.teamgalacticraft.galacticraft.Galacticraft"
   ],
   "requires": {
-    "fabric": "*"
+    "fabric": "*",
+    "cotton-energy": "*",
+    "libblockattributes": "*",
+    "silk": "*",
+    "tgc-utils": "*"
   },
   "mixins": {
     "client": "galacticraft-fabric.client.json",
