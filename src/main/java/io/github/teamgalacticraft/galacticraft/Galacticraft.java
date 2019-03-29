@@ -31,9 +31,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftEnergy.register();
 
         Capes.updateCapeList();
-        for (String s : Capes.getCapeUsers()) {
-            logger.info(s);
-        }
 
         /* This currently crashes the game when it tries to load the config menu.
         if(FabricLoader.getInstance().isModLoaded("modmenu")) {
