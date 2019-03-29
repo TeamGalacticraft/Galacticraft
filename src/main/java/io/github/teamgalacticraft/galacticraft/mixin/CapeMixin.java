@@ -29,22 +29,15 @@ public abstract class CapeMixin {
     private void method_2969(CallbackInfo info) {
         for (Entity r : MinecraftClient.getInstance().world.getPlayers()) {
             if (r instanceof PlayerEntity) {
-                for (String uuid : Capes.getCapeUsers()) {
-                    if (uuid.equals(r.getUuidAsString().replace("-", ""))) {
-                        field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/cape_" + /*ConfigHandler.capeType*/ "earth" + ".png"));
-                    }
+                if (Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")) != null) {
+                    field_3742.put(MinecraftProfileTexture.Type.CAPE, Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")));
                 }
-            }
-                /*TypeConverters.UuidConverter converter = new TypeConverters.UuidConverter();
-                try {
-                    String username = Capes.getName(uuid);
-                    if (username.equals(getDisplayName().getString())) {
-                        this.getDisplayName();
-                        field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "aijdksl"));
+                /*for (String uuid : Capes.getCapeMap().get()) {
+                    if (uuid.equals(r.getUuidAsString().replace("-", ""))) {
+                        field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/cape_" + ConfigHandler.capeType "earth" + ".png"));
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }*/
+            }
         }
     }
 }

@@ -1,12 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.misc;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import net.minecraft.entity.Entity;
-import org.apache.commons.io.IOUtils;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -16,18 +12,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 public class Capes {
 
     private static final Marker CAPES = MarkerManager.getMarker("Capes");
-    private static List<String> capeUsers = new ArrayList<>();
+    private static Map<String, Identifier> capeMap = new HashMap<>();
 
-    public static List<String> getCapeUsers() {
-        return capeUsers;
+    public static Map<String, Identifier> getCapeMap() {
+        return capeMap;
     }
 
     public static void updateCapeList() {
@@ -67,7 +63,7 @@ public class Capes {
         InputStreamReader streamReader = new InputStreamReader(stream);
         BufferedReader reader = new BufferedReader(streamReader);
 
-        String line;
+        /*String line;
         try {
             while ((line = reader.readLine()) != null) {
                 if (!line.isEmpty()) {
@@ -83,22 +79,50 @@ public class Capes {
                 reader.close();
             }
             catch (IOException ignored) {}
+        }*/
+
+        String line;
+        try
+        {
+            while ((line = reader.readLine()) != null)
+            {
+                if (line.contains(":"))
+                {
+                    int splitLocation = line.indexOf(":");
+                    String uuid = line.substring(0, splitLocation);
+                    capeMap.put(uuid, new Identifier(Constants.MOD_ID, "textures/capes/" + convertCapeString(line.substring(splitLocation + 1)) + ".png"));
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                reader.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
-    public static String getName(String uuid) { //Use this sparingly
-        String url = "https://api.mojang.com/user/profiles/"+uuid.replace("-", "")+"/names";
-        try {
-            JsonParser parser = new JsonParser();
-            @SuppressWarnings("deprecation")
-            String nameJson = IOUtils.toString(new URL(url));
-            JsonArray nameValue = (JsonArray) parser.parse(nameJson);
-            String playerSlot = nameValue.get(nameValue.size()-1).toString();
-            JsonObject nameObject = (JsonObject) parser.parse(playerSlot);
-            return nameObject.get("name").toString();
-        } catch (IOException e) {
-            e.printStackTrace();
+    private static String convertCapeString(String capeName)
+    {
+        String s = "";
+        for (int i = 0; i < capeName.length(); ++i)
+        {
+            char c = capeName.charAt(i);
+            if (c == " ".charAt(0)) {
+                break;
+            }
+            c = Character.toLowerCase(c);
+            s = String.join("", s, Character.toString(c));
         }
-        return "error";
+        return s;
     }
 }
