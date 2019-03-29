@@ -58,24 +58,6 @@ public class Capes {
         InputStreamReader streamReader = new InputStreamReader(stream);
         BufferedReader reader = new BufferedReader(streamReader);
 
-        /*String line;
-        try {
-            while ((line = reader.readLine()) != null) {
-                if (!line.isEmpty()) {
-                    capeUsers.add(line);
-                }
-            }
-
-        }
-        catch (IOException ignored) {}
-        finally
-        {
-            try {
-                reader.close();
-            }
-            catch (IOException ignored) {}
-        }*/
-
         String line;
         try {
             while ((line = reader.readLine()) != null) {

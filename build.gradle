@@ -20,9 +20,11 @@ minecraft {
 allprojects {
     repositories {
         maven { url "https://minecraft.curseforge.com/api/maven" }
-        maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
-        maven { url "https://jitpack.io" }
+        maven { url "https://maven.fabricmc.net" }
         maven { url "https://mod-buildcraft.com/maven" }
+        mavenLocal()
+        //maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
+        //maven { url "https://jitpack.io" }
     }
 }
 

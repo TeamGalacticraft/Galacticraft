@@ -34,11 +34,6 @@ public abstract class CapeMixin {
                     field_3742.put(MinecraftProfileTexture.Type.CAPE, Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")));
                     System.out.println(Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")));
                 }
-                /*for (String uuid : Capes.getCapeMap().get()) {
-                    if (uuid.equals(r.getUuidAsString().replace("-", ""))) {
-                        field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/cape_" + ConfigHandler.capeType "earth" + ".png"));
-                    }
-                }*/
             }
         }
     }
