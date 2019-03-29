@@ -3,7 +3,6 @@
   "package": "io.github.teamgalacticraft.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "TestMixin",
     "CapeMixin"
   ],
   "injectors": {
