@@ -13,7 +13,7 @@ import net.minecraft.world.World;
  */
 public class CannedFoodItem extends Item {
 
-    public CannedFoodItem(Settings settings) {
+    CannedFoodItem(Settings settings) {
         super(settings);
     }
 

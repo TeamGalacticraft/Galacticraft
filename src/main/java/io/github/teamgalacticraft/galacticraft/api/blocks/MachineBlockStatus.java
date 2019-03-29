@@ -40,4 +40,5 @@ public enum MachineBlockStatus implements StringRepresentable {
     @Override
     public String asString() {
         return name;
-    }}
+    }
+}

@@ -244,10 +244,10 @@ public class Constants {
         public static final String BEEF_PATTY = "beef_patty";
         public static final String CHEESEBURGER = "cheeseburger";
         //CANNED FOOD
-        public static final String DEHYDRATED_APPLE = "dehydrated_apple";
-        public static final String DEHYDRATED_CARROT = "dehydrated_carrot";
-        public static final String DEHYDRATED_MELON = "dehydrated_melon";
-        public static final String DEHYDRATED_POTATO = "dehydrated_potato";
+        public static final String CANNED_DEHYDRATED_APPLE = "canned_dehydrated_apple";
+        public static final String CANNED_DEHYDRATED_CARROT = "canned_dehydrated_carrot";
+        public static final String CANNED_DEHYDRATED_MELON = "canned_dehydrated_melon";
+        public static final String CANNED_DEHYDRATED_POTATO = "canned_dehydrated_potato";
         public static final String CANNED_BEEF = "canned_beef";
         //ROCKET PARTS
         public static final String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";

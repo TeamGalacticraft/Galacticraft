@@ -182,10 +182,10 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESEBURGER), CHEESEBURGER);
 
         //CANNED FOOD
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_DEHYDRATED_APPLE), CANNED_DEHYDRATED_APPLE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_DEHYDRATED_CARROT), CANNED_DEHYDRATED_CARROT);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_DEHYDRATED_MELON), CANNED_DEHYDRATED_MELON);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_DEHYDRATED_POTATO), CANNED_DEHYDRATED_POTATO);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANNED_BEEF), CANNED_BEEF);
 
         //ROCKET PARTS

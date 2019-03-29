@@ -12,9 +12,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Capes {
@@ -32,8 +30,7 @@ public class Capes {
 
         try {
             capeListUrl = new URL("https://raw.github.com/teamgalacticraft/Galacticraft-Fabric/master/capes.txt");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Galacticraft.logger.fatal(CAPES, "FAILED TO GET CAPES"); //TODO debug msg not error when config is in
             return;
         }
@@ -42,8 +39,7 @@ public class Capes {
 
         try {
             connection = capeListUrl.openConnection();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Galacticraft.logger.fatal(CAPES, "FAILED TO GET CAPES");
             return;
         }
@@ -54,8 +50,7 @@ public class Capes {
 
         try {
             stream = connection.getInputStream();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Galacticraft.logger.fatal(CAPES, "FAILED TO GET CAPES");
             return;
         }
@@ -82,40 +77,28 @@ public class Capes {
         }*/
 
         String line;
-        try
-        {
-            while ((line = reader.readLine()) != null)
-            {
-                if (line.contains(":"))
-                {
+        try {
+            while ((line = reader.readLine()) != null) {
+                if (line.contains(":")) {
                     int splitLocation = line.indexOf(":");
                     String uuid = line.substring(0, splitLocation);
-                    capeMap.put(uuid, new Identifier(Constants.MOD_ID, "textures/capes/" + convertCapeString(line.substring(splitLocation + 1)) + ".png"));
+                    capeMap.put(uuid, new Identifier(Constants.MOD_ID, "textures/cape/cape_" + convertCapeString(line.substring(splitLocation + 1)) + ".png"));
                 }
             }
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
+        } finally {
+            try {
                 reader.close();
-            }
-            catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    private static String convertCapeString(String capeName)
-    {
+    private static String convertCapeString(String capeName) {
         String s = "";
-        for (int i = 0; i < capeName.length(); ++i)
-        {
+        for (int i = 0; i < capeName.length(); ++i) {
             char c = capeName.charAt(i);
             if (c == " ".charAt(0)) {
                 break;
