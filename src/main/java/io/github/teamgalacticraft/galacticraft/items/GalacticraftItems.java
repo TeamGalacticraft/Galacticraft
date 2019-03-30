@@ -109,23 +109,23 @@ public class GalacticraftItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    //MISC
-    public static final Item PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item ORANGE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item MAGENTA_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item LIGHT_BLUE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item YELLOW_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item LIME_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item PINK_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item GRAY_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item LIGHT_GRAY_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item CYAN_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item PURPLE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item BLUE_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item BROWN_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item GREEN_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item RED_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item BLACK_PARACHUTE = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
+    //GC INVENTORY
+    public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item ORANGE_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item MAGENTA_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item LIGHT_BLUE_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item YELLOW_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item LIME_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item PINK_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item GRAY_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item LIGHT_GRAY_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item CYAN_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item PURPLE_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BLUE_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BROWN_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item GREEN_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item RED_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item BLACK_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
     public static void register() {
 
@@ -226,7 +226,7 @@ public class GalacticraftItems {
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), STANDARD_WRENCH);
 
-        //MISC
+        //GC INVENTORY
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PARACHUTE), PARACHUTE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ORANGE_PARACHUTE), ORANGE_PARACHUTE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MAGENTA_PARACHUTE), MAGENTA_PARACHUTE);
