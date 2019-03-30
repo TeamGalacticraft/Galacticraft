@@ -7,6 +7,8 @@ import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBloc
 import io.github.teamgalacticraft.galacticraft.blocks.environment.CavernousVineBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.GlowstoneTorchBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.UnlitTorchBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.CircuitFabricatorBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorcherdRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
 import net.fabricmc.api.EnvType;
@@ -117,6 +119,9 @@ public class GalacticraftBlocks {
     public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
+
+    public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block COAL_GENERATOR_BLOCK = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).build());
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings());
     public static final BlockItem MOON_ROCK_BLOCK_ITEM = new BlockItem(MOON_ROCK_BLOCK, new Item.Settings());
@@ -201,6 +206,9 @@ public class GalacticraftBlocks {
     public static final BlockItem UNLIT_TORCH_BLOCK_ITEM = new BlockItem(UNLIT_TORCH_BLOCK, new Item.Settings());
     public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new BlockItem(GLOWSTONE_TORCH_BLOCK, new Item.Settings());
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings());
+
+    public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings());
+    public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings());
 
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP))
@@ -289,6 +297,9 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(UNLIT_TORCH_BLOCK_ITEM));
                 itemStack.add(new ItemStack(GLOWSTONE_TORCH_BLOCK_ITEM));
                 itemStack.add(new ItemStack(CAVERNOUS_VINE_BLOCK_ITEM));
+
+                itemStack.add(new ItemStack(CIRCUIT_FABRICATOR_BLOCK_ITEM));
+                itemStack.add(new ItemStack(COAL_GENERATOR_BLOCK_ITEM));
 
                 // add blocks to creative menu
             })
@@ -382,6 +393,8 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), UNLIT_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), CIRCUIT_FABRICATOR_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
@@ -467,5 +480,8 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), UNLIT_TORCH_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK_ITEM);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), CIRCUIT_FABRICATOR_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK_ITEM);
     }
 }

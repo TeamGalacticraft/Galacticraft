@@ -5,7 +5,8 @@
   "version": "0.1.0",
   "side": "universal",
   "initializers": [
-    "io.github.teamgalacticraft.galacticraft.Galacticraft"
+    "io.github.teamgalacticraft.galacticraft.Galacticraft",
+    "io.github.teamgalacticraft.galacticraft.GalacticraftClient"
   ],
   "requires": {
     "fabric": "*",

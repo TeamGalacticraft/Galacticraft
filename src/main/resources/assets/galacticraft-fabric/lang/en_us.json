@@ -7,6 +7,7 @@
   "block.galacticraft-fabric.moon_dungeon_brick_block": "Moon Dungeon Brick",
   "block.galacticraft-fabric.mars_surface_rock_block": "Mars Surface Rock",
   "block.galacticraft-fabric.mars_sub_surface_rock_block": "Mars Sub-Surface Rock",
+  "block.galacticraft-fabric.coal_generator_block": "Coal Generator",
   "item.galacticraft-fabric.aluminum_ingot": "Aluminum Ingot",
   "item.galacticraft-fabric.copper_ingot": "Copper Ingot",
   "item.galacticraft-fabric.lunar_sapphire": "Lunar Sapphire",
@@ -94,9 +95,12 @@
   "item.galacticraft-fabric.small_oxygen_tank": "Small Oxygen Tank",
   "item.galacticraft-fabric.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-fabric.large_oxygen_tank": "Large Oxygen Tank",
-  "tooltip.galacticraft-fabric.energy": "$d GJ",
-  "tooltip.galacticraft-fabric.energy.k": "$.3fK GJ",
-  "tooltip.galacticraft-fabric.energy.m": "$.3fM GJ",
-  "tooltip.galacticraft-fabric.energy.g": "$.3G GJ",
-  "tooltip.galacticraft-fabric.oxygen-remaining": "Oxygen Remaining: $"
+  "tooltip.galacticraft-fabric.energy": "%s GJ",
+  "tooltip.galacticraft-fabric.energy.k": "%sK GJ",
+  "tooltip.galacticraft-fabric.energy.m": "%sM GJ",
+  "tooltip.galacticraft-fabric.energy.g": "%sG GJ",
+  "ui.galacticraft-fabric.machine.status": "Status: %s",
+  "ui.galacticraft-fabric.machine.current_energy": "Energy: %s",
+  "ui.galacticraft-fabric.machine.max_energy": "Maximum Energy: %s",
+  "tooltip.galacticraft-fabric.oxygen-remaining": "Oxygen Remaining: %s"
 }

@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.config.ConfigHandler;
+import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
@@ -37,13 +38,14 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
 
     @Override
     public void onInitialize() {
-        logger.info(GALACTICRAFT, "Initializing Galacticraft");
+        logger.info(GALACTICRAFT, "[Galacticraft] Initializing...");
 
         GalacticraftBlocks.register();
         GalacticraftItems.register();
         GalacticraftFluids.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
+        GalacticraftContainers.register();
 
         Capes.updateCapeList();
 

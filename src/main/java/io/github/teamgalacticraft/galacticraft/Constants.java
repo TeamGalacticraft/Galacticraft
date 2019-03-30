@@ -327,4 +327,17 @@ public class Constants {
         //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
         public static final int WU_GJ_CONVERSION = 30;
     }
+
+    public static class ScreenTextures {
+        public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
+        public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
+
+        public static String getRaw(String path) {
+            return "textures/" + path + ".png";
+        }
+    }
+
+    public static class Container {
+        public static final String COAL_GENERATOR_CONTAINER = "coal_generator_container";
+    }
 }
