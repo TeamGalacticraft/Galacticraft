@@ -285,7 +285,7 @@ public class Constants {
 
         public static final String STANDARD_WRENCH = "standard_wrench";
 
-        //MISC
+        //GC INVENTORY
         public static final String PARACHUTE = "parachute";
         public static final String ORANGE_PARACHUTE = "orange_parachute";
         public static final String MAGENTA_PARACHUTE = "magenta_parachute";
@@ -302,6 +302,10 @@ public class Constants {
         public static final String GREEN_PARACHUTE = "green_parachute";
         public static final String RED_PARACHUTE = "red_parachute";
         public static final String BLACK_PARACHUTE = "black_parachute";
+
+        public static final String SMALL_OXYGEN_TANK = "small_oxygen_tank";
+        public static final String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
+        public static final String LARGE_OXYGEN_TANK = "large_oxygen_tank";
     }
 
     public static class Config {

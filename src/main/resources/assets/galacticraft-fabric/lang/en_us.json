@@ -91,8 +91,12 @@
   "item.galacticraft-fabric.burger_bun": "Burger Bun",
   "item.galacticraft-fabric.beef_patty_cooked": "Cooked Beef Patty",
   "item.galacticraft-fabric.beef_patty_raw": "Raw Beef Patty",
+  "item.galacticraft-fabric.small_oxygen_tank": "Small Oxygen Tank",
+  "item.galacticraft-fabric.medium_oxygen_tank": "Medium Oxygen Tank",
+  "item.galacticraft-fabric.large_oxygen_tank": "Large Oxygen Tank",
   "tooltip.galacticraft-fabric.energy": "$d GJ",
   "tooltip.galacticraft-fabric.energy.k": "$.3fK GJ",
   "tooltip.galacticraft-fabric.energy.m": "$.3fM GJ",
-  "tooltip.galacticraft-fabric.energy.g": "$.3G GJ"
+  "tooltip.galacticraft-fabric.energy.g": "$.3G GJ",
+  "tooltip.galacticraft-fabric.oxygen-remaining": "Oxygen Remaining: $"
 }

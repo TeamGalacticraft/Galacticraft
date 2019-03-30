@@ -127,6 +127,10 @@ public class GalacticraftItems {
     public static final Item RED_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BLACK_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
+    public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings().itemGroup(ITEMS_GROUP)));
+    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings().itemGroup(ITEMS_GROUP)));
+    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem((new Item.Settings().itemGroup(ITEMS_GROUP)));
+
     public static void register() {
 
         //MATERIALS
@@ -243,6 +247,10 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.GREEN_PARACHUTE), GREEN_PARACHUTE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RED_PARACHUTE), RED_PARACHUTE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLACK_PARACHUTE), BLACK_PARACHUTE);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SMALL_OXYGEN_TANK), SMALL_OXYGEN_TANK);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MEDIUM_OXYGEN_TANK), MEDIUM_OXYGEN_TANK);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LARGE_OXYGEN_TANK), LARGE_OXYGEN_TANK);
 
     }
 }
