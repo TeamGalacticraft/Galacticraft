@@ -32,7 +32,6 @@ public abstract class CapeMixin {
             if (r instanceof PlayerEntity) {
                 if (Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")) != null) {
                     field_3742.put(MinecraftProfileTexture.Type.CAPE, Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")));
-                    System.out.println(Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")));
                 }
             }
         }
