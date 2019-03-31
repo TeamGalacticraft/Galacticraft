@@ -1,5 +1,9 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.item.ItemAttributes;
+import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.teamgalacticraft.galacticraft.api.blocks.configurable.BlockConfigurationType;
 import io.github.teamgalacticraft.galacticraft.api.blocks.configurable.Configurable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
@@ -20,7 +24,7 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlock extends BlockWithEntity implements Configurable {
+public class CoalGeneratorBlock extends BlockWithEntity implements Configurable, AttributeProvider {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -64,5 +68,14 @@ public class CoalGeneratorBlock extends BlockWithEntity implements Configurable 
     @Override
     public void onConfigurationChanged(BlockConfigurationType configurationType) {
 
+    }
+
+    @Override
+    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
+        Direction dir = to.getSearchDirection();
+        if (dir != null) return;
+        if (to.attribute != EnergyAttribute.ENERGY_ATTRIBUTE || to.attribute != ItemAttributes.FIXED_INV ||!(world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity)) return;
+        to.offer(EnergyAttribute.ENERGY_ATTRIBUTE);
+        to.offer(ItemAttributes.FIXED_INV);
     }
 }

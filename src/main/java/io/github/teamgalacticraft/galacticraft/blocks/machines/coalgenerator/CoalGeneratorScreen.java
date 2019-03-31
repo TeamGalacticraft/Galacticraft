@@ -67,8 +67,8 @@ public class CoalGeneratorScreen extends ContainerScreen {
     }
 
     private void drawEnergyBufferBar() {
-        float currentEnergy = (float)((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getCurrentEnergy();
-        float maxEnergy = (float)((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getMaxEnergy();
+        float currentEnergy = (float)((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
+        float maxEnergy = (float)((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
         //this.drawTexturedReact(...)
@@ -80,8 +80,8 @@ public class CoalGeneratorScreen extends ContainerScreen {
         if(mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
             toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.status", ((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).status.toString()).getText());
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getCurrentEnergy())).getText());
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getMaxEnergy())).getText());
+            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy())).getText());
+            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getText());
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

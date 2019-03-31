@@ -1,16 +1,20 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
+import alexiil.mc.lib.attributes.Attribute;
+import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.github.cottonmc.energy.api.EnergyAttribute;
-import io.github.cottonmc.energy.api.EnergyType;
-import io.github.cottonmc.energy.api.Observable;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
+import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemProvider;
 import net.minecraft.item.ItemStack;
@@ -27,11 +31,11 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlockEntity extends BlockEntity implements EnergyAttribute, Observable, Tickable {
+public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
     private final List<Runnable> listeners = Lists.newArrayList();
-    BasicInventory inventory = new BasicInventory(1);
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
+    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
-    private int currentEnergy;
     boolean isBurning = false;
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     private float heat = 0.0f;
@@ -41,6 +45,8 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements EnergyAttri
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_BLOCK_BLOCK_ENTITY_TYPE);
+        //automatically mark dirty whenever the energy attribute is changed
+        energy.listen(this::markDirty);
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -128,9 +134,9 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements EnergyAttri
 
     @Override
     public void tick() {
-        int prev = this.currentEnergy;
+        int prev = energy.getCurrentEnergy();
 
-        if(canUseAsFuel(inventory.getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && this.getCurrentEnergy() < this.getMaxEnergy()) {
+        if(canUseAsFuel(inventory.getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
             if(status == CoalGeneratorStatus.INACTIVE) {
                 this.status = CoalGeneratorStatus.WARMING;
             } else {
@@ -152,7 +158,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements EnergyAttri
 
         if(status == CoalGeneratorStatus.ACTIVE) {
             fuelTimeCurrent++;
-            currentEnergy = Math.min(getMaxEnergy(), currentEnergy + fuelEnergyPerTick);
+            energy.setCurrentEnergy(Math.min(energy.getMaxEnergy(), energy.getCurrentEnergy() + fuelEnergyPerTick));
 
             if(fuelTimeCurrent >= fuelTimeMax) {
                 this.status = CoalGeneratorStatus.IDLE;
@@ -161,89 +167,38 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements EnergyAttri
         }
 
         for(Direction direction : Direction.values()) {
-            if(world.getBlockEntity(pos.offset(direction)) instanceof EnergyAttribute) {
-                EnergyAttribute energyAttribute = (EnergyAttribute)world.getBlockEntity(pos.offset(direction));
+            if(world.getBlockState(pos).getBlock() instanceof AttributeProvider) {
+                EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if(energyAttribute.canInsertEnergy()) {
-                    this.currentEnergy = energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM);
+                    energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM));
                 }
             }
         }
 
-        if(prev != currentEnergy) onChanged();
+    }
+
+    public <T> T getNeighborAttribute(Attribute<T> attr, Direction dir) {
+        return attr.getFirstOrNull(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
+    }
+
+    public EnergyAttribute getEnergy() {
+        return energy;
+    }
+
+    public FixedItemInv getItems() {
+        return inventory;
     }
 
     @Override
-    public int getMaxEnergy() {
-        return 250000;
+    public CompoundTag toTag(CompoundTag tag) {
+        tag.put("Inventory", inventory.toTag());
+        tag.put("Energy", energy.toTag());
+        return tag;
     }
 
     @Override
-    public int getCurrentEnergy() {
-        return this.currentEnergy;
-    }
-
-    @Override
-    public boolean canInsertEnergy() {
-        return false;
-    }
-
-    @Override
-    public int insertEnergy(EnergyType energyType, int i, ActionType actionType) {
-        return 0;
-    }
-
-    @Override
-    public boolean canExtractEnergy() {
-        return true;
-    }
-
-    @Override
-    public int extractEnergy(EnergyType energyType, int amount, ActionType actionType) {
-
-        int extractAmount = (amount <= currentEnergy)? amount : currentEnergy;
-
-        if (actionType == ActionType.PERFORM) {
-            currentEnergy -= extractAmount;
-            if (extractAmount != 0) onChanged();
-        }
-
-        return extractAmount;
-    }
-
-    @Override
-    public EnergyType getPreferredType() {
-        return new GalacticraftEnergyType();
-    }
-
-    @Override
-    public void listen(Runnable runnable) {
-        listeners.add(runnable);
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag compoundTag_1) {
-        super.toTag(compoundTag_1);
-
-        compoundTag_1.putInt("CurrentEnergy", this.currentEnergy);
-
-        ItemStack invStack = inventory.getInvStack(0);
-        compoundTag_1.put("Fuel", invStack.toTag(new CompoundTag()));
-
-        return compoundTag_1;
-    }
-
-
-    @Override
-    public void fromTag(CompoundTag compoundTag_1) {
-        super.fromTag(compoundTag_1);
-
-        this.currentEnergy = compoundTag_1.getInt("CurrentEnergy");
-
-        ItemStack invStack = ItemStack.fromTag((CompoundTag)compoundTag_1.getTag("Fuel"));
-        this.inventory.setInvStack(0, invStack);
-    }
-
-    public void onChanged() {
-        listeners.forEach(Runnable::run);
+    public void fromTag(CompoundTag tag) {
+        inventory.fromTag(tag.getCompound("Inventory"));
+        energy.fromTag(tag.getTag("Energy"));
     }
 }
