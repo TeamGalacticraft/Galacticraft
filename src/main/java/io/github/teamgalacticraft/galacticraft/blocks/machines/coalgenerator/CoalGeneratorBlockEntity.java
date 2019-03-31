@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.Attribute;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
@@ -167,18 +168,16 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
         }
 
         for(Direction direction : Direction.values()) {
-            if(world.getBlockState(pos).getBlock() instanceof AttributeProvider) {
-                EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
-                if(energyAttribute.canInsertEnergy()) {
-                    energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM));
-                }
+            EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
+            if(energyAttribute.canInsertEnergy()) {
+                energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM));
             }
         }
 
     }
 
-    public <T> T getNeighborAttribute(Attribute<T> attr, Direction dir) {
-        return attr.getFirstOrNull(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
+    public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
+        return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
     public EnergyAttribute getEnergy() {
