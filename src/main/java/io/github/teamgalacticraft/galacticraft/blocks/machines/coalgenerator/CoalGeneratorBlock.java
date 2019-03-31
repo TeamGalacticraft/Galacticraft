@@ -74,8 +74,10 @@ public class CoalGeneratorBlock extends BlockWithEntity implements Configurable,
     public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
         Direction dir = to.getSearchDirection();
         if (dir != null) return;
-        if (to.attribute != EnergyAttribute.ENERGY_ATTRIBUTE || to.attribute != ItemAttributes.FIXED_INV ||!(world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity)) return;
-        to.offer(EnergyAttribute.ENERGY_ATTRIBUTE);
-        to.offer(ItemAttributes.FIXED_INV);
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof CoalGeneratorBlockEntity)) return;
+        CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) be;
+        to.offer(generator.getEnergy());
+        generator.getItems().offerSelfAsAttribute(to, null, null);
     }
 }
