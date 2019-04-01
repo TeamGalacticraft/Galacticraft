@@ -23,6 +23,7 @@ import java.util.List;
 public class CoalGeneratorScreen extends ContainerScreen {
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
+    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = 0;
     private static final int ENERGY_Y = 167;
@@ -30,6 +31,11 @@ public class CoalGeneratorScreen extends ContainerScreen {
     private static final int ENERGY_HEIGHT = 40;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
+
+    private static final int CONFIG_TAB_X = 0;
+    private static final int CONFIG_TAB_Y = 69;
+    private static final int CONFIG_TAB_WIDTH = 22;
+    private static final int CONFIG_TAB_HEIGHT = 22;
 
     BlockPos blockPos;
     private World world;
@@ -43,6 +49,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
     @Override
     protected void drawBackground(float v, int mouseX, int mouseY) {
         GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
         int leftPos = this.left;
@@ -53,17 +60,20 @@ public class CoalGeneratorScreen extends ContainerScreen {
 
         //this.drawTexturedReact(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
+        this.drawEnergyBufferBar();
+        this.drawConfigTabs();
     }
 
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-
-        this.drawEnergyBufferBar();
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, I18n.translate("block.galacticraft-fabric.coal_generator_block"), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
+    }
+
+    private void drawConfigTabs() {
+        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
+        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X ,CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {
@@ -84,6 +94,9 @@ public class CoalGeneratorScreen extends ContainerScreen {
             toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
+        }
+        if(mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
+            this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-fabric.tabs.side_config").getText(), mouseX, mouseY);
         }
     }
 }

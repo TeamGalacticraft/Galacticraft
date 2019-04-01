@@ -2,8 +2,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import io.github.teamgalacticraft.galacticraft.api.blocks.configurable.BlockConfigurationType;
-import io.github.teamgalacticraft.galacticraft.api.blocks.configurable.Configurable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
@@ -31,7 +29,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlock extends BlockWithEntity implements Configurable, AttributeProvider {
+public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -70,11 +68,6 @@ public class CoalGeneratorBlock extends BlockWithEntity implements Configurable,
         if (world.isClient) return true;
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COAL_GENERATOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return true;
-    }
-
-    @Override
-    public void onConfigurationChanged(BlockConfigurationType configurationType) {
-
     }
 
     @Override

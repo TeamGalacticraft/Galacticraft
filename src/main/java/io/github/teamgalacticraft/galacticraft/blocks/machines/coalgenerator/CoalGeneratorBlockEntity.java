@@ -1,5 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
+import alexiil.mc.lib.attributes.Attribute;
+import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
@@ -9,9 +11,11 @@ import com.google.common.collect.Maps;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
+import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
@@ -21,6 +25,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,10 +45,14 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
 
+    public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
+    public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_BLOCK_BLOCK_ENTITY_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        energy.listen(this::markDirty);
+        this.energy.listen(this::markDirty);
+        selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -69,9 +79,9 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             }
             this.fuelTimeMax = 200;
             this.fuelTimeCurrent = 0;
-            this.fuelEnergyPerTick = createFuelTimeMap().get(inventory.getInvStack(0).getItem());
+            this.fuelEnergyPerTick = createFuelTimeMap().get(this.inventory.getInvStack(0).getItem());
 
-            inventory.getInvStack(0).setAmount(inventory.getInvStack(0).getAmount() - 1);
+            this.inventory.getInvStack(0).setAmount(this.inventory.getInvStack(0).getAmount() - 1);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {
@@ -91,10 +101,12 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             }
         }
 
-        for (Direction direction : Direction.values()) {
-            EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
-            if (energyAttribute.canInsertEnergy()) {
-                energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
+        for(Direction direction : Direction.values()) {
+            if(selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
+                EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
+                if(energyAttribute.canInsertEnergy()) {
+                    this.energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM));
+                }
             }
         }
 
@@ -105,11 +117,11 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
     }
 
     public EnergyAttribute getEnergy() {
-        return energy;
+        return this.energy;
     }
 
     public FixedItemInv getItems() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
