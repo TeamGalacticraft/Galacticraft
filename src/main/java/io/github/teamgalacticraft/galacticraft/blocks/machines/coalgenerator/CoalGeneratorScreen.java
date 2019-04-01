@@ -7,11 +7,11 @@ import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -79,9 +79,9 @@ public class CoalGeneratorScreen extends ContainerScreen {
     public void drawMouseoverTooltip(int mouseX, int mouseY) {
         if(mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.status", ((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).status.toString()).getText());
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy())).getText());
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getText());
+            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.status", ((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
+            toolTipLines.add("\u00A76" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(TextFormat.BLUE))).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

@@ -16,7 +16,7 @@ public class GalacticraftEnergyType implements EnergyType {
     public TextComponent getDisplayAmount(int amount) {
         float fAmount = (float)amount;
 
-        if (fAmount < 1000) { // x < 1M
+        if (fAmount < 1000) { // x < 1K
             return new TranslatableTextComponent("tooltip.galacticraft-fabric.energy", fAmount);
         } else if (fAmount < 1_000_000) { // 1K < x < 1M
             float tAmount = fAmount / 1000;

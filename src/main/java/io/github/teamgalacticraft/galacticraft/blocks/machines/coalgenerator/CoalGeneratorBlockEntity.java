@@ -52,81 +52,10 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
 
     public static Map<Item, Integer> createFuelTimeMap() {
         Map<Item, Integer> map_1 = Maps.newLinkedHashMap();
-        addFuel(map_1,  Items.LAVA_BUCKET, 20000);
-        addFuel(map_1,  Blocks.COAL_BLOCK, 16000);
-        addFuel(map_1, Items.BLAZE_ROD, 2400);
-        addFuel(map_1, Items.COAL, 1600);
-        addFuel(map_1, Items.CHARCOAL, 1600);
-        addFuel(map_1,  ItemTags.LOGS, 300);
-        addFuel(map_1, ItemTags.PLANKS, 300);
-        addFuel(map_1, ItemTags.WOODEN_STAIRS, 300);
-        addFuel(map_1, ItemTags.WOODEN_SLABS, 150);
-        addFuel(map_1, ItemTags.WOODEN_TRAPDOORS, 300);
-        addFuel(map_1, ItemTags.WOODEN_PRESSURE_PLATES, 300);
-        addFuel(map_1, Blocks.OAK_FENCE, 300);
-        addFuel(map_1, Blocks.BIRCH_FENCE, 300);
-        addFuel(map_1, Blocks.SPRUCE_FENCE, 300);
-        addFuel(map_1, Blocks.JUNGLE_FENCE, 300);
-        addFuel(map_1, Blocks.DARK_OAK_FENCE, 300);
-        addFuel(map_1, Blocks.ACACIA_FENCE, 300);
-        addFuel(map_1, Blocks.OAK_FENCE_GATE, 300);
-        addFuel(map_1, Blocks.BIRCH_FENCE_GATE, 300);
-        addFuel(map_1, Blocks.SPRUCE_FENCE_GATE, 300);
-        addFuel(map_1, Blocks.JUNGLE_FENCE_GATE, 300);
-        addFuel(map_1, Blocks.DARK_OAK_FENCE_GATE, 300);
-        addFuel(map_1, Blocks.ACACIA_FENCE_GATE, 300);
-        addFuel(map_1, Blocks.NOTE_BLOCK, 300);
-        addFuel(map_1, Blocks.BOOKSHELF, 300);
-        addFuel(map_1, Blocks.LECTERN, 300);
-        addFuel(map_1, Blocks.JUKEBOX, 300);
-        addFuel(map_1, Blocks.CHEST, 300);
-        addFuel(map_1, Blocks.TRAPPED_CHEST, 300);
-        addFuel(map_1, Blocks.CRAFTING_TABLE, 300);
-        addFuel(map_1, Blocks.DAYLIGHT_DETECTOR, 300);
-        addFuel(map_1, ItemTags.BANNERS, 300);
-        addFuel(map_1, Items.BOW, 300);
-        addFuel(map_1, Items.FISHING_ROD, 300);
-        addFuel(map_1, Blocks.LADDER, 300);
-        addFuel(map_1, ItemTags.SIGNS, 200);
-        addFuel(map_1, Items.WOODEN_SHOVEL, 200);
-        addFuel(map_1, Items.WOODEN_SWORD, 200);
-        addFuel(map_1, Items.WOODEN_HOE, 200);
-        addFuel(map_1, Items.WOODEN_AXE, 200);
-        addFuel(map_1, Items.WOODEN_PICKAXE, 200);
-        addFuel(map_1, ItemTags.WOODEN_DOORS, 200);
-        addFuel(map_1, ItemTags.BOATS, 200);
-        addFuel(map_1, ItemTags.WOOL, 100);
-        addFuel(map_1, ItemTags.WOODEN_BUTTONS, 100);
-        addFuel(map_1, Items.STICK, 100);
-        addFuel(map_1, ItemTags.SAPLINGS, 100);
-        addFuel(map_1, Items.BOWL, 100);
-        addFuel(map_1, ItemTags.CARPETS, 67);
-        addFuel(map_1, Blocks.DRIED_KELP_BLOCK, 4001);
-        addFuel(map_1, Items.CROSSBOW, 300);
-        addFuel(map_1, Blocks.BAMBOO, 50);
-        addFuel(map_1, Blocks.DEAD_BUSH, 100);
-        addFuel(map_1, Blocks.SCAFFOLDING, 50);
-        addFuel(map_1, Blocks.LOOM, 300);
-        addFuel(map_1, Blocks.BARREL, 300);
-        addFuel(map_1, Blocks.CARTOGRAPHY_TABLE, 300);
-        addFuel(map_1, Blocks.FLETCHING_TABLE, 300);
-        addFuel(map_1, Blocks.SMITHING_TABLE, 300);
-        addFuel(map_1, Blocks.COMPOSTER, 300);
-        addFuel(map_1, Blocks.OBSIDIAN, 1);
+        map_1.put(Blocks.COAL_BLOCK.getItem(), 160000);
+        map_1.put(Items.COAL, 1600);
+        map_1.put(Items.CHARCOAL, 1600);
         return map_1;
-    }
-
-    private static void addFuel(Map<Item, Integer> map_1, net.minecraft.tag.Tag<Item> tag_1, int int_1) {
-        Iterator var3 = tag_1.values().iterator();
-
-        while(var3.hasNext()) {
-            Item item_1 = (Item)var3.next();
-            map_1.put(item_1, int_1);
-        }
-    }
-
-    private static void addFuel(Map<Item, Integer> map_1, ItemProvider itemProvider_1, int int_1) {
-        map_1.put(itemProvider_1.getItem(), int_1);
     }
 
     public static boolean canUseAsFuel(ItemStack itemStack) {

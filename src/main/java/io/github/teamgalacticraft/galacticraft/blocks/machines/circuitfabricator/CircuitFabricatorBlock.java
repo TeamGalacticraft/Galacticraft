@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.blocks.machines;
+package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator;
 
 import io.github.teamgalacticraft.galacticraft.api.blocks.AbstractHorizontalDirectionalBlock;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;

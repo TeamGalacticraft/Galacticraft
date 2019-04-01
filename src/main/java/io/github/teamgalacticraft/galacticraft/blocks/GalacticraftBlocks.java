@@ -7,12 +7,10 @@ import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBloc
 import io.github.teamgalacticraft.galacticraft.blocks.environment.CavernousVineBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.GlowstoneTorchBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.UnlitTorchBlock;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.CircuitFabricatorBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorcherdRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
@@ -25,8 +23,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
