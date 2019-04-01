@@ -62,26 +62,26 @@ public class CoalGeneratorScreen extends ContainerScreen {
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
         this.drawEnergyBufferBar();
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, I18n.translate("block.galacticraft-fabric.coal_generator_block"), (this.width / 2),this.top + 5, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, I18n.translate("block.galacticraft-fabric.coal_generator_block"), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     private void drawEnergyBufferBar() {
-        float currentEnergy = (float)((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
-        float maxEnergy = (float)((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
+        float currentEnergy = (float) ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
+        float maxEnergy = (float) ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
         //this.drawTexturedReact(...)
-        this.blit(energyDisplayX, (energyDisplayY - (int)(ENERGY_HEIGHT * energyScale)) + ENERGY_HEIGHT, ENERGY_X, ENERGY_Y, ENERGY_WIDTH, (int)(ENERGY_HEIGHT * energyScale));
+        this.blit(energyDisplayX, (energyDisplayY - (int) (ENERGY_HEIGHT * energyScale)) + ENERGY_HEIGHT, ENERGY_X, ENERGY_Y, ENERGY_WIDTH, (int) (ENERGY_HEIGHT * energyScale));
     }
 
     @Override
     public void drawMouseoverTooltip(int mouseX, int mouseY) {
-        if(mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
+        if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.status", ((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
-            toolTipLines.add("\u00A76" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(TextFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity)world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
+            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.status", ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
+            toolTipLines.add("\u00A76" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(TextFormat.BLUE))).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-fabric.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

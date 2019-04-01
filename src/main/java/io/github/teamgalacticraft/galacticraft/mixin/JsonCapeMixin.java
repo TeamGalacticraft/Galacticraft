@@ -28,9 +28,9 @@ public abstract class JsonCapeMixin {
 
     @Inject(at = @At("RETURN"), method = "method_2969")
     private void method_2969(CallbackInfo callbackInfo) {
-        for(Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
-            if(entity instanceof PlayerEntity) {
-                field_3742.put(MinecraftProfileTexture.Type.CAPE,  new Identifier(Constants.MOD_ID, "textures/cape/developer_cape.png"));
+        for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
+            if (entity instanceof PlayerEntity) {
+                field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/developer_cape.png"));
             }
         }
     }

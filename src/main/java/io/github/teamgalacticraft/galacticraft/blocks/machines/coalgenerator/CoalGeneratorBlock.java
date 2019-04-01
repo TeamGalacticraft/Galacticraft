@@ -67,7 +67,7 @@ public class CoalGeneratorBlock extends BlockWithEntity implements Configurable,
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if(world.isClient) return true;
+        if (world.isClient) return true;
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COAL_GENERATOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return true;
     }

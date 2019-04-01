@@ -1,17 +1,13 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
+import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.BlockContext;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -44,12 +40,13 @@ public class CoalGeneratorContainer extends Container {
             // TODO: Move this logic somewhere else to just not open this at all.
             throw new IllegalStateException("Found " + blockEntity + " instead of a coal generator!");
         }
-        CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity)blockEntity;
+        CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) blockEntity;
         Inventory inv = new PartialInventoryFixedWrapper(generator.inventory) {
             @Override
             public void markDirty() {
                 generator.markDirty();
             }
+
             @Override
             public boolean canPlayerUseInv(PlayerEntity player) {
                 return CoalGeneratorContainer.this.canUse(player);

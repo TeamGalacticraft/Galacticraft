@@ -100,7 +100,7 @@
   "tooltip.galacticraft-fabric.energy.k": "%sK GJ",
   "tooltip.galacticraft-fabric.energy.m": "%sM GJ",
   "tooltip.galacticraft-fabric.energy.g": "%sG GJ",
-  "tooltip.galacticraft-fabric.coal_generator": "This machine will burn coal, charcoal or a block of coal for energy. It's the simplest, but least efficient energy production method.",
+  "tooltip.galacticraft-fabric.coal_generator": "Burns coal and charcoal for energy. The simplest but least efficient energy method.",
   "ui.galacticraft-fabric.machine.status": "Status: %s",
   "ui.galacticraft-fabric.machine.current_energy": "Energy: %s",
   "ui.galacticraft-fabric.machine.max_energy": "Maximum Energy: %s",

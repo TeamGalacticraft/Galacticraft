@@ -10,5 +10,4 @@ public interface BlockConfigurationType {
     Identifier getName();
 
 
-
 }

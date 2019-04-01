@@ -1,7 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
-import org.omg.PortableInterceptor.INACTIVE;
-
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */

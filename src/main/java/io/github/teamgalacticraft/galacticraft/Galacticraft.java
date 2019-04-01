@@ -49,7 +49,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
 
         Capes.updateCapeList();
 
-        if(FabricLoader.getInstance().isModLoaded("modmenu")) {
+        if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {
                 Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
                 Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
@@ -63,7 +63,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
 
     @Override
     public void onUpdate(UpdateInfo updateInfo) {
-        if(updateInfo.getStatus() == UpdateInfo.VersionStatus.OUTDATED) {
+        if (updateInfo.getStatus() == UpdateInfo.VersionStatus.OUTDATED) {
             logger.info("Galacticraft: Rewoven is outdated.");
         }
     }

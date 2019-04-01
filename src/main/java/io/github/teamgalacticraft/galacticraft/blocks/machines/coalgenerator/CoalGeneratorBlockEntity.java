@@ -1,7 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
-import alexiil.mc.lib.attributes.Attribute;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
@@ -17,15 +15,12 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -66,8 +61,8 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
     public void tick() {
         int prev = energy.getCurrentEnergy();
 
-        if(canUseAsFuel(inventory.getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
-            if(status == CoalGeneratorStatus.INACTIVE) {
+        if (canUseAsFuel(inventory.getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
+            if (status == CoalGeneratorStatus.INACTIVE) {
                 this.status = CoalGeneratorStatus.WARMING;
             } else {
                 this.status = CoalGeneratorStatus.ACTIVE;
@@ -79,27 +74,27 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             inventory.getInvStack(0).setAmount(inventory.getInvStack(0).getAmount() - 1);
         }
 
-        if(this.status == CoalGeneratorStatus.WARMING) {
-            if(this.heat >= 10.0f) {
+        if (this.status == CoalGeneratorStatus.WARMING) {
+            if (this.heat >= 10.0f) {
                 this.status = CoalGeneratorStatus.ACTIVE;
             }
             this.heat += 0.1f;
         }
 
-        if(status == CoalGeneratorStatus.ACTIVE) {
+        if (status == CoalGeneratorStatus.ACTIVE) {
             fuelTimeCurrent++;
             energy.setCurrentEnergy(Math.min(energy.getMaxEnergy(), energy.getCurrentEnergy() + fuelEnergyPerTick));
 
-            if(fuelTimeCurrent >= fuelTimeMax) {
+            if (fuelTimeCurrent >= fuelTimeMax) {
                 this.status = CoalGeneratorStatus.IDLE;
                 this.fuelTimeCurrent = 0;
             }
         }
 
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
-            if(energyAttribute.canInsertEnergy()) {
-                energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM));
+            if (energyAttribute.canInsertEnergy()) {
+                energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
             }
         }
 
