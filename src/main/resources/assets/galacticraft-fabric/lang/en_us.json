@@ -104,5 +104,6 @@
   "ui.galacticraft-fabric.machine.status": "Status: %s",
   "ui.galacticraft-fabric.machine.current_energy": "Energy: %s",
   "ui.galacticraft-fabric.machine.max_energy": "Maximum Energy: %s",
-  "tooltip.galacticraft-fabric.oxygen-remaining": "Oxygen Remaining: %s"
+  "tooltip.galacticraft-fabric.oxygen-remaining": "Oxygen Remaining: %s",
+  "ui.galacticraft-fabric.tabs.side_config": "Coming Soon"
 }

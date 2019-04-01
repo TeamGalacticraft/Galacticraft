@@ -87,6 +87,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
 
     @Override
     public void drawMouseoverTooltip(int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
             toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-fabric.machine.status", ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
