@@ -35,7 +35,7 @@ public class StandardWrenchItem extends Item {
     }
 
     private static <T> T method_7760(Iterable<T> iterable_1, T object_1, boolean sneaking) {
-        return sneaking ? SystemUtil.method_645(iterable_1, object_1) : SystemUtil.method_660(iterable_1, object_1);
+        return sneaking ? SystemUtil.previous(iterable_1, object_1) : SystemUtil.previous(iterable_1, object_1);
     }
 
     public boolean beforeBlockBreak(BlockState state, World world_1, BlockPos pos, PlayerEntity player) {
