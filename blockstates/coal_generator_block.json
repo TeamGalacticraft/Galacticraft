@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "galacticraft-fabric:block/coal_generator_block"
+    },
+    "facing=east": {
+      "model": "galacticraft-fabric:block/coal_generator_block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "galacticraft-fabric:block/coal_generator_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraft-fabric:block/coal_generator_block",
+      "y": 270
+    }
+  }
+}
