@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft-fabric:block/desh_block"
+    }
+  }
+}

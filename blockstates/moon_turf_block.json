@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft-fabric:block/moon_turf_block"
+    }
+  }
+}

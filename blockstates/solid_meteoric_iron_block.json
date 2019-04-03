@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft-fabric:block/solid_meteoric_iron_block"
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft-fabric:block/tin_ore_block"
+    }
+  }
+}
