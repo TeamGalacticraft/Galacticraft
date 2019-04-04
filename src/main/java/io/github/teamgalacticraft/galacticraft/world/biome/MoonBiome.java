@@ -17,6 +17,7 @@ public final class MoonBiome extends Biome {
                 .waterColor(4159204)
                 .waterFogColor(329011)
                 .parent(null));
+        //For the love of god, keep the format above. Writing in one line is highly unreadable.
         //this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 100, 4, 4));
     }
 }
