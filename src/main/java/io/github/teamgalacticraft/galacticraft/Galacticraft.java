@@ -8,6 +8,7 @@ import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
+import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
@@ -46,6 +47,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
+        GCBiomes.register();
 
         Capes.updateCapeList();
 
