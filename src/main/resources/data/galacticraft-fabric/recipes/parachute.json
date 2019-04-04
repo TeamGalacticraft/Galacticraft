@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "CCC",
+    "S S",
+    " S "
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft-fabric:canvas"
+    },
+    "S": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "galacticraft-fabric:parachute",
+    "count": 1
+  }
+}

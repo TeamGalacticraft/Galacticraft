@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft-fabric:parachute"
+    },
+    {
+      "item": "minecraft:gray_dye"
+    }
+  ],
+  "result": {
+    "item": "galacticraft-fabric:gray_parachute",
+    "count": 1
+  }
+}
