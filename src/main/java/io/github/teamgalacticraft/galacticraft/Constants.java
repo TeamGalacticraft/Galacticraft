@@ -100,7 +100,7 @@ public class Constants {
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
         public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
-        // Environment
+        //  Environment
         public static final String UNLIT_TORCH = "unlit_torch";
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
         public static final String CAVERNOUS_VINE_BLOCK = "cavernous_vine_block";
