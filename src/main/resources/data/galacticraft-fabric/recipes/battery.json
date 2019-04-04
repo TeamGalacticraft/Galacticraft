@@ -1,0 +1,23 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " A ",
+    "ARA",
+    "ACA"
+  ],
+  "key": {
+    "A": {
+      "item": "galacticraft-fabric:compressed_tin"
+    },
+    "R": {
+      "item": "minecraft:redstone_dust"
+    },
+    "C": {
+      "item": "minecraft:coal"
+    }
+  },
+  "result": {
+    "item": "galacticraft-fabric:battery",
+    "count": 1
+  }
+}

@@ -209,7 +209,7 @@ public class Constants {
         public static final String IRON_SHARD = "shard_iron";
         public static final String TITANIUM_SHARD = "shard_titanium";
         public static final String TITANIUM_INGOT = "titanium_ingot";
-        public static final String DUST_TITANIUM = "dust_titanium";
+        public static final String DUST_TITANIUM = "titanium_dust";
         public static final String BASIC_WAFER = "basic_wafer";
         public static final String ADVANCED_WAFER = "advanced_wafer";
         public static final String BEAM_CORE = "beam_core";

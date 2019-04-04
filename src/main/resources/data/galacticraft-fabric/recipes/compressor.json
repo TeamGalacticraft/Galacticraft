@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "ANA",
+    "ACA",
+    "AWA"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:aluminum_ingot"
+    },
+    "N": {
+      "item": "minecraft:anvil"
+    },
+    "C": {
+      "tag": "c:copper_ingot"
+    },
+    "W": {
+      "item": "galacticraft-fabric:basic_wafer"
+    }
+  },
+  "result": {
+    "item": "galacticraft-fabric:compressor",
+    "count": 1
+  }
+}

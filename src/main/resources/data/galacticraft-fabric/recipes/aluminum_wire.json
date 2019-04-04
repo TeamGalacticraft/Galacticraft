@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "WWW",
+    "AAA",
+    "WWW"
+  ],
+  "key": {
+    "W": {
+      "tag": "minecraft:wool"
+    },
+    "A": {
+      "tag": "c:aluminum_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-fabric:aluminum_wire",
+    "count": 6
+  }
+}

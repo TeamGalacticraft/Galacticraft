@@ -1,0 +1,32 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "ALA",
+    "BFB",
+    "WRW"
+  ],
+  "key": {
+    "A": {
+      "tag": "c:aluminum_ingot"
+    },
+    "L": {
+      "item": "minecraft:lever"
+    },
+    "B": {
+      "item": "minecraft:stone_button"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "W": {
+      "item": "galacticraft-fabric:aluminum_wire"
+    },
+    "R": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "result": {
+    "item": "galacticraft-fabric:circuit_fabricator",
+    "count": 1
+  }
+}

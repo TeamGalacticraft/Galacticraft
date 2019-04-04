@@ -1,0 +1,26 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "CCC",
+    "AFA",
+    "AWA"
+  ],
+  "key": {
+    "C": {
+      "tag": "c:copper_ingot"
+    },
+    "A": {
+      "tag": "c:aluminum_ingot"
+    },
+    "F": {
+      "item": "minecraft:furnace"
+    },
+    "W": {
+      "item": "galacticraft-fabric:aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraft-fabric:coal_generator",
+    "count": 1
+  }
+}
