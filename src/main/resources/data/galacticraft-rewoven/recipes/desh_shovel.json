@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " D ",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:desh_ingot"
+    },
+    "S": {
+      "item": "galacticraft-rewoven:desh_stick"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:desh_shovel",
+    "count": 1
+  }
+}

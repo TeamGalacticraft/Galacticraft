@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "II ",
+    "II ",
+    "   "
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_bars"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:grating_block",
+    "count": 4
+  }
+}

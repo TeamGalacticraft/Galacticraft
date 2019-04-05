@@ -1,7 +1,7 @@
 {
   "type": "smelting",
   "ingredient": {
-    "item": "galacticraft-rewoven:desh_ore"
+    "item": "galacticraft-rewoven:raw_desh"
   },
   "result": "galacticraft-rewoven:desh_ingot",
   "experience": 0.1,

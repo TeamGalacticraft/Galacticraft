@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CMC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft-rewoven:cheese_curd"
+    },
+    "M": {
+      "item": "minecraft:milk_bucket"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:cheese_block",
+    "count": 1
+  }
+}
