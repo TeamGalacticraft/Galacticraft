@@ -4,7 +4,7 @@
     "up": "galacticraft-rewoven:block/machine",
     "down": "galacticraft-rewoven:block/machine",
     "north": "galacticraft-rewoven:block/compressor_block",
-    "south": "galacticraft-rewoven:block/machine_side",
+    "south": "galacticraft-rewoven:block/machine_power_input",
     "east": "galacticraft-rewoven:block/machine_side",
     "west": "galacticraft-rewoven:block/machine_side",
     "particle": "galacticraft-rewoven:block/machine"
