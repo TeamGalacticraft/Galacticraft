@@ -1,7 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
-import alexiil.mc.lib.attributes.Attribute;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
@@ -25,8 +23,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -101,11 +97,11 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             }
         }
 
-        for(Direction direction : Direction.values()) {
-            if(selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
+        for (Direction direction : Direction.values()) {
+            if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
-                if(energyAttribute.canInsertEnergy()) {
-                    this.energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(),1, ActionType.PERFORM));
+                if (energyAttribute.canInsertEnergy()) {
+                    this.energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
                 }
             }
         }

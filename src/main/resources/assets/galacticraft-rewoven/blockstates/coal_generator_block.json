@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "galacticraft-rewoven:block/coal_generator_block"
+    },
+    "facing=east": {
+      "model": "galacticraft-rewoven:block/coal_generator_block",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "galacticraft-rewoven:block/coal_generator_block",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraft-rewoven:block/coal_generator_block",
+      "y": 270
+    }
+  }
+}
