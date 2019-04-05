@@ -6,6 +6,7 @@
     "north": "galacticraft-rewoven:block/venus_rock_block",
     "south": "galacticraft-rewoven:block/venus_rock_block",
     "east": "galacticraft-rewoven:block/venus_rock_block",
-    "west": "galacticraft-rewoven:block/venus_rock_block"
+    "west": "galacticraft-rewoven:block/venus_rock_block",
+    "particle": "galacticraft-rewoven:block/venus_rock_block"
   }
 }
