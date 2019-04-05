@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "CCC",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft-rewoven:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:copper_block",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TTT",
+    "TTT",
+    "TTT"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:titanium_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:titanium_block",
+    "count": 1
+  }
+}

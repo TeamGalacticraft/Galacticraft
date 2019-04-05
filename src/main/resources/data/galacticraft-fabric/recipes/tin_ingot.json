@@ -1,0 +1,9 @@
+{
+  "type": "smelting",
+  "ingredient": {
+    "tag": "c:tin_ore"
+  },
+  "result": "galacticraft-rewoven:tin_ingot",
+  "experience": 0.1,
+  "cookingtime": 200
+}

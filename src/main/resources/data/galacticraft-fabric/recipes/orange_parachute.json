@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-fabric:parachute"
+      "item": "galacticraft-rewoven:parachute"
     },
     {
       "item": "minecraft:orange_dye"
     }
   ],
   "result": {
-    "item": "galacticraft-fabric:orange_parachute",
+    "item": "galacticraft-rewoven:orange_parachute",
     "count": 1
   }
 }

@@ -16,11 +16,11 @@
       "tag": "c:copper_ingot"
     },
     "W": {
-      "item": "galacticraft-fabric:basic_wafer"
+      "item": "galacticraft-rewoven:basic_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-fabric:compressor",
+    "item": "galacticraft-rewoven:compressor",
     "count": 1
   }
 }

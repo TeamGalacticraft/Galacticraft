@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-fabric:steel_sword",
-    "galacticraft-fabric:desh_sword",
-    "galacticraft-fabric:titanium_sword"
+    "galacticraft-rewoven:steel_sword",
+    "galacticraft-rewoven:desh_sword",
+    "galacticraft-rewoven:titanium_sword"
   ]
 }

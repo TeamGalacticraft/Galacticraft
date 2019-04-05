@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:solid_meteoric_iron"
+    }
+  ],
+  "result": {
+    "item": "galacticraft-rewoven:meteoric_iron_ingot",
+    "count": 9
+  }
+}

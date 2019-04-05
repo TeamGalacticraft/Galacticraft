@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-fabric:parachute"
+      "item": "galacticraft-rewoven:parachute"
     },
     {
       "item": "minecraft:brown_dye"
     }
   ],
   "result": {
-    "item": "galacticraft-fabric:brown_parachute",
+    "item": "galacticraft-rewoven:brown_parachute",
     "count": 1
   }
 }

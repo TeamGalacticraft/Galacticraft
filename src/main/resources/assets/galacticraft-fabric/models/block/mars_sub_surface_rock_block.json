@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "galacticraft-fabric:block/mars_sub_surface_rock_block"
-  }
-}

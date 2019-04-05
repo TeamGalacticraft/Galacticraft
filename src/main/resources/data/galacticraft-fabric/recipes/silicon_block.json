@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SSS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:raw_silicon"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:silicon_block",
+    "count": 1
+  }
+}

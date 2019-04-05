@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "key": {
+    "A": {
+      "item": "galacticraft-rewoven:aluminum_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:aluminum_block",
+    "count": 1
+  }
+}

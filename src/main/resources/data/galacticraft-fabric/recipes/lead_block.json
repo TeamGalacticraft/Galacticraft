@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft-rewoven:lead_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:lead_block",
+    "count": 1
+  }
+}

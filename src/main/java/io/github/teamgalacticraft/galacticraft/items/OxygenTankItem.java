@@ -25,7 +25,7 @@ public class OxygenTankItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void buildTooltip(ItemStack stack, World world, List<TextComponent> lines, TooltipContext context) {
-        lines.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.oxygen-remaining", this.getDurability()));
+        lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.oxygen-remaining", this.getDurability()));
         super.buildTooltip(stack, world, lines, context);
     }
 

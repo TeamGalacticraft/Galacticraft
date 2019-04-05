@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-fabric:steel_hoe",
-    "galacticraft-fabric:desh_hoe",
-    "galacticraft-fabric:titanium_hoe"
+    "galacticraft-rewoven:steel_hoe",
+    "galacticraft-rewoven:desh_hoe",
+    "galacticraft-rewoven:titanium_hoe"
   ]
 }

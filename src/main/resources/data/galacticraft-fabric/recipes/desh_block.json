@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DDD",
+    "DDD",
+    "DDD"
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:desh_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:desh_block",
+    "count": 1
+  }
+}

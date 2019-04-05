@@ -7,23 +7,23 @@
   ],
   "key": {
     "S": {
-      "item": "galacticraft-fabric:compressed_steel"
+      "item": "galacticraft-rewoven:compressed_steel"
     },
     "A": {
       "item": "minecraft:anvil"
     },
     "C": {
-      "item": "galacticraft-fabric:compressed_copper"
+      "item": "galacticraft-rewoven:compressed_copper"
     },
     "W": {
-      "item": "galacticraft-fabric:aluminum_wire"
+      "item": "galacticraft-rewoven:aluminum_wire"
     },
     "F": {
-      "item": "galacticraft-fabric:advanced_wafer"
+      "item": "galacticraft-rewoven:advanced_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-fabric:electric_compressor",
+    "item": "galacticraft-rewoven:electric_compressor",
     "count": 1
   }
 }
