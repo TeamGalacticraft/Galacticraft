@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "galacticraft-fabric:block/mars_cobblestone_block"
+    "all": "galacticraft-rewoven:block/mars_cobblestone_block"
   }
 }

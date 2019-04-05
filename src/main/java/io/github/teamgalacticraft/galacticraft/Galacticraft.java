@@ -9,6 +9,7 @@ import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
+import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GCChunkGeneratorTypes;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
@@ -27,13 +28,13 @@ import java.lang.reflect.Method;
  */
 public class Galacticraft implements ModInitializer, ModUpdateListener {
 
-    public static Logger logger = LogManager.getLogger("Galacticraft-Fabric");
+    public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     private static ConfigHandler configHandler = new ConfigHandler();
     private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
             Constants.MOD_ID,
-            "https://raw.githubusercontent.com/teamgalacticraft/Galacticraft-Fabric/master/updates.json",
+            "https://raw.githubusercontent.com/teamgalacticraft/Galacticraft-Rewoven/master/updates.json",
             true
     );
 
@@ -48,7 +49,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
         GCBiomes.register();
-
+        GCChunkGeneratorTypes.register();
         Capes.updateCapeList();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {

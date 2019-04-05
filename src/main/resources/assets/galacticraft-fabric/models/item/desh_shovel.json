@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "galacticraft-fabric:item/desh_shovel"
+    "layer0": "galacticraft-rewoven:item/desh_shovel"
   }
 }

@@ -1,11 +1,11 @@
 {
   "parent": "block/cube",
   "textures": {
-    "up": "galacticraft-fabric:block/vapor_spout_block_top",
-    "down": "galacticraft-fabric:block/venus_rock_block",
-    "north": "galacticraft-fabric:block/venus_rock_block",
-    "south": "galacticraft-fabric:block/venus_rock_block",
-    "east": "galacticraft-fabric:block/venus_rock_block",
-    "west": "galacticraft-fabric:block/venus_rock_block"
+    "up": "galacticraft-rewoven:block/vapor_spout_block_top",
+    "down": "galacticraft-rewoven:block/venus_rock_block",
+    "north": "galacticraft-rewoven:block/venus_rock_block",
+    "south": "galacticraft-rewoven:block/venus_rock_block",
+    "east": "galacticraft-rewoven:block/venus_rock_block",
+    "west": "galacticraft-rewoven:block/venus_rock_block"
   }
 }

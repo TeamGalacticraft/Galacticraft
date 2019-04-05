@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/mars_cobblestone_block"
+      "model": "galacticraft-rewoven:block/mars_cobblestone_block"
     }
   }
 }

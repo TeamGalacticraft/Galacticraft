@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-fabric:steel_axe",
-    "galacticraft-fabric:desh_axe",
-    "galacticraft-fabric:titanium_axe"
+    "galacticraft-rewoven:steel_axe",
+    "galacticraft-rewoven:desh_axe",
+    "galacticraft-rewoven:titanium_axe"
   ]
 }

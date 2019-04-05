@@ -1,11 +1,11 @@
 {
   "parent": "block/orientable",
   "textures": {
-    "top": "galacticraft-fabric:block/machine",
-    "bottom": "galacticraft-fabric:block/machine",
-    "front": "galacticraft-fabric:block/coal_generator_block",
-    "back": "galacticraft-fabric:block/machine_power_output",
-    "side": "galacticraft-fabric:block/machine_side",
-    "particle": "galacticraft-fabric:block/machine"
+    "top": "galacticraft-rewoven:block/machine",
+    "bottom": "galacticraft-rewoven:block/machine",
+    "front": "galacticraft-rewoven:block/coal_generator_block",
+    "back": "galacticraft-rewoven:block/machine_power_output",
+    "side": "galacticraft-rewoven:block/machine_side",
+    "particle": "galacticraft-rewoven:block/machine"
   }
 }

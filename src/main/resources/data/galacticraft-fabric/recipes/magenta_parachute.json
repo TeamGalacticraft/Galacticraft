@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-fabric:parachute"
+      "item": "galacticraft-rewoven:parachute"
     },
     {
       "item": "minecraft:magenta_dye"
     }
   ],
   "result": {
-    "item": "galacticraft-fabric:magenta_parachute",
+    "item": "galacticraft-rewoven:magenta_parachute",
     "count": 1
   }
 }

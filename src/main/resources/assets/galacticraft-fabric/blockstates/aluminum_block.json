@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/aluminum_block"
+      "model": "galacticraft-rewoven:block/aluminum_block"
     }
   }
 }

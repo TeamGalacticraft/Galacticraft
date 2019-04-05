@@ -1,8 +1,8 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-fabric:steel_pickaxe",
-    "galacticraft-fabric:desh_pickaxe",
-    "galacticraft-fabric:titanium_pickaxe"
+    "galacticraft-rewoven:steel_pickaxe",
+    "galacticraft-rewoven:desh_pickaxe",
+    "galacticraft-rewoven:titanium_pickaxe"
   ]
 }

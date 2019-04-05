@@ -7,14 +7,14 @@
   ],
   "key": {
     "C": {
-      "item": "galacticraft-fabric:canvas"
+      "item": "galacticraft-rewoven:canvas"
     },
     "S": {
       "item": "minecraft:string"
     }
   },
   "result": {
-    "item": "galacticraft-fabric:parachute",
+    "item": "galacticraft-rewoven:parachute",
     "count": 1
   }
 }

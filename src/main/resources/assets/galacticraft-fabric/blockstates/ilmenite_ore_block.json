@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/ilmenite_ore_block"
+      "model": "galacticraft-rewoven:block/ilmenite_ore_block"
     }
   }
 }

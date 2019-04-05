@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "galacticraft-fabric:block/silicon_block"
+    "all": "galacticraft-rewoven:block/silicon_block"
   }
 }

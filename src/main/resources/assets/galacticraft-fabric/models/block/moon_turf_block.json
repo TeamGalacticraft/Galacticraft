@@ -39,9 +39,9 @@
     }
   ],
   "textures": {
-    "particle": "galacticraft-fabric:block/moon_turf_block_top",
-    "bottom": "galacticraft-fabric:block/moon_dirt_block",
-    "top": "galacticraft-fabric:block/moon_turf_block_top",
-    "side": "galacticraft-fabric:block/moon_turf_block_side"
+    "particle": "galacticraft-rewoven:block/moon_turf_block_top",
+    "bottom": "galacticraft-rewoven:block/moon_dirt_block",
+    "top": "galacticraft-rewoven:block/moon_turf_block_top",
+    "side": "galacticraft-rewoven:block/moon_turf_block_side"
   }
 }

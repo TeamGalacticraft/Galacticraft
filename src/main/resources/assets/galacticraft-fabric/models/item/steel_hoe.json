@@ -1,6 +1,6 @@
 {
   "parent": "item/handheld",
   "textures": {
-    "layer0": "galacticraft-fabric:item/steel_hoe"
+    "layer0": "galacticraft-rewoven:item/steel_hoe"
   }
 }

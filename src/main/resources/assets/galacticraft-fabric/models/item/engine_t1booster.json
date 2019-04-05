@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/engine_t1booster"
+    "layer0": "galacticraft-rewoven:item/engine_t1booster"
   }
 }

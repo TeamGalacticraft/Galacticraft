@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/canned_dehydrated_potato"
+    "layer0": "galacticraft-rewoven:item/canned_dehydrated_potato"
   }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/asteroid_rock_block_1"
+      "model": "galacticraft-rewoven:block/asteroid_rock_block_1"
     }
   }
 }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/asteroid_aluminum_ore_block"
+      "model": "galacticraft-rewoven:block/asteroid_aluminum_ore_block"
     }
   }
 }

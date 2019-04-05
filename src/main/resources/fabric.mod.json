@@ -1,5 +1,5 @@
 {
-  "id": "galacticraft-fabric",
+  "id": "galacticraft-rewoven",
   "name": "Galacticraft: Rewoven",
   "description": "FabricMC port of Galacticraft",
   "version": "0.1.0",
@@ -16,7 +16,7 @@
     "tgc-utils": "*"
   },
   "mixins": {
-    "client": "galacticraft-fabric.client.json",
-    "common": "galacticraft-fabric.common.json"
+    "client": "galacticraft-rewoven.client.json",
+    "common": "galacticraft-rewoven.common.json"
   }
 }

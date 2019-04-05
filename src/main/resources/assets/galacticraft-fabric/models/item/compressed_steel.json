@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/compressed_steel"
+    "layer0": "galacticraft-rewoven:item/compressed_steel"
   }
 }

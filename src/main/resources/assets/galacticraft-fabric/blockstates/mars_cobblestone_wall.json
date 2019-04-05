@@ -5,7 +5,7 @@
         "up": "true"
       },
       "apply": {
-        "model": "galacticraft-fabric:block/mars_cobblestone_wall_post"
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_post"
       }
     },
     {
@@ -13,7 +13,7 @@
         "north": "true"
       },
       "apply": {
-        "model": "galacticraft-fabric:block/mars_cobblestone_wall_side",
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
         "uvlock": true
       }
     },
@@ -22,7 +22,7 @@
         "east": "true"
       },
       "apply": {
-        "model": "galacticraft-fabric:block/mars_cobblestone_wall_side",
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
         "y": 90,
         "uvlock": true
       }
@@ -32,7 +32,7 @@
         "south": "true"
       },
       "apply": {
-        "model": "galacticraft-fabric:block/mars_cobblestone_wall_side",
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
         "y": 180,
         "uvlock": true
       }
@@ -42,7 +42,7 @@
         "west": "true"
       },
       "apply": {
-        "model": "galacticraft-fabric:block/mars_cobblestone_wall_side",
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
         "y": 270,
         "uvlock": true
       }

@@ -1,6 +1,6 @@
 {
   "parent": "block/template_wall_side",
   "textures": {
-    "wall": "galacticraft-fabric:block/mars_cobblestone_block"
+    "wall": "galacticraft-rewoven:block/mars_cobblestone_block"
   }
 }

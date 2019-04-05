@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "galacticraft-fabric:block/solid_meteoric_iron_block"
+    "all": "galacticraft-rewoven:block/solid_meteoric_iron_block"
   }
 }

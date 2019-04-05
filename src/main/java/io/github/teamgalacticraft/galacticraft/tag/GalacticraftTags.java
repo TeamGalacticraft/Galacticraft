@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.tag;
 
-import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.tag.Tag;

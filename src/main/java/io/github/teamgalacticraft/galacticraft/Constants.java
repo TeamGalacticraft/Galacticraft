@@ -5,7 +5,7 @@ package io.github.teamgalacticraft.galacticraft;
  */
 public class Constants {
 
-    public static final String MOD_ID = "galacticraft-fabric";
+    public static final String MOD_ID = "galacticraft-rewoven";
 
     // Blocks
     public static class Blocks {
@@ -309,16 +309,16 @@ public class Constants {
     }
 
     public static class Config {
-        public static final String TITLE = "ui.galacticraft-fabric.config.title";
-        public static final String GENERAL = "ui.galacticraft-fabric.config.general";
-        public static final String BOOLEAN = "ui.galacticraft-fabric.config.boolean";
-        public static final String DOUBLE = "ui.galacticraft-fabric.config.double";
-        public static final String FLOAT = "ui.galacticraft-fabric.config.float";
-        public static final String INT = "ui.galacticraft-fabric.config.int";
-        public static final String INT_SLIDER = "ui.galacticraft-fabric.config.intslider";
-        public static final String LONG = "ui.galacticraft-fabric.config.long";
-        public static final String LONG_SLIDER = "ui.galacticraft-fabric.config.longslider";
-        public static final String STRING = "ui.galacticraft-fabric.config.string";
+        public static final String TITLE = "ui.galacticraft-rewoven.config.title";
+        public static final String GENERAL = "ui.galacticraft-rewoven.config.general";
+        public static final String BOOLEAN = "ui.galacticraft-rewoven.config.boolean";
+        public static final String DOUBLE = "ui.galacticraft-rewoven.config.double";
+        public static final String FLOAT = "ui.galacticraft-rewoven.config.float";
+        public static final String INT = "ui.galacticraft-rewoven.config.int";
+        public static final String INT_SLIDER = "ui.galacticraft-rewoven.config.intslider";
+        public static final String LONG = "ui.galacticraft-rewoven.config.long";
+        public static final String LONG_SLIDER = "ui.galacticraft-rewoven.config.longslider";
+        public static final String STRING = "ui.galacticraft-rewoven.config.string";
     }
 
     public static class Energy {

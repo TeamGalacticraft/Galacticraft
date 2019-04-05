@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/silicon_block"
+      "model": "galacticraft-rewoven:block/silicon_block"
     }
   }
 }

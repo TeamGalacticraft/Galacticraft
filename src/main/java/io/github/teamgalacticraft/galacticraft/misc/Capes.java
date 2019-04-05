@@ -29,7 +29,7 @@ public class Capes {
         URL capeListUrl;
 
         try {
-            capeListUrl = new URL("https://raw.github.com/teamgalacticraft/Galacticraft-Fabric/master/capes.txt");
+            capeListUrl = new URL("https://raw.github.com/teamgalacticraft/Galacticraft-Rewoven/master/capes.txt");
         } catch (IOException e) {
             Galacticraft.logger.fatal(CAPES, "FAILED TO GET CAPES"); //TODO debug msg not error when config is in
             return;

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/mars_copper_ore_block"
+      "model": "galacticraft-rewoven:block/mars_copper_ore_block"
     }
   }
 }

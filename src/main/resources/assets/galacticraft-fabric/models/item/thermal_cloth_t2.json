@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/thermal_cloth_t2"
+    "layer0": "galacticraft-rewoven:item/thermal_cloth_t2"
   }
 }

@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "galacticraft-fabric:block/compressor_block"
+      "model": "galacticraft-rewoven:block/compressor_block"
     },
     "facing=east": {
-      "model": "galacticraft-fabric:block/compressor_block",
+      "model": "galacticraft-rewoven:block/compressor_block",
       "y": 90
     },
     "facing=south": {
-      "model": "galacticraft-fabric:block/compressor_block",
+      "model": "galacticraft-rewoven:block/compressor_block",
       "y": 180
     },
     "facing=west": {
-      "model": "galacticraft-fabric:block/compressor_block",
+      "model": "galacticraft-rewoven:block/compressor_block",
       "y": 270
     }
   }

@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/lead_block"
+      "model": "galacticraft-rewoven:block/lead_block"
     }
   }
 }

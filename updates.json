@@ -1,6 +1,6 @@
 {
-  "mod_id": "galacticraft-fabric",
-  "download_page": "http://ci.joezwet.me:8080/job/Galacticraft-Fabric/",
+  "mod_id": "galacticraft-rewoven",
+  "download_page": "http://ci.joezwet.me:8080/job/Galacticraft-Rewoven/",
   "mc_versions": {
     "19w12b": {
       "latest": "0.1.0-alpha+33",

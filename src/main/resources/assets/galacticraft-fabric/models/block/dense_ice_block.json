@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "galacticraft-fabric:block/dense_ice_block"
+    "all": "galacticraft-rewoven:block/dense_ice_block"
   }
 }

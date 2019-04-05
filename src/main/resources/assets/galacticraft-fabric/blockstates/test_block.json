@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/test_block"
+      "model": "galacticraft-rewoven:block/test_block"
     }
   }
 }

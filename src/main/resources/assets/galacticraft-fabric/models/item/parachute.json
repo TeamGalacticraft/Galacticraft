@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/parachute_plain"
+    "layer0": "galacticraft-rewoven:item/parachute_plain"
   },
   "display": {
     "thirdperson": {

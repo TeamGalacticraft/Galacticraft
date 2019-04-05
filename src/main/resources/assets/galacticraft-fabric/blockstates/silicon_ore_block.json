@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/silicon_ore_block"
+      "model": "galacticraft-rewoven:block/silicon_ore_block"
     }
   }
 }

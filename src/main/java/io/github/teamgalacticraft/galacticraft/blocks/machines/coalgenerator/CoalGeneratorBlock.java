@@ -84,9 +84,9 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     @Override
     public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<TextComponent> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.coal_generator").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
-            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
         }
     }
 }

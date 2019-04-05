@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/canister_copper"
+    "layer0": "galacticraft-rewoven:item/canister_copper"
   }
 }

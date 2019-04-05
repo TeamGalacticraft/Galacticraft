@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-fabric:block/venus_dungeon_brick_block_1"
+      "model": "galacticraft-rewoven:block/venus_dungeon_brick_block_1"
     }
   }
 }

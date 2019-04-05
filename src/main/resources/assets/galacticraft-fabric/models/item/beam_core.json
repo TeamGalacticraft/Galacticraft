@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "galacticraft-fabric:item/beam_core"
+    "layer0": "galacticraft-rewoven:item/beam_core"
   }
 }

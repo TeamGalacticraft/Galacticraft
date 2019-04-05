@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "galacticraft-fabric:block/cheese_ore_block"
+    "all": "galacticraft-rewoven:block/cheese_ore_block"
   }
 }

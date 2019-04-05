@@ -2,14 +2,14 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-fabric:parachute"
+      "item": "galacticraft-rewoven:parachute"
     },
     {
       "item": "minecraft:pink_dye"
     }
   ],
   "result": {
-    "item": "galacticraft-fabric:pink_parachute",
+    "item": "galacticraft-rewoven:pink_parachute",
     "count": 1
   }
 }
