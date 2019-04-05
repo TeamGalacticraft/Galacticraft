@@ -9,6 +9,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.environment.GlowstoneTorch
 import io.github.teamgalacticraft.galacticraft.blocks.environment.UnlitTorchBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorcherdRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -117,6 +118,7 @@ public class GalacticraftBlocks {
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
 
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block COMPRESSOR_BLOCK = new CompressorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COAL_GENERATOR_BLOCK = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).build());
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings());
@@ -204,6 +206,7 @@ public class GalacticraftBlocks {
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings());
 
     public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings());
+    public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings());
     public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings());
 
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
@@ -295,6 +298,7 @@ public class GalacticraftBlocks {
                 itemStack.add(new ItemStack(CAVERNOUS_VINE_BLOCK_ITEM));
 
                 itemStack.add(new ItemStack(CIRCUIT_FABRICATOR_BLOCK_ITEM));
+                itemStack.add(new ItemStack(COMPRESSOR_BLOCK_ITEM));
                 itemStack.add(new ItemStack(COAL_GENERATOR_BLOCK_ITEM));
 
                 // add blocks to creative menu
@@ -390,6 +394,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), CIRCUIT_FABRICATOR_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK);
 
         // Register Block items
