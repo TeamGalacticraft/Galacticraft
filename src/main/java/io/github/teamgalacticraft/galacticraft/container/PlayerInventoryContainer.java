@@ -4,7 +4,6 @@ import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerEntity;
 
-
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */

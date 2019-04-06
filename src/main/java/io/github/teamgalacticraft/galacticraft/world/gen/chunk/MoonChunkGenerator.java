@@ -9,7 +9,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnEntry;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -17,11 +16,13 @@ import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.PhantomSpawner;
 import net.minecraft.world.gen.PillagerSpawner;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.level.LevelGeneratorType;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGeneratorConfig> {
     private static final float[] BIOME_WEIGHT_TABLE = SystemUtil.consume(new float[25], (floats_1) -> {
         for (int int_1 = -2; int_1 <= 2; ++int_1) {
@@ -44,6 +45,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         this.amplified = iWorld_1.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
+    @Override
     public void populateEntities(ChunkRegion chunkRegion_1) {
         int int_1 = chunkRegion_1.getCenterChunkX();
         int int_2 = chunkRegion_1.getCenterChunkZ();
@@ -53,10 +55,12 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         SpawnHelper.populateEntities(chunkRegion_1, biome_1, int_1, int_2, chunkRandom_1);
     }
 
+    @Override
     protected void sampleNoiseColumn(double[] doubles_1, int int_1, int int_2) {
         this.sampleNoiseColumn(doubles_1, int_1, int_2, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
     }
 
+    @Override
     protected double computeNoiseFalloff(double double_1, double double_2, int int_1) {
         double double_4 = ((double) int_1 - (8.5D + double_1 * 8.5D / 8.0D * 4.0D)) * 12.0D * 128.0D / 256.0D / double_2;
         if (double_4 < 0.0D) {
@@ -65,7 +69,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
         return double_4;
     }
-
+    @Override
     protected double[] computeNoiseRange(int int_1, int int_2) {
         double[] doubles_1 = new double[2];
         float float_1 = 0.0F;
@@ -123,31 +127,14 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return double_1;
     }
 
+    @Override
     public List<SpawnEntry> getEntitySpawnList(EntityCategory entityCategory_1, BlockPos blockPos_1) {
-        if (Feature.SWAMP_HUT.method_14029(this.world, blockPos_1)) {
-            if (entityCategory_1 == EntityCategory.MONSTER) {
-                return Feature.SWAMP_HUT.getMonsterSpawns();
-            }
-
-            if (entityCategory_1 == EntityCategory.CREATURE) {
-                return Feature.SWAMP_HUT.getCreatureSpawns();
-            }
-        } else if (entityCategory_1 == EntityCategory.MONSTER) {
-            if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(this.world, blockPos_1)) {
-                return Feature.PILLAGER_OUTPOST.getMonsterSpawns();
-            }
-
-            if (Feature.OCEAN_MONUMENT.isApproximatelyInsideStructure(this.world, blockPos_1)) {
-                return Feature.OCEAN_MONUMENT.getMonsterSpawns();
-            }
-        }
-
         return super.getEntitySpawnList(entityCategory_1, blockPos_1);
     }
 
-    public void spawnEntities(World world_1, boolean boolean_1, boolean boolean_2) {
-        this.phantomSpawner.spawn((ServerWorld) world_1, boolean_1, boolean_2);
-        this.pillagerSpawner.spawn((ServerWorld) world_1, boolean_1, boolean_2);
+    public void spawnEntities(ServerWorld world_1, boolean boolean_1, boolean boolean_2) {
+        this.phantomSpawner.spawn(world_1, boolean_1, boolean_2);
+        this.pillagerSpawner.spawn(world_1, boolean_1, boolean_2);
     }
 
     public int getSpawnHeight() {

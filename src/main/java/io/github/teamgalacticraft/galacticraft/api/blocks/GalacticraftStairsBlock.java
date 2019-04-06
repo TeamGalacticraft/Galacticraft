@@ -4,7 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.StairsBlock;
 
 /**
- * Because Mojang is stupid and set the constructor of GalacticraftStairsBlock to protected
+ * Because Mojang is stupid and set the constructor of StairsBlock to protected
  *
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */

@@ -15,6 +15,9 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class Capes {
 
     private static final Marker CAPES = MarkerManager.getMarker("Capes");

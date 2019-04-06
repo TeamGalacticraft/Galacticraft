@@ -15,6 +15,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class OxygenTankItem extends Item {
 
     public OxygenTankItem(Settings settings) {

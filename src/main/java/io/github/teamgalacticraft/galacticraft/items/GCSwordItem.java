@@ -19,10 +19,10 @@ public class GCSwordItem extends SwordItem {
     }
 
     @Override
-    public boolean onBlockBroken(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
+    public boolean onBlockBroken(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity entity) {
         //All of these are stronger than vanilla
         if (state.getHardness(null, pos) > 0.2001F) {
-            stack.applyDamage(2, entityLiving, (livingEntity_1x) -> livingEntity_1x.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
+            stack.applyDamage(2, entity, (entity1) -> entity1.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
         }
         return true;
     }

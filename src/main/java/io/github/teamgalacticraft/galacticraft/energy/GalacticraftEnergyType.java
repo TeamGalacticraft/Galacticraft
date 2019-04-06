@@ -5,6 +5,9 @@ import io.github.cottonmc.energy.api.EnergyType;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TranslatableTextComponent;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftEnergyType implements EnergyType {
 
     @Override

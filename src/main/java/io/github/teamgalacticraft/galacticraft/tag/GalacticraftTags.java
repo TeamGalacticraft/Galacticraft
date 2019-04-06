@@ -5,6 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftTags {
 
     public static final Tag<Block> WALLS = register(new Identifier("minecraft", "walls"));

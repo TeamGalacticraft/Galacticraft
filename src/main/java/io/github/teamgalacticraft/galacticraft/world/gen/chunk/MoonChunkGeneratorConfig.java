@@ -7,6 +7,9 @@ package io.github.teamgalacticraft.galacticraft.world.gen.chunk;
 
 import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
 
     public MoonChunkGeneratorConfig() {

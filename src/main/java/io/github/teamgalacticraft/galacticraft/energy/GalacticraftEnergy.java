@@ -8,6 +8,9 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftEnergy {
     private static final Marker ENERGY = MarkerManager.getMarker("Energy");
 
