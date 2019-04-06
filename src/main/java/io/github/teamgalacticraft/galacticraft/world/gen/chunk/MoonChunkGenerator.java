@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.world.gen.chunk;
 
 import net.minecraft.entity.EntityCategory;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sortme.SpawnHelper;
 import net.minecraft.util.SystemUtil;
 import net.minecraft.util.math.BlockPos;
@@ -145,8 +146,8 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public void spawnEntities(World world_1, boolean boolean_1, boolean boolean_2) {
-        this.phantomSpawner.spawn(world_1, boolean_1, boolean_2);
-        this.pillagerSpawner.spawn(world_1, boolean_1, boolean_2);
+        this.phantomSpawner.spawn((ServerWorld)world_1, boolean_1, boolean_2);
+        this.pillagerSpawner.spawn((ServerWorld)world_1, boolean_1, boolean_2);
     }
 
     public int getSpawnHeight() {

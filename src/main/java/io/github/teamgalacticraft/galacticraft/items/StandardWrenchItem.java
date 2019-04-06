@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -80,7 +81,7 @@ public class StandardWrenchItem extends Item {
                 if (property.getName().equals("facing")) {
                     BlockState blockState_2 = method_7758(state, property, player.isSneaking());
                     iWorld.setBlockState(pos, blockState_2, 18);
-                    stack.applyDamage(1, player);
+                    stack.applyDamage(2, player, (playerEntity) -> playerEntity.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
                 }
             }
         }

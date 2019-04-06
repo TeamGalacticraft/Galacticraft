@@ -3,7 +3,7 @@ package io.github.teamgalacticraft.galacticraft.mixin;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ScoreboardEntry;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
@@ -19,18 +19,18 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-@Mixin(ScoreboardEntry.class)
+@Mixin(PlayerListEntry.class)
 public abstract class JsonCapeMixin {
 
     @Shadow
     @Final
-    private Map<MinecraftProfileTexture.Type, Identifier> field_3742;
+    private Map<MinecraftProfileTexture.Type, Identifier> textures;
 
-    @Inject(at = @At("RETURN"), method = "method_2969")
-    private void method_2969(CallbackInfo callbackInfo) {
+    @Inject(at = @At("RETURN"), method = "loadTextures")
+    private void loadTextures(CallbackInfo callbackInfo) {
         for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
             if (entity instanceof PlayerEntity) {
-                field_3742.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/developer_cape.png"));
+                textures.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/developer_cape.png"));
             }
         }
     }

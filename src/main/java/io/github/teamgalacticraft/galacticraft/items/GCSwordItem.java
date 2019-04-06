@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
@@ -21,7 +22,7 @@ public class GCSwordItem extends SwordItem {
     public boolean onBlockBroken(ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving) {
         //All of these are stronger than vanilla
         if (state.getHardness(null, pos) > 0.2001F) {
-            stack.applyDamage(2, entityLiving);
+            stack.applyDamage(2, entityLiving, (livingEntity_1x) -> livingEntity_1x.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
         }
         return true;
     }
