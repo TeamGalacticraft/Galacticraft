@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.api.blocks;
 
-import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.StateFactory;

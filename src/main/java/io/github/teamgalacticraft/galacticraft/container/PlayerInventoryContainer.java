@@ -2,9 +2,7 @@ package io.github.teamgalacticraft.galacticraft.container;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import net.minecraft.container.Container;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 
 
 /**

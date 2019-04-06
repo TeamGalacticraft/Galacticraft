@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft;
 
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
-import io.github.teamgalacticraft.galacticraft.container.screen.PlayerInventoryScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;

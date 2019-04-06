@@ -5,23 +5,16 @@ import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.client.gui.ingame.AbstractPlayerInventoryScreen;
 import net.minecraft.client.gui.ingame.PlayerInventoryScreen;
 import net.minecraft.client.render.GuiLighting;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.TextComponentUtil;
 import net.minecraft.container.PlayerContainer;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.TextComponent;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -39,10 +32,10 @@ public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventory
         System.out.println("Y: " + mouseY);
         System.out.println("b: " + button);
 
-        if(mouseX <= this.left && mouseX >= this.left + 28 && mouseY <= this.top && mouseY >= this.top - 28 && button == 0) {
+        if (mouseX <= this.left && mouseX >= this.left + 28 && mouseY <= this.top && mouseY >= this.top - 28 && button == 0) {
             // vanill button
         }
-        if(mouseX <= this.left && mouseX >= this.left + 28 && mouseY <= this.top && mouseY >= this.top - 28 && button == 0) {
+        if (mouseX <= this.left && mouseX >= this.left + 28 && mouseY <= this.top && mouseY >= this.top - 28 && button == 0) {
             // vanill button
         }
     }

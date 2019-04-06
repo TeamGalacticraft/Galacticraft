@@ -7,6 +7,7 @@ import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -83,7 +84,7 @@ public class CoalGeneratorContainer extends Container {
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return true;
+            return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL || stack.getItem() == Items.COAL_BLOCK;
         }
     }
 }

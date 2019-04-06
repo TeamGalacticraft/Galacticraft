@@ -146,8 +146,8 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public void spawnEntities(World world_1, boolean boolean_1, boolean boolean_2) {
-        this.phantomSpawner.spawn((ServerWorld)world_1, boolean_1, boolean_2);
-        this.pillagerSpawner.spawn((ServerWorld)world_1, boolean_1, boolean_2);
+        this.phantomSpawner.spawn((ServerWorld) world_1, boolean_1, boolean_2);
+        this.pillagerSpawner.spawn((ServerWorld) world_1, boolean_1, boolean_2);
     }
 
     public int getSpawnHeight() {

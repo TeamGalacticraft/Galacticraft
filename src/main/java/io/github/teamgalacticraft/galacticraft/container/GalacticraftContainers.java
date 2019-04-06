@@ -3,7 +3,6 @@ package io.github.teamgalacticraft.galacticraft.container;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.client.gui.ContainerProvider;
 import net.minecraft.util.Identifier;
 
 /**
