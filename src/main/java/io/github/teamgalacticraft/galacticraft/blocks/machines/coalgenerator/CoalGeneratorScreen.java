@@ -58,7 +58,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
         energyDisplayX = leftPos + 10;
         energyDisplayY = topPos + 9;
 
-        //this.drawTexturedReact(...)
+        //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();

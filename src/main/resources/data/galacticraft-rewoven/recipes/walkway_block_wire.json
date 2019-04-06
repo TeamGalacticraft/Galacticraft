@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TTT",
+    "WTW",
+    "WWW"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:compressed_titanium"
+    },
+    "W": {
+      "item": "galacticraft-rewoven:heavy_aluminum_wire"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:walkway_block_wire",
+    "count": 5
+  }
+}

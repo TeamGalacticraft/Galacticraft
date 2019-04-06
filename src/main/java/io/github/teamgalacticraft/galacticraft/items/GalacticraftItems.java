@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.items;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.client.gui.Screen;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -10,6 +11,7 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftItems {
+
 
     public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP)).icon(() -> new ItemStack(GalacticraftItems.CANVAS)).build();
 

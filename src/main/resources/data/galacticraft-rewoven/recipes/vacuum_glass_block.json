@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TGT",
+    "GGG",
+    "TGT"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:tin_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:vacuum_glass_block",
+    "count": 5
+  }
+}

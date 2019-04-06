@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TTT",
+    " T ",
+    "   "
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:compressed_titanium"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:walkway_block",
+    "count": 5
+  }
+}

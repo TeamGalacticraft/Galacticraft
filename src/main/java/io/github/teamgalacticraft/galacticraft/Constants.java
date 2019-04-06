@@ -9,7 +9,8 @@ public class Constants {
 
     // Blocks
     public static class Blocks {
-        public static final String ITEM_GROUP = "blocks";
+        public static final String ITEM_GROUP_BLOCKS = "blocks";
+        public static final String ITEM_GROUP_MACHINES = "machines";
 
         // Natural
         public static final String MOON_TURF = "moon_turf_block";
@@ -73,9 +74,9 @@ public class Constants {
         public static final String LIGHTING_PANEL_BLOCK_DARK = "lighting_panel_block_dark";
         public static final String LIGHTING_PANEL_BLOCK_DARK_ANGLE = "lighting_panel_block_dark_angle";
         public static final String VACUUM_GLASS_BLOCK = "vacuum_glass_block";
-        public static final String VACUUM_GLASS_BLOCK_CLEAR = "vacuum_glass_block_clear_block";
-        public static final String VACUUM_GLASS_BLOCK_TIN = "vacuum_glass_block_tin_block";
-        public static final String VACUUM_GLASS_BLOCK_STRONG = "vacuum_glass_block_strong_block";
+        public static final String VACUUM_GLASS_BLOCK_CLEAR = "vacuum_glass_clear_block";
+        public static final String VACUUM_GLASS_BLOCK_TIN = "vacuum_glass_tin_block";
+        public static final String VACUUM_GLASS_BLOCK_STRONG = "vacuum_glass_strong_block";
         public static final String WALKWAY_BLOCK = "walkway_block";
         public static final String WALKWAY_BLOCK_WIRE = "walkway_block_wire";
         public static final String WALKWAY_BLOCK_PIPE = "walkway_block_pipe";

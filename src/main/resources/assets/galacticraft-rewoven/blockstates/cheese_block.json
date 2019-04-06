@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "bites=0": { "model": "galacticraft-rewoven:block/cheese_uneaten_model" },
+    "bites=1": { "model": "galacticraft-rewoven:block/cheese_slice1_model" },
+    "bites=2": { "model": "galacticraft-rewoven:block/cheese_slice2_model" },
+    "bites=3": { "model": "galacticraft-rewoven:block/cheese_slice3_model" },
+    "bites=4": { "model": "galacticraft-rewoven:block/cheese_slice4_model" },
+    "bites=5": { "model": "galacticraft-rewoven:block/cheese_slice5_model" },
+    "bites=6": { "model": "galacticraft-rewoven:block/cheese_slice6_model" }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "facing=up": { "model": "galacticraft-rewoven:block/glowstone_torch_block" },
+    "facing=east": { "model": "galacticraft-rewoven:block/glowstone_torch_wall_block" },
+    "facing=south": { "model": "galacticraft-rewoven:block/glowstone_torch_wall_block", "y": 90 },
+    "facing=west": { "model": "galacticraft-rewoven:block/glowstone_torch_wall_block", "y": 180 },
+    "facing=north": { "model": "galacticraft-rewoven:block/glowstone_torch_wall_block", "y": 270 }
+  }
+}

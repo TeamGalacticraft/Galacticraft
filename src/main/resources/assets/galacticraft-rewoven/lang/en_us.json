@@ -1,6 +1,7 @@
 {
   "itemGroup.galacticraft-rewoven.blocks": "Galacticraft Blocks",
   "itemGroup.galacticraft-rewoven.items": "Galacticraft Items",
+  "itemGroup.galacticraft-rewoven.machines": "Galacticraft Machines",
 
   "block.galacticraft-rewoven.aluminum_ore_block": "Aluminum Ore",
   "block.galacticraft-rewoven.copper_ore_block": "Copper Ore",
@@ -49,8 +50,31 @@
   "block.galacticraft-rewoven.galena_ore_block": "Galena Ore",
   "block.galacticraft-rewoven.lead_block": "Block of Lead",
 
+  "block.galacticraft-rewoven.tin_decoration_block": "Tin Decoration Block Plain",
+  "block.galacticraft-rewoven.tin_decoration_block_1": "Tin Decoration Block Detailed",
+  "block.galacticraft-rewoven.dark_decoration_block": "Dark Decoration Block",
+  "block.galacticraft-rewoven.grating_block": "Grating",
+
   "block.galacticraft-rewoven.coal_generator_block": "Coal Generator",
+  "block.galacticraft-rewoven.compressor_block": "Compressor",
   "block.galacticraft-rewoven.circuit_fabricator_block": "Circuit Fabricator",
+
+  "item.galacticraft-rewoven.steel_sword": "Steel Sword",
+  "item.galacticraft-rewoven.steel_shovel": "Steel Shovel",
+  "item.galacticraft-rewoven.steel_pickaxe": "Steel Pickaxe",
+  "item.galacticraft-rewoven.steel_axe": "Steel Axe",
+  "item.galacticraft-rewoven.steel_hoe": "Steel Hoe",
+  "item.galacticraft-rewoven.desh_sword": "Desh Sword",
+  "item.galacticraft-rewoven.desh_shovel": "Desh Shovel",
+  "item.galacticraft-rewoven.desh_pickaxe": "Desh Pickaxe",
+  "item.galacticraft-rewoven.desh_axe": "Desh Axe",
+  "item.galacticraft-rewoven.desh_hoe": "Desh Hoe",
+  "item.galacticraft-rewoven.titanium_sword": "Titanium Sword",
+  "item.galacticraft-rewoven.titanium_shovel": "Titanium Shovel",
+  "item.galacticraft-rewoven.titanium_pickaxe": "Titanium Pickaxe",
+  "item.galacticraft-rewoven.titanium_axe": "Titanium Axe",
+  "item.galacticraft-rewoven.titanium_hoe": "Titanium Hoe",
+
 
   "item.galacticraft-rewoven.aluminum_ingot": "Aluminum Ingot",
   "item.galacticraft-rewoven.copper_ingot": "Copper Ingot",
@@ -99,6 +123,7 @@
   "item.galacticraft-rewoven.heavy_plating": "Heavy Plating",
   "item.galacticraft-rewoven.heavy_plating_t2": "Thick Heavy Plating",
   "item.galacticraft-rewoven.heavy_plating_t3": "Reinforced Heavy Plating",
+  "item.galacticraft-rewoven.buggy_wheel": "Buggy Wheel",
   "item.galacticraft-rewoven.nose_cone": "Nose Cone",
   "item.galacticraft-rewoven.heavy_nose_cone": "Heavy Nose Cone",
   "item.galacticraft-rewoven.engine_t1": "Rocket Engine",
@@ -139,12 +164,14 @@
   "item.galacticraft-rewoven.small_oxygen_tank": "Small Oxygen Tank",
   "item.galacticraft-rewoven.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-rewoven.large_oxygen_tank": "Large Oxygen Tank",
+
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
   "tooltip.galacticraft-rewoven.energy": "%s GJ",
   "tooltip.galacticraft-rewoven.energy.k": "%sK GJ",
   "tooltip.galacticraft-rewoven.energy.m": "%sM GJ",
   "tooltip.galacticraft-rewoven.energy.g": "%sG GJ",
   "tooltip.galacticraft-rewoven.coal_generator": "Burns coal and charcoal for energy. The simplest but least efficient energy method.",
+
   "ui.galacticraft-rewoven.machine.status": "Status: %s",
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: %s",

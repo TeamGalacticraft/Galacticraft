@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "AGA",
+    "GGG",
+    "AGA"
+  ],
+  "key": {
+    "A": {
+      "item": "galacticraft-rewoven:aluminum_ingot"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:vacuum_glass_clear_block",
+    "count": 5
+  }
+}

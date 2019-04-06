@@ -9,6 +9,7 @@ import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
@@ -18,11 +19,12 @@ public class GCSwordItem extends SwordItem {
         super(material, additionalDamage, cooldown, settings);
     }
 
+
     @Override
-    public boolean onBlockBroken(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity entity) {
+    public boolean onBlockBroken(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
         //All of these are stronger than vanilla
-        if (state.getHardness(null, pos) > 0.2001F) {
-            stack.applyDamage(2, entity, (entity1) -> entity1.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
+        if (blockState.getHardness(null, blockPos) > 0.2001F) {
+            stack.applyDamage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
         }
         return true;
     }

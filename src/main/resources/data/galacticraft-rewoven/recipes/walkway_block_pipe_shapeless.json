@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:walkway_block"
+    },
+    {
+      "item": "galacticraft-rewoven:oxygen_pipe"
+    }
+  ],
+  "result": {
+    "item": "galacticraft-rewoven:walkway_block_pipe",
+    "count": 1
+  }
+}

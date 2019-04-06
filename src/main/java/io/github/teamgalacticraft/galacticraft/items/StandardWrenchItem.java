@@ -65,6 +65,7 @@ public class StandardWrenchItem extends Item {
         return ActionResult.SUCCESS;
     }
 
+
     private void method_7759(PlayerEntity player, BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
         if (block instanceof Rotatable) {

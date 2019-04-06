@@ -19,6 +19,7 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
+
 @Mixin(PlayerListEntry.class)
 public abstract class CapeMixin {
 
@@ -37,3 +38,4 @@ public abstract class CapeMixin {
         }
     }
 }
+

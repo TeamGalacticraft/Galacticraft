@@ -19,16 +19,38 @@ public class CoalGeneratorContainer extends Container {
     private Inventory inventory;
 
     private BlockPos blockPos;
+    private CoalGeneratorBlockEntity generator;
     private PlayerEntity playerEntity;
 
+
     @Override
-    public ItemStack transferSlot(PlayerEntity playerEntity_1, int int_1) {
-        ItemStack itemStack_1 = ItemStack.EMPTY;
-        Slot slot_1 = this.slotList.get(int_1);
-        if (slot_1 != null && slot_1.hasStack()) {
-            return slot_1.getStack();
+    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
+
+        ItemStack itemStack = null;
+        Slot slot = this.slotList.get(slotId);
+
+        if (slot != null && slot.hasStack()) {
+            ItemStack itemStack1 = slot.getStack();
+            itemStack = itemStack1.copy();
+
+            if (slotId < this.generator.inventory.getSlotCount()) {
+
+                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemStack1.getAmount() == 0) {
+                slot.setStack(ItemStack.EMPTY);
+            }
+            else {
+                slot.markDirty();
+            }
         }
-        return itemStack_1;
+
+        return itemStack;
     }
 
     public CoalGeneratorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
@@ -37,12 +59,13 @@ public class CoalGeneratorContainer extends Container {
         this.playerEntity = playerEntity;
 
         BlockEntity blockEntity = playerEntity.world.getBlockEntity(blockPos);
+
         if (!(blockEntity instanceof CoalGeneratorBlockEntity)) {
             // TODO: Move this logic somewhere else to just not open this at all.
             throw new IllegalStateException("Found " + blockEntity + " instead of a coal generator!");
         }
-        CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) blockEntity;
-        Inventory inv = new PartialInventoryFixedWrapper(generator.inventory) {
+        this.generator = (CoalGeneratorBlockEntity) blockEntity;
+        this.inventory = new PartialInventoryFixedWrapper(generator.inventory) {
             @Override
             public void markDirty() {
                 generator.markDirty();
@@ -53,7 +76,8 @@ public class CoalGeneratorContainer extends Container {
                 return CoalGeneratorContainer.this.canUse(player);
             }
         };
-        this.addSlot(new CoalGeneratorFuelSlot(this, inv, 0, 8, 53));
+        // Coal Generator fuel slot
+        this.addSlot(new CoalGeneratorFuelSlot(this, this.inventory, 0, 8, 53));
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
