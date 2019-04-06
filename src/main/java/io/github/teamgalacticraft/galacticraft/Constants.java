@@ -331,6 +331,7 @@ public class Constants {
     public static class ScreenTextures {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
+        public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -339,5 +340,6 @@ public class Constants {
 
     public static class Container {
         public static final String COAL_GENERATOR_CONTAINER = "coal_generator_container";
+        public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
     }
 }

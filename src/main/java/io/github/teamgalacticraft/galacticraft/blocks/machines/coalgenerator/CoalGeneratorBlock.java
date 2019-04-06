@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
+import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -29,7 +30,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider {
+public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 

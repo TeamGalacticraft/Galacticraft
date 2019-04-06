@@ -12,5 +12,4 @@ public class CircuitFabricatorBlock extends AbstractHorizontalDirectionalBlock i
     public CircuitFabricatorBlock(Settings settings) {
         super(settings);
     }
-
 }

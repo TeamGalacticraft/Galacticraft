@@ -1,4 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.util;
 
-public interface Rotatable {
-}
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
+public interface Rotatable {}

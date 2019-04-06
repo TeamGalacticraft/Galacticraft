@@ -10,7 +10,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.environment.UnlitTorchBloc
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlock;
-import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorcherdRockBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorchedRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -50,9 +50,9 @@ public class GalacticraftBlocks {
     public static final Block VENUS_ROCK_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VENUS_ROCK_BLOCK_2 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VENUS_ROCK_BLOCK_3 = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
-    public static final Block VENUS_ROCK_BLOCK_SCORCHED = new ScorcherdRockBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
+    public static final Block VENUS_ROCK_BLOCK_SCORCHED = new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build());
     public static final Block VOLCANIC_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).build().strength(2.2F, 0.5F));
-    public static final Block SCORCHED_ROCK_BLOCK = new ScorcherdRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build());
+    public static final Block SCORCHED_ROCK_BLOCK = new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build());
     public static final Block PUMICE_BLOCK = new Block(FabricBlockSettings.of(Material.STONE).resistance(1.0F).build());
     public static final Block VAPOR_SPOUT_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build());
     public static final Block TIN_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());

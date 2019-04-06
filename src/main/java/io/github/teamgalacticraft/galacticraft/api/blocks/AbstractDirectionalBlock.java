@@ -10,7 +10,7 @@ import net.minecraft.state.property.Properties;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class AbstractDirectionalBlock extends Block implements Rotatable {
+public class AbstractDirectionalBlock extends Block {
 
     public static DirectionProperty FACING = Properties.FACING;
 

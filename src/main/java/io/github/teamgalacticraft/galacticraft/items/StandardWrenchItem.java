@@ -3,6 +3,8 @@ package io.github.teamgalacticraft.galacticraft.items;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -10,6 +12,10 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextComponent;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SystemUtil;
@@ -19,6 +25,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -76,6 +83,15 @@ public class StandardWrenchItem extends Item {
                     stack.applyDamage(1, player);
                 }
             }
+        }
+    }
+
+    @Override
+    public void buildTooltip(ItemStack itemStack_1, World world_1, List<TextComponent> list_1, TooltipContext tooltipContext_1) {
+        if (Screen.hasShiftDown()) {
+            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.standard_wrench").setStyle(new Style().setColor(TextFormat.GRAY)));
+        } else {
+            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
         }
     }
 }

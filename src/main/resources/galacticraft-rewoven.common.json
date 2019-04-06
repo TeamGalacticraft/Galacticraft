@@ -3,8 +3,10 @@
   "package": "io.github.teamgalacticraft.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "CapeMixin"
+    "CapeMixin",
+    "PlayerInventoryScreenMixin"
   ],
+  "minVersion": "0.1.0",
   "injectors": {
     "defaultRequire": 1
   }

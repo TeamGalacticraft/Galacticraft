@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],
+  "minVersion": "0.1.0",
   "injectors": {
     "defaultRequire": 1
   }
