@@ -331,6 +331,7 @@ public class Constants {
 
     public static class ScreenTextures {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
+        public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
 
