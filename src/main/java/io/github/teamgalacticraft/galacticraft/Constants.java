@@ -237,6 +237,7 @@ public class Constants {
         public static final String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
         public static final String ORION_DRIVE = "orion_drive";
         public static final String ATMOSPHERIC_VALVE = "atmospheric_valve";
+        public static final String BATTERY = "battery";
         //FOOD
         public static final String CHEESE_CURD = "cheese_curd";
         public static final String CHEESE_SLICE = "cheese_slice";
@@ -342,6 +343,7 @@ public class Constants {
 
     public static class Container {
         public static final String COAL_GENERATOR_CONTAINER = "coal_generator_container";
+        public static final String CIRCUIT_FABRICATOR_CONTAINER = "circuit_fabricator_container";
         public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
     }
 }

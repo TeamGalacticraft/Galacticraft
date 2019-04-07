@@ -1,14 +1,18 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.ArrayList;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -21,6 +25,8 @@ public class CoalGeneratorContainer extends Container {
     private BlockPos blockPos;
     private CoalGeneratorBlockEntity generator;
     private PlayerEntity playerEntity;
+    private static Item[] fuel = new Item[] {Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
+
 
 
     @Override
@@ -77,7 +83,7 @@ public class CoalGeneratorContainer extends Container {
             }
         };
         // Coal Generator fuel slot
-        this.addSlot(new CoalGeneratorFuelSlot(this, this.inventory, 0, 8, 53));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, fuel));
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
@@ -98,17 +104,4 @@ public class CoalGeneratorContainer extends Container {
         return true;
     }
 
-    public class CoalGeneratorFuelSlot extends Slot {
-        private final CoalGeneratorContainer container;
-
-        public CoalGeneratorFuelSlot(CoalGeneratorContainer container, Inventory inventory, int int_1, int int_2, int int_3) {
-            super(inventory, int_1, int_2, int_3);
-            this.container = container;
-        }
-
-        @Override
-        public boolean canInsert(ItemStack stack) {
-            return stack.getItem() == Items.COAL || stack.getItem() == Items.CHARCOAL || stack.getItem() == Items.COAL_BLOCK;
-        }
-    }
 }
