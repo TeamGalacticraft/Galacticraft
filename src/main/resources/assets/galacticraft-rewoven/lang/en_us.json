@@ -164,6 +164,7 @@
   "item.galacticraft-rewoven.small_oxygen_tank": "Small Oxygen Tank",
   "item.galacticraft-rewoven.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-rewoven.large_oxygen_tank": "Large Oxygen Tank",
+  "item.galacticraft-rewoven.battery": "Battery",
 
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
   "tooltip.galacticraft-rewoven.energy": "%s GJ",
