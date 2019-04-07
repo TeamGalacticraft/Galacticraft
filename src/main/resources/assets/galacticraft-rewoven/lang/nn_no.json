@@ -1,6 +1,6 @@
 {
   "itemGroup.galacticraft-rewoven.blocks": "Galacticraft Blokkar",
-  "itemGroup.galacticraft-rewoven.items": "Galacticraft Gjennstander",
+  "itemGroup.galacticraft-rewoven.items": "Galacticraft Gjennstandar",
   "itemGroup.galacticraft-rewoven.machines": "Galacticraft Maskinar",
 
   "block.galacticraft-rewoven.aluminum_ore_block": "Aluminiummalm",
@@ -152,9 +152,9 @@
   "item.galacticraft-rewoven.black_parachute": "Svart Fallskjerm",
   "item.galacticraft-rewoven.canned_dehydrated_apple": "Hermetisert Dehydrert Eple",
   "item.galacticraft-rewoven.canned_dehydrated_carrot": "Hermetisert Dehydrert Gulrot",
-  "item.galacticraft-rewoven.canned_dehydrated_melon": "Canned Dehydrated Melon",
-  "item.galacticraft-rewoven.canned_dehydrated_potato": "Canned Dehydrated Potet",
-  "item.galacticraft-rewoven.canned_beef": "Canned Beef",
+  "item.galacticraft-rewoven.canned_dehydrated_melon": "Hermetisert Dehydrated Melon",
+  "item.galacticraft-rewoven.canned_dehydrated_potato": "Hermetisert Dehydrated Potet",
+  "item.galacticraft-rewoven.canned_beef": "Hermetisert Biff",
   "item.galacticraft-rewoven.cheeseburger": "Osteburger",
   "item.galacticraft-rewoven.cheese_curd": "Ostemasse",
   "item.galacticraft-rewoven.cheese_slice": "Osteskive",
