@@ -177,5 +177,6 @@
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: %s",
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
+  "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
   "ui.galacticraft-rewoven.tabs.side_config": "Coming Soon"
 }

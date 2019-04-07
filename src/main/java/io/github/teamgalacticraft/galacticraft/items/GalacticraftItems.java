@@ -111,6 +111,8 @@ public class GalacticraftItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 
+    public static final Item BATTERY = new BatteryItem(new Item.Settings().itemGroup(ITEMS_GROUP).durability(100));
+
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ORANGE_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -231,6 +233,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HOE), TITANIUM_HOE);
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), STANDARD_WRENCH);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), BATTERY);
 
         //GC INVENTORY
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PARACHUTE), PARACHUTE);
