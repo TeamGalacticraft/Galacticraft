@@ -31,7 +31,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
     public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
-    private static ConfigHandler configHandler = new ConfigHandler();
+    public static ConfigHandler configHandler = new ConfigHandler();
     private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
             Constants.MOD_ID,
             "https://raw.githubusercontent.com/teamgalacticraft/Galacticraft-Rewoven/master/updates.json",
