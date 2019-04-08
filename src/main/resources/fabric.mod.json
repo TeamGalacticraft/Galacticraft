@@ -1,22 +1,36 @@
 {
+  "schemaVersion": 1,
   "id": "galacticraft-rewoven",
+  "version": "$version",
+
   "name": "Galacticraft: Rewoven",
+  "icon": "assets/galacticraft-rewoven/icon.png",
   "description": "FabricMC port of Galacticraft",
-  "version": "0.1.0",
-  "side": "universal",
-  "initializers": [
-    "io.github.teamgalacticraft.galacticraft.Galacticraft",
-    "io.github.teamgalacticraft.galacticraft.GalacticraftClient"
+  "licence": "Galacticraft License",
+  "contact": {
+    "sources": "https://github.com/teamgalacticraft/Galacticraft-Rewoven"
+  },
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "io.github.teamgalacticraft.galacticraft.Galacticraft"
+    ],
+    "client": [
+      "io.github.teamgalacticraft.galacticraft.GalacticraftClient"
+    ]
+  },
+  "mixins": [
+    "galacticraft-rewoven.common.json",
+    "galacticraft-rewoven.client.json"
   ],
   "requires": {
+    "fabricloader": ">=0.4.0",
     "fabric": "*",
+    "cotton": "*",
     "cotton-energy": "*",
     "libblockattributes": "*",
     "silk": "*",
     "tgc-utils": "*"
-  },
-  "mixins": {
-    "client": "galacticraft-rewoven.client.json",
-    "common": "galacticraft-rewoven.common.json"
   }
 }

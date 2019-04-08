@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.0-SNAPSHOT'
+    id 'fabric-loom' version '0.2.1-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -38,9 +38,18 @@ dependencies {
     modCompile "cloth:Cloth:${project.cloth_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
+    modCompile "io.github.cottonmc:cotton:${project.cotton_version}"
     modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
     modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
     modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+    //include everything mandatory inside the jar
+    include "net.fabricmc:fabric:${project.fabric_version}"
+    include "cloth:Cloth:${project.cloth_version}"
+    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
+    include "io.github.cottonmc:cotton:${project.cotton_version}"
+    include "io.github.cottonmc:cotton-energy:${project.energy_version}"
+    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
+    include "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
 }
 
 processResources {
