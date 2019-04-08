@@ -113,6 +113,7 @@ public class GalacticraftItems {
 
     public static final Item BATTERY = new BatteryItem(new Item.Settings().itemGroup(ITEMS_GROUP).durability(100));
 
+
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ORANGE_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));

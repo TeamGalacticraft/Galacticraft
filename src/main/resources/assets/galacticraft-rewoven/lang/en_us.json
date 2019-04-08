@@ -164,6 +164,7 @@
   "item.galacticraft-rewoven.small_oxygen_tank": "Small Oxygen Tank",
   "item.galacticraft-rewoven.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-rewoven.large_oxygen_tank": "Large Oxygen Tank",
+  "item.galacticraft-rewoven.battery": "Battery",
 
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
   "tooltip.galacticraft-rewoven.energy": "%s GJ",
@@ -175,7 +176,12 @@
   "ui.galacticraft-rewoven.machine.status": "Status: %s",
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: %s",
+  "ui.galacticraft-rewoven.machinestatus.active": "Active",
+  "ui.galacticraft-rewoven.machinestatus.idle": "Idle",
+  "ui.galacticraft-rewoven.machinestatus.warming": "Warming",
+  "ui.galacticraft-rewoven.machinestatus.inactive": "Inactive",
+  "ui.galacticraft-rewoven.tabs.side_config": "Coming Soon",
+
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
-  "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
-  "ui.galacticraft-rewoven.tabs.side_config": "Coming Soon"
+  "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s"
 }
