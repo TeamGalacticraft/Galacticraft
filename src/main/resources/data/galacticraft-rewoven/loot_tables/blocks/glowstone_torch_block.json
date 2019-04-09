@@ -1,0 +1,11 @@
+{
+  "pools": [{
+    "entries": [{
+      "name": "galacticraft-rewoven:glowstone_torch_block",
+      "type": "minecraft:item"
+    }],
+    "rolls": 1,
+    "conditions": [{"condition": "minecraft:survives_explosion"}]
+  }],
+  "type": "minecraft:block"
+}

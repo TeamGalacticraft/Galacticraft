@@ -1,0 +1,11 @@
+{
+  "pools": [{
+    "entries": [{
+      "name": "galacticraft-rewoven:venus_rock_block_2",
+      "type": "minecraft:item"
+    }],
+    "rolls": 1,
+    "conditions": [{"condition": "minecraft:survives_explosion"}]
+  }],
+  "type": "minecraft:block"
+}
