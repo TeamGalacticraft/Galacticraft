@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft.world.dimension;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
-import io.github.teamgalacticraft.galacticraft.world.GCDimensions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;

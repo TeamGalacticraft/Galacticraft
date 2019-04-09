@@ -10,9 +10,7 @@ import net.minecraft.world.biome.Biome;
  */
 public class GCBiomes {
 
-    public static final Biome MOON = new MoonBiome();
+    public static final Biome MOON = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, "moon"), new MoonBiome());
 
-    public static void register() {
-        Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, "moon"), MOON);
-    }
+    public static void init() {}
 }
