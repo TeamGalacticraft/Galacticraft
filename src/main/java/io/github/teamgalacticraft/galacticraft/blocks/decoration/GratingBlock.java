@@ -21,16 +21,12 @@ public class GratingBlock extends Block implements Waterloggable {
 
     public GratingBlock(Settings settings) {
         super(settings);
+        this.setDefaultState(this.stateFactory.getDefaultState().with(WATERLOGGED, false));
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, VerticalEntityPosition verticalEntityPosition) {
         return Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    }
-
-    @Override
-    public boolean isTranslucent(BlockState blockState, BlockView blockView, BlockPos blockPos) {
-        return !blockState.get(WATERLOGGED);
     }
 
     @Override
