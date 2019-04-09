@@ -7,12 +7,14 @@ import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
+import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
@@ -40,6 +42,16 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     @Override
     public void tick() {
         int prev = energy.getCurrentEnergy();
+
+        if (inventory.getInvStack(0) != null) {
+            if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(0))) {
+                if (inventory.getInvStack(0).getTag().getInt("Energy") > 0) {
+
+                    this.energy.setCurrentEnergy(this.energy.getCurrentEnergy() + 1);
+                    this.inventory.getInvStack(0).getTag().putInt("Energy", this.inventory.getInvStack(0).getTag().getInt("Energy") - 1);
+                }
+            }
+        }
 
         if (status == CircuitFabricatorStatus.ACTIVE) {
             progress++;
@@ -70,6 +82,11 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
 
     public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
         return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
+    }
+
+    private boolean isValidRecipe(ItemStack input) {
+
+        return false;
     }
 
 

@@ -3,13 +3,16 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.container.Container;
+import net.minecraft.container.HopperContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
@@ -83,7 +86,8 @@ public class CoalGeneratorContainer extends Container {
             }
         };
         // Coal Generator fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, fuel));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 62, fuel));
+        this.addSlot(new ChargeSlot(this.inventory, 1, 8, -2));
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
@@ -104,4 +108,16 @@ public class CoalGeneratorContainer extends Container {
         return true;
     }
 
+    public class ChargeSlot extends Slot {
+
+        public ChargeSlot(Inventory inventory, int slotId, int x, int y) {
+            super(inventory, slotId, x, y);
+        }
+
+        @Override
+        public boolean canInsert(ItemStack itemStack) {
+
+            return itemStack.hasTag() && itemStack.getTag().containsKey("Energy");
+        }
+    }
 }

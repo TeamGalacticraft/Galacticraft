@@ -26,6 +26,5 @@ public class SiliconOreBlock extends OreBlock {
         //}
 
         return new ItemStack(GalacticraftItems.RAW_SILICON, new Random().nextInt(4) + 2 /*+ bonus*/);
-
     }
 }

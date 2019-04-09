@@ -21,8 +21,8 @@ allprojects {
     repositories {
         maven { url "https://minecraft.curseforge.com/api/maven" }
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
-        //maven { url "https://mod-buildcraft.com/maven" }
-        //maven { url "https://jitpack.io" }
+//        maven { url "https://mod-buildcraft.com/maven" }        
+        maven { url "https://jitpack.io" }
         flatDir { dirs 'locallib' }
     }
 }

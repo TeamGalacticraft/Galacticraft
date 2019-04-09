@@ -48,13 +48,13 @@ public class CircuitFabricatorContainer extends Container {
             }
         };
         // Energy slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 0, 0, GalacticraftItems.BATTERY));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 1, 0, 0, Items.DIAMOND));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 2, 0, 0, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 3, 0, 0, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 4, 0, 0, Items.REDSTONE));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 5, 0, 0, materials));
-        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, 6, 0, 0));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 1, 8, -11, Items.DIAMOND));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 2, 8 + (18 * 3), 53, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 3, 8 + (18 * 3), 53 - 18, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 4, 8 + (18 * 6), 53 - 18, Items.REDSTONE));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 5, 8 + (18 * 7), -11, materials));
+        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, 6, 8 + (18 * 8), 53));
 
 
         // Player inventory slots

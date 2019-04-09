@@ -26,7 +26,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = 0;
-    private static final int ENERGY_Y = 167;
+    private static final int ENERGY_Y = 176;
     private static final int ENERGY_WIDTH = 12;
     private static final int ENERGY_HEIGHT = 40;
     private int energyDisplayX = 0;
@@ -44,6 +44,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
         super(new CoalGeneratorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.coal_generator.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
+        this.containerHeight = 176;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
         energyDisplayY = topPos + 9;
 
         //this.drawTexturedRect(...)
-        this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
+        this.blit(leftPos, topPos - 10, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
     }
@@ -73,7 +74,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
 
     private void drawConfigTabs() {
         this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+        this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 7, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {
