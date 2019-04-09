@@ -275,6 +275,7 @@ public class GalacticraftItems {
                 itemStack.add(new ItemStack(MEDIUM_OXYGEN_TANK));
                 itemStack.add(new ItemStack(LARGE_OXYGEN_TANK));
             })
+            .icon(() -> new ItemStack(CANVAS))
             .build();
 
     public static void register() {
