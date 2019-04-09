@@ -1,12 +1,17 @@
 package io.github.teamgalacticraft.galacticraft;
 
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelScreen;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -22,7 +27,19 @@ public class GalacticraftClient implements ClientModInitializer {
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN)));
 
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COAL_GENERATOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CoalGeneratorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.BASIC_SOLAR_PANEL_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new BasicSolarPanelScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.CIRCUIT_FABRICATOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CircuitFabricatorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         //ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryScreen());
+
+		if (FabricLoader.getInstance().isModLoaded("modmenu")) {
+            try {
+                Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
+                Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
+                method.invoke(null, Constants.MOD_ID, (Runnable) () -> Galacticraft.configHandler.openConfigScreen());
+            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
+                Galacticraft.logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
+            }
+        }
+
     }
 }

@@ -43,13 +43,13 @@ dependencies {
     modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
     modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
     //include everything mandatory inside the jar
-    include "net.fabricmc:fabric:${project.fabric_version}"
-    include "cloth:Cloth:${project.cloth_version}"
-    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
-    include "io.github.cottonmc:cotton:${project.cotton_version}"
-    include "io.github.cottonmc:cotton-energy:${project.energy_version}"
-    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
-    include "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+//    include "net.fabricmc:fabric:${project.fabric_version}"
+//    include "cloth:Cloth:${project.cloth_version}"
+//    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
+//    include "io.github.cottonmc:cotton:${project.cotton_version}"
+//    include "io.github.cottonmc:cotton-energy:${project.energy_version}"
+//    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
+//    include "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
 }
 
 processResources {

@@ -8,6 +8,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.lang.reflect.Field;
+
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
@@ -373,7 +375,6 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HOE), TITANIUM_HOE);
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), STANDARD_WRENCH);
-
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), BATTERY);
 
         //GC INVENTORY

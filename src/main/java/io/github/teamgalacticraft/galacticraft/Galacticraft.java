@@ -4,12 +4,15 @@ import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.config.ConfigHandler;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
+import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
+import io.github.teamgalacticraft.galacticraft.world.dimension.GCDimensions;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.OreGenerator;
+import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
@@ -31,7 +34,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
     public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
-    private static ConfigHandler configHandler = new ConfigHandler();
+    public static ConfigHandler configHandler = new ConfigHandler();
     private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
             Constants.MOD_ID,
             "https://raw.githubusercontent.com/teamgalacticraft/Galacticraft-Rewoven/master/updates.json",
@@ -48,7 +51,10 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
-        GCBiomes.register();
+        GalacticraftBlockEntities.init();
+        GCBiomes.init();
+        GCDimensions.init();
+        GCSurfaceBuilder.init();
         OreGenerator.register();
         Capes.updateCapeList();
 

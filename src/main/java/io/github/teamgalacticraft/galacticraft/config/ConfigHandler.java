@@ -8,6 +8,8 @@ import io.github.teamgalacticraft.galacticraft.util.FileUtils;
 import me.shedaniel.cloth.api.ConfigScreenBuilder;
 import me.shedaniel.cloth.gui.ClothConfigScreen;
 import me.shedaniel.cloth.gui.entries.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Screen;
@@ -86,6 +88,7 @@ public class ConfigHandler {
         writer.close();
     }
 
+    @Environment(EnvType.CLIENT)
     public void openConfigScreen() {
         Screen parentScreen = MinecraftClient.getInstance().currentScreen;
         ClothConfigScreen.Builder builder = new ClothConfigScreen.Builder(parentScreen, I18n.translate(Constants.Config.TITLE), null);

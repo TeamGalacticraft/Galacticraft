@@ -6,4 +6,5 @@ public class MoonDimensionType extends DimensionType {
    public MoonDimensionType() {
       super(30, "moon", "DIM30", MoonDimension::new, true);
    }
+
 }

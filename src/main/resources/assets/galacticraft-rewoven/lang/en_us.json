@@ -58,6 +58,7 @@
   "block.galacticraft-rewoven.coal_generator_block": "Coal Generator",
   "block.galacticraft-rewoven.compressor_block": "Compressor",
   "block.galacticraft-rewoven.circuit_fabricator_block": "Circuit Fabricator",
+  "block.galacticraft-rewoven.basic_solar_panel": "Basic Solar Panel",
 
   "item.galacticraft-rewoven.steel_sword": "Steel Sword",
   "item.galacticraft-rewoven.steel_shovel": "Steel Shovel",
@@ -175,6 +176,7 @@
 
   "ui.galacticraft-rewoven.machine.status": "Status: %s",
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: %s",
+  "ui.galacticraft-rewoven.machine.gj_per_t": "GJ/t: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: %s",
   "ui.galacticraft-rewoven.machinestatus.active": "Active",
   "ui.galacticraft-rewoven.machinestatus.idle": "Idle",
