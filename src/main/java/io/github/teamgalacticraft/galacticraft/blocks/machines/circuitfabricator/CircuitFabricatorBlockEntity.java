@@ -92,6 +92,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
+        super.toTag(tag);
         tag.put("Inventory", inventory.toTag());
         tag.put("Energy", energy.toTag());
         return tag;
@@ -99,6 +100,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
 
     @Override
     public void fromTag(CompoundTag tag) {
+        super.fromTag(tag);
         inventory.fromTag(tag.getCompound("Inventory"));
         energy.fromTag(tag.getTag("Energy"));
     }
