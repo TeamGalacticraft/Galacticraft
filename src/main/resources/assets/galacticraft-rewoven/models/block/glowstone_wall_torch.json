@@ -1,0 +1,6 @@
+{
+    "parent": "block/torch_wall",
+    "textures": {
+        "torch": "galacticraft-rewoven:block/glowstone_torch"
+    }
+}

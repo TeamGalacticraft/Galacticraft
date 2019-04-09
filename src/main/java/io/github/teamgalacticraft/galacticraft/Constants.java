@@ -104,6 +104,7 @@ public class Constants {
         //  Environment
         public static final String UNLIT_TORCH = "unlit_torch";
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
+        public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
         public static final String CAVERNOUS_VINE_BLOCK = "cavernous_vine_block";
         public static final String WEB_TORCH = "web_torch";
         public static final String FALLEN_METEOR = "fallen_meteor_block";

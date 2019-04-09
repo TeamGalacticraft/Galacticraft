@@ -8,6 +8,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.decoration.LightingPanelBl
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.CavernousVineBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.GlowstoneTorchBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.environment.GlowstoneWallTorchBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.UnlitTorchBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
@@ -22,6 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.block.BlockItem;
+import net.minecraft.item.block.WallStandingBlockItem;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -120,6 +122,7 @@ public class GalacticraftBlocks {
     public static final Block LEAD_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).build());
+    public static final Block GLOWSTONE_WALL_TORCH_BLOCK = new GlowstoneWallTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).dropsLike(GLOWSTONE_TORCH_BLOCK).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
 
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
@@ -211,7 +214,7 @@ public class GalacticraftBlocks {
     public static final BlockItem MARS_COBBLESTONE_WALL_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_WALL_BLOCK, new Item.Settings());
     public static final BlockItem MARS_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
     public static final BlockItem UNLIT_TORCH_BLOCK_ITEM = new BlockItem(UNLIT_TORCH_BLOCK, new Item.Settings());
-    public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new BlockItem(GLOWSTONE_TORCH_BLOCK, new Item.Settings());
+    public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new WallStandingBlockItem(GLOWSTONE_TORCH_BLOCK, GLOWSTONE_WALL_TORCH_BLOCK, new Item.Settings());
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings());
 
     public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings());
@@ -416,6 +419,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CHEESE_BLOCK), CHEESE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), UNLIT_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_WALL_TORCH), GLOWSTONE_WALL_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK);
 
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), CIRCUIT_FABRICATOR_BLOCK);
