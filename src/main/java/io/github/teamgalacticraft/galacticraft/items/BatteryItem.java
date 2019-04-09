@@ -7,12 +7,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.util.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -49,6 +51,32 @@ public class BatteryItem extends Item {
                 super.buildTooltip(stack, world, lines, context);
             }
         }
+    }
+
+    @Override
+    public void appendItemsForGroup(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
+        if (group != GalacticraftItems.ITEMS_GROUP) {
+            // Only add battery items to our item group.
+            return;
+        }
+
+        // Adds a full battery and a depleted one
+        ItemStack battery_full = new ItemStack(GalacticraftItems.BATTERY);
+        ItemStack battery_depleted = new ItemStack(GalacticraftItems.BATTERY);
+        CompoundTag tag_full = new CompoundTag();
+        CompoundTag tag_depleted = new CompoundTag();
+        tag_full.putInt("Energy", BatteryItem.getMaxEnergy());
+        tag_full.putInt("MaxEnergy", BatteryItem.getMaxEnergy());
+        tag_full.putInt("Harm", 0);
+        tag_depleted.putInt("Energy", 0);
+        tag_depleted.putInt("MaxEnergy", BatteryItem.getMaxEnergy());
+        tag_depleted.putInt("Harm", 100);
+
+        battery_full.setTag(tag_full);
+        battery_depleted.setTag(tag_depleted);
+
+        groupStacks.add(battery_full);
+        groupStacks.add(battery_depleted);
     }
 
     @Override

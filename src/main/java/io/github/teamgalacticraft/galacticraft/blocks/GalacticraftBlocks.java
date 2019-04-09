@@ -34,8 +34,20 @@ import org.apache.logging.log4j.MarkerManager;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBlocks {
-
     private static final Marker BLOCKS = MarkerManager.getMarker("Blocks"); // Galacticraft/Blocks
+
+    public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
+            // Set the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF_BLOCK))
+            .build();
+
+
+    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
+            // Set the the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR_BLOCK))
+            .build();
 
     // Blocks
     public static final Block MOON_TURF_BLOCK = new Block(FabricBlockSettings.of(Material.ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build());
@@ -131,207 +143,96 @@ public class GalacticraftBlocks {
     public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).build());
 
     // Block Items
-    public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_ROCK_BLOCK_ITEM = new BlockItem(MOON_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_DIRT_BLOCK_ITEM = new BlockItem(MOON_DIRT_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_DUNGEON_BRICK_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_SURFACE_ROCK_BLOCK_ITEM = new BlockItem(MARS_SURFACE_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_SUB_SURFACE_ROCK_BLOCK_ITEM = new BlockItem(MARS_SUB_SURFACE_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_STONE_BLOCK_ITEM = new BlockItem(MARS_STONE_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_COBBLESTONE_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_DUNGEON_BRICK_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_BLOCK, new Item.Settings());
-    public static final BlockItem DENSE_ICE_BLOCK_ITEM = new BlockItem(DENSE_ICE_BLOCK, new Item.Settings());
-    public static final BlockItem ASTEROID_ROCK_BLOCK_ITEM = new BlockItem(ASTEROID_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem ASTEROID_ROCK_BLOCK_ITEM_1 = new BlockItem(ASTEROID_ROCK_BLOCK_1, new Item.Settings());
-    public static final BlockItem ASTEROID_ROCK_BLOCK_ITEM_2 = new BlockItem(ASTEROID_ROCK_BLOCK_2, new Item.Settings());
-    public static final BlockItem VENUS_ROCK_BLOCK_ITEM = new BlockItem(VENUS_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_1 = new BlockItem(VENUS_ROCK_BLOCK_1, new Item.Settings());
-    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_2 = new BlockItem(VENUS_ROCK_BLOCK_2, new Item.Settings());
-    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_3 = new BlockItem(VENUS_ROCK_BLOCK_3, new Item.Settings());
-    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_SCORCHED = new BlockItem(VENUS_ROCK_BLOCK_SCORCHED, new Item.Settings());
-    public static final BlockItem VOLCANIC_ROCK_BLOCK_ITEM = new BlockItem(VOLCANIC_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem SCORCHED_ROCK_BLOCK_ITEM = new BlockItem(SCORCHED_ROCK_BLOCK, new Item.Settings());
-    public static final BlockItem PUMICE_BLOCK_ITEM = new BlockItem(PUMICE_BLOCK, new Item.Settings());
-    public static final BlockItem VAPOR_SPOUT_BLOCK_ITEM = new BlockItem(VAPOR_SPOUT_BLOCK, new Item.Settings());
-    public static final BlockItem COPPER_ORE_BLOCK_ITEM = new BlockItem(COPPER_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_ORE_BLOCK_ITEM = new BlockItem(TIN_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ALUMINUM_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem SILICON_ORE_BLOCK_ITEM = new BlockItem(SILICON_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem ASTEROID_ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ASTEROID_ALUMINUM_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem CHEESE_ORE_BLOCK_ITEM = new BlockItem(CHEESE_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem CHEESE_BLOCK_ITEM = new BlockItem(CHEESE_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_COPPER_ORE_BLOCK_ITEM = new BlockItem(MOON_COPPER_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_COPPER_ORE_BLOCK_ITEM = new BlockItem(MARS_COPPER_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem DESH_ORE_BLOCK_ITEM = new BlockItem(DESH_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem ILMENITE_ORE_BLOCK_ITEM = new BlockItem(ILMENITE_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_IRON_ORE_BLOCK_ITEM = new BlockItem(MARS_IRON_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem ASTEROID_IRON_ORE_BLOCK_ITEM = new BlockItem(ASTEROID_IRON_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_TIN_ORE_BLOCK_ITEM = new BlockItem(MOON_TIN_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_TIN_ORE_BLOCK_ITEM = new BlockItem(MARS_TIN_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem GALENA_ORE_BLOCK_ITEM = new BlockItem(GALENA_ORE_BLOCK, new Item.Settings());
-    public static final BlockItem COPPER_BLOCK_ITEM = new BlockItem(COPPER_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_BLOCK_ITEM = new BlockItem(TIN_BLOCK, new Item.Settings());
-    public static final BlockItem ALUMINUM_BLOCK_ITEM = new BlockItem(ALUMINUM_BLOCK, new Item.Settings());
-    public static final BlockItem SILICON_BLOCK_ITEM = new BlockItem(SILICON_BLOCK, new Item.Settings());
-    public static final BlockItem SOLID_METEORIC_IRON_BLOCK_ITEM = new BlockItem(SOLID_METEORIC_IRON_BLOCK, new Item.Settings());
-    public static final BlockItem DESH_BLOCK_ITEM = new BlockItem(DESH_BLOCK, new Item.Settings());
-    public static final BlockItem TITANIUM_BLOCK_ITEM = new BlockItem(TITANIUM_BLOCK, new Item.Settings());
-    public static final BlockItem LEAD_BLOCK_ITEM = new BlockItem(LEAD_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_DECORATION_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_1, new Item.Settings());
-    public static final BlockItem DARK_DECORATION_BLOCK_ITEM = new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings());
-    public static final BlockItem GRATING_BLOCK_ITEM = new BlockItem(GRATING_BLOCK, new Item.Settings());
-    public static final BlockItem ALUMINUM_WIRE_BLOCK_ITEM = new BlockItem(ALUMINUM_WIRE_BLOCK, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_SQUARE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SQUARE, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SPOTLIGHT, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_LINEAR_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_LINEAR, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_DARK, new Item.Settings());
-    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_DARK_ANGLE, new Item.Settings());
-    public static final BlockItem VACUUM_GLASS_BLOCK_ITEM = new BlockItem(VACUUM_GLASS_BLOCK, new Item.Settings());
-    public static final BlockItem VACUUM_GLASS_BLOCK_CLEAR_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_CLEAR, new Item.Settings());
-    public static final BlockItem VACUUM_GLASS_BLOCK_TIN_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_TIN, new Item.Settings());
-    public static final BlockItem VACUUM_GLASS_BLOCK_STRONG_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_STRONG, new Item.Settings());
-    public static final BlockItem WALKWAY_BLOCK_ITEM = new BlockItem(WALKWAY_BLOCK, new Item.Settings());
-    public static final BlockItem WALKWAY_BLOCK_WIRE_ITEM = new BlockItem(WALKWAY_BLOCK_WIRE, new Item.Settings());
-    public static final BlockItem WALKWAY_BLOCK_PIPE_ITEM = new BlockItem(WALKWAY_BLOCK_PIPE, new Item.Settings());
-    public static final BlockItem TIN_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(TIN_DECORATION_SLAB_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_DECORATION_SLAB_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_SLAB_BLOCK_1, new Item.Settings());
-    public static final BlockItem DARK_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(DARK_DECORATION_SLAB_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_COBBLESTONE_SLAB_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_SLAB_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_STONE_SLAB_BLOCK_ITEM = new BlockItem(MOON_STONE_SLAB_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_STONE_STAIRS_BLOCK_ITEM = new BlockItem(MOON_STONE_STAIRS_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_DECORATION_STAIRS_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK_STAIRS, new Item.Settings());
-    public static final BlockItem TIN_DECORATION_STAIRS_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_STAIRS_1, new Item.Settings());
-    public static final BlockItem MARS_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_COBBLESTONE_STAIRS_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_STAIRS_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings());
-    public static final BlockItem TIN_WALL_BLOCK_ITEM_1 = new BlockItem(TIN_WALL_BLOCK_1, new Item.Settings());
-    public static final BlockItem MOON_STONE_WALL_BLOCK_ITEM = new BlockItem(MOON_STONE_WALL_BLOCK, new Item.Settings());
-    public static final BlockItem MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_COBBLESTONE_WALL_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_WALL_BLOCK, new Item.Settings());
-    public static final BlockItem MARS_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings());
-    public static final BlockItem UNLIT_TORCH_BLOCK_ITEM = new BlockItem(UNLIT_TORCH_BLOCK, new Item.Settings());
-    public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new WallStandingBlockItem(GLOWSTONE_TORCH_BLOCK, GLOWSTONE_WALL_TORCH_BLOCK, new Item.Settings());
-    public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings());
+    public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_ROCK_BLOCK_ITEM = new BlockItem(MOON_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_DIRT_BLOCK_ITEM = new BlockItem(MOON_DIRT_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_DUNGEON_BRICK_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_SURFACE_ROCK_BLOCK_ITEM = new BlockItem(MARS_SURFACE_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_SUB_SURFACE_ROCK_BLOCK_ITEM = new BlockItem(MARS_SUB_SURFACE_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_STONE_BLOCK_ITEM = new BlockItem(MARS_STONE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_COBBLESTONE_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_DUNGEON_BRICK_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem DENSE_ICE_BLOCK_ITEM = new BlockItem(DENSE_ICE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ASTEROID_ROCK_BLOCK_ITEM = new BlockItem(ASTEROID_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ASTEROID_ROCK_BLOCK_ITEM_1 = new BlockItem(ASTEROID_ROCK_BLOCK_1, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ASTEROID_ROCK_BLOCK_ITEM_2 = new BlockItem(ASTEROID_ROCK_BLOCK_2, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VENUS_ROCK_BLOCK_ITEM = new BlockItem(VENUS_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_1 = new BlockItem(VENUS_ROCK_BLOCK_1, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_2 = new BlockItem(VENUS_ROCK_BLOCK_2, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_3 = new BlockItem(VENUS_ROCK_BLOCK_3, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VENUS_ROCK_BLOCK_ITEM_SCORCHED = new BlockItem(VENUS_ROCK_BLOCK_SCORCHED, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VOLCANIC_ROCK_BLOCK_ITEM = new BlockItem(VOLCANIC_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem SCORCHED_ROCK_BLOCK_ITEM = new BlockItem(SCORCHED_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem PUMICE_BLOCK_ITEM = new BlockItem(PUMICE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VAPOR_SPOUT_BLOCK_ITEM = new BlockItem(VAPOR_SPOUT_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem COPPER_ORE_BLOCK_ITEM = new BlockItem(COPPER_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_ORE_BLOCK_ITEM = new BlockItem(TIN_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ALUMINUM_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem SILICON_ORE_BLOCK_ITEM = new BlockItem(SILICON_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ASTEROID_ALUMINUM_ORE_BLOCK_ITEM = new BlockItem(ASTEROID_ALUMINUM_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem CHEESE_ORE_BLOCK_ITEM = new BlockItem(CHEESE_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem CHEESE_BLOCK_ITEM = new BlockItem(CHEESE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_COPPER_ORE_BLOCK_ITEM = new BlockItem(MOON_COPPER_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_COPPER_ORE_BLOCK_ITEM = new BlockItem(MARS_COPPER_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem DESH_ORE_BLOCK_ITEM = new BlockItem(DESH_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ILMENITE_ORE_BLOCK_ITEM = new BlockItem(ILMENITE_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_IRON_ORE_BLOCK_ITEM = new BlockItem(MARS_IRON_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ASTEROID_IRON_ORE_BLOCK_ITEM = new BlockItem(ASTEROID_IRON_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_TIN_ORE_BLOCK_ITEM = new BlockItem(MOON_TIN_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_TIN_ORE_BLOCK_ITEM = new BlockItem(MARS_TIN_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem GALENA_ORE_BLOCK_ITEM = new BlockItem(GALENA_ORE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem COPPER_BLOCK_ITEM = new BlockItem(COPPER_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_BLOCK_ITEM = new BlockItem(TIN_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ALUMINUM_BLOCK_ITEM = new BlockItem(ALUMINUM_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem SILICON_BLOCK_ITEM = new BlockItem(SILICON_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem SOLID_METEORIC_IRON_BLOCK_ITEM = new BlockItem(SOLID_METEORIC_IRON_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem DESH_BLOCK_ITEM = new BlockItem(DESH_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TITANIUM_BLOCK_ITEM = new BlockItem(TITANIUM_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem LEAD_BLOCK_ITEM = new BlockItem(LEAD_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_DECORATION_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_1, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem DARK_DECORATION_BLOCK_ITEM = new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem GRATING_BLOCK_ITEM = new BlockItem(GRATING_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem ALUMINUM_WIRE_BLOCK_ITEM = new BlockItem(ALUMINUM_WIRE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem LIGHTING_PANEL_BLOCK_SQUARE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SQUARE, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SPOTLIGHT, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem LIGHTING_PANEL_BLOCK_LINEAR_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_LINEAR, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_DARK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_DARK_ANGLE, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VACUUM_GLASS_BLOCK_ITEM = new BlockItem(VACUUM_GLASS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VACUUM_GLASS_BLOCK_CLEAR_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_CLEAR, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VACUUM_GLASS_BLOCK_TIN_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_TIN, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem VACUUM_GLASS_BLOCK_STRONG_ITEM = new BlockItem(VACUUM_GLASS_BLOCK_STRONG, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem WALKWAY_BLOCK_ITEM = new BlockItem(WALKWAY_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem WALKWAY_BLOCK_WIRE_ITEM = new BlockItem(WALKWAY_BLOCK_WIRE, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem WALKWAY_BLOCK_PIPE_ITEM = new BlockItem(WALKWAY_BLOCK_PIPE, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(TIN_DECORATION_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_DECORATION_SLAB_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_SLAB_BLOCK_1, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem DARK_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(DARK_DECORATION_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_COBBLESTONE_SLAB_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_STONE_SLAB_BLOCK_ITEM = new BlockItem(MOON_STONE_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_STONE_STAIRS_BLOCK_ITEM = new BlockItem(MOON_STONE_STAIRS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_DECORATION_STAIRS_BLOCK_ITEM = new BlockItem(TIN_DECORATION_BLOCK_STAIRS, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_DECORATION_STAIRS_BLOCK_ITEM_1 = new BlockItem(TIN_DECORATION_BLOCK_STAIRS_1, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_COBBLESTONE_STAIRS_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_STAIRS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_WALL_BLOCK_ITEM = new BlockItem(TIN_WALL_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem TIN_WALL_BLOCK_ITEM_1 = new BlockItem(TIN_WALL_BLOCK_1, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_STONE_WALL_BLOCK_ITEM = new BlockItem(MOON_STONE_WALL_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_COBBLESTONE_WALL_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_WALL_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MARS_DUNGEON_BRICK_WALL_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_WALL_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem UNLIT_TORCH_BLOCK_ITEM = new BlockItem(UNLIT_TORCH_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new WallStandingBlockItem(GLOWSTONE_TORCH_BLOCK, GLOWSTONE_WALL_TORCH_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
 
-    public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings());
-    public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings());
-    public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings());
-    public static final BlockItem BASIC_SOLAR_PANEL_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_BLOCK, new Item.Settings());
-
-    public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
-            .appendItems(itemStack -> {
-                // add blocks to Creative tab
-                itemStack.add(new ItemStack(MOON_TURF_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_DIRT_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_SURFACE_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_SUB_SURFACE_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_STONE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_COBBLESTONE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_DUNGEON_BRICK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(DENSE_ICE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ASTEROID_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ASTEROID_ROCK_BLOCK_ITEM_1));
-                itemStack.add(new ItemStack(ASTEROID_ROCK_BLOCK_ITEM_2));
-                itemStack.add(new ItemStack(VENUS_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(VENUS_ROCK_BLOCK_ITEM_1));
-                itemStack.add(new ItemStack(VENUS_ROCK_BLOCK_ITEM_2));
-                itemStack.add(new ItemStack(VENUS_ROCK_BLOCK_ITEM_3));
-                itemStack.add(new ItemStack(VENUS_ROCK_BLOCK_ITEM_SCORCHED));
-                itemStack.add(new ItemStack(VOLCANIC_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(SCORCHED_ROCK_BLOCK_ITEM));
-                itemStack.add(new ItemStack(PUMICE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(VAPOR_SPOUT_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ALUMINUM_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(COPPER_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(SILICON_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ASTEROID_ALUMINUM_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(CHEESE_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_COPPER_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_COPPER_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(DESH_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ILMENITE_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_IRON_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ASTEROID_IRON_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_TIN_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_TIN_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(GALENA_ORE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(COPPER_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ALUMINUM_BLOCK_ITEM));
-                itemStack.add(new ItemStack(SILICON_BLOCK_ITEM));
-                itemStack.add(new ItemStack(SOLID_METEORIC_IRON_BLOCK_ITEM));
-                itemStack.add(new ItemStack(DESH_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TITANIUM_BLOCK_ITEM));
-                itemStack.add(new ItemStack(LEAD_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_BLOCK_ITEM_1));
-                itemStack.add(new ItemStack(DARK_DECORATION_BLOCK_ITEM));
-                itemStack.add(new ItemStack(GRATING_BLOCK_ITEM));
-                itemStack.add(new ItemStack(ALUMINUM_WIRE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_SQUARE_ITEM));
-                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM));
-                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_LINEAR_ITEM));
-                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_DARK_ITEM));
-                itemStack.add(new ItemStack(LIGHTING_PANEL_BLOCK_DARK_ANGLE_ITEM));
-                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_CLEAR_ITEM));
-                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_TIN_ITEM));
-                itemStack.add(new ItemStack(VACUUM_GLASS_BLOCK_STRONG_ITEM));
-                itemStack.add(new ItemStack(WALKWAY_BLOCK_ITEM));
-                itemStack.add(new ItemStack(WALKWAY_BLOCK_WIRE_ITEM));
-                itemStack.add(new ItemStack(WALKWAY_BLOCK_PIPE_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_SLAB_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_SLAB_BLOCK_ITEM_1));
-                itemStack.add(new ItemStack(DARK_DECORATION_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_COBBLESTONE_SLAB_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_STONE_SLAB_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_STONE_STAIRS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_STAIRS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_DECORATION_STAIRS_BLOCK_ITEM_1));
-                itemStack.add(new ItemStack(MARS_DUNGEON_BRICK_STAIRS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_COBBLESTONE_STAIRS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM));
-                itemStack.add(new ItemStack(TIN_WALL_BLOCK_ITEM_1));
-                itemStack.add(new ItemStack(MOON_STONE_STAIRS_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MOON_DUNGEON_BRICK_WALL_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_COBBLESTONE_WALL_BLOCK_ITEM));
-                itemStack.add(new ItemStack(MARS_COBBLESTONE_WALL_BLOCK_ITEM));
-                itemStack.add(new ItemStack(CHEESE_BLOCK_ITEM));
-                itemStack.add(new ItemStack(UNLIT_TORCH_BLOCK_ITEM));
-                itemStack.add(new ItemStack(GLOWSTONE_TORCH_BLOCK_ITEM));
-                itemStack.add(new ItemStack(CAVERNOUS_VINE_BLOCK_ITEM));
-
-                // add blocks to creative menu
-            })
-            // Set the tab icon
-            .icon(() -> new ItemStack(MOON_TURF_BLOCK_ITEM))
-            .build();
-
-
-    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
-            .appendItems(itemStack -> {
-                // add blocks to Creative tab
-                itemStack.add(new ItemStack(COAL_GENERATOR_BLOCK_ITEM));
-                itemStack.add(new ItemStack(COMPRESSOR_BLOCK_ITEM));
-                itemStack.add(new ItemStack(CIRCUIT_FABRICATOR_BLOCK_ITEM));
-                itemStack.add(new ItemStack(BASIC_SOLAR_PANEL_BLOCK_ITEM));
-            })
-            // Set the the tab icon
-            .icon(() -> new ItemStack(COAL_GENERATOR_BLOCK_ITEM))
-            .build();
-
+    public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
+    public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
+    public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
+    public static final BlockItem BASIC_SOLAR_PANEL_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
 
     public static void register() {
         // Register Blocks
