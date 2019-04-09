@@ -106,6 +106,7 @@ public class Constants {
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
         public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
         public static final String CAVERNOUS_VINE_BLOCK = "cavernous_vine_block";
+        public static final String POISONOUS_CAVERNOUS_VINE_BLOCK = "poisonous_cavernous_vine_block";
         public static final String WEB_TORCH = "web_torch";
         public static final String FALLEN_METEOR = "fallen_meteor_block";
         public static final String SLIMELING_EGG_BLOCK = "slimeling_egg_block";
