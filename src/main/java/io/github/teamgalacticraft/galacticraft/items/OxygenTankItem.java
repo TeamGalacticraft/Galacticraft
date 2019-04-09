@@ -27,12 +27,12 @@ public class OxygenTankItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void buildTooltip(ItemStack stack, World world, List<TextComponent> lines, TooltipContext context) {
-        lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.oxygen-remaining", this.getDurability()));
+        lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.oxygen-remaining", stack.getDurability() - stack.getDamage()));
         super.buildTooltip(stack, world, lines, context);
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand)); //TODO
+        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand)); //TODO Put in GC Slot
     }
 
 }

@@ -112,7 +112,7 @@ public class GalacticraftItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static final Item BATTERY = new BatteryItem(new Item.Settings().durability(100));
+    public static final Item BATTERY = new BatteryItem(new Item.Settings().durability(15000));
 
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -132,9 +132,9 @@ public class GalacticraftItems {
     public static final Item RED_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BLACK_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP));
-    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP));
-    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP));
+    public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(900));
+    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(18000));
+    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(27000));
 
     public static void register() {
         //MATERIALS
