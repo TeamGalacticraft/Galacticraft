@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.energy;
 import io.github.cottonmc.energy.CottonEnergy;
 import io.github.cottonmc.energy.api.EnergyType;
 import io.github.teamgalacticraft.galacticraft.Constants;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Marker;
@@ -18,5 +19,10 @@ public class GalacticraftEnergy {
 
     public static void register() {
         Registry.register(CottonEnergy.ENERGY_REGISTRY, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
+    }
+
+    public static boolean isEnergyItem(ItemStack itemStack) {
+
+        return itemStack.hasTag() && itemStack.getTag().containsKey("Energy") && itemStack.getTag().containsKey("MaxEnergy") && itemStack.getTag().containsKey("Harm");
     }
 }

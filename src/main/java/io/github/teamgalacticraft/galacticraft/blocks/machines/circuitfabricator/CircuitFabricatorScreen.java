@@ -1,7 +1,8 @@
-package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
+package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
@@ -17,18 +18,19 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
- */
-public class CoalGeneratorScreen extends ContainerScreen {
+public class CircuitFabricatorScreen extends ContainerScreen {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = 0;
-    private static final int ENERGY_Y = 176;
+    private static final int ENERGY_Y = 167;
     private static final int ENERGY_WIDTH = 12;
     private static final int ENERGY_HEIGHT = 40;
+    private static final int PROGRESS_X = 0;
+    private static final int PROGRESS_Y = 0;
+    private static final int PROGRESS_WIDTH = 0;
+    private static final int PROGRESS_HEIGHT = 0;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
 
@@ -40,11 +42,12 @@ public class CoalGeneratorScreen extends ContainerScreen {
     BlockPos blockPos;
     private World world;
 
-    public CoalGeneratorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new CoalGeneratorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.coal_generator.name"));
+
+    public CircuitFabricatorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
+        super(new CircuitFabricatorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.circuit_fabricator.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
-        this.containerHeight = 176;
+        this.containerHeight = 192;
     }
 
     @Override
@@ -60,7 +63,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
         energyDisplayY = topPos + 9;
 
         //this.drawTexturedRect(...)
-        this.blit(leftPos, topPos - 10, 0, 0, this.containerWidth, this.containerHeight);
+        this.blit(leftPos, topPos - 26, 0, 0, this.containerWidth, this.containerHeight + 26);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
     }
@@ -68,18 +71,18 @@ public class CoalGeneratorScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, I18n.translate("block.galacticraft-rewoven.coal_generator_block"), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, I18n.translate("block.galacticraft-rewoven.circuit_fabricator_block"), (this.width / 2), this.top - 16, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     private void drawConfigTabs() {
         this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 7, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+        this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 16, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {
-        float currentEnergy = (float) ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
-        float maxEnergy = (float) ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
+        float currentEnergy = (float) ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
+        float maxEnergy = (float) ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
         //this.drawTexturedReact(...)
@@ -91,7 +94,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status", ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
+            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status", ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
             toolTipLines.add("\u00A76" + new TranslatableTextComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(TextFormat.BLUE))).getFormattedText() + "\u00A7r");
             toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
 

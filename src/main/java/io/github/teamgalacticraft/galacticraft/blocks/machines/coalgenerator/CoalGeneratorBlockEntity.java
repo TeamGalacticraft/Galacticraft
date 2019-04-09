@@ -16,6 +16,7 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -30,11 +31,11 @@ import java.util.Map;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
+
     private final List<Runnable> listeners = Lists.newArrayList();
-    SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
-    boolean isBurning = false;
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     private float heat = 0.0f;
     public int fuelTimeMax;
@@ -52,11 +53,11 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
-        Map<Item, Integer> map_1 = Maps.newLinkedHashMap();
-        map_1.put(Blocks.COAL_BLOCK.getItem(), 160000);
-        map_1.put(Items.COAL, 1600);
-        map_1.put(Items.CHARCOAL, 1600);
-        return map_1;
+        Map<Item, Integer> map = Maps.newLinkedHashMap();
+        map.put(Blocks.COAL_BLOCK.getItem(), 160000);
+        map.put(Items.COAL, 1600);
+        map.put(Items.CHARCOAL, 1600);
+        return map;
     }
 
     public static boolean canUseAsFuel(ItemStack itemStack) {
@@ -106,7 +107,16 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             }
         }
 
+        if (inventory.getInvStack(1).getTag() != null) {
+            if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(1))) {
+                if (inventory.getInvStack(1).getTag().getInt("Energy") < inventory.getInvStack(1).getTag().getInt("MaxEnergy")) {
+                    this.energy.setCurrentEnergy(this.energy.getCurrentEnergy() - 1);
+                    this.inventory.getInvStack(1).getTag().putInt("Energy", this.inventory.getInvStack(1).getTag().getInt("Energy") + 1);
+                }
+            }
+        }
     }
+
 
     public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
         return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));

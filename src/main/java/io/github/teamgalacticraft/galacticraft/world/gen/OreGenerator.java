@@ -12,15 +12,13 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 public class OreGenerator {
 
     public static void register() {
-
         registerOverworld();
         registerMoon();
+        registerMars();
     }
 
     private static void registerOverworld() {
-
         for (Biome biome : Biome.BIOMES) {
-
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.NETHER.getCategory())) {
 
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.ALUMINUM_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));

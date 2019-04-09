@@ -9,8 +9,10 @@ import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
+import io.github.teamgalacticraft.galacticraft.world.dimension.GCDimensions;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.OreGenerator;
+import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
@@ -50,7 +52,9 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
         GalacticraftBlockEntities.init();
-        GCBiomes.register();
+        GCBiomes.init();
+        GCDimensions.init();
+        GCSurfaceBuilder.init();
         OreGenerator.register();
         Capes.updateCapeList();
 

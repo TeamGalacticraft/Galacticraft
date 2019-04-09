@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
@@ -78,7 +79,7 @@ public class BasicSolarPanelContainer extends Container {
             }
         };
         // Coal Generator fuel slot
-        this.addSlot(new SolarPanelBatterySlot(this, this.inventory, 0, 8, 53));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
@@ -97,19 +98,5 @@ public class BasicSolarPanelContainer extends Container {
     @Override
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
-    }
-
-    public class SolarPanelBatterySlot extends Slot {
-        private final BasicSolarPanelContainer container;
-
-        public SolarPanelBatterySlot(BasicSolarPanelContainer container, Inventory inventory, int int_1, int int_2, int int_3) {
-            super(inventory, int_1, int_2, int_3);
-            this.container = container;
-        }
-
-        @Override
-        public boolean canInsert(ItemStack stack) {
-            return stack.getItem() == GalacticraftItems.BATTERY;
-        }
     }
 }
