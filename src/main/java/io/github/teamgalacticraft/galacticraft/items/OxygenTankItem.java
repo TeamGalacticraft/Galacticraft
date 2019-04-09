@@ -22,7 +22,6 @@ public class OxygenTankItem extends Item {
 
     public OxygenTankItem(Settings settings) {
         super(settings);
-        settings.stackSize(1);
     }
 
     @Override

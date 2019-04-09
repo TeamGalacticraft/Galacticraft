@@ -4,6 +4,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.config.ConfigHandler;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
+import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
@@ -48,6 +49,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
+        GalacticraftBlockEntities.init();
         GCBiomes.register();
         OreGenerator.register();
         Capes.updateCapeList();
