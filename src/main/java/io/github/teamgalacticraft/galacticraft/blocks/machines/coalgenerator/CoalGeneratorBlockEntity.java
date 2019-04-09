@@ -107,7 +107,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             }
         }
 
-        if (inventory.getInvStack(1).getTag() != null) {
+        if (inventory.getInvStack(1).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
             if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(1))) {
                 if (inventory.getInvStack(1).getTag().getInt("Energy") < inventory.getInvStack(1).getTag().getInt("MaxEnergy")) {
                     this.energy.setCurrentEnergy(this.energy.getCurrentEnergy() - 1);
@@ -132,6 +132,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
+        super.toTag(tag);
         tag.put("Inventory", inventory.toTag());
         tag.put("Energy", energy.toTag());
         return tag;
@@ -139,6 +140,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
 
     @Override
     public void fromTag(CompoundTag tag) {
+        super.fromTag(tag);
         inventory.fromTag(tag.getCompound("Inventory"));
         energy.fromTag(tag.getTag("Energy"));
     }

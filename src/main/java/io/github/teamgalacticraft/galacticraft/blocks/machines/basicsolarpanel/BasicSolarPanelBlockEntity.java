@@ -114,6 +114,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
+        super.toTag(tag);
         tag.put("Inventory", inventory.toTag());
         tag.put("Energy", energy.toTag());
         return tag;
@@ -121,6 +122,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
 
     @Override
     public void fromTag(CompoundTag tag) {
+        super.fromTag(tag);
         inventory.fromTag(tag.getCompound("Inventory"));
         energy.fromTag(tag.getTag("Energy"));
     }
