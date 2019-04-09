@@ -58,9 +58,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
             }
             time -= 24000;
         }
-
-        System.out.println(time);
-
+        
         if ((time > 250 && time < 12000)) {
                 if (energy.getCurrentEnergy() <= energy.getMaxEnergy()) {
                     status = BasicSolarPanelStatus.COLLECTING;

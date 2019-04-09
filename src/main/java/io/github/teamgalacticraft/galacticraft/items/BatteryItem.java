@@ -29,9 +29,6 @@ public class BatteryItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void buildTooltip(ItemStack stack, World world, List<TextComponent> lines, TooltipContext context) {
-        System.out.println(stack.getDurability() - stack.getDamage());
-        System.out.println(stack.getDurability());
-        System.out.println(stack.getDamage());
         if (stack.getDurability() - stack.getDamage() < 34) {
             lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", (stack.getDurability() - stack.getDamage()) * 150).setStyle(new Style().setColor(TextFormat.DARK_RED)));
         } else if (stack.getDurability() - stack.getDamage() < 67) {
