@@ -119,7 +119,7 @@ public class GalacticraftBlocks {
     public static final Block TITANIUM_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block LEAD_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).build());
     public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
-    public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
+    public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
 
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
