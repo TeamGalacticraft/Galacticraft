@@ -33,10 +33,9 @@ import java.util.Map;
 public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
 
     private final List<Runnable> listeners = Lists.newArrayList();
-    SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
-    boolean isBurning = false;
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     private float heat = 0.0f;
     public int fuelTimeMax;
@@ -108,6 +107,14 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             }
         }
 
+        if (inventory.getInvStack(1).getTag() != null) {
+            if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(1))) {
+                if (inventory.getInvStack(1).getTag().getInt("Energy") < inventory.getInvStack(1).getTag().getInt("MaxEnergy")) {
+                    this.energy.setCurrentEnergy(this.energy.getCurrentEnergy() - 1);
+                    this.inventory.getInvStack(1).getTag().putInt("Energy", this.inventory.getInvStack(1).getTag().getInt("Energy") + 1);
+                }
+            }
+        }
     }
 
 
