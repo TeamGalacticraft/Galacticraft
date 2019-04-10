@@ -210,7 +210,7 @@ public class GalacticraftBlocks {
     public static final BlockItem DARK_DECORATION_SLAB_BLOCK_ITEM = new BlockItem(DARK_DECORATION_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MARS_COBBLESTONE_SLAB_BLOCK_ITEM = new BlockItem(MARS_COBBLESTONE_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MARS_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
-    public static final BlockItem MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MARS_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_DUNGEON_BRICK_SLAB_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MOON_ROCK_SLAB_BLOCK_ITEM = new BlockItem(MOON_ROCK_SLAB_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MOON_ROCK_STAIRS_BLOCK_ITEM = new BlockItem(MOON_ROCK_STAIRS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MOON_DUNGEON_BRICK_STAIRS_BLOCK_ITEM = new BlockItem(MOON_DUNGEON_BRICK_STAIRS_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
