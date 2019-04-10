@@ -1,0 +1,12 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:cheese_block"
+    }
+  ],
+  "result": {
+    "item": "galacticraft-rewoven:cheese_slice",
+    "count": 6
+  }
+}
