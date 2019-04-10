@@ -3,9 +3,11 @@ package io.github.teamgalacticraft.galacticraft.items;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TextFormat;
@@ -49,6 +51,15 @@ public class BatteryItem extends Item {
 
         groupStacks.add(battery_full);
         groupStacks.add(battery_depleted);
+    }
+
+    @Override
+    public void onCrafted(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
+        CompoundTag batteryTag = battery.getOrCreateTag();
+        batteryTag.putInt("Energy", 0);
+        batteryTag.putInt("MaxEnergy", BatteryItem.maxEnergy);
+        battery.setDamage(BatteryItem.maxEnergy);
+        battery.setTag(batteryTag);
     }
 
     @Override
