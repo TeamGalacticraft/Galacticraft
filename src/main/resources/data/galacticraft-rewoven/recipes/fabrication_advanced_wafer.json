@@ -1,0 +1,8 @@
+{
+  "type": "galacticraft-rewoven:fabrication",
+  "ingredient": {
+    "item": "minecraft:repeater"
+  },
+  "result": "galacticraft-rewoven:advanced_wafer",
+  "amount": 1
+}

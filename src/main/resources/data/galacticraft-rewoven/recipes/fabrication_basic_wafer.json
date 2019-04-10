@@ -1,0 +1,8 @@
+{
+  "type": "galacticraft-rewoven:fabrication",
+  "ingredient": {
+    "item": "minecraft:redstone_torch"
+  },
+  "result": "galacticraft-rewoven:basic_wafer",
+  "amount": 3
+}
