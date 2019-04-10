@@ -125,14 +125,14 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         tag.put("Inventory", inventory.toTag());
-        tag.put("Energy", energy.toTag());
+        tag.putInt("Energy", energy.getCurrentEnergy());
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        inventory.fromTag(tag.getCompound("Inventory"));
-        energy.fromTag(tag.getTag("Energy"));
+        this.inventory.fromTag(tag.getCompound("Inventory"));
+        this.energy.setCurrentEnergy(tag.getInt("Energy"));
     }
 }

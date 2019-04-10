@@ -11,7 +11,7 @@ public enum CircuitFabricatorStatus {
     /**
      * Fabricator is active and is processing.
      */
-    ACTIVE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText()),
+    PROCESSING(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.processing").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText()),
     /**
      * Fabricator is not processing.
      */

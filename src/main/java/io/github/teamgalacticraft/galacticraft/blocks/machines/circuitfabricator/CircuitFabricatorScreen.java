@@ -36,11 +36,11 @@ public class CircuitFabricatorScreen extends ContainerScreen {
     private static final int PROGRESS_WIDTH = 50;
     private static final int PROGRESS_HEIGHT = 10;
 
-    private int energyDisplayX = 0;
-    private int energyDisplayY = 0;
+    private int energyDisplayX;
+    private int energyDisplayY;
 
-    private int progressDisplayX = 0;
-    private int progressDisplayY = 0;
+    private int progressDisplayX;
+    private int progressDisplayY;
 
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
@@ -68,12 +68,12 @@ public class CircuitFabricatorScreen extends ContainerScreen {
         int topPos = this.top;
 
         energyDisplayX = leftPos + 10;
-        energyDisplayY = topPos + 9;
+        energyDisplayY = topPos + 35;
         progressDisplayX = leftPos + 90;
-        progressDisplayY = topPos + 56;
+        progressDisplayY = topPos + 82;
 
         //this.drawTexturedRect(...)
-        this.blit(leftPos, topPos - 26, 0, 0, this.containerWidth, this.containerHeight + 26);
+        this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight + 26);
         this.drawProgressBar();
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
@@ -82,13 +82,13 @@ public class CircuitFabricatorScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.circuit_fabricator_block").getText(), (this.width / 2), this.top - 16, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.circuit_fabricator_block").getText(), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     private void drawConfigTabs() {
         this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 16, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {
@@ -121,7 +121,7 @@ public class CircuitFabricatorScreen extends ContainerScreen {
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
-        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
+        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 2 && mouseY <= this.top + (22 + 2)) {
             this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
         }
     }

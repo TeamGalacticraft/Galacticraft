@@ -1,6 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
@@ -47,17 +49,31 @@ public class CompressorContainer extends Container {
         };
 
         // 3x3 comprerssor input grid
+        int slot = 0;
         for (int x = 0; x < 3; x++) {
             for (int y = 0; y < 3; y++) {
-                this.addSlot(new Slot(this.inventory, x * y, x * 18 + 2, y * 18 + 60));
+                this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 8));
+                slot++;
             }
         }
 
         // Output slot
-        this.addSlot(new Slot(this.inventory, 9, 8, -2));
+        this.addSlot(new Slot(this.inventory, 9, 138, 28) {
+            @Override
+            public boolean canInsert(ItemStack itemStack_1) {
+                return false;
+            }
+        });
+        // Fuel slot
+        this.addSlot(new ItemSpecificSlot(this.inventory, 10, 3 * 18 + 1, 65, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])) {
+            @Override
+            public String getBackgroundSprite() {
+                return super.getBackgroundSprite();
+            }
+        });
 
         // Player inventory slots
-        int playerInvYOffset = 112;
+        int playerInvYOffset = 100;
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));

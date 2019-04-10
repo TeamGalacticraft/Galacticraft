@@ -180,6 +180,12 @@
   "ui.galacticraft-rewoven.machinestatus.idle": "Tomgang",
   "ui.galacticraft-rewoven.machinestatus.warming": "Varmar Opp",
   "ui.galacticraft-rewoven.machinestatus.inactive": "Innaktiv",
+  "ui.galacticraft-rewoven.machinestatus.processing": "Arbeijar",
+  "ui.galacticraft-rewoven.machinestatus.collecting": "Samlar",
+  "ui.galacticraft-rewoven.machinestatus.raining": "Regnar",
+  "ui.galacticraft-rewoven.machinestatus.night": "Natt",
+  "ui.galacticraft-rewoven.machinestatus.full": "Full",
+  "ui.galacticraft-rewoven.machinestatus.blocked": "Sperra",
   "ui.galacticraft-rewoven.tabs.side_config": "Kjem Snart",
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Attverande Oksygen: %s",
   "tooltip.galacticraft-rewoven.energy-remaining": "Attverande Straum: %s"

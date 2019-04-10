@@ -86,19 +86,19 @@ public class CoalGeneratorContainer extends Container {
             }
         };
         // Coal Generator fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 62, fuel));
-        this.addSlot(new ChargeSlot(this.inventory, 1, 8, -2));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 72, fuel));
+        this.addSlot(new ChargeSlot(this.inventory, 1, 8, 8));
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 94 + i * 18));
             }
         }
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 152));
         }
 
     }

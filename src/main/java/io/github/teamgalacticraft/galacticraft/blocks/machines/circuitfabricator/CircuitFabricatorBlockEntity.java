@@ -62,11 +62,12 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         }
         attemptChargeFromStack(this.inventory.getInvStack(0));
 
-        /*
+
         if (status == CircuitFabricatorStatus.IDLE) {
-            this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            this.progress = 0;
         }
-        */
+
 
         if (getEnergy().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.INACTIVE;
@@ -74,16 +75,17 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
             status = CircuitFabricatorStatus.IDLE;
         }
 
-        /*
+
         if (status == CircuitFabricatorStatus.INACTIVE) {
-            this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            this.progress = 0;
             return;
         }
-        */
 
-        if (status != CircuitFabricatorStatus.INACTIVE && isValidRecipe(this.inventory.getInvStack(5))) {
-            if (canPutStackInResultSlot(getResultFromRecipe())) {
-                this.status = CircuitFabricatorStatus.ACTIVE;
+
+        if (isValidRecipe(this.inventory.getInvStack(5))) {
+            if (canPutStackInResultSlot(getResultFromRecipeStack())) {
+                this.status = CircuitFabricatorStatus.PROCESSING;
             }
         } else {
             if (this.status != CircuitFabricatorStatus.INACTIVE) {
@@ -91,17 +93,18 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
             }
         }
 
-        if (status == CircuitFabricatorStatus.ACTIVE) {
-            ItemStack resultStack = getResultFromRecipe();
+        if (status == CircuitFabricatorStatus.PROCESSING) {
+
+            ItemStack resultStack = getResultFromRecipeStack();
             if (inventory.getInvStack(6).isEmpty() || inventory.getInvStack(6).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
-                    if (progress <= maxProgress) {
+                    if (this.progress <= this.maxProgress) {
 
                         ++progress;
                         this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
                     } else {
                         System.out.println("Finished crafting an item.");
-                        progress = 0;
+                        this.progress = 0;
 
                         inventory.getInvStack(1).subtractAmount(1);
                         inventory.getInvStack(2).subtractAmount(1);
@@ -110,7 +113,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
                         inventory.getInvStack(5).subtractAmount(1);
 
                         if (!inventory.getInvStack(6).isEmpty()) {
-                            inventory.getInvStack(6).addAmount(1);
+                            inventory.getInvStack(6).addAmount(resultStack.getAmount());
                         } else {
                             inventory.setInvStack(6, resultStack, Simulation.ACTION);
                         }
@@ -120,8 +123,15 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         }
     }
 
-    private ItemStack getResultFromRecipe() {
-        return getRecipe(inventory.getInvStack(5)).orElseThrow(() -> new IllegalStateException("No recipe present????")).getOutput();
+    private ItemStack getResultFromRecipeStack() {
+        BasicInventory inv = new BasicInventory(inventory.getInvStack(5));
+        // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
+        FabricationRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("No recipe present????"));
+        return recipe.craft(inv);
+    }
+
+    private Optional<FabricationRecipe> getRecipe(BasicInventory input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
@@ -154,13 +164,9 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
-    private Optional<FabricationRecipe> getRecipe(ItemStack input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, new BasicInventory(input), this.world);
-    }
-
-    // This is just for testing
     private boolean isValidRecipe(ItemStack input) {
-        return getRecipe(input).isPresent();
+        // TODO check up on this
+        return getRecipe(new BasicInventory(input)).isPresent() && hasMandatoryMaterials();
 //        return !input.isEmpty() && hasMandatoryMaterials();
     }
 
@@ -190,16 +196,16 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         tag.put("Inventory", inventory.toTag());
-        tag.put("Energy", energy.toTag());
-        tag.putInt("Progress", progress);
+        tag.putInt("Energy", energy.getCurrentEnergy());
+        tag.putInt("Progress", this.progress);
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        inventory.fromTag(tag.getCompound("Inventory"));
-        energy.fromTag(tag.getTag("Energy"));
+        this.inventory.fromTag(tag.getCompound("Inventory"));
+        this.energy.setCurrentEnergy(tag.getInt("Energy"));
         this.progress = tag.getInt("Progress");
     }
 }

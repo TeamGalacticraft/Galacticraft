@@ -21,7 +21,8 @@ public class CircuitFabricatorContainer extends Container {
     private CircuitFabricatorBlockEntity fabricator;
     private PlayerEntity playerEntity;
 
-    public static Item[] materials = new Item[] {Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER};
+    //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
+    public static Item[] materials = new Item[] {Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
 
 
     public CircuitFabricatorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
@@ -48,25 +49,25 @@ public class CircuitFabricatorContainer extends Container {
             }
         };
         // Energy slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 1, 8, -11, Items.DIAMOND));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 2, 8 + (18 * 3), 53, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 3, 8 + (18 * 3), 53 - 18, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 4, 8 + (18 * 6), 53 - 18, Items.REDSTONE));
-        this.addSlot(new ItemSpecificSlot(this.inventory, 5, 8 + (18 * 7), -11, materials));
-        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, 6, 8 + (18 * 8), 53));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 79, GalacticraftItems.BATTERY));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 1, 8, 15, Items.DIAMOND));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 2, 8 + (18 * 3), 79, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 3, 8 + (18 * 3), 79 - 18, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 4, 8 + (18 * 6), 79 - 18, Items.REDSTONE));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 5, 8 + (18 * 7), 15, materials));
+        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, 6, 8 + (18 * 8), 79));
 
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 110 + i * 18));
             }
         }
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
+            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 168));
         }
 
     }

@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class CompressorBlockEntity extends BlockEntity implements Tickable {
-    SimpleFixedItemInv inventory = new SimpleFixedItemInv(10);
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(11);
     private final int maxProgress = 300;
     private int progress;
 
@@ -54,13 +54,13 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
                 this.inventory.getInvStack(7), this.inventory.getInvStack(8), this.inventory.getInvStack(9)
         )) {
             if (canPutStackInResultSlot(getResultFromRecipe())) {
-                this.status = CircuitFabricatorStatus.ACTIVE;
+                this.status = CircuitFabricatorStatus.PROCESSING;
             }
         } else {
             this.status = CircuitFabricatorStatus.IDLE;
         }
 
-        if (status == CircuitFabricatorStatus.ACTIVE) {
+        if (status == CircuitFabricatorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipe();
             if (inventory.getInvStack(10).isEmpty() || inventory.getInvStack(10).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(10).getAmount() < resultStack.getMaxAmount()) {

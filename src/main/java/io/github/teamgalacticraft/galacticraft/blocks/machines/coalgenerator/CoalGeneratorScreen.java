@@ -61,10 +61,10 @@ public class CoalGeneratorScreen extends ContainerScreen {
         int topPos = this.top;
 
         energyDisplayX = leftPos + 10;
-        energyDisplayY = topPos + 18;
+        energyDisplayY = topPos + 28;
 
         //this.drawTexturedRect(...)
-        this.blit(leftPos, topPos - 10, 0, 0, this.containerWidth, this.containerHeight);
+        this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
     }
@@ -78,7 +78,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
 
     private void drawConfigTabs() {
         this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 7, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {
@@ -103,7 +103,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
-        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
+        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 21 && mouseY <= this.top + (22 + 21)) {
             this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
         }
     }
