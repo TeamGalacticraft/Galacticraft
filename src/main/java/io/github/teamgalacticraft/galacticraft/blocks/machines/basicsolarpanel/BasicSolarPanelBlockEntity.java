@@ -67,7 +67,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
                     status = BasicSolarPanelStatus.FULL;
                 }
             } else if (world.isRaining() || world.isThundering()) {
-            status = BasicSolarPanelStatus.RAIN;
+            status = BasicSolarPanelStatus.RAINING;
         }
 
         if (time <= 250 || time >= 12000) {

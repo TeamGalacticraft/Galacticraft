@@ -1,14 +1,11 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.prospector.silk.util.ActionType;
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.entity.player.PlayerEntity;
+ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
@@ -69,7 +66,7 @@ public class BasicSolarPanelScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, I18n.translate("block.galacticraft-rewoven.basic_solar_panel"), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.basic_solar_panel").getText(), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
