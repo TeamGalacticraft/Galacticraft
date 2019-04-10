@@ -20,6 +20,7 @@
   "block.galacticraft-rewoven.moon_copper_ore_block": "Moon Copper Ore",
   "block.galacticraft-rewoven.moon_tin_ore_block": "Moon Tin Ore",
   "block.galacticraft-rewoven.cheese_ore_block": "Cheese Ore",
+  "block.galacticraft-rewoven.cheese_block": "Block of Cheese",
   "block.galacticraft-rewoven.solid_meteoric_iron_block": "Solid Meteoric Iron Block",
   "block.galacticraft-rewoven.moon_dungeon_bricks_block": "Moon Dungeon Bricks",
   "block.galacticraft-rewoven.moon_dungeon_bricks_stairs": "Moon Dungeon Bricks Stairs",
@@ -69,7 +70,7 @@
   "block.galacticraft-rewoven.coal_generator_block": "Coal Generator",
   "block.galacticraft-rewoven.compressor_block": "Compressor",
   "block.galacticraft-rewoven.circuit_fabricator_block": "Circuit Fabricator",
-  "block.galacticraft-rewoven.basic_solar_panel": "Basic Solar Panel",
+  "block.galacticraft-rewoven.basic_solar_panel_block": "Basic Solar Panel",
 
   "item.galacticraft-rewoven.steel_sword": "Steel Sword",
   "item.galacticraft-rewoven.steel_shovel": "Steel Shovel",
