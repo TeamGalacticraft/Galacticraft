@@ -194,6 +194,7 @@
   "ui.galacticraft-rewoven.machinestatus.idle": "Idle",
   "ui.galacticraft-rewoven.machinestatus.warming": "Warming",
   "ui.galacticraft-rewoven.machinestatus.inactive": "Inactive",
+  "ui.galacticraft-rewoven.machinestatus.processing": "Processing",
   "ui.galacticraft-rewoven.machinestatus.collecting": "Collecting",
   "ui.galacticraft-rewoven.machinestatus.raining": "Raining",
   "ui.galacticraft-rewoven.machinestatus.night": "Night",
