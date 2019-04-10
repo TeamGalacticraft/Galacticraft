@@ -23,6 +23,6 @@ public class GalacticraftEnergy {
 
     public static boolean isEnergyItem(ItemStack itemStack) {
 
-        return itemStack.hasTag() && itemStack.getTag().containsKey("Energy") && itemStack.getTag().containsKey("MaxEnergy") && itemStack.getTag().containsKey("Harm");
+        return itemStack.hasTag() && itemStack.getTag().containsKey("Energy") && itemStack.getTag().containsKey("MaxEnergy");
     }
 }

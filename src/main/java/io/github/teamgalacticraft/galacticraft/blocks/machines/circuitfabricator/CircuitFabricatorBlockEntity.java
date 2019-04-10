@@ -13,8 +13,10 @@ import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -31,6 +33,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     private int progress;
 
     public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
+    public final Item[] mandatoryMaterials = new Item[] {Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
 
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_INPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
@@ -143,7 +146,14 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
 
     // This is just for testing
     private boolean isValidRecipe(ItemStack input) {
-        return input != null;
+        return input != null && hasMandatoryMaterials();
+    }
+
+    private boolean hasMandatoryMaterials() {
+        return inventory.getInvStack(1).getItem() == mandatoryMaterials[0] &&
+                inventory.getInvStack(2).getItem() == mandatoryMaterials[1] &&
+                inventory.getInvStack(3).getItem() == mandatoryMaterials[2] &&
+                inventory.getInvStack(4).getItem() == mandatoryMaterials[3];
     }
 
     // Tries charging the block entity with the given itemstack

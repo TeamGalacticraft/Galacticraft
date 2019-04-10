@@ -22,6 +22,8 @@ import java.util.List;
  */
 public class BatteryItem extends Item {
 
+    public static final int maxEnergy = 10000;
+
     public BatteryItem(Settings settings) {
         super(settings);
     }
@@ -45,10 +47,18 @@ public class BatteryItem extends Item {
             return;
         }
         // Adds a full battery and a depleted one
-        ItemStack battery_full = new ItemStack(GalacticraftItems.BATTERY);
         ItemStack battery_depleted = new ItemStack(GalacticraftItems.BATTERY);
+        ItemStack battery_full = new ItemStack(GalacticraftItems.BATTERY);
         battery_depleted.setDamage(15000);
         battery_full.setDamage(0);
+        CompoundTag tag_depleted = new CompoundTag();
+        CompoundTag tag_full = new CompoundTag();
+        tag_depleted.putInt("Energy", 0);
+        tag_depleted.putInt("MaxEnergy", maxEnergy);
+        tag_full.putInt("Energy", maxEnergy);
+        tag_full.putInt("MaxEnergy", maxEnergy);
+        battery_depleted.setTag(tag_depleted);
+        battery_full.setTag(tag_full);
 
         groupStacks.add(battery_full);
         groupStacks.add(battery_depleted);
