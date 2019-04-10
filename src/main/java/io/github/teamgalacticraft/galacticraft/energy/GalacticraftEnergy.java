@@ -4,6 +4,7 @@ import io.github.cottonmc.energy.CottonEnergy;
 import io.github.cottonmc.energy.api.EnergyType;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Marker;
@@ -22,7 +23,7 @@ public class GalacticraftEnergy {
     }
 
     public static boolean isEnergyItem(ItemStack itemStack) {
-
-        return itemStack.hasTag() && itemStack.getTag().containsKey("Energy") && itemStack.getTag().containsKey("MaxEnergy");
+        CompoundTag tag = itemStack.getOrCreateTag();
+        return itemStack.hasTag() && tag.containsKey("Energy") && tag.containsKey("MaxEnergy");
     }
 }
