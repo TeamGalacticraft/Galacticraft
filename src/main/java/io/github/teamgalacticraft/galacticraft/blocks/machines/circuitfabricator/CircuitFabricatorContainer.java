@@ -21,7 +21,7 @@ public class CircuitFabricatorContainer extends Container {
     private CircuitFabricatorBlockEntity fabricator;
     private PlayerEntity playerEntity;
 
-    private static Item[] materials = new Item[] {Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER};
+    public static Item[] materials = new Item[] {Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER};
 
 
     public CircuitFabricatorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {

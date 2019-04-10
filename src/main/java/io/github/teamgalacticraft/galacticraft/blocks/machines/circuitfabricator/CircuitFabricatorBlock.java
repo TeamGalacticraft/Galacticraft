@@ -10,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -89,6 +90,27 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
             list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
             list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(new Style().setColor(TextFormat.GRAY)));
+        }
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
+        super.onBreak(world, blockPos, blockState, playerEntity);
+
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+
+        if (blockEntity != null) {
+            if (blockEntity instanceof CircuitFabricatorBlockEntity) {
+                CircuitFabricatorBlockEntity circuitFabricatorBlockEntity = (CircuitFabricatorBlockEntity) blockEntity;
+
+                for (int i = 0; i < circuitFabricatorBlockEntity.inventory.getSlotCount(); i++) {
+                    ItemStack itemStack = circuitFabricatorBlockEntity.inventory.getInvStack(i);
+
+                    if (itemStack != null) {
+                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    }
+                }
+            }
         }
     }
 }
