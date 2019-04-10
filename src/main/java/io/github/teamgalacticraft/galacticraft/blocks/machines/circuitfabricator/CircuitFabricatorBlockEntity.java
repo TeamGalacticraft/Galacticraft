@@ -16,6 +16,7 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -120,6 +121,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
                 }
             }
         }
+        markDirty();
     }
 
     // This is just for testing purposes
@@ -178,7 +180,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
             if (GalacticraftEnergy.isEnergyItem(itemStack)) {
                 if (itemStack.getTag().getInt("Energy") > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
                     this.energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
-                    itemStack.getTag().putInt("Energy", itemStack.getTag().getInt("Energy") - 1);
+                    itemStack.getTag().putInt("Energy", (itemStack.getTag().getInt("Energy") - 1));
                     itemStack.setDamage(itemStack.getDamage() + 1);
                 }
             }
