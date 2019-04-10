@@ -1,16 +1,91 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.compressor;
 
 import io.github.teamgalacticraft.galacticraft.api.blocks.AbstractHorizontalDirectionalBlock;
+import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.gui.Screen;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.state.StateFactory;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextComponent;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CompressorBlock extends AbstractHorizontalDirectionalBlock implements Rotatable {
-
-
+public class CompressorBlock extends AbstractHorizontalDirectionalBlock implements Rotatable, BlockEntityProvider {
     public CompressorBlock(Settings settings) {
         super(settings);
     }
 
+    @Override
+    public BlockEntity createBlockEntity(BlockView var1) {
+        return new CompressorBlockEntity();
+    }
+
+    @Override
+    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<TextComponent> list_1, TooltipContext tooltipContext_1) {
+        if (Screen.hasShiftDown()) {
+            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.compressor").setStyle(new Style().setColor(TextFormat.GRAY)));
+        } else {
+            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
+        }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState blockState_1) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.SOLID;
+    }
+
+    @Override
+    public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
+        super.appendProperties(stateBuilder);
+    }
+
+    @Override
+    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+        if (world.isClient) return true;
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COMPRESSOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        return true;
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
+        super.onBreak(world, blockPos, blockState, playerEntity);
+
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+
+        if (blockEntity != null) {
+            if (blockEntity instanceof CompressorBlockEntity) {
+                CompressorBlockEntity be = (CompressorBlockEntity) blockEntity;
+
+                for (int i = 0; i < be.inventory.getSlotCount(); i++) {
+                    ItemStack itemStack = be.inventory.getInvStack(i);
+
+                    if (itemStack != null) {
+                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    }
+                }
+            }
+        }
+    }
 }

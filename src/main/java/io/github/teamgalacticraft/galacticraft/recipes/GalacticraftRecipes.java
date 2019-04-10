@@ -9,12 +9,18 @@ import net.minecraft.util.registry.Registry;
 
 public class GalacticraftRecipes {
     public static RecipeType<FabricationRecipe> FABRICATION_TYPE;
-    public static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
+    public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
+
+    static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
+    public static CompressingRecipeSerializer<CompressingRecipe> COMPRESSING_SERIALIZER;
 
     public static void register() {
         // Circuit fabricator recipe stuff
-        FABRICATION_TYPE = registerType("fabrication");
-        FABRICATION_SERIALIZER = registerSerializer("fabrication", new FabricationRecipeSerializer<>(FabricationRecipe::new));
+        FABRICATION_TYPE = registerType("circuit_fabricator");
+        FABRICATION_SERIALIZER = registerSerializer("circuit_fabricator", new FabricationRecipeSerializer<>(FabricationRecipe::new));
+
+        COMPRESSING_TYPE = registerType("compressing");
+        COMPRESSING_SERIALIZER = registerSerializer("compressing", new CompressingRecipeSerializer<>(CompressingRecipe::new));
     }
 
     private static <T extends Recipe<?>> RecipeType<T> registerType(String id) {

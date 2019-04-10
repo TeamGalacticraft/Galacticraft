@@ -32,7 +32,8 @@ public class GalacticraftItems {
     public static final Item IRON_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item DUST_TITANIUM = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_DUST = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item SOLAR_DUST = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BASIC_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ADVANCED_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BEAM_CORE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -52,6 +53,7 @@ public class GalacticraftItems {
     public static final Item OXYGEN_VENT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item SENSOR_LENS = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item SOLAR_ARRAY_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item STEEL_POLE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item CANISTER_COPPER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item CANISTER_TIN = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -154,7 +156,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.IRON_SHARD), IRON_SHARD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SHARD), TITANIUM_SHARD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_INGOT), TITANIUM_INGOT);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DUST_TITANIUM), DUST_TITANIUM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_DUST), TITANIUM_DUST);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SOLAR_DUST), SOLAR_DUST);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BASIC_WAFER), BASIC_WAFER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ADVANCED_WAFER), ADVANCED_WAFER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BEAM_CORE), BEAM_CORE);
@@ -174,6 +177,7 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_VENT), OXYGEN_VENT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SENSOR_LENS), SENSOR_LENS);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLUE_SOLAR_WAFER), BLUE_SOLAR_WAFER);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SOLAR_ARRAY_WAFER), SOLAR_ARRAY_WAFER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_POLE), STEEL_POLE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANISTER_COPPER), CANISTER_COPPER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANISTER_TIN), CANISTER_TIN);

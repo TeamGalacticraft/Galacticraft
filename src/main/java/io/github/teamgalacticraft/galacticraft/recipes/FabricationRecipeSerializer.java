@@ -10,7 +10,7 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.registry.Registry;
 
 public class FabricationRecipeSerializer<T extends FabricationRecipe> implements RecipeSerializer<T> {
-    private final FabricationRecipeSerializer.RecipeFactory<T> recipeFactory;
+    private final RecipeFactory<T> recipeFactory;
 
     public FabricationRecipeSerializer(FabricationRecipeSerializer.RecipeFactory<T> factory) {
         this.recipeFactory = factory;
@@ -23,6 +23,7 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
         packetByteBuf.writeItemStack(recipe.getOutput());
     }
 
+    @Override
     public T read(Identifier id, PacketByteBuf packet) {
         String string_1 = packet.readString(32767);
         Ingredient ingredient_1 = Ingredient.fromPacket(packet);

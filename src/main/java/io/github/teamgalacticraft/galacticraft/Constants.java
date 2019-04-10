@@ -212,7 +212,8 @@ public class Constants {
         public static final String IRON_SHARD = "iron_shard";
         public static final String TITANIUM_SHARD = "titanium_shard";
         public static final String TITANIUM_INGOT = "titanium_ingot";
-        public static final String DUST_TITANIUM = "titanium_dust";
+        public static final String TITANIUM_DUST = "titanium_dust";
+        public static final String SOLAR_DUST = "solar_dust";
         public static final String BASIC_WAFER = "basic_wafer";
         public static final String ADVANCED_WAFER = "advanced_wafer";
         public static final String BEAM_CORE = "beam_core";
@@ -232,6 +233,7 @@ public class Constants {
         public static final String OXYGEN_VENT = "air_vent";
         public static final String SENSOR_LENS = "sensor_lens";
         public static final String BLUE_SOLAR_WAFER = "blue_solar_wafer";
+        public static final String SOLAR_ARRAY_WAFER = "solar_array_wafer";
         public static final String STEEL_POLE = "steel_pole";
         public static final String CANISTER_COPPER = "canister_copper";
         public static final String CANISTER_TIN = "canister_tin";
@@ -336,6 +338,7 @@ public class Constants {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
         public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
+        public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
         public static final String OVERLAY = "gui/overlay";
@@ -362,6 +365,7 @@ public class Constants {
         public static final String COAL_GENERATOR_CONTAINER = "coal_generator_container";
         public static final String BASIC_SOLAR_PANEL_CONTAINER = "basic_solar_panel_container";
         public static final String CIRCUIT_FABRICATOR_CONTAINER = "circuit_fabricator_container";
+        public static final String COMPRESSOR_CONTAINER = "compressor_container";
         public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
     }
 }

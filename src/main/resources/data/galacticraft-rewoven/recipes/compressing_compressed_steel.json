@@ -1,0 +1,15 @@
+{
+  "type": "galacticraft-rewoven:compressing",
+  "pattern": [
+    "II"
+  ],
+  "key": {
+    "I": {
+      "item": "galacticraft-rewoven:steel_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:compressed_steel",
+    "count": 1
+  }
+}

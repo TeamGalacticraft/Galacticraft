@@ -1,8 +1,8 @@
 {
   "type": "galacticraft-rewoven:circuit_fabricator",
   "ingredient": {
-    "item": "minecraft:redstone_torch"
+    "item": "minecraft:solar_dust"
   },
-  "result": "galacticraft-rewoven:basic_wafer",
+  "result": "galacticraft-rewoven:solar_array_wafer",
   "count": 3
 }

@@ -89,7 +89,7 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
         if (Screen.hasShiftDown()) {
             list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
         }
     }
 

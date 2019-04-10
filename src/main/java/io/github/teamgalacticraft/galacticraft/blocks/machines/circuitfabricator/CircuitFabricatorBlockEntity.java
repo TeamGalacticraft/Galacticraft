@@ -8,14 +8,16 @@ import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
+import io.github.teamgalacticraft.galacticraft.recipes.FabricationRecipe;
+import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -24,6 +26,7 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickable {
 
@@ -33,7 +36,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     private int progress;
 
     public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
-    public final Item[] mandatoryMaterials = new Item[] {Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
+    public final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
 
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_INPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
@@ -67,9 +70,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
 
         if (getEnergy().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.INACTIVE;
-        }
-        else
-        {
+        } else {
             status = CircuitFabricatorStatus.IDLE;
         }
 
@@ -81,19 +82,17 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         */
 
         if (status != CircuitFabricatorStatus.INACTIVE && isValidRecipe(this.inventory.getInvStack(5))) {
-            if (canPutStackInResultSlot(getResultFromRecipeStack())) {
+            if (canPutStackInResultSlot(getResultFromRecipe())) {
                 this.status = CircuitFabricatorStatus.ACTIVE;
             }
-        }
-        else {
+        } else {
             if (this.status != CircuitFabricatorStatus.INACTIVE) {
                 this.status = CircuitFabricatorStatus.IDLE;
             }
         }
 
         if (status == CircuitFabricatorStatus.ACTIVE) {
-
-            ItemStack resultStack = getResultFromRecipeStack();
+            ItemStack resultStack = getResultFromRecipe();
             if (inventory.getInvStack(6).isEmpty() || inventory.getInvStack(6).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
                     if (progress <= maxProgress) {
@@ -101,6 +100,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
                         ++progress;
                         this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
                     } else {
+                        System.out.println("Finished crafting an item.");
                         progress = 0;
 
                         inventory.getInvStack(1).subtractAmount(1);
@@ -120,19 +120,16 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         }
     }
 
-    // This is just for testing purposes
-    private ItemStack getResultFromRecipeStack() {
-        return new ItemStack(Items.DIRT);
+    private ItemStack getResultFromRecipe() {
+        return getRecipe(inventory.getInvStack(5)).orElseThrow(() -> new IllegalStateException("No recipe present????")).getOutput();
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
         if (inventory.getInvStack(6).isEmpty()) {
             return true;
-        }
-        else if (inventory.getInvStack(6).getItem() == itemStack.getItem()) {
+        } else if (inventory.getInvStack(6).getItem() == itemStack.getItem()) {
             return inventory.getInvStack(6).getAmount() < itemStack.getMaxAmount();
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -157,9 +154,14 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
+    private Optional<FabricationRecipe> getRecipe(ItemStack input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, new BasicInventory(input), this.world);
+    }
+
     // This is just for testing
     private boolean isValidRecipe(ItemStack input) {
-        return !input.isEmpty() && hasMandatoryMaterials();
+        return getRecipe(input).isPresent();
+//        return !input.isEmpty() && hasMandatoryMaterials();
     }
 
     private boolean hasMandatoryMaterials() {
