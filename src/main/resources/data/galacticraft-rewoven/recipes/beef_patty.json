@@ -1,0 +1,9 @@
+{
+  "type": "smelting",
+  "ingredient": {
+    "item": "galacticraft-rewoven:ground_beef"
+  },
+  "result": "galacticraft-rewoven:beef_patty",
+  "experience": 0.1,
+  "cookingtime": 200
+}
