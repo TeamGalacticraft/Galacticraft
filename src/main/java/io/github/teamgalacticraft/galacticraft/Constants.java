@@ -86,8 +86,8 @@ public class Constants {
         public static final String MARS_COBBLESTONE_SLAB_BLOCK = "mars_cobblestone_slab";
         public static final String MARS_DUNGEON_BRICK_SLAB_BLOCK = "mars_dungeon_brick_slab";
         public static final String MOON_DUNGEON_BRICK_SLAB_BLOCK = "moon_dungeon_brick_slab";
-        public static final String MOON_STONE_SLAB_BLOCK = "moon_stone_slab";
-        public static final String MOON_STONE_STAIRS = "moon_stone_stairs";
+        public static final String MOON_ROCK_SLAB_BLOCK = "moon_rock_slab";
+        public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
         public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
         public static final String TIN_DECORATION_STAIRS_1 = "tin_decoration_stairs_1";
@@ -95,7 +95,7 @@ public class Constants {
         public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
         public static final String TIN_DECORATION_WALL_1 = "tin_decoration_wall_1";
-        public static final String MOON_STONE_WALL = "moon_stone_wall";
+        public static final String MOON_ROCK_WALL = "moon_rock_wall";
 
         public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";

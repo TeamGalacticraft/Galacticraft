@@ -13,7 +13,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Screen;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TranslatableTextComponent;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -91,8 +91,8 @@ public class ConfigHandler {
     @Environment(EnvType.CLIENT)
     public void openConfigScreen() {
         Screen parentScreen = MinecraftClient.getInstance().currentScreen;
-        ClothConfigScreen.Builder builder = new ClothConfigScreen.Builder(parentScreen, I18n.translate(Constants.Config.TITLE), null);
-        ConfigScreenBuilder.CategoryBuilder general = builder.addCategory(I18n.translate(Constants.Config.GENERAL));
+        ClothConfigScreen.Builder builder = new ClothConfigScreen.Builder(parentScreen, new TranslatableTextComponent(Constants.Config.TITLE).getText(), null);
+        ConfigScreenBuilder.CategoryBuilder general = builder.addCategory(new TranslatableTextComponent(Constants.Config.GENERAL).getText());
         general.addOption(new BooleanListEntry(Constants.Config.BOOLEAN, config.aBoolean, aBoolean -> config.aBoolean = aBoolean));
         general.addOption(new DoubleListEntry(Constants.Config.DOUBLE, config.aDouble, aDouble -> config.aDouble = aDouble));
         general.addOption(new FloatListEntry(Constants.Config.FLOAT, config.aFloat, aFloat -> config.aFloat = aFloat));

@@ -1,10 +1,10 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
-import io.netty.channel.ChannelHandler;
-import net.minecraft.block.*;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -23,7 +23,7 @@ import java.util.Random;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CavernousVineBlock extends Block implements Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public CavernousVineBlock(Settings settings) {
         super(settings);
@@ -64,7 +64,10 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         pos2 = pos2.add(0, -1, 0);
         pos3 = pos3.add(0, 1, 0);
         //If it isn't on the ground and it is below a block
-        return (!viewableWorld.getBlockState(pos3).getBlock().equals(Blocks.AIR)) && (viewableWorld.getBlockState(pos2).getBlock().equals(Blocks.AIR) || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.CAVERNOUS_VINE_BLOCK));
+        return (!viewableWorld.getBlockState(pos3).getBlock().equals(Blocks.AIR))
+                && (viewableWorld.getBlockState(pos2).getBlock().equals(Blocks.AIR)
+                || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.CAVERNOUS_VINE_BLOCK)
+                || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK));
     }
 
     @Override

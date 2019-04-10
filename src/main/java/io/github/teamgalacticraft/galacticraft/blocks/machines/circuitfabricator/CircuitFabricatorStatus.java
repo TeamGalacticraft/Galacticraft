@@ -1,6 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator;
 
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -9,15 +11,15 @@ public enum CircuitFabricatorStatus {
     /**
      * Fabricator is active and is processing.
      */
-    ACTIVE("\u00A7a" + I18n.translate("ui.galacticraft-rewoven.machinestatus.active") + "\u00A7r"),
+    ACTIVE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText()),
     /**
      * Fabricator is not processing.
      */
-    IDLE("\u00A77" + I18n.translate("ui.galacticraft-rewoven.machinestatus.idle") + "\u00A7r"),
+    IDLE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(TextFormat.GOLD)).getFormattedText()),
     /**
      * The fabricator has been switched off.
      */
-    INACTIVE("\u00A77" + I18n.translate("ui.galacticraft-rewoven.machinestatus.inactive") + "\u00A7r");
+    INACTIVE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
 
 
     private String name;

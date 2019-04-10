@@ -1,6 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -9,19 +11,19 @@ public enum CoalGeneratorStatus {
     /**
      * Generator is active and is generating energy.
      */
-    ACTIVE("\u00A7a" + I18n.translate("ui.galacticraft-rewoven.machinestatus.active") + "\u00A7r"),
+    ACTIVE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE("\u00A77" + I18n.translate("ui.galacticraft-rewoven.machinestatus.idle") + "\u00A7r"),
+    IDLE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(TextFormat.GOLD)).getFormattedText()),
     /**
      * The generator has no fuel.
      */
-    INACTIVE("\u00A77" + I18n.translate("ui.galacticraft-rewoven.machinestatus.inactive") + "\u00A7r"),
+    INACTIVE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText()),
     /**
      * The generator is warming up.
      */
-    WARMING("\u00A7e" + I18n.translate("ui.galacticraft-rewoven.machinestatus.warming") + "\u00A7r");
+    WARMING(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.warming").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText());
 
     private String name;
 
