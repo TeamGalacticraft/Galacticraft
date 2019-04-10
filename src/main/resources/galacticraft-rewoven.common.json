@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "CapeMixin",
-    "PlayerInventoryScreenMixin"
+    "PlayerInventoryScreenMixin",
+    "ItemStackMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {

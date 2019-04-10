@@ -22,15 +22,20 @@ public class CircuitFabricatorScreen extends ContainerScreen {
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = 0;
-    private static final int ENERGY_Y = 167;
+    private static final int ENERGY_Y = 231;
     private static final int ENERGY_WIDTH = 12;
     private static final int ENERGY_HEIGHT = 40;
-    private static final int PROGRESS_X = 0;
+
+    private static final int PROGRESS_X = 206;
     private static final int PROGRESS_Y = 0;
-    private static final int PROGRESS_WIDTH = 0;
-    private static final int PROGRESS_HEIGHT = 0;
+    private static final int PROGRESS_WIDTH = 50;
+    private static final int PROGRESS_HEIGHT = 10;
+
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
+
+    private int progressDisplayX = 0;
+    private int progressDisplayY = 0;
 
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
@@ -62,6 +67,7 @@ public class CircuitFabricatorScreen extends ContainerScreen {
 
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos - 26, 0, 0, this.containerWidth, this.containerHeight + 26);
+        this.drawProgressBar();
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
     }
@@ -85,6 +91,14 @@ public class CircuitFabricatorScreen extends ContainerScreen {
 
         //this.drawTexturedReact(...)
         this.blit(energyDisplayX, (energyDisplayY - (int) (ENERGY_HEIGHT * energyScale)) + ENERGY_HEIGHT, ENERGY_X, ENERGY_Y, ENERGY_WIDTH, (int) (ENERGY_HEIGHT * energyScale));
+    }
+
+    private void drawProgressBar() {
+        float progress = (float) ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).getProgress();
+        float maxProgress = (float) ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).getMaxProgress();
+        float progressScale = (progress / maxProgress);
+
+        this.blit(progressDisplayX, (progressDisplayY - (int) (PROGRESS_HEIGHT * progressScale)) + PROGRESS_HEIGHT, PROGRESS_X, PROGRESS_Y, PROGRESS_WIDTH, (int) (PROGRESS_HEIGHT * progressScale));
     }
 
     @Override
