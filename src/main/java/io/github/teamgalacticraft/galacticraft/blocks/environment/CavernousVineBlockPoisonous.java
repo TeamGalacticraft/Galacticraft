@@ -29,7 +29,7 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if (hand == Hand.MAIN && (playerEntity.getActiveItem().getItem() instanceof ShearsItem)) {
+        if (playerEntity.getStackInHand(hand).getItem() instanceof ShearsItem) {
             world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE_BLOCK.getDefaultState());
             return true;
         }
