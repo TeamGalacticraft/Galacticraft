@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,8 +19,10 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
 
     @Override
     protected void onCollided(LivingEntity entity) {
-        // Override the one from CavernousVineBlock and only bring them up. Dont damage.
+        // Override the one from CavernousVineBlock and only bring them up. Apply damage and rotate player.
         dragEntityUp(entity);
+        entity.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
+        entity.yaw += 0.4F; // Spin the player
     }
 
     @Override
