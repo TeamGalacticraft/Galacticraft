@@ -65,12 +65,7 @@ public class CompressorContainer extends Container {
             }
         });
         // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 10, 3 * 18 + 1, 65, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])) {
-            @Override
-            public String getBackgroundSprite() {
-                return super.getBackgroundSprite();
-            }
-        });
+        this.addSlot(new ItemSpecificSlot(this.inventory, 10, 3 * 18 + 1, 65, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])) {});
 
         // Player inventory slots
         int playerInvYOffset = 100;
