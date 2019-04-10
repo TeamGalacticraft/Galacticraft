@@ -23,6 +23,8 @@ import java.util.List;
 public class BatteryItem extends Item {
 
     public static final int maxEnergy = 10000;
+    public static ItemStack battery_full;
+    public static ItemStack battery_depleted;
 
     public BatteryItem(Settings settings) {
         super(settings);
@@ -31,9 +33,9 @@ public class BatteryItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void buildTooltip(ItemStack stack, World world, List<TextComponent> lines, TooltipContext context) {
-        if (stack.getDurability() - stack.getDamage() < 5000) {
+        if (stack.getDurability() - stack.getDamage() < 3334) {
             lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", (stack.getDurability() - stack.getDamage())).setStyle(new Style().setColor(TextFormat.DARK_RED)));
-        } else if (stack.getDurability() - stack.getDamage() < 10000) {
+        } else if (stack.getDurability() - stack.getDamage() < 6667) {
             lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", (stack.getDurability() - stack.getDamage())).setStyle(new Style().setColor(TextFormat.GOLD)));
         } else {
             lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", (stack.getDurability() - stack.getDamage())).setStyle(new Style().setColor(TextFormat.GREEN)));
@@ -46,19 +48,6 @@ public class BatteryItem extends Item {
         if (group != GalacticraftItems.ITEMS_GROUP) {
             return;
         }
-        // Adds a full battery and a depleted one
-        ItemStack battery_depleted = new ItemStack(GalacticraftItems.BATTERY);
-        ItemStack battery_full = new ItemStack(GalacticraftItems.BATTERY);
-        battery_depleted.setDamage(15000);
-        battery_full.setDamage(0);
-        CompoundTag tag_depleted = new CompoundTag();
-        CompoundTag tag_full = new CompoundTag();
-        tag_depleted.putInt("Energy", 0);
-        tag_depleted.putInt("MaxEnergy", maxEnergy);
-        tag_full.putInt("Energy", maxEnergy);
-        tag_full.putInt("MaxEnergy", maxEnergy);
-        battery_depleted.setTag(tag_depleted);
-        battery_full.setTag(tag_full);
 
         groupStacks.add(battery_full);
         groupStacks.add(battery_depleted);

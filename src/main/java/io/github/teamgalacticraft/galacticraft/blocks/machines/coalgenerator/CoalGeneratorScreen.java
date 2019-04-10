@@ -21,13 +21,18 @@ import java.util.List;
  */
 public class CoalGeneratorScreen extends ContainerScreen {
 
+    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
-    private static final int ENERGY_X = 0;
-    private static final int ENERGY_Y = 176;
-    private static final int ENERGY_WIDTH = 12;
-    private static final int ENERGY_HEIGHT = 40;
+    private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
+    private static final int ENERGY_Y = Constants.TextureCoordinates.ENERGY_LIGHT_Y;
+    private static final int ENERGY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
+    private static final int ENERGY_DIMMED_X = Constants.TextureCoordinates.ENERGY_DARK_X;
+    private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
+    private static final int ENERGY_DIMMED_WIDTH= Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
 
@@ -56,7 +61,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
         int topPos = this.top;
 
         energyDisplayX = leftPos + 10;
-        energyDisplayY = topPos + 9;
+        energyDisplayY = topPos + 18;
 
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos - 10, 0, 0, this.containerWidth, this.containerHeight);
@@ -82,6 +87,8 @@ public class CoalGeneratorScreen extends ContainerScreen {
         float energyScale = (currentEnergy / maxEnergy);
 
         //this.drawTexturedReact(...)
+        this.minecraft.getTextureManager().bindTexture(OVERLAY);
+        this.blit(energyDisplayX, energyDisplayY, ENERGY_DIMMED_X, ENERGY_DIMMED_Y, ENERGY_DIMMED_WIDTH, ENERGY_DIMMED_HEIGHT);
         this.blit(energyDisplayX, (energyDisplayY - (int) (ENERGY_HEIGHT * energyScale)) + ENERGY_HEIGHT, ENERGY_X, ENERGY_Y, ENERGY_WIDTH, (int) (ENERGY_HEIGHT * energyScale));
     }
 
