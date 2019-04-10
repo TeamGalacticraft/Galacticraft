@@ -102,7 +102,7 @@ public class GalacticraftBlocks {
     public static final Block MARS_COBBLESTONE_STAIRS_BLOCK = new GalacticraftStairsBlock(MARS_COBBLESTONE_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build());
     public static final Block TIN_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
     public static final Block TIN_WALL_BLOCK_1 = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
-    public static final Block MOON_ROCK_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build());
+    public static final Block MOON_ROCK_WALL_BLOCK = new WallBlock(FabricBlockSettings.copy(MOON_ROCK_BLOCK).strength(2.0F, 2.0F).build());
     public static final Block MOON_DUNGEON_BRICKS_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0F, 5.0F).build());
     public static final Block MARS_COBBLESTONE_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block MARS_DUNGEON_BRICKS_WALL_BLOCK = new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0F, 5.0F).build());
