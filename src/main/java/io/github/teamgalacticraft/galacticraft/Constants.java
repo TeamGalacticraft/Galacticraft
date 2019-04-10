@@ -338,10 +338,24 @@ public class Constants {
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
+        public static final String OVERLAY = "gui/overlay";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
         }
+    }
+
+    public static class TextureCoordinates {
+        public static final int OVERLAY_WIDTH = 12;
+        public static final int OVERLAY_HEIGHT = 40;
+        public static final int ENERGY_DARK_X = 0;
+        public static final int ENERGY_DARK_Y = 0;
+        public static final int ENERGY_LIGHT_X = 12;
+        public static final int ENERGY_LIGHT_Y = 0;
+        public static final int OXYGEN_DARK_X = 0;
+        public static final int OXYGEN_DARK_Y = 40;
+        public static final int OXYGEN_LIGHT_X = 12;
+        public static final int OXYGEN_LIGHT_Y = 40;
     }
 
     public static class Container {

@@ -59,32 +59,42 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         }
         attemptChargeFromStack(this.inventory.getInvStack(0));
 
+        /*
         if (status == CircuitFabricatorStatus.IDLE) {
             this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
         }
+        */
 
-        if (getEnergy().getCurrentEnergy() < 1) {
+        if (getEnergy().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.INACTIVE;
         }
+        else
+        {
+            status = CircuitFabricatorStatus.IDLE;
+        }
 
+        /*
         if (status == CircuitFabricatorStatus.INACTIVE) {
             this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
             return;
         }
+        */
 
-        if (isValidRecipe(this.inventory.getInvStack(5))) {
+        if (status != CircuitFabricatorStatus.INACTIVE && isValidRecipe(this.inventory.getInvStack(5))) {
             if (canPutStackInResultSlot(getResultFromRecipeStack())) {
                 this.status = CircuitFabricatorStatus.ACTIVE;
             }
         }
         else {
-            this.status = CircuitFabricatorStatus.IDLE;
+            if (this.status != CircuitFabricatorStatus.INACTIVE) {
+                this.status = CircuitFabricatorStatus.IDLE;
+            }
         }
 
         if (status == CircuitFabricatorStatus.ACTIVE) {
 
             ItemStack resultStack = getResultFromRecipeStack();
-            if (inventory.getInvStack(6) == null || inventory.getInvStack(6).getItem() == resultStack.getItem()) {
+            if (inventory.getInvStack(6).isEmpty() || inventory.getInvStack(6).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
                     if (progress <= maxProgress) {
 
@@ -93,14 +103,16 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
                     } else {
                         progress = 0;
 
-                        for (int i = 0; i < inventory.getSlotCount() - 1; i++) {
-                            inventory.getInvStack(i).subtractAmount(1);
+                        inventory.getInvStack(1).subtractAmount(1);
+                        inventory.getInvStack(2).subtractAmount(1);
+                        inventory.getInvStack(3).subtractAmount(1);
+                        inventory.getInvStack(4).subtractAmount(1);
+                        inventory.getInvStack(5).subtractAmount(1);
 
-                            if (inventory.getInvStack(6) != null) {
-                                inventory.getInvStack(6).addAmount(1);
-                            } else {
-                                inventory.setInvStack(6, resultStack, Simulation.ACTION);
-                            }
+                        if (!inventory.getInvStack(6).isEmpty()) {
+                            inventory.getInvStack(6).addAmount(1);
+                        } else {
+                            inventory.setInvStack(6, resultStack, Simulation.ACTION);
                         }
                     }
                 }
@@ -114,14 +126,15 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
-
-        if (inventory.getInvStack(6) == null) {
+        if (inventory.getInvStack(6).isEmpty()) {
             return true;
         }
-        if (inventory.getInvStack(6).getItem() == itemStack.getItem()) {
+        else if (inventory.getInvStack(6).getItem() == itemStack.getItem()) {
             return inventory.getInvStack(6).getAmount() < itemStack.getMaxAmount();
         }
-        return false;
+        else {
+            return false;
+        }
     }
 
     public EnergyAttribute getEnergy() {
@@ -146,7 +159,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
 
     // This is just for testing
     private boolean isValidRecipe(ItemStack input) {
-        return input != null && hasMandatoryMaterials();
+        return !input.isEmpty() && hasMandatoryMaterials();
     }
 
     private boolean hasMandatoryMaterials() {
@@ -159,12 +172,12 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     // Tries charging the block entity with the given itemstack
     // if it has energy in it's tag.
     private void attemptChargeFromStack(ItemStack itemStack) {
-
-        if (itemStack != null) {
+        if (!itemStack.isEmpty()) {
             if (GalacticraftEnergy.isEnergyItem(itemStack)) {
-                if (itemStack.getTag().getInt("Energy") > 0 && energy.canInsertEnergy()) {
-                    energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                if (itemStack.getTag().getInt("Energy") > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
+                    this.energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
                     itemStack.getTag().putInt("Energy", itemStack.getTag().getInt("Energy") - 1);
+                    itemStack.setDamage(itemStack.getDamage() + 1);
                 }
             }
         }
@@ -176,6 +189,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         super.toTag(tag);
         tag.put("Inventory", inventory.toTag());
         tag.put("Energy", energy.toTag());
+        tag.putInt("Progress", progress);
         return tag;
     }
 
@@ -184,5 +198,6 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         super.fromTag(tag);
         inventory.fromTag(tag.getCompound("Inventory"));
         energy.fromTag(tag.getTag("Energy"));
+        this.progress = tag.getInt("Progress");
     }
 }

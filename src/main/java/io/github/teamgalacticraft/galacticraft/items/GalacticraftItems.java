@@ -112,7 +112,8 @@ public class GalacticraftItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static final Item BATTERY = new BatteryItem(new Item.Settings().durability(15000));
+    public static final Item BATTERY = new BatteryItem(new Item.Settings().durability(10000));
+
 
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));

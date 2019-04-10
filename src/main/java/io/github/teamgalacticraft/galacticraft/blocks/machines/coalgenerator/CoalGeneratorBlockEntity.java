@@ -34,7 +34,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
 
     private final List<Runnable> listeners = Lists.newArrayList();
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
-    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(10000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     private float heat = 0.0f;
@@ -110,8 +110,9 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
         if (inventory.getInvStack(1).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
             if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(1))) {
                 if (inventory.getInvStack(1).getTag().getInt("Energy") < inventory.getInvStack(1).getTag().getInt("MaxEnergy")) {
-                    this.energy.setCurrentEnergy(this.energy.getCurrentEnergy() - 1);
+                    this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
                     this.inventory.getInvStack(1).getTag().putInt("Energy", this.inventory.getInvStack(1).getTag().getInt("Energy") + 1);
+                    this.inventory.getInvStack(1).setDamage(this.inventory.getInvStack(1).getDamage() - 1);
                 }
             }
         }

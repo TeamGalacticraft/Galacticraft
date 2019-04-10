@@ -6,6 +6,7 @@ import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
+import io.github.teamgalacticraft.galacticraft.items.BatteryItem;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
@@ -19,6 +20,8 @@ import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -48,6 +51,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
 
         GalacticraftBlocks.register();
         GalacticraftItems.register();
+        initTabStacks();
         GalacticraftFluids.register();
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
@@ -70,6 +74,21 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
             }
         }
 
+    }
+
+    private static void initTabStacks() {
+        BatteryItem.battery_full = new ItemStack(GalacticraftItems.BATTERY);
+        BatteryItem.battery_depleted = new ItemStack(GalacticraftItems.BATTERY);
+        CompoundTag tag_depleted = new CompoundTag();
+        CompoundTag tag_full = new CompoundTag();
+        tag_depleted.putInt("Energy", 0);
+        tag_depleted.putInt("MaxEnergy", BatteryItem.maxEnergy);
+        tag_full.putInt("Energy", BatteryItem.maxEnergy);
+        tag_full.putInt("MaxEnergy", BatteryItem.maxEnergy);
+        BatteryItem.battery_depleted.setTag(tag_depleted);
+        BatteryItem.battery_full.setTag(tag_full);
+        BatteryItem.battery_depleted.setDamage(BatteryItem.maxEnergy);
+        BatteryItem.battery_full.setDamage(0);
     }
 
     @Override
