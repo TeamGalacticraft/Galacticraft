@@ -24,7 +24,7 @@ public class CircuitFabricatorScreen extends ContainerScreen {
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = 0;
-    private static final int ENERGY_Y = 231;
+    private static final int ENERGY_Y = 192;
     private static final int ENERGY_WIDTH = 12;
     private static final int ENERGY_HEIGHT = 40;
 
