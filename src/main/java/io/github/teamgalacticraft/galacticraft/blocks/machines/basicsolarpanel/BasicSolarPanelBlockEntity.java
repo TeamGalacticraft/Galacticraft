@@ -82,10 +82,19 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
             }
         }
 
-        if (inventory.getInvStack(0) != ItemStack.EMPTY && inventory.getInvStack(0).getItem() == GalacticraftItems.BATTERY) {
-            if (energy.getCurrentEnergy() >= 150 && inventory.getInvStack(0).getDamage() != 0) {
-                energy.setCurrentEnergy(energy.getCurrentEnergy() - 150);
-                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDurability() - 1);
+        if (inventory.getInvStack(0).getItem() == GalacticraftItems.BATTERY) {
+            if (energy.getCurrentEnergy() >= 200 && !(inventory.getInvStack(0).getDamage() < 200)) {
+                energy.setCurrentEnergy(energy.getCurrentEnergy() - 200);
+                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 200);
+            } else if (energy.getCurrentEnergy() >= 100 && !(inventory.getInvStack(0).getDamage() < 100)) {
+                energy.setCurrentEnergy(energy.getCurrentEnergy() - 100);
+                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 100);
+            } else if (energy.getCurrentEnergy() >= 10 && !(inventory.getInvStack(0).getDamage() < 10)) {
+                energy.setCurrentEnergy(energy.getCurrentEnergy() - 10);
+                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 10);
+            } else if (energy.getCurrentEnergy() >= 1 && inventory.getInvStack(0).getDamage() != 0) {
+                energy.setCurrentEnergy(energy.getCurrentEnergy() - 1);
+                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 1);
             }
         }
 
