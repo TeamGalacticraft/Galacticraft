@@ -11,6 +11,7 @@ public enum BasicSolarPanelStatus {
     /**
      * Solar panel is active and is generating energy.
      */
+    COLLECTING(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.collecting").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText()),
     /**
      * Solar Panel is generating energy, but the buffer is full.
      */
