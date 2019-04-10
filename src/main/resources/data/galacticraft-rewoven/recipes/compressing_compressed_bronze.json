@@ -1,11 +1,14 @@
 {
   "type": "galacticraft-rewoven:compressing",
   "pattern": [
-    "II"
+    "CT"
   ],
   "key": {
-    "I": {
-      "item": "galacticraft-rewoven:bronze_ingot"
+    "C": {
+      "item": "galacticraft-rewoven:compressed_copper"
+    },
+    "T": {
+      "item": "galacticraft-rewoven:compressed_tin"
     }
   },
   "result": {
