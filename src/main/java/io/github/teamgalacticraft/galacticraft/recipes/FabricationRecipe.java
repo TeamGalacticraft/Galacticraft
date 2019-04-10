@@ -74,7 +74,6 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public String getGroup() {
         return group;
     }

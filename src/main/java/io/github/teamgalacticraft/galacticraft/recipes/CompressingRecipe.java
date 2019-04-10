@@ -1,7 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.recipes;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -17,7 +16,7 @@ import java.util.List;
 public class CompressingRecipe implements Recipe<Inventory> {
     private final Identifier id;
     private final String group;
-    private final DefaultedList<Ingredient> input;
+    private final DefaultedList<Ingredient> inputs;
     private final ItemStack output;
     private int width;
     private int height;
@@ -27,13 +26,48 @@ public class CompressingRecipe implements Recipe<Inventory> {
         this.group = group;
         this.width = width;
         this.height = height;
-        this.input = input;
+        this.inputs = input;
         this.output = output;
     }
 
     @Override
-    public boolean matches(Inventory var1, World var2) {
+    public boolean matches(Inventory inv, World world) {
+        for (int int_1 = 0; int_1 <= 3 - this.width; ++int_1) {
+            for (int int_2 = 0; int_2 <= 3 - this.height; ++int_2) {
+                if (this.matchesSmall(inv, int_1, int_2, true)) {
+                    return true;
+                }
+
+                if (this.matchesSmall(inv, int_1, int_2, false)) {
+                    return true;
+                }
+            }
+        }
+
         return false;
+    }
+
+    private boolean matchesSmall(Inventory craftingInventory_1, int int_1, int int_2, boolean boolean_1) {
+        for (int x = 0; x < 2; ++x) {
+            for (int y = 0; y < 1; ++y) {
+                int int_5 = x - int_1;
+                int int_6 = y - int_2;
+                Ingredient ingredient_1 = Ingredient.EMPTY;
+                if (int_5 >= 0 && int_6 >= 0 && int_5 < this.width && int_6 < this.height) {
+                    if (boolean_1) {
+                        ingredient_1 = this.inputs.get(this.width - int_5 - 1 + int_6 * this.width);
+                    } else {
+                        ingredient_1 = this.inputs.get(int_5 + int_6 * this.width);
+                    }
+                }
+
+                if (!ingredient_1.method_8093(craftingInventory_1.getInvStack(x + y * 3))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     @Override
@@ -48,7 +82,7 @@ public class CompressingRecipe implements Recipe<Inventory> {
 
     public DefaultedList<Ingredient> getPreviewInputs() {
         DefaultedList<Ingredient> list = DefaultedList.create();
-        list.addAll(this.input);
+        list.addAll(this.inputs);
         return list;
     }
 
@@ -68,7 +102,7 @@ public class CompressingRecipe implements Recipe<Inventory> {
     }
 
     public List<Ingredient> getInputs() {
-        return input;
+        return inputs;
     }
 
     @Override
@@ -77,7 +111,6 @@ public class CompressingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
     public String getGroup() {
         return group;
     }
