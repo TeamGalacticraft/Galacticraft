@@ -1,5 +1,9 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
+import net.minecraft.text.Style;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
+
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
@@ -7,23 +11,22 @@ public enum BasicSolarPanelStatus {
     /**
      * Solar panel is active and is generating energy.
      */
-    COLLECTING("\u00A7a" + "Collecting" + "\u00A7r"),
     /**
      * Solar Panel is generating energy, but the buffer is full.
      */
-    FULL("\u00A77" + "Full" + "\u00A7r"),
+    FULL(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.full").setStyle(new Style().setColor(TextFormat.GOLD)).getFormattedText()),
     /**
      * Solar Panel is generating energy, but less efficiently.
      */
-    RAIN("\u00A7e" + "Raining" + "\u00A7r"),
+    RAINING(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.raining").setStyle(new Style().setColor(TextFormat.DARK_AQUA)).getFormattedText()),
     /**
      * Solar Panel is not generating energy.
      */
-    NIGHT("\u00A70" + "Night" + "\u00A7r"),
+    NIGHT(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.night").setStyle(new Style().setColor(TextFormat.BLUE)).getFormattedText()),
     /**
      * The sun is not visible.
      */
-    BLOCKED("\u00A70" + "Blocked" + "\u00A7r");
+    BLOCKED(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.blocked").setStyle(new Style().setColor(TextFormat.DARK_GRAY)).getFormattedText());
 
     private String name;
 
