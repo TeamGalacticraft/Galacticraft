@@ -209,8 +209,8 @@ public class Constants {
         public static final String DESH_INGOT = "desh_ingot";
         public static final String DESH_STICK = "desh_stick";
         public static final String CARBON_FRAGMENTS = "carbon_fragments";
-        public static final String IRON_SHARD = "shard_iron";
-        public static final String TITANIUM_SHARD = "shard_titanium";
+        public static final String IRON_SHARD = "iron_shard";
+        public static final String TITANIUM_SHARD = "titanium_shard";
         public static final String TITANIUM_INGOT = "titanium_ingot";
         public static final String DUST_TITANIUM = "titanium_dust";
         public static final String BASIC_WAFER = "basic_wafer";
