@@ -35,7 +35,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modCompile "net.fabricmc:fabric:${project.fabric_version}"
-    modCompile "cloth:Cloth:${project.cloth_version}"
+//    modCompile "cloth:Cloth:${project.cloth_version}" // We don't use cloth anymore since the config part was split into cloth-config.
     modCompile "cloth-config:ClothConfig:${project.cloth_config_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"

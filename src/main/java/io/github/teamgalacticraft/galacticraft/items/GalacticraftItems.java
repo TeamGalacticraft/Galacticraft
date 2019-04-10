@@ -29,8 +29,8 @@ public class GalacticraftItems {
     public static final Item DESH_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item DESH_STICK = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item FRAGMENTED_CARBON = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item SHARD_IRON = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item SHARD_TITANIUM = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item IRON_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_SHARD = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item TITANIUM_INGOT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item DUST_TITANIUM = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BASIC_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -151,8 +151,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_INGOT), DESH_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_STICK), DESH_STICK);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CARBON_FRAGMENTS), FRAGMENTED_CARBON);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.IRON_SHARD), SHARD_IRON);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SHARD), SHARD_TITANIUM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.IRON_SHARD), IRON_SHARD);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SHARD), TITANIUM_SHARD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_INGOT), TITANIUM_INGOT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DUST_TITANIUM), DUST_TITANIUM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BASIC_WAFER), BASIC_WAFER);

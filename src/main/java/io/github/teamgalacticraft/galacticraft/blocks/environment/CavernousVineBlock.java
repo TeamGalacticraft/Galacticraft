@@ -1,10 +1,14 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Waterloggable;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -29,6 +33,25 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         super(settings);
         settings.noCollision();
         this.setDefaultState(this.stateFactory.getDefaultState().with(WATERLOGGED, false));
+    }
+
+    @Override
+    public void onEntityCollision(BlockState blockState_1, World world_1, BlockPos blockPos_1, Entity entity) {
+        if (!(entity instanceof LivingEntity) || (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.flying)) {
+            return;
+        }
+
+        onCollided((LivingEntity)entity);
+    }
+
+    protected void onCollided(LivingEntity entity) {
+        entity.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
+        entity.yaw += 0.4F; // Spin the player
+        dragEntityUp(entity);
+    }
+
+    void dragEntityUp(LivingEntity entity) {
+        entity.setVelocity(entity.getVelocity().x, 0.1D, entity.getVelocity().z);
     }
 
     @Override

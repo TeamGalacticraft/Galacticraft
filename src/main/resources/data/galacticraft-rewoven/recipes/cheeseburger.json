@@ -1,0 +1,18 @@
+{
+  "type": "crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:burger_bun"
+    },
+    {
+      "item": "galacticraft-rewoven:beef_patty"
+    },
+    {
+      "item": "galacticraft-rewoven:cheese_slice"
+    }
+  ],
+  "result": {
+    "item": "galacticraft-rewoven:cheeseburger",
+    "count": 1
+  }
+}

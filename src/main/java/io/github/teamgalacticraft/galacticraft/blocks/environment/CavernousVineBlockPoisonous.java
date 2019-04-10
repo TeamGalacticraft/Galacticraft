@@ -1,9 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.util.Hand;
@@ -18,18 +17,14 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState blockState_1, World world_1, BlockPos blockPos_1, Entity entity_1) {
-        entity_1.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
-        if (entity_1.getVelocity().y < 0.15) {
-            entity_1.addVelocity(0, 0.2D, 0);
-        } else {
-            entity_1.setVelocity(0, 0.15D, 0);
-        }
+    protected void onCollided(LivingEntity entity) {
+        // Override the one from CavernousVineBlock and only bring them up. Dont damage.
+        dragEntityUp(entity);
     }
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if (hand == Hand.MAIN && (playerEntity.getActiveItem().getItem() instanceof ShearsItem)) {
+        if (playerEntity.getStackInHand(hand).getItem() instanceof ShearsItem) {
             world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE_BLOCK.getDefaultState());
             return true;
         }
