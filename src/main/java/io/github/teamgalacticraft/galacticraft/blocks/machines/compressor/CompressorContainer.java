@@ -50,8 +50,8 @@ public class CompressorContainer extends Container {
 
         // 3x3 comprerssor input grid
         int slot = 0;
-        for (int x = 0; x < 3; x++) {
-            for (int y = 0; y < 3; y++) {
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
                 this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 8));
                 slot++;
             }
@@ -65,7 +65,7 @@ public class CompressorContainer extends Container {
             }
         });
         // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 10, 3 * 18 + 1, 65, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])) {});
+        this.addSlot(new ItemSpecificSlot(this.inventory, 10, 3 * 18 + 1, 65, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
 
         // Player inventory slots
         int playerInvYOffset = 100;

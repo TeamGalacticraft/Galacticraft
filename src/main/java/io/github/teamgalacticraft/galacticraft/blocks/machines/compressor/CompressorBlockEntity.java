@@ -9,24 +9,24 @@ import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
+import io.github.teamgalacticraft.galacticraft.recipes.CompressingRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.FabricationRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.BasicInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 
 import java.util.Map;
 import java.util.Optional;
 
 public class CompressorBlockEntity extends BlockEntity implements Tickable {
-    SimpleFixedItemInv inventory = new SimpleFixedItemInv(11);
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(12);
     private final int maxProgress = 300;
     private int progress;
 
@@ -48,11 +48,11 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
         }
         */
 
-        if (isValidRecipe(
-                this.inventory.getInvStack(1), this.inventory.getInvStack(2), this.inventory.getInvStack(3),
-                this.inventory.getInvStack(4), this.inventory.getInvStack(5), this.inventory.getInvStack(6),
-                this.inventory.getInvStack(7), this.inventory.getInvStack(8), this.inventory.getInvStack(9)
-        )) {
+        DefaultedList<ItemStack> inv = DefaultedList.create(9, ItemStack.EMPTY);
+        for (int i = 0; i < 9; i++) {
+            inv.set(i, this.inventory.getInvStack(i));
+        }
+        if (isValidRecipe(inv)) {
             if (canPutStackInResultSlot(getResultFromRecipe())) {
                 this.status = CircuitFabricatorStatus.PROCESSING;
             }
@@ -62,8 +62,8 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
 
         if (status == CircuitFabricatorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipe();
-            if (inventory.getInvStack(10).isEmpty() || inventory.getInvStack(10).getItem() == resultStack.getItem()) {
-                if (inventory.getInvStack(10).getAmount() < resultStack.getMaxAmount()) {
+            if (inventory.getInvStack(9).isEmpty() || inventory.getInvStack(9).getItem() == resultStack.getItem()) {
+                if (inventory.getInvStack(9).getAmount() < resultStack.getMaxAmount()) {
                     if (progress <= maxProgress) {
                         ++progress;
                     } else {
@@ -77,15 +77,16 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
                             }
                         }
 
-                        if (!inventory.getInvStack(10).isEmpty()) {
-                            inventory.getInvStack(10).addAmount(resultStack.getAmount());
+                        if (!inventory.getInvStack(9).isEmpty()) {
+                            inventory.getInvStack(9).addAmount(resultStack.getAmount());
                         } else {
-                            inventory.setInvStack(10, resultStack, Simulation.ACTION);
+                            inventory.setInvStack(9, resultStack, Simulation.ACTION);
                         }
                     }
                 }
             }
         }
+//        System.out.println("Status: " + status.name());
     }
 
     private ItemStack getResultFromRecipe() {
@@ -97,10 +98,10 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
-        if (inventory.getInvStack(10).isEmpty()) {
+        if (inventory.getInvStack(9).isEmpty()) {
             return true;
-        } else if (inventory.getInvStack(10).getItem() == itemStack.getItem()) {
-            return inventory.getInvStack(10).getAmount() < itemStack.getMaxAmount();
+        } else if (inventory.getInvStack(9).getItem() == itemStack.getItem()) {
+            return inventory.getInvStack(9).getAmount() < itemStack.getMaxAmount();
         } else {
             return false;
         }
@@ -122,14 +123,27 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
         return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
-    private Optional<FabricationRecipe> getRecipe(DefaultedList<ItemStack> input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, new BasicInventory(input.toArray(new ItemStack[0])), this.world);
+    private Optional<CompressingRecipe> getRecipe(DefaultedList<ItemStack> input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, new BasicInventory(input.toArray(new ItemStack[0])), this.world);
     }
 
-    // This is just for testing
-    private boolean isValidRecipe(ItemStack item1, ItemStack item2, ItemStack item3, ItemStack item4, ItemStack item5, ItemStack item6, ItemStack item7, ItemStack item8, ItemStack item9) {
-        return getRecipe(DefaultedList.create(ItemStack.EMPTY, item1, item2, item3, item4, item5, item6, item7, item8, item9)).isPresent();
+
+    int i = 0;
+    private boolean isValidRecipe(DefaultedList<ItemStack> inv) {
+        boolean present = getRecipe(inv).isPresent();
+        if (!world.isClient) {
+            if (i == 100) {
+                for (ItemStack itemStack : inv) {
+                    System.out.println(Registry.ITEM.getId(itemStack.getItem()));
+                }
+                i = 0;
+            }
+            i++;
+        }
+
 //        return !input.isEmpty() && hasMandatoryMaterials();
+//        System.out.println((present ? "Valid" : "Invalid") + " recipe.");
+        return present;
     }
 
     @Override
