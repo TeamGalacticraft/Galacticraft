@@ -14,6 +14,7 @@ import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
@@ -25,7 +26,7 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable {
+public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     private final List<Runnable> listeners = Lists.newArrayList();
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
@@ -130,5 +131,15 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
         super.fromTag(tag);
         this.inventory.fromTag(tag.getCompound("Inventory"));
         this.energy.setCurrentEnergy(tag.getInt("Energy"));
+    }
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        this.fromTag(tag);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return this.toTag(tag);
     }
 }

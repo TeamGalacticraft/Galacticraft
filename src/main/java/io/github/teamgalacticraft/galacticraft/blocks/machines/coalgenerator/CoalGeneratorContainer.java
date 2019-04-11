@@ -54,7 +54,6 @@ public class CoalGeneratorContainer extends Container {
                 slot.markDirty();
             }
         }
-
         return itemStack;
     }
 
