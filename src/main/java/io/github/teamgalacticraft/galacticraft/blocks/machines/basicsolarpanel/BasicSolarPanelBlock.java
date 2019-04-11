@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

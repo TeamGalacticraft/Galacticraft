@@ -12,10 +12,10 @@ import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
@@ -75,24 +75,44 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
                 energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), ActionType.PERFORM);
             }
         }
+        if (world.isClient) return;
 
-        if (inventory.getInvStack(0).getItem() == GalacticraftItems.BATTERY) {
-            if (energy.getCurrentEnergy() >= 200 && !(inventory.getInvStack(0).getDamage() < 200)) {
-                energy.setCurrentEnergy(energy.getCurrentEnergy() - 200);
-                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 200);
-            }
-            else if (energy.getCurrentEnergy() >= 100 && !(inventory.getInvStack(0).getDamage() < 100)) {
-                energy.setCurrentEnergy(energy.getCurrentEnergy() - 100);
-                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 100);
-            }
-            else if (energy.getCurrentEnergy() >= 10 && !(inventory.getInvStack(0).getDamage() < 10)) {
-                energy.setCurrentEnergy(energy.getCurrentEnergy() - 10);
-                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 10);
-            }
-            else if (energy.getCurrentEnergy() >= 1 && inventory.getInvStack(0).getDamage() != 0) {
-                energy.setCurrentEnergy(energy.getCurrentEnergy() - 1);
-                inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 1);
-            }
+        ItemStack battery = inventory.getInvStack(0);
+        if (GalacticraftEnergy.isEnergyItem(battery)) {
+            CompoundTag tag = battery.getTag();
+
+            int currentBatteryCharge = tag.getInt("Energy");
+            int maxBatteryCharge = tag.getInt("MaxEnergy");
+            int chargeRoom = maxBatteryCharge - currentBatteryCharge;
+
+            int chargeToAdd = Math.min(200, chargeRoom);
+            int newCharge = currentBatteryCharge + chargeToAdd;
+            this.energy.setCurrentEnergy(energy.getCurrentEnergy() - newCharge);
+            tag.putInt("Energy", newCharge);
+
+            battery.setTag(tag);
+            battery.setDamage(battery.getDurability() - newCharge);
+
+//            if (energy.getCurrentEnergy() >= 200 && !(battery.getDamage() < 200)) {
+//
+//                 Decrease
+//                energy.setCurrentEnergy(energy.getCurrentEnergy() - 200);
+//                battery.setDamage(inventory.getInvStack(0).getDamage() - 200);
+//
+//
+//            } else if (energy.getCurrentEnergy() >= 100 && !(battery.getDamage() < 100)) {
+//                energy.setCurrentEnergy(energy.getCurrentEnergy() - 100);
+//                battery.setDamage(inventory.getInvStack(0).getDamage() - 100);
+//
+//            } else if (energy.getCurrentEnergy() >= 10 && !(battery.getDamage() < 10)) {
+//                energy.setCurrentEnergy(energy.getCurrentEnergy() - 10);
+//                battery.setDamage(battery.getDamage() - 10);
+//
+//            } else if (energy.getCurrentEnergy() >= 1 && battery.getDamage() != 0) {
+//                energy.setCurrentEnergy(energy.getCurrentEnergy() - 1);
+//                battery.setDamage(battery.getDamage() - 1);
+//
+//            }
         }
 
         for (Direction direction : Direction.values()) {
