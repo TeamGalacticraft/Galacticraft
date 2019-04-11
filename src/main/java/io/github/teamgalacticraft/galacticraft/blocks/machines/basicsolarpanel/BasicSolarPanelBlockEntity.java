@@ -15,7 +15,6 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
@@ -31,13 +30,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
-    boolean isBurning = false;
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
-    private float heat = 0.0f;
-    public int fuelTimeMax;
-    public int fuelTimeCurrent;
-    public int fuelEnergyPerTick;
-
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
@@ -60,13 +53,13 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
         }
 
         if ((time > 250 && time < 12000)) {
-                if (energy.getCurrentEnergy() <= energy.getMaxEnergy()) {
-                    status = BasicSolarPanelStatus.COLLECTING;
-                } else {
-                    energy.setCurrentEnergy(energy.getMaxEnergy());
-                    status = BasicSolarPanelStatus.FULL;
-                }
-            } else if (world.isRaining() || world.isThundering()) {
+            if (energy.getCurrentEnergy() <= energy.getMaxEnergy()) {
+                status = BasicSolarPanelStatus.COLLECTING;
+            } else {
+                energy.setCurrentEnergy(energy.getMaxEnergy());
+                status = BasicSolarPanelStatus.FULL;
+            }
+        } else if (world.isRaining() || world.isThundering()) {
             status = BasicSolarPanelStatus.RAINING;
         }
 
@@ -76,9 +69,9 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
 
         if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int)((6000D-((double)time-6000D))/133.3333333333D), ActionType.PERFORM);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), ActionType.PERFORM);
             } else {
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int)(((double)time/133.3333333333D)), ActionType.PERFORM);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), ActionType.PERFORM);
             }
         }
 
@@ -86,13 +79,16 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
             if (energy.getCurrentEnergy() >= 200 && !(inventory.getInvStack(0).getDamage() < 200)) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 200);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 200);
-            } else if (energy.getCurrentEnergy() >= 100 && !(inventory.getInvStack(0).getDamage() < 100)) {
+            }
+            else if (energy.getCurrentEnergy() >= 100 && !(inventory.getInvStack(0).getDamage() < 100)) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 100);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 100);
-            } else if (energy.getCurrentEnergy() >= 10 && !(inventory.getInvStack(0).getDamage() < 10)) {
+            }
+            else if (energy.getCurrentEnergy() >= 10 && !(inventory.getInvStack(0).getDamage() < 10)) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 10);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 10);
-            } else if (energy.getCurrentEnergy() >= 1 && inventory.getInvStack(0).getDamage() != 0) {
+            }
+            else if (energy.getCurrentEnergy() >= 1 && inventory.getInvStack(0).getDamage() != 0) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 1);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 1);
             }

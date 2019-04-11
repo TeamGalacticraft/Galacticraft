@@ -10,9 +10,13 @@ import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CircuitFabricatorContainer extends Container {
 
     private Inventory inventory;
@@ -22,7 +26,7 @@ public class CircuitFabricatorContainer extends Container {
     private PlayerEntity playerEntity;
 
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
-    public static Item[] materials = new Item[] {Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
+    public static Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
 
 
     public CircuitFabricatorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
@@ -70,6 +74,40 @@ public class CircuitFabricatorContainer extends Container {
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 168));
         }
 
+    }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
+
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = this.slotList.get(slotId);
+
+        if (slot != null && slot.hasStack()) {
+            ItemStack itemStack1 = slot.getStack();
+            itemStack = itemStack1.copy();
+
+            if (itemStack.isEmpty()) {
+                return itemStack;
+            }
+
+            if (slotId < this.fabricator.inventory.getSlotCount()) {
+
+                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemStack1.getAmount() == 0) {
+                slot.setStack(ItemStack.EMPTY);
+            }
+            else {
+                slot.markDirty();
+            }
+        }
+
+        return itemStack;
     }
 
     @Override

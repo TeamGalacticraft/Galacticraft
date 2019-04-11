@@ -1,8 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.container;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorContainer;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelContainer;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorContainer;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorContainer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

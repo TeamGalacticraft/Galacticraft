@@ -3,19 +3,14 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.container.Container;
-import net.minecraft.container.HopperContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.ArrayList;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -28,33 +23,34 @@ public class CoalGeneratorContainer extends Container {
     private BlockPos blockPos;
     private CoalGeneratorBlockEntity generator;
     private PlayerEntity playerEntity;
-    private static Item[] fuel = new Item[] {Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
-
+    private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
 
 
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
 
-        ItemStack itemStack = null;
+        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slotList.get(slotId);
 
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack1 = slot.getStack();
             itemStack = itemStack1.copy();
 
+            if (itemStack.isEmpty()) {
+                return itemStack;
+            }
+
             if (slotId < this.generator.inventory.getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            }
-            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getAmount() == 0) {
                 slot.setStack(ItemStack.EMPTY);
-            }
-            else {
+            } else {
                 slot.markDirty();
             }
         }

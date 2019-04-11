@@ -1,7 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -41,7 +40,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
             return;
         }
 
-        onCollided((LivingEntity)entity);
+        onCollided((LivingEntity) entity);
     }
 
     protected void onCollided(LivingEntity entity) {

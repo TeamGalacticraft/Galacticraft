@@ -11,6 +11,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CavernousVineBlockPoisonous extends CavernousVineBlock {
 
     public CavernousVineBlockPoisonous(Settings settings) {

@@ -12,5 +12,6 @@ public class GCBiomes {
 
     public static final Biome MOON = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, "moon"), new MoonBiome());
 
-    public static void init() {}
+    public static void init() {
+    }
 }

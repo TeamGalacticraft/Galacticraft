@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -9,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -88,6 +90,27 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
             list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
             list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
+        }
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
+        super.onBreak(world, blockPos, blockState, playerEntity);
+
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+
+        if (blockEntity != null) {
+            if (blockEntity instanceof CoalGeneratorBlockEntity) {
+                CoalGeneratorBlockEntity coalGeneratorBlockEntity = (CoalGeneratorBlockEntity) blockEntity;
+
+                for (int i = 0; i < coalGeneratorBlockEntity.inventory.getSlotCount(); i++) {
+                    ItemStack itemStack = coalGeneratorBlockEntity.inventory.getInvStack(i);
+
+                    if (itemStack != null) {
+                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    }
+                }
+            }
         }
     }
 }

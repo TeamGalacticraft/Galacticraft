@@ -16,6 +16,9 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CircuitFabricatorScreen extends ContainerScreen {
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
@@ -28,7 +31,7 @@ public class CircuitFabricatorScreen extends ContainerScreen {
     private static final int ENERGY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private static final int ENERGY_DIMMED_X = Constants.TextureCoordinates.ENERGY_DARK_X;
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
-    private static final int ENERGY_DIMMED_WIDTH= Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
 
     private static final int PROGRESS_X = 206;
@@ -74,8 +77,8 @@ public class CircuitFabricatorScreen extends ContainerScreen {
 
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight + 26);
-        this.drawProgressBar();
         this.drawEnergyBufferBar();
+        this.drawProgressBar();
         this.drawConfigTabs();
     }
 
@@ -107,6 +110,7 @@ public class CircuitFabricatorScreen extends ContainerScreen {
         float maxProgress = (float) ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).getMaxProgress();
         float progressScale = (progress / maxProgress);
 
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
