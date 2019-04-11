@@ -11,6 +11,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CompressorScreen extends ContainerScreen {
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN));

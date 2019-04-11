@@ -9,7 +9,6 @@ import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -40,14 +39,12 @@ public class BasicSolarPanelContainer extends Container {
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            }
-            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getAmount() == 0) {
                 slot.setStack(ItemStack.EMPTY);
-            }
-            else {
+            } else {
                 slot.markDirty();
             }
         }

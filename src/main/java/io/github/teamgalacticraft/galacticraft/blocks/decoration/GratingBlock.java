@@ -16,6 +16,9 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GratingBlock extends Block implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 

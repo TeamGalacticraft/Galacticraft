@@ -1,8 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.recipes;
 
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -13,6 +10,9 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class FabricationRecipe implements Recipe<Inventory> {
     private final Identifier id;
     private final String group;

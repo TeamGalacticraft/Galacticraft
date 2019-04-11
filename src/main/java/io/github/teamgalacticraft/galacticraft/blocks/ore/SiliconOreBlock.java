@@ -20,11 +20,6 @@ public class SiliconOreBlock extends OreBlock {
 
     @Override
     public ItemStack getPickStack(BlockView blockView, BlockPos pos, BlockState state) {
-        //int bonus = 0;
-        //if (ConfigManagerCore.quickMode) {
-        //    bonus = 1;
-        //}
-
         return new ItemStack(GalacticraftItems.RAW_SILICON, new Random().nextInt(4) + 2 /*+ bonus*/);
     }
 }

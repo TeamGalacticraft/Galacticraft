@@ -28,6 +28,9 @@ import net.minecraft.util.math.Direction;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickable {
 
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(7);

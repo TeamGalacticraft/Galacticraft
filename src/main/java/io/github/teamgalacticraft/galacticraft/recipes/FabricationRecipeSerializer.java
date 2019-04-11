@@ -9,6 +9,9 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class FabricationRecipeSerializer<T extends FabricationRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> recipeFactory;
 

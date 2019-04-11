@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
+import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -23,7 +24,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 
 import java.util.List;
 

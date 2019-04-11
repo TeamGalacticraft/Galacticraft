@@ -15,7 +15,6 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
@@ -60,13 +59,13 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
         }
 
         if ((time > 250 && time < 12000)) {
-                if (energy.getCurrentEnergy() <= energy.getMaxEnergy()) {
-                    status = BasicSolarPanelStatus.COLLECTING;
-                } else {
-                    energy.setCurrentEnergy(energy.getMaxEnergy());
-                    status = BasicSolarPanelStatus.FULL;
-                }
-            } else if (world.isRaining() || world.isThundering()) {
+            if (energy.getCurrentEnergy() <= energy.getMaxEnergy()) {
+                status = BasicSolarPanelStatus.COLLECTING;
+            } else {
+                energy.setCurrentEnergy(energy.getMaxEnergy());
+                status = BasicSolarPanelStatus.FULL;
+            }
+        } else if (world.isRaining() || world.isThundering()) {
             status = BasicSolarPanelStatus.RAINING;
         }
 
@@ -76,9 +75,9 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
 
         if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int)((6000D-((double)time-6000D))/133.3333333333D), ActionType.PERFORM);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), ActionType.PERFORM);
             } else {
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int)(((double)time/133.3333333333D)), ActionType.PERFORM);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), ActionType.PERFORM);
             }
         }
 

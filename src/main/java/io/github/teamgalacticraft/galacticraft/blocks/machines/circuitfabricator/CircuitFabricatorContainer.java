@@ -13,6 +13,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CircuitFabricatorContainer extends Container {
 
     private Inventory inventory;
@@ -22,7 +25,7 @@ public class CircuitFabricatorContainer extends Container {
     private PlayerEntity playerEntity;
 
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
-    public static Item[] materials = new Item[] {Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
+    public static Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
 
 
     public CircuitFabricatorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
