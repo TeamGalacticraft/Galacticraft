@@ -3,7 +3,9 @@ package io.github.teamgalacticraft.galacticraft.recipes.rei;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
+import me.shedaniel.rei.api.DisplaySettings;
 import me.shedaniel.rei.api.RecipeCategory;
+import me.shedaniel.rei.api.RecipeDisplay;
 import me.shedaniel.rei.gui.widget.ItemSlotWidget;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
 import me.shedaniel.rei.gui.widget.Widget;
@@ -34,11 +36,12 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     }
 
     public String getCategoryName() {
-        return I18n.translate("category.rei.fabrication");
+        return I18n.translate("category.rei.circuit_fabricator");
     }
 
+    @SuppressWarnings("PointlessArithmeticExpression")
     public List<Widget> setupDisplay(Supplier<DefaultFabricationDisplay> recipeDisplaySupplier, Rectangle bounds) {
-        final Point startPoint = new Point((int) bounds.getCenterX() - 72, (int) bounds.getCenterY() - 47);
+        final Point startPoint = new Point((int) bounds.getCenterX() - 81, (int) bounds.getCenterY() - 41);
 //        final Point startPoint = new Point((int) bounds.getCenterX() - 41, (int) bounds.getCenterY() - 27);
 
         class NamelessClass_1 extends RecipeBaseWidget {
@@ -51,7 +54,8 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
                 GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GuiLighting.disable();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
-                this.blit(startPoint.x, startPoint.y, 0, 54, 82, 54);
+                this.blit(startPoint.x, startPoint.y, 0, 0, 162, 82);
+
                 int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D / 1.0D);
                 this.blit(startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
                 int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
@@ -68,13 +72,33 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         // Redstone
         // User input
         // Output
-        widgets.add(new ItemSlotWidget(startPoint.x, startPoint.y + 15, Arrays.asList(new ItemStack(Items.DIAMOND)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3), startPoint.y + 61, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3), startPoint.y + 61 - 18, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 6), startPoint.y + 61 - 18, Arrays.asList(new ItemStack(Items.REDSTONE)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 7), startPoint.y + 15, recipeDisplay.getInput().get(0), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 7), startPoint.y + 61, recipeDisplay.getOutput(), false, true, true));
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 0) + 1, startPoint.y + 1, Arrays.asList(new ItemStack(Items.DIAMOND)), false, true, true));
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 7) + 1, startPoint.y + 1, recipeDisplay.getInput().get(0), false, true, true));
 
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Arrays.asList(new ItemStack(Items.REDSTONE)), false, true, true));
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput(), false, true, true));
         return widgets;
+    }
+
+    @Override
+    public DisplaySettings<DefaultFabricationDisplay> getDisplaySettings() {
+        return new DisplaySettings<DefaultFabricationDisplay>() {
+            @Override
+            public int getDisplayHeight(RecipeCategory recipeCategory) {
+                return 90;
+            }
+
+            @Override
+            public int getDisplayWidth(RecipeCategory recipeCategory, DefaultFabricationDisplay recipeDisplay) {
+                return 170;
+            }
+
+            @Override
+            public int getMaximumRecipePerPage(RecipeCategory recipeCategory) {
+                return 99;
+            }
+        };
     }
 }
