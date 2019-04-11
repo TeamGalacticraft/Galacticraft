@@ -15,7 +15,7 @@ public class GalacticraftRecipes {
     public static CompressingRecipeSerializer<CompressingRecipe> COMPRESSING_SERIALIZER;
 
     public static void register() {
-        // Circuit fabricator recipe stuff
+        // Circuit CIRCUIT_FABRICATION recipe stuff
         FABRICATION_TYPE = registerType("circuit_fabricator");
         FABRICATION_SERIALIZER = registerSerializer("circuit_fabricator", new FabricationRecipeSerializer<>(FabricationRecipe::new));
 
