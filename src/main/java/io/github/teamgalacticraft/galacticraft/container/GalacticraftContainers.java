@@ -24,6 +24,6 @@ public class GalacticraftContainers {
         ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, (syncId, id, playerEntity, buf) -> new CircuitFabricatorContainer(syncId, buf.readBlockPos(), playerEntity));
         ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, (syncId, id, player, buf) -> new BasicSolarPanelContainer(syncId, buf.readBlockPos(), player));
         ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, (syncId, id, player, buf) -> new CompressorContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryContainer(syncId, playerEntity));
+        ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCContainer(playerEntity.inventory, !playerEntity.world.isClient, playerEntity));
     }
 }

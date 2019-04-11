@@ -5,6 +5,7 @@
   "mixins": [
     "CapeMixin",
     "PlayerInventoryScreenMixin",
+    "PlayerEntityMixin",
     "ItemStackMixin"
   ],
   "minVersion": "0.1.0",

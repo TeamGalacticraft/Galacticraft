@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.mixin;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.container.screen.PlayerInventoryGCScreen;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.client.gui.ingame.AbstractPlayerInventoryScreen;
 import net.minecraft.client.gui.ingame.PlayerInventoryScreen;
@@ -21,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(PlayerInventoryScreen.class)
 public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventoryScreen<PlayerContainer> {
-
     private boolean isGC = false;
 
     public PlayerInventoryScreenMixin(PlayerContainer container, PlayerInventory playerInventory, TextComponent textComponent) {
@@ -30,21 +30,19 @@ public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventory
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        System.out.println("X: " + mouseX);
-        System.out.println("Y: " + mouseY);
-        System.out.println("b: " + button);
+//        System.out.println("X: " + mouseX);
+//        System.out.println("Y: " + mouseY);
+//        System.out.println("b: " + button);
 
-        if (mouseX <= this.left && mouseX >= this.left + 28 && mouseY <= this.top && mouseY >= this.top - 28 && button == 0) {
-            // vanill button
-        }
-        if (mouseX <= this.left && mouseX >= this.left + 28 && mouseY <= this.top && mouseY >= this.top - 28 && button == 0) {
-            // vanill button
+        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), 155, 183) && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), 12, 38)) {
+            System.out.println("Clicked on GC tab!");
+            minecraft.openScreen(new PlayerInventoryGCScreen(playerInventory.player));
         }
     }
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN)));
+        this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
         this.blit(this.left, this.top - 28, 0, 0, 57, 32);
     }
 

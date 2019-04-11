@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.items;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -137,9 +138,17 @@ public class GalacticraftItems {
     public static final Item RED_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BLACK_PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
+    public static final Item OXYGEN_MASK = new Item((new Item.Settings()).itemGroup(ITEMS_GROUP));
+    public static final Item OXYGEN_GEAR = new Item((new Item.Settings()).itemGroup(ITEMS_GROUP));
+
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(900));
-    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(18000));
-    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(27000));
+    public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(1800));
+    public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).itemGroup(ITEMS_GROUP).durability(2700));
+
+    public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem((new Item.Settings()).itemGroup(ITEMS_GROUP), EquipmentSlot.HEAD);
+    public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem((new Item.Settings()).itemGroup(ITEMS_GROUP), EquipmentSlot.CHEST);
+    public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem((new Item.Settings()).itemGroup(ITEMS_GROUP), EquipmentSlot.LEGS);
+    public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem((new Item.Settings()).itemGroup(ITEMS_GROUP), EquipmentSlot.FEET);
 
     public static void register() {
         //MATERIALS
@@ -262,9 +271,16 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RED_PARACHUTE), RED_PARACHUTE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLACK_PARACHUTE), BLACK_PARACHUTE);
 
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_MASK), OXYGEN_MASK);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_GEAR), OXYGEN_GEAR);
+
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SMALL_OXYGEN_TANK), SMALL_OXYGEN_TANK);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MEDIUM_OXYGEN_TANK), MEDIUM_OXYGEN_TANK);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LARGE_OXYGEN_TANK), LARGE_OXYGEN_TANK);
 
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_HELMET), THERMAL_PADDING_HELMET);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_CHESTPIECE), THERMAL_PADDING_CHESTPIECE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_LEGGINGS), THERMAL_PADDING_LEGGINGS);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_BOOTS), THERMAL_PADDING_BOOTS);
     }
 }

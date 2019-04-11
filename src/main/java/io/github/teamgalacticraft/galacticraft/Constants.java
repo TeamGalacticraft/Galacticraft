@@ -311,9 +311,22 @@ public class Constants {
         public static final String RED_PARACHUTE = "red_parachute";
         public static final String BLACK_PARACHUTE = "black_parachute";
 
+        public static final String OXYGEN_MASK = "oxygen_mask";
+        public static final String OXYGEN_GEAR = "oxygen_gear";
+
         public static final String SMALL_OXYGEN_TANK = "small_oxygen_tank";
         public static final String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
         public static final String LARGE_OXYGEN_TANK = "large_oxygen_tank";
+
+        public static final String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
+        public static final String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
+        public static final String THERMAL_PADDING_LEGGINGS = "thermal_padding_leggings";
+        public static final String THERMAL_PADDING_BOOTS = "thermal_padding_boots";
+
+        public static final String ISOTHERMAL_PADDING_HELMET = "isothermal_padding_helmet";
+        public static final String ISOTHERMAL_PADDING_CHESTPIECE = "isothermal_padding_chestpiece";
+        public static final String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
+        public static final String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
     }
 
     public static class Config {
@@ -343,6 +356,7 @@ public class Constants {
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
+        public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_tabs";
         public static final String OVERLAY = "gui/overlay";
 
         public static String getRaw(String path) {
