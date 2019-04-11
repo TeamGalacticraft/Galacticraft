@@ -63,18 +63,15 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
 
     @Override
     public void drawBackground(float v, int mouseX, int mouseY) {
-        this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
-        this.blit(this.left, this.top - 28, 0, 0, 57, 32);
-
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.renderBackground();
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-
 //        this.drawTexturedReact(...)
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(this.left, this.top, 0, 0, this.containerWidth, this.containerHeight);
 
         int int_3 = this.left;
         int int_4 = this.top;
         PlayerInventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
+
+        this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
+        this.blit(this.left, this.top - 28, 0, 32, 57, 62);
     }
 }
