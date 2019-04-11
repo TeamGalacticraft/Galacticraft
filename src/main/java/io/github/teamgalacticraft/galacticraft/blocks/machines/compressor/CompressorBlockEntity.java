@@ -26,7 +26,7 @@ import java.util.Optional;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CompressorBlockEntity extends BlockEntity implements Tickable {
-    SimpleFixedItemInv inventory = new SimpleFixedItemInv(12);
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(11);
     private final int maxProgress = 300;
     private int progress;
 

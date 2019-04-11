@@ -29,12 +29,16 @@ public class CoalGeneratorContainer extends Container {
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
 
-        ItemStack itemStack = null;
+        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slotList.get(slotId);
 
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack1 = slot.getStack();
             itemStack = itemStack1.copy();
+
+            if (itemStack.isEmpty()) {
+                return itemStack;
+            }
 
             if (slotId < this.generator.inventory.getSlotCount()) {
 

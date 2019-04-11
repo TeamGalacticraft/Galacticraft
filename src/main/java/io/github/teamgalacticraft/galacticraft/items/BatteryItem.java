@@ -48,7 +48,6 @@ public class BatteryItem extends Item {
         if (group != GalacticraftItems.ITEMS_GROUP) {
             return;
         }
-
         groupStacks.add(battery_full);
         groupStacks.add(battery_depleted);
     }

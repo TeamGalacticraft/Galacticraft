@@ -101,7 +101,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
             if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    this.energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
+                    energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
                 }
             }
         }
@@ -109,9 +109,9 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
         if (inventory.getInvStack(1).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
             if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(1))) {
                 if (inventory.getInvStack(1).getTag().getInt("Energy") < inventory.getInvStack(1).getTag().getInt("MaxEnergy")) {
-                    this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
-                    this.inventory.getInvStack(1).getTag().putInt("Energy", this.inventory.getInvStack(1).getTag().getInt("Energy") + 1);
-                    this.inventory.getInvStack(1).setDamage(this.inventory.getInvStack(1).getDamage() - 1);
+                    energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                    inventory.getInvStack(1).getTag().putInt("Energy", this.inventory.getInvStack(1).getTag().getInt("Energy") + 1);
+                    inventory.getInvStack(1).setDamage(this.inventory.getInvStack(1).getDamage() - 1);
                 }
             }
         }
@@ -123,11 +123,11 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable {
     }
 
     public EnergyAttribute getEnergy() {
-        return this.energy;
+        return energy;
     }
 
     public FixedItemInv getItems() {
-        return this.inventory;
+        return inventory;
     }
 
     @Override

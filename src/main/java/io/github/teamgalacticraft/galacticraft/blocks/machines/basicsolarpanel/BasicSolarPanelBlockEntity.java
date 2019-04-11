@@ -30,13 +30,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
-    boolean isBurning = false;
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
-    private float heat = 0.0f;
-    public int fuelTimeMax;
-    public int fuelTimeCurrent;
-    public int fuelEnergyPerTick;
-
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
@@ -85,13 +79,16 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable 
             if (energy.getCurrentEnergy() >= 200 && !(inventory.getInvStack(0).getDamage() < 200)) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 200);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 200);
-            } else if (energy.getCurrentEnergy() >= 100 && !(inventory.getInvStack(0).getDamage() < 100)) {
+            }
+            else if (energy.getCurrentEnergy() >= 100 && !(inventory.getInvStack(0).getDamage() < 100)) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 100);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 100);
-            } else if (energy.getCurrentEnergy() >= 10 && !(inventory.getInvStack(0).getDamage() < 10)) {
+            }
+            else if (energy.getCurrentEnergy() >= 10 && !(inventory.getInvStack(0).getDamage() < 10)) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 10);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 10);
-            } else if (energy.getCurrentEnergy() >= 1 && inventory.getInvStack(0).getDamage() != 0) {
+            }
+            else if (energy.getCurrentEnergy() >= 1 && inventory.getInvStack(0).getDamage() != 0) {
                 energy.setCurrentEnergy(energy.getCurrentEnergy() - 1);
                 inventory.getInvStack(0).setDamage(inventory.getInvStack(0).getDamage() - 1);
             }
