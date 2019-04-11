@@ -8,9 +8,7 @@ import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.recipes.CompressingRecipe;
-import io.github.teamgalacticraft.galacticraft.recipes.FabricationRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.minecraft.block.entity.BlockEntity;
@@ -90,11 +88,12 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
     }
 
     private ItemStack getResultFromRecipe() {
-        return getRecipe(DefaultedList.create(ItemStack.EMPTY,
-                this.inventory.getInvStack(1), this.inventory.getInvStack(2), this.inventory.getInvStack(3),
-                this.inventory.getInvStack(4), this.inventory.getInvStack(5), this.inventory.getInvStack(6),
-                this.inventory.getInvStack(7), this.inventory.getInvStack(8), this.inventory.getInvStack(9))
-        ).orElseThrow(() -> new IllegalStateException("No recipe present????")).getOutput();
+        DefaultedList<ItemStack> inv = DefaultedList.create(9, ItemStack.EMPTY);
+        for (int i = 0; i < 9; i++) {
+            inv.set(i, this.inventory.getInvStack(i));
+        }
+
+        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("No recipe present????")).getOutput();
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
@@ -129,12 +128,13 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
 
 
     int i = 0;
+
     private boolean isValidRecipe(DefaultedList<ItemStack> inv) {
         boolean present = getRecipe(inv).isPresent();
         if (!world.isClient) {
             if (i == 100) {
                 for (ItemStack itemStack : inv) {
-                    System.out.println(Registry.ITEM.getId(itemStack.getItem()));
+//                    System.out.println(Registry.ITEM.getId(itemStack.getItem()));
                 }
                 i = 0;
             }

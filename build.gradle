@@ -35,7 +35,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modCompile "net.fabricmc:fabric:${project.fabric_version}"
-//    modCompile "cloth:Cloth:${project.cloth_version}" // We don't use cloth anymore since the config part was split into cloth-config.
+    modCompile "cloth:Cloth:${project.cloth_version}" // We don't use cloth anymore since the config part was split into cloth-config.
     modCompile "cloth-config:ClothConfig:${project.cloth_config_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
@@ -43,6 +43,7 @@ dependencies {
     modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
     modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
     modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+    modCompile "roughly-enough-items:RoughlyEnoughItems:2.7.1.84"
 
     //include everything mandatory inside the jar
 //    include "net.fabricmc:fabric:${project.fabric_version}"
