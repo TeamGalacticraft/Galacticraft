@@ -1,0 +1,6 @@
+{
+    "parent": "block/wall_inventory",
+    "textures": {
+        "wall": "galacticraft-rewoven:block/moon_rock_block"
+    }
+}

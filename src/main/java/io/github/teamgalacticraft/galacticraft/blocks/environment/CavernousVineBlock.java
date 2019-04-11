@@ -45,8 +45,6 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     protected void onCollided(LivingEntity entity) {
-        entity.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
-        entity.yaw += 0.4F; // Spin the player
         dragEntityUp(entity);
     }
 

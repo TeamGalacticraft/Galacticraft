@@ -1,0 +1,8 @@
+{
+  "type": "galacticraft-rewoven:circuit_fabricator",
+  "ingredient": {
+    "item": "minecraft:lapis_lazuli"
+  },
+  "result": "galacticraft-rewoven:blue_solar_wafer",
+  "count": 9
+}

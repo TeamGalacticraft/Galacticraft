@@ -17,43 +17,12 @@ import net.minecraft.util.math.BlockPos;
  */
 public class BasicSolarPanelContainer extends Container {
 
-    private ItemStack itemStack;
     private Inventory inventory;
 
     private BlockPos blockPos;
-    private BasicSolarPanelBlockEntity generator;
+    private BasicSolarPanelBlockEntity solarPanel;
     private PlayerEntity playerEntity;
 
-
-    @Override
-    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
-
-        ItemStack itemStack = null;
-        Slot slot = this.slotList.get(slotId);
-
-        if (slot != null && slot.hasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (slotId < this.generator.inventory.getSlotCount()) {
-
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            }
-            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemStack1.getAmount() == 0) {
-                slot.setStack(ItemStack.EMPTY);
-            }
-            else {
-                slot.markDirty();
-            }
-        }
-
-        return itemStack;
-    }
 
     public BasicSolarPanelContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
         super(null, syncId);
@@ -66,11 +35,11 @@ public class BasicSolarPanelContainer extends Container {
             // TODO: Move this logic somewhere else to just not open this at all.
             throw new IllegalStateException("Found " + blockEntity + " instead of a Solar Panel!");
         }
-        this.generator = (BasicSolarPanelBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(generator.inventory) {
+        this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
+        this.inventory = new PartialInventoryFixedWrapper(solarPanel.inventory) {
             @Override
             public void markDirty() {
-                generator.markDirty();
+                solarPanel.markDirty();
             }
 
             @Override
@@ -92,8 +61,41 @@ public class BasicSolarPanelContainer extends Container {
         for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
         }
-
     }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
+
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = this.slotList.get(slotId);
+
+        if (slot != null && slot.hasStack()) {
+            ItemStack itemStack1 = slot.getStack();
+            itemStack = itemStack1.copy();
+
+            if (itemStack.isEmpty()) {
+                return itemStack;
+            }
+
+            if (slotId < this.solarPanel.inventory.getSlotCount()) {
+
+                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemStack1.getAmount() == 0) {
+                slot.setStack(ItemStack.EMPTY);
+            }
+            else {
+                slot.markDirty();
+            }
+        }
+        return itemStack;
+    }
+
 
     @Override
     public boolean canUse(PlayerEntity playerEntity) {

@@ -1,0 +1,15 @@
+{
+  "type": "galacticraft-rewoven:compressing",
+  "pattern": [
+    "I"
+  ],
+  "key": {
+    "I": {
+      "item": "galacticraft-rewoven:meteoric_iron_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:compressed_meteoric_iron",
+    "count": 1
+  }
+}

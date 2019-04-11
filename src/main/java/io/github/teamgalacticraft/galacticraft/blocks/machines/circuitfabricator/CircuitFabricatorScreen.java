@@ -74,8 +74,8 @@ public class CircuitFabricatorScreen extends ContainerScreen {
 
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight + 26);
-        this.drawProgressBar();
         this.drawEnergyBufferBar();
+        this.drawProgressBar();
         this.drawConfigTabs();
     }
 
@@ -107,6 +107,7 @@ public class CircuitFabricatorScreen extends ContainerScreen {
         float maxProgress = (float) ((CircuitFabricatorBlockEntity) world.getBlockEntity(blockPos)).getMaxProgress();
         float progressScale = (progress / maxProgress);
 
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
