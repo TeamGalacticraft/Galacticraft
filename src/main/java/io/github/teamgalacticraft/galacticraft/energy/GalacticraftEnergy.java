@@ -24,6 +24,6 @@ public class GalacticraftEnergy {
 
     public static boolean isEnergyItem(ItemStack itemStack) {
         CompoundTag tag = itemStack.getOrCreateTag();
-        return itemStack.hasTag() && tag.containsKey("Energy") && tag.containsKey("MaxEnergy");
+        return tag.containsKey("Energy") && tag.containsKey("MaxEnergy");
     }
 }
