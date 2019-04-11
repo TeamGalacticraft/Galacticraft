@@ -20,7 +20,7 @@ public class CannedFoodItem extends Item {
         if (entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
             player.eatFood(world, stack);
-            player.dropStack(new ItemStack(GalacticraftItems.CANISTER_TIN));
+            player.dropStack(new ItemStack(GalacticraftItems.TIN_CANISTER));
         }
         stack.subtractAmount(1);
         return stack;

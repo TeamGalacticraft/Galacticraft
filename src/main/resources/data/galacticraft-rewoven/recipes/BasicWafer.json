@@ -1,8 +1,0 @@
-{
-  "type": "circuit_fabricator",
-  "ingridient": "minecraft:diamond",
-  "result": {
-    "item": "galacticraft-rewoven:basic_wafer",
-    "count": 1
-  }
-}

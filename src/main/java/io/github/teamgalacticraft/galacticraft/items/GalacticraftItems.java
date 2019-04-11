@@ -55,8 +55,8 @@ public class GalacticraftItems {
     public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item SOLAR_ARRAY_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item STEEL_POLE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item CANISTER_COPPER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item CANISTER_TIN = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item COPPER_CANISTER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TIN_CANISTER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item THERMAL_CLOTH = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ORION_DRIVE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -179,8 +179,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLUE_SOLAR_WAFER), BLUE_SOLAR_WAFER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SOLAR_ARRAY_WAFER), SOLAR_ARRAY_WAFER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_POLE), STEEL_POLE);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANISTER_COPPER), CANISTER_COPPER);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CANISTER_TIN), CANISTER_TIN);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.COPPER_CANISTER), COPPER_CANISTER);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIN_CANISTER), TIN_CANISTER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_CLOTH), THERMAL_CLOTH);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ISOTHERMAL_FABRIC), ISOTHERMAL_FABRIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ORION_DRIVE), ORION_DRIVE);
