@@ -356,7 +356,7 @@ public class Constants {
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
-        public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_tabs";
+        public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
         public static final String OVERLAY = "gui/overlay";
 
         public static String getRaw(String path) {
