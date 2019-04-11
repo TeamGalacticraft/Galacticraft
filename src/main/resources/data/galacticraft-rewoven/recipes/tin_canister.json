@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "I I",
+    "I I",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "galacticraft-rewoven:tin_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:tin_canister",
+    "count": 2
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "S S",
+    " W ",
+    "SRS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "W": {
+      "item": "galacticraft-rewoven:basic_wafer"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:oxygen_fan",
+    "count": 1
+  }
+}

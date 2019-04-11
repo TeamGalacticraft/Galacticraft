@@ -53,6 +53,8 @@ public class GalacticraftItems {
     public static final Item OXYGEN_VENT = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item SENSOR_LENS = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item BLUE_SOLAR_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item SINGLE_SOLAR_MODULE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item FULL_SOLAR_PANEL = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item SOLAR_ARRAY_WAFER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item STEEL_POLE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item COPPER_CANISTER = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -177,6 +179,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_VENT), OXYGEN_VENT);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SENSOR_LENS), SENSOR_LENS);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLUE_SOLAR_WAFER), BLUE_SOLAR_WAFER);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SINGLE_SOLAR_MODULE), SINGLE_SOLAR_MODULE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FULL_SOLAR_PANEL), FULL_SOLAR_PANEL);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SOLAR_ARRAY_WAFER), SOLAR_ARRAY_WAFER);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_POLE), STEEL_POLE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.COPPER_CANISTER), COPPER_CANISTER);

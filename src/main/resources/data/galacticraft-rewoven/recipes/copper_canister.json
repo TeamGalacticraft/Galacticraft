@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "I I",
+    "I I",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "item": "galacticraft-rewoven:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:copper_canister",
+    "count": 2
+  }
+}

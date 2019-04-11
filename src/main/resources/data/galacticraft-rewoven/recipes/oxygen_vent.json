@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TT",
+    "TS"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:compressed_tin"
+    },
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:oxygen_vent",
+    "count": 1
+  }
+}

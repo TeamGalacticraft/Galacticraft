@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DVD",
+    " D "
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:desh_ingot"
+    },
+    "V": {
+      "item": "galacticraft-rewoven:oxygen_vent"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:atmospheric_valve",
+    "count": 1
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "I",
+    "I",
+    "I"
+  ],
+  "key": {
+    "I": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:steel_pole",
+    "count": 2
+  }
+}
