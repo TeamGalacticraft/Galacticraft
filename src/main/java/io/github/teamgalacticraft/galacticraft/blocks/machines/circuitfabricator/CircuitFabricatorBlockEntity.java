@@ -17,8 +17,10 @@ import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.recipes.FabricationRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,12 +28,14 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
+import javax.swing.*;
 import java.util.Map;
 import java.util.Optional;
 
-public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickable {
+public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
 
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(7);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
@@ -108,24 +112,32 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
                         System.out.println("Finished crafting an item.");
                         this.progress = 0;
 
-                        inventory.getInvStack(1).subtractAmount(1);
-                        inventory.getInvStack(2).subtractAmount(1);
-                        inventory.getInvStack(3).subtractAmount(1);
-                        inventory.getInvStack(4).subtractAmount(1);
-                        inventory.getInvStack(5).subtractAmount(1);
+                        if (!world.isClient) {
+                            inventory.getInvStack(1).subtractAmount(1);
+                            inventory.getInvStack(2).subtractAmount(1);
+                            inventory.getInvStack(3).subtractAmount(1);
+                            inventory.getInvStack(4).subtractAmount(1);
+                            inventory.getInvStack(5).subtractAmount(1);
 
-                        if (!inventory.getInvStack(6).isEmpty()) {
-                            inventory.getInvStack(6).addAmount(1);
-                        } else {
-                            inventory.setInvStack(6, resultStack, Simulation.ACTION);
+                            if (!inventory.getInvStack(6).isEmpty()) {
+                                inventory.getInvStack(6).addAmount(resultStack.getAmount());
+                            } else {
+                                inventory.setInvStack(6, resultStack, Simulation.ACTION);
+                            }
                         }
+
+                        markDirty();
                     }
                 }
             }
         }
     }
 
-    // This is just for testing purposes
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return new BlockEntityUpdateS2CPacket(this.getPos(), 0, toTag(new CompoundTag()));
+    }
+
     private ItemStack getResultFromRecipeStack() {
         BasicInventory inv = new BasicInventory(inventory.getInvStack(5));
         // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
@@ -141,7 +153,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         if (inventory.getInvStack(6).isEmpty()) {
             return true;
         } else if (inventory.getInvStack(6).getItem() == itemStack.getItem()) {
-            return inventory.getInvStack(6).getAmount() < itemStack.getMaxAmount();
+            return (inventory.getInvStack(6).getAmount() + itemStack.getAmount()) <= itemStack.getMaxAmount();
         } else {
             return false;
         }
@@ -211,5 +223,15 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         inventory.fromTag(tag.getCompound("Inventory"));
         energy.setCurrentEnergy(tag.getInt("Energy"));
         progress = tag.getInt("Progress");
+    }
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        this.fromTag(tag);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return this.toTag(tag);
     }
 }

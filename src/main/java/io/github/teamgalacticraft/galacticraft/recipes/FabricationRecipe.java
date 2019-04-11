@@ -1,8 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.recipes;
 
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;

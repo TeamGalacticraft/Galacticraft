@@ -20,6 +20,7 @@ import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.apache.logging.log4j.LogManager;
