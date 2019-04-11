@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.google.common.collect.Lists;
@@ -77,8 +78,9 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
         }
         if (world.isClient) return;
 
-        ItemStack battery = inventory.getInvStack(0);
-        if (GalacticraftEnergy.isEnergyItem(battery)) {
+        ItemStack storedBattery = inventory.getInvStack(0);
+        if (GalacticraftEnergy.isEnergyItem(storedBattery)) {
+            ItemStack battery = storedBattery.copy();
             CompoundTag tag = battery.getTag();
 
             int currentBatteryCharge = tag.getInt("Energy");
@@ -92,6 +94,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
 
             battery.setTag(tag);
             battery.setDamage(battery.getDurability() - newCharge);
+            inventory.setInvStack(0, battery, Simulation.ACTION);
 
 //            if (energy.getCurrentEnergy() >= 200 && !(battery.getDamage() < 200)) {
 //
