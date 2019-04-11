@@ -20,7 +20,6 @@ import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
-import net.minecraft.client.network.packet.BlockEntityUpdateS2CPacket;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -28,13 +27,14 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-import javax.swing.*;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
 
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(7);
@@ -133,11 +133,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         }
     }
 
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.getPos(), 0, toTag(new CompoundTag()));
-    }
-
+    // This is just for testing purposes
     private ItemStack getResultFromRecipeStack() {
         BasicInventory inv = new BasicInventory(inventory.getInvStack(5));
         // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.

@@ -31,7 +31,7 @@ public class CoalGeneratorScreen extends ContainerScreen {
     private static final int ENERGY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private static final int ENERGY_DIMMED_X = Constants.TextureCoordinates.ENERGY_DARK_X;
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
-    private static final int ENERGY_DIMMED_WIDTH= Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;

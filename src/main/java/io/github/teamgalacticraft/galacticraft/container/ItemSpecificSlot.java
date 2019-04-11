@@ -8,6 +8,9 @@ import net.minecraft.item.ItemStack;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class ItemSpecificSlot extends Slot {
 
     private List<Item> items;

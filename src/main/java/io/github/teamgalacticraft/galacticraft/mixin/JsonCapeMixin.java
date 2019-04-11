@@ -19,7 +19,6 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-
 @Mixin(PlayerListEntry.class)
 public abstract class JsonCapeMixin {
 

@@ -17,10 +17,12 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.PacketByteBuf;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CompressingRecipeSerializer<T extends CompressingRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> recipeFactory;
 

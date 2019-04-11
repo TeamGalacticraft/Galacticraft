@@ -12,7 +12,7 @@ import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
-import io.github.teamgalacticraft.galacticraft.world.dimension.GCDimensions;
+import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
 import io.github.teamgalacticraft.galacticraft.world.gen.OreGenerator;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
@@ -60,7 +60,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftContainers.register();
         GalacticraftBlockEntities.init();
         GCBiomes.init();
-        GCDimensions.init();
+        GalacticraftDimensions.init();
         GCSurfaceBuilder.init();
         OreGenerator.register();
         Capes.updateCapeList();

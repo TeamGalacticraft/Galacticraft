@@ -10,6 +10,9 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class FabricationRecipe implements Recipe<Inventory> {
     private final Identifier id;
     private final String group;

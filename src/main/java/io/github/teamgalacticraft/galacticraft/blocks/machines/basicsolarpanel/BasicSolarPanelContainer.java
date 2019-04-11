@@ -9,7 +9,6 @@ import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -22,7 +21,6 @@ public class BasicSolarPanelContainer extends Container {
     private BlockPos blockPos;
     private BasicSolarPanelBlockEntity solarPanel;
     private PlayerEntity playerEntity;
-
 
     public BasicSolarPanelContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
         super(null, syncId);

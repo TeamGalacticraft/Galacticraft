@@ -11,6 +11,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CompressorScreen extends ContainerScreen {
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN));
@@ -49,7 +52,7 @@ public class CompressorScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText(), (this.width / 2), this.top + 2, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText(), (this.width / 2), this.top, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 

@@ -5,7 +5,7 @@ import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
- import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
 import net.minecraft.text.TranslatableTextComponent;
@@ -31,7 +31,7 @@ public class BasicSolarPanelScreen extends ContainerScreen {
     private static final int ENERGY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private static final int ENERGY_DIMMED_X = Constants.TextureCoordinates.ENERGY_DARK_X;
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
-    private static final int ENERGY_DIMMED_WIDTH= Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;

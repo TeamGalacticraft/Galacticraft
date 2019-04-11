@@ -32,5 +32,14 @@
     "libblockattributes": "*",
     "silk": "*",
     "tgc-utils": "*"
+  },
+  "custom": {
+    "modmenu:clientsideOnly": true,
+    "roughlyenoughitems:plugins": [
+      {
+        "id": "galacticraft_plugin",
+        "class": "io.github.teamgalacticraft.galacticraft.recipes.rei.GalacticraftREIPlugin"
+      }
+    ]
   }
 }

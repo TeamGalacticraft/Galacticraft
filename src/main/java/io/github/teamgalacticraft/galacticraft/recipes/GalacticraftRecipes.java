@@ -7,6 +7,9 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftRecipes {
     public static RecipeType<FabricationRecipe> FABRICATION_TYPE;
     public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
@@ -15,7 +18,7 @@ public class GalacticraftRecipes {
     public static CompressingRecipeSerializer<CompressingRecipe> COMPRESSING_SERIALIZER;
 
     public static void register() {
-        // Circuit fabricator recipe stuff
+        // Circuit CIRCUIT_FABRICATION recipe stuff
         FABRICATION_TYPE = registerType("circuit_fabricator");
         FABRICATION_SERIALIZER = registerSerializer("circuit_fabricator", new FabricationRecipeSerializer<>(FabricationRecipe::new));
 

@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.recipes;
 
-import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -13,6 +12,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CompressingRecipe implements Recipe<Inventory> {
     private final Identifier id;
     private final String group;

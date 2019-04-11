@@ -18,11 +18,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CompressorBlockEntity extends BlockEntity implements Tickable {
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(11);
     private final int maxProgress = 300;
