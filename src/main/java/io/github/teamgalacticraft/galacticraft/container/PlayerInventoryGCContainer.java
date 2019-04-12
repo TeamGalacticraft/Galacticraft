@@ -34,6 +34,11 @@ public class PlayerInventoryGCContainer extends Container {
             public boolean canPlayerUseInv(PlayerEntity var1) {
                 return true;
             }
+
+            @Override
+            public void markDirty() {
+                //TODO
+            }
         };
 
         this.player = playerEntity;
