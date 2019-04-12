@@ -36,7 +36,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
     public BasicSolarPanelBlockEntity() {
-        super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_BLOCK_ENTITY_TYPE);
+        super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         this.energy.listen(this::markDirty);
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);

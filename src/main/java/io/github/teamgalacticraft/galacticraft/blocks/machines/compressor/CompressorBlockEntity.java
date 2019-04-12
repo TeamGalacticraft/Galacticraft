@@ -35,7 +35,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
     public CompressorBlockEntity() {
-        super(GalacticraftBlockEntities.COMPRESSOR_BLOCK_ENTITY_TYPE);
+        super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
     }
 
