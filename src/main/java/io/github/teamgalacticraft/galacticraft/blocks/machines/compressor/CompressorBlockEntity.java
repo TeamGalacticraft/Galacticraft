@@ -11,6 +11,7 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.recipes.CompressingRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.ItemStack;
@@ -25,12 +26,12 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CompressorBlockEntity extends BlockEntity implements Tickable {
+public class CompressorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(11);
     private final int maxProgress = 300;
     private int progress;
 
-    public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
+    public CompressorStatus status = CompressorStatus.INACTIVE;
 
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
@@ -54,13 +55,13 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
         }
         if (isValidRecipe(inv)) {
             if (canPutStackInResultSlot(getResultFromRecipe())) {
-                this.status = CircuitFabricatorStatus.PROCESSING;
+                this.status = CompressorStatus.PROCESSING;
             }
         } else {
-            this.status = CircuitFabricatorStatus.IDLE;
+            this.status = CompressorStatus.IDLE;
         }
 
-        if (status == CircuitFabricatorStatus.PROCESSING) {
+        if (status == CompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipe();
             if (inventory.getInvStack(9).isEmpty() || inventory.getInvStack(9).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(9).getAmount() < resultStack.getMaxAmount()) {
@@ -70,17 +71,20 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
                         System.out.println("Finished crafting an item.");
                         progress = 0;
 
-                        for (int i = 0; i < 9; i++) {
-                            ItemStack invStack = inventory.getInvStack(i);
-                            if (!invStack.isEmpty()) {
-                                invStack.subtractAmount(1);
-                            }
-                        }
+                        if (!world.isClient) {
 
-                        if (!inventory.getInvStack(9).isEmpty()) {
-                            inventory.getInvStack(9).addAmount(resultStack.getAmount());
-                        } else {
-                            inventory.setInvStack(9, resultStack, Simulation.ACTION);
+                            for (int i = 0; i < 9; i++) {
+                                ItemStack invStack = inventory.getInvStack(i);
+                                if (!invStack.isEmpty()) {
+                                    invStack.subtractAmount(1);
+                                }
+                            }
+
+                            if (!inventory.getInvStack(9).isEmpty()) {
+                                inventory.getInvStack(9).addAmount(resultStack.getAmount());
+                            } else {
+                                inventory.setInvStack(9, resultStack, Simulation.ACTION);
+                            }
                         }
                     }
                 }
@@ -128,24 +132,8 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, new BasicInventory(input.toArray(new ItemStack[0])), this.world);
     }
 
-
-    int i = 0;
-
     private boolean isValidRecipe(DefaultedList<ItemStack> inv) {
-        boolean present = getRecipe(inv).isPresent();
-        if (!world.isClient) {
-            if (i == 100) {
-                for (ItemStack itemStack : inv) {
-//                    System.out.println(Registry.ITEM.getId(itemStack.getItem()));
-                }
-                i = 0;
-            }
-            i++;
-        }
-
-//        return !input.isEmpty() && hasMandatoryMaterials();
-//        System.out.println((present ? "Valid" : "Invalid") + " recipe.");
-        return present;
+        return getRecipe(inv).isPresent();
     }
 
     @Override
@@ -161,5 +149,15 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable {
         super.fromTag(tag);
         inventory.fromTag(tag.getCompound("Inventory"));
         this.progress = tag.getInt("Progress");
+    }
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        this.fromTag(tag);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return this.toTag(tag);
     }
 }

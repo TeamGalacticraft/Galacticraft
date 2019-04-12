@@ -243,6 +243,7 @@ public class Constants {
         public static final String ISOTHERMAL_FABRIC = "thermal_cloth_t2";
         public static final String ORION_DRIVE = "orion_drive";
         public static final String ATMOSPHERIC_VALVE = "atmospheric_valve";
+        public static final String LIQUID_CANISTER = "liquid_canister";
         //FOOD
         public static final String CHEESE_CURD = "cheese_curd";
         public static final String CHEESE_SLICE = "cheese_slice";

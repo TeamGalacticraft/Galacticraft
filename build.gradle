@@ -3,8 +3,10 @@ plugins {
     id 'maven-publish'
 }
 
+
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
 
 ext {
     buildNum = (System.getenv("BUILD_NUMBER") != null) ? System.getenv("BUILD_NUMBER") : "0"
