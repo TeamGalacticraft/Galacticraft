@@ -1,13 +1,13 @@
 {
   "type": "galacticraft-rewoven:compressing",
-  "pattern": [
-    "II"
-  ],
-  "key": {
-    "I": {
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:aluminum_ingot"
+    },
+    {
       "item": "galacticraft-rewoven:aluminum_ingot"
     }
-  },
+  ],
   "result": {
     "item": "galacticraft-rewoven:compressed_aluminum",
     "count": 1

@@ -1,13 +1,13 @@
 {
   "type": "galacticraft-rewoven:compressing",
-  "pattern": [
-    "II"
-  ],
-  "key": {
-    "I": {
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:copper_ingot"
+    },
+    {
       "item": "galacticraft-rewoven:copper_ingot"
     }
-  },
+  ],
   "result": {
     "item": "galacticraft-rewoven:compressed_copper",
     "count": 1
