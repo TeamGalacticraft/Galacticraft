@@ -80,7 +80,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
         if (world.isClient) return;
 
         ItemStack storedBattery = inventory.get(0);
-        if (GalacticraftEnergy.isEnergyItem(storedBattery)) {
+        if (GalacticraftEnergy.isEnergyItem(storedBattery) && this.energy.getCurrentEnergy() > 0) {
             ItemStack battery = storedBattery.copy();
             CompoundTag tag = battery.getTag();
 
@@ -89,6 +89,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
             int chargeRoom = maxBatteryCharge - currentBatteryCharge;
 
             int chargeToAdd = Math.min(50, chargeRoom);
+            chargeToAdd = Math.min(chargeToAdd, this.energy.getCurrentEnergy());
             int newCharge = currentBatteryCharge + chargeToAdd;
             this.energy.setCurrentEnergy(energy.getCurrentEnergy() - chargeToAdd);
             tag.putInt("Energy", newCharge);
