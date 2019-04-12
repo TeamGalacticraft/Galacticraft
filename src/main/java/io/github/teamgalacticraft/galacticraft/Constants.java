@@ -354,6 +354,8 @@ public class Constants {
         public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
+        public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
+
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
         public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
@@ -383,5 +385,6 @@ public class Constants {
         public static final String CIRCUIT_FABRICATOR_CONTAINER = "circuit_fabricator_container";
         public static final String COMPRESSOR_CONTAINER = "compressor_container";
         public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
+        public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
     }
 }

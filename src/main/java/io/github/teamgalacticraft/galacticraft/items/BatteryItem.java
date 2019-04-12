@@ -8,10 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.text.*;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.world.World;
 
@@ -40,6 +37,8 @@ public class BatteryItem extends Item {
         } else {
             lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(TextFormat.GREEN)));
         }
+
+        lines.add(new StringTextComponent(stack.getOrCreateTag().toString()));
         super.buildTooltip(stack, world, lines, context);
     }
 

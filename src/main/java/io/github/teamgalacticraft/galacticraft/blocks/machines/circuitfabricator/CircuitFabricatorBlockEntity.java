@@ -102,7 +102,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
             ItemStack resultStack = getResultFromRecipeStack();
             if (inventory.getInvStack(6).isEmpty() || inventory.getInvStack(6).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
-                    if (this.progress <= this.maxProgress) {
+                    if (this.progress < this.maxProgress) {
                         ++progress;
                         this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
                     } else {

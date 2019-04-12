@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.teamgalacticraft.galacticraft.accessor.GCPlayerAccessor;
+import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
 import io.github.teamgalacticraft.galacticraft.items.ThermalArmorItem;

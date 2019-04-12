@@ -1,7 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
-import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
+import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;

@@ -14,7 +14,6 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBlockEntities {
-
     public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), BlockEntityType.Builder.create(CoalGeneratorBlockEntity::new).build(null));
     public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BlockEntityType.Builder.create(BasicSolarPanelBlockEntity::new).build(null));
     public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), BlockEntityType.Builder.create(CircuitFabricatorBlockEntity::new).build(null));

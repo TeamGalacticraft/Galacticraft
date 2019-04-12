@@ -1,7 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
-import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
+import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
@@ -51,23 +51,24 @@ public class CompressorContainer extends Container {
         int slot = 0;
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 8));
+                this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 18));
                 slot++;
             }
         }
 
+        // Fuel slot
+        this.addSlot(new ItemSpecificSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
+
         // Output slot
-        this.addSlot(new Slot(this.inventory, 9, 138, 28) {
+        this.addSlot(new Slot(this.inventory, CompressorBlockEntity.OUTPUT_SLOT, 138, 38) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
                 return false;
             }
         });
-        // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 10, 3 * 18 + 1, 65, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
 
         // Player inventory slots
-        int playerInvYOffset = 100;
+        int playerInvYOffset = 110;
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
@@ -84,18 +85,5 @@ public class CompressorContainer extends Container {
     @Override
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
-    }
-
-    public class ChargeSlot extends Slot {
-
-        public ChargeSlot(Inventory inventory, int slotId, int x, int y) {
-            super(inventory, slotId, x, y);
-        }
-
-        @Override
-        public boolean canInsert(ItemStack itemStack) {
-
-            return itemStack.hasTag() && itemStack.getTag().containsKey("Energy");
-        }
     }
 }

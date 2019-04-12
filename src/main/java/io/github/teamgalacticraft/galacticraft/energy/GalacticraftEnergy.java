@@ -30,4 +30,45 @@ public class GalacticraftEnergy {
         CompoundTag tag = itemStack.getTag();
         return tag.containsKey("Energy") && tag.containsKey("MaxEnergy");
     }
+
+    public static int getBatteryEnergy(ItemStack battery) {
+        if (!isEnergyItem(battery)) {
+            throw new IllegalArgumentException("Provided argument is not an energy item!");
+        }
+
+        return battery.getTag().getInt("Energy");
+    }
+
+    public static int getMaxBatteryEnergy(ItemStack battery) {
+        if (!isEnergyItem(battery)) {
+            throw new IllegalArgumentException("Provided argument is not an energy item!");
+        }
+
+        return battery.getTag().getInt("MaxEnergy");
+    }
+
+    public static void incrementEnergy(ItemStack battery, int energyToAdd) {
+        int newEnergy = getBatteryEnergy(battery);
+        newEnergy = Math.min(newEnergy + energyToAdd, getMaxBatteryEnergy(battery));
+
+        setEnergy(battery, newEnergy);
+    }
+
+    public static void decrementEnergy(ItemStack battery, int energyToRemove) {
+        int newEnergy = getBatteryEnergy(battery);
+        newEnergy = Math.max(newEnergy - energyToRemove, 0);
+
+        setEnergy(battery, newEnergy);
+    }
+
+    public static void setEnergy(ItemStack battery, int newEnergy) {
+        if (!isEnergyItem(battery)) {
+            throw new IllegalArgumentException("Provided argument is not an energy item!");
+        }
+
+        CompoundTag tag = battery.getOrCreateTag();
+        tag.putInt("Energy", newEnergy);
+        battery.setTag(tag);
+        battery.setDamage(battery.getDurability() - newEnergy);
+    }
 }
