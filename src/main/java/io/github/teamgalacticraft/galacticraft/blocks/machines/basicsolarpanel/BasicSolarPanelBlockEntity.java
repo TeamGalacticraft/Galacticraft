@@ -2,6 +2,8 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.google.common.collect.Lists;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
@@ -13,12 +15,8 @@ import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
@@ -28,9 +26,9 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable, Inventory {
+public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     private final List<Runnable> listeners = Lists.newArrayList();
-    private DefaultedList<ItemStack> inventory = DefaultedList.create(getInvSize(), ItemStack.EMPTY);
+    private SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
     SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
@@ -79,7 +77,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
         }
         if (world.isClient) return;
 
-        ItemStack storedBattery = inventory.get(0);
+        ItemStack storedBattery = inventory.getInvStack(0);
         if (GalacticraftEnergy.isEnergyItem(storedBattery) && this.energy.getCurrentEnergy() > 0) {
             ItemStack battery = storedBattery.copy();
             CompoundTag tag = battery.getTag();
@@ -96,7 +94,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
 
             battery.setTag(tag);
             battery.setDamage(battery.getDurability() - newCharge);
-            inventory.set(0, battery);
+            inventory.setInvStack(0, battery, Simulation.ACTION);
         }
 
         for (Direction direction : Direction.values()) {
@@ -118,14 +116,14 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
         return this.energy;
     }
 
-    public DefaultedList<ItemStack> getItems() {
+    public SimpleFixedItemInv getItems() {
         return this.inventory;
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.put("Inventory", Inventories.toTag(new CompoundTag(), inventory));
+        tag.put("Inventory", inventory.toTag());
         tag.putInt("Energy", energy.getCurrentEnergy());
         return tag;
     }
@@ -133,61 +131,9 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        Inventories.fromTag(tag.getCompound("Inventory"), inventory);
+        inventory.fromTag(tag.getCompound("Inventory"));
         this.energy.setCurrentEnergy(tag.getInt("Energy"));
     }
-
-    @Override
-    public int getInvSize() {
-        return 1;
-    }
-
-    @Override
-    public boolean isInvEmpty() {
-        return inventory.get(0).isEmpty();
-    }
-
-    @Override
-    public ItemStack getInvStack(int index) {
-        return inventory.get(index);
-    }
-
-    @Override
-    public ItemStack takeInvStack(int index, int count) {
-        ItemStack item = Inventories.splitStack(this.inventory, index, count);
-        if (!item.isEmpty()) {
-            this.markDirty();
-        }
-
-        return item;
-    }
-
-    @Override
-    public ItemStack removeInvStack(int index) {
-        ItemStack item = this.inventory.get(index);
-        if (item.isEmpty()) {
-            return ItemStack.EMPTY;
-        } else {
-            this.inventory.set(index, ItemStack.EMPTY);
-            return item;
-        }
-    }
-
-    @Override
-    public void setInvStack(int index, ItemStack item) {
-        this.inventory.set(index, item);
-        if (!item.isEmpty() && item.getAmount() > this.getInvMaxStackAmount()) {
-            item.setAmount(this.getInvMaxStackAmount());
-        }
-
-        this.markDirty();
-    }
-
-    @Override
-    public boolean canPlayerUseInv(PlayerEntity var1) {
-        return true;
-    }
-
     @Override
     public void fromClientTag(CompoundTag tag) {
         this.fromTag(tag);
@@ -196,10 +142,5 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         return this.toTag(tag);
-    }
-
-    @Override
-    public void clear() {
-        this.inventory.clear();
     }
 }

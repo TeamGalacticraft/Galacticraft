@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class BasicSolarPanelContainer extends Container {
+    private final Inventory inventory;
     private BlockPos blockPos;
     private BasicSolarPanelBlockEntity solarPanel;
     private PlayerEntity playerEntity;
@@ -31,8 +33,20 @@ public class BasicSolarPanelContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a Solar Panel!");
         }
         this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
+        this.inventory = new PartialInventoryFixedWrapper(solarPanel.getItems()) {
+            @Override
+            public void markDirty() {
+                solarPanel.markDirty();
+            }
+
+            @Override
+            public boolean canPlayerUseInv(PlayerEntity player) {
+                return BasicSolarPanelContainer.this.canUse(player);
+            }
+        };
+
         // Coal Generator fuel slot
-        this.addSlot(new ItemSpecificSlot(this.solarPanel, 0, 8, 53, GalacticraftItems.BATTERY));
+        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
@@ -60,11 +74,11 @@ public class BasicSolarPanelContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.solarPanel.getInvSize()) {
-                if (!this.insertItem(itemStack1, this.solarPanel.getInvSize(), this.slotList.size(), true)) {
+            if (slotId < this.solarPanel.getItems().getSlotCount()) {
+                if (!this.insertItem(itemStack1, this.solarPanel.getItems().getSlotCount(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.solarPanel.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.solarPanel.getItems().getSlotCount(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getAmount() == 0) {

@@ -103,8 +103,8 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
             if (blockEntity instanceof BasicSolarPanelBlockEntity) {
                 BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
 
-                for (int i = 0; i < basicSolarPanelBlockEntity.getInvSize(); i++) {
-                    ItemStack itemStack = basicSolarPanelBlockEntity.getInvStack(i);
+                for (int i = 0; i < basicSolarPanelBlockEntity.getItems().getSlotCount(); i++) {
+                    ItemStack itemStack = basicSolarPanelBlockEntity.getItems().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
