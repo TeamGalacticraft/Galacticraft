@@ -34,7 +34,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable, B
 
     private final List<Runnable> listeners = Lists.newArrayList();
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
-    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(10000, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(15000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     private float heat = 0.0f;

@@ -67,7 +67,10 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) return true;
+        if (world.isClient) {
+            return true;
+        }
+
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.CIRCUIT_FABRICATOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return true;
     }

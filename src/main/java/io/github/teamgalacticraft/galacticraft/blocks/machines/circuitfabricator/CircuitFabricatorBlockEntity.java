@@ -38,7 +38,7 @@ import java.util.Optional;
 public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
 
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(7);
-    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(15000, GalacticraftEnergy.GALACTICRAFT_JOULES);
     private final int maxProgress = 300;
     private int progress;
 

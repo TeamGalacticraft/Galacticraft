@@ -29,7 +29,7 @@ import java.util.Map;
 public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     private final List<Runnable> listeners = Lists.newArrayList();
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
-    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(250000, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    SimpleEnergyAttribute energy = new SimpleEnergyAttribute(15000, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
@@ -134,6 +134,7 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
         inventory.fromTag(tag.getCompound("Inventory"));
         this.energy.setCurrentEnergy(tag.getInt("Energy"));
     }
+
     @Override
     public void fromClientTag(CompoundTag tag) {
         this.fromTag(tag);
