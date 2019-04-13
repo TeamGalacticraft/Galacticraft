@@ -50,12 +50,12 @@ public class GalacticraftREIPlugin implements REIPlugin {
             }
         });
 
-        recipeHelper.registerSpeedCraftFunctional(COMPRESSING, new SpeedCraftFunctional<DefaultShapelessCompressingDisplay>() {
+        recipeHelper.registerSpeedCraftFunctional(COMPRESSING, new SpeedCraftFunctional<DefaultCompressingDisplay>() {
             public Class[] getFunctioningFor() {
                 return new Class[]{CompressorScreen.class};
             }
 
-            public boolean performAutoCraft(Screen screen, DefaultShapelessCompressingDisplay recipe) {
+            public boolean performAutoCraft(Screen screen, DefaultCompressingDisplay recipe) {
                 if (!recipe.getRecipe().isPresent()) {
                     return false;
                 } else if (screen instanceof CompressorScreen) {
@@ -66,7 +66,7 @@ public class GalacticraftREIPlugin implements REIPlugin {
                 }
             }
 
-            public boolean acceptRecipe(Screen screen, DefaultShapelessCompressingDisplay recipe) {
+            public boolean acceptRecipe(Screen screen, DefaultCompressingDisplay recipe) {
                 return screen instanceof CompressorScreen;
             }
         });

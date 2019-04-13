@@ -75,9 +75,9 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
             }
         }
         for (i = 0; i < input.size(); ++i) {
-            if (recipeDisplaySupplier.get() != null) {
+            if (recipeDisplay != null) {
                 if (!input.get(i).isEmpty()) {
-                    slots.get(this.getSlotWithSize(i)).setItemList(input.get(i));
+                    slots.get(this.getSlotWithSize(recipeDisplay, i)).setItemList(input.get(i));
                 }
             } else if (!input.get(i).isEmpty()) {
                 slots.get(i).setItemList(input.get(i));
@@ -99,58 +99,38 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         return widgets;
     }
 
-    private int getSlotWithSize(int num) {
-        if (num == 2) {
-            return 3;
+    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
+        if (recipeDisplay.getWidth() == 1) {
+            if (num == 1) {
+                return 3;
+            }
+
+            if (num == 2) {
+                return 6;
+            }
         }
 
-        if (num == 3) {
-            return 4;
-        }
+        if (recipeDisplay.getWidth() == 2) {
+            if (num == 2) {
+                return 3;
+            }
 
-        if (num == 4) {
-            return 6;
-        }
+            if (num == 3) {
+                return 4;
+            }
 
-        if (num == 5) {
-            return 7;
+            if (num == 4) {
+                return 6;
+            }
+
+            if (num == 5) {
+                return 7;
+            }
         }
 
         return num;
     }
 
-    //    private int getSlotWithSize(DefaultShapelessCompressingDisplay recipeDisplay, int num) {
-//        if (recipeDisplay.getWidth() == 1) {
-//            if (num == 1) {
-//                return 3;
-//            }
-//
-//            if (num == 2) {
-//                return 6;
-//            }
-//        }
-//
-//        if (recipeDisplay.getWidth() == 2) {
-//            if (num == 2) {
-//                return 3;
-//            }
-//
-//            if (num == 3) {
-//                return 4;
-//            }
-//
-//            if (num == 4) {
-//                return 6;
-//            }
-//
-//            if (num == 5) {
-//                return 7;
-//            }
-//        }
-//
-//        return num;
-//    }
-//
     @Override
     public DisplaySettings<DefaultCompressingDisplay> getDisplaySettings() {
         return new DisplaySettings<DefaultCompressingDisplay>() {
