@@ -7,7 +7,7 @@ import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
  */
 public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
 
-    public MoonChunkGeneratorConfig() {
+    MoonChunkGeneratorConfig() {
     }
 
     public int getBiomeSize() {

@@ -5,6 +5,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorScreen;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
+import io.github.teamgalacticraft.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.container.screen.PlayerInventoryGCScreen;
 import net.fabricmc.api.ClientModInitializer;
@@ -37,6 +38,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COMPRESSOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CompressorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new EnergyStorageModuleScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
+
+        GalacticraftBlockEntityRenderers.register();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {
