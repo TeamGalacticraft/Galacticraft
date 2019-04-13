@@ -168,6 +168,7 @@ public class Constants {
 
         // Power
         public static final String BASIC_SOLAR_PANEL_BLOCK = "basic_solar_panel_block";
+        public static final String BASIC_SOLAR_PANEL_PART_BLOCK = "basic_solar_panel_part_block";
         public static final String ADVANCED_SOLAR_PANEL_BLOCK = "advanced_solar_panel_block";
         public static final String COAL_GENERATOR_BLOCK = "coal_generator_block";
         public static final String GEOTHERMAL_GENERATOR_BLOCK = "geothermal_generator_block";

@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
-import alexiil.mc.lib.attributes.mixin.FluidBlockMixin;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.api.blocks.GalacticraftStairsBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.CheeseBlock;
@@ -11,6 +10,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.environment.*;
 import io.github.teamgalacticraft.galacticraft.blocks.fluid.CrudeOilBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.fluid.FuelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelPartBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlock;
@@ -20,7 +20,6 @@ import io.github.teamgalacticraft.galacticraft.blocks.natural.VaporSpoutBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
 import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
@@ -148,6 +147,7 @@ public class GalacticraftBlocks {
     public static final Block COMPRESSOR_BLOCK = new CompressorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COAL_GENERATOR_BLOCK = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block BASIC_SOLAR_PANEL_PART_BLOCK = new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 3600000.0F).dropsNothing().build());
     public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).build());
 
     // Liquids
@@ -247,6 +247,7 @@ public class GalacticraftBlocks {
     public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem BASIC_SOLAR_PANEL_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
+    public static final BlockItem BASIC_SOLAR_PANEL_PART_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_PART_BLOCK, new Item.Settings());
     public static final BlockItem ENERGY_STORAGE_MODULE_BLOCK_ITEM = new BlockItem(ENERGY_STORAGE_MODULE_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
 
     public static void register() {
@@ -344,6 +345,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BASIC_SOLAR_PANEL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_PART_BLOCK), BASIC_SOLAR_PANEL_PART_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), ENERGY_STORAGE_MODULE_BLOCK);
 
         // Register Block items
@@ -439,6 +441,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BASIC_SOLAR_PANEL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_PART_BLOCK), BASIC_SOLAR_PANEL_PART_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), ENERGY_STORAGE_MODULE_BLOCK_ITEM);
     }
 }
