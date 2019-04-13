@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.container.screen;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.container.PlayerInventoryGCContainer;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
@@ -53,8 +52,8 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
 //        System.out.println("b: " + button);
         boolean b = super.mouseClicked(mouseX, mouseY, button);
 
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), 125, 154)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), 12, 38)) {
+        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), left, left + 29)
+                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), top - 26, top)) {
             System.out.println("Clicked on vanilla tab!");
             minecraft.openScreen(new PlayerInventoryScreen(playerInventory.player));
         }
