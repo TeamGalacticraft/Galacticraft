@@ -3,6 +3,7 @@
   "package": "io.github.teamgalacticraft.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PauseMenuScreenMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {
