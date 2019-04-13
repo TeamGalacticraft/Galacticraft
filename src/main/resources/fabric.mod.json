@@ -21,8 +21,7 @@
     ]
   },
   "mixins": [
-    "galacticraft-rewoven.common.json",
-    "galacticraft-rewoven.client.json"
+    "galacticraft-rewoven.mixins.json"
   ],
   "requires": {
     "fabricloader": ">=0.4.0",
