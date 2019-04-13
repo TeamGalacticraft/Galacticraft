@@ -11,10 +11,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.PacketByteBuf;
 
-public class CompressingRecipeSerializer<T extends CompressingRecipe> implements RecipeSerializer<T> {
+public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressingRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> factory;
 
-    public CompressingRecipeSerializer(RecipeFactory<T> factory) {
+    public ShapelessCompressingRecipeSerializer(RecipeFactory<T> factory) {
         this.factory = factory;
     }
 
@@ -32,7 +32,7 @@ public class CompressingRecipeSerializer<T extends CompressingRecipe> implements
     }
 
     @Override
-    public void write(PacketByteBuf packet, CompressingRecipe recipe) {
+    public void write(PacketByteBuf packet, ShapelessCompressingRecipe recipe) {
 //            packet.writeString(recipe.group);
         packet.writeVarInt(recipe.getInput().size());
 
@@ -66,12 +66,12 @@ public class CompressingRecipeSerializer<T extends CompressingRecipe> implements
         } else if (ingredients.size() > 9) {
             throw new JsonParseException("Too many ingredients for compressing recipe");
         } else {
-            ItemStack result = CompressingRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+            ItemStack result = ShapelessCompressingRecipe.getItemStack(JsonHelper.getObject(json, "result"));
             return factory.create(id, /*group, */result, ingredients);
         }
     }
 
-    interface RecipeFactory<T extends CompressingRecipe> {
+    interface RecipeFactory<T extends ShapelessCompressingRecipe> {
         T create(Identifier id, ItemStack output, DefaultedList<Ingredient> ingredients);
     }
 }

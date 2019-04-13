@@ -1,0 +1,22 @@
+{
+  "type": "galacticraft-rewoven:compressing_shaped",
+  "pattern": [
+    "SAB",
+    "SAB"
+  ],
+  "key": {
+    "B": {
+      "item": "galacticraft-rewoven:compressed_bronze"
+    },
+    "A": {
+      "item": "galacticraft-rewoven:compressed_aluminum"
+    },
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:heavy_plating",
+    "count": 1
+  }
+}

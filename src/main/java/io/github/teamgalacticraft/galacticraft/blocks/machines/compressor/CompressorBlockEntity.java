@@ -8,14 +8,15 @@ import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.teamgalacticraft.galacticraft.recipes.CompressingRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
-import net.minecraft.block.entity.BlockEntity;
+import io.github.teamgalacticraft.galacticraft.recipes.ShapedCompressingRecipe;
+import io.github.teamgalacticraft.galacticraft.recipes.ShapelessCompressingRecipe;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
@@ -88,13 +89,26 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     }
 
     private ItemStack getResultFromRecipeStack(Inventory inv) {
-        // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
-        CompressingRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("No recipe present????"));
-        return recipe.craft(inv);
+        // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
+
+        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(inv);
+        if (shapelessRecipe.isPresent()) {
+            return shapelessRecipe.get().craft(inv);
+        }
+
+        return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
     }
 
-    private Optional<CompressingRecipe> getRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
+    private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
+        Optional<ShapelessCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
+
+        return firstMatch;
+    }
+
+    private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
+        Optional<ShapedCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
+
+        return firstMatch;
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
@@ -126,7 +140,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     // This is just for testing
     private boolean isValidRecipe(Inventory input) {
         // TODO check up on this
-        return getRecipe(input).isPresent();
+        return getShapelessRecipe(input).isPresent() || getShapedRecipe(input).isPresent();
 //        return !input.isEmpty() && hasMandatoryMaterials();
     }
 

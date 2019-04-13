@@ -172,6 +172,7 @@ public class Constants {
 
         // Power
         public static final String BASIC_SOLAR_PANEL_BLOCK = "basic_solar_panel_block";
+        public static final String BASIC_SOLAR_PANEL_PART_BLOCK = "basic_solar_panel_part_block";
         public static final String ADVANCED_SOLAR_PANEL_BLOCK = "advanced_solar_panel_block";
         public static final String COAL_GENERATOR_BLOCK = "coal_generator_block";
         public static final String GEOTHERMAL_GENERATOR_BLOCK = "geothermal_generator_block";
@@ -363,6 +364,7 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
 
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
+        public static final String MACHINE_CONFIG_PANELS = "gui/machine_config_panels";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
         public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
         public static final String OVERLAY = "gui/overlay";

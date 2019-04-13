@@ -2,14 +2,18 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import io.github.teamgalacticraft.galacticraft.MultiBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -24,14 +28,17 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable {
+public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable, MultiBlock {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -110,6 +117,83 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
                     }
                 }
+            }
+        }
+    }
+
+    @Override
+    public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
+        List<BlockPos> parts = new LinkedList<>();
+        BlockPos rod = pos.up();
+        BlockPos mid = rod.up();
+        BlockPos front = mid.north();
+        BlockPos back = mid.south();
+
+        BlockPos right = mid.east();
+        BlockPos left = mid.west();
+
+        BlockPos frontLeft = front.east();
+        BlockPos frontRight = front.west();
+        BlockPos backLeft = back.east();
+        BlockPos backRight = back.west();
+
+        parts.add(rod);
+        parts.add(mid);
+        parts.add(front);
+        parts.add(back);
+
+        parts.add(right);
+        parts.add(left);
+
+        parts.add(frontLeft);
+        parts.add(frontRight);
+        parts.add(backLeft);
+        parts.add(backRight);
+
+        return parts;
+    }
+
+    @Override
+    public void onBroken(IWorld iWorld_1, BlockPos blockPos_1, BlockState blockState_1) {
+        for (BlockPos otherPart : getOtherParts(blockState_1, blockPos_1)) {
+            iWorld_1.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
+        }
+
+        super.onBroken(iWorld_1, blockPos_1, blockState_1);
+    }
+
+    @Override
+    public boolean canPlaceAt(BlockState blockState_1, ViewableWorld viewableWorld_1, BlockPos blockPos_1) {
+        for (BlockPos otherPart : getOtherParts(blockState_1, blockPos_1)) {
+            if (!viewableWorld_1.getBlockState(otherPart).getMaterial().isReplaceable()) {
+                return false;
+            }
+        }
+        return super.canPlaceAt(blockState_1, viewableWorld_1, blockPos_1);
+    }
+
+    @Override
+    public void onPlaced(World world_1, BlockPos basePos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
+        for (BlockPos otherPart : getOtherParts(blockState_1, basePos)) {
+            BlockState defaultState = GalacticraftBlocks.BASIC_SOLAR_PANEL_PART_BLOCK.getDefaultState();
+            world_1.setBlockState(otherPart, defaultState);
+
+            BlockEntity partEntity = world_1.getBlockEntity(otherPart);
+            assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
+            ((BasicSolarPanelPartBlockEntity) partEntity).basePos = basePos;
+        }
+    }
+
+    @Override
+    public PistonBehavior getPistonBehavior(BlockState blockState_1) {
+        return PistonBehavior.BLOCK;
+    }
+
+    void onPartDestroyed(IWorld world, BlockState partState, BlockPos partPos, BlockState baseState, BlockPos basePos) {
+        world.setBlockState(basePos, Blocks.AIR.getDefaultState(), 3);
+        for (BlockPos otherPart : getOtherParts(baseState, basePos)) {
+            if (!world.getBlockState(otherPart).isAir()) {
+                world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
             }
         }
     }

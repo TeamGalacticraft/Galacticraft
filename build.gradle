@@ -21,11 +21,11 @@ minecraft {
 }
 allprojects {
     repositories {
+	    mavenLocal()
         maven { url "https://minecraft.curseforge.com/api/maven" }
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://mod-buildcraft.com/maven" }
         maven { url "https://jitpack.io" }
-//        flatDir { dirs 'locallib' }
     }
 }
 
@@ -37,7 +37,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modCompile "net.fabricmc:fabric:${project.fabric_version}"
-    modCompile "cloth:Cloth:${project.cloth_version}" // We don't use cloth anymore since the config part was split into cloth-config.
+    modCompile "cloth:ClothEvents:${project.cloth_version}"
     modCompile "cloth-config:ClothConfig:${project.cloth_config_version}"
     modCompile "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     modCompile "io.github.prospector.modmenu:ModMenu:${project.modmenu_version}"
@@ -45,7 +45,7 @@ dependencies {
     modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
     modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
     modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
-    modCompile "roughly-enough-items:RoughlyEnoughItems:2.7.1.84"
+    modCompile "roughly-enough-items:RoughlyEnoughItems:${project.rei_version}"
 
     //include everything mandatory inside the jar
 //    include "net.fabricmc:fabric:${project.fabric_version}"

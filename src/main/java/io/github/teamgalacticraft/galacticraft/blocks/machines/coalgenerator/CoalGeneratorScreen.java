@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.api.screen.MachineContainerScreen;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CoalGeneratorScreen extends ContainerScreen {
+public class CoalGeneratorScreen extends MachineContainerScreen {
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
@@ -35,11 +36,6 @@ public class CoalGeneratorScreen extends ContainerScreen {
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
-
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
 
     BlockPos blockPos;
     private World world;
@@ -76,11 +72,6 @@ public class CoalGeneratorScreen extends ContainerScreen {
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
-    private void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-    }
-
     private void drawEnergyBufferBar() {
         float currentEnergy = (float) ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
         float maxEnergy = (float) ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
@@ -103,8 +94,11 @@ public class CoalGeneratorScreen extends ContainerScreen {
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
-        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 21 && mouseY <= this.top + (22 + 21)) {
-            this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
-        }
+        this.drawTabTooltips(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean mouseClicked(double double_1, double double_2, int int_1) {
+        return this.checkTabsClick(double_1, double_2, int_1);
     }
 }
