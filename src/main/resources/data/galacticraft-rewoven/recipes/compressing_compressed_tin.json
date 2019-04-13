@@ -1,13 +1,13 @@
 {
   "type": "galacticraft-rewoven:compressing",
-  "pattern": [
-    "II"
-  ],
-  "key": {
-    "I": {
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:tin_ingot"
+    },
+    {
       "item": "galacticraft-rewoven:tin_ingot"
     }
-  },
+  ],
   "result": {
     "item": "galacticraft-rewoven:compressed_tin",
     "count": 1

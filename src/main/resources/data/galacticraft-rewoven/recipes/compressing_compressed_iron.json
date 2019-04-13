@@ -1,13 +1,13 @@
 {
   "type": "galacticraft-rewoven:compressing",
-  "pattern": [
-    "II"
-  ],
-  "key": {
-    "I": {
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
       "item": "minecraft:iron_ingot"
     }
-  },
+  ],
   "result": {
     "item": "galacticraft-rewoven:compressed_iron",
     "count": 1

@@ -8,7 +8,6 @@ import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
@@ -19,7 +18,6 @@ import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,7 +25,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 import java.util.Map;
 import java.util.Optional;
@@ -49,7 +46,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
     public CircuitFabricatorBlockEntity() {
-        super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_BLOCK_ENTITY_BLOCK_ENTITY_TYPE);
+        super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         this.energy.listen(this::markDirty);
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_INPUT);
@@ -105,7 +102,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
             ItemStack resultStack = getResultFromRecipeStack();
             if (inventory.getInvStack(6).isEmpty() || inventory.getInvStack(6).getItem() == resultStack.getItem()) {
                 if (inventory.getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
-                    if (this.progress <= this.maxProgress) {
+                    if (this.progress < this.maxProgress) {
                         ++progress;
                         this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
                     } else {

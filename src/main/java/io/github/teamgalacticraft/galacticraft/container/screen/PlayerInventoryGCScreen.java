@@ -39,7 +39,7 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
         this.drawMouseoverTooltip(x, y);
 
         this.mouseX = (float) x;
-        this.mouseY = (float)/*y*/ minecraft.window.getHeight() / 2;
+        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
 
         GuiLighting.enableForItems();
         this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.left + 6, this.top - 20);
@@ -51,6 +51,7 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
 //        System.out.println("X: " + mouseX);
 //        System.out.println("Y: " + mouseY);
 //        System.out.println("b: " + button);
+        boolean b = super.mouseClicked(mouseX, mouseY, button);
 
         if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), 125, 154)
                 && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), 12, 38)) {
@@ -58,7 +59,7 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
             minecraft.openScreen(new PlayerInventoryScreen(playerInventory.player));
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return b;
     }
 
     @Override

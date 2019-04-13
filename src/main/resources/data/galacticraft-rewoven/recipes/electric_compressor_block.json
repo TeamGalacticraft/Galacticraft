@@ -16,14 +16,14 @@
       "item": "galacticraft-rewoven:compressed_copper"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire"
+      "item": "galacticraft-rewoven:aluminum_wire_block"
     },
     "F": {
       "item": "galacticraft-rewoven:advanced_wafer"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:electric_compressor",
+    "item": "galacticraft-rewoven:electric_compressor_block",
     "count": 1
   }
 }

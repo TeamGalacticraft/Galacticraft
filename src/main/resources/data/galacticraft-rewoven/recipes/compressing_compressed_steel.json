@@ -1,16 +1,16 @@
 {
   "type": "galacticraft-rewoven:compressing",
-  "pattern": [
-    "CIC"
-  ],
-  "key": {
-    "C": {
+  "ingredients": [
+    {
       "item": "minecraft:coal"
     },
-    "I": {
+    {
       "item": "galacticraft-rewoven:compressed_iron"
+    },
+    {
+      "item": "minecraft:coal"
     }
-  },
+  ],
   "result": {
     "item": "galacticraft-rewoven:compressed_steel",
     "count": 1

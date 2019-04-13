@@ -4,109 +4,104 @@ import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.recipes.CompressingRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
-import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.inventory.BasicInventory;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CompressorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
+    public static final int FUEL_INPUT_SLOT = 9;
+    public static final int OUTPUT_SLOT = 10;
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(11);
-    private final int maxProgress = 300;
+    private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
     private int progress;
 
-    public CompressorStatus status = CompressorStatus.INACTIVE;
-
-    public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
+    public int fuelTime;
+    public int maxFuelTime;
 
     public CompressorBlockEntity() {
-        super(GalacticraftBlockEntities.COMPRESSOR_BLOCK_ENTITY_TYPE);
-        //automatically mark dirty whenever the energy attribute is changed
+        super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
     }
 
     @Override
     public void tick() {
-        /*
-        if (status == CircuitFabricatorStatus.INACTIVE) {
-            this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+        PartialInventoryFixedWrapper inv = new PartialInventoryFixedWrapper(inventory.getSubInv(0, 9)) {
+            @Override
+            public void markDirty() {
+                CompressorBlockEntity.this.markDirty();
+            }
+
+            @Override
+            public boolean canPlayerUseInv(PlayerEntity var1) {
+                return true;
+            }
+        };
+
+        if (this.fuelTime <= 0) {
+            ItemStack fuel = inventory.getInvStack(FUEL_INPUT_SLOT);
+            if (fuel.isEmpty()) {
+                // Machine out of fuel and no fuel present.
+                return;
+            } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+                this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
+                this.fuelTime = maxFuelTime;
+            } else {
+                // Can't start processing any new materials anyway, dont waste fuel.
+                return;
+            }
+        }
+        this.fuelTime--;
+
+        if (!isValidRecipe(inv)) {
             return;
         }
-        */
 
-        DefaultedList<ItemStack> inv = DefaultedList.create(9, ItemStack.EMPTY);
-        for (int i = 0; i < 9; i++) {
-            inv.set(i, this.inventory.getInvStack(i));
-        }
-        if (isValidRecipe(inv)) {
-            if (canPutStackInResultSlot(getResultFromRecipe())) {
-                this.status = CompressorStatus.PROCESSING;
+        ItemStack resultStack = getResultFromRecipeStack(inv);
+        if (canPutStackInResultSlot(resultStack)) {
+            for (int i = 0; i < 9; i++) {
+                inventory.getInvStack(i).subtractAmount(1);
             }
-        } else {
-            this.status = CompressorStatus.IDLE;
-        }
 
-        if (status == CompressorStatus.PROCESSING) {
-            ItemStack resultStack = getResultFromRecipe();
-            if (inventory.getInvStack(9).isEmpty() || inventory.getInvStack(9).getItem() == resultStack.getItem()) {
-                if (inventory.getInvStack(9).getAmount() < resultStack.getMaxAmount()) {
-                    if (progress <= maxProgress) {
-                        ++progress;
-                    } else {
-                        System.out.println("Finished crafting an item.");
-                        progress = 0;
-
-                        if (!world.isClient) {
-
-                            for (int i = 0; i < 9; i++) {
-                                ItemStack invStack = inventory.getInvStack(i);
-                                if (!invStack.isEmpty()) {
-                                    invStack.subtractAmount(1);
-                                }
-                            }
-
-                            if (!inventory.getInvStack(9).isEmpty()) {
-                                inventory.getInvStack(9).addAmount(resultStack.getAmount());
-                            } else {
-                                inventory.setInvStack(9, resultStack, Simulation.ACTION);
-                            }
-                        }
-                    }
-                }
+            if (!inventory.getInvStack(OUTPUT_SLOT).isEmpty()) {
+                inventory.getInvStack(OUTPUT_SLOT).addAmount(resultStack.getAmount());
+            } else {
+                inventory.setInvStack(OUTPUT_SLOT, resultStack, Simulation.ACTION);
             }
         }
-//        System.out.println("Status: " + status.name());
     }
 
-    private ItemStack getResultFromRecipe() {
-        DefaultedList<ItemStack> inv = DefaultedList.create(9, ItemStack.EMPTY);
-        for (int i = 0; i < 9; i++) {
-            inv.set(i, this.inventory.getInvStack(i));
-        }
+    private ItemStack getResultFromRecipeStack(Inventory inv) {
+        // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
+        CompressingRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("No recipe present????"));
+        return recipe.craft(inv);
+    }
 
-        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("No recipe present????")).getOutput();
+    private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
-        if (inventory.getInvStack(9).isEmpty()) {
+        if (inventory.getInvStack(OUTPUT_SLOT).isEmpty()) {
             return true;
-        } else if (inventory.getInvStack(9).getItem() == itemStack.getItem()) {
-            return inventory.getInvStack(9).getAmount() < itemStack.getMaxAmount();
+        } else if (inventory.getInvStack(OUTPUT_SLOT).getItem() == itemStack.getItem()) {
+            return (inventory.getInvStack(OUTPUT_SLOT).getAmount() + itemStack.getAmount()) <= itemStack.getMaxAmount();
         } else {
             return false;
         }
@@ -128,26 +123,30 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
         return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
-    private Optional<CompressingRecipe> getRecipe(DefaultedList<ItemStack> input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, new BasicInventory(input.toArray(new ItemStack[0])), this.world);
-    }
-
-    private boolean isValidRecipe(DefaultedList<ItemStack> inv) {
-        return getRecipe(inv).isPresent();
+    // This is just for testing
+    private boolean isValidRecipe(Inventory input) {
+        // TODO check up on this
+        return getRecipe(input).isPresent();
+//        return !input.isEmpty() && hasMandatoryMaterials();
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
+
         tag.put("Inventory", inventory.toTag());
-        tag.putInt("Progress", progress);
+        tag.putInt("FuelTime", this.fuelTime);
+        tag.putInt("Progress", this.progress);
+
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        inventory.fromTag(tag.getCompound("Inventory"));
+
+        this.inventory.fromTag(tag.getCompound("Inventory"));
+        this.fuelTime = tag.getInt("FuelTime");
         this.progress = tag.getInt("Progress");
     }
 

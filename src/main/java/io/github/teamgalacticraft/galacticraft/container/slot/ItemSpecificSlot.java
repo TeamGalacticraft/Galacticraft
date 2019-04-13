@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.container;
+package io.github.teamgalacticraft.galacticraft.container.slot;
 
 import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;

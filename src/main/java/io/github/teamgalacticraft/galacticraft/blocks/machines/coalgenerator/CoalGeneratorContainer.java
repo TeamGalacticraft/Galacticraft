@@ -1,7 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
-import io.github.teamgalacticraft.galacticraft.container.ItemSpecificSlot;
+import io.github.teamgalacticraft.galacticraft.container.slot.ChargeSlot;
+import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
@@ -101,18 +102,5 @@ public class CoalGeneratorContainer extends Container {
     @Override
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
-    }
-
-    public class ChargeSlot extends Slot {
-
-        public ChargeSlot(Inventory inventory, int slotId, int x, int y) {
-            super(inventory, slotId, x, y);
-        }
-
-        @Override
-        public boolean canInsert(ItemStack itemStack) {
-
-            return itemStack.hasTag() && itemStack.getTag().containsKey("Energy");
-        }
     }
 }

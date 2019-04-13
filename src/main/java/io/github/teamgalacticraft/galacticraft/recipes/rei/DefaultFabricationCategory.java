@@ -5,7 +5,6 @@ import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import me.shedaniel.rei.api.DisplaySettings;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.api.RecipeDisplay;
 import me.shedaniel.rei.gui.widget.ItemSlotWidget;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
 import me.shedaniel.rei.gui.widget.Widget;
@@ -78,7 +77,17 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
         widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
         widgets.add(new ItemSlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Arrays.asList(new ItemStack(Items.REDSTONE)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput(), false, true, true));
+
+        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput(), false, true, true) {
+            @Override
+            protected String getItemCountOverlay(ItemStack currentStack) {
+                if (currentStack.getAmount() == 1)
+                    return "";
+                if (currentStack.getAmount() < 1)
+                    return "§c" + currentStack.getAmount();
+                return currentStack.getAmount() + "";
+            }
+        });
         return widgets;
     }
 

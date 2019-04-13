@@ -14,6 +14,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.B
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorchedRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.VaporSpoutBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
@@ -80,6 +81,7 @@ public class GalacticraftBlocks {
     public static final Block DARK_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build());
     public static final Block GRATING_BLOCK = new GratingBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block ALUMINUM_WIRE_BLOCK = new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).build());
+    public static final Block OXYGEN_PIPE_BLOCK = new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).build());
     public static final Block LIGHTING_PANEL_BLOCK_SQUARE = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block LIGHTING_PANEL_BLOCK_SPOTLIGHT = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 3.0f);
     public static final Block LIGHTING_PANEL_BLOCK_LINEAR = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 5.0f);
@@ -146,6 +148,7 @@ public class GalacticraftBlocks {
     public static final Block COMPRESSOR_BLOCK = new CompressorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COAL_GENERATOR_BLOCK = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).build());
 
     // Liquids
     public static final Block CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
@@ -203,6 +206,7 @@ public class GalacticraftBlocks {
     public static final BlockItem DARK_DECORATION_BLOCK_ITEM = new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem GRATING_BLOCK_ITEM = new BlockItem(GRATING_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem ALUMINUM_WIRE_BLOCK_ITEM = new BlockItem(ALUMINUM_WIRE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem OXYGEN_PIPE_BLOCK_ITEM = new BlockItem(OXYGEN_PIPE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem LIGHTING_PANEL_BLOCK_SQUARE_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SQUARE, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_SPOTLIGHT, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem LIGHTING_PANEL_BLOCK_LINEAR_ITEM = new BlockItem(LIGHTING_PANEL_BLOCK_LINEAR, new Item.Settings().itemGroup(BLOCKS_GROUP));
@@ -243,6 +247,7 @@ public class GalacticraftBlocks {
     public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem BASIC_SOLAR_PANEL_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
+    public static final BlockItem ENERGY_STORAGE_MODULE_BLOCK_ITEM = new BlockItem(ENERGY_STORAGE_MODULE_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
 
     public static void register() {
         // Register Blocks
@@ -298,6 +303,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.DARK_DECORATION_BLOCK), DARK_DECORATION_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GRATING_BLOCK), GRATING_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE_BLOCK), ALUMINUM_WIRE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_PIPE_BLOCK), OXYGEN_PIPE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SQUARE), LIGHTING_PANEL_BLOCK_SQUARE);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SPOTLIGHT), LIGHTING_PANEL_BLOCK_SPOTLIGHT);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_LINEAR), LIGHTING_PANEL_BLOCK_LINEAR);
@@ -341,6 +347,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BASIC_SOLAR_PANEL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), ENERGY_STORAGE_MODULE_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
@@ -395,6 +402,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.DARK_DECORATION_BLOCK), DARK_DECORATION_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GRATING_BLOCK), GRATING_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE_BLOCK), ALUMINUM_WIRE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_PIPE_BLOCK), OXYGEN_PIPE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SQUARE), LIGHTING_PANEL_BLOCK_SQUARE_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_SPOTLIGHT), LIGHTING_PANEL_BLOCK_SPOTLIGHT_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.LIGHTING_PANEL_BLOCK_LINEAR), LIGHTING_PANEL_BLOCK_LINEAR_ITEM);
@@ -434,5 +442,6 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR_BLOCK), COAL_GENERATOR_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BASIC_SOLAR_PANEL_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), ENERGY_STORAGE_MODULE_BLOCK_ITEM);
     }
 }

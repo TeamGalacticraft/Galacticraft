@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.compressor;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,7 +16,6 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CompressorScreen extends ContainerScreen {
-    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
@@ -23,6 +23,14 @@ public class CompressorScreen extends ContainerScreen {
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
+
+    private static final int PROGRESS_X = 203;
+    private static final int PROGRESS_Y = 1;
+    private static final int PROGRESS_WIDTH = 52;
+    private static final int PROGRESS_HEIGHT = 25;
+
+    private int progressDisplayX;
+    private int progressDisplayY;
 
     BlockPos blockPos;
     private World world;
@@ -40,19 +48,21 @@ public class CompressorScreen extends ContainerScreen {
         this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-        int leftPos = this.left;
-        int topPos = this.top;
+        progressDisplayX = left + 90;
+        progressDisplayY = top + 82;
 
         //this.drawTexturedRect(...)
-        this.blit(leftPos, topPos - 10, 0, 0, this.containerWidth, this.containerHeight);
-        this.drawEnergyBufferBar();
+        this.blit(this.left, this.top, 0, 0, this.containerWidth, this.containerHeight);
+
+        this.drawCraftProgressBar();
+        this.drawFuelProgressBar();
         this.drawConfigTabs();
     }
 
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText(), (this.width / 2), this.top, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText(), (this.width / 2), this.top + 6, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
@@ -61,9 +71,44 @@ public class CompressorScreen extends ContainerScreen {
         this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 7, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
-    private void drawEnergyBufferBar() {
+    private void drawFuelProgressBar() {
         //this.drawTexturedReact(...)
-        this.minecraft.getTextureManager().bindTexture(OVERLAY);
+        this.blit(left, top, 0, 0, this.containerWidth, this.containerHeight);
+        int fuelUsageScale;
+        CircuitFabricatorStatus status = ((CompressorBlockEntity) world.getBlockEntity(blockPos)).status;
+
+        if (status != CircuitFabricatorStatus.INACTIVE) {
+            fuelUsageScale = getFuelProgress();
+            this.blit(
+                    left + (81),
+                    top + 27 + 12 - fuelUsageScale,
+                    203,
+                    39 - fuelUsageScale,
+                    14,
+                    fuelUsageScale + 1);
+        }
+    }
+
+    private void drawCraftProgressBar() {
+        float progress = (float) ((CompressorBlockEntity) world.getBlockEntity(blockPos)).getProgress();
+        float maxProgress = (float) ((CompressorBlockEntity) world.getBlockEntity(blockPos)).getMaxProgress();
+        float progressScale = (progress / maxProgress);
+        // Progress confirmed to be working properly, below code is the problem.
+
+        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.blit(progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+    }
+
+    private int getFuelProgress() {
+        CompressorBlockEntity compressor = ((CompressorBlockEntity) world.getBlockEntity(blockPos));
+
+        int maxFuelTime = compressor.maxFuelTime;
+        if (maxFuelTime == 0) {
+            maxFuelTime = 200;
+        }
+
+        // 0 = CompressorBlockEntity#fuelTime
+        return compressor.fuelTime * 13 / maxFuelTime;
     }
 
     @Override

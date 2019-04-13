@@ -46,7 +46,7 @@ public class CoalGeneratorBlockEntity extends BlockEntity implements Tickable, B
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
 
     public CoalGeneratorBlockEntity() {
-        super(GalacticraftBlockEntities.COAL_GENERATOR_BLOCK_ENTITY_TYPE);
+        super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         this.energy.listen(this::markDirty);
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);

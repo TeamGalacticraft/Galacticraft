@@ -15,10 +15,10 @@ public class GalacticraftRecipes {
     public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
 
     static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
-    public static CompressingRecipeSerializer<CompressingRecipe> COMPRESSING_SERIALIZER;
+    static CompressingRecipeSerializer<CompressingRecipe> COMPRESSING_SERIALIZER;
 
     public static void register() {
-        // Circuit CIRCUIT_FABRICATION recipe stuff
+        // Circuit fabricator recipe stuff
         FABRICATION_TYPE = registerType("circuit_fabricator");
         FABRICATION_SERIALIZER = registerSerializer("circuit_fabricator", new FabricationRecipeSerializer<>(FabricationRecipe::new));
 
