@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
+import alexiil.mc.lib.attributes.mixin.FluidBlockMixin;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.api.blocks.GalacticraftStairsBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.CheeseBlock;
@@ -7,6 +8,8 @@ import io.github.teamgalacticraft.galacticraft.blocks.decoration.GratingBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.LightingPanelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.environment.*;
+import io.github.teamgalacticraft.galacticraft.blocks.fluid.CrudeOilBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.fluid.FuelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
@@ -15,7 +18,9 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodu
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorchedRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.VaporSpoutBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
+import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
@@ -138,11 +143,16 @@ public class GalacticraftBlocks {
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
     public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
 
+    // Machines
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COMPRESSOR_BLOCK = new CompressorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COAL_GENERATOR_BLOCK = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).build());
+
+    // Liquids
+    public static final Block CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
+    public static final Block FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
 
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));

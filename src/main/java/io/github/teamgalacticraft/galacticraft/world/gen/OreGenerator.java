@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.world.gen;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig;

@@ -77,24 +77,14 @@ public class BasicSolarPanelBlockEntity extends BlockEntity implements Tickable,
         }
         if (world.isClient) return;
 
-        ItemStack storedBattery = inventory.getInvStack(0);
-        if (GalacticraftEnergy.isEnergyItem(storedBattery) && this.energy.getCurrentEnergy() > 0) {
-            ItemStack battery = storedBattery.copy();
-            CompoundTag tag = battery.getTag();
-
-            int currentBatteryCharge = tag.getInt("Energy");
-            int maxBatteryCharge = tag.getInt("MaxEnergy");
-            int chargeRoom = maxBatteryCharge - currentBatteryCharge;
-
-            int chargeToAdd = Math.min(50, chargeRoom);
-            chargeToAdd = Math.min(chargeToAdd, this.energy.getCurrentEnergy());
-            int newCharge = currentBatteryCharge + chargeToAdd;
-            this.energy.setCurrentEnergy(energy.getCurrentEnergy() - chargeToAdd);
-            tag.putInt("Energy", newCharge);
-
-            battery.setTag(tag);
-            battery.setDamage(battery.getDurability() - newCharge);
-            inventory.setInvStack(0, battery, Simulation.ACTION);
+        if (inventory.getInvStack(0).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
+            if (GalacticraftEnergy.isEnergyItem(inventory.getInvStack(0))) {
+                if (inventory.getInvStack(0).getTag().getInt("Energy") < inventory.getInvStack(0).getTag().getInt("MaxEnergy")) {
+                    energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                    inventory.getInvStack(0).getTag().putInt("Energy", this.inventory.getInvStack(0).getTag().getInt("Energy") + 1);
+                    inventory.getInvStack(0).setDamage(this.inventory.getInvStack(1).getDamage() - 1);
+                }
+            }
         }
 
         for (Direction direction : Direction.values()) {

@@ -65,6 +65,7 @@ public class GalacticraftItems {
     public static final Item ORION_DRIVE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
     public static final Item ATMOSPHERIC_VALVE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
+
     //FOOD
     public static final Item CHEESE_CURD = new Item(new Item.Settings().food(GCFoodSettings.CHEESE_CURD).itemGroup(ITEMS_GROUP));
     public static final Item CHEESE_SLICE = new Item(new Item.Settings().food(GCFoodSettings.CHEESE_SLICE).itemGroup(ITEMS_GROUP));
