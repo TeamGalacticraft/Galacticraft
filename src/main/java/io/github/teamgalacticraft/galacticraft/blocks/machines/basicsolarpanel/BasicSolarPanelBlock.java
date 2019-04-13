@@ -28,7 +28,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
@@ -103,7 +102,16 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
     @Override
     public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
         super.onBreak(world, blockPos, blockState, playerEntity);
+        dropInventory(world, blockPos);
 
+        for (BlockPos otherPart : getOtherParts(blockState, blockPos)) {
+            world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
+        }
+
+        super.onBroken(world, blockPos, blockState);
+    }
+
+    private void dropInventory(World world, BlockPos blockPos) {
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
         if (blockEntity != null) {
@@ -154,15 +162,6 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
     }
 
     @Override
-    public void onBroken(IWorld iWorld_1, BlockPos blockPos_1, BlockState blockState_1) {
-        for (BlockPos otherPart : getOtherParts(blockState_1, blockPos_1)) {
-            iWorld_1.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
-        }
-
-        super.onBroken(iWorld_1, blockPos_1, blockState_1);
-    }
-
-    @Override
     public boolean canPlaceAt(BlockState blockState_1, ViewableWorld viewableWorld_1, BlockPos blockPos_1) {
         for (BlockPos otherPart : getOtherParts(blockState_1, blockPos_1)) {
             if (!viewableWorld_1.getBlockState(otherPart).getMaterial().isReplaceable()) {
@@ -189,8 +188,10 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
         return PistonBehavior.BLOCK;
     }
 
-    void onPartDestroyed(IWorld world, BlockState partState, BlockPos partPos, BlockState baseState, BlockPos basePos) {
-        world.setBlockState(basePos, Blocks.AIR.getDefaultState(), 3);
+    void onPartDestroyed(World world, BlockState partState, BlockPos partPos, BlockState baseState, BlockPos basePos) {
+        dropInventory(world, basePos);
+        world.breakBlock(basePos, true);
+
         for (BlockPos otherPart : getOtherParts(baseState, basePos)) {
             if (!world.getBlockState(otherPart).isAir()) {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
