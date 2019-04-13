@@ -359,6 +359,7 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
 
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
+        public static final String MACHINE_CONFIG_PANELS = "gui/machine_config_panels";
         public static final String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
         public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
         public static final String OVERLAY = "gui/overlay";
