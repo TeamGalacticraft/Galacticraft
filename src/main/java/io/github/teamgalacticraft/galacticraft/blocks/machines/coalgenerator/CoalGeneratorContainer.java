@@ -26,7 +26,6 @@ public class CoalGeneratorContainer extends Container {
     private PlayerEntity playerEntity;
     private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
 
-
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
 
