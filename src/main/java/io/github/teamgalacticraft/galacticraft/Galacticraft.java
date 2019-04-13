@@ -14,6 +14,7 @@ import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
 import io.github.teamgalacticraft.galacticraft.world.gen.OreGenerator;
+import io.github.teamgalacticraft.galacticraft.world.gen.WorldGenerator;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
@@ -50,10 +51,10 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
     public void onInitialize() {
         logger.info(GALACTICRAFT, "[Galacticraft] Initializing...");
 
+        GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();
         initTabStacks();
-        GalacticraftFluids.register();
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
@@ -62,7 +63,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GCBiomes.init();
         GalacticraftDimensions.init();
         GCSurfaceBuilder.init();
-        OreGenerator.register();
+        WorldGenerator.register();
         Capes.updateCapeList();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {

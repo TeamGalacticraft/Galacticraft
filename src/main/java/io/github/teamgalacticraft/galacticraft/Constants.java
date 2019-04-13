@@ -121,6 +121,10 @@ public class Constants {
         public static final String CHEESE_BLOCK = "cheese_block";
         public static final String CRASHED_PROBE_BLOCK = "crashed_probe_block";
 
+        // Liquids
+        public static final String FUEL_BLOCK = "fuel_block";
+        public static final String CRUDE_OIL_BLOCK = "crude_oil_block";
+
         // Machines
         public static final String CIRCUIT_FABRICATOR_BLOCK = "circuit_fabricator_block";
         public static final String COMPRESSOR_BLOCK = "compressor_block";
