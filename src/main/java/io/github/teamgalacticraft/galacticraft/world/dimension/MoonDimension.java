@@ -2,6 +2,8 @@ package io.github.teamgalacticraft.galacticraft.world.dimension;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
+import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
+import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
@@ -21,10 +23,24 @@ import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class MoonDimension extends Dimension {
-    private final float[] sunriseSunsetColors = new float[4];
 
     public MoonDimension(World worldIn, DimensionType typeIn) {
         super(worldIn, typeIn);
+    }
+
+    @Override
+    public int getMoonPhase(long long_1) {
+        return -1;
+    }
+
+    @Override
+    public boolean hasSkyLight() {
+        return true;
+    }
+
+    @Override
+    public boolean isNether() {
+        return false;
     }
 
     @Override
@@ -43,11 +59,11 @@ public class MoonDimension extends Dimension {
 
     @Override
     public BlockPos getForcedSpawnPoint() {
-        return super.getForcedSpawnPoint();
+        return new BlockPos(0,100,0);
     }
 
     public ChunkGenerator<?> createChunkGenerator() {
-        OverworldChunkGeneratorConfig cavesChunkGeneratorConfig_1 = ChunkGeneratorType.SURFACE.createSettings();
+        MoonChunkGeneratorConfig cavesChunkGeneratorConfig_1 = GalacticraftChunkGeneratorTypes.MOON.createSettings();
         cavesChunkGeneratorConfig_1.setDefaultBlock(GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState());
         cavesChunkGeneratorConfig_1.setDefaultFluid(Blocks.AIR.getDefaultState());
         return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GCBiomes.MOON)), cavesChunkGeneratorConfig_1);
@@ -55,12 +71,12 @@ public class MoonDimension extends Dimension {
 
     @Override
     public BlockPos getSpawningBlockInChunk(ChunkPos chunkPos, boolean b) {
-        return null;
+        return new BlockPos(0,100,0);
     }
 
     @Override
     public BlockPos getTopSpawningBlockPosition(int i, int i1, boolean b) {
-        return null;
+        return new BlockPos(0,100,0);
     }
 
     @Override
@@ -86,21 +102,7 @@ public class MoonDimension extends Dimension {
 
     @Environment(EnvType.CLIENT)
     public float[] getBackgroundColor(float var1, float var2) {
-        float f2 = 0.4F;
-        float f3 = MathHelper.cos(var1 * 3.141593F * 2.0F) - 0.0F;
-        float f4 = -0.0F;
-        if (f3 >= f4 - f2 && f3 <= f4 + f2) {
-            float f5 = (f3 - f4) / f2 * 0.5F + 0.5F;
-            float f6 = 1.0F - (1.0F - MathHelper.cos(f5 * 3.141593F)) * 0.99F;
-            f6 = f6 * f6;
-            this.sunriseSunsetColors[0] = f5 * 0.3F + 0.1F;
-            this.sunriseSunsetColors[1] = f5 * f5 * 0.7F + 0.2F;
-            this.sunriseSunsetColors[2] = f5 * f5 * 0.7F + 0.2F;
-            this.sunriseSunsetColors[3] = f6;
-            return this.sunriseSunsetColors;
-        } else {
-            return null;
-        }
+        return new float[]{0,0,0,0};
     }
 
     @Environment(EnvType.CLIENT)

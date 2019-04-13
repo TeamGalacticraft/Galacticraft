@@ -14,6 +14,7 @@ import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
 import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
 import io.github.teamgalacticraft.galacticraft.world.gen.OreGenerator;
+import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
@@ -60,6 +61,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftContainers.register();
         GalacticraftBlockEntities.init();
         GCBiomes.init();
+        GalacticraftChunkGeneratorTypes.init();
         GalacticraftDimensions.init();
         GCSurfaceBuilder.init();
         OreGenerator.register();
