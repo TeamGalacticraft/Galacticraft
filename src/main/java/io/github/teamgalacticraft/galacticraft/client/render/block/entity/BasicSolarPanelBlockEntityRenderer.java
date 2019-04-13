@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.client.render.block.entity;
 
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlockEntity;
@@ -16,8 +17,10 @@ public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<Basi
     private static Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
 
     @Override
-    public void render(BasicSolarPanelBlockEntity blockEntity_1, double x, double y, double z, float f, int i) {
+    public void render(BasicSolarPanelBlockEntity entity, double x, double y, double z, float f, int i) {
         this.bindTexture(BasicSolarPanelBlockEntityRenderer.solarPanelTexture);
+        int lightmapIndex = this.getWorld().getLightmapIndex(entity.getPos().up(), 0);
+        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (lightmapIndex % 65536), (float) (lightmapIndex / 65536));
 
         GlStateManager.pushMatrix();
         GlStateManager.enableRescaleNormal();
