@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:titanium_ingot"
+      "tagt": "c:titanium_ingot"
     },
     {
-      "item": "galacticraft-rewoven:titanium_ingot"
+      "tag": "c:titanium_ingot"
     }
   ],
   "result": {

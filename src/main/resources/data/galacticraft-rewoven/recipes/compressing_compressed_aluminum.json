@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:aluminum_ingot"
+      "tag": "c:aluminum_ingot"
     },
     {
-      "item": "galacticraft-rewoven:aluminum_ingot"
+      "tag": "c:aluminum_ingot"
     }
   ],
   "result": {
