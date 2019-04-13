@@ -48,12 +48,4 @@ public class DefaultCompressingDisplay implements RecipeDisplay {
     public Identifier getRecipeCategory() {
         return GalacticraftREIPlugin.COMPRESSING;
     }
-
-    public int getHeight() {
-        return this.display.getHeight();
-    }
-
-    public int getWidth() {
-        return this.display.getWidth();
-    }
 }

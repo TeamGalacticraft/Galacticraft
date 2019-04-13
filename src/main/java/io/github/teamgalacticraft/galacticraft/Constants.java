@@ -133,6 +133,7 @@ public class Constants {
         public static final String OXYGEN_DECOMPRESSOR_BLOCK = "oxygen_decompressor_block";
         public static final String OXYGEN_DETECTOR_BLOCK = "oxygen_detector_block";
         public static final String OXYGEN_SEALER_BLOCK = "oxygen_sealer_block";
+        public static final String OXYGEN_PIPE_BLOCK = "oxygen_pipe_block";
         public static final String REFINERY_BLOCK = "refinery_block";
         public static final String TERRAFORMER_BLOCK = "terraformer_block";
         public static final String DECONSTRUCTOR_BLOCK = "deconstructor_block";

@@ -77,7 +77,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         for (i = 0; i < input.size(); ++i) {
             if (recipeDisplaySupplier.get() != null) {
                 if (!input.get(i).isEmpty()) {
-                    slots.get(this.getSlotWithSize(recipeDisplaySupplier.get(), i)).setItemList(input.get(i));
+                    slots.get(this.getSlotWithSize(i)).setItemList(input.get(i));
                 }
             } else if (!input.get(i).isEmpty()) {
                 slots.get(i).setItemList(input.get(i));
@@ -85,43 +85,72 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         }
 
         widgets.addAll(slots);
-        widgets.add(new ItemSlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput(), false, true, true));
+        widgets.add(new ItemSlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput(), false, true, true) {
+            @Override
+            protected String getItemCountOverlay(ItemStack currentStack) {
+                if (currentStack.getAmount() == 1)
+                    return "";
+                if (currentStack.getAmount() < 1)
+                    return "§c" + currentStack.getAmount();
+                return currentStack.getAmount() + "";
+            }
+        });
         widgets.add(new ItemSlotWidget(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(ItemStack::new).collect(Collectors.toList()), false, true, true));
         return widgets;
     }
 
-    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
-        if (recipeDisplay.getWidth() == 1) {
-            if (num == 1) {
-                return 3;
-            }
-
-            if (num == 2) {
-                return 6;
-            }
+    private int getSlotWithSize(int num) {
+        if (num == 2) {
+            return 3;
         }
 
-        if (recipeDisplay.getWidth() == 2) {
-            if (num == 2) {
-                return 3;
-            }
+        if (num == 3) {
+            return 4;
+        }
 
-            if (num == 3) {
-                return 4;
-            }
+        if (num == 4) {
+            return 6;
+        }
 
-            if (num == 4) {
-                return 6;
-            }
-
-            if (num == 5) {
-                return 7;
-            }
+        if (num == 5) {
+            return 7;
         }
 
         return num;
     }
 
+    //    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
+//        if (recipeDisplay.getWidth() == 1) {
+//            if (num == 1) {
+//                return 3;
+//            }
+//
+//            if (num == 2) {
+//                return 6;
+//            }
+//        }
+//
+//        if (recipeDisplay.getWidth() == 2) {
+//            if (num == 2) {
+//                return 3;
+//            }
+//
+//            if (num == 3) {
+//                return 4;
+//            }
+//
+//            if (num == 4) {
+//                return 6;
+//            }
+//
+//            if (num == 5) {
+//                return 7;
+//            }
+//        }
+//
+//        return num;
+//    }
+//
     @Override
     public DisplaySettings<DefaultCompressingDisplay> getDisplaySettings() {
         return new DisplaySettings<DefaultCompressingDisplay>() {
