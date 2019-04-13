@@ -9,6 +9,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.decoration.VacuumGlassBloc
 import io.github.teamgalacticraft.galacticraft.blocks.environment.*;
 import io.github.teamgalacticraft.galacticraft.blocks.fluid.CrudeOilBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.fluid.FuelBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.AluminumWireBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelPartBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
@@ -79,7 +80,7 @@ public class GalacticraftBlocks {
     public static final Block TIN_DECORATION_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block DARK_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build());
     public static final Block GRATING_BLOCK = new GratingBlock(FabricBlockSettings.of(Material.METAL).build());
-    public static final Block ALUMINUM_WIRE_BLOCK = new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).build());
+    public static final Block ALUMINUM_WIRE_BLOCK = new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL).build());
     public static final Block OXYGEN_PIPE_BLOCK = new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).build());
     public static final Block LIGHTING_PANEL_BLOCK_SQUARE = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block LIGHTING_PANEL_BLOCK_SPOTLIGHT = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 3.0f);
@@ -146,7 +147,7 @@ public class GalacticraftBlocks {
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COMPRESSOR_BLOCK = new CompressorBlock(FabricBlockSettings.of(Material.METAL).build());
     public static final Block COAL_GENERATOR_BLOCK = new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).build());
-    public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(1.0F, 3600000.0F).sounds(BlockSoundGroup.METAL).build());
     public static final Block BASIC_SOLAR_PANEL_PART_BLOCK = new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 3600000.0F).dropsNothing().build());
     public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).build());
 

@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricato
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -24,6 +25,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -31,8 +33,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CircuitFabricatorBlock extends BlockWithEntity implements AttributeProvider, Rotatable {
-
+public class CircuitFabricatorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable {
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
     public CircuitFabricatorBlock(Settings settings) {
@@ -114,5 +115,21 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        BlockEntity blockEntity = world.getBlockEntity(connectionTargetPos);
+        if (!(blockEntity instanceof CircuitFabricatorBlockEntity)) {
+            System.out.println("Not a fab. rejecting connection.");
+            return false;
+        }
+        CircuitFabricatorBlockEntity be = (CircuitFabricatorBlockEntity) blockEntity;
+        BlockState fabricator = world.getBlockState(connectionTargetPos);
+
+        // This is not relative to the face of the machine.
+//        SideOptions sideOptions = be.selectedOptions.get(dir);
+//        return sideOptions == SideOptions.POWER_INPUT || sideOptions == SideOptions.POWER_OUTPUT;
+        return false;
     }
 }
