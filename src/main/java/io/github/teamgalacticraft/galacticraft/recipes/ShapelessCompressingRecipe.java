@@ -16,14 +16,14 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
-public class CompressingRecipe implements Recipe<Inventory> {
+public class ShapelessCompressingRecipe implements Recipe<Inventory> {
     private final Identifier id;
 
     //    private final String group;
     private final ItemStack output;
     private final DefaultedList<Ingredient> input;
 
-    public CompressingRecipe(Identifier id, /*String group, */ItemStack output, DefaultedList<Ingredient> input) {
+    public ShapelessCompressingRecipe(Identifier id, /*String group, */ItemStack output, DefaultedList<Ingredient> input) {
         this.id = id;
 //        this.group = group;
         this.output = output;
@@ -48,12 +48,12 @@ public class CompressingRecipe implements Recipe<Inventory> {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipes.COMPRESSING_SERIALIZER;
+        return GalacticraftRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
     }
 
     @Override
     public RecipeType<?> getType() {
-        return GalacticraftRecipes.COMPRESSING_TYPE;
+        return GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE;
     }
 
     @Override

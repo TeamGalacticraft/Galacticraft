@@ -2,14 +2,14 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "tag": "c:copper_ingot"
+      "item": "galacticraft-rewoven:dense_ice"
     },
     {
-      "tag": "c:copper_ingot"
+      "item": "galacticraft-rewoven:dense_ice"
     }
   ],
   "result": {
-    "item": "galacticraft-rewoven:compressed_copper",
+    "item": "minecraft:ice",
     "count": 1
   }
 }

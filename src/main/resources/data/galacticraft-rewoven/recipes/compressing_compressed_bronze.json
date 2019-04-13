@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft-rewoven:compressing",
+  "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
       "item": "galacticraft-rewoven:compressed_copper"

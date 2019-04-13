@@ -119,7 +119,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         return num;
     }
 
-    //    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
+    //    private int getSlotWithSize(DefaultShapelessCompressingDisplay recipeDisplay, int num) {
 //        if (recipeDisplay.getWidth() == 1) {
 //            if (num == 1) {
 //                return 3;

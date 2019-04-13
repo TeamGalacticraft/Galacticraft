@@ -3,8 +3,9 @@ package io.github.teamgalacticraft.galacticraft.recipes.rei;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorScreen;
-import io.github.teamgalacticraft.galacticraft.recipes.CompressingRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.FabricationRecipe;
+import io.github.teamgalacticraft.galacticraft.recipes.ShapedCompressingRecipe;
+import io.github.teamgalacticraft.galacticraft.recipes.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.REIPlugin;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.SpeedCraftFunctional;
@@ -49,12 +50,12 @@ public class GalacticraftREIPlugin implements REIPlugin {
             }
         });
 
-        recipeHelper.registerSpeedCraftFunctional(COMPRESSING, new SpeedCraftFunctional<DefaultCompressingDisplay>() {
+        recipeHelper.registerSpeedCraftFunctional(COMPRESSING, new SpeedCraftFunctional<DefaultShapelessCompressingDisplay>() {
             public Class[] getFunctioningFor() {
                 return new Class[]{CompressorScreen.class};
             }
 
-            public boolean performAutoCraft(Screen screen, DefaultCompressingDisplay recipe) {
+            public boolean performAutoCraft(Screen screen, DefaultShapelessCompressingDisplay recipe) {
                 if (!recipe.getRecipe().isPresent()) {
                     return false;
                 } else if (screen instanceof CompressorScreen) {
@@ -65,7 +66,7 @@ public class GalacticraftREIPlugin implements REIPlugin {
                 }
             }
 
-            public boolean acceptRecipe(Screen screen, DefaultCompressingDisplay recipe) {
+            public boolean acceptRecipe(Screen screen, DefaultShapelessCompressingDisplay recipe) {
                 return screen instanceof CompressorScreen;
             }
         });
@@ -79,8 +80,10 @@ public class GalacticraftREIPlugin implements REIPlugin {
         for (Recipe<?> value : recipeHelper.getRecipeManager().values()) {
             if (value instanceof FabricationRecipe) {
                 recipeHelper.registerDisplay(CIRCUIT_FABRICATION, new DefaultFabricationDisplay((FabricationRecipe) value));
-            } else if (value instanceof CompressingRecipe) {
-                recipeHelper.registerDisplay(COMPRESSING, new DefaultCompressingDisplay((CompressingRecipe) value));
+            } else if (value instanceof ShapelessCompressingRecipe) {
+                recipeHelper.registerDisplay(COMPRESSING, new DefaultShapelessCompressingDisplay((ShapelessCompressingRecipe) value));
+            } else if (value instanceof ShapedCompressingRecipe) {
+                recipeHelper.registerDisplay(COMPRESSING, new DefaultShapedCompressingDisplay((ShapedCompressingRecipe) value));
             }
         }
     }
