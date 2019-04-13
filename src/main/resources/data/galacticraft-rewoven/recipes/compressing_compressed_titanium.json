@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "tagt": "c:titanium_ingot"
+      "item": "galacticraft-rewoven:titanium_ingot"
     },
     {
-      "tag": "c:titanium_ingot"
+      "item": "galacticraft-rewoven:titanium_ingot"
     }
   ],
   "result": {
