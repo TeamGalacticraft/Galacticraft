@@ -75,9 +75,9 @@ public class CompressorScreen extends ContainerScreen {
         //this.drawTexturedReact(...)
         this.blit(left, top, 0, 0, this.containerWidth, this.containerHeight);
         int fuelUsageScale;
-        CircuitFabricatorStatus status = ((CompressorBlockEntity) world.getBlockEntity(blockPos)).status;
+        CompressorStatus status = ((CompressorBlockEntity) world.getBlockEntity(blockPos)).status;
 
-        if (status != CircuitFabricatorStatus.INACTIVE) {
+        if (status != CompressorStatus.INACTIVE) {
             fuelUsageScale = getFuelProgress();
             this.blit(
                     left + (81),

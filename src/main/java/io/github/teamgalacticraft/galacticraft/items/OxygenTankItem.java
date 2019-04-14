@@ -66,7 +66,7 @@ public class OxygenTankItem extends Item {
     }
 
     private int getMaxOxygen(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(OXYGEN_NBT_KEY);
+        return stack.getOrCreateTag().getInt(MAX_OXYGEN_NBT_KEY);
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
