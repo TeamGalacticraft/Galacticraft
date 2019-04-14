@@ -79,8 +79,8 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
             return;
         }
 
-        ItemStack resultStack = getResultFromRecipeStack(inv);
-        if (status == CompressorStatus.PROCESSING && canPutStackInResultSlot(resultStack)) {
+        if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+            ItemStack resultStack = getResultFromRecipeStack(inv);
             this.progress++;
             System.out.println("Progress: " + this.progress);
 
@@ -113,15 +113,11 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     }
 
     private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
-        Optional<ShapelessCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-
-        return firstMatch;
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
     }
 
     private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
-        Optional<ShapedCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
-
-        return firstMatch;
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
