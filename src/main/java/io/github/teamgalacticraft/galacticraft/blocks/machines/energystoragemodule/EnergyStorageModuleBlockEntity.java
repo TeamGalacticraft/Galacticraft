@@ -31,7 +31,7 @@ public class EnergyStorageModuleBlockEntity extends BlockEntity implements Ticka
     @Override
     public void tick() {
         // Charge the battery, drain internal energy buffer.
-        ItemStack batteryToCharge = inventory.getInvStack(this.CHARGE_BATTERY_SLOT);
+        ItemStack batteryToCharge = inventory.getInvStack(CHARGE_BATTERY_SLOT);
         if (GalacticraftEnergy.isEnergyItem(batteryToCharge) && this.energy.getCurrentEnergy() > 0) {
             int currentBatteryCharge = GalacticraftEnergy.getBatteryEnergy(batteryToCharge);
             int maxBatteryCharge = GalacticraftEnergy.getMaxBatteryEnergy(batteryToCharge);
