@@ -5,6 +5,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.Cuboid;
 import net.minecraft.client.model.Model;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelModel extends Model
 {

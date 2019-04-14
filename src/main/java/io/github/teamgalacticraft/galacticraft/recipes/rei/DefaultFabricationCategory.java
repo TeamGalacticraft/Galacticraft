@@ -23,6 +23,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class DefaultFabricationCategory implements RecipeCategory<DefaultFabricationDisplay> {
     private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
 

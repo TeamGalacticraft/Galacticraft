@@ -13,7 +13,7 @@ import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
 
 /**
- * @author Joe van der Zewrt <https://joezwet.me>
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public abstract class MachineContainerScreen extends ContainerScreen {
 

@@ -11,6 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class EnergyStorageModuleBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(60000, GalacticraftEnergy.GALACTICRAFT_JOULES);
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
@@ -61,17 +64,14 @@ public class EnergyStorageModuleBlockEntity extends BlockEntity implements Ticka
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-
         tag.put("Inventory", inventory.toTag());
         tag.putInt("Energy", energy.getCurrentEnergy());
-
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-
         this.inventory.fromTag(tag.getCompound("Inventory"));
         this.energy.setCurrentEnergy(tag.getInt("Energy"));
     }

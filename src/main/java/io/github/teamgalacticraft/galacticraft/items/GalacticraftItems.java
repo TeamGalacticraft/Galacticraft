@@ -98,23 +98,23 @@ public class GalacticraftItems {
     public static final Item BUGGY_WHEEL = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
 
     //TOOLS + WEAPONS
-    public static final Item STEEL_SWORD = new GCSwordItem(GCToolMaterials.STEEL, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item STEEL_SHOVEL = new ShovelItem(GCToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item STEEL_PICKAXE = new GCPickaxeItem(GCToolMaterials.STEEL, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item STEEL_AXE = new GCAxeItem(GCToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item STEEL_HOE = new HoeItem(GCToolMaterials.STEEL, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_SWORD = new GCSwordItem(GalacticraftToolMaterials.STEEL, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_SHOVEL = new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_AXE = new GCAxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item STEEL_HOE = new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static final Item DESH_SWORD = new GCSwordItem(GCToolMaterials.DESH, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item DESH_SHOVEL = new ShovelItem(GCToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item DESH_PICKAXE = new GCPickaxeItem(GCToolMaterials.DESH, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item DESH_AXE = new GCAxeItem(GCToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item DESH_HOE = new HoeItem(GCToolMaterials.DESH, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_SWORD = new GCSwordItem(GalacticraftToolMaterials.DESH, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_SHOVEL = new ShovelItem(GalacticraftToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.DESH, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_AXE = new GCAxeItem(GalacticraftToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item DESH_HOE = new HoeItem(GalacticraftToolMaterials.DESH, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static final Item TITANIUM_SWORD = new GCSwordItem(GCToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item TITANIUM_SHOVEL = new ShovelItem(GCToolMaterials.TITANIUM, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item TITANIUM_PICKAXE = new GCPickaxeItem(GCToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item TITANIUM_AXE = new GCAxeItem(GCToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
-    public static final Item TITANIUM_HOE = new HoeItem(GCToolMaterials.TITANIUM, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_SWORD = new GCSwordItem(GalacticraftToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_SHOVEL = new ShovelItem(GalacticraftToolMaterials.TITANIUM, -1.5F, -3.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_AXE = new GCAxeItem(GalacticraftToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().itemGroup(ITEMS_GROUP));
+    public static final Item TITANIUM_HOE = new HoeItem(GalacticraftToolMaterials.TITANIUM, -1.0F, new Item.Settings().itemGroup(ITEMS_GROUP));
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 

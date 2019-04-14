@@ -15,6 +15,9 @@ import net.minecraft.text.TextFormat;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.dimension.DimensionType;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class GalacticraftCommands {
     public static void register() {
         CommandRegistry instance = CommandRegistry.INSTANCE;

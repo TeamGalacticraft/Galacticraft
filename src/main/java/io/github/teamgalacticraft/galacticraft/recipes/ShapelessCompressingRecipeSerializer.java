@@ -11,6 +11,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.PacketByteBuf;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressingRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> factory;
 

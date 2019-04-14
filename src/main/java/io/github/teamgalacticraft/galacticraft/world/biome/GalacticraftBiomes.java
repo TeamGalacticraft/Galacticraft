@@ -8,7 +8,7 @@ import net.minecraft.world.biome.Biome;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class GCBiomes {
+public class GalacticraftBiomes {
 
     public static final Biome MOON = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, "moon"), new MoonBiome());
 

@@ -5,6 +5,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class BasicSolarPanelPartBlockEntity extends BlockEntity {
     public BlockPos basePos;
 

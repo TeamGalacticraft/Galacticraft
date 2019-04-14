@@ -29,7 +29,7 @@ public class BasicSolarPanelContainer extends Container {
 
         if (!(blockEntity instanceof BasicSolarPanelBlockEntity)) {
             // TODO: Move this logic somewhere else to just not open this at all.
-            throw new IllegalStateException("Found " + blockEntity + " instead of a Solar Panel!");
+            throw new IllegalStateException("Found " + blockEntity + " instead of a solar panel!");
         }
         this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
         this.inventory = new PartialInventoryFixedWrapper(solarPanel.getItems()) {

@@ -11,17 +11,18 @@ import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
-import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
+import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
 import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
-import io.github.teamgalacticraft.galacticraft.world.gen.OreGenerator;
+import io.github.teamgalacticraft.galacticraft.world.gen.WorldGenerator;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
-import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
+import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
+import io.github.teamgalacticraft.galacticraft.world.gen.feature.GalacticraftFeatures;
+import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import org.apache.logging.log4j.LogManager;
@@ -51,21 +52,23 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
     public void onInitialize() {
         logger.info(GALACTICRAFT, "[Galacticraft] Initializing...");
 
+        GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();
         initTabStacks();
-        GalacticraftFluids.register();
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
         GalacticraftBlockEntities.init();
         GalacticraftCommands.register();
-        GCBiomes.init();
         GalacticraftChunkGeneratorTypes.init();
+        GalacticraftFeatures.init();
+        GalacticraftDecorators.init();
+        GalacticraftBiomes.init();
         GalacticraftDimensions.init();
-        GCSurfaceBuilder.init();
-        OreGenerator.register();
+        GalacticraftSurfaceBuilders.init();
+        WorldGenerator.register();
         Capes.updateCapeList();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {

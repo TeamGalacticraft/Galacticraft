@@ -11,7 +11,7 @@ public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
     }
 
     public int getBiomeSize() {
-        return 4;
+        return 0;
     }
 
     public int getRiverSize() {
@@ -25,4 +25,5 @@ public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
     public int getMinY() {
         return 0;
     }
+
 }

@@ -13,6 +13,9 @@ import net.minecraft.util.PacketByteBuf;
 import java.util.Iterator;
 import java.util.Map;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> factory;
 

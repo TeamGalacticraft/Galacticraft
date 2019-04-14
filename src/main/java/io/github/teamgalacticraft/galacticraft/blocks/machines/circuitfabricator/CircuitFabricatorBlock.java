@@ -2,6 +2,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricato
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
@@ -119,17 +120,10 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
 
     @Override
     public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        BlockEntity blockEntity = world.getBlockEntity(connectionTargetPos);
-        if (!(blockEntity instanceof CircuitFabricatorBlockEntity)) {
-            System.out.println("Not a fab. rejecting connection.");
+        if (!( world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
+            Galacticraft.logger.error("Not a fab. rejecting connection.");
             return false;
         }
-        CircuitFabricatorBlockEntity be = (CircuitFabricatorBlockEntity) blockEntity;
-        BlockState fabricator = world.getBlockState(connectionTargetPos);
-
-        // This is not relative to the face of the machine.
-//        SideOptions sideOptions = be.selectedOptions.get(dir);
-//        return sideOptions == SideOptions.POWER_INPUT || sideOptions == SideOptions.POWER_OUTPUT;
-        return false;
+        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
     }
 }

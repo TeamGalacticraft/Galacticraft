@@ -34,7 +34,7 @@ public class CompressorContainer extends Container {
 
         if (!(blockEntity instanceof CompressorBlockEntity)) {
             // TODO: Move this logic somewhere else to just not open this at all.
-            throw new IllegalStateException("Found " + blockEntity + " instead of a coal generator!");
+            throw new IllegalStateException("Found " + blockEntity + " instead of a compressor!");
         }
         this.compressor = (CompressorBlockEntity) blockEntity;
         this.inventory = new PartialInventoryFixedWrapper(compressor.inventory) {
