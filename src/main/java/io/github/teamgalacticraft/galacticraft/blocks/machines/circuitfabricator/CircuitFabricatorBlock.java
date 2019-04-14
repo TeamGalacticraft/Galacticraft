@@ -3,7 +3,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricato
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;

@@ -2,8 +2,11 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.MultiBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -28,6 +31,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
@@ -37,7 +41,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable, MultiBlock {
+public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable, MultiBlock, WireConnectable {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -197,5 +201,14 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
             }
         }
+    }
+
+    @Override
+    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        if (!( world.getBlockEntity(connectionTargetPos) instanceof BasicSolarPanelBlockEntity)) {
+            Galacticraft.logger.error("Not a Solar Panel. Rejecting connection.");
+            return false;
+        }
+        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
     }
 }
