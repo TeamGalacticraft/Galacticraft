@@ -351,6 +351,7 @@ public class Constants {
 
     public static class Energy {
         public static final String GALACTICRAFT_JOULES = "galacticraft_joules";
+        public static final String GALACTICRAFT_OXYGEN = "galacticraft_oxygen";
         //30 Galacticraft Joules per one Cotton Energy Work Unit.
         //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
         public static final int WU_GJ_CONVERSION = 30;
@@ -362,6 +363,7 @@ public class Constants {
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
+        public static final String OXYGEN_COLLECTOR_SCREEN = "gui/oxygen_collector_screen";
 
         public static final String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
         public static final String MACHINE_CONFIG_PANELS = "gui/machine_config_panels";
@@ -394,5 +396,6 @@ public class Constants {
         public static final String COMPRESSOR_CONTAINER = "compressor_container";
         public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
         public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
+        public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
     }
 }
