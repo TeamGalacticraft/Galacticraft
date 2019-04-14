@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:dense_ice"
+      "item": "galacticraft-rewoven:dense_ice_block"
     },
     {
-      "item": "galacticraft-rewoven:dense_ice"
+      "item": "galacticraft-rewoven:dense_ice_block"
     }
   ],
   "result": {
