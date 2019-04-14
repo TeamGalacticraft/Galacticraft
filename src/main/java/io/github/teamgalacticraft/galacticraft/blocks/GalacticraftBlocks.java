@@ -140,8 +140,8 @@ public class GalacticraftBlocks {
     public static final Block UNLIT_TORCH_BLOCK = new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build());
     public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).build());
     public static final Block GLOWSTONE_WALL_TORCH_BLOCK = new GlowstoneWallTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).dropsLike(GLOWSTONE_TORCH_BLOCK).build());
-    public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
-    public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
+    public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).build());
+    public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).build());
 
     // Machines
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
@@ -341,6 +341,9 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_WALL_TORCH), GLOWSTONE_WALL_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.POISONOUS_CAVERNOUS_VINE_BLOCK), POISONOUS_CAVERNOUS_VINE_BLOCK);
+
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CRUDE_OIL_BLOCK), CRUDE_OIL_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.FUEL_BLOCK), FUEL_BLOCK);
 
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), CIRCUIT_FABRICATOR_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK);

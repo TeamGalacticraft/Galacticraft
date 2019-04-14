@@ -14,6 +14,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -27,6 +28,9 @@ import java.util.Random;
  */
 public class CavernousVineBlock extends Block implements Waterloggable {
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private static final Property[] VINES = new Property[] {
+
+    };
 
     public CavernousVineBlock(Settings settings) {
         super(settings);
@@ -69,6 +73,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
         builder.with(WATERLOGGED);
+        builder.with();
     }
 
     @Override

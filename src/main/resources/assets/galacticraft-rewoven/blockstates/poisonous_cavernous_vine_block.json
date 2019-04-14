@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "vinetype=vine_0": { "model": "galacticraft-rewoven:poisonous_vine_0" },
+    "vinetype=vine_1": { "model": "galacticraft-rewoven:poisonous_vine_1" },
+    "vinetype=vine_2": { "model": "galacticraft-rewoven:poisonous_vine_2" }
+  }
+}

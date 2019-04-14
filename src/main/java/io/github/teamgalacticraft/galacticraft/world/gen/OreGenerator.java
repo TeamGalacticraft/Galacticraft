@@ -3,7 +3,6 @@ package io.github.teamgalacticraft.galacticraft.world.gen;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig;
@@ -12,13 +11,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 public class OreGenerator {
 
-    public static void register() {
-        registerOverworld();
-        registerMoon();
-        registerMars();
-    }
-
-    private static void registerOverworld() {
+    public static void registerOres() {
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
@@ -28,13 +21,5 @@ public class OreGenerator {
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.SILICON_ORE_BLOCK.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(3, 0, 0, 25)));
             }
         }
-    }
-
-    private static void registerMoon() {
-
-    }
-
-    private static void registerMars() {
-
     }
 }
