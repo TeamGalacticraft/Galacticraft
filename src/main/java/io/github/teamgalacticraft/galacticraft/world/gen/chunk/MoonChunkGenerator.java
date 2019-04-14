@@ -72,6 +72,11 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Override
+    public MoonChunkGeneratorConfig getConfig() {
+        return this.config;
+    }
+
+    @Override
     protected double[] computeNoiseRange(int int_1, int int_2) {
         double[] doubles_1 = new double[2];
         float float_1 = 0.0F;

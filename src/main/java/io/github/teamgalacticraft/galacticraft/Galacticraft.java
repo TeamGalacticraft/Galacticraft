@@ -15,6 +15,8 @@ import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
 import io.github.teamgalacticraft.galacticraft.world.gen.WorldGenerator;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
+import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
+import io.github.teamgalacticraft.galacticraft.world.gen.feature.GalacticraftFeatures;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
@@ -65,6 +67,8 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftDimensions.init();
         GCSurfaceBuilder.init();
         WorldGenerator.register();
+        GalacticraftFeatures.init();
+        GalacticraftDecorators.init();
         Capes.updateCapeList();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
