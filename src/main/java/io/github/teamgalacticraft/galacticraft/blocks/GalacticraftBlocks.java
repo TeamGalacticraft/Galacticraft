@@ -140,7 +140,7 @@ public class GalacticraftBlocks {
     public static final Block GLOWSTONE_TORCH_BLOCK = new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).build());
     public static final Block GLOWSTONE_WALL_TORCH_BLOCK = new GlowstoneWallTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).dropsLike(GLOWSTONE_TORCH_BLOCK).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).build());
-    public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(1).build());
+    public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).build());
 
     // Machines
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
