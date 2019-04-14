@@ -99,6 +99,6 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
 
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1) {
-        return this.checkTabsClick(double_1, double_2, int_1);
+        return this.checkTabsClick(double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
     }
 }
