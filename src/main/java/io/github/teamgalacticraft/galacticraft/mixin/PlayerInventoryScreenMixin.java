@@ -22,8 +22,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(PlayerInventoryScreen.class)
 public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventoryScreen<PlayerContainer> {
-    private boolean isGC = false;
-
     public PlayerInventoryScreenMixin(PlayerContainer container, PlayerInventory playerInventory, TextComponent textComponent) {
         super(container, playerInventory, textComponent);
     }
@@ -34,7 +32,8 @@ public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventory
 //        System.out.println("Y: " + mouseY);
 //        System.out.println("b: " + button);
 
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), 155, 183) && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), 12, 38)) {
+        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), left + 30, left + 59)
+                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), top - 26, top)) {
             System.out.println("Clicked on GC tab!");
             minecraft.openScreen(new PlayerInventoryGCScreen(playerInventory.player));
         }
@@ -50,6 +49,6 @@ public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventory
     public void render(int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         GuiLighting.enableForItems();
         this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.left + 6, this.top - 20);
-        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getDefaultStack(), this.left + 35, this.top - 20);
+        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.left + 35, this.top - 20);
     }
 }

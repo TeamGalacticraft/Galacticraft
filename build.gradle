@@ -26,6 +26,7 @@ allprojects {
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://mod-buildcraft.com/maven" }
         maven { url "https://jitpack.io" }
+//        flatDir { dirs 'locallib' }
     }
 }
 
@@ -48,14 +49,14 @@ dependencies {
     modCompile "roughly-enough-items:RoughlyEnoughItems:${project.rei_version}"
 
     //include everything mandatory inside the jar
-//    include "net.fabricmc:fabric:${project.fabric_version}"
-//    include "cloth:Cloth:${project.cloth_version}"
-//    include "cloth-config:ClothConfig:${project.cloth_config_version}"
-//    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
+    include "net.fabricmc:fabric:${project.fabric_version}"
+    include "cloth:ClothEvents:${project.cloth_version}"
+    include "cloth-config:ClothConfig:${project.cloth_config_version}"
+    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
 //    include "io.github.cottonmc:cotton:${project.cotton_version}"
-//    include "io.github.cottonmc:cotton-energy:${project.energy_version}"
-//    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
-//    include "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+    include "io.github.cottonmc:cotton-energy:${project.energy_version}"
+    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
+    include "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
 }
 
 processResources {

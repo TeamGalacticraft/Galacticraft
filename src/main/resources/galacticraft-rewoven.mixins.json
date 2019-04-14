@@ -3,6 +3,13 @@
   "package": "io.github.teamgalacticraft.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PlayerEntityMixin",
+    "ItemStackMixin"
+  ],
+  "client": [
+    "PlayerInventoryScreenMixin",
+    "PauseMenuScreenMixin",
+    "CapeMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {

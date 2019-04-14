@@ -57,7 +57,7 @@ public class CircuitFabricatorBlockEntity extends BlockEntity implements Tickabl
         int prev = energy.getCurrentEnergy();
 
         for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
+            if (selectedOptions.get(direction).equals(SideOptions.POWER_INPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     this.energy.setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));

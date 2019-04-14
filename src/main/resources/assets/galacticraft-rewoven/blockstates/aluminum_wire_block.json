@@ -1,0 +1,196 @@
+{
+  "variants": {
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/aluminum_wire_block"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/sud"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/e"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nd"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/neud"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/neswu"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/eswud"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/wud"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nsd"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/eswu"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nsw"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/n"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/neswud"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/eswd"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/swd"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/eu"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ned"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/esud"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/esu"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nsu"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nswud"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nwud"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nw"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ne"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nu"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/new"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/neu"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/neswd"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/wu"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ns"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nesw"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/swu"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nwd"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/sw"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/esd"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/s"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/newu"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/su"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nesu"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nesud"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/esw"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ewu"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/newud"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=false,attached_up=false,attached_down=false,": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nes"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/sd"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=false,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/u"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nsud"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ew"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/eud"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nwu"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/d"
+    },
+    "attached_north=true,attached_east=true,attached_south=false,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/newd"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ewd"
+    },
+    "attached_north=true,attached_east=false,attached_south=false,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nud"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ewud"
+    },
+    "attached_north=true,attached_east=true,attached_south=true,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nesd"
+    },
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nswd"
+    },
+    "attached_north=false,attached_east=true,attached_south=true,attached_west=false,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/es"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=true,attached_up=false,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/w"
+    },
+    " attached_north=true,attached_east=false,attached_south=true,attached_west=true,attached_up=true,attached_down=false": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/nswu"
+    },
+    "attached_north=false,attached_east=true,attached_south=false,attached_west=false,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ed"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=false,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/ud"
+    },
+    "attached_north=false,attached_east=false,attached_south=false,attached_west=true,attached_up=false,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/wd"
+    },
+    "attached_north=false,attached_east=false,attached_south=true,attached_west=true,attached_up=true,attached_down=true": {
+      "model": "galacticraft-rewoven:block/aluminum_wire/swud"
+    }
+  }
+}
