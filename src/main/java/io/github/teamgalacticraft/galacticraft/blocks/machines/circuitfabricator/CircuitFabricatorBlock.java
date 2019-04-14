@@ -121,28 +121,10 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
 
     @Override
     public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        BlockEntity blockEntity = world.getBlockEntity(connectionTargetPos);
-        if (!(blockEntity instanceof CircuitFabricatorBlockEntity)) {
+        if (!( world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
             Galacticraft.logger.error("Not a fab. rejecting connection.");
             return false;
         }
-        CircuitFabricatorBlockEntity be = (CircuitFabricatorBlockEntity) blockEntity;
-        BlockState fabricator = world.getBlockState(connectionTargetPos);
-
-        //This is not relative to the face of the machine.
-        SideOptions sideOptions = be.selectedOptions.get(dir);
-        System.out.println(dir);
-        if (fabricator.get(FACING) == Direction.NORTH) {
-            return dir == Direction.SOUTH;
-        } else if (fabricator.get(FACING) == Direction.SOUTH) {
-            return dir == Direction.NORTH;
-        } else if (fabricator.get(FACING) == Direction.EAST) {
-            return dir == Direction.WEST;
-        } else if (fabricator.get(FACING) == Direction.WEST) {
-            return dir == Direction.EAST;
-        } else {
-            System.out.println("top/bottom");
-            return false;
-        }
+        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
     }
 }
