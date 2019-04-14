@@ -30,7 +30,7 @@ public class MoonDimension extends Dimension {
 
     @Override
     public int getMoonPhase(long long_1) {
-        return -1;
+        return 0;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class MoonDimension extends Dimension {
 
     @Override
     public BlockPos getForcedSpawnPoint() {
-        return new BlockPos(0,100,0);
+        return new BlockPos(0, 100, 0);
     }
 
     public ChunkGenerator<?> createChunkGenerator() {
@@ -71,12 +71,12 @@ public class MoonDimension extends Dimension {
 
     @Override
     public BlockPos getSpawningBlockInChunk(ChunkPos chunkPos, boolean b) {
-        return new BlockPos(0,100,0);
+        return new BlockPos(0, 100, 0);
     }
 
     @Override
     public BlockPos getTopSpawningBlockPosition(int i, int i1, boolean b) {
-        return new BlockPos(0,100,0);
+        return new BlockPos(0, 100, 0);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MoonDimension extends Dimension {
 
     @Environment(EnvType.CLIENT)
     public float[] getBackgroundColor(float var1, float var2) {
-        return new float[]{0,0,0,0};
+        return new float[]{0, 0, 0, 0};
     }
 
     @Environment(EnvType.CLIENT)

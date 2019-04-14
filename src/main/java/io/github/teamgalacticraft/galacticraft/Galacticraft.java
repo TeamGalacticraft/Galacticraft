@@ -60,6 +60,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftEnergy.register();
         GalacticraftContainers.register();
         GalacticraftBlockEntities.init();
+        GalacticraftCommands.register();
         GCBiomes.init();
         GalacticraftChunkGeneratorTypes.init();
         GalacticraftDimensions.init();
