@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 
 /**
- * @author Joe van der Zewrt <https://joezwet.me>
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class VaporSpoutBlock extends Block {
 

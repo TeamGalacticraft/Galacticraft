@@ -16,6 +16,9 @@ import net.minecraft.world.gen.feature.Feature;
 import java.util.Random;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CraterFeature extends Feature<CraterFeatureConfig> {
     public CraterFeature(Function<Dynamic<?>, ? extends CraterFeatureConfig> function_1) {
         super(function_1);

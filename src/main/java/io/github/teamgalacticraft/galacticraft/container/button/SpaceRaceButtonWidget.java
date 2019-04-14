@@ -6,6 +6,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class SpaceRaceButtonWidget extends ButtonWidget {
     private final TextRenderer font;
     private int screenWidth;

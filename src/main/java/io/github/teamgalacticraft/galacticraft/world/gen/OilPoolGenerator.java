@@ -9,6 +9,9 @@ import net.minecraft.world.gen.decorator.LakeDecoratorConfig;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.LakeFeatureConfig;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class OilPoolGenerator {
 
     public static void registerOilLake() {

@@ -1,16 +1,12 @@
 package io.github.teamgalacticraft.galacticraft.world.biome;
 
-import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
-import io.github.teamgalacticraft.galacticraft.world.gen.feature.CraterFeatureConfig;
-import io.github.teamgalacticraft.galacticraft.world.gen.feature.GalacticraftFeatures;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**

@@ -7,6 +7,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.feature.FeatureConfig;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CraterFeatureConfig implements FeatureConfig {
 
     public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {

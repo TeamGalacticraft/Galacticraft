@@ -28,6 +28,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider {
     private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 

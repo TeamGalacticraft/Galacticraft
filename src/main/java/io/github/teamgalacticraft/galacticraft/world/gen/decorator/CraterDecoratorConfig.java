@@ -5,6 +5,9 @@ import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;
 import net.minecraft.world.gen.decorator.DecoratorConfig;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CraterDecoratorConfig implements DecoratorConfig {
     public final int chance;
 

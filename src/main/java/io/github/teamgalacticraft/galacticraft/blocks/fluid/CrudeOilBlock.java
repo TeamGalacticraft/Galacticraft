@@ -5,6 +5,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.fluid.BaseFluid;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CrudeOilBlock extends FluidBlock {
 
     public CrudeOilBlock(BaseFluid fluid, Settings settings) {

@@ -11,6 +11,9 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class CraterDecorator extends Decorator<CraterDecoratorConfig> {
 
     public CraterDecorator(Function<Dynamic<?>, ? extends CraterDecoratorConfig> function_1) {

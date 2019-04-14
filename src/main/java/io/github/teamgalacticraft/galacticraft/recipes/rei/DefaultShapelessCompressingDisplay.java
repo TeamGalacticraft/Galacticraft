@@ -9,6 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
     private ShapelessCompressingRecipe display;
     private List<List<ItemStack>> input;

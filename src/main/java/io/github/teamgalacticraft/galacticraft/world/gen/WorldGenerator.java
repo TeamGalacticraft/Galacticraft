@@ -1,5 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.world.gen;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class WorldGenerator {
 
     public static void register() {

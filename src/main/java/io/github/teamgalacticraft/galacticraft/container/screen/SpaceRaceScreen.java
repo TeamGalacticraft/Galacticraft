@@ -6,6 +6,9 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.text.TranslatableTextComponent;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class SpaceRaceScreen extends Screen {
     private int widthSize = 0;
     private int heightSize = 0;
