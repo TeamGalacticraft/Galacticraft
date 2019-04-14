@@ -2,7 +2,7 @@ package io.github.teamgalacticraft.galacticraft.world.dimension;
 
 import io.github.teamgalacticraft.galacticraft.api.world.dimension.LowGravityDimension;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
+import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
@@ -18,7 +18,6 @@ import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
-import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -67,7 +66,7 @@ public class MoonDimension extends Dimension implements LowGravityDimension {
         MoonChunkGeneratorConfig cavesChunkGeneratorConfig_1 = GalacticraftChunkGeneratorTypes.MOON.createSettings();
         cavesChunkGeneratorConfig_1.setDefaultBlock(GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState());
         cavesChunkGeneratorConfig_1.setDefaultFluid(Blocks.AIR.getDefaultState());
-        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GCBiomes.MOON)), cavesChunkGeneratorConfig_1);
+        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GalacticraftBiomes.MOON)), cavesChunkGeneratorConfig_1);
     }
 
     @Override

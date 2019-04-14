@@ -1,11 +1,12 @@
 package io.github.teamgalacticraft.galacticraft.world.biome;
 
-import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
+import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
+import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**
@@ -15,7 +16,7 @@ public final class MoonPlainsBiome extends Biome {
 
     public MoonPlainsBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GCSurfaceBuilder.MOON_CONFIG)
+                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MOON_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.03F)
@@ -26,7 +27,9 @@ public final class MoonPlainsBiome extends Biome {
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
-        this.structureFeatures.remove(Feature.LAKE);
+        this.structureFeatures.clear();
+        this.features.clear();
+        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
         this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 1, 1, 1));
     }
 

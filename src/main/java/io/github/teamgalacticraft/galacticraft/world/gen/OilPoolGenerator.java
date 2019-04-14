@@ -15,7 +15,6 @@ import net.minecraft.world.gen.feature.LakeFeatureConfig;
 public class OilPoolGenerator {
 
     public static void registerOilLake() {
-
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 

@@ -1,12 +1,10 @@
 package io.github.teamgalacticraft.galacticraft.world.biome;
 
-import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
-import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GCSurfaceBuilder;
+import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**
@@ -16,7 +14,7 @@ public final class MoonBiome extends Biome {
 
     public MoonBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GCSurfaceBuilder.MOON_CONFIG)
+                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MOON_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.075F)
@@ -29,8 +27,13 @@ public final class MoonBiome extends Biome {
         this.flowerFeatures.clear();
         this.structureFeatures.clear();
         this.features.clear();
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, MoonChunkGeneratorConfig.CRATER);
+        //this.addFeature(GenerationStep.Feature.LOCAL_MODIFICATIONS, Biome.configureFeature(GalacticraftFeatures.CRATER_FEATURE, new CraterFeatureConfig(), GalacticraftDecorators.CRATER, new CraterDecoratorConfig(4)));
         this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 1, 1, 1));
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return "biome.galacticarft-rewoven.moon";
     }
 
     @Override
