@@ -46,7 +46,7 @@ public class EnergyStorageModuleBlockEntity extends BlockEntity implements Ticka
         }
 
         // Drain the battery, charge internal energy buffer.
-        ItemStack batteryToDrain = inventory.getInvStack(this.DRAIN_BATTERY_SLOT);
+        ItemStack batteryToDrain = inventory.getInvStack(DRAIN_BATTERY_SLOT);
         if (GalacticraftEnergy.isEnergyItem(batteryToDrain) && this.energy.getCurrentEnergy() < this.energy.getMaxEnergy()) {
             int currentBatteryCharge = GalacticraftEnergy.getBatteryEnergy(batteryToDrain);
 
