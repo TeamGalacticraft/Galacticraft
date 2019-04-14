@@ -2,6 +2,8 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricato
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import io.github.teamgalacticraft.galacticraft.Galacticraft;
+import io.github.teamgalacticraft.galacticraft.api.configurable.SideOptions;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
@@ -121,15 +123,26 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
     public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         BlockEntity blockEntity = world.getBlockEntity(connectionTargetPos);
         if (!(blockEntity instanceof CircuitFabricatorBlockEntity)) {
-            System.out.println("Not a fab. rejecting connection.");
+            Galacticraft.logger.error("Not a fab. rejecting connection.");
             return false;
         }
         CircuitFabricatorBlockEntity be = (CircuitFabricatorBlockEntity) blockEntity;
         BlockState fabricator = world.getBlockState(connectionTargetPos);
 
-        // This is not relative to the face of the machine.
-//        SideOptions sideOptions = be.selectedOptions.get(dir);
-//        return sideOptions == SideOptions.POWER_INPUT || sideOptions == SideOptions.POWER_OUTPUT;
-        return false;
+        //This is not relative to the face of the machine.
+        SideOptions sideOptions = be.selectedOptions.get(dir);
+        System.out.println(dir);
+        if (fabricator.get(FACING) == Direction.NORTH) {
+            return dir == Direction.SOUTH;
+        } else if (fabricator.get(FACING) == Direction.SOUTH) {
+            return dir == Direction.NORTH;
+        } else if (fabricator.get(FACING) == Direction.EAST) {
+            return dir == Direction.WEST;
+        } else if (fabricator.get(FACING) == Direction.WEST) {
+            return dir == Direction.EAST;
+        } else {
+            System.out.println("top/bottom");
+            return false;
+        }
     }
 }
