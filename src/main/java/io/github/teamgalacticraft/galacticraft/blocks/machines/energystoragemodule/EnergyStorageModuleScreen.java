@@ -39,7 +39,7 @@ public class EnergyStorageModuleScreen extends ContainerScreen {
     private World world;
 
     public EnergyStorageModuleScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new EnergyStorageModuleContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.coal_generator.name"));
+        super(new EnergyStorageModuleContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.energy_storage_module.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
 //        this.containerHeight = 166;
@@ -90,7 +90,6 @@ public class EnergyStorageModuleScreen extends ContainerScreen {
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-//            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status", ((EnergyStorageModuleBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
             toolTipLines.add("\u00A76" + new TranslatableTextComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((EnergyStorageModuleBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(TextFormat.BLUE))).getFormattedText() + "\u00A7r");
             toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((EnergyStorageModuleBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
 

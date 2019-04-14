@@ -4,6 +4,9 @@ import me.shedaniel.rei.api.RecipeDisplay;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public interface DefaultCompressingDisplay<T> extends RecipeDisplay<Recipe> {
     default Identifier getRecipeCategory() {
         return GalacticraftREIPlugin.COMPRESSING;

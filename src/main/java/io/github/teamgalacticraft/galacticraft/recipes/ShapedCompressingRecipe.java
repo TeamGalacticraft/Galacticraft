@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class ShapedCompressingRecipe implements Recipe<Inventory> {
     private final int width;
     private final int height;

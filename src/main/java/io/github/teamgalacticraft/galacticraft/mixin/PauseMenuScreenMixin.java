@@ -9,6 +9,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 @Mixin(PauseMenuScreen.class)
 public abstract class PauseMenuScreenMixin extends Screen {
     protected PauseMenuScreenMixin(TextComponent textComponent_1) {

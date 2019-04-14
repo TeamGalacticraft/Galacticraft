@@ -16,6 +16,9 @@ import net.minecraft.util.Identifier;
 
 import java.awt.*;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 
 public class GalacticraftREIPlugin implements REIPlugin {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");

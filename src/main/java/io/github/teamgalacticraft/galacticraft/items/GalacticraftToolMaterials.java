@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public enum GCToolMaterials implements ToolMaterial {
+public enum GalacticraftToolMaterials implements ToolMaterial {
 
     STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getBlockBreakingSpeed(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
         return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
@@ -33,7 +33,7 @@ public enum GCToolMaterials implements ToolMaterial {
     private final int enchantability;
     private final Lazy<Ingredient> repairIngredient;
 
-    GCToolMaterials(int miningLevel, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
+    GalacticraftToolMaterials(int miningLevel, int durability, float breakSpeed, float attackDamage, int enchantability, Supplier<Ingredient> repairIngredient) {
         this.miningLevel = miningLevel;
         this.durability = durability;
         this.blockBreakSpeed = breakSpeed;

@@ -11,6 +11,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
+/**
+ * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
+ */
 public class EnergyStorageModuleBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(60000, GalacticraftEnergy.GALACTICRAFT_JOULES);
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);

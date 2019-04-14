@@ -16,12 +16,11 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version + "+" + buildNum
 group = project.maven_group
 
-
 minecraft {
 }
 allprojects {
     repositories {
-	    mavenLocal()
+	mavenLocal()
         maven { url "https://minecraft.curseforge.com/api/maven" }
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://mod-buildcraft.com/maven" }
@@ -29,6 +28,7 @@ allprojects {
 //        flatDir { dirs 'locallib' }
     }
 }
+
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

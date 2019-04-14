@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.energy;
 import io.github.cottonmc.energy.CottonEnergy;
 import io.github.cottonmc.energy.api.EnergyType;
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -17,9 +18,11 @@ public class GalacticraftEnergy {
     private static final Marker ENERGY = MarkerManager.getMarker("Energy");
 
     public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType();
+    public static final EnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
 
     public static void register() {
         Registry.register(CottonEnergy.ENERGY_REGISTRY, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
+        Registry.register(CottonEnergy.ENERGY_REGISTRY, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_OXYGEN), GALACTICRAFT_OXYGEN);
     }
 
     public static boolean isEnergyItem(ItemStack itemStack) {
@@ -70,5 +73,14 @@ public class GalacticraftEnergy {
         tag.putInt("Energy", newEnergy);
         battery.setTag(tag);
         battery.setDamage(battery.getDurability() - newEnergy);
+    }
+
+    public static boolean isOxygenItem(ItemStack itemStack) {
+        if (!itemStack.hasTag()) {
+            return false;
+        }
+
+        CompoundTag tag = itemStack.getTag();
+        return tag.containsKey(OxygenTankItem.OXYGEN_NBT_KEY) && tag.containsKey(OxygenTankItem.MAX_OXYGEN_NBT_KEY);
     }
 }
