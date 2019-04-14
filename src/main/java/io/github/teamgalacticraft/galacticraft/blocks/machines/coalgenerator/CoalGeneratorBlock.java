@@ -120,8 +120,8 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
 
     @Override
     public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!( world.getBlockEntity(connectionTargetPos) instanceof BasicSolarPanelBlockEntity)) {
-            Galacticraft.logger.error("Not a Solar Panel. Rejecting connection.");
+        if (!( world.getBlockEntity(connectionTargetPos) instanceof CoalGeneratorBlockEntity)) {
+            Galacticraft.logger.error("Not a Coal Generator. Rejecting connection.");
             return false;
         }
         return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
