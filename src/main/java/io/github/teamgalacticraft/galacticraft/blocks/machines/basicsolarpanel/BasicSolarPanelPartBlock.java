@@ -68,7 +68,7 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
         }
 
         BasicSolarPanelBlock block = (BasicSolarPanelBlock) baseState.getBlock();
-        block.onPartDestroyed(world_1, partState, partPos, baseState, basePos);
+        block.onPartDestroyed(world_1, partState, partPos, baseState, basePos, !playerEntity_1.isCreative());
 
         super.onBroken(world_1, partPos, partState);
     }
