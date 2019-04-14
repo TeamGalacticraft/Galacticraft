@@ -9,12 +9,12 @@ public class WorldGenerator {
     }
 
     private static void registerOverworld() {
-        OreGenerator.registerOres();
+        OreGenerator.registerOverworldOres();
         OilPoolGenerator.registerOilLake();
     }
 
     private static void registerMoon() {
-
+        OreGenerator.registerMoonOres();
     }
 
     private static void registerMars() {

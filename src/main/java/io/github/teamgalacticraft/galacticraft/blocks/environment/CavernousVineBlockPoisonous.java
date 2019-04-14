@@ -14,6 +14,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.VinesFeature;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -25,7 +26,7 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
     }
 
     @Override
-    protected void onCollided(LivingEntity entity) {
+    public void onCollided(LivingEntity entity) {
         // Override the one from CavernousVineBlock and only bring them up. Apply damage and rotate player.
         dragEntityUp(entity);
         entity.damage(GalacticraftDamageSource.VINE_POISON, 5.0f);
@@ -35,7 +36,7 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         if (playerEntity.getStackInHand(hand).getItem() instanceof ShearsItem) {
-            world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE_BLOCK.getDefaultState());
+            world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE_BLOCK.getDefaultState().with(VINES, blockState.get(VINES)));
             world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, true);
             return true;
         }

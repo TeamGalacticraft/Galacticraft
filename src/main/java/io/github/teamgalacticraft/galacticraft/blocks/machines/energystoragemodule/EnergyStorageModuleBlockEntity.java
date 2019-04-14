@@ -61,17 +61,14 @@ public class EnergyStorageModuleBlockEntity extends BlockEntity implements Ticka
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-
         tag.put("Inventory", inventory.toTag());
         tag.putInt("Energy", energy.getCurrentEnergy());
-
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-
         this.inventory.fromTag(tag.getCompound("Inventory"));
         this.energy.setCurrentEnergy(tag.getInt("Energy"));
     }

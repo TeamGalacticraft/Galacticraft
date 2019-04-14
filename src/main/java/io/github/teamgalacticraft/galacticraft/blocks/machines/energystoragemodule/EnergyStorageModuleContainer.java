@@ -46,7 +46,7 @@ public class EnergyStorageModuleContainer extends Container {
         };
 
         // Battery slot
-        this.addSlot(new ChargeSlot(this.inventory, 0, 18 * 2 - 3, 18 * 1 + 6));
+        this.addSlot(new ChargeSlot(this.inventory, 0, 18 * 2 - 3, 18 + 6));
 
         // Battery slot
         this.addSlot(new ChargeSlot(this.inventory, 1, 18 * 2 - 3, 18 * 2 + 12));

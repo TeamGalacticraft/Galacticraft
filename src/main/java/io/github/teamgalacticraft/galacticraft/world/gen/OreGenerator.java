@@ -1,6 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.world.gen;
 
+import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import io.github.teamgalacticraft.galacticraft.world.biome.GCBiomes;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
@@ -11,7 +13,7 @@ import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 public class OreGenerator {
 
-    public static void registerOres() {
+    public static void registerOverworldOres() {
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
@@ -19,6 +21,16 @@ public class OreGenerator {
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.COPPER_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.TIN_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.SILICON_ORE_BLOCK.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(3, 0, 0, 25)));
+            }
+        }
+    }
+
+    public static void registerMoonOres() {
+        for (Biome biome : Biome.BIOMES) {
+            if (biome == GCBiomes.MOON) {
+
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.byName(Constants.Blocks.MOON_ROCK), GalacticraftBlocks.MOON_COPPER_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.byName(Constants.Blocks.MOON_ROCK), GalacticraftBlocks.MOON_TIN_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
             }
         }
     }

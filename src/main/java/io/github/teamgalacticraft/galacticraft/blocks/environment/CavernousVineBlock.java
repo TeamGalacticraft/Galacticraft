@@ -1,20 +1,22 @@
 package io.github.teamgalacticraft.galacticraft.blocks.environment;
 
+import blue.endless.jankson.annotation.Nullable;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Waterloggable;
+import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShearsItem;
+import net.minecraft.sortme.ItemScatterer;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -28,15 +30,51 @@ import java.util.Random;
  */
 public class CavernousVineBlock extends Block implements Waterloggable {
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    private static final Property[] VINES = new Property[] {
+    protected static final EnumProperty<VineTypes> VINES = EnumProperty.create("vinetype", VineTypes.class);
 
-    };
+    public enum VineTypes implements StringRepresentable {
+        VINE_0("vine_0", 0),
+        VINE_1("vine_1", 1),
+        VINE_2("vine_2", 2);
+
+        private String name;
+        private int meta;
+
+        VineTypes(String name, int meta) {
+            this.name = name;
+            this.meta = meta;
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        private final static VineTypes[] values = values();
+        public static VineTypes byMetadata(int meta) {
+            return values[meta % values.length];
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
+    }
 
     public CavernousVineBlock(Settings settings) {
         super(settings);
         settings.noCollision();
-        this.setDefaultState(this.stateFactory.getDefaultState().with(WATERLOGGED, false));
+        this.setDefaultState(this.stateFactory.getDefaultState().with(WATERLOGGED, false).with(VINES, VineTypes.VINE_0));
     }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
+        super.onBreak(world, blockPos, blockState, playerEntity);
+
+        if (playerEntity.getActiveItem().getItem() instanceof ShearsItem) {
+            ItemScatterer.spawn(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(this, 1));
+        }
+    }
+
 
     @Override
     public void onEntityCollision(BlockState blockState_1, World world_1, BlockPos blockPos_1, Entity entity) {
@@ -47,7 +85,17 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         onCollided((LivingEntity) entity);
     }
 
-    protected void onCollided(LivingEntity entity) {
+    @Override
+    public BlockRenderType getRenderType(BlockState blockState_1) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    public void onCollided(LivingEntity entity) {
         dragEntityUp(entity);
     }
 
@@ -57,8 +105,8 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        FluidState fluidState_1 = context.getWorld().getFluidState(context.getBlockPos());
-        return super.getPlacementState(context).with(WATERLOGGED, fluidState_1.getFluid() == Fluids.WATER);
+        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
+        return super.getPlacementState(context).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER).with(VINES, VineTypes.VINE_0);
     }
 
     @Override
@@ -73,7 +121,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
         builder.with(WATERLOGGED);
-        builder.with();
+        builder.with(VINES);
     }
 
     @Override
@@ -105,8 +153,67 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onScheduledTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!canPlaceAt(state, world, pos)) {
-            world.breakBlock(pos, false);
+        System.out.println("Ticked vines");
+
+        if (!world.isClient)
+        {
+            for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--) {
+
+                BlockPos pos1 = new BlockPos(pos.getX(), y2, pos.getZ());
+                BlockState blockState = world.getBlockState(pos1);
+
+                if (!blockState.isAir()) {
+                    return;
+                }
+            }
+
+            world.setBlockState(pos.down(), this.getStateFromMeta(this.getVineLight(world, pos) % 3), 2);
+            world.updateNeighbors(pos, state.getBlock());
+        }
+    }
+
+    private BlockState getStateFromMeta(int meta) {
+        return this.getDefaultState().with(VINES, VineTypes.byMetadata(meta));
+    }
+
+    public int getVineLight(World world, BlockPos pos) {
+
+        int vineCount = 0;
+        int y2 = pos.getY();
+
+        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() instanceof CavernousVineBlock) {
+            vineCount += 4;
+            y2--;
+        }
+        return Math.max(19 - vineCount, 0);
+    }
+
+    public int getTickRate(ViewableWorld viewableWorld) {
+        return 1;
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+        BlockPos abovePos = new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
+        BlockState stateAbove = world.getBlockState(abovePos);
+
+        if (stateAbove.getBlock() == GalacticraftBlocks.CAVERNOUS_VINE_BLOCK || stateAbove.getBlock() == GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK) {
+            System.out.println("Blockstate is cavernous vine");
+            System.out.println(stateAbove.toString());
+            switch(stateAbove.get(VINES).getMeta()) {
+                case 0:
+                    world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
+                    System.out.println("Case is 0");
+                    break;
+                case 1:
+                    world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_2));
+                    System.out.println("Case is 1");
+                    break;
+                default:
+                    world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
+                    System.out.println("Case is 2");
+                    break;
+            }
         }
     }
 }

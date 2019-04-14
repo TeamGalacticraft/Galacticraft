@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
+import com.mojang.datafixers.kinds.Const;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.api.blocks.GalacticraftStairsBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.CheeseBlock;
@@ -244,6 +245,8 @@ public class GalacticraftBlocks {
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem POISONOUS_CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(POISONOUS_CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
 
+    public static final BlockItem CRUDE_OIL_BLOCK_ITEM = new BlockItem(CRUDE_OIL_BLOCK, new Item.Settings());
+
     public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
@@ -440,6 +443,8 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.POISONOUS_CAVERNOUS_VINE_BLOCK), POISONOUS_CAVERNOUS_VINE_BLOCK_ITEM);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CRUDE_OIL_BLOCK), CRUDE_OIL_BLOCK_ITEM);
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), CIRCUIT_FABRICATOR_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), COMPRESSOR_BLOCK_ITEM);
