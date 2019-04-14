@@ -27,10 +27,13 @@ public final class MoonPlainsBiome extends Biome {
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
-        this.structureFeatures.clear();
-        this.features.clear();
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
         this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 1, 1, 1));
+    }
+
+    @Override
+    public String getTranslationKey() {
+        return "biome.galacticraft-rewoven.moon";
     }
 
     @Override
