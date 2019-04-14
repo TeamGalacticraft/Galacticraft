@@ -5,6 +5,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorScreen;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import io.github.teamgalacticraft.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.container.screen.PlayerInventoryGCScreen;
@@ -32,12 +33,14 @@ public class GalacticraftClient implements ClientModInitializer {
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN)));
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
 
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
+
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COAL_GENERATOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CoalGeneratorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.BASIC_SOLAR_PANEL_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new BasicSolarPanelScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.CIRCUIT_FABRICATOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CircuitFabricatorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COMPRESSOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CompressorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new EnergyStorageModuleScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new OxygenCollectorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
 
         GalacticraftBlockEntityRenderers.register();
 

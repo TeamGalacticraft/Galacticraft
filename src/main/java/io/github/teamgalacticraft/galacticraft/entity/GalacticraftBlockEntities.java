@@ -7,6 +7,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlockEntity;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -20,7 +21,8 @@ public class GalacticraftBlockEntities {
     public static final BlockEntityType<BasicSolarPanelPartBlockEntity> BASIC_SOLAR_PANEL_PART_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_PART_BLOCK), BlockEntityType.Builder.create(BasicSolarPanelPartBlockEntity::new).build(null));
     public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR_BLOCK), BlockEntityType.Builder.create(CircuitFabricatorBlockEntity::new).build(null));
     public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR_BLOCK), BlockEntityType.Builder.create(CompressorBlockEntity::new).build(null));
-    public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), BlockEntityType.Builder.create(EnergyStorageModuleBlockEntity::new).build(null));
+    public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), BlockEntityType.Builder.create(EnergyStorageModuleBlockEntity::new).build(null));
+    public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR_BLOCK), BlockEntityType.Builder.create(OxygenCollectorBlockEntity::new).build(null));
 
     public static void init() {
     }
