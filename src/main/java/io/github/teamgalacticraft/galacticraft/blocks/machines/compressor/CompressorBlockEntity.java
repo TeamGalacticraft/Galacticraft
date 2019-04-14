@@ -6,7 +6,6 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.recipes.ShapedCompressingRecipe;
@@ -33,7 +32,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
     private int progress;
 
-    public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
+    public CompressorStatus status = CompressorStatus.INACTIVE;
     public int fuelTime;
     public int maxFuelTime;
 
@@ -55,35 +54,49 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
             }
         };
 
+
         if (this.fuelTime <= 0) {
             ItemStack fuel = inventory.getInvStack(FUEL_INPUT_SLOT);
             if (fuel.isEmpty()) {
                 // Machine out of fuel and no fuel present.
+                status = CompressorStatus.INACTIVE;
                 return;
             } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
                 this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
                 this.fuelTime = maxFuelTime;
+                fuel.subtractAmount(1);
+                status = CompressorStatus.PROCESSING;
             } else {
                 // Can't start processing any new materials anyway, dont waste fuel.
+                status = CompressorStatus.INACTIVE;
                 return;
             }
         }
         this.fuelTime--;
 
-        if (!isValidRecipe(inv)) {
+        if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv)) {
+            status = CompressorStatus.IDLE;
             return;
         }
 
         ItemStack resultStack = getResultFromRecipeStack(inv);
-        if (canPutStackInResultSlot(resultStack)) {
-            for (int i = 0; i < 9; i++) {
-                inventory.getInvStack(i).subtractAmount(1);
-            }
+        if (status == CompressorStatus.PROCESSING && canPutStackInResultSlot(resultStack)) {
+            this.progress++;
+            System.out.println("Progress: " + this.progress);
 
-            if (!inventory.getInvStack(OUTPUT_SLOT).isEmpty()) {
-                inventory.getInvStack(OUTPUT_SLOT).addAmount(resultStack.getAmount());
-            } else {
-                inventory.setInvStack(OUTPUT_SLOT, resultStack, Simulation.ACTION);
+            if (this.progress == maxProgress) {
+                this.progress = 0;
+
+                for (int i = 0; i < 9; i++) {
+                    inventory.getInvStack(i).subtractAmount(1);
+                }
+
+                ItemStack output = inventory.getInvStack(OUTPUT_SLOT);
+                if (output.isEmpty()) {
+                    inventory.setInvStack(OUTPUT_SLOT, resultStack, Simulation.ACTION);
+                } else {
+                    inventory.getInvStack(OUTPUT_SLOT).addAmount(resultStack.getAmount());
+                }
             }
         }
     }
