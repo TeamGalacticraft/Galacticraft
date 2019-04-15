@@ -45,12 +45,12 @@ public class SpaceRaceScreen extends Screen {
         // 5% of width
         int maxWidth = this.width - getXMargins() * 2;
         if (widthSize < maxWidth) {
-            widthSize += 2;
+            widthSize += Math.min(3, maxWidth - widthSize);
         }
 
         int maxHeight = this.height - getYMargins() * 2;
         if (heightSize < maxHeight) {
-            heightSize += 2;
+            heightSize += Math.min(2, maxHeight - heightSize);
         }
 
         int midX = this.width / 2;
