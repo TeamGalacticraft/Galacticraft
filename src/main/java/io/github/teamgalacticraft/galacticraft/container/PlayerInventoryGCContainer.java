@@ -19,8 +19,9 @@ import net.minecraft.item.ItemStack;
  */
 public class PlayerInventoryGCContainer extends Container {
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
+    public static int OXYGEN_TANK_1_SLOT = 6, OXYGEN_TANK_2_SLOT = 7;
 
-    private final BasicInventory gearInventory = new BasicInventory(12);
+    public final BasicInventory gearInventory = new BasicInventory(12);
     private final boolean remote;
     private PlayerEntity player;
 
@@ -49,8 +50,8 @@ public class PlayerInventoryGCContainer extends Container {
         }
         this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK));
         this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR));
-        this.addSlot(new OxygenTankSlot(this.gearInventory, 6, 80, 8 + 2 * 18));
-        this.addSlot(new OxygenTankSlot(this.gearInventory, 7, 80, 8 + 3 * 18));
+        this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
+        this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
         int accessorySlot = 0;
         for (int i = 8; i < 12; i++) {

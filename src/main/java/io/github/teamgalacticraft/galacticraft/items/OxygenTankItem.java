@@ -61,11 +61,11 @@ public class OxygenTankItem extends Item {
         super.buildTooltip(stack, world, lines, context);
     }
 
-    private int getOxygenCount(ItemStack stack) {
+    public static int getOxygenCount(ItemStack stack) {
         return stack.getOrCreateTag().getInt(OXYGEN_NBT_KEY);
     }
 
-    private int getMaxOxygen(ItemStack stack) {
+    public static int getMaxOxygen(ItemStack stack) {
         return stack.getOrCreateTag().getInt(MAX_OXYGEN_NBT_KEY);
     }
 

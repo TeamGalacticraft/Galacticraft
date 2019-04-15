@@ -3,10 +3,12 @@ package io.github.teamgalacticraft.galacticraft.container.screen;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.container.PlayerInventoryGCContainer;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
+import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.gui.ingame.PlayerInventoryScreen;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Identifier;
@@ -35,10 +37,16 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
     protected void drawMouseoverTooltip(int x, int y) {
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, left + 138, left + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, top + 8, top + 8 + 40)) {
-            this.renderTooltip("Tank 1 Oxygen: ", x, y);
+            ItemStack invStack = container.gearInventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
+            int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
+            int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
+            this.renderTooltip("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy, x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, left + 156, left + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, top + 8, top + 8 + 40)) {
-            this.renderTooltip("Tank 2 oxygen: ", x, y);
+            ItemStack invStack = container.gearInventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
+            int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
+            int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
+            this.renderTooltip("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy, x, y);
         }
         super.drawMouseoverTooltip(x, y);
     }
