@@ -449,6 +449,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.POISONOUS_CAVERNOUS_VINE_BLOCK), POISONOUS_CAVERNOUS_VINE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_BERRY_BUSH_BLOCK), MOON_BERRY_BUSH_BLOCK_ITEM);
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.CRUDE_OIL_BLOCK), CRUDE_OIL_BLOCK_ITEM);
 

@@ -1,5 +1,5 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cross",
   "textures": {
     "all": "galacticraft-rewoven:block/moon_berry_bush_3"
   }
