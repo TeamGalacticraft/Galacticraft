@@ -37,7 +37,7 @@ public final class MarsBiome extends Biome {
 
     @Override
     public int getSkyColor(float float_1) {
-        return 1847249;
+        return 16747622;
     }
 
     @Override
