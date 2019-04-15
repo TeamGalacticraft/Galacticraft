@@ -12,11 +12,11 @@ import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public final class MoonBiome extends Biome {
+public final class MarsBiome extends Biome {
 
-    public MoonBiome() {
+    public MarsBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MOON_CONFIG)
+                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MARS_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.075F)
@@ -27,28 +27,17 @@ public final class MoonBiome extends Biome {
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
         this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 1, 1, 1));
     }
 
     @Override
-    public Precipitation getPrecipitation() {
-        return Precipitation.NONE;
-    }
-
-    @Override
-    public float getTemperature(BlockPos blockPos_1) {
-        return 0;
-    }
-
-    @Override
     public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon";
+        return "biome.galacticarft-rewoven.moon";
     }
 
     @Override
     public int getSkyColor(float float_1) {
-        return 0;
+        return 16747622;
     }
 
     @Override

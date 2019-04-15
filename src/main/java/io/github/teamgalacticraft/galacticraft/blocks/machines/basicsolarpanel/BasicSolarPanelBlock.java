@@ -184,6 +184,7 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
             BlockEntity partEntity = world_1.getBlockEntity(otherPart);
             assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
             ((BasicSolarPanelPartBlockEntity) partEntity).setBasePos(basePos);
+            partEntity.markDirty();
         }
     }
 
@@ -192,9 +193,9 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
         return PistonBehavior.BLOCK;
     }
 
-    void onPartDestroyed(World world, BlockState partState, BlockPos partPos, BlockState baseState, BlockPos basePos) {
+    void onPartDestroyed(World world, BlockState partState, BlockPos partPos, BlockState baseState, BlockPos basePos, boolean dropBase) {
         dropInventory(world, basePos);
-        world.breakBlock(basePos, true);
+        world.breakBlock(basePos, dropBase);
 
         for (BlockPos otherPart : getOtherParts(baseState, basePos)) {
             if (!world.getBlockState(otherPart).isAir()) {
