@@ -183,7 +183,7 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
 
             BlockEntity partEntity = world_1.getBlockEntity(otherPart);
             assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
-            ((BasicSolarPanelPartBlockEntity) partEntity).basePos = basePos;
+            ((BasicSolarPanelPartBlockEntity) partEntity).setBasePos(basePos);
         }
     }
 
@@ -205,7 +205,7 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
 
     @Override
     public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!( world.getBlockEntity(connectionTargetPos) instanceof BasicSolarPanelBlockEntity)) {
+        if (!(world.getBlockEntity(connectionTargetPos) instanceof BasicSolarPanelBlockEntity)) {
             Galacticraft.logger.error("Not a Solar Panel. Rejecting connection.");
             return false;
         }

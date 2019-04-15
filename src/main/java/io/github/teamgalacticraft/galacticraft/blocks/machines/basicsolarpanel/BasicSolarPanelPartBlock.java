@@ -13,6 +13,8 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -104,5 +106,20 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     @Override
     public boolean allowsSpawning(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, EntityType<?> entityType_1) {
         return false;
+    }
+
+    @Override
+    public boolean activate(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, Hand hand_1, BlockHitResult blockHitResult_1) {
+        BlockEntity partEntity = world_1.getBlockEntity(blockPos_1);
+        if (world_1.isAir(blockPos_1) || !(partEntity instanceof BasicSolarPanelPartBlockEntity)) {
+            return false;
+        }
+
+        BlockPos basePos = ((BasicSolarPanelPartBlockEntity) partEntity).basePos;
+        System.out.println("base pos: " + basePos);
+
+        BlockState base = world_1.getBlockState(basePos);
+        BasicSolarPanelBlock baseBlock = (BasicSolarPanelBlock) base.getBlock();
+        return baseBlock.activate(base, world_1, basePos, playerEntity_1, hand_1, blockHitResult_1);
     }
 }

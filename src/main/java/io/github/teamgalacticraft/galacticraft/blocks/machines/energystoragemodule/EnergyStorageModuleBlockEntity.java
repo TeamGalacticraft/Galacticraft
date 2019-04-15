@@ -15,7 +15,8 @@ import net.minecraft.util.Tickable;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class EnergyStorageModuleBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(60000, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    public static int MAX_ENERGY = 60000;
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(MAX_ENERGY, GalacticraftEnergy.GALACTICRAFT_JOULES);
     SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;

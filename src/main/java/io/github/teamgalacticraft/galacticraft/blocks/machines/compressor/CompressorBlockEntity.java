@@ -79,8 +79,8 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
             return;
         }
 
-        ItemStack resultStack = getResultFromRecipeStack(inv);
-        if (status == CompressorStatus.PROCESSING && canPutStackInResultSlot(resultStack)) {
+        if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+            ItemStack resultStack = getResultFromRecipeStack(inv);
             this.progress++;
             System.out.println("Progress: " + this.progress);
 

@@ -12,7 +12,7 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
  */
 public class GalacticraftDecorators {
     public static final Decorator<CraterDecoratorConfig> CRATER = Registry.register(Registry.DECORATOR, "water_lake", new CraterDecorator(CraterDecoratorConfig::deserialize));
-    public static final ConfiguredFeature<?> CRATER_CONF = Biome.configureFeature(GalacticraftFeatures.CRATER_FEATURE, new CraterFeatureConfig(), GalacticraftDecorators.CRATER, new CraterDecoratorConfig(4));
+    public static final ConfiguredFeature<?> CRATER_CONF = Biome.configureFeature(GalacticraftFeatures.CRATER_FEATURE, new CraterFeatureConfig(), GalacticraftDecorators.CRATER, new CraterDecoratorConfig(2));
 
     public static void init() {
 

@@ -1,5 +1,5 @@
 # <img src="https://raw.githubusercontent.com/teamgalacticraft/Galacticraft-Rewoven/master/src/main/resources/assets/galacticraft-rewoven/icon.png" width="45" height="45" >Galacticraft: Rewoven
-[![](https://img.shields.io/discord/449966345665249290.svg?colorB=7289DA&label=Discord&style=flat-square)](https://discord.gg/N4ndFkr) [![Build Status](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven.svg?branch=master)](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven) [![Build Status](http://ci.joezwet.me:8080/job/Galacticraft-Rewoven/job/master/badge/icon?style=flat-square)](http://ci.joezwet.me:8080/job/Galacticraft-Rewoven/job/master)
+[![](https://img.shields.io/discord/449966345665249290.svg?colorB=7289DA&label=Discord&style=flat-square)](https://discord.me/galacticraft) [![Build Status](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven.svg?branch=master)](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven) [![Build Status](http://ci.joezwet.me:8080/job/Galacticraft-Rewoven/job/master/badge/icon?style=flat-square)](http://ci.joezwet.me:8080/job/Galacticraft-Rewoven/job/master)
 
 Galacticraft: Rewoven is a port of the popular space mod Galacticraft made for the [Fabric modloader](https://fabricmc.net/2018/12/10/announcement.html).
 

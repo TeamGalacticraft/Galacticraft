@@ -16,6 +16,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlock;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.ScorchedRockBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.natural.VaporSpoutBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.ore.SiliconOreBlock;
@@ -151,6 +152,7 @@ public class GalacticraftBlocks {
     public static final Block BASIC_SOLAR_PANEL_BLOCK = new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(1.0F, 3600000.0F).sounds(BlockSoundGroup.METAL).build());
     public static final Block BASIC_SOLAR_PANEL_PART_BLOCK = new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 3600000.0F).dropsNothing().build());
     public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block OXYGEN_COLLECTOR_BLOCK = new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).build());
 
     // Liquids
     public static final Block CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
@@ -254,6 +256,7 @@ public class GalacticraftBlocks {
     public static final BlockItem BASIC_SOLAR_PANEL_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem BASIC_SOLAR_PANEL_PART_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_PART_BLOCK, new Item.Settings());
     public static final BlockItem ENERGY_STORAGE_MODULE_BLOCK_ITEM = new BlockItem(ENERGY_STORAGE_MODULE_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
+    public static final BlockItem OXYGEN_COLLECTOR_BLOCK_ITEM = new BlockItem(OXYGEN_COLLECTOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
 
     public static void register() {
         // Register Blocks
@@ -356,6 +359,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BASIC_SOLAR_PANEL_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_PART_BLOCK), BASIC_SOLAR_PANEL_PART_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), ENERGY_STORAGE_MODULE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR_BLOCK), OXYGEN_COLLECTOR_BLOCK);
 
         // Register Block items
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK_ITEM);
@@ -454,5 +458,6 @@ public class GalacticraftBlocks {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_BLOCK), BASIC_SOLAR_PANEL_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL_PART_BLOCK), BASIC_SOLAR_PANEL_PART_BLOCK_ITEM);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE_BLOCK), ENERGY_STORAGE_MODULE_BLOCK_ITEM);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR_BLOCK), OXYGEN_COLLECTOR_BLOCK_ITEM);
     }
 }

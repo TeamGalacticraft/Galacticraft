@@ -33,4 +33,9 @@ public class BasicSolarPanelPartBlockEntity extends BlockEntity {
         CompoundTag base = tag.getCompound("Base");
         this.basePos = new BlockPos(base.getInt("X"), base.getInt("Y"), base.getInt("Z"));
     }
+
+    public void setBasePos(BlockPos basePos) {
+        this.basePos = basePos;
+        this.markDirty();
+    }
 }
