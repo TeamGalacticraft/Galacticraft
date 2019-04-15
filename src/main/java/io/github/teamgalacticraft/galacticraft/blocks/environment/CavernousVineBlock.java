@@ -153,8 +153,6 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onScheduledTick(BlockState state, World world, BlockPos pos, Random random) {
-        System.out.println("Ticked vines");
-
         if (!world.isClient)
         {
             for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--) {
@@ -166,7 +164,6 @@ public class CavernousVineBlock extends Block implements Waterloggable {
                     return;
                 }
             }
-
             world.setBlockState(pos.down(), this.getStateFromMeta(this.getVineLight(world, pos) % 3), 2);
             world.updateNeighbors(pos, state.getBlock());
         }

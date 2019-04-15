@@ -56,7 +56,7 @@ public class MoonBerryBushBlock extends PlantBlock {
     public void onScheduledTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
         super.onScheduledTick(blockState, world, blockPos, random);
         int age = blockState.get(AGE);
-        if (age < 3 && random.nextInt(10) == 0 && world.getLightLevel(blockPos.up(), 0) >= 3) {
+        if (age < 3 && random.nextInt(20) == 0) {
             world.setBlockState(blockPos, blockState.with(AGE, age + 1), 2);
         }
     }
@@ -98,13 +98,13 @@ public class MoonBerryBushBlock extends PlantBlock {
     public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
         if (blockState.get(AGE) == 3) {
 
-            double x = blockPos.getX() + random.nextFloat() - random.nextFloat();
-            double y = blockPos.getY() + random.nextFloat() - random.nextFloat();
-            double z = blockPos.getZ() + random.nextFloat() - random.nextFloat();
+            double x = blockPos.getX() + 0.5D + (random.nextFloat() - random.nextFloat());
+            double y = blockPos.getY() + random.nextFloat();
+            double z = blockPos.getZ() + 0.5D + (random.nextFloat() - random.nextFloat());
             int times = random.nextInt(4);
 
             for (int i = 0; i < times; i++) {
-                world.addParticle(new DustParticleParameters(0.0f, 0.0f, 0.8f, 1.0f), x, y, z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(new DustParticleParameters(0.5f, 0.5f, 1.0f, 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
