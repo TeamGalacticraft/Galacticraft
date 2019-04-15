@@ -48,7 +48,7 @@ public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventory
     @Inject(method = "render", at = @At("TAIL"))
     public void render(int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         GuiLighting.enableForItems();
-        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.left + 6, this.top - 20);
+        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getDefaultStack(), this.left + 6, this.top - 20);
         this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.left + 35, this.top - 20);
     }
 }

@@ -1,9 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.container;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import io.github.teamgalacticraft.galacticraft.accessor.GCPlayerAccessor;
 import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
@@ -13,6 +9,8 @@ import net.minecraft.container.Slot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.BasicInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -22,25 +20,12 @@ import net.minecraft.item.ItemStack;
 public class PlayerInventoryGCContainer extends Container {
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 
-    public static final SimpleFixedItemInv inv = new SimpleFixedItemInv(11);
+    private final BasicInventory gearInventory = new BasicInventory(12);
     private final boolean remote;
-    private final PartialInventoryFixedWrapper gearInventory;
     private PlayerEntity player;
 
     public PlayerInventoryGCContainer(PlayerInventory playerInventory, boolean isServer, PlayerEntity playerEntity) {
-        super(null, 0);
-
-        this.gearInventory = new PartialInventoryFixedWrapper(((GCPlayerAccessor) (Object) playerEntity).getGearInventory()) {
-            @Override
-            public boolean canPlayerUseInv(PlayerEntity var1) {
-                return true;
-            }
-
-            @Override
-            public void markDirty() {
-                //TODO
-            }
-        };
+        super(null, 1);
 
         this.player = playerEntity;
         this.remote = isServer;
@@ -50,7 +35,7 @@ public class PlayerInventoryGCContainer extends Container {
 
         for (slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];
-            this.addSlot(new Slot(gearInventory, slotY, 8, 8 + slotY * 18) {
+            this.addSlot(new Slot(this.gearInventory, slotY, 8, 8 + slotY * 18) {
                 @Override
                 public int getMaxStackAmount() {
                     return 1;
@@ -62,24 +47,14 @@ public class PlayerInventoryGCContainer extends Container {
                 }
             });
         }
-        this.addSlot(new ItemSpecificSlot(gearInventory, 4, 77, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK) {
-            @Override
-            public int getMaxStackAmount() {
-                return 1;
-            }
-        });
-        this.addSlot(new ItemSpecificSlot(gearInventory, 5, 77, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR) {
-            @Override
-            public int getMaxStackAmount() {
-                return 1;
-            }
-        });
-        this.addSlot(new OxygenTankSlot(gearInventory, 6, 77, 8 + 2 * 18));
-        this.addSlot(new OxygenTankSlot(gearInventory, 7, 77, 8 + 3 * 18));
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK));
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR));
+        this.addSlot(new OxygenTankSlot(this.gearInventory, 6, 80, 8 + 2 * 18));
+        this.addSlot(new OxygenTankSlot(this.gearInventory, 7, 80, 8 + 3 * 18));
 
         int accessorySlot = 0;
         for (int i = 8; i < 12; i++) {
-            this.addSlot(new Slot(gearInventory, i, 77 + 18, 8 + accessorySlot * 18));
+            this.addSlot(new Slot(this.gearInventory, i, 80 + 18, 8 + accessorySlot * 18));
             accessorySlot++;
         }
 
@@ -87,13 +62,13 @@ public class PlayerInventoryGCContainer extends Container {
         // Player main inv
         for (slotY = 0; slotY < 3; ++slotY) {
             for (slotX = 0; slotX < 9; ++slotX) {
-                this.addSlot(new Slot(playerInventory, slotX + (slotY + 1) * 9, 8 + slotX * 18, 84 + slotY * 18));
+                this.addSlot(new Slot(player.inventory, slotX + (slotY + 1) * 9, 8 + slotX * 18, 84 + slotY * 18));
             }
         }
 
         // Player hotbar
         for (slotY = 0; slotY < 9; ++slotY) {
-            this.addSlot(new Slot(playerInventory, slotY, 8 + slotY * 18, 142));
+            this.addSlot(new Slot(player.inventory, slotY, 8 + slotY * 18, 142));
         }
     }
 
@@ -110,13 +85,13 @@ public class PlayerInventoryGCContainer extends Container {
     public ItemStack getThermalPiece(EquipmentSlot slot) {
         switch (slot) {
             case HEAD:
-                return inv.getInvStack(0);
+                return gearInventory.getInvStack(0);
             case CHEST:
-                return inv.getInvStack(1);
+                return gearInventory.getInvStack(1);
             case LEGS:
-                return inv.getInvStack(2);
+                return gearInventory.getInvStack(2);
             case FEET:
-                return inv.getInvStack(3);
+                return gearInventory.getInvStack(3);
             default:
                 return ItemStack.EMPTY;
         }
@@ -125,16 +100,16 @@ public class PlayerInventoryGCContainer extends Container {
     public void setThermalPiece(EquipmentSlot slot, ItemStack thermalPiece) {
         switch (slot) {
             case HEAD:
-                inv.setInvStack(0, thermalPiece, Simulation.ACTION);
+                gearInventory.setInvStack(0, thermalPiece);
                 return;
             case CHEST:
-                inv.setInvStack(1, thermalPiece, Simulation.ACTION);
+                gearInventory.setInvStack(1, thermalPiece);
                 return;
             case LEGS:
-                inv.setInvStack(2, thermalPiece, Simulation.ACTION);
+                gearInventory.setInvStack(2, thermalPiece);
                 return;
             case FEET:
-                inv.setInvStack(3, thermalPiece, Simulation.ACTION);
+                gearInventory.setInvStack(3, thermalPiece);
                 return;
             default:
                 throw new IllegalArgumentException("Invalid EquipmentSlot " + slot + "!");
@@ -142,7 +117,7 @@ public class PlayerInventoryGCContainer extends Container {
     }
 
     private class OxygenTankSlot extends Slot {
-        public OxygenTankSlot(PartialInventoryFixedWrapper gearInventory, int slotId, int x, int y) {
+        public OxygenTankSlot(Inventory gearInventory, int slotId, int x, int y) {
             super(gearInventory, slotId, x, y);
         }
 
