@@ -24,7 +24,7 @@ public class EnergyStorageModuleBlockEntity extends BlockEntity implements Ticka
     private int powerToChargePerTick = 5;
 
     public EnergyStorageModuleBlockEntity() {
-        super(GalacticraftBlockEntities.ENERGY_STORAGE_TYPE);
+        super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
         this.energy.listen(this::markDirty);
     }
 
