@@ -6,6 +6,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator
 import io.github.teamgalacticraft.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorContainer;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleContainer;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorContainer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.util.Identifier;
 
@@ -30,6 +31,6 @@ public class GalacticraftContainers {
         ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, (syncId, id, player, buf) -> new BasicSolarPanelContainer(syncId, buf.readBlockPos(), player));
         ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, (syncId, id, player, buf) -> new CompressorContainer(syncId, buf.readBlockPos(), player));
         ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, (syncId, id, player, buf) -> new EnergyStorageModuleContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, (syncId, id, player, buf) -> new EnergyStorageModuleContainer(syncId, buf.readBlockPos(), player));
+        ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, (syncId, id, player, buf) -> new OxygenCollectorContainer(syncId, buf.readBlockPos(), player));
     }
 }
