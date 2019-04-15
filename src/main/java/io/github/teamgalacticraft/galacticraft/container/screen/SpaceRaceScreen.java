@@ -22,6 +22,17 @@ public class SpaceRaceScreen extends Screen {
         super(new TranslatableTextComponent("menu.space_race_manager"));
     }
 
+    private boolean isAnimationComplete() {
+        int sideMargins = (int) (this.width * 0.16);
+        int maxWidth = this.width - sideMargins * 2;
+
+        int topMargins = (int) (this.width * 0.09);
+        int maxHeight = this.height - topMargins * 2;
+
+        return widthSize >= maxWidth
+                && heightSize >= maxHeight;
+    }
+
     @Override
     public void resize(MinecraftClient minecraftClient_1, int int_1, int int_2) {
         this.widthSize = 0;
@@ -32,14 +43,12 @@ public class SpaceRaceScreen extends Screen {
     @Override
     public void renderBackground() {
         // 5% of width
-        int sideMargins = (int) (this.width * 0.16);
-        int maxWidth = this.width - sideMargins * 2;
+        int maxWidth = this.width - getXMargins() * 2;
         if (widthSize < maxWidth) {
             widthSize += 2;
         }
 
-        int topMargins = (int) (this.width * 0.09);
-        int maxHeight = this.height - topMargins * 2;
+        int maxHeight = this.height - getYMargins() * 2;
         if (heightSize < maxHeight) {
             heightSize += 2;
         }
@@ -55,13 +64,45 @@ public class SpaceRaceScreen extends Screen {
 
     private void renderForeground() {
         TextRenderer font = minecraft.textRenderer;
-        DrawableUtils.drawCenteredString(font, "Space Race Manager", this.width/2,50, 0xFFFFFF);
+        DrawableUtils.drawCenteredString(font, "Space Race Manager", this.width / 2, getTop() + 2, 0xFFFFFF);
+    }
+
+    private int getYMargins() {
+        return (int) (this.height * this.getMarginPercent());
+    }
+
+    private int getXMargins() {
+        return (int) (this.width * this.getMarginPercent());
+    }
+
+    private float getMarginPercent() {
+        return 0.17F;
+    }
+
+    private int getTop() {
+        return getYMargins();
+    }
+
+    private int getBottom() {
+        return this.height - getYMargins();
+    }
+
+    private int getLeft() {
+        return getXMargins();
+    }
+
+    private int getRight() {
+        return this.widthSize - getXMargins();
     }
 
     @Override
     public void render(int x, int y, float lastFrameDuration) {
         this.renderBackground();
-        this.renderForeground();
+
+        if (this.isAnimationComplete()) {
+            this.renderForeground();
+        }
+
         super.render(x, y, lastFrameDuration);
 //        this.drawMouseoverTooltip(x, y);
 
