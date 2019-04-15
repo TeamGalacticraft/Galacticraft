@@ -44,7 +44,7 @@ dependencies {
 //    modCompile "io.github.cottonmc:cotton:${project.cotton_version}"
     modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
     modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
-    modCompile "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+    modCompile "io.github.teamgalacticraft:TGC-Utils:${project.tgc_utils_version}"
     modCompile "roughly-enough-items:RoughlyEnoughItems:${project.rei_version}"
 
     //include everything mandatory inside the jar
@@ -55,7 +55,7 @@ dependencies {
 //    include "io.github.cottonmc:cotton:${project.cotton_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
     include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
-    include "com.github.teamgalacticraft:tgc-utils:${project.tgc_utils_version}"
+    include "io.github.teamgalacticraft:TGC-Utils:${project.tgc_utils_version}"
 }
 
 processResources {
