@@ -35,7 +35,7 @@ public class GlowstoneTorchBlock extends TorchBlock {
     @Override
     public void buildTooltip(ItemStack itemStack, BlockView blockView, List<TextComponent> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.oxygen_collector   ").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.glowstone_torch").setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
             list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
         }
