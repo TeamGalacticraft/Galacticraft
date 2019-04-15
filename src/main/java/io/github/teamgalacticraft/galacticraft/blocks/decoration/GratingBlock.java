@@ -90,10 +90,4 @@ public class GratingBlock extends Block implements Waterloggable {
     public FluidState getFluidState(BlockState blockState) {
         return blockState.get(WATERLOGGED) ? Fluids.WATER.getState(false) : super.getFluidState(blockState);
     }
-
-    @Override
-    public boolean activate(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, Hand hand_1, BlockHitResult blockHitResult_1) {
-        System.out.println(blockState_1.get(GRATING_STATE).asString());
-        return true;
-    }
 }
