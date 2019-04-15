@@ -37,4 +37,14 @@ public class OreGenerator {
             }
         }
     }
+    public static void registerMarsOres() {
+        for (Biome biome : Biome.BIOMES) {
+            if (biome == GalacticraftBiomes.MARS) {
+
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.byName(Constants.Blocks.MARS_STONE), GalacticraftBlocks.MARS_COPPER_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.byName(Constants.Blocks.MARS_STONE), GalacticraftBlocks.MARS_TIN_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.byName(Constants.Blocks.MARS_STONE), GalacticraftBlocks.DESH_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+            }
+        }
+    }
 }
