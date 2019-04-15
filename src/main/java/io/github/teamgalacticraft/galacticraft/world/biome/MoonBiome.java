@@ -32,6 +32,16 @@ public final class MoonBiome extends Biome {
     }
 
     @Override
+    public Precipitation getPrecipitation() {
+        return Precipitation.NONE;
+    }
+
+    @Override
+    public float getTemperature(BlockPos blockPos_1) {
+        return 0;
+    }
+
+    @Override
     public String getTranslationKey() {
         return "biome.galacticraft-rewoven.moon";
     }

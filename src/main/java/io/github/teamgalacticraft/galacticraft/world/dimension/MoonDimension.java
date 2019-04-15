@@ -30,7 +30,7 @@ public class MoonDimension extends Dimension implements LowGravityDimension {
 
     @Override
     public int getMoonPhase(long long_1) {
-        return 0;
+        return 2;
     }
 
     @Override
@@ -45,16 +45,7 @@ public class MoonDimension extends Dimension implements LowGravityDimension {
 
     @Override
     public Vec3d getFogColor(float v, float v1) {
-        int i = 8421536;
-        float f2 = MathHelper.cos(v * 3.141593F * 2.0F) * 2.0F + 0.5F;
-        f2 = MathHelper.clamp(f2, 0.0F, 1.0F);
-        float f3 = (float) (i >> 16 & 255) / 255.0F;
-        float f4 = (float) (i >> 8 & 255) / 255.0F;
-        float f5 = (float) (i & 255) / 255.0F;
-        f3 = f3 * (f2 * 0.94F + 0.06F);
-        f4 = f4 * (f2 * 0.94F + 0.06F);
-        f5 = f5 * (f2 * 0.91F + 0.09F);
-        return new Vec3d((double) f3, (double) f4, (double) f5);
+        return new Vec3d(0, 0, 0);
     }
 
     @Override
@@ -108,7 +99,7 @@ public class MoonDimension extends Dimension implements LowGravityDimension {
     @Environment(EnvType.CLIENT)
     @Override
     public float getCloudHeight() {
-        return -100.0F;
+        return -1000.0F;
     }
 
     public boolean canPlayersSleep() {
