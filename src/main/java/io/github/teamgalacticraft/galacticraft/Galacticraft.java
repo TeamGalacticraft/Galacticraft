@@ -12,6 +12,7 @@ import io.github.teamgalacticraft.galacticraft.misc.Capes;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.sounds.GalacticraftSounds;
 import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
+import io.github.teamgalacticraft.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
 import io.github.teamgalacticraft.galacticraft.world.gen.WorldGenerator;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
@@ -66,6 +67,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         GalacticraftFeatures.init();
         GalacticraftDecorators.init();
         GalacticraftBiomes.init();
+        GalacticraftBiomeSourceTypes.init();
         GalacticraftDimensions.init();
         GalacticraftSurfaceBuilders.init();
         WorldGenerator.register();

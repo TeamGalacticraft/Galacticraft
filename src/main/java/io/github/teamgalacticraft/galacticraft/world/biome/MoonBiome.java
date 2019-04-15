@@ -33,7 +33,7 @@ public final class MoonBiome extends Biome {
 
     @Override
     public String getTranslationKey() {
-        return "biome.galacticarft-rewoven.moon";
+        return "biome.galacticraft-rewoven.moon";
     }
 
     @Override
