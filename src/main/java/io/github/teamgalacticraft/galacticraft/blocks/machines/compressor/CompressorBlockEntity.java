@@ -108,19 +108,16 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
         if (shapelessRecipe.isPresent()) {
             return shapelessRecipe.get().craft(inv);
         }
-
         return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
     }
 
     private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
         Optional<ShapelessCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-
         return firstMatch;
     }
 
     private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
         Optional<ShapedCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
-
         return firstMatch;
     }
 

@@ -79,13 +79,7 @@ public class CompressorScreen extends ContainerScreen {
 
         if (status != CompressorStatus.INACTIVE) {
             fuelUsageScale = getFuelProgress();
-            this.blit(
-                    left + (81),
-                    top + 27 + 12 - fuelUsageScale,
-                    203,
-                    39 - fuelUsageScale,
-                    14,
-                    fuelUsageScale + 1);
+            this.blit(left + (81), top + 27 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
     }
 

@@ -107,6 +107,7 @@ public class Constants {
         public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
         public static final String CAVERNOUS_VINE_BLOCK = "cavernous_vine_block";
         public static final String POISONOUS_CAVERNOUS_VINE_BLOCK = "poisonous_cavernous_vine_block";
+        public static final String MOON_BERRY_BUSH_BLOCK = "moon_berry_bush_block";
         public static final String WEB_TORCH = "web_torch";
         public static final String FALLEN_METEOR = "fallen_meteor_block";
         public static final String SLIMELING_EGG_BLOCK = "slimeling_egg_block";
@@ -251,6 +252,7 @@ public class Constants {
         public static final String ATMOSPHERIC_VALVE = "atmospheric_valve";
         public static final String LIQUID_CANISTER = "liquid_canister";
         //FOOD
+        public static final String MOON_BERRIES = "moon_berries";
         public static final String CHEESE_CURD = "cheese_curd";
         public static final String CHEESE_SLICE = "cheese_slice";
         public static final String BURGER_BUN = "burger_bun";

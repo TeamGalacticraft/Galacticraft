@@ -1,5 +1,5 @@
 {
-  "parent":"galacticraft-rewoven:block/grating_block",
+  "parent":"galacticraft-rewoven:block/grating_block_upper",
   "display": {
     "thirdperson_righthand": {
       "rotation": [ 75, 45, 0 ],
@@ -28,12 +28,12 @@
     },
     "firstperson_righthand": {
       "rotation": [ 15, 45, 0 ],
-      "translation": [ 0, 0, -2 ],
+      "translation": [ 0, 0, -3 ],
       "scale": [ 0.40, 0.40, 0.40 ]
     },
     "firstperson_lefthand": {
       "rotation": [ 15, 225, 0 ],
-      "translation": [ 0, 0, -2 ],
+      "translation": [ 0, 0, -3 ],
       "scale": [ 0.40, 0.40, 0.40 ]
     }
   }

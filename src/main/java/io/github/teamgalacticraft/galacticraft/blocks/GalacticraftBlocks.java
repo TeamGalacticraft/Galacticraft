@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.blocks;
 
-import com.mojang.datafixers.kinds.Const;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.api.blocks.GalacticraftStairsBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.decoration.CheeseBlock;
@@ -80,7 +79,7 @@ public class GalacticraftBlocks {
     public static final Block TIN_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block TIN_DECORATION_BLOCK_1 = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build());
     public static final Block DARK_DECORATION_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build());
-    public static final Block GRATING_BLOCK = new GratingBlock(FabricBlockSettings.of(Material.METAL).build());
+    public static final Block GRATING_BLOCK = new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).build().strength(2.5f, 6.0f));
     public static final Block ALUMINUM_WIRE_BLOCK = new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL).build());
     public static final Block OXYGEN_PIPE_BLOCK = new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).build());
     public static final Block LIGHTING_PANEL_BLOCK_SQUARE = new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build());
@@ -143,6 +142,7 @@ public class GalacticraftBlocks {
     public static final Block GLOWSTONE_WALL_TORCH_BLOCK = new GlowstoneWallTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).dropsLike(GLOWSTONE_TORCH_BLOCK).build());
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).build());
     public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).build());
+    public static final Block MOON_BERRY_BUSH_BLOCK = new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).build());
 
     // Machines
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).build());
@@ -244,6 +244,7 @@ public class GalacticraftBlocks {
     public static final BlockItem GLOWSTONE_TORCH_BLOCK_ITEM = new WallStandingBlockItem(GLOWSTONE_TORCH_BLOCK, GLOWSTONE_WALL_TORCH_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem POISONOUS_CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(POISONOUS_CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
+    public static final BlockItem MOON_BERRY_BUSH_BLOCK_ITEM = new BlockItem(MOON_BERRY_BUSH_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
 
     public static final BlockItem CRUDE_OIL_BLOCK_ITEM = new BlockItem(CRUDE_OIL_BLOCK, new Item.Settings());
 
@@ -344,6 +345,7 @@ public class GalacticraftBlocks {
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_WALL_TORCH), GLOWSTONE_WALL_TORCH_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CAVERNOUS_VINE_BLOCK), CAVERNOUS_VINE_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.POISONOUS_CAVERNOUS_VINE_BLOCK), POISONOUS_CAVERNOUS_VINE_BLOCK);
+        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_BERRY_BUSH_BLOCK), MOON_BERRY_BUSH_BLOCK);
 
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.CRUDE_OIL_BLOCK), CRUDE_OIL_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.FUEL_BLOCK), FUEL_BLOCK);

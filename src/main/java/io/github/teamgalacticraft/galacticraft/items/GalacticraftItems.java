@@ -1,7 +1,9 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
+import com.mojang.datafixers.kinds.Const;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
@@ -67,6 +69,7 @@ public class GalacticraftItems {
 
 
     //FOOD
+    public static final Item MOON_BERRIES = new Item(new Item.Settings().food(GCFoodSettings.MOON_BERRIES).itemGroup(ITEMS_GROUP));
     public static final Item CHEESE_CURD = new Item(new Item.Settings().food(GCFoodSettings.CHEESE_CURD).itemGroup(ITEMS_GROUP));
     public static final Item CHEESE_SLICE = new Item(new Item.Settings().food(GCFoodSettings.CHEESE_SLICE).itemGroup(ITEMS_GROUP));
     public static final Item BURGER_BUN = new Item(new Item.Settings().food(GCFoodSettings.BURGER_BUN).itemGroup(ITEMS_GROUP));
@@ -201,6 +204,7 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ATMOSPHERIC_VALVE), ATMOSPHERIC_VALVE);
 
         //FOOD
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_BERRIES), MOON_BERRIES);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_CURD), CHEESE_CURD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CHEESE_SLICE), CHEESE_SLICE);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BURGER_BUN), BURGER_BUN);
