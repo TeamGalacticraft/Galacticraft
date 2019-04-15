@@ -5,8 +5,8 @@
     "down": "galacticraft-rewoven:block/machine",
     "north": "galacticraft-rewoven:block/oxygen_collector_block",
     "south": "galacticraft-rewoven:block/machine_side",
-    "east": "galacticraft-rewoven:block/machine_oxygen_output",
-    "west": "galacticraft-rewoven:block/machine_power_input",
+    "east": "galacticraft-rewoven:block/machine_power_input",
+    "west": "galacticraft-rewoven:block/machine_oxygen_output",
     "particle": "galacticraft-rewoven:block/machine"
   }
 }
