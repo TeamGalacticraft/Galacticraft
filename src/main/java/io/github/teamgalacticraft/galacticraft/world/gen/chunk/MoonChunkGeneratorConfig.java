@@ -1,5 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.world.gen.chunk;
 
+import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 
 /**
@@ -8,6 +10,8 @@ import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
 
     MoonChunkGeneratorConfig() {
+        this.setDefaultBlock(GalacticraftBlocks.MOON_ROCK_BLOCK.getDefaultState());
+        this.setDefaultFluid(Blocks.AIR.getDefaultState());
     }
 
     public int getBiomeSize() {

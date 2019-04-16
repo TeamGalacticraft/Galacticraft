@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.world.gen.chunk;
 
+import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sortme.SpawnHelper;
@@ -25,11 +26,12 @@ import java.util.List;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGeneratorConfig> {
-    private static final float[] BIOME_WEIGHT_TABLE = SystemUtil.consume(new float[25], (floats_1) -> {
-        for (int int_1 = -2; int_1 <= 2; ++int_1) {
-            for (int int_2 = -2; int_2 <= 2; ++int_2) {
-                float float_1 = 10.0F / MathHelper.sqrt((float) (int_1 * int_1 + int_2 * int_2) + 0.2F);
-                floats_1[int_1 + 2 + (int_2 + 2) * 5] = float_1;
+
+    private static final float[] BIOME_WEIGHT_TABLE = SystemUtil.consume(new float[25], (floats) -> {
+        for (int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
+                float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
+                floats[i + 2 + (j + 2) * 5] = f;
             }
         }
 
@@ -39,21 +41,21 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     private final PhantomSpawner phantomSpawner = new PhantomSpawner();
     private final PillagerSpawner pillagerSpawner = new PillagerSpawner();
 
-    public MoonChunkGenerator(IWorld iWorld_1, BiomeSource biomeSource_1, MoonChunkGeneratorConfig overworldChunkGeneratorConfig_1) {
-        super(iWorld_1, biomeSource_1, 4, 8, 256, overworldChunkGeneratorConfig_1, true);
+    public MoonChunkGenerator(IWorld iWorld, BiomeSource biomeSource, MoonChunkGeneratorConfig chunkGenConfig) {
+        super(iWorld, biomeSource, 4, 8, 256, chunkGenConfig, true);
         this.random.consume(2620);
         this.noiseSampler = new OctavePerlinNoiseSampler(this.random, 16);
-        this.amplified = iWorld_1.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
+        this.amplified = iWorld.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
     @Override
-    public void populateEntities(ChunkRegion chunkRegion_1) {
-        int int_1 = chunkRegion_1.getCenterChunkX();
-        int int_2 = chunkRegion_1.getCenterChunkZ();
-        Biome biome_1 = chunkRegion_1.getChunk(int_1, int_2).getBiomeArray()[0];
-        ChunkRandom chunkRandom_1 = new ChunkRandom();
-        chunkRandom_1.setSeed(chunkRegion_1.getSeed(), int_1 << 4, int_2 << 4);
-        SpawnHelper.populateEntities(chunkRegion_1, biome_1, int_1, int_2, chunkRandom_1);
+    public void populateEntities(ChunkRegion chunkRegion) {
+        int chunkX = chunkRegion.getCenterChunkX();
+        int chunkZ = chunkRegion.getCenterChunkZ();
+        Biome biome = chunkRegion.getChunk(chunkX, chunkZ).getBiomeArray()[0];
+        ChunkRandom chunkRandom = new ChunkRandom();
+        chunkRandom.setSeed(chunkRegion.getSeed(), chunkX << 4, chunkZ << 4);
+        SpawnHelper.populateEntities(chunkRegion, biome, chunkX, chunkZ, chunkRandom);
     }
 
     @Override
@@ -139,9 +141,9 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return super.getEntitySpawnList(entityCategory_1, blockPos_1);
     }
 
-    public void spawnEntities(ServerWorld world_1, boolean boolean_1, boolean boolean_2) {
-        this.phantomSpawner.spawn(world_1, boolean_1, boolean_2);
-        this.pillagerSpawner.spawn(world_1, boolean_1, boolean_2);
+    public void spawnEntities(ServerWorld world, boolean boolean_1, boolean boolean_2) {
+        this.phantomSpawner.spawn(world, boolean_1, boolean_2);
+        this.pillagerSpawner.spawn(world, boolean_1, boolean_2);
     }
 
     public int getSpawnHeight() {
@@ -149,6 +151,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public int getSeaLevel() {
-        return 63;
+        return super.getSeaLevel();
     }
 }

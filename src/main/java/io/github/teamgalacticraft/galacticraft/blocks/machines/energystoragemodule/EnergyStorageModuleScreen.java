@@ -23,10 +23,16 @@ public class EnergyStorageModuleScreen extends ContainerScreen {
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ENERGY_STORAGE_MODULE_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
-    private static final int ENERGY_X = 175;
-    private static final int ENERGY_Y = 0;
-    private static final int ENERGY_WIDTH = 72;
-    private static final int ENERGY_HEIGHT = 3;
+
+    private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
+    private static final int ENERGY_Y = Constants.TextureCoordinates.ENERGY_LIGHT_Y;
+    private static final int ENERGY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
+    private static final int ENERGY_DIMMED_X = Constants.TextureCoordinates.ENERGY_DARK_X;
+    private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
+    private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
+    private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
+
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
 
@@ -54,8 +60,8 @@ public class EnergyStorageModuleScreen extends ContainerScreen {
         int leftPos = this.left;
         int topPos = this.top;
 
-        energyDisplayX = leftPos + (containerWidth / 2) - 2;
-        energyDisplayY = topPos + 52;
+        energyDisplayX = leftPos + 58;
+        energyDisplayY = topPos + 24;
 
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
@@ -80,9 +86,9 @@ public class EnergyStorageModuleScreen extends ContainerScreen {
         float maxEnergy = (float) ((EnergyStorageModuleBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
-        //this.drawTexturedReact(...)
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        this.blit((energyDisplayY - (int) (ENERGY_WIDTH * energyScale)) + ENERGY_WIDTH, energyDisplayY, ENERGY_X, ENERGY_Y, (int) (ENERGY_WIDTH * energyScale), (ENERGY_HEIGHT));
+        this.minecraft.getTextureManager().bindTexture(OVERLAY);
+        this.blit(energyDisplayX, energyDisplayY, ENERGY_DIMMED_X, ENERGY_DIMMED_Y, ENERGY_DIMMED_WIDTH, ENERGY_DIMMED_HEIGHT);
+        this.blit(energyDisplayX, (energyDisplayY - (int) (ENERGY_HEIGHT * energyScale)) + ENERGY_HEIGHT, ENERGY_X, ENERGY_Y, ENERGY_WIDTH, (int) (ENERGY_HEIGHT * energyScale));
     }
 
     @Override
@@ -95,7 +101,7 @@ public class EnergyStorageModuleScreen extends ContainerScreen {
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
-        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 21 && mouseY <= this.top + (22 + 21)) {
+        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + 24) {
             this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
         }
     }
