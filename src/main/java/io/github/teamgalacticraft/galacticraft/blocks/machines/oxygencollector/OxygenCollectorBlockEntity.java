@@ -25,7 +25,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
-        this.getEnergy().listen(this::markDirty);
     }
 
     @Override

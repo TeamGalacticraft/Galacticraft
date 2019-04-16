@@ -32,7 +32,7 @@ public class BasicSolarPanelContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a solar panel!");
         }
         this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(solarPanel.getItems()) {
+        this.inventory = new PartialInventoryFixedWrapper(solarPanel.getInventory()) {
             @Override
             public void markDirty() {
                 solarPanel.markDirty();
@@ -73,11 +73,11 @@ public class BasicSolarPanelContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.solarPanel.getItems().getSlotCount()) {
-                if (!this.insertItem(itemStack1, this.solarPanel.getItems().getSlotCount(), this.slotList.size(), true)) {
+            if (slotId < this.solarPanel.getInventory().getSlotCount()) {
+                if (!this.insertItem(itemStack1, this.solarPanel.getInventory().getSlotCount(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.solarPanel.getItems().getSlotCount(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.solarPanel.getInventory().getSlotCount(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getAmount() == 0) {

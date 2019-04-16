@@ -85,7 +85,7 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
         if (!(be instanceof CoalGeneratorBlockEntity)) return;
         CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) be;
         to.offer(generator.getEnergy());
-        generator.getItems().offerSelfAsAttribute(to, null, null);
+        generator.getInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override
@@ -107,8 +107,8 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
             if (blockEntity instanceof CoalGeneratorBlockEntity) {
                 CoalGeneratorBlockEntity coalGeneratorBlockEntity = (CoalGeneratorBlockEntity) blockEntity;
 
-                for (int i = 0; i < coalGeneratorBlockEntity.inventory.getSlotCount(); i++) {
-                    ItemStack itemStack = coalGeneratorBlockEntity.inventory.getInvStack(i);
+                for (int i = 0; i < coalGeneratorBlockEntity.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = coalGeneratorBlockEntity.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

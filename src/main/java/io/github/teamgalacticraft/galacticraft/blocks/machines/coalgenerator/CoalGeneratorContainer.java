@@ -40,7 +40,7 @@ public class CoalGeneratorContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.generator.inventory.getSlotCount()) {
+            if (slotId < this.generator.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
@@ -69,7 +69,7 @@ public class CoalGeneratorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a coal generator!");
         }
         this.generator = (CoalGeneratorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(generator.inventory) {
+        this.inventory = new PartialInventoryFixedWrapper(generator.getInventory()) {
             @Override
             public void markDirty() {
                 generator.markDirty();

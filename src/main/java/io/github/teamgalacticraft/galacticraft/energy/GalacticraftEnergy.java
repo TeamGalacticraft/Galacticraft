@@ -35,7 +35,7 @@ public class GalacticraftEnergy {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        return battery.getTag().containsKey("Energy") ? battery.getTag().getInt("Energy") : Integer.MAX_VALUE;
+        return battery.hasTag() && battery.getTag().containsKey("Energy") ? battery.getTag().getInt("Energy") : Integer.MAX_VALUE;
     }
 
     public static int getMaxBatteryEnergy(ItemStack battery) {
