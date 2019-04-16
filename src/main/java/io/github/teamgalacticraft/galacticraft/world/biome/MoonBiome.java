@@ -6,8 +6,15 @@ import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.NetherBiome;
+import net.minecraft.world.biome.PlainsBiome;
+import net.minecraft.world.biome.TaigaBiome;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+
+import java.util.Arrays;
+import java.util.Set;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -27,8 +34,10 @@ public final class MoonBiome extends Biome {
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
+        for (GenerationStep.Feature feature : this.features.keySet()) {
+            this.features.get(feature).clear();
+        }
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
-        this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 1, 1, 1));
     }
 
     @Override
@@ -37,7 +46,7 @@ public final class MoonBiome extends Biome {
     }
 
     @Override
-    public float getTemperature(BlockPos blockPos_1) {
+    public float getTemperature(BlockPos blockPos) {
         return 0;
     }
 
@@ -47,7 +56,7 @@ public final class MoonBiome extends Biome {
     }
 
     @Override
-    public int getSkyColor(float float_1) {
+    public int getSkyColor(float f) {
         return 0;
     }
 

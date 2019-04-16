@@ -17,6 +17,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
@@ -79,10 +81,13 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
             return;
         }
 
-        if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+        if (status == CompressorStatus.PROCESSING && isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
             this.progress++;
-            System.out.println("Progress: " + this.progress);
+
+            if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
+                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.3F, this.world.random.nextFloat() * 0.1F + 0.9F);
+            }
 
             if (this.progress == maxProgress) {
                 this.progress = 0;

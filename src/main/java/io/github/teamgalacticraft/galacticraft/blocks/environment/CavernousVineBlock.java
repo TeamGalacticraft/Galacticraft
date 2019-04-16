@@ -129,7 +129,6 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         return blockState.get(WATERLOGGED) ? Fluids.WATER.getState(false) : super.getFluidState(blockState);
     }
 
-
     @Override
     public boolean canPlaceAt(BlockState state, ViewableWorld viewableWorld, BlockPos pos) {
         BlockPos pos2 = pos;
@@ -153,40 +152,36 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     public void onScheduledTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!world.isClient)
-        {
-            for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--) {
+        for (int y2 = pos.getY() - 1; y2 >= pos.getY() - 2; y2--) {
 
-                BlockPos pos1 = new BlockPos(pos.getX(), y2, pos.getZ());
-                BlockState blockState = world.getBlockState(pos1);
+            BlockPos pos1 = new BlockPos(pos.getX(), y2, pos.getZ());
+            BlockState blockState = world.getBlockState(pos1);
 
-                if (!blockState.isAir()) {
-                    return;
-                }
+            if (!blockState.isAir()) {
+                return;
             }
-            world.setBlockState(pos.down(), this.getStateFromMeta(this.getVineLight(world, pos) % 3), 2);
-            world.updateNeighbors(pos, state.getBlock());
         }
+        world.setBlockState(pos.down(), this.getStateFromMeta(getVineLength(world, pos)), 2);
+        world.updateNeighbors(pos, state.getBlock());
     }
 
     private BlockState getStateFromMeta(int meta) {
-        return this.getDefaultState().with(VINES, VineTypes.byMetadata(meta));
+        return GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK.getDefaultState().with(VINES, VineTypes.byMetadata(meta));
     }
 
-    public int getVineLight(World world, BlockPos pos) {
-
+    private int getVineLength(World world, BlockPos pos) {
         int vineCount = 0;
         int y2 = pos.getY();
 
-        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() instanceof CavernousVineBlock) {
-            vineCount += 4;
-            y2--;
+        while (world.getBlockState(new BlockPos(pos.getX(), y2, pos.getZ())).getBlock() == this) {
+            vineCount++;
+            y2++;
         }
-        return Math.max(19 - vineCount, 0);
+        return vineCount;
     }
 
     public int getTickRate(ViewableWorld viewableWorld) {
-        return 1;
+        return 50;
     }
 
     @Override
@@ -195,20 +190,15 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         BlockState stateAbove = world.getBlockState(abovePos);
 
         if (stateAbove.getBlock() == GalacticraftBlocks.CAVERNOUS_VINE_BLOCK || stateAbove.getBlock() == GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK) {
-            System.out.println("Blockstate is cavernous vine");
-            System.out.println(stateAbove.toString());
             switch(stateAbove.get(VINES).getMeta()) {
                 case 0:
                     world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
-                    System.out.println("Case is 0");
                     break;
                 case 1:
                     world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_2));
-                    System.out.println("Case is 1");
                     break;
                 default:
                     world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
-                    System.out.println("Case is 2");
                     break;
             }
         }

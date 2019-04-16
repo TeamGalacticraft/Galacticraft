@@ -28,7 +28,6 @@ public final class MoonPlainsBiome extends Biome {
                 .parent(null));
         this.flowerFeatures.clear();
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
-        this.addSpawn(EntityCategory.MONSTER, new SpawnEntry(EntityType.ZOMBIE, 1, 1, 1));
     }
 
     @Override

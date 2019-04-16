@@ -24,8 +24,8 @@ public class CompressorScreen extends ContainerScreen {
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
 
-    private static final int PROGRESS_X = 203;
-    private static final int PROGRESS_Y = 1;
+    private static final int PROGRESS_X = 204;
+    private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
@@ -48,14 +48,14 @@ public class CompressorScreen extends ContainerScreen {
         this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-        progressDisplayX = left + 90;
-        progressDisplayY = top + 82;
+        progressDisplayX = left + 77;
+        progressDisplayY = top + 28;
 
         //this.drawTexturedRect(...)
         this.blit(this.left, this.top, 0, 0, this.containerWidth, this.containerHeight);
 
-        this.drawCraftProgressBar();
         this.drawFuelProgressBar();
+        this.drawCraftProgressBar();
         this.drawConfigTabs();
     }
 
@@ -68,7 +68,7 @@ public class CompressorScreen extends ContainerScreen {
 
     private void drawConfigTabs() {
         this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top - 7, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawFuelProgressBar() {
@@ -79,7 +79,7 @@ public class CompressorScreen extends ContainerScreen {
 
         if (status != CompressorStatus.INACTIVE) {
             fuelUsageScale = getFuelProgress();
-            this.blit(left + (81), top + 27 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
+            this.blit(left + 80, top + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
     }
 

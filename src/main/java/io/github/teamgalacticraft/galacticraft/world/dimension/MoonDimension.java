@@ -55,8 +55,6 @@ public class MoonDimension extends Dimension implements LowGravityDimension {
 
     public ChunkGenerator<?> createChunkGenerator() {
         MoonChunkGeneratorConfig cavesChunkGeneratorConfig_1 = GalacticraftChunkGeneratorTypes.MOON.createSettings();
-        cavesChunkGeneratorConfig_1.setDefaultBlock(GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState());
-        cavesChunkGeneratorConfig_1.setDefaultFluid(Blocks.AIR.getDefaultState());
         return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GalacticraftBiomes.MOON)), cavesChunkGeneratorConfig_1);
     }
 
