@@ -1,7 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "layer0": "galacticraft-rewoven:block/aluminum_ore_block",
-    "layer1": "galacticraft-rewoven:block/aluminum_ore_block"
+    "all": "galacticraft-rewoven:block/aluminum_ore_block"
   }
 }
