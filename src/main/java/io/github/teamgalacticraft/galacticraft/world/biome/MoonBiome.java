@@ -10,11 +10,14 @@ import net.minecraft.world.biome.NetherBiome;
 import net.minecraft.world.biome.PlainsBiome;
 import net.minecraft.world.biome.TaigaBiome;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -34,9 +37,7 @@ public final class MoonBiome extends Biome {
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
-        for (GenerationStep.Feature feature : this.features.keySet()) {
-            this.features.get(feature).clear();
-        }
+        this.features.forEach(this.features::remove);
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
     }
 
