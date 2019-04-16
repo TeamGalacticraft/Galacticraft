@@ -6,6 +6,7 @@ import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.teamgalacticraft.galacticraft.items.EnergyHolderItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -33,12 +34,15 @@ public class OxygenCollectorBlockEntity extends BlockEntity implements Tickable,
         return this.energy;
     }
 
-    private void attemptChargeFromStack(ItemStack itemStack) {
-        if (GalacticraftEnergy.isEnergyItem(itemStack)) {
-            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(itemStack);
+    private void attemptChargeFromStack(ItemStack battery) {
+        if (GalacticraftEnergy.isEnergyItem(battery)) {
+            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(battery);
+            EnergyHolderItem item = (EnergyHolderItem) battery.getItem();
+
             if (itemEnergy > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
-                GalacticraftEnergy.decrementEnergy(itemStack, 1);
+                int energyToRemove = 5;
+                int amountFailedToInsert = item.extract(battery, energyToRemove);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, ActionType.PERFORM);
             }
         }
     }
