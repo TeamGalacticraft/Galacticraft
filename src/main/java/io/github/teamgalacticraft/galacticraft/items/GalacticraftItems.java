@@ -1,9 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
-import com.mojang.datafixers.kinds.Const;
 import io.github.teamgalacticraft.galacticraft.Constants;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
@@ -121,8 +119,8 @@ public class GalacticraftItems {
 
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().itemGroup(ITEMS_GROUP));
 
-    public static final Item BATTERY = new BatteryItem(new Item.Settings().durability(10000));
-
+    public static final Item BATTERY = new BatteryItem(new Item.Settings().itemGroup(ITEMS_GROUP).durability(BatteryItem.MAX_ENERGY));
+    public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Settings().itemGroup(ITEMS_GROUP).durability(BatteryItem.MAX_ENERGY));
 
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -257,6 +255,7 @@ public class GalacticraftItems {
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), STANDARD_WRENCH);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), BATTERY);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.INFINITE_BATTERY), INFINITE_BATTERY);
 
         //GC INVENTORY
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PARACHUTE), PARACHUTE);

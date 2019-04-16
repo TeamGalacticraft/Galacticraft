@@ -67,6 +67,7 @@
 
   "block.galacticraft-rewoven.coal_generator_block": "Coal Generator",
   "block.galacticraft-rewoven.compressor_block": "Compressor",
+  "block.galacticraft-rewoven.electric_compressor_block": "Electric Compressor",
   "block.galacticraft-rewoven.circuit_fabricator_block": "Circuit Fabricator",
   "block.galacticraft-rewoven.basic_solar_panel_block": "Basic Solar Panel",
   "block.galacticraft-rewoven.energy_storage_module_block": "Energy Storage Module",
@@ -194,6 +195,7 @@
   "item.galacticraft-rewoven.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-rewoven.large_oxygen_tank": "Large Oxygen Tank",
   "item.galacticraft-rewoven.battery": "Battery",
+  "item.galacticraft-rewoven.infinite_battery": "Infinite Battery",
 
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
 

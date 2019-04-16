@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.energy;
 import io.github.cottonmc.energy.CottonEnergy;
 import io.github.cottonmc.energy.api.EnergyType;
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.items.EnergyHolderItem;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -26,12 +27,7 @@ public class GalacticraftEnergy {
     }
 
     public static boolean isEnergyItem(ItemStack itemStack) {
-        if (!itemStack.hasTag()) {
-            return false;
-        }
-
-        CompoundTag tag = itemStack.getTag();
-        return tag.containsKey("Energy") && tag.containsKey("MaxEnergy");
+        return itemStack.getItem() instanceof EnergyHolderItem;
     }
 
     public static int getBatteryEnergy(ItemStack battery) {

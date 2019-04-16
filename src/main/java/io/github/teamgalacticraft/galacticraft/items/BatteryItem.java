@@ -17,10 +17,8 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class BatteryItem extends Item {
-    public static final int maxEnergy = 10000;
-    public static ItemStack battery_full;
-    public static ItemStack battery_depleted;
+public class BatteryItem extends Item implements EnergyHolderItem{
+    public static final int MAX_ENERGY = 10000;
 
     public BatteryItem(Settings settings) {
         super(settings);
@@ -44,20 +42,40 @@ public class BatteryItem extends Item {
 
     @Override
     public void appendItemsForGroup(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
-        if (group != GalacticraftItems.ITEMS_GROUP) {
-            return;
+        if (this.isInItemGroup(group)) {
+            ItemStack fullBattery = new ItemStack(GalacticraftItems.BATTERY);
+            CompoundTag fullTag = new CompoundTag();
+            fullTag.putInt("Energy", BatteryItem.MAX_ENERGY);
+            fullTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
+            fullBattery.setTag(fullTag);
+            fullBattery.setDamage(0);
+
+            ItemStack depletedBattery = new ItemStack(GalacticraftItems.BATTERY);
+            CompoundTag depletedTag = new CompoundTag();
+            depletedTag.putInt("Energy", 0);
+            depletedTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
+            depletedBattery.setTag(depletedTag);
+            depletedBattery.setDamage(BatteryItem.MAX_ENERGY);
+
+            groupStacks.add(fullBattery);
+            groupStacks.add(depletedBattery);
+
+            System.out.println("Append items for group.");
         }
-        groupStacks.add(battery_full);
-        groupStacks.add(battery_depleted);
     }
 
     @Override
     public void onCrafted(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
         CompoundTag batteryTag = battery.getOrCreateTag();
         batteryTag.putInt("Energy", 0);
-        batteryTag.putInt("MaxEnergy", BatteryItem.maxEnergy);
-        battery.setDamage(BatteryItem.maxEnergy);
+        batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
+        battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
+    }
+
+    @Override
+    public ItemStack getDefaultStack() {
+        return super.getDefaultStack();
     }
 
     @Override

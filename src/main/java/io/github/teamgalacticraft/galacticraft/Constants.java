@@ -301,6 +301,7 @@ public class Constants {
 
         public static final String STANDARD_WRENCH = "standard_wrench";
         public static final String BATTERY = "battery";
+        public static final String INFINITE_BATTERY = "infinite_battery";
 
         //GC INVENTORY
         public static final String PARACHUTE = "parachute";
@@ -364,6 +365,7 @@ public class Constants {
         public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
+        public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
         public static final String OXYGEN_COLLECTOR_SCREEN = "gui/oxygen_collector_screen";
 
@@ -396,6 +398,7 @@ public class Constants {
         public static final String BASIC_SOLAR_PANEL_CONTAINER = "basic_solar_panel_container";
         public static final String CIRCUIT_FABRICATOR_CONTAINER = "circuit_fabricator_container";
         public static final String COMPRESSOR_CONTAINER = "compressor_container";
+        public static final String ELECTRIC_COMPRESSOR_CONTAINER = "electric_compressor_container";
         public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
         public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
         public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
