@@ -4,14 +4,16 @@ import io.github.teamgalacticraft.galacticraft.api.blocks.AbstractHorizontalDire
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateFactory;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextComponent;
 import net.minecraft.text.TextFormat;
@@ -38,12 +40,16 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<TextComponent> list_1, TooltipContext tooltipContext_1) {
+    public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<TextComponent> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.compressor").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list_1.add(new TranslatableTextComponent(getTooltipKey()).setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
             list_1.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
         }
+    }
+
+    protected String getTooltipKey() {
+        return "tooltip.galacticraft-rewoven.compressor";
     }
 
     @Override
@@ -57,15 +63,17 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
     }
 
     @Override
-    public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder);
+    public final boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+        if (world.isClient) {
+            return true;
+        }
+
+        openContainer(playerEntity, blockPos);
+        return true;
     }
 
-    @Override
-    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) return true;
+    protected void openContainer(PlayerEntity playerEntity, BlockPos blockPos) {
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COMPRESSOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
-        return true;
     }
 
     @Override

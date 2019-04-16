@@ -82,7 +82,7 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
             }
         }
 
-        return int_1 == this.input.size() && recipeFinder_1.findRecipe(this, (IntList) null);
+        return int_1 == this.input.size() && recipeFinder_1.findRecipe(this, null);
     }
 
     @Override

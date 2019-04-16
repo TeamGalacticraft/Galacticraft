@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.compressor;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorStatus;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,30 +15,45 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CompressorScreen extends ContainerScreen {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN));
+    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
+
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int CONFIG_TAB_X = 0;
+
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-
     private static final int PROGRESS_X = 204;
+
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
+    protected int progressDisplayX;
 
-    private int progressDisplayX;
-    private int progressDisplayY;
+    protected int progressDisplayY;
+    protected BlockPos blockPos;
 
-    BlockPos blockPos;
-    private World world;
+    protected World world;
 
     public CompressorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new CompressorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.compressor.name"));
+        this(new CompressorContainer(syncId, blockPos, playerEntity), blockPos, playerEntity, new TranslatableTextComponent("ui.galacticraft-rewoven.compressor.name"));
+        this.containerHeight = 192;
+    }
+
+    public CompressorScreen(CompressorContainer electricCompressorContainer, BlockPos blockPos, PlayerEntity playerEntity, TranslatableTextComponent textComponents) {
+        super(electricCompressorContainer, playerEntity.inventory, textComponents);
         this.blockPos = blockPos;
         this.world = playerEntity.world;
-        this.containerHeight = 192;
+    }
+
+    protected String getBackgroundLocation() {
+        return Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN);
+    }
+
+    protected void updateProgressDisplay() {
+        progressDisplayX = left + 77;
+        progressDisplayY = top + 28;
     }
 
     @Override
@@ -48,8 +62,7 @@ public class CompressorScreen extends ContainerScreen {
         this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-        progressDisplayX = left + 77;
-        progressDisplayY = top + 28;
+        updateProgressDisplay();
 
         //this.drawTexturedRect(...)
         this.blit(this.left, this.top, 0, 0, this.containerWidth, this.containerHeight);
@@ -62,8 +75,12 @@ public class CompressorScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText(), (this.width / 2), this.top + 6, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.top + 6, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
+    }
+
+    protected String getContainerDisplayName() {
+        return new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText();
     }
 
     private void drawConfigTabs() {
@@ -71,7 +88,7 @@ public class CompressorScreen extends ContainerScreen {
         this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
-    private void drawFuelProgressBar() {
+    protected void drawFuelProgressBar() {
         //this.drawTexturedReact(...)
         this.blit(left, top, 0, 0, this.containerWidth, this.containerHeight);
         int fuelUsageScale;
@@ -83,7 +100,7 @@ public class CompressorScreen extends ContainerScreen {
         }
     }
 
-    private void drawCraftProgressBar() {
+    protected void drawCraftProgressBar() {
         float progress = (float) ((CompressorBlockEntity) world.getBlockEntity(blockPos)).getProgress();
         float maxProgress = (float) ((CompressorBlockEntity) world.getBlockEntity(blockPos)).getMaxProgress();
         float progressScale = (progress / maxProgress);

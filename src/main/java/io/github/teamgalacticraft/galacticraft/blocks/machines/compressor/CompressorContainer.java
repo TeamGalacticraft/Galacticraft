@@ -1,9 +1,9 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.FurnaceOutputSlot;
@@ -19,11 +19,13 @@ import net.minecraft.util.math.BlockPos;
  */
 public class CompressorContainer extends Container {
     private ItemStack itemStack;
-    private Inventory inventory;
+    protected Inventory inventory;
 
     private BlockPos blockPos;
     private CompressorBlockEntity compressor;
     private PlayerEntity playerEntity;
+
+    protected int outputSlotId = 0;
 
     public CompressorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
         super(null, syncId);
@@ -59,13 +61,15 @@ public class CompressorContainer extends Container {
         }
 
         // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
+        if (!(blockEntity instanceof ElectricCompressorBlockEntity)) {
+            this.addSlot(new ItemSpecificSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
+        }
 
         // Output slot
-        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, CompressorBlockEntity.OUTPUT_SLOT, 138, 38));
+        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, CompressorBlockEntity.OUTPUT_SLOT, getOutputSlotPos()[0], getOutputSlotPos()[1]));
 
         // Player inventory slots
-        int playerInvYOffset = 110;
+        int playerInvYOffset = getPlayerInvYOffset();
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
@@ -77,6 +81,14 @@ public class CompressorContainer extends Container {
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
         }
 
+    }
+
+    protected int[] getOutputSlotPos() {
+        return new int[]{138, 38};
+    }
+
+    protected int getPlayerInvYOffset() {
+        return 110;
     }
 
     @Override

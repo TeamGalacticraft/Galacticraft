@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
 public abstract class MachineBlockEntity extends BlockEntity {
+    public static final int DEFAULT_MAX_ENERGY = 15000;
     private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
@@ -20,7 +21,7 @@ public abstract class MachineBlockEntity extends BlockEntity {
      * @return
      */
     protected int getMaxEnergy() {
-        return 15000;
+        return DEFAULT_MAX_ENERGY;
     }
 
     public SimpleEnergyAttribute getEnergy() {
