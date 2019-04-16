@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import io.github.teamgalacticraft.galacticraft.container.slot.ChargeSlot;
 import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.entity.BlockEntity;
@@ -53,7 +54,7 @@ public class CircuitFabricatorContainer extends Container {
             }
         };
         // Energy slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 79, GalacticraftItems.BATTERY));
+        this.addSlot(new ChargeSlot(this.inventory, 0, 8, 79));
         this.addSlot(new ItemSpecificSlot(this.inventory, 1, 8, 15, Items.DIAMOND));
         this.addSlot(new ItemSpecificSlot(this.inventory, 2, 8 + (18 * 3), 79, GalacticraftItems.RAW_SILICON));
         this.addSlot(new ItemSpecificSlot(this.inventory, 3, 8 + (18 * 3), 79 - 18, GalacticraftItems.RAW_SILICON));
@@ -95,14 +96,12 @@ public class CircuitFabricatorContainer extends Container {
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            }
-            else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getAmount() == 0) {
                 slot.setStack(ItemStack.EMPTY);
-            }
-            else {
+            } else {
                 slot.markDirty();
             }
         }
