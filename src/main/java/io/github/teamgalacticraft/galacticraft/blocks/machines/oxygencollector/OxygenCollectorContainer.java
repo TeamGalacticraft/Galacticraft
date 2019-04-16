@@ -48,10 +48,10 @@ public class OxygenCollectorContainer extends Container {
         // Oxy tank slot
 //        this.addSlot(new OxygenTankSlot(this.inventory, 0, 18 * 2 - 3, 18 * 1 + 6));
         // Oxy tank slot
-        this.addSlot(new ChargeSlot(this.inventory, 0, 18 * 2 - 3, 18 * 1 + 6));
+        this.addSlot(new ChargeSlot(this.inventory, 0, 20, 70));
 
         // Player inventory slots
-        int playerInvYOffset = 84;
+        int playerInvYOffset = 99;
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

@@ -13,6 +13,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -27,6 +28,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Random;
 
 public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntityProvider {
     private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
@@ -87,5 +89,41 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
     @Override
     public BlockEntity createBlockEntity(BlockView blockView) {
         return new OxygenCollectorBlockEntity();
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState blockState_1, World world, BlockPos pos, Random random_1) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (!(blockEntity instanceof OxygenCollectorBlockEntity)) {
+            return;
+        }
+
+        OxygenCollectorBlockEntity collector = (OxygenCollectorBlockEntity) blockEntity;
+        if (collector.lastCollectAmount > 0) {
+            for (int particleCount = 0; particleCount < 10; particleCount++) {
+                Random random = world.random;
+                double x2 = pos.getX() + random.nextFloat();
+                double y2 = pos.getY() + random.nextFloat();
+                double z2;
+                double mX = (random.nextFloat() - 0.5D) * 0.5D;
+                double mY = (random.nextFloat() - 0.5D) * 0.5D;
+                double mZ;
+                int dir = random.nextInt(2) * 2 - 1;
+
+                z2 = pos.getZ() + 0.5D + 0.25D * dir;
+                mZ = random.nextFloat() * 2.0F * dir;
+
+                for (int int_1 = 0; int_1 < 32; ++int_1) {
+                    world.addParticle(
+                            ParticleTypes.PORTAL,
+                            pos.getX() + 0.5D,
+                            (random.nextFloat() - 0.5D) * 0.5D + /*random.nextDouble() * 2.0D*/ 0.5D,
+                            pos.getZ() + 0.5D,
+                            random.nextGaussian(),
+                            0.0D,
+                            random.nextGaussian());
+                }
+            }
+        }
     }
 }
