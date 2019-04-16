@@ -4,47 +4,33 @@ import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
+import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.teamgalacticraft.galacticraft.items.EnergyHolderItem;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
-public class OxygenCollectorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
+public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable, BlockEntityClientSerializable {
     public CollectorStatus status = CollectorStatus.INACTIVE;
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(15000, GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(5000, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
-    SimpleFixedItemInv inventory = new SimpleFixedItemInv(1);
     public static int BATTERY_SLOT = 0;
     public int lastCollectAmount = 0;
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
-        this.energy.listen(this::markDirty);
+        this.getEnergy().listen(this::markDirty);
     }
 
-    public EnergyAttribute getEnergy() {
-        return this.energy;
-    }
-
-    private void attemptChargeFromStack(ItemStack battery) {
-        if (GalacticraftEnergy.isEnergyItem(battery)) {
-            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(battery);
-            EnergyHolderItem item = (EnergyHolderItem) battery.getItem();
-
-            if (itemEnergy > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
-                int energyToRemove = 5;
-                int amountFailedToInsert = item.extract(battery, energyToRemove);
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, ActionType.PERFORM);
-            }
-        }
+    @Override
+    protected int getInvSize() {
+        return 1;
     }
 
     private int collectOxygen(BlockPos center) {
@@ -73,9 +59,9 @@ public class OxygenCollectorBlockEntity extends BlockEntity implements Tickable,
 
     @Override
     public void tick() {
-        attemptChargeFromStack(inventory.getInvStack(BATTERY_SLOT));
+        attemptChargeFromStack(getInventory().getInvStack(BATTERY_SLOT));
         lastCollectAmount = collectOxygen(this.pos);
-        if (this.energy.getCurrentEnergy() <= 0) {
+        if (this.getEnergy().getCurrentEnergy() <= 0) {
             this.status = CollectorStatus.INACTIVE;
         }
         if (this.lastCollectAmount <= 0) {
@@ -85,7 +71,7 @@ public class OxygenCollectorBlockEntity extends BlockEntity implements Tickable,
         }
 
         if (status == CollectorStatus.COLLECTING && this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
-            this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
             this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, collectOxygen(this.pos), ActionType.PERFORM);
         }
     }
@@ -93,20 +79,14 @@ public class OxygenCollectorBlockEntity extends BlockEntity implements Tickable,
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-
-        tag.put("Inventory", inventory.toTag());
-        tag.putInt("Energy", energy.getCurrentEnergy());
         tag.putInt("Oxygen", oxygen.getCurrentEnergy());
 
         return tag;
     }
-
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
 
-        this.inventory.fromTag(tag.getCompound("Inventory"));
-        this.energy.setCurrentEnergy(tag.getInt("Energy"));
         this.oxygen.setCurrentEnergy(tag.getInt("Oxygen"));
     }
 

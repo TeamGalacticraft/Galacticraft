@@ -65,8 +65,8 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
             if (blockEntity instanceof OxygenCollectorBlockEntity) {
                 OxygenCollectorBlockEntity be = (OxygenCollectorBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.inventory.getSlotCount(); i++) {
-                    ItemStack itemStack = be.inventory.getInvStack(i);
+                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = be.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

@@ -85,7 +85,7 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
         if (!(be instanceof CircuitFabricatorBlockEntity)) return;
         CircuitFabricatorBlockEntity fabricator = (CircuitFabricatorBlockEntity) be;
         to.offer(fabricator.getEnergy());
-        fabricator.getItems().offerSelfAsAttribute(to, null, null);
+        fabricator.getInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override
@@ -107,8 +107,8 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
             if (blockEntity instanceof CircuitFabricatorBlockEntity) {
                 CircuitFabricatorBlockEntity circuitFabricatorBlockEntity = (CircuitFabricatorBlockEntity) blockEntity;
 
-                for (int i = 0; i < circuitFabricatorBlockEntity.inventory.getSlotCount(); i++) {
-                    ItemStack itemStack = circuitFabricatorBlockEntity.inventory.getInvStack(i);
+                for (int i = 0; i < circuitFabricatorBlockEntity.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = circuitFabricatorBlockEntity.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

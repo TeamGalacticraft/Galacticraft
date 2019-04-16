@@ -41,7 +41,7 @@ public class CircuitFabricatorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a circuit fabricator!");
         }
         this.fabricator = (CircuitFabricatorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(fabricator.inventory) {
+        this.inventory = new PartialInventoryFixedWrapper(fabricator.getInventory()) {
             @Override
             public void markDirty() {
                 fabricator.markDirty();
@@ -90,7 +90,7 @@ public class CircuitFabricatorContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.fabricator.inventory.getSlotCount()) {
+            if (slotId < this.fabricator.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
