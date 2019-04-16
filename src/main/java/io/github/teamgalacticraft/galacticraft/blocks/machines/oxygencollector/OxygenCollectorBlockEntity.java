@@ -77,6 +77,9 @@ public class OxygenCollectorBlockEntity extends BlockEntity implements Tickable,
         lastCollectAmount = collectOxygen(this.pos);
         if (this.energy.getCurrentEnergy() <= 0) {
             this.status = CollectorStatus.INACTIVE;
+        }
+        if (this.lastCollectAmount <= 0) {
+            this.status = CollectorStatus.NOT_ENOUGH_LEAVES;
         } else {
             this.status = CollectorStatus.COLLECTING;
         }

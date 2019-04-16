@@ -3,7 +3,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector;
 import net.minecraft.text.TextFormat;
 
 public enum CollectorStatus {
-    INACTIVE(0xFF0000), COLLECTING(TextFormat.GREEN.getColor());
+    INACTIVE(TextFormat.RED.getColor()), NOT_ENOUGH_LEAVES(TextFormat.RED.getColor()), COLLECTING(TextFormat.GREEN.getColor());
 
     private int textColor;
 

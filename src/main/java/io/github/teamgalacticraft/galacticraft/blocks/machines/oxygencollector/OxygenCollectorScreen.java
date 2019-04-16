@@ -87,7 +87,9 @@ public class OxygenCollectorScreen extends ContainerScreen {
         String statusText = new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status").getText();
         minecraft.textRenderer.draw(statusText, this.left + 60, this.top + 28, 0x000000);
 
-        String status = collector.status == CollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting" : "ui.galacticraft-rewoven.machinestatus.inactive";
+        String status = collector.status == CollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
+                : collector.status == CollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
+                : "ui.galacticraft-rewoven.machinestatus.inactive";
         minecraft.textRenderer.draw(new TranslatableTextComponent(status).getText(), this.left + 60 + minecraft.textRenderer.getStringWidth(statusText), this.top + 28, collector.status.getTextColor());
 
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("ui.galacticraft-rewoven.machine.collecting", collector.lastCollectAmount).getText(), (this.width / 2) + 10, this.top + 40, TextFormat.DARK_GRAY.getColor());
