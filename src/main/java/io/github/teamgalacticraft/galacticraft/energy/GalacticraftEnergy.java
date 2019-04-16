@@ -3,7 +3,7 @@ package io.github.teamgalacticraft.galacticraft.energy;
 import io.github.cottonmc.energy.CottonEnergy;
 import io.github.cottonmc.energy.api.EnergyType;
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.items.EnergyHolderItem;
+import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -35,7 +35,7 @@ public class GalacticraftEnergy {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        return battery.getTag().getInt("Energy");
+        return battery.getTag().containsKey("Energy") ? battery.getTag().getInt("Energy") : Integer.MAX_VALUE;
     }
 
     public static int getMaxBatteryEnergy(ItemStack battery) {

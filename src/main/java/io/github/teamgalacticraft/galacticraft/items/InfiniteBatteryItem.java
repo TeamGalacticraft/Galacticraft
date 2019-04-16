@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
+import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

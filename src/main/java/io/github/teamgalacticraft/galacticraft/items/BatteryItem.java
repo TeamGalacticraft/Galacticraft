@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
+import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -17,7 +18,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class BatteryItem extends Item implements EnergyHolderItem{
+public class BatteryItem extends Item implements EnergyHolderItem {
     public static final int MAX_ENERGY = 10000;
 
     public BatteryItem(Settings settings) {
