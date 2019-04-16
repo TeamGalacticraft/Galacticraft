@@ -1,7 +1,7 @@
 {
   "parent": "block/cube",
   "textures": {
-    "up": "galacticraft-rewoven:block/machine",
+    "up": "galacticraft-rewoven:block/oxygen_collector_block",
     "down": "galacticraft-rewoven:block/machine",
     "north": "galacticraft-rewoven:block/oxygen_collector_block",
     "south": "galacticraft-rewoven:block/machine_side",
