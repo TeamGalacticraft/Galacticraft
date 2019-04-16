@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.items;
+package io.github.teamgalacticraft.galacticraft.api;
 
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.item.ItemStack;
