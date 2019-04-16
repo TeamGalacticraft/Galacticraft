@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.world.biome;
 
+import com.google.common.collect.Lists;
 import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.entity.EntityCategory;
@@ -37,7 +38,6 @@ public final class MoonBiome extends Biome {
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
-        this.features.forEach(this.features::remove);
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
     }
 
