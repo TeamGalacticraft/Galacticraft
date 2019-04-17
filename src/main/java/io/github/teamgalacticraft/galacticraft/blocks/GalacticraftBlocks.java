@@ -157,8 +157,8 @@ public class GalacticraftBlocks {
     public static final Block OXYGEN_COLLECTOR_BLOCK = new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
 
     // Liquids
-    public static final Block CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
-    public static final Block FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
+    public static final FluidBlock CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().build());
+    public static final FluidBlock FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().build());
 
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
@@ -264,6 +264,7 @@ public class GalacticraftBlocks {
 
     public static void register() {
         // Register Blocks
+        System.out.println(CRUDE_OIL_BLOCK.getFluidState(CRUDE_OIL_BLOCK.getDefaultState()));
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_ROCK), MOON_ROCK_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DIRT), MOON_DIRT_BLOCK);

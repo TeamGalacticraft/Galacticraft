@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.world.gen;
 
-import net.minecraft.block.Blocks;
+import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
+import net.minecraft.client.render.block.FluidRenderer;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
@@ -19,10 +20,10 @@ public class OilPoolGenerator {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
                 if (biome.getCategory() == Biome.Category.DESERT) {
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(Blocks.GLASS.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(20)));
+                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL_BLOCK.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(20)));
                 }
                 else {
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(Blocks.GLASS.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(10)));
+                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL_BLOCK.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(10)));
                 }
             }
         }
