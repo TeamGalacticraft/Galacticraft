@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.Oxygenless;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
@@ -30,6 +31,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     }
 
     private int collectOxygen(BlockPos center) {
+        if (world.dimension instanceof Oxygenless) {
         int minX = center.getX() - 5;
         int minY = center.getY() - 5;
         int minZ = center.getZ() - 5;
@@ -53,17 +55,19 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
         double oxyCount = 20 * (leafBlocks / 14);
         return (int) Math.ceil(oxyCount);
+        } else {
+            return 183;
+        }
     }
 
     @Override
     public void tick() {
         attemptChargeFromStack(getInventory().getInvStack(BATTERY_SLOT));
 
-        // Only collect every 20 seconds
+        // Only collect every 20 ticks
         if (world.random.nextInt(10) != 0) {
             return;
         }
-
 
         if (this.getEnergy().getCurrentEnergy() > 0) {
             this.status = CollectorStatus.COLLECTING;
@@ -81,7 +85,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
             // If the oxygen capacity isn't full, add collected oxygen.
             if (this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
-                int i = this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, ActionType.PERFORM);
+                this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, ActionType.PERFORM);
 
                 this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, lastCollectAmount, ActionType.PERFORM);
             }
