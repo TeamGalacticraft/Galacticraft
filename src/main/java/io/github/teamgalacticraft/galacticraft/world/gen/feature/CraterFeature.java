@@ -20,88 +20,87 @@ import java.util.function.Function;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CraterFeature extends Feature<CraterFeatureConfig> {
-    public CraterFeature(Function<Dynamic<?>, ? extends CraterFeatureConfig> function_1) {
-        super(function_1);
+    public CraterFeature(Function<Dynamic<?>, ? extends CraterFeatureConfig> function) {
+        super(function);
     }
 
-    public boolean generate(IWorld iWorld_1, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator_1, Random random_1, BlockPos blockPos_1, CraterFeatureConfig lakeFeatureConfig_1) {
-        while (blockPos_1.getY() > 5 && iWorld_1.isAir(blockPos_1)) {
-            blockPos_1 = blockPos_1.down();
+    public boolean generate(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGen, Random rand, BlockPos pos, CraterFeatureConfig craterConfig) {
+        while (pos.getY() > 5 && world.isAir(pos)) {
+            pos = pos.down();
         }
 
-        if (blockPos_1.getY() <= 4) {
+        if (pos.getY() <= 4) {
             return false;
         } else {
-            blockPos_1 = blockPos_1.down(4);
-            ChunkPos chunkPos_1 = new ChunkPos(blockPos_1);
-            if (!iWorld_1.getChunk(chunkPos_1.x, chunkPos_1.z, ChunkStatus.STRUCTURE_REFERENCES).getStructureReferences(Feature.VILLAGE.getName()).isEmpty()) {
+            pos = pos.down(4);
+            ChunkPos chunkPos = new ChunkPos(pos);
+            if (!world.getChunk(chunkPos.x, chunkPos.z, ChunkStatus.STRUCTURE_REFERENCES).getStructureReferences(Feature.VILLAGE.getName()).isEmpty()) {
                 return false;
             } else {
-                boolean[] booleans_1 = new boolean[2048];
-                int int_1 = random_1.nextInt(4) + 4;
+                boolean[] booleans = new boolean[2048];
+                int i = rand.nextInt(4) + 4;
 
-                int int_15;
-                for (int_15 = 0; int_15 < int_1; ++int_15) {
-                    double double_1 = random_1.nextDouble() * 6.0D + 3.0D;
-                    double double_2 = random_1.nextDouble() * 4.0D + 2.0D;
-                    double double_3 = random_1.nextDouble() * 6.0D + 3.0D;
-                    double double_4 = random_1.nextDouble() * (16.0D - double_1 - 2.0D) + 1.0D + double_1 / 2.0D;
-                    double double_5 = random_1.nextDouble() * (8.0D - double_2 - 4.0D) + 2.0D + double_2 / 2.0D;
-                    double double_6 = random_1.nextDouble() * (16.0D - double_3 - 2.0D) + 1.0D + double_3 / 2.0D;
+                int i5;
+                for (i5 = 0; i5 < i; ++i5) {
+                    double d1 = rand.nextDouble() * 6.0D + 3.0D;
+                    double d2 = rand.nextDouble() * 4.0D + 2.0D;
+                    double d3 = rand.nextDouble() * 6.0D + 3.0D;
+                    double d4 = rand.nextDouble() * (16.0D - d1 - 2.0D) + 1.0D + d1 / 2.0D;
+                    double d5 = rand.nextDouble() * (8.0D - d2 - 4.0D) + 2.0D + d2 / 2.0D;
+                    double d6 = rand.nextDouble() * (16.0D - d3 - 2.0D) + 1.0D + d3 / 2.0D;
 
-                    for (int int_3 = 1; int_3 < 15; ++int_3) {
-                        for (int int_4 = 1; int_4 < 15; ++int_4) {
-                            for (int int_5 = 1; int_5 < 7; ++int_5) {
-                                double double_7 = ((double) int_3 - double_4) / (double_1 / 2.0D);
-                                double double_8 = ((double) int_5 - double_5) / (double_2 / 2.0D);
-                                double double_9 = ((double) int_4 - double_6) / (double_3 / 2.0D);
-                                double double_10 = double_7 * double_7 + double_8 * double_8 + double_9 * double_9;
-                                if (double_10 < 1.0D) {
-                                    booleans_1[(int_3 * 16 + int_4) * 8 + int_5] = true;
+                    for (int i3 = 1; i3 < 15; ++i3) {
+                        for (int i4 = 1; i4 < 15; ++i4) {
+                            for (int i6 = 1; i6 < 7; ++i6) {
+                                double d7 = ((double) i3 - d4) / (d1 / 2.0D);
+                                double d8 = ((double) i6 - d5) / (d2 / 2.0D);
+                                double d9 = ((double) i4 - d6) / (d3 / 2.0D);
+                                double d10 = d7 * d7 + d8 * d8 + d9 * d9;
+                                if (d10 < 1.0D) {
+                                    booleans[(i3 * 16 + i4) * 8 + i6] = true;
                                 }
                             }
                         }
                     }
                 }
 
-                int int_17;
-                int int_16;
+                int i7, i6;
                 boolean boolean_2;
 
-                for (int_15 = 0; int_15 < 16; ++int_15) {
-                    for (int_16 = 0; int_16 < 16; ++int_16) {
-                        for (int_17 = 0; int_17 < 8; ++int_17) {
-                            if (booleans_1[(int_15 * 16 + int_16) * 8 + int_17]) {
-                                iWorld_1.setBlockState(blockPos_1.add(int_15, int_17, int_16), int_17 >= 4 ? Blocks.AIR.getDefaultState() : Blocks.AIR.getDefaultState(), 2);
+                for (i5 = 0; i5 < 16; ++i5) {
+                    for (i6 = 0; i6 < 16; ++i6) {
+                        for (i7 = 0; i7 < 8; ++i7) {
+                            if (booleans[(i5 * 16 + i6) * 8 + i7]) {
+                                world.setBlockState(pos.add(i5, i7, i6), i7 >= 4 ? Blocks.AIR.getDefaultState() : Blocks.AIR.getDefaultState(), 2);
                             }
                         }
                     }
                 }
 
                 BlockPos blockPos_3;
-                for (int_15 = 0; int_15 < 16; ++int_15) {
-                    for (int_16 = 0; int_16 < 16; ++int_16) {
-                        for (int_17 = 4; int_17 < 8; ++int_17) {
-                            if (booleans_1[(int_15 * 16 + int_16) * 8 + int_17]) {
-                                blockPos_3 = blockPos_1.add(int_15, int_17 - 1, int_16);
-                                if (Block.isNaturalDirt(iWorld_1.getBlockState(blockPos_3).getBlock()) && iWorld_1.getLightLevel(LightType.SKY, blockPos_1.add(int_15, int_17, int_16)) > 0) {
-                                    iWorld_1.setBlockState(blockPos_3, GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
+                for (i5 = 0; i5 < 16; ++i5) {
+                    for (i6 = 0; i6 < 16; ++i6) {
+                        for (i7 = 4; i7 < 8; ++i7) {
+                            if (booleans[(i5 * 16 + i6) * 8 + i7]) {
+                                blockPos_3 = pos.add(i5, i7 - 1, i6);
+                                if (Block.isNaturalDirt(world.getBlockState(blockPos_3).getBlock()) && world.getLightLevel(LightType.SKY, pos.add(i5, i7, i6)) > 0) {
+                                    world.setBlockState(blockPos_3, GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
                                 }
                             }
                         }
                     }
                 }
 
-                    for (int_15 = 0; int_15 < 16; ++int_15) {
-                        for (int_16 = 0; int_16 < 16; ++int_16) {
-                            for (int_17 = 0; int_17 < 8; ++int_17) {
-                                boolean_2 = !booleans_1[(int_15 * 16 + int_16) * 8 + int_17] && (int_15 < 15 && booleans_1[((int_15 + 1) * 16 + int_16) * 8 + int_17] || int_15 > 0 && booleans_1[((int_15 - 1) * 16 + int_16) * 8 + int_17] || int_16 < 15 && booleans_1[(int_15 * 16 + int_16 + 1) * 8 + int_17] || int_16 > 0 && booleans_1[(int_15 * 16 + (int_16 - 1)) * 8 + int_17] || int_17 < 7 && booleans_1[(int_15 * 16 + int_16) * 8 + int_17 + 1] || int_17 > 0 && booleans_1[(int_15 * 16 + int_16) * 8 + (int_17 - 1)]);
-                                if (boolean_2 && (int_17 < 4 || random_1.nextInt(2) != 0) && iWorld_1.getBlockState(blockPos_1.add(int_15, int_17, int_16)).getMaterial().method_15799()) {
-                                    iWorld_1.setBlockState(blockPos_1.add(int_15, int_17, int_16), GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
-                                }
+                for (i5 = 0; i5 < 16; ++i5) {
+                    for (i6 = 0; i6 < 16; ++i6) {
+                        for (i7 = 0; i7 < 8; ++i7) {
+                            boolean_2 = !booleans[(i5 * 16 + i6) * 8 + i7] && (i5 < 15 && booleans[((i5 + 1) * 16 + i6) * 8 + i7] || i5 > 0 && booleans[((i5 - 1) * 16 + i6) * 8 + i7] || i6 < 15 && booleans[(i5 * 16 + i6 + 1) * 8 + i7] || i6 > 0 && booleans[(i5 * 16 + (i6 - 1)) * 8 + i7] || i7 < 7 && booleans[(i5 * 16 + i6) * 8 + i7 + 1] || i7 > 0 && booleans[(i5 * 16 + i6) * 8 + (i7 - 1)]);
+                            if (boolean_2 && (i7 < 4 || rand.nextInt(2) != 0) && world.getBlockState(pos.add(i5, i7, i6)).getMaterial().method_15799()) {
+                                world.setBlockState(pos.add(i5, i7, i6), GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
                             }
                         }
                     }
+                }
 
 
                 return true;

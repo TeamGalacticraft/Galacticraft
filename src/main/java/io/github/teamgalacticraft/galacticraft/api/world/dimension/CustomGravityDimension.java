@@ -5,5 +5,5 @@ package io.github.teamgalacticraft.galacticraft.api.world.dimension;
  *
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public interface LowGravityDimension {
+public interface CustomGravityDimension {
 }

@@ -29,6 +29,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     private PlayerInventoryGCContainer gcContainer;
     private SimpleFixedItemInv gearInventory;
 
+    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world_1) {
+        super(entityType_1, world_1);
+    }
+
     @Override
     public PlayerInventoryGCContainer getGCContainer() {
         return gcContainer;
@@ -37,10 +41,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     @Override
     public SimpleFixedItemInv getGearInventory() {
         return gearInventory;
-    }
-
-    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world_1) {
-        super(entityType_1, world_1);
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))

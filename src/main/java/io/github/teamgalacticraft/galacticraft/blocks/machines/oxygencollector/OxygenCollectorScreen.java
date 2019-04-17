@@ -34,18 +34,16 @@ public class OxygenCollectorScreen extends ContainerScreen {
     private static final int OXYGEN_Y = Constants.TextureCoordinates.OXYGEN_LIGHT_Y;
     private static final int OXYGEN_DIMMED_X = Constants.TextureCoordinates.OXYGEN_DARK_X;
     private static final int OXYGEN_DIMMED_Y = Constants.TextureCoordinates.OXYGEN_DARK_Y;
-    private final OxygenCollectorBlockEntity collector;
-    private int energyDisplayX = 0;
-    private int energyDisplayY = 0;
-    private int oxygenDisplayX = 0;
-    private int oxygenDisplayY = 0;
-
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-
+    private final OxygenCollectorBlockEntity collector;
     BlockPos blockPos;
+    private int energyDisplayX = 0;
+    private int energyDisplayY = 0;
+    private int oxygenDisplayX = 0;
+    private int oxygenDisplayY = 0;
     private World world;
 
     public OxygenCollectorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
@@ -85,14 +83,19 @@ public class OxygenCollectorScreen extends ContainerScreen {
 //                        new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.active").applyFormat(TextFormat.GREEN)
 //                ).getText(), this.left + 90, this.top + 28, TextFormat.DARK_GRAY.getTextColor());
         String statusText = new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status").getText();
-        minecraft.textRenderer.draw(statusText, this.left + 60, this.top + 28, 0x000000);
+
+
+        int statusX = this.left + 38;
+        int statusY = this.top + 64;
+
+        minecraft.textRenderer.draw(statusText, statusX, statusY, TextFormat.DARK_GRAY.getColor());
 
         String status = collector.status == CollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
                 : collector.status == CollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
                 : "ui.galacticraft-rewoven.machinestatus.inactive";
-        minecraft.textRenderer.draw(new TranslatableTextComponent(status).getText(), this.left + 60 + minecraft.textRenderer.getStringWidth(statusText), this.top + 28, collector.status.getTextColor());
+        minecraft.textRenderer.draw(new TranslatableTextComponent(status).getText(), statusX + minecraft.textRenderer.getStringWidth(statusText), statusY, collector.status.getTextColor());
 
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("ui.galacticraft-rewoven.machine.collecting", collector.lastCollectAmount).getText(), (this.width / 2) + 10, this.top + 40, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("ui.galacticraft-rewoven.machine.collecting", collector.lastCollectAmount).getText(), (this.width / 2) + 10, statusY + 12, TextFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 

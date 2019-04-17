@@ -12,11 +12,15 @@ import net.minecraft.world.gen.feature.FeatureConfig;
  */
 public class CraterFeatureConfig implements FeatureConfig {
 
-    public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {
-        return new Dynamic<>(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("state"), BlockState.serialize(dynamicOps_1, Blocks.AIR.getDefaultState()).getValue())));
+    public static CraterFeatureConfig deserialize() {
+        return new CraterFeatureConfig();
     }
 
-    public static <T> CraterFeatureConfig deserialize(Dynamic<T> dynamic_1) {
+    public static CraterFeatureConfig deserialize(Dynamic<?> d) {
         return new CraterFeatureConfig();
+    }
+
+    public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {
+        return new Dynamic<>(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("state"), BlockState.serialize(dynamicOps_1, Blocks.AIR.getDefaultState()).getValue())));
     }
 }

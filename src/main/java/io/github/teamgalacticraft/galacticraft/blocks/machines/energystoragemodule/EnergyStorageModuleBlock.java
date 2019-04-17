@@ -70,8 +70,8 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
             if (blockEntity instanceof EnergyStorageModuleBlockEntity) {
                 EnergyStorageModuleBlockEntity be = (EnergyStorageModuleBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.inventory.getSlotCount(); i++) {
-                    ItemStack itemStack = be.inventory.getInvStack(i);
+                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = be.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
@@ -98,7 +98,7 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
 
     @Override
     public boolean canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!( world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
+        if (!(world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
             Galacticraft.logger.error("Not a Energy Storage Module. Rejecting connection.");
             return false;
         }

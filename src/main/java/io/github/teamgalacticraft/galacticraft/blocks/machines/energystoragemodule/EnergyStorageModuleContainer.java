@@ -33,7 +33,7 @@ public class EnergyStorageModuleContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of an EnergyStorageModuleBlockEntity!");
         }
         this.module = (EnergyStorageModuleBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(module.inventory) {
+        this.inventory = new PartialInventoryFixedWrapper(module.getInventory()) {
             @Override
             public void markDirty() {
                 module.markDirty();
@@ -77,7 +77,7 @@ public class EnergyStorageModuleContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.module.inventory.getSlotCount()) {
+            if (slotId < this.module.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;

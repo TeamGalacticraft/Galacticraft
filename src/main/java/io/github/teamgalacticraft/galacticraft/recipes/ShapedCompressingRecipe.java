@@ -3,11 +3,13 @@ package io.github.teamgalacticraft.galacticraft.recipes;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
@@ -16,7 +18,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Iterator;
@@ -34,10 +35,6 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
     private final Identifier id;
     private final String group;
 
-    public DefaultedList<Ingredient> getIngredients() {
-        return ingredients;
-    }
-
     public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
         this.id = id;
         this.group = group;
@@ -45,96 +42,6 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
         this.height = height;
         this.ingredients = ingredients;
         this.output = output;
-    }
-
-    public Identifier getId() {
-        return this.id;
-    }
-
-    public RecipeSerializer<?> getSerializer() {
-        return GalacticraftRecipes.SHAPED_COMPRESSING_SERIALIZER;
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return GalacticraftRecipes.SHAPED_COMPRESSING_TYPE;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public String getGroup() {
-        return this.group;
-    }
-
-    public ItemStack getOutput() {
-        return this.output;
-    }
-
-    public DefaultedList<Ingredient> getPreviewInputs() {
-        return this.ingredients;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public boolean fits(int int_1, int int_2) {
-        return int_1 >= this.width && int_2 >= this.height;
-    }
-
-    @Override
-    public boolean matches(Inventory inv, World world_1) {
-        int invWidth = 3;
-        int invHeight = 3;
-
-        for (int x = 0; x <= invWidth - this.width; ++x) {
-            for (int y = 0; y <= invHeight - this.height; ++y) {
-                if (this.matchesSmall(inv, x, y, true)) {
-                    return true;
-                }
-
-                if (this.matchesSmall(inv, x, y, false)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean matchesSmall(Inventory inv, int int_1, int int_2, boolean boolean_1) {
-        int invWidth = 3;
-        int invHeight = 3;
-
-        for (int int_3 = 0; int_3 < invWidth; ++int_3) {
-            for (int int_4 = 0; int_4 < invHeight; ++int_4) {
-                int int_5 = int_3 - int_1;
-                int int_6 = int_4 - int_2;
-                Ingredient ingredient_1 = Ingredient.EMPTY;
-                if (int_5 >= 0 && int_6 >= 0 && int_5 < this.width && int_6 < this.height) {
-                    if (boolean_1) {
-                        ingredient_1 = this.ingredients.get(this.width - int_5 - 1 + int_6 * this.width);
-                    } else {
-                        ingredient_1 = this.ingredients.get(int_5 + int_6 * this.width);
-                    }
-                }
-
-                if (!ingredient_1.method_8093(inv.getInvStack(int_3 + int_4 * invWidth))) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    @Override
-    public ItemStack craft(Inventory inv) {
-        return this.getOutput().copy();
-    }
-
-    int getWidth() {
-        return this.width;
-    }
-
-    int getHeight() {
-        return this.height;
     }
 
     static DefaultedList<Ingredient> getIngredients(String[] strings_1, Map<String, Ingredient> map_1, int int_1, int int_2) {
@@ -257,5 +164,99 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
 
         map_1.put(" ", Ingredient.EMPTY);
         return map_1;
+    }
+
+    public DefaultedList<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public Identifier getId() {
+        return this.id;
+    }
+
+    public RecipeSerializer<?> getSerializer() {
+        return GalacticraftRecipes.SHAPED_COMPRESSING_SERIALIZER;
+    }
+
+    @Override
+    public RecipeType<?> getType() {
+        return GalacticraftRecipes.SHAPED_COMPRESSING_TYPE;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public String getGroup() {
+        return this.group;
+    }
+
+    public ItemStack getOutput() {
+        return this.output;
+    }
+
+    public DefaultedList<Ingredient> getPreviewInputs() {
+        return this.ingredients;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public boolean fits(int int_1, int int_2) {
+        return int_1 >= this.width && int_2 >= this.height;
+    }
+
+    @Override
+    public boolean matches(Inventory inv, World world_1) {
+        int invWidth = 3;
+        int invHeight = 3;
+
+        for (int x = 0; x <= invWidth - this.width; ++x) {
+            for (int y = 0; y <= invHeight - this.height; ++y) {
+                if (this.matchesSmall(inv, x, y, true)) {
+                    return true;
+                }
+
+                if (this.matchesSmall(inv, x, y, false)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean matchesSmall(Inventory inv, int int_1, int int_2, boolean boolean_1) {
+        int invWidth = 3;
+        int invHeight = 3;
+
+        for (int int_3 = 0; int_3 < invWidth; ++int_3) {
+            for (int int_4 = 0; int_4 < invHeight; ++int_4) {
+                int int_5 = int_3 - int_1;
+                int int_6 = int_4 - int_2;
+                Ingredient ingredient_1 = Ingredient.EMPTY;
+                if (int_5 >= 0 && int_6 >= 0 && int_5 < this.width && int_6 < this.height) {
+                    if (boolean_1) {
+                        ingredient_1 = this.ingredients.get(this.width - int_5 - 1 + int_6 * this.width);
+                    } else {
+                        ingredient_1 = this.ingredients.get(int_5 + int_6 * this.width);
+                    }
+                }
+
+                if (!ingredient_1.method_8093(inv.getInvStack(int_3 + int_4 * invWidth))) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    @Override
+    public ItemStack craft(Inventory inv) {
+        return this.getOutput().copy();
+    }
+
+    int getWidth() {
+        return this.width;
+    }
+
+    int getHeight() {
+        return this.height;
     }
 }

@@ -6,7 +6,6 @@ import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.MultiBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -122,8 +121,8 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
             if (blockEntity instanceof BasicSolarPanelBlockEntity) {
                 BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
 
-                for (int i = 0; i < basicSolarPanelBlockEntity.getItems().getSlotCount(); i++) {
-                    ItemStack itemStack = basicSolarPanelBlockEntity.getItems().getInvStack(i);
+                for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

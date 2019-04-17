@@ -5,7 +5,6 @@ import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.api.screen.MachineContainerScreen;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergyType;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
-import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TextFormat;
@@ -34,10 +33,9 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
     private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
+    BlockPos blockPos;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
-
-    BlockPos blockPos;
     private World world;
 
     public CoalGeneratorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {

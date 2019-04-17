@@ -5,20 +5,26 @@ import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
 import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
-public abstract class MachineBlockEntity extends BlockEntity {
+public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     public static final int DEFAULT_MAX_ENERGY = 15000;
     private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
+    public MachineBlockEntity(BlockEntityType<?> blockEntityType_1) {
+        super(blockEntityType_1);
+        this.energy.listen(this::markDirty);
+    }
+
     /**
      * The max energy that this machine can hold. Override for machines that should hold more.
      *
-     * @return
+     * @return Energy capacity of this machine.
      */
     protected int getMaxEnergy() {
         return DEFAULT_MAX_ENERGY;
@@ -26,10 +32,6 @@ public abstract class MachineBlockEntity extends BlockEntity {
 
     public SimpleEnergyAttribute getEnergy() {
         return energy;
-    }
-
-    public MachineBlockEntity(BlockEntityType<?> blockEntityType_1) {
-        super(blockEntityType_1);
     }
 
     // Tries charging the block entity with the given itemstack
@@ -66,5 +68,15 @@ public abstract class MachineBlockEntity extends BlockEntity {
         super.fromTag(tag);
         getEnergy().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
+    }
+
+    @Override
+    public void fromClientTag(CompoundTag tag) {
+        this.fromTag(tag);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return this.toTag(tag);
     }
 }

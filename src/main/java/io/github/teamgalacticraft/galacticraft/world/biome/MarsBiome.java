@@ -1,12 +1,10 @@
 package io.github.teamgalacticraft.galacticraft.world.biome;
 
-import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**
@@ -32,7 +30,7 @@ public final class MarsBiome extends Biome {
 
     @Override
     public String getTranslationKey() {
-        return "biome.galacticarft-rewoven.moon";
+        return "biome.galacticraft-rewoven.moon";
     }
 
     @Override

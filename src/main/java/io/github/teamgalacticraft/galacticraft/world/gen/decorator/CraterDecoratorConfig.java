@@ -15,12 +15,12 @@ public class CraterDecoratorConfig implements DecoratorConfig {
         this.chance = int_1;
     }
 
-    public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {
-        return new Dynamic(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("chance"), dynamicOps_1.createInt(this.chance))));
-    }
-
     public static CraterDecoratorConfig deserialize(Dynamic<?> dynamic_1) {
         int int_1 = dynamic_1.get("chance").asInt(0);
         return new CraterDecoratorConfig(int_1);
+    }
+
+    public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {
+        return new Dynamic(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("chance"), dynamicOps_1.createInt(this.chance))));
     }
 }

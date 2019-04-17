@@ -18,44 +18,12 @@ import net.minecraft.util.math.BlockPos;
  */
 public class CoalGeneratorContainer extends Container {
 
+    private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
     private ItemStack itemStack;
     private Inventory inventory;
-
     private BlockPos blockPos;
     private CoalGeneratorBlockEntity generator;
     private PlayerEntity playerEntity;
-    private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
-
-    @Override
-    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
-
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.slotList.get(slotId);
-
-        if (slot != null && slot.hasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (itemStack.isEmpty()) {
-                return itemStack;
-            }
-
-            if (slotId < this.generator.inventory.getSlotCount()) {
-
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemStack1.getAmount() == 0) {
-                slot.setStack(ItemStack.EMPTY);
-            } else {
-                slot.markDirty();
-            }
-        }
-        return itemStack;
-    }
 
     public CoalGeneratorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
         super(null, syncId);
@@ -69,7 +37,7 @@ public class CoalGeneratorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a coal generator!");
         }
         this.generator = (CoalGeneratorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(generator.inventory) {
+        this.inventory = new PartialInventoryFixedWrapper(generator.getInventory()) {
             @Override
             public void markDirty() {
                 generator.markDirty();
@@ -96,6 +64,37 @@ public class CoalGeneratorContainer extends Container {
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 152));
         }
 
+    }
+
+    @Override
+    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
+
+        ItemStack itemStack = ItemStack.EMPTY;
+        Slot slot = this.slotList.get(slotId);
+
+        if (slot != null && slot.hasStack()) {
+            ItemStack itemStack1 = slot.getStack();
+            itemStack = itemStack1.copy();
+
+            if (itemStack.isEmpty()) {
+                return itemStack;
+            }
+
+            if (slotId < this.generator.getInventory().getSlotCount()) {
+
+                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+                return ItemStack.EMPTY;
+            }
+            if (itemStack1.getAmount() == 0) {
+                slot.setStack(ItemStack.EMPTY);
+            } else {
+                slot.markDirty();
+            }
+        }
+        return itemStack;
     }
 
     @Override

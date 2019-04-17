@@ -40,21 +40,6 @@ import org.apache.logging.log4j.MarkerManager;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class GalacticraftBlocks {
-    private static final Marker BLOCKS = MarkerManager.getMarker("Blocks"); // Galacticraft/Blocks
-
-    public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
-            // Set the tab icon
-            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF_BLOCK))
-            .build();
-
-
-    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
-            // Set the the tab icon
-            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR_BLOCK))
-            .build();
-
     // Blocks
     public static final Block MOON_TURF_BLOCK = new Block(FabricBlockSettings.of(Material.ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build());
     public static final Block MOON_ROCK_BLOCK = new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F).build());
@@ -145,7 +130,6 @@ public class GalacticraftBlocks {
     public static final Block CAVERNOUS_VINE_BLOCK = new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly().build());
     public static final Block POISONOUS_CAVERNOUS_VINE_BLOCK = new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly().build());
     public static final Block MOON_BERRY_BUSH_BLOCK = new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build());
-
     // Machines
     public static final Block CIRCUIT_FABRICATOR_BLOCK = new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
     public static final Block COMPRESSOR_BLOCK = new CompressorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
@@ -155,11 +139,17 @@ public class GalacticraftBlocks {
     public static final Block BASIC_SOLAR_PANEL_PART_BLOCK = new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 3600000.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build());
     public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
     public static final Block OXYGEN_COLLECTOR_BLOCK = new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
-
     // Liquids
-    public static final FluidBlock CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().build());
-    public static final FluidBlock FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().build());
-
+    public static final FluidBlock CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
+    public static final FluidBlock FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
+    public static final BlockItem CRUDE_OIL_BLOCK_ITEM = new BlockItem(CRUDE_OIL_BLOCK, new Item.Settings());
+    public static final BlockItem BASIC_SOLAR_PANEL_PART_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_PART_BLOCK, new Item.Settings());
+    private static final Marker BLOCKS = MarkerManager.getMarker("Blocks"); // Galacticraft/Blocks
+    public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
+            // Set the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF_BLOCK))
+            .build();
     // Block Items
     public static final BlockItem MOON_TURF_BLOCK_ITEM = new BlockItem(MOON_TURF_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MOON_ROCK_BLOCK_ITEM = new BlockItem(MOON_ROCK_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
@@ -247,15 +237,16 @@ public class GalacticraftBlocks {
     public static final BlockItem CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem POISONOUS_CAVERNOUS_VINE_BLOCK_ITEM = new BlockItem(POISONOUS_CAVERNOUS_VINE_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
     public static final BlockItem MOON_BERRY_BUSH_BLOCK_ITEM = new BlockItem(MOON_BERRY_BUSH_BLOCK, new Item.Settings().itemGroup(BLOCKS_GROUP));
-
-    public static final BlockItem CRUDE_OIL_BLOCK_ITEM = new BlockItem(CRUDE_OIL_BLOCK, new Item.Settings());
-
+    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
+            // Set the the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR_BLOCK))
+            .build();
     public static final BlockItem CIRCUIT_FABRICATOR_BLOCK_ITEM = new BlockItem(CIRCUIT_FABRICATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem COMPRESSOR_BLOCK_ITEM = new BlockItem(COMPRESSOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem ELECTRIC_COMPRESSOR_BLOCK_ITEM = new BlockItem(ELECTRIC_COMPRESSOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem COAL_GENERATOR_BLOCK_ITEM = new BlockItem(COAL_GENERATOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem BASIC_SOLAR_PANEL_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
-    public static final BlockItem BASIC_SOLAR_PANEL_PART_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_PART_BLOCK, new Item.Settings());
     public static final BlockItem ENERGY_STORAGE_MODULE_BLOCK_ITEM = new BlockItem(ENERGY_STORAGE_MODULE_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
     public static final BlockItem OXYGEN_COLLECTOR_BLOCK_ITEM = new BlockItem(OXYGEN_COLLECTOR_BLOCK, new Item.Settings().itemGroup(MACHINES_GROUP));
 
@@ -264,7 +255,6 @@ public class GalacticraftBlocks {
 
     public static void register() {
         // Register Blocks
-        System.out.println(CRUDE_OIL_BLOCK.getFluidState(CRUDE_OIL_BLOCK.getDefaultState()));
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_TURF), MOON_TURF_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_ROCK), MOON_ROCK_BLOCK);
         Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, Constants.Blocks.MOON_DIRT), MOON_DIRT_BLOCK);

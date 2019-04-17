@@ -46,8 +46,7 @@ public class MoonBerryBushBlock extends PlantBlock {
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, VerticalEntityPosition verticalEntityPosition) {
         if (blockState.get(AGE) == 0) {
             return SMALL_SHAPE;
-        }
-        else {
+        } else {
             return blockState.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(blockState, blockView, blockPos, verticalEntityPosition);
         }
     }
@@ -77,8 +76,7 @@ public class MoonBerryBushBlock extends PlantBlock {
             world.playSound(null, blockPos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlockState(blockPos, blockState.with(AGE, 1), 2);
             return true;
-        }
-        else {
+        } else {
             return super.activate(blockState, world, blockPos, playerEntity, hand, blockHitResult);
         }
     }

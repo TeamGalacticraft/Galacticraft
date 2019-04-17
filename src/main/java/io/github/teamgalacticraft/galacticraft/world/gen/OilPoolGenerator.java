@@ -1,7 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.world.gen;
 
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
-import net.minecraft.client.render.block.FluidRenderer;
+import net.minecraft.block.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;

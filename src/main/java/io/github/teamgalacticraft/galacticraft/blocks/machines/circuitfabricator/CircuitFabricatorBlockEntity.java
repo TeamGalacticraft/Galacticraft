@@ -14,7 +14,6 @@ import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.recipes.FabricationRecipe;
 import io.github.teamgalacticraft.galacticraft.recipes.GalacticraftRecipes;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,20 +28,17 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements Tickable, BlockEntityClientSerializable {
-    private final int maxProgress = 300;
-    private int progress;
-
-    public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
+public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements Tickable {
     public final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
-
+    private final int maxProgress = 300;
+    public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_INPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    private int progress;
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        getEnergy().listen(this::markDirty);
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_INPUT);
     }
 
@@ -190,15 +186,5 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         progress = tag.getInt("Progress");
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
     }
 }

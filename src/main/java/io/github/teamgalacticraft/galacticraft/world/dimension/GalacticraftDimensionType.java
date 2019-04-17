@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.world.dimension;
 
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.Oxygenless;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;

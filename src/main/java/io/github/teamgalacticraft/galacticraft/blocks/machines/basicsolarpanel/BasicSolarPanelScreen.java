@@ -33,15 +33,13 @@ public class BasicSolarPanelScreen extends ContainerScreen {
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
     private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-    private int energyDisplayX = 0;
-    private int energyDisplayY = 0;
-
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-
     BlockPos blockPos;
+    private int energyDisplayX = 0;
+    private int energyDisplayY = 0;
     private World world;
 
     public BasicSolarPanelScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {

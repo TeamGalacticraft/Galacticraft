@@ -2,8 +2,6 @@ package io.github.teamgalacticraft.galacticraft.world.biome;
 
 import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import net.minecraft.entity.EntityCategory;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
