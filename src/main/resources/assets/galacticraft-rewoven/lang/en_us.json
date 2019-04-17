@@ -223,7 +223,7 @@
   "ui.galacticraft-rewoven.machine.max_oxygen": "Maximum Oxygen: %s",
   "ui.galacticraft-rewoven.machine.gj_per_t": "GJ/t: %s",
   "ui.galacticraft-rewoven.machine.collecting": "Collecting: %s/s",
-  "ui.galacticraft-rewoven.machinestatus.not_enough_leaves": "Not Enough Leaf Blocks",
+  "ui.galacticraft-rewoven.machinestatus.not_enough_leaves": "Not Enough Leaves",
   "ui.galacticraft-rewoven.machinestatus.active": "Active",
   "ui.galacticraft-rewoven.machinestatus.idle": "Idle",
   "ui.galacticraft-rewoven.machinestatus.warming": "Warming",
