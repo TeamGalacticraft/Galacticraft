@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.world.dimension;
 
 import io.github.teamgalacticraft.galacticraft.api.world.dimension.LowGravityDimension;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.Oxygenless;
 import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
@@ -19,7 +20,7 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class MoonDimension extends Dimension implements LowGravityDimension {
+public class MoonDimension extends Dimension implements LowGravityDimension, Oxygenless {
 
     public MoonDimension(World worldIn, DimensionType typeIn) {
         super(worldIn, typeIn);
