@@ -29,36 +29,8 @@ import java.util.Random;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CavernousVineBlock extends Block implements Waterloggable {
-    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     protected static final EnumProperty<VineTypes> VINES = EnumProperty.create("vinetype", VineTypes.class);
-
-    public enum VineTypes implements StringRepresentable {
-        VINE_0("vine_0", 0),
-        VINE_1("vine_1", 1),
-        VINE_2("vine_2", 2);
-
-        private String name;
-        private int meta;
-
-        VineTypes(String name, int meta) {
-            this.name = name;
-            this.meta = meta;
-        }
-
-        public int getMeta() {
-            return this.meta;
-        }
-
-        private final static VineTypes[] values = values();
-        public static VineTypes byMetadata(int meta) {
-            return values[meta % values.length];
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
-    }
+    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public CavernousVineBlock(Settings settings) {
         super(settings);
@@ -74,7 +46,6 @@ public class CavernousVineBlock extends Block implements Waterloggable {
             ItemScatterer.spawn(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(this.getItem(), 1));
         }
     }
-
 
     @Override
     public void onEntityCollision(BlockState blockState_1, World world_1, BlockPos blockPos_1, Entity entity) {
@@ -190,7 +161,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         BlockState stateAbove = world.getBlockState(abovePos);
 
         if (stateAbove.getBlock() == GalacticraftBlocks.CAVERNOUS_VINE_BLOCK || stateAbove.getBlock() == GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK) {
-            switch(stateAbove.get(VINES).getMeta()) {
+            switch (stateAbove.get(VINES).getMeta()) {
                 case 0:
                     world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));
                     break;
@@ -201,6 +172,34 @@ public class CavernousVineBlock extends Block implements Waterloggable {
                     world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_0));
                     break;
             }
+        }
+    }
+
+    public enum VineTypes implements StringRepresentable {
+        VINE_0("vine_0", 0),
+        VINE_1("vine_1", 1),
+        VINE_2("vine_2", 2);
+
+        private final static VineTypes[] values = values();
+        private String name;
+        private int meta;
+
+        VineTypes(String name, int meta) {
+            this.name = name;
+            this.meta = meta;
+        }
+
+        public static VineTypes byMetadata(int meta) {
+            return values[meta % values.length];
+        }
+
+        public int getMeta() {
+            return this.meta;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
         }
     }
 }

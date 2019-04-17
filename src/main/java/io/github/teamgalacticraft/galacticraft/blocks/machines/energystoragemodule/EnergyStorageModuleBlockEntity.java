@@ -1,5 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule;
 
+import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
@@ -13,7 +15,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     public static int MAX_ENERGY = 60000;
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;
-
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(MAX_ENERGY, GalacticraftEnergy.GALACTICRAFT_JOULES);
     private int powerToChargePerTick = 5;
 
     public EnergyStorageModuleBlockEntity() {

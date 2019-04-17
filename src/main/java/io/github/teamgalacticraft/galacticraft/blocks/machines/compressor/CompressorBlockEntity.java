@@ -31,13 +31,12 @@ import java.util.Optional;
 public class CompressorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
-    protected SimpleFixedItemInv inventory;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    private int progress;
-
     public CompressorStatus status = CompressorStatus.INACTIVE;
     public int fuelTime;
     public int maxFuelTime;
+    protected SimpleFixedItemInv inventory;
+    private int progress;
 
     public CompressorBlockEntity() {
         this(GalacticraftBlockEntities.COMPRESSOR_TYPE);

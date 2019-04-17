@@ -120,7 +120,7 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
 
     @Override
     public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!( world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
+        if (!(world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
             Galacticraft.logger.error("Not a fab. rejecting connection.");
             return false;
         }

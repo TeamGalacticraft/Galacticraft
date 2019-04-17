@@ -15,10 +15,10 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
 public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable, BlockEntityClientSerializable {
-    public CollectorStatus status = CollectorStatus.INACTIVE;
-    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(5000, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
     public static int BATTERY_SLOT = 0;
+    public CollectorStatus status = CollectorStatus.INACTIVE;
     public int lastCollectAmount = 0;
+    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(5000, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);

@@ -18,14 +18,12 @@ import net.minecraft.util.math.BlockPos;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CompressorContainer extends Container {
-    private ItemStack itemStack;
     protected Inventory inventory;
-
+    protected int outputSlotId = 0;
+    private ItemStack itemStack;
     private BlockPos blockPos;
     private CompressorBlockEntity compressor;
     private PlayerEntity playerEntity;
-
-    protected int outputSlotId = 0;
 
     public CompressorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
         super(null, syncId);

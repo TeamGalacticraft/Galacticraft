@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.world.gen.chunk;
 
-import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sortme.SpawnHelper;
@@ -16,7 +15,6 @@ import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.PhantomSpawner;
 import net.minecraft.world.gen.PillagerSpawner;
-import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.level.LevelGeneratorType;
 
@@ -59,18 +57,18 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Override
-    protected void sampleNoiseColumn(double[] doubles_1, int int_1, int int_2) {
-        this.sampleNoiseColumn(doubles_1, int_1, int_2, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
+    protected void sampleNoiseColumn(double[] doubles, int i, int i2) {
+        this.sampleNoiseColumn(doubles, i, i2, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
     }
 
     @Override
-    protected double computeNoiseFalloff(double double_1, double double_2, int int_1) {
-        double double_4 = ((double) int_1 - (8.5D + double_1 * 8.5D / 8.0D * 4.0D)) * 12.0D * 128.0D / 256.0D / double_2;
-        if (double_4 < 0.0D) {
-            double_4 *= 4.0D;
+    protected double computeNoiseFalloff(double d, double double_2, int i) {
+        double d4 = ((double) i - (8.5D + d * 8.5D / 8.0D * 4.0D)) * 12.0D * 128.0D / 256.0D / double_2;
+        if (d4 < 0.0D) {
+            d4 *= 4.0D;
         }
 
-        return double_4;
+        return d4;
     }
 
     @Override
@@ -79,61 +77,61 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Override
-    protected double[] computeNoiseRange(int int_1, int int_2) {
-        double[] doubles_1 = new double[2];
-        float float_1 = 0.0F;
-        float float_2 = 0.0F;
-        float float_3 = 0.0F;
-        float float_4 = this.biomeSource.getBiomeForNoiseGen(int_1, int_2).getDepth();
+    protected double[] computeNoiseRange(int i, int i2) {
+        double[] doubles = new double[2];
+        float f1 = 0.0F;
+        float f2 = 0.0F;
+        float f3 = 0.0F;
+        float f4 = this.biomeSource.getBiomeForNoiseGen(i, i2).getDepth();
 
-        for (int int_4 = -2; int_4 <= 2; ++int_4) {
-            for (int int_5 = -2; int_5 <= 2; ++int_5) {
-                Biome biome_1 = this.biomeSource.getBiomeForNoiseGen(int_1 + int_4, int_2 + int_5);
-                float float_5 = biome_1.getDepth();
-                float float_6 = biome_1.getScale();
-                if (this.amplified && float_5 > 0.0F) {
-                    float_5 = 1.0F + float_5 * 2.0F;
-                    float_6 = 1.0F + float_6 * 4.0F;
+        for (int i4 = -2; i4 <= 2; ++i4) {
+            for (int i5 = -2; i5 <= 2; ++i5) {
+                Biome biome = this.biomeSource.getBiomeForNoiseGen(i + i4, i2 + i5);
+                float f5 = biome.getDepth();
+                float f6 = biome.getScale();
+                if (this.amplified && f5 > 0.0F) {
+                    f5 = 1.0F + f5 * 2.0F;
+                    f6 = 1.0F + f6 * 4.0F;
                 }
 
-                float float_7 = BIOME_WEIGHT_TABLE[int_4 + 2 + (int_5 + 2) * 5] / (float_5 + 2.0F);
-                if (biome_1.getDepth() > float_4) {
+                float float_7 = BIOME_WEIGHT_TABLE[i4 + 2 + (i5 + 2) * 5] / (f5 + 2.0F);
+                if (biome.getDepth() > f4) {
                     float_7 /= 2.0F;
                 }
 
-                float_1 += float_6 * float_7;
-                float_2 += float_5 * float_7;
-                float_3 += float_7;
+                f1 += f6 * float_7;
+                f2 += f5 * float_7;
+                f3 += float_7;
             }
         }
 
-        float_1 /= float_3;
-        float_2 /= float_3;
-        float_1 = float_1 * 0.9F + 0.1F;
-        float_2 = (float_2 * 4.0F - 1.0F) / 8.0F;
-        doubles_1[0] = (double) float_2 + this.method_16414(int_1, int_2);
-        doubles_1[1] = (double) float_1;
-        return doubles_1;
+        f1 /= f3;
+        f2 /= f3;
+        f1 = f1 * 0.9F + 0.1F;
+        f2 = (f2 * 4.0F - 1.0F) / 8.0F;
+        doubles[0] = (double) f2 + this.method_16414(i, i2);
+        doubles[1] = (double) f1;
+        return doubles;
     }
 
-    private double method_16414(int int_1, int int_2) {
-        double double_1 = this.noiseSampler.sample((double) (int_1 * 200), 10.0D, (double) (int_2 * 200), 1.0D, 0.0D, true) / 8000.0D;
-        if (double_1 < 0.0D) {
-            double_1 = -double_1 * 0.3D;
+    private double method_16414(int i, int i2) {
+        double d = this.noiseSampler.sample((double) (i * 200), 10.0D, (double) (i2 * 200), 1.0D, 0.0D, true) / 8000.0D;
+        if (d < 0.0D) {
+            d = -d * 0.3D;
         }
 
-        double_1 = double_1 * 3.0D - 2.0D;
-        if (double_1 < 0.0D) {
-            double_1 /= 28.0D;
+        d = d * 3.0D - 2.0D;
+        if (d < 0.0D) {
+            d /= 28.0D;
         } else {
-            if (double_1 > 1.0D) {
-                double_1 = 1.0D;
+            if (d > 1.0D) {
+                d = 1.0D;
             }
 
-            double_1 /= 40.0D;
+            d /= 40.0D;
         }
 
-        return double_1;
+        return d;
     }
 
     @Override

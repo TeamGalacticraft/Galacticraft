@@ -1,24 +1,11 @@
 package io.github.teamgalacticraft.galacticraft.world.biome;
 
-import com.google.common.collect.Lists;
 import io.github.teamgalacticraft.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import io.github.teamgalacticraft.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import net.minecraft.entity.EntityCategory;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.NetherBiome;
-import net.minecraft.world.biome.PlainsBiome;
-import net.minecraft.world.biome.TaigaBiome;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-import java.util.function.BiConsumer;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -26,7 +13,7 @@ import java.util.function.BiConsumer;
 public final class MoonBiome extends Biome {
 
     public MoonBiome() {
-        super((new Settings())
+        super(new Settings()
                 .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MOON_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)

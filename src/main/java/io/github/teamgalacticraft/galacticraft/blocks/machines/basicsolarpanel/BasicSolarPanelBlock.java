@@ -6,7 +6,6 @@ import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.MultiBlock;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.WireConnectable;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

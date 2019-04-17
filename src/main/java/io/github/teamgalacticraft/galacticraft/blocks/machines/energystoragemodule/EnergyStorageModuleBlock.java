@@ -98,7 +98,7 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
 
     @Override
     public boolean canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!( world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
+        if (!(world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
             Galacticraft.logger.error("Not a Energy Storage Module. Rejecting connection.");
             return false;
         }

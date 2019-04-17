@@ -32,6 +32,14 @@ public class OxygenTankItem extends Item {
         this.maxOxygen = getDurability();
     }
 
+    public static int getOxygenCount(ItemStack stack) {
+        return stack.getOrCreateTag().getInt(OXYGEN_NBT_KEY);
+    }
+
+    public static int getMaxOxygen(ItemStack stack) {
+        return stack.getOrCreateTag().getInt(MAX_OXYGEN_NBT_KEY);
+    }
+
     @Override
     public void appendItemsForGroup(ItemGroup itemGroup_1, DefaultedList<ItemStack> list) {
         if (this.isInItemGroup(itemGroup_1)) {
@@ -59,14 +67,6 @@ public class OxygenTankItem extends Item {
     public void buildTooltip(ItemStack stack, World world, List<TextComponent> lines, TooltipContext context) {
         lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
         super.buildTooltip(stack, world, lines, context);
-    }
-
-    public static int getOxygenCount(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(OXYGEN_NBT_KEY);
-    }
-
-    public static int getMaxOxygen(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(MAX_OXYGEN_NBT_KEY);
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {

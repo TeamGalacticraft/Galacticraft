@@ -34,18 +34,16 @@ public class OxygenCollectorScreen extends ContainerScreen {
     private static final int OXYGEN_Y = Constants.TextureCoordinates.OXYGEN_LIGHT_Y;
     private static final int OXYGEN_DIMMED_X = Constants.TextureCoordinates.OXYGEN_DARK_X;
     private static final int OXYGEN_DIMMED_Y = Constants.TextureCoordinates.OXYGEN_DARK_Y;
-    private final OxygenCollectorBlockEntity collector;
-    private int energyDisplayX = 0;
-    private int energyDisplayY = 0;
-    private int oxygenDisplayX = 0;
-    private int oxygenDisplayY = 0;
-
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-
+    private final OxygenCollectorBlockEntity collector;
     BlockPos blockPos;
+    private int energyDisplayX = 0;
+    private int energyDisplayY = 0;
+    private int oxygenDisplayX = 0;
+    private int oxygenDisplayY = 0;
     private World world;
 
     public OxygenCollectorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {

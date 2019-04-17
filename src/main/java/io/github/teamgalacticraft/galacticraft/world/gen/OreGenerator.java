@@ -1,10 +1,9 @@
 package io.github.teamgalacticraft.galacticraft.world.gen;
 
 import com.mojang.datafixers.Dynamic;
-import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
+import io.github.teamgalacticraft.galacticraft.world.gen.feature.GCOreGenConfig;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -15,11 +14,9 @@ import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.decorator.RangeDecoratorConfig;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 import java.util.BitSet;
@@ -68,15 +65,15 @@ public class OreGenerator {
         @Override
         public boolean generate(IWorld iWorld, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, GCOreGenConfig featureConfig) {
             float float_1 = random.nextFloat() * 3.1415927F;
-            float float_2 = (float)featureConfig.size / 8.0F;
-            int size = MathHelper.ceil(((float)featureConfig.size / 16.0F * 2.0F + 1.0F) / 2.0F);
+            float float_2 = (float) featureConfig.size / 8.0F;
+            int size = MathHelper.ceil(((float) featureConfig.size / 16.0F * 2.0F + 1.0F) / 2.0F);
 
-            double x1 = (double)((float)blockPos.getX() + MathHelper.sin(float_1) * float_2);
-            double x2 = (double)((float)blockPos.getX() - MathHelper.sin(float_1) * float_2);
-            double z1 = (double)((float)blockPos.getZ() + MathHelper.cos(float_1) * float_2);
-            double z2 = (double)((float)blockPos.getZ() - MathHelper.cos(float_1) * float_2);
-            double double_5 = (double)(blockPos.getY() + random.nextInt(3) - 2);
-            double double_6 = (double)(blockPos.getY() + random.nextInt(3) - 2);
+            double x1 = (double) ((float) blockPos.getX() + MathHelper.sin(float_1) * float_2);
+            double x2 = (double) ((float) blockPos.getX() - MathHelper.sin(float_1) * float_2);
+            double z1 = (double) ((float) blockPos.getZ() + MathHelper.cos(float_1) * float_2);
+            double z2 = (double) ((float) blockPos.getZ() - MathHelper.cos(float_1) * float_2);
+            double double_5 = (double) (blockPos.getY() + random.nextInt(3) - 2);
+            double double_6 = (double) (blockPos.getY() + random.nextInt(3) - 2);
 
             int int_3 = blockPos.getX() - MathHelper.ceil(float_2) - size;
             int int_4 = blockPos.getY() - 2 - size;
@@ -84,8 +81,8 @@ public class OreGenerator {
             int int_6 = 2 * (MathHelper.ceil(float_2) + size);
             int int_7 = 2 * (2 + size);
 
-            for(int i = int_3; i <= int_3 + int_6; ++i) {
-                for(int j = int_5; j <= int_5 + int_6; ++j) {
+            for (int i = int_3; i <= int_3 + int_6; ++i) {
+                for (int j = int_5; j <= int_5 + int_6; ++j) {
 
                     if (int_4 <= iWorld.getTop(Heightmap.Type.OCEAN_FLOOR_WG, i, j)) {
                         return this.generateVeinPart(iWorld, random, featureConfig, x1, x2, z1, z2, double_5, double_6, int_3, int_4, int_5, int_6, int_7);
@@ -107,22 +104,22 @@ public class OreGenerator {
             double double_13;
             double double_14;
             double double_15;
-            for(int_8 = 0; int_8 < oreGenConfig.size; ++int_8) {
-                float float_1 = (float)int_8 / (float)oreGenConfig.size;
-                double_12 = MathHelper.lerp((double)float_1, double_1, double_2);
-                double_13 = MathHelper.lerp((double)float_1, double_5, double_6);
-                double_14 = MathHelper.lerp((double)float_1, double_3, double_4);
-                double_15 = random.nextDouble() * (double)oreGenConfig.size / 16.0D;
-                double double_11 = ((double)(MathHelper.sin(3.1415927F * float_1) + 1.0F) * double_15 + 1.0D) / 2.0D;
+            for (int_8 = 0; int_8 < oreGenConfig.size; ++int_8) {
+                float float_1 = (float) int_8 / (float) oreGenConfig.size;
+                double_12 = MathHelper.lerp((double) float_1, double_1, double_2);
+                double_13 = MathHelper.lerp((double) float_1, double_5, double_6);
+                double_14 = MathHelper.lerp((double) float_1, double_3, double_4);
+                double_15 = random.nextDouble() * (double) oreGenConfig.size / 16.0D;
+                double double_11 = ((double) (MathHelper.sin(3.1415927F * float_1) + 1.0F) * double_15 + 1.0D) / 2.0D;
                 doubles_1[int_8 * 4] = double_12;
                 doubles_1[int_8 * 4 + 1] = double_13;
                 doubles_1[int_8 * 4 + 2] = double_14;
                 doubles_1[int_8 * 4 + 3] = double_11;
             }
 
-            for(int_8 = 0; int_8 < oreGenConfig.size - 1; ++int_8) {
+            for (int_8 = 0; int_8 < oreGenConfig.size - 1; ++int_8) {
                 if (doubles_1[int_8 * 4 + 3] > 0.0D) {
-                    for(int int_9 = int_8 + 1; int_9 < oreGenConfig.size; ++int_9) {
+                    for (int int_9 = int_8 + 1; int_9 < oreGenConfig.size; ++int_9) {
                         if (doubles_1[int_9 * 4 + 3] > 0.0D) {
                             double_12 = doubles_1[int_8 * 4] - doubles_1[int_9 * 4];
                             double_13 = doubles_1[int_8 * 4 + 1] - doubles_1[int_9 * 4 + 1];
@@ -140,7 +137,7 @@ public class OreGenerator {
                 }
             }
 
-            for(int_8 = 0; int_8 < oreGenConfig.size; ++int_8) {
+            for (int_8 = 0; int_8 < oreGenConfig.size; ++int_8) {
                 double double_16 = doubles_1[int_8 * 4 + 3];
                 if (double_16 >= 0.0D) {
                     double double_17 = doubles_1[int_8 * 4];
@@ -153,14 +150,14 @@ public class OreGenerator {
                     int int_15 = Math.max(MathHelper.floor(double_18 + double_16), int_12);
                     int int_16 = Math.max(MathHelper.floor(double_19 + double_16), int_13);
 
-                    for(int int_17 = int_11; int_17 <= int_14; ++int_17) {
-                        double double_20 = ((double)int_17 + 0.5D - double_17) / double_16;
+                    for (int int_17 = int_11; int_17 <= int_14; ++int_17) {
+                        double double_20 = ((double) int_17 + 0.5D - double_17) / double_16;
                         if (double_20 * double_20 < 1.0D) {
-                            for(int int_18 = int_12; int_18 <= int_15; ++int_18) {
-                                double double_21 = ((double)int_18 + 0.5D - double_18) / double_16;
+                            for (int int_18 = int_12; int_18 <= int_15; ++int_18) {
+                                double double_21 = ((double) int_18 + 0.5D - double_18) / double_16;
                                 if (double_20 * double_20 + double_21 * double_21 < 1.0D) {
-                                    for(int int_19 = int_13; int_19 <= int_16; ++int_19) {
-                                        double double_22 = ((double)int_19 + 0.5D - double_19) / double_16;
+                                    for (int int_19 = int_13; int_19 <= int_16; ++int_19) {
+                                        double double_22 = ((double) int_19 + 0.5D - double_19) / double_16;
                                         if (double_20 * double_20 + double_21 * double_21 + double_22 * double_22 < 1.0D) {
                                             int int_20 = int_17 - int_1 + (int_18 - int_2) * int_4 + (int_19 - int_3) * int_4 * int_5;
                                             if (!bitSet_1.get(int_20)) {
