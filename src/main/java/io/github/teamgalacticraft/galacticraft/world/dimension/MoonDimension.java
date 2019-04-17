@@ -1,12 +1,13 @@
 package io.github.teamgalacticraft.galacticraft.world.dimension;
 
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.LowGravityDimension;
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.Oxygenless;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.CustomGravityDimension;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.OxygenLess;
 import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.launch.FabricClientTweaker;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -20,7 +21,7 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class MoonDimension extends Dimension implements LowGravityDimension, Oxygenless {
+public class MoonDimension extends Dimension implements CustomGravityDimension, OxygenLess {
 
     public MoonDimension(World worldIn, DimensionType typeIn) {
         super(worldIn, typeIn);
@@ -28,8 +29,9 @@ public class MoonDimension extends Dimension implements LowGravityDimension, Oxy
 
     @Override
     public int getMoonPhase(long long_1) {
-        return 2;
+        return 0;
     }
+
 
     @Override
     public boolean hasSkyLight() {
@@ -108,5 +110,10 @@ public class MoonDimension extends Dimension implements LowGravityDimension, Oxy
 
     public DimensionType getType() {
         return GalacticraftDimensions.MOON;
+    }
+
+    @Override
+    public float getGravity() {
+        return 0.062F;
     }
 }

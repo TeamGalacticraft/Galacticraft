@@ -3,7 +3,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.Oxygenless;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.OxygenLess;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
@@ -31,7 +31,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     }
 
     private int collectOxygen(BlockPos center) {
-        if (world.dimension instanceof Oxygenless) {
+        if (world.dimension instanceof OxygenLess) {
         int minX = center.getX() - 5;
         int minY = center.getY() - 5;
         int minZ = center.getZ() - 5;

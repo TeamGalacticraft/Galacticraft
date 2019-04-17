@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft;
+package io.github.teamgalacticraft.galacticraft.util;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

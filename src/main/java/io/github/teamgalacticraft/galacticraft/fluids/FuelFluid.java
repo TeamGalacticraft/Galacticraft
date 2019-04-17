@@ -34,7 +34,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     protected BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.SOLID;
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override
@@ -75,7 +75,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     protected int method_15733(ViewableWorld viewableWorld) {
-        return 0;
+        return 1;
     }
 
     @Override

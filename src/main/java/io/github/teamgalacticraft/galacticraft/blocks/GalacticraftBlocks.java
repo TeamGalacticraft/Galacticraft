@@ -140,8 +140,8 @@ public class GalacticraftBlocks {
     public static final Block ENERGY_STORAGE_MODULE_BLOCK = new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
     public static final Block OXYGEN_COLLECTOR_BLOCK = new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build());
     // Liquids
-    public static final FluidBlock CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
-    public static final FluidBlock FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().dropsNothing().resistance(100.0F).build());
+    public static final FluidBlock CRUDE_OIL_BLOCK = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().build());
+    public static final FluidBlock FUEL_BLOCK = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().build());
     public static final BlockItem CRUDE_OIL_BLOCK_ITEM = new BlockItem(CRUDE_OIL_BLOCK, new Item.Settings());
     public static final BlockItem BASIC_SOLAR_PANEL_PART_BLOCK_ITEM = new BlockItem(BASIC_SOLAR_PANEL_PART_BLOCK, new Item.Settings());
     private static final Marker BLOCKS = MarkerManager.getMarker("Blocks"); // Galacticraft/Blocks

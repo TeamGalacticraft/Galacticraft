@@ -197,6 +197,8 @@
   "item.galacticraft-rewoven.battery": "Battery",
   "item.galacticraft-rewoven.infinite_battery": "Infinite Battery",
 
+  "item.galacticraft-rewoven.crude_oil_bucket": "Oil Bucket",
+
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
 
   "tooltip.galacticraft-rewoven.energy": "%s GJ",

@@ -303,6 +303,9 @@ public class Constants {
         public static final String BATTERY = "battery";
         public static final String INFINITE_BATTERY = "infinite_battery";
 
+        //Fluid buckets
+        public static final String CRUDE_OIL_BUCKET = "crude_oil_bucket";
+
         //GC INVENTORY
         public static final String PARACHUTE = "parachute";
         public static final String ORANGE_PARACHUTE = "orange_parachute";
@@ -380,6 +383,10 @@ public class Constants {
         }
     }
 
+    public static class Entities {
+        public static final String MOON_VILLAGER = "moon_villager";
+    }
+
     public static class TextureCoordinates {
         public static final int OVERLAY_WIDTH = 12;
         public static final int OVERLAY_HEIGHT = 40;
@@ -401,6 +408,7 @@ public class Constants {
         public static final String ELECTRIC_COMPRESSOR_CONTAINER = "electric_compressor_container";
         public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
         public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
+        public static final String REFINERY_CONTAINER = "refinery_container";
         public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
     }
 }

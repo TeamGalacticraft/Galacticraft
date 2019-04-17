@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.blocks.machines;
+package io.github.teamgalacticraft.galacticraft.util;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
