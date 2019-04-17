@@ -1,10 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector;
 
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
@@ -12,7 +10,6 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
@@ -40,7 +37,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
         int maxY = center.getY() + 5;
         int maxZ = center.getZ() + 5;
 
-        int leafBlocks = 0;
+        double leafBlocks = 0;
 
         for (BlockPos pos : BlockPos.iterateBoxPositions(minX, minY, minZ, maxX, maxY, maxZ)) {
             BlockState blockState = world.getBlockState(pos);
@@ -53,7 +50,9 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
         }
 
         if (leafBlocks < 2) return 0;
-        return leafBlocks;
+
+        double oxyCount = 20 * (leafBlocks / 14);
+        return (int) Math.ceil(oxyCount);
     }
 
     @Override
@@ -82,6 +81,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
         return tag;
     }
+
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
