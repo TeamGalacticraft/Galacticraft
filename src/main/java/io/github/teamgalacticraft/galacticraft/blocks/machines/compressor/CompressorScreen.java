@@ -15,20 +15,16 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class CompressorScreen extends ContainerScreen {
-    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
-
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
-
     private static final int CONFIG_TAB_X = 0;
-
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
     private static final int PROGRESS_X = 204;
-
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
+    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
     protected int progressDisplayX;
 
     protected int progressDisplayY;

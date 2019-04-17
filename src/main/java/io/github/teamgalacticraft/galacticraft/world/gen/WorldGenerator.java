@@ -20,6 +20,8 @@ public class WorldGenerator {
         OreGenerator.registerMoonOres();
     }
 
-    private static void registerMars() {OreGenerator.registerMarsOres(); }
+    private static void registerMars() {
+        OreGenerator.registerMarsOres();
+    }
 
 }

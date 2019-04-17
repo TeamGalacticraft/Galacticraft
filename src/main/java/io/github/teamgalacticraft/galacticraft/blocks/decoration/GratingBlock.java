@@ -2,11 +2,8 @@ package io.github.teamgalacticraft.galacticraft.blocks.decoration;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
 import net.minecraft.block.Waterloggable;
-import net.minecraft.block.enums.SlabType;
 import net.minecraft.entity.VerticalEntityPosition;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -14,16 +11,12 @@ import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.util.Hand;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
@@ -31,23 +24,6 @@ import net.minecraft.world.World;
 public class GratingBlock extends Block implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.create("grating_state", GratingState.class);
-
-    public enum GratingState implements StringRepresentable {
-        UPPER("upper"),
-        LOWER("lower");
-
-        GratingState(String name) {
-            this.name = name;
-        }
-
-        private String name;
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
-    }
-
 
     public GratingBlock(Settings settings) {
         super(settings);
@@ -68,7 +44,7 @@ public class GratingBlock extends Block implements Waterloggable {
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getFacing();
 
-        return direction != Direction.DOWN && (direction == Direction.UP || context.getPos().y - (double)blockPos.getY() <= 0.5D) ? blockState : blockState.with(GRATING_STATE, GratingState.UPPER);
+        return direction != Direction.DOWN && (direction == Direction.UP || context.getPos().y - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.with(GRATING_STATE, GratingState.UPPER);
     }
 
     @Override
@@ -89,5 +65,21 @@ public class GratingBlock extends Block implements Waterloggable {
     @Override
     public FluidState getFluidState(BlockState blockState) {
         return blockState.get(WATERLOGGED) ? Fluids.WATER.getState(false) : super.getFluidState(blockState);
+    }
+
+    public enum GratingState implements StringRepresentable {
+        UPPER("upper"),
+        LOWER("lower");
+
+        private String name;
+
+        GratingState(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
     }
 }

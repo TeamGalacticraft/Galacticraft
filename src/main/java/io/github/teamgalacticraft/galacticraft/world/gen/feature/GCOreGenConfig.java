@@ -1,4 +1,4 @@
-package io.github.teamgalacticraft.galacticraft.world.gen;
+package io.github.teamgalacticraft.galacticraft.world.gen.feature;
 
 import com.mojang.datafixers.Dynamic;
 import com.mojang.datafixers.types.DynamicOps;

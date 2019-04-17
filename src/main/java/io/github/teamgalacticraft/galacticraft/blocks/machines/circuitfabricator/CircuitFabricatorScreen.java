@@ -38,19 +38,15 @@ public class CircuitFabricatorScreen extends ContainerScreen {
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 50;
     private static final int PROGRESS_HEIGHT = 10;
-
-    private int energyDisplayX;
-    private int energyDisplayY;
-
-    private int progressDisplayX;
-    private int progressDisplayY;
-
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-
     BlockPos blockPos;
+    private int energyDisplayX;
+    private int energyDisplayY;
+    private int progressDisplayX;
+    private int progressDisplayY;
     private World world;
 
 

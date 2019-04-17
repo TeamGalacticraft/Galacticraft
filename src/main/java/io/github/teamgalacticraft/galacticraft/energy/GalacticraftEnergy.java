@@ -46,29 +46,29 @@ public class GalacticraftEnergy {
         return battery.getTag().getInt("MaxEnergy");
     }
 
-    public static void incrementEnergy(ItemStack battery, int energyToAdd) {
-        int newEnergy = getBatteryEnergy(battery);
-        newEnergy = Math.min(newEnergy + energyToAdd, getMaxBatteryEnergy(battery));
+    public static void incrementEnergy(ItemStack stack, int energyToAdd) {
+        int newEnergy = getBatteryEnergy(stack);
+        newEnergy = Math.min(newEnergy + energyToAdd, getMaxBatteryEnergy(stack));
 
-        setEnergy(battery, newEnergy);
+        setEnergy(stack, newEnergy);
     }
 
-    public static void decrementEnergy(ItemStack battery, int energyToRemove) {
-        int newEnergy = getBatteryEnergy(battery);
+    public static void decrementEnergy(ItemStack stack, int energyToRemove) {
+        int newEnergy = getBatteryEnergy(stack);
         newEnergy = Math.max(newEnergy - energyToRemove, 0);
 
-        setEnergy(battery, newEnergy);
+        setEnergy(stack, newEnergy);
     }
 
-    public static void setEnergy(ItemStack battery, int newEnergy) {
-        if (!isEnergyItem(battery)) {
+    public static void setEnergy(ItemStack stack, int newEnergy) {
+        if (!isEnergyItem(stack)) {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        CompoundTag tag = battery.getOrCreateTag();
+        CompoundTag tag = stack.getOrCreateTag();
         tag.putInt("Energy", newEnergy);
-        battery.setTag(tag);
-        battery.setDamage(battery.getDurability() - newEnergy);
+        stack.setTag(tag);
+        stack.setDamage(stack.getDurability() - newEnergy);
     }
 
     public static boolean isOxygenItem(ItemStack itemStack) {

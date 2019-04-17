@@ -28,24 +28,17 @@ import java.util.Map;
 public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
     private final List<Runnable> listeners = Lists.newArrayList();
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
-
-    private float heat = 0.0f;
     public int fuelTimeMax;
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
-
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    private float heat = 0.0f;
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);
-    }
-
-    @Override
-    protected int getInvSize() {
-        return 2;
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -58,6 +51,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
 
     public static boolean canUseAsFuel(ItemStack itemStack) {
         return createFuelTimeMap().containsKey(itemStack.getItem());
+    }
+
+    @Override
+    protected int getInvSize() {
+        return 2;
     }
 
     @Override

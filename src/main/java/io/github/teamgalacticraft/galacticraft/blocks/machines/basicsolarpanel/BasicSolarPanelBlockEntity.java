@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.google.common.collect.Lists;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
@@ -11,9 +10,7 @@ import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntit
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.teamgalacticraft.galacticraft.util.BlockOptionUtils;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 

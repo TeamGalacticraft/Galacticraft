@@ -13,7 +13,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     public static int MAX_ENERGY = 60000;
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;
-
+    SimpleFixedItemInv inventory = new SimpleFixedItemInv(2);
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(MAX_ENERGY, GalacticraftEnergy.GALACTICRAFT_JOULES);
     private int powerToChargePerTick = 5;
 
     public EnergyStorageModuleBlockEntity() {

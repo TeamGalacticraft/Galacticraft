@@ -20,8 +20,7 @@ public class OilPoolGenerator {
 
                 if (biome.getCategory() == Biome.Category.DESERT) {
                     biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(Blocks.GLASS.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(20)));
-                }
-                else {
+                } else {
                     biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(Blocks.GLASS.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(10)));
                 }
             }
