@@ -1,5 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule;
 
+import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
