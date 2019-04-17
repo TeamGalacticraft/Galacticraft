@@ -58,19 +58,35 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     @Override
     public void tick() {
         attemptChargeFromStack(getInventory().getInvStack(BATTERY_SLOT));
-        lastCollectAmount = collectOxygen(this.pos);
-        if (this.getEnergy().getCurrentEnergy() <= 0) {
-            this.status = CollectorStatus.INACTIVE;
-        }
-        if (this.lastCollectAmount <= 0) {
-            this.status = CollectorStatus.NOT_ENOUGH_LEAVES;
-        } else {
-            this.status = CollectorStatus.COLLECTING;
+
+        // Only collect every 20 seconds
+        if (world.random.nextInt(10) != 0) {
+            return;
         }
 
-        if (status == CollectorStatus.COLLECTING && this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
-            this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
-            this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, collectOxygen(this.pos), ActionType.PERFORM);
+
+        if (this.getEnergy().getCurrentEnergy() > 0) {
+            this.status = CollectorStatus.COLLECTING;
+        } else {
+            this.status = CollectorStatus.INACTIVE;
+        }
+
+        if (status == CollectorStatus.COLLECTING) {
+            lastCollectAmount = collectOxygen(this.pos);
+
+            if (this.lastCollectAmount <= 0) {
+                this.status = CollectorStatus.NOT_ENOUGH_LEAVES;
+                return;
+            }
+
+            // If the oxygen capacity isn't full, add collected oxygen.
+            if (this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
+                int i = this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, ActionType.PERFORM);
+
+                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, lastCollectAmount, ActionType.PERFORM);
+            }
+        } else {
+            lastCollectAmount = 0;
         }
     }
 
