@@ -8,16 +8,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-public class GCEntityTypes {
+public class GalacticraftEntityTypes {
 
-    /*public static final EntityType<EntityMoonVillager> MOON_VILLAGER = newEntityType(EntityMoonVillager.class, EntityCategory.CREATURE);//EntityType.Builder.create(EntityMoonVillager::new, EntityCategory.CREATURE);
+    public static final EntityType<?> MOON_VILLAGER = EntityType.Builder.create(EntityMoonVillager::new, EntityCategory.CREATURE).build("galacticraft-rewoven:" + Constants.Entities.MOON_VILLAGER);
 
     public static void register() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.Entities.MOON_VILLAGER), MOON_VILLAGER);
     }
-
-    private static EntityType<?extends Entity> newEntityType(Class<?extends Entity> clazz, EntityCategory category) {
-        return new EntityType<>(clazz, category);
-    }
-    */
 }

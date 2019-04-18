@@ -327,6 +327,9 @@ public class Constants {
         public static final String OXYGEN_MASK = "oxygen_mask";
         public static final String OXYGEN_GEAR = "oxygen_gear";
 
+        public static final String SHIELD_CONTROLLER = "shield_controller";
+        public static final String FREQUENCY_MODULE = "frequency_module";
+
         public static final String SMALL_OXYGEN_TANK = "small_oxygen_tank";
         public static final String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
         public static final String LARGE_OXYGEN_TANK = "large_oxygen_tank";
@@ -340,6 +343,12 @@ public class Constants {
         public static final String ISOTHERMAL_PADDING_CHESTPIECE = "isothermal_padding_chestpiece";
         public static final String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
         public static final String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
+
+        public static final String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
+        public static final String TIER_3_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
+        public static final String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
+        public static final String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
+        public static final String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
     }
 
     public static class Config {

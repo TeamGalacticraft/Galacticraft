@@ -37,8 +37,6 @@ public class BatteryItem extends Item implements EnergyHolderItem {
         } else {
             lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(TextFormat.GREEN)));
         }
-
-        lines.add(new StringTextComponent(stack.getOrCreateTag().toString()));
         super.buildTooltip(stack, world, lines, context);
     }
 
