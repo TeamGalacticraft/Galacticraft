@@ -3,7 +3,7 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.OxygenLess;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.SpaceDimension;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import io.github.teamgalacticraft.galacticraft.entity.GalacticraftBlockEntities;
@@ -31,30 +31,34 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     }
 
     private int collectOxygen(BlockPos center) {
-        if (world.dimension instanceof OxygenLess) {
-        int minX = center.getX() - 5;
-        int minY = center.getY() - 5;
-        int minZ = center.getZ() - 5;
-        int maxX = center.getX() + 5;
-        int maxY = center.getY() + 5;
-        int maxZ = center.getZ() + 5;
+        if (world.dimension instanceof SpaceDimension) {
+            if (!((SpaceDimension) world.dimension).hasOxygen()) {
+                int minX = center.getX() - 5;
+                int minY = center.getY() - 5;
+                int minZ = center.getZ() - 5;
+                int maxX = center.getX() + 5;
+                int maxY = center.getY() + 5;
+                int maxZ = center.getZ() + 5;
 
-        double leafBlocks = 0;
+                double leafBlocks = 0;
 
-        for (BlockPos pos : BlockPos.iterateBoxPositions(minX, minY, minZ, maxX, maxY, maxZ)) {
-            BlockState blockState = world.getBlockState(pos);
-            if (blockState.isAir()) {
-                continue;
+                for (BlockPos pos : BlockPos.iterateBoxPositions(minX, minY, minZ, maxX, maxY, maxZ)) {
+                    BlockState blockState = world.getBlockState(pos);
+                    if (blockState.isAir()) {
+                        continue;
+                    }
+                    if (blockState.getBlock() instanceof LeavesBlock || blockState.getBlock() instanceof CropBlock) {
+                        leafBlocks++;
+                    }
+                }
+
+                if (leafBlocks < 2) return 0;
+
+                double oxyCount = 20 * (leafBlocks / 14);
+                return (int) Math.ceil(oxyCount);
+            } else {
+                return 183;
             }
-            if (blockState.getBlock() instanceof LeavesBlock || blockState.getBlock() instanceof CropBlock) {
-                leafBlocks++;
-            }
-        }
-
-        if (leafBlocks < 2) return 0;
-
-        double oxyCount = 20 * (leafBlocks / 14);
-        return (int) Math.ceil(oxyCount);
         } else {
             return 183;
         }

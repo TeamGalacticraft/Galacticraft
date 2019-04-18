@@ -1,6 +1,5 @@
 package io.github.teamgalacticraft.galacticraft.container;
 
-import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
@@ -14,6 +13,7 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import io.github.teamgalacticraft.galacticraft.Constants;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>

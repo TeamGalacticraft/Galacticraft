@@ -1,7 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.world.dimension;
 
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.CustomGravityDimension;
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.OxygenLess;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.SpaceDimension;
 import io.github.teamgalacticraft.galacticraft.blocks.GalacticraftBlocks;
 import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
@@ -23,7 +22,7 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class MarsDimension extends Dimension implements CustomGravityDimension, OxygenLess {
+public class MarsDimension extends Dimension implements SpaceDimension {
 
     public MarsDimension(World worldIn, DimensionType typeIn) {
         super(worldIn, typeIn);
@@ -128,4 +127,10 @@ public class MarsDimension extends Dimension implements CustomGravityDimension, 
     public float getGravity() {
         return 0;
     }
+
+    @Override
+    public boolean hasOxygen() {
+        return false;
+    }
+
 }
