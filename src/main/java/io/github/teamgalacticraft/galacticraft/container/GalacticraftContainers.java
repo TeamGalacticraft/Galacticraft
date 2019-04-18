@@ -23,6 +23,7 @@ public class GalacticraftContainers {
     public static final Identifier COMPRESSOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.COMPRESSOR_CONTAINER);
     public static final Identifier ELECTRIC_COMPRESSOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.ELECTRIC_COMPRESSOR_CONTAINER);
     public static final Identifier ENERGY_STORAGE_MODULE_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.ENERGY_STORAGE_MODULE_CONTAINER);
+    public static final Identifier REFINERY_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.REFINERY_CONTAINER);
     public static final Identifier OXYGEN_COLLECTOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.OXYGEN_COLLECTOR_CONTAINER);
 
     public static void register() {

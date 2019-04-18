@@ -1,9 +1,12 @@
-package io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule;
+package io.github.teamgalacticraft.galacticraft.blocks.machines.refinery;
 
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
+import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
+import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -32,30 +35,28 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-/**
- * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
- */
-public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable {
+public class RefineryBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable {
+
     private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 
-    public EnergyStorageModuleBlock(Settings settings) {
+    public RefineryBlock(Settings settings) {
         super(settings);
     }
+
 
     @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) {
             return true;
         }
-
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.REFINERY_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return true;
     }
 
     @Override
     public void buildTooltip(ItemStack itemStack, BlockView blockView, List<TextComponent> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.refinery").setStyle(new Style().setColor(TextFormat.GRAY)));
         } else {
             list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
         }
@@ -67,8 +68,8 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
         if (blockEntity != null) {
-            if (blockEntity instanceof EnergyStorageModuleBlockEntity) {
-                EnergyStorageModuleBlockEntity be = (EnergyStorageModuleBlockEntity) blockEntity;
+            if (blockEntity instanceof RefineryBlockEntity) {
+                RefineryBlockEntity be = (RefineryBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
                     ItemStack itemStack = be.getInventory().getInvStack(i);
@@ -88,32 +89,20 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
+        return this.stateFactory.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockView blockView) {
-        return new EnergyStorageModuleBlockEntity();
+        return new RefineryBlockEntity();
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
-            Galacticraft.logger.error("Not a Energy Storage Module. Rejecting connection.");
+    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        if (!(world.getBlockEntity(connectionTargetPos) instanceof MachineBlockEntity)) {
+            Galacticraft.logger.error("Not a fab. Rejecting connection.");
             return false;
         }
-        Direction d = world.getBlockState(connectionTargetPos).get(FACING);
-        System.out.println(opposite);
-        if (d == Direction.NORTH) {
-            return opposite == Direction.WEST || opposite == Direction.EAST;
-        } else if (d == Direction.SOUTH) {
-            return opposite == Direction.WEST || opposite == Direction.EAST;
-        } else if (d == Direction.EAST) {
-            return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else if (d == Direction.WEST) {
-            return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else {
-            return false;
-        }
+        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
     }
 }

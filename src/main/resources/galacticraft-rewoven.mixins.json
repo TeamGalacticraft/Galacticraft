@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "PlayerEntityMixin",
-    "ItemStackMixin"
+    "ItemStackMixin",
+    "LivingEntityMixin"
   ],
   "client": [
     "PlayerInventoryScreenMixin",

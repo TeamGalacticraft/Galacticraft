@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "minecraft:block/water" }
+    "": {
+      "model": "galacticraft-rewoven:crude_oil_block" }
   }
 }

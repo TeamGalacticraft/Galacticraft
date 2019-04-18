@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
+import io.github.teamgalacticraft.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
@@ -121,6 +122,9 @@ public class GalacticraftItems {
 
     public static final Item BATTERY = new BatteryItem(new Item.Settings().itemGroup(ITEMS_GROUP).durability(BatteryItem.MAX_ENERGY));
     public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Settings().itemGroup(ITEMS_GROUP).durability(BatteryItem.MAX_ENERGY));
+
+    //Fluid buckets
+    public static final BucketItem CRUDE_OIL_BUCKET = new BucketItem(GalacticraftFluids.STILL_CRUDE_OIL, new Item.Settings().itemGroup(ITEMS_GROUP));
 
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().itemGroup(ITEMS_GROUP));
@@ -256,6 +260,9 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), STANDARD_WRENCH);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), BATTERY);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.INFINITE_BATTERY), INFINITE_BATTERY);
+
+        //Fluid buckets
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CRUDE_OIL_BUCKET), CRUDE_OIL_BUCKET);
 
         //GC INVENTORY
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PARACHUTE), PARACHUTE);

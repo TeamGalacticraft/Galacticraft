@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines;
 
+import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

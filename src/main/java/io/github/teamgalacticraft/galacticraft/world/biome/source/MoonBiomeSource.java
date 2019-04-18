@@ -14,7 +14,7 @@ import java.util.Set;
 public class MoonBiomeSource extends BiomeSource {
     private final Biome[] biomes;
 
-    public MoonBiomeSource(MoonBiomeSourceConfig vanillaLayeredBiomeSourceConfig_1) {
+    public MoonBiomeSource(MoonBiomeSourceConfig sourceConfig) {
         this.biomes = new Biome[]{GalacticraftBiomes.MOON, GalacticraftBiomes.MOON_PLAINS};
     }
 
@@ -45,8 +45,8 @@ public class MoonBiomeSource extends BiomeSource {
 
     public Set<BlockState> getTopMaterials() {
         if (this.topMaterials.isEmpty()) {
-            for (Biome biome_1 : this.biomes) {
-                this.topMaterials.add(biome_1.getSurfaceConfig().getTopMaterial());
+            for (Biome biome : this.biomes) {
+                this.topMaterials.add(biome.getSurfaceConfig().getTopMaterial());
             }
         }
 

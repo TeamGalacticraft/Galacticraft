@@ -16,8 +16,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
-    public MachineBlockEntity(BlockEntityType<?> blockEntityType_1) {
-        super(blockEntityType_1);
+    public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
+        super(blockEntityType);
         this.energy.listen(this::markDirty);
     }
 

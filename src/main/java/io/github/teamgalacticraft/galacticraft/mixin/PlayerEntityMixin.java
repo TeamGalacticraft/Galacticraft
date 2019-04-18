@@ -3,6 +3,7 @@ package io.github.teamgalacticraft.galacticraft.mixin;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.mojang.authlib.GameProfile;
 import io.github.teamgalacticraft.galacticraft.accessor.GCPlayerAccessor;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.CustomGravityDimension;
 import io.github.teamgalacticraft.galacticraft.container.PlayerInventoryGCContainer;
 import io.github.teamgalacticraft.galacticraft.world.dimension.GalacticraftDimensions;
 import net.minecraft.entity.EntityType;
@@ -47,12 +48,5 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     public void init(World world_1, GameProfile gameProfile_1, CallbackInfo info) {
         this.gcContainer = new PlayerInventoryGCContainer(this.inventory, !world.isClient, (PlayerEntity) (Object) this);
         this.gearInventory = new SimpleFixedItemInv(12);
-    }
-
-    @Inject(method = "tick", at = @At("RETURN"))
-    public void tick(CallbackInfo ci) {
-        if (this.world.dimension.getType() == GalacticraftDimensions.MOON) {
-
-        }
     }
 }
