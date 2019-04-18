@@ -1,6 +1,7 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
 import io.github.teamgalacticraft.galacticraft.api.EnergyHolderItem;
+import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -44,24 +45,13 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     @Override
     public void appendItemsForGroup(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
         if (this.isInItemGroup(group)) {
-            ItemStack fullBattery = new ItemStack(GalacticraftItems.BATTERY);
-            CompoundTag fullTag = new CompoundTag();
-            fullTag.putInt("Energy", BatteryItem.MAX_ENERGY);
-            fullTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
-            fullBattery.setTag(fullTag);
-            fullBattery.setDamage(0);
+            ItemStack charged = new ItemStack(this);
+            GalacticraftEnergy.setEnergy(charged, 0);
+            groupStacks.add(charged);
 
-            ItemStack depletedBattery = new ItemStack(GalacticraftItems.BATTERY);
-            CompoundTag depletedTag = new CompoundTag();
-            depletedTag.putInt("Energy", 0);
-            depletedTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
-            depletedBattery.setTag(depletedTag);
-            depletedBattery.setDamage(BatteryItem.MAX_ENERGY);
-
-            groupStacks.add(fullBattery);
-            groupStacks.add(depletedBattery);
-
-            System.out.println("Append items for group.");
+            ItemStack depleted = new ItemStack(this);
+            GalacticraftEnergy.setEnergy(depleted, MAX_ENERGY);
+            groupStacks.add(depleted);
         }
     }
 
