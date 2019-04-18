@@ -2,7 +2,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.refinery;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.galacticraft.Constants;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.CollectorStatus;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorContainer;
 import io.github.teamgalacticraft.galacticraft.energy.GalacticraftEnergy;

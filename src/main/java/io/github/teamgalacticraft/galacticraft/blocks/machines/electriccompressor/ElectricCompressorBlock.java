@@ -1,10 +1,10 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.electriccompressor;
 
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.compressor.CompressorBlock;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
+import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

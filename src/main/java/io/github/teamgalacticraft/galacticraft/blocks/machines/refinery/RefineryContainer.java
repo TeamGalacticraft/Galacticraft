@@ -1,8 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.refinery;
 
 import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorContainer;
 import io.github.teamgalacticraft.galacticraft.container.slot.ChargeSlot;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;

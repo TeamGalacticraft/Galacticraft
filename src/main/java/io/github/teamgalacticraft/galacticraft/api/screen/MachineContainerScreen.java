@@ -1,8 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.api.screen;
 
 import io.github.teamgalacticraft.galacticraft.Constants;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.container.Container;

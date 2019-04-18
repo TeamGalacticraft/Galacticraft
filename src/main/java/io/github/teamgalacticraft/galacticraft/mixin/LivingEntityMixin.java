@@ -6,19 +6,12 @@ import io.github.teamgalacticraft.galacticraft.api.entity.EvolvedEntity;
 import io.github.teamgalacticraft.galacticraft.api.world.dimension.SpaceDimension;
 import io.github.teamgalacticraft.galacticraft.entity.damage.GalacticraftDamageSource;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
-import net.minecraft.advancement.criterion.EntityHurtPlayerCriterion;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mixins;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>

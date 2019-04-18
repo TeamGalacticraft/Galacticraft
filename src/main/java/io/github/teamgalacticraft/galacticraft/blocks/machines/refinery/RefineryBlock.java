@@ -2,8 +2,6 @@ package io.github.teamgalacticraft.galacticraft.blocks.machines.refinery;
 
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
 import io.github.teamgalacticraft.galacticraft.blocks.machines.MachineBlockEntity;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
-import io.github.teamgalacticraft.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
 import io.github.teamgalacticraft.galacticraft.util.WireConnectable;

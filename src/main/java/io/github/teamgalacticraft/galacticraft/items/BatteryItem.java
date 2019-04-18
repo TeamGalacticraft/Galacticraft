@@ -10,7 +10,10 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.*;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextComponent;
+import net.minecraft.text.TextFormat;
+import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.world.World;
 

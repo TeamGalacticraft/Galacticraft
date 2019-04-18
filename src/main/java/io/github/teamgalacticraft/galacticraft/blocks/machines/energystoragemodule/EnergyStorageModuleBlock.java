@@ -1,9 +1,9 @@
 package io.github.teamgalacticraft.galacticraft.blocks.machines.energystoragemodule;
 
 import io.github.teamgalacticraft.galacticraft.Galacticraft;
-import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
 import io.github.teamgalacticraft.galacticraft.container.GalacticraftContainers;
 import io.github.teamgalacticraft.galacticraft.util.Rotatable;
+import io.github.teamgalacticraft.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
