@@ -22,24 +22,26 @@ public class GalacticraftCommands {
     public static void register() {
         CommandRegistry instance = CommandRegistry.INSTANCE;
 
-        instance.register(false, source -> {
-            source.register(
-                    literal("dimensiontp")
-                            .then(CommandManager.argument("dimension", DimensionArgumentType.create())
-                                    .executes(context -> {
-                                        try {
-                                            ServerPlayerEntity player = context.getSource().getPlayer();
-                                            DimensionType dim = DimensionArgumentType.getDimensionArgument(context, "dimension");
+        instance.register(false, source -> source.register(
+                literal("dimensiontp")
+                        .then(CommandManager.argument("dimension", DimensionArgumentType.create())
+                                .executes(context -> {
+                                    try {
+                                        ServerPlayerEntity player = context.getSource().getPlayer();
+                                        DimensionType dim = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                                        if (dim != player.dimension) {
                                             message(context, "Teleported to " + Registry.DIMENSION.getId(dim));
                                             GalacticraftDimensions.teleport(context.getSource(), player, context.getSource().getMinecraftServer().getWorld(dim));
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            message(context, TextFormat.RED + "Error: " + e.getMessage());
+                                        } else {
+                                            message(context, TextFormat.RED + "Error: You are already in the specified dimension!");
                                         }
-                                        return 1;
-                                    }))
-                            .executes(context -> missingArgs(context, "<dimension>")));
-        });
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                        message(context, TextFormat.RED + "Error: " + e.getMessage());
+                                    }
+                                    return 1;
+                                }))
+                        .executes(context -> missingArgs(context, "<dimension>"))));
     }
 
     private static int missingArgs(CommandContext<ServerCommandSource> context, String args) throws CommandSyntaxException {

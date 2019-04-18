@@ -1,13 +1,11 @@
 package io.github.teamgalacticraft.galacticraft.world.dimension;
 
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.CustomGravityDimension;
-import io.github.teamgalacticraft.galacticraft.api.world.dimension.OxygenLess;
+import io.github.teamgalacticraft.galacticraft.api.world.dimension.SpaceDimension;
 import io.github.teamgalacticraft.galacticraft.world.biome.GalacticraftBiomes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import io.github.teamgalacticraft.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.launch.FabricClientTweaker;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -21,7 +19,7 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 /**
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
-public class MoonDimension extends Dimension implements CustomGravityDimension, OxygenLess {
+public class MoonDimension extends Dimension implements SpaceDimension {
 
     public MoonDimension(World worldIn, DimensionType typeIn) {
         super(worldIn, typeIn);
@@ -115,5 +113,10 @@ public class MoonDimension extends Dimension implements CustomGravityDimension, 
     @Override
     public float getGravity() {
         return 0.062F;
+    }
+
+    @Override
+    public boolean hasOxygen() {
+        return false;
     }
 }

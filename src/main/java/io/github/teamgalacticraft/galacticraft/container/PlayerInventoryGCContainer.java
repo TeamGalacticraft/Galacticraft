@@ -48,8 +48,8 @@ public class PlayerInventoryGCContainer extends Container {
                 }
             });
         }
-        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK));
-        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR));
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK));
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR));
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 

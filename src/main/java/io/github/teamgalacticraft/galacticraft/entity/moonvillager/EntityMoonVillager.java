@@ -20,7 +20,7 @@ public class EntityMoonVillager extends LivingEntity {
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot equipmentSlot) {
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
