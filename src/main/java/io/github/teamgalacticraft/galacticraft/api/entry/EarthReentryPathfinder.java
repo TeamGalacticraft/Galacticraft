@@ -14,7 +14,6 @@ public class EarthReentryPathfinder {
     private final Position startingPosition;
     private Map<Integer, Position> points = new HashMap<>();
 
-
     public EarthReentryPathfinder(Position landingPosition, Position startingPosition) {
         this.landingPosition = landingPosition;
         this.startingPosition = startingPosition;

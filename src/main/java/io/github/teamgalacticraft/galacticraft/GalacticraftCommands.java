@@ -56,7 +56,6 @@ public class GalacticraftCommands {
                 return -1;
             }
         } catch (Exception ignore) {
-            ignore.printStackTrace();
             return -1;
         }
     }
