@@ -378,6 +378,14 @@ public class Constants {
         public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
         public static final String OVERLAY = "gui/overlay";
 
+        public static final String THERMAL_HEAD = "slot/thermal_helmet";
+        public static final String THERMAL_CHEST = "slot/thermal_chestpiece";
+        public static final String THERMAL_PANTS = "slot/thermal_leggings";
+        public static final String THERMAL_BOOTS = "slot/thermal_boots";
+        public static final String OXYGEN_MASK = "slot/oxygen_mask";
+        public static final String OXYGEN_GEAR = "slot/oxygen_gear";
+        public static final String OXYGEN_TANK = "slot/oxygen_tank";
+
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
         }

@@ -1,5 +1,6 @@
 package io.github.teamgalacticraft.galacticraft.container;
 
+import io.github.teamgalacticraft.galacticraft.Constants;
 import io.github.teamgalacticraft.galacticraft.container.slot.ItemSpecificSlot;
 import io.github.teamgalacticraft.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.galacticraft.items.OxygenTankItem;
@@ -18,6 +19,11 @@ import net.minecraft.item.ItemStack;
  * @author <a href="https://github.com/teamgalacticraft">TeamGalacticraft</a>
  */
 public class PlayerInventoryGCContainer extends Container {
+    private static final String[] EMPTY_ARMOR_SLOT_IDS = new String[]{
+            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_HEAD,
+            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_CHEST,
+            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_PANTS,
+            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_BOOTS};
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static int OXYGEN_TANK_1_SLOT = 6, OXYGEN_TANK_2_SLOT = 7;
 
@@ -36,7 +42,8 @@ public class PlayerInventoryGCContainer extends Container {
 
         for (slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];
-            this.addSlot(new Slot(this.gearInventory, slotY, 8, 8 + slotY * 18) {
+            int finalSlotY = slotY;
+            this.addSlot(new Slot(this.gearInventory, finalSlotY, 8, 8 + slotY * 18) {
                 @Override
                 public int getMaxStackAmount() {
                     return 1;
@@ -46,10 +53,25 @@ public class PlayerInventoryGCContainer extends Container {
                 public boolean canInsert(ItemStack itemStack_1) {
                     return slot == getPreferredEquipmentSlot(itemStack_1);
                 }
+
+                @Override
+                public String getBackgroundSprite() {
+                    return EMPTY_ARMOR_SLOT_IDS[finalSlotY];
+                }
             });
         }
-        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK));
-        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR));
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK) {
+            @Override
+            public String getBackgroundSprite() {
+                return Constants.MOD_ID + ":" + Constants.ScreenTextures.OXYGEN_MASK;
+            }
+        });
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR) {
+            @Override
+            public String getBackgroundSprite() {
+                return Constants.MOD_ID + ":" + Constants.ScreenTextures.OXYGEN_GEAR;
+            }
+        });
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
@@ -130,6 +152,11 @@ public class PlayerInventoryGCContainer extends Container {
         @Override
         public int getMaxStackAmount() {
             return 1;
+        }
+
+        @Override
+        public String getBackgroundSprite() {
+            return Constants.MOD_ID + ":" + Constants.ScreenTextures.OXYGEN_TANK;
         }
     }
 }
