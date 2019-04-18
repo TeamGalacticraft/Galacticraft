@@ -12,6 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
@@ -40,14 +41,16 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
                 int maxY = center.getY() + 5;
                 int maxZ = center.getZ() + 5;
 
-                double leafBlocks = 0;
+                int leafBlocks = 0;
 
                 for (BlockPos pos : BlockPos.iterateBoxPositions(minX, minY, minZ, maxX, maxY, maxZ)) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.isAir()) {
                         continue;
                     }
-                    if (blockState.getBlock() instanceof LeavesBlock || blockState.getBlock() instanceof CropBlock) {
+                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                        leafBlocks++;
+                    } else if (blockState.getBlock() instanceof CropBlock) {
                         leafBlocks++;
                     }
                 }
