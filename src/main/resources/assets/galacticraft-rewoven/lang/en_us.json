@@ -243,6 +243,10 @@
 
   "galacticraft-rewoven:moon": "Moon",
 
+  "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
+  "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
+  "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",
+
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!"
 }
