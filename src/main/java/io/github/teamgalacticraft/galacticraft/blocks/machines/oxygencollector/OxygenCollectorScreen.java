@@ -77,7 +77,7 @@ public class OxygenCollectorScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.oxygen_collector_block").getText(), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.oxygen_collector").getText(), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
 //        DrawableUtils.drawCenteredString(this.minecraft.textRenderer,
 //                new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status",
 //                        new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.active").applyFormat(TextFormat.GREEN)

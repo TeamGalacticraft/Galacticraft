@@ -19,14 +19,14 @@
       "item": "minecraft:furnace"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire_block"
+      "item": "galacticraft-rewoven:aluminum_wire"
     },
     "R": {
       "item": "minecraft:redstone_torch"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:circuit_fabricator_block",
+    "item": "galacticraft-rewoven:circuit_fabricator",
     "count": 1
   }
 }

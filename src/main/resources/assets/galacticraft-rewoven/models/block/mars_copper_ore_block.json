@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "galacticraft-rewoven:block/mars_copper_ore_block"
-  }
-}

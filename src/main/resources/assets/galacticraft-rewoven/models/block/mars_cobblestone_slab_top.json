@@ -1,8 +1,8 @@
 {
     "parent": "block/slab_top",
     "textures": {
-        "bottom": "galacticraft-rewoven:block/mars_cobblestone_block",
-        "top": "galacticraft-rewoven:block/mars_cobblestone_block",
-        "side": "galacticraft-rewoven:block/mars_cobblestone_block"
+        "bottom": "galacticraft-rewoven:block/mars_cobblestone",
+        "top": "galacticraft-rewoven:block/mars_cobblestone",
+        "side": "galacticraft-rewoven:block/mars_cobblestone"
     }
 }

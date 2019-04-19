@@ -2,10 +2,10 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:walkway_block"
+      "item": "galacticraft-rewoven:walkway"
     },
     {
-      "item": "galacticraft-rewoven:heavy_aluminum_wire_block"
+      "item": "galacticraft-rewoven:heavy_aluminum_wire"
     }
   ],
   "result": {

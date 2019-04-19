@@ -1,7 +1,7 @@
 {
   "pools": [{
     "entries": [{
-      "name": "galacticraft-rewoven:aluminum_block",
+      "name": "galacticraft-rewoven:aluminum",
       "type": "minecraft:item"
     }],
     "rolls": 1,

@@ -1,8 +1,8 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "galacticraft-rewoven:block/aluminum_wire_block",
-		"particle": "galacticraft-rewoven:block/aluminum_wire_block"
+		"0": "galacticraft-rewoven:block/aluminum_wire",
+		"particle": "galacticraft-rewoven:block/aluminum_wire"
 	},
 	"elements": [
 		{

@@ -2,6 +2,6 @@
     "variants": {
         "type=bottom": { "model": "galacticraft-rewoven:block/mars_dungeon_bricks_slab" },
         "type=top": { "model": "galacticraft-rewoven:block/mars_dungeon_bricks_slab_top" },
-        "type=double": { "model": "galacticraft-rewoven:block/mars_dungeon_bricks_block" }
+        "type=double": { "model": "galacticraft-rewoven:block/mars_dungeon_bricks" }
     }
 }

@@ -1,7 +1,7 @@
 {
   "type": "smelting",
   "ingredient": {
-    "item": "galacticraft-rewoven:ilmenite_ore_block"
+    "item": "galacticraft-rewoven:ilmenite_ore"
   },
   "result": "galacticraft-rewoven:titanium_ingot",
   "experience": 0.1,

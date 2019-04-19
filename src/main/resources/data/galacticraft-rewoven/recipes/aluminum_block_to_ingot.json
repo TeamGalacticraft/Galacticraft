@@ -2,7 +2,7 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:aluminum_block"
+      "item": "galacticraft-rewoven:aluminum"
     }
   ],
   "result": {

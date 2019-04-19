@@ -2,7 +2,7 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:desh_block"
+      "item": "galacticraft-rewoven:desh"
     }
   ],
   "result": {

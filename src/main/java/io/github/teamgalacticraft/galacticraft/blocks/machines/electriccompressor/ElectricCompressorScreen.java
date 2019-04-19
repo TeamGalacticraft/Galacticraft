@@ -32,6 +32,6 @@ public class ElectricCompressorScreen extends CompressorScreen {
 
     @Override
     protected String getContainerDisplayName() {
-        return new TranslatableTextComponent("block.galacticraft-rewoven.electric_compressor_block").getText();
+        return new TranslatableTextComponent("block.galacticraft-rewoven.electric_compressor").getText();
     }
 }

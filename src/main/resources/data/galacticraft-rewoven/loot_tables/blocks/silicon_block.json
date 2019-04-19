@@ -1,7 +1,7 @@
 {
   "pools": [{
     "entries": [{
-      "name": "galacticraft-rewoven:silicon_block",
+      "name": "galacticraft-rewoven:silicon",
       "type": "minecraft:item"
     }],
     "rolls": 1,

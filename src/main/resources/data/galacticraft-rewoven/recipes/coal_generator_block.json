@@ -16,11 +16,11 @@
       "item": "minecraft:furnace"
     },
     "W": {
-      "item": "galacticraft-rewoven:aluminum_wire_block"
+      "item": "galacticraft-rewoven:aluminum_wire"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:coal_generator_block",
+    "item": "galacticraft-rewoven:coal_generator",
     "count": 1
   }
 }

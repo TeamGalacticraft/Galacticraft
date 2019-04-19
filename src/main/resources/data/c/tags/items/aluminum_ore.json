@@ -1,7 +1,7 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-rewoven:aluminum_ore_block",
-    "galacticraft-rewoven:asteroid_aluminum_ore_block"
+    "galacticraft-rewoven:aluminum_ore",
+    "galacticraft-rewoven:asteroid_aluminum_ore"
   ]
 }

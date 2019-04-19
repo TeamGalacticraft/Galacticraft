@@ -76,7 +76,7 @@ public class CompressorScreen extends ContainerScreen {
     }
 
     protected String getContainerDisplayName() {
-        return new TranslatableTextComponent("block.galacticraft-rewoven.compressor_block").getText();
+        return new TranslatableTextComponent("block.galacticraft-rewoven.compressor").getText();
     }
 
     private void drawConfigTabs() {
