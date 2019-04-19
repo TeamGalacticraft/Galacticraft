@@ -73,12 +73,12 @@ public class OxygenTankItem extends Item {
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (((GCPlayerAccessor)player).getGearInventory().getInvStack(6) == ItemStack.EMPTY) {
+        if (((GCPlayerAccessor)player).getGearInventory().getInvStack(6).isEmpty()) {
             ItemStack stack = player.getStackInHand(hand);
             player.setStackInHand(hand, ItemStack.EMPTY);
             ((GCPlayerAccessor) player).getGearInventory().setInvStack(6, stack, Simulation.ACTION);
             new TypedActionResult<>(ActionResult.SUCCESS, stack);
-        } else if (((GCPlayerAccessor)player).getGearInventory().getInvStack(7) == ItemStack.EMPTY) {
+        } else if (((GCPlayerAccessor)player).getGearInventory().getInvStack(7).isEmpty()) {
             ItemStack stack = player.getStackInHand(hand);
             player.setStackInHand(hand, ItemStack.EMPTY);
             ((GCPlayerAccessor) player).getGearInventory().setInvStack(7, stack, Simulation.ACTION);
