@@ -1,5 +1,8 @@
 package io.github.teamgalacticraft.galacticraft.items;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import io.github.teamgalacticraft.galacticraft.accessor.GCPlayerAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -70,6 +73,17 @@ public class OxygenTankItem extends Item {
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        if (((GCPlayerAccessor)player).getGearInventory().getInvStack(6) == ItemStack.EMPTY) {
+            ItemStack stack = player.getStackInHand(hand);
+            player.setStackInHand(hand, ItemStack.EMPTY);
+            ((GCPlayerAccessor) player).getGearInventory().setInvStack(6, stack, Simulation.ACTION);
+            new TypedActionResult<>(ActionResult.SUCCESS, stack);
+        } else if (((GCPlayerAccessor)player).getGearInventory().getInvStack(7) == ItemStack.EMPTY) {
+            ItemStack stack = player.getStackInHand(hand);
+            player.setStackInHand(hand, ItemStack.EMPTY);
+            ((GCPlayerAccessor) player).getGearInventory().setInvStack(7, stack, Simulation.ACTION);
+            new TypedActionResult<>(ActionResult.SUCCESS, stack);
+        }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand)); //TODO Put in GC Slot
     }
 
