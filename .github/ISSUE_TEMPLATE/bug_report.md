@@ -7,15 +7,10 @@ assignees: ''
 
 ---
 
-REVIEW THE GUIDELINES (LINK AT TOP OF THIS PAGE)
+Galacticraft Rewoven version:
 
-Minecraft version:
-Galacticraft version:
+Singleplayer, Multiplayer, or Singleplayer opened to LAN?
 
-Single player (SSP), Multiplayer (SMP), or SSP opened to LAN (LAN)?
+Please list the Galacticraft Rewoven addons you have installed
 
-Any Galacticraft add-ons installed? please list all
-
-Please provide screenshots / crash report / log / full modlist as needed
-
-If the game is not starting at all, please confirm that you downloaded from the official Galacticraft download site (https://micdoodle8.com/mods/galacticraft)
+Please provide your LOG (preferably on [gist](https://gist.github.com) or [pastebin](https://pastebin.com)) and screenshots etc. if applicable
