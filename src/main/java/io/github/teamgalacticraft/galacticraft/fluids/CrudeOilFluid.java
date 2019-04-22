@@ -44,6 +44,11 @@ public class CrudeOilFluid extends BaseFluid {
     }
 
     @Override
+    protected boolean isInfinite() {
+        return true;
+    }
+
+    @Override
     protected BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.SOLID;
     }
@@ -86,15 +91,8 @@ public class CrudeOilFluid extends BaseFluid {
         return fluid == getStill() || fluid == getFlowing();
     }
 
-
     @Override
-    public boolean method_15737() {
-        // Swim
-        return true;
-    }
-
-    @Override
-    public void method_15730(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
+    public void beforeBreakingBlock(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
         BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
         Block.dropStacks(blockState, iWorld.getWorld(), blockPos, blockEntity);
     }
@@ -105,7 +103,7 @@ public class CrudeOilFluid extends BaseFluid {
     }
 
     @Override
-    public int method_15739(ViewableWorld viewableWorld) {
+    public int getLevelDecreasePerBlock(ViewableWorld viewableWorld) {
         return 1;
     }
 

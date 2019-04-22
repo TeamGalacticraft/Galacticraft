@@ -42,7 +42,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
                 int leafBlocks = 0;
 
-                for (BlockPos pos : BlockPos.iterateBoxPositions(minX, minY, minZ, maxX, maxY, maxZ)) {
+                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.isAir()) {
                         continue;

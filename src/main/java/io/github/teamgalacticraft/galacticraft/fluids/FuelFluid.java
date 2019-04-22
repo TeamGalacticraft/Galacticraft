@@ -63,13 +63,13 @@ public class FuelFluid extends BaseFluid {
     }
 
     @Override
-    protected boolean method_15737() {
+    protected boolean isInfinite() {
         // Swim
         return true;
     }
 
     @Override
-    protected void method_15730(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
+    protected void beforeBreakingBlock(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
 
     }
 
@@ -79,7 +79,7 @@ public class FuelFluid extends BaseFluid {
     }
 
     @Override
-    protected int method_15739(ViewableWorld viewableWorld) {
+    protected int getLevelDecreasePerBlock(ViewableWorld viewableWorld) {
         return 0;
     }
 

@@ -95,7 +95,7 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
                     for (i6 = 0; i6 < 16; ++i6) {
                         for (i7 = 0; i7 < 8; ++i7) {
                             boolean_2 = !booleans[(i5 * 16 + i6) * 8 + i7] && (i5 < 15 && booleans[((i5 + 1) * 16 + i6) * 8 + i7] || i5 > 0 && booleans[((i5 - 1) * 16 + i6) * 8 + i7] || i6 < 15 && booleans[(i5 * 16 + i6 + 1) * 8 + i7] || i6 > 0 && booleans[(i5 * 16 + (i6 - 1)) * 8 + i7] || i7 < 7 && booleans[(i5 * 16 + i6) * 8 + i7 + 1] || i7 > 0 && booleans[(i5 * 16 + i6) * 8 + (i7 - 1)]);
-                            if (boolean_2 && (i7 < 4 || rand.nextInt(2) != 0) && world.getBlockState(pos.add(i5, i7, i6)).getMaterial().method_15799()) {
+                            if (boolean_2 && (i7 < 4 || rand.nextInt(2) != 0) && world.getBlockState(pos.add(i5, i7, i6)).getMaterial().isSolid()) {
                                 world.setBlockState(pos.add(i5, i7, i6), GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
                             }
                         }

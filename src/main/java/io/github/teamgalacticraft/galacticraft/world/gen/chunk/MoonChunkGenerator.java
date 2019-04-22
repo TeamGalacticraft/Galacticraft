@@ -2,13 +2,13 @@ package io.github.teamgalacticraft.galacticraft.world.gen.chunk;
 
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sortme.SpawnHelper;
 import net.minecraft.util.SystemUtil;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biome.SpawnEntry;
 import net.minecraft.world.biome.source.BiomeSource;
