@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "io.github.teamgalacticraft.galacticraft.mixin",
+  "package": "com.hrznstudio.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "PlayerEntityMixin",

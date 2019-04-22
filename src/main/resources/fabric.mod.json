@@ -8,16 +8,16 @@
   "description": "FabricMC port of Galacticraft",
   "licence": "Galacticraft License",
   "contact": {
-    "sources": "https://github.com/teamgalacticraft/Galacticraft-Rewoven"
+    "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven"
   },
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "io.github.teamgalacticraft.galacticraft.Galacticraft"
+      "com.hrznstudio.galacticraft.Galacticraft"
     ],
     "client": [
-      "io.github.teamgalacticraft.galacticraft.GalacticraftClient"
+      "com.hrznstudio.galacticraft.GalacticraftClient"
     ]
   },
   "mixins": [
@@ -37,7 +37,7 @@
     "roughlyenoughitems:plugins": [
       {
         "id": "galacticraft_plugin",
-        "class": "io.github.teamgalacticraft.galacticraft.recipes.rei.GalacticraftREIPlugin"
+        "class": "com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin"
       }
     ]
   }
