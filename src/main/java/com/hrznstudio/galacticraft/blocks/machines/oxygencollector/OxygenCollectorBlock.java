@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -30,7 +31,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntityProvider {
+public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntityProvider, MachineBlock {
     private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 
     public OxygenCollectorBlock(Settings settings) {

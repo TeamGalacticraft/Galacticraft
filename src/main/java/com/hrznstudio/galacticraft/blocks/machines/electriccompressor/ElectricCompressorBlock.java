@@ -1,7 +1,9 @@
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlock;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -13,7 +15,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
-public class ElectricCompressorBlock extends CompressorBlock implements WireConnectable {
+public class ElectricCompressorBlock extends CompressorBlock implements WireConnectable, MachineBlock {
     public ElectricCompressorBlock(Settings settings) {
         super(settings);
     }
@@ -34,11 +36,14 @@ public class ElectricCompressorBlock extends CompressorBlock implements WireConn
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         if (!(world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
             Galacticraft.logger.error("Not an electric compressor. rejecting connection.");
-            return false;
+            return WireConnectionType.NONE;
         }
-        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
+        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
+            return WireConnectionType.ENERGY_INPUT;
+        }
+        return WireConnectionType.NONE;
     }
 }

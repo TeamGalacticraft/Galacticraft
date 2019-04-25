@@ -1,22 +1,29 @@
-package com.hrznstudio.galacticraft.blocks.machines;
+package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
+import com.hrznstudio.galacticraft.api.blocks.WireBlock;
+import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderLayer;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
-public class AluminumWireBlock extends Block implements WireConnectable {
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+public class AluminumWireBlock extends BlockWithEntity implements WireConnectable, WireBlock {
+
     private static BooleanProperty ATTACHED_NORTH = BooleanProperty.create("attached_north");
     private static BooleanProperty ATTACHED_EAST = BooleanProperty.create("attached_east");
     private static BooleanProperty ATTACHED_SOUTH = BooleanProperty.create("attached_south");
@@ -42,16 +49,23 @@ public class AluminumWireBlock extends Block implements WireConnectable {
         return state;
     }
 
+    @Override
+    public void onPlaced(World world_1, BlockPos blockPos_1, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
+        if (world_1.getBlockEntity(blockPos_1).getType() == GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE) {
+            ((AluminumWireBlockEntity)world_1.getBlockEntity(blockPos_1)).init();
+        }
+    }
+
     private BooleanProperty getPropForDirection(Direction dir) {
         switch (dir) {
             case SOUTH:
-                return (ATTACHED_SOUTH);
+                return ATTACHED_SOUTH;
             case EAST:
-                return (ATTACHED_EAST);
+                return ATTACHED_EAST;
             case WEST:
-                return (ATTACHED_WEST);
+                return ATTACHED_WEST;
             case NORTH:
-                return (ATTACHED_NORTH);
+                return ATTACHED_NORTH;
             case UP:
                 return ATTACHED_UP;
             case DOWN:
@@ -66,7 +80,7 @@ public class AluminumWireBlock extends Block implements WireConnectable {
                 !(blockState_2).isAir()
                         && blockState_2.getBlock() instanceof WireConnectable
                         // get opposite of direction so the WireConnectable can check from its perspective.
-                        && ((WireConnectable) blockState_2.getBlock()).canWireConnect(world, direction_1.getOpposite(), thisWire, otherConnectable)
+                        && (((WireConnectable) blockState_2.getBlock()).canWireConnect(world, direction_1.getOpposite(), thisWire, otherConnectable) != WireConnectionType.NONE)
         ));
     }
 
@@ -112,4 +126,13 @@ public class AluminumWireBlock extends Block implements WireConnectable {
         return false;
     }
 
+    @Override
+    public BlockEntity createBlockEntity(BlockView blockView) {
+        return new AluminumWireBlockEntity();
+    }
+
+    @Override
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.WIRE;
+    }
 }

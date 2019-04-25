@@ -1,7 +1,9 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -33,7 +35,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class RefineryBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable {
+public class RefineryBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 
@@ -96,11 +98,14 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         if (!(world.getBlockEntity(connectionTargetPos) instanceof MachineBlockEntity)) {
             Galacticraft.logger.error("Not a fab. Rejecting connection.");
-            return false;
+            return WireConnectionType.NONE;
         }
-        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
+        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
+            return WireConnectionType.ENERGY_INPUT;
+        }
+        return WireConnectionType.NONE;
     }
 }

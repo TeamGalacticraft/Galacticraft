@@ -6,7 +6,7 @@ import com.hrznstudio.galacticraft.blocks.decoration.*;
 import com.hrznstudio.galacticraft.blocks.environment.*;
 import com.hrznstudio.galacticraft.blocks.fluid.CrudeOilBlock;
 import com.hrznstudio.galacticraft.blocks.fluid.FuelBlock;
-import com.hrznstudio.galacticraft.blocks.machines.AluminumWireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlock;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelPartBlock;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;

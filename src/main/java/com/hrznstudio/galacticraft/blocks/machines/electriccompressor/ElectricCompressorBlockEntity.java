@@ -7,7 +7,7 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import com.hrznstudio.galacticraft.api.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;

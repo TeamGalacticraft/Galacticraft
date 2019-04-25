@@ -1,6 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -35,7 +37,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable {
+public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
     private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
 
     public EnergyStorageModuleBlock(Settings settings) {
@@ -97,11 +99,11 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         if (!(world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
             Galacticraft.logger.error("Not a Energy Storage Module. Rejecting connection.");
-            return false;
-        }
+            return WireConnectionType.NONE;
+        }/*
         Direction d = world.getBlockState(connectionTargetPos).get(FACING);
         System.out.println(opposite);
         if (d == Direction.NORTH) {
@@ -112,8 +114,8 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
             return opposite == Direction.NORTH || opposite == Direction.SOUTH;
         } else if (d == Direction.WEST) {
             return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else {
-            return false;
-        }
+        } else {*/
+            return WireConnectionType.NONE;
+        //}
     }
 }

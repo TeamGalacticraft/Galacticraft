@@ -3,6 +3,8 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -34,7 +36,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable {
+public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -117,11 +119,14 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         if (!(world.getBlockEntity(connectionTargetPos) instanceof CoalGeneratorBlockEntity)) {
             Galacticraft.logger.error("Not a Coal Generator. Rejecting connection.");
-            return false;
+            return WireConnectionType.NONE;
         }
-        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
+        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
+            return WireConnectionType.ENERGY_OUTPUT;
+        }
+        return WireConnectionType.NONE;
     }
 }

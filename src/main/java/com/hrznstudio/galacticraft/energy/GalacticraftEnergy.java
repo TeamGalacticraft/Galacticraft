@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.energy;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import io.github.cottonmc.energy.CottonEnergy;
 import io.github.cottonmc.energy.api.EnergyType;
