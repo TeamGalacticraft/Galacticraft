@@ -52,8 +52,10 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     @Override
     public void onPlaced(World world_1, BlockPos blockPos_1, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
         if (world_1.getBlockEntity(blockPos_1).getType() == GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE) {
-            ((AluminumWireBlockEntity)world_1.getBlockEntity(blockPos_1)).init();
+            ((AluminumWireBlockEntity) world_1.getBlockEntity(blockPos_1)).init();
         }
+        WireNetwork.blockPlaced();
+
     }
 
     private BooleanProperty getPropForDirection(Direction dir) {

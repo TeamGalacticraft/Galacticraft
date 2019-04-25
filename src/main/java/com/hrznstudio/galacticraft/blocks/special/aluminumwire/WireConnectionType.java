@@ -11,6 +11,11 @@ public enum WireConnectionType {
     NONE,
 
     /**
+     * The wire is connected to another wire.
+     */
+    WIRE,
+
+    /**
      * The wire is connected to some sort of energy consuming block.
      */
     ENERGY_INPUT,
@@ -18,10 +23,6 @@ public enum WireConnectionType {
     /**
      * The wire is connected to some sort of energy generating block.
      */
-    ENERGY_OUTPUT,
+    ENERGY_OUTPUT
 
-    /**
-     * The wire is connected to another wire.
-     */
-    WIRE
 }
