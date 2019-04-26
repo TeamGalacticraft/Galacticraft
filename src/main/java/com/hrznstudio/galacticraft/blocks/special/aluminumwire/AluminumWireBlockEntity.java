@@ -28,7 +28,6 @@ public class AluminumWireBlockEntity extends BlockEntity implements Tickable {
                 }
             }
         }*/
-        networkId = new WireNetwork(this).getId();
         WireNetwork.getNetworkFromId(networkId).update();
     }
 

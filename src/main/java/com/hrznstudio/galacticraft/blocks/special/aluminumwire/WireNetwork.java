@@ -8,13 +8,15 @@ import net.minecraft.world.IWorld;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class WireNetwork {
 
-    public static Map<WireNetwork, BlockPos> networkMap = new HashMap<>();
+    public static ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
     private static WireNetwork n;
     private int id;
-    private Map<BlockEntity, WireConnectionType> wires = new HashMap<>();
+    private ConcurrentMap<BlockEntity, WireConnectionType> wires = new ConcurrentHashMap<>();
     private int z = Integer.MAX_VALUE;
 
     WireNetwork(BlockEntity source) {
