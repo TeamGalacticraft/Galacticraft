@@ -1,11 +1,20 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
+import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.prospector.silk.util.ActionType;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 
-public class AluminumWireBlockEntity extends BlockEntity implements Tickable {
+import java.util.HashMap;
+import java.util.Map;
+
+public class AluminumWireBlockEntity extends BlockEntity implements Tickable, WireBlockEntity {
     protected int networkId;
+    private boolean tickedOnce = false;
 
     public AluminumWireBlockEntity() {
         super(GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE);
@@ -13,26 +22,15 @@ public class AluminumWireBlockEntity extends BlockEntity implements Tickable {
 
     @Override
     public void tick() {
-        /*if (world.getBlockState(pos).getBlock() == GalacticraftBlocks.ALUMINUM_WIRE_BLOCK) {
-            for (Direction direction : Direction.values()) {
-                if (world.getBlockState(pos).get(BooleanProperty.create("attached_" + direction.getName()))) {
-                    if (world.getBlockState(getPosFromDirection(direction, pos)).getBlock() instanceof WireBlock) {
-                        connections.replace(direction, WireConnectionType.WIRE);
-                    } else if (world.getBlockState(getPosFromDirection(direction, pos)).getBlock() instanceof MachineBlock) {
-                        connections.replace(direction, ((WireConnectable)world.getBlockState(getPosFromDirection(direction, pos)).getBlock()).canWireConnect(world, direction.getOpposite(), pos, getPosFromDirection(direction, pos)));
-                    } else {
-                        connections.replace(direction, WireConnectionType.NONE);
-                    }
-                } else {
-                    connections.replace(direction, WireConnectionType.NONE);
-                }
-            }
-        }*/
-        WireNetwork.getNetworkFromId(networkId).update();
+        if (!tickedOnce) {
+            networkId = new WireNetwork(this).getId();
+            tickedOnce = true;
+            WireNetwork.blockPlaced();
+        }
     }
 
     public void init() {
         networkId = new WireNetwork(this).getId(); //use id for easy replacement
+        tickedOnce = true;
     }
-
 }

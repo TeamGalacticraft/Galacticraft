@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
@@ -23,6 +24,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.function.BiConsumer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -99,6 +101,16 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
         }
         WireNetwork.blockPlaced();
 
+    }
+
+    @Override
+    public void afterBreak(World world_1, PlayerEntity playerEntity_1, BlockPos blockPos_1, BlockState blockState_1, BlockEntity blockEntity_1, ItemStack itemStack_1) {
+        super.afterBreak(world_1, playerEntity_1, blockPos_1, blockState_1, blockEntity_1, itemStack_1);
+        WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
+            if (blockPos == blockPos_1) {
+                WireNetwork.networkMap.remove(wireNetwork, blockPos);
+            }
+        });
     }
 
     private BooleanProperty getPropForDirection(Direction dir) {

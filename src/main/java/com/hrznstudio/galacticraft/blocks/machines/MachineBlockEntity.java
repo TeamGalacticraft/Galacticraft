@@ -16,7 +16,7 @@ import net.minecraft.nbt.CompoundTag;
  */
 public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     public static final int DEFAULT_MAX_ENERGY = 15000;
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {

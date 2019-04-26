@@ -1,12 +1,16 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
+import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.util.WireConnectable;
+import io.github.prospector.silk.util.ActionType;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -17,7 +21,11 @@ public class WireNetwork {
     private static WireNetwork n;
     private int id;
     private ConcurrentMap<BlockEntity, WireConnectionType> wires = new ConcurrentHashMap<>();
+    private ConcurrentMap<BlockEntity, Integer> energyNeed = new ConcurrentHashMap<>();
+    private int energyRequired;
+    private int energyFufilled;
     private int z = Integer.MAX_VALUE;
+    private ConcurrentMap<BlockEntity, Integer> energy = new ConcurrentHashMap<>();
 
     WireNetwork(BlockEntity source) {
         networkMap.forEach((wireNetwork, blockPos) -> {
@@ -52,7 +60,9 @@ public class WireNetwork {
                 for (BlockEntity entity : adjacentWires) {
                     if (entity != null) {
                         wireNetwork.wires.putIfAbsent(entity, WireConnectionType.WIRE);
-                        networkMap.remove(getNetworkFromId(((AluminumWireBlockEntity) entity).networkId)); //remove old one
+                        try {
+                            networkMap.remove(getNetworkFromId(((AluminumWireBlockEntity) entity).networkId)); //remove old one
+                        } catch (NullPointerException ignore) {}
                         ((AluminumWireBlockEntity) entity).networkId = wireNetwork.getId();
                     }
                 }
@@ -62,7 +72,6 @@ public class WireNetwork {
     }
 
     public static BlockPos getPosFromDirection(Direction direction, BlockPos pos) {
-
         if (direction == Direction.NORTH) {
             return pos.add(0, 0, -1);
         } else if (direction == Direction.SOUTH) {
@@ -84,15 +93,17 @@ public class WireNetwork {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
-            BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, pos));
+            Block blockEntity = world.getBlockState(getPosFromDirection(direction, pos)).getBlock();
+            System.out.println("," + pos.getX() +"," + pos.getY() +","+pos.getZ());
 
             if (blockEntity == null) {
                 continue;
             }
 
             if (blockEntity instanceof WireConnectable) {
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, blockEntity.getPos()) == WireConnectionType.ENERGY_INPUT) {
-                    adjacentConnections[direction.ordinal()] = blockEntity;
+                System.out.println("adhjkhjkahkjhjfdhjafsdhjjhkfd-con");
+                if (((WireConnectable) blockEntity).canWireConnect(world, direction, pos, pos) == WireConnectionType.ENERGY_INPUT) {
+                    adjacentConnections[direction.ordinal()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 }
             }
         }
@@ -103,15 +114,17 @@ public class WireNetwork {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
-            BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, pos));
+            Block blockEntity = world.getBlockState(getPosFromDirection(direction, pos)).getBlock();
+            System.out.println("," + pos.getX() +"," + pos.getY() +","+pos.getZ());
 
             if (blockEntity == null) {
                 continue;
             }
 
             if (blockEntity instanceof WireConnectable) {
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, blockEntity.getPos()) == WireConnectionType.ENERGY_OUTPUT) {
-                    adjacentConnections[direction.ordinal()] = blockEntity;
+                System.out.println("adhjkhjkahkjhjfdhjafsdhjjhkfd-pro");
+                if (((WireConnectable) blockEntity).canWireConnect(world, direction, pos, pos) == WireConnectionType.ENERGY_OUTPUT) {
+                    adjacentConnections[direction.ordinal()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 }
             }
         }
@@ -128,10 +141,9 @@ public class WireNetwork {
                 continue;
             }
 
-            if (blockEntity instanceof WireConnectable) {
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, blockEntity.getPos()) == WireConnectionType.WIRE) {
-                    adjacentConnections[direction.ordinal()] = blockEntity;
-                }
+            if (blockEntity instanceof WireBlockEntity) {
+                System.out.println("adhjkhjkahkjhjfdhjafsdhjjhkfd-wire");
+                adjacentConnections[direction.ordinal()] = blockEntity;
             }
         }
         return adjacentConnections;
@@ -156,12 +168,95 @@ public class WireNetwork {
         return adjacentConnections;
     }
 
+    public static BlockPos getPosFromInt(BlockPos pos, int i) {
+        if (i == 0) {
+            return pos.down();
+        } else if (i == 1) {
+            return pos.up();
+        } else if (i == 2) {
+            return pos.north();
+        } else if (i == 3) {
+            return pos.south();
+        } else if (i == 4) {
+            return pos.east();
+        } else if (i == 5) {
+            return pos.west();
+        }
+        return null;
+    }
+
     private Map<BlockEntity, WireConnectionType> getWires() {
         return wires;
     }
 
     public void update() {
+        System.out.println("update");
+        energyNeed.clear();
+        energy.clear();
+        wires.forEach((blockEntity, wireConnectionType) -> {
+            if (!(blockEntity.getWorld().getBlockState(blockEntity.getPos()).getBlock() instanceof WireBlockEntity)) {
+                wires.remove(blockEntity, wireConnectionType);
+            }
+            System.out.println("wires.foreach");
+            for (BlockEntity consumer : getAdjacentConsumers(blockEntity.getPos(), blockEntity.getWorld())) {
+                if (consumer != null) {
+                    System.out.println("notnull.foreach");
+                    if (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() <= ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy()) {
+                        if (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() < ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy()) {
+                            ((MachineBlockEntity) consumer).getEnergy().setCurrentEnergy(((MachineBlockEntity) consumer).getEnergy().getMaxEnergy());
+                        }
+                    } else {
+                        energyNeed.put(consumer, (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() - ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy()));
+                    }
+                }
+            }
 
+            for (BlockEntity producer : getAdjacentProducers(blockEntity.getPos(), blockEntity.getWorld())) {
+                System.out.println(producer);
+                if (producer != null) {
+                    System.out.println("for producer");
+                    if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() != 0) {
+                        if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 100) {
+                            energy.put(producer, 100);
+                        } else if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 50) {
+                            energy.put(producer, 50);
+                        } else if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 25) {
+                            energy.put(producer, 25);
+                        }
+                        if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 10) {
+                            energy.put(producer, 10);
+                        } else if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 1) {
+                            energy.put(producer, 1);
+                        }
+                    }
+                }
+            }
+        });
+
+        energyRequired = 0;
+        energyFufilled = 0;
+        for (int i : energyNeed.values()) {
+            energyRequired += i;
+        }
+        energy.forEach((blockEntity, integer) -> {
+            System.out.println("energy.foreach energyfufilled");
+            if (integer > 0) {
+                ((MachineBlockEntity)blockEntity).energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, integer, ActionType.PERFORM);
+                energyFufilled += integer;
+            }
+        });
+        energyNeed.forEach((blockEntity, integer) -> {
+            System.out.println("filling consumer");
+            if (integer > 0 ) {
+                if (integer <= energyFufilled) {
+                    energyFufilled -= integer;
+                    ((MachineBlockEntity) blockEntity).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, integer, ActionType.PERFORM);
+                } else {
+                    ((MachineBlockEntity) blockEntity).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyFufilled, ActionType.PERFORM);
+                    energyFufilled = 0;
+                }
+            }
+        });
     }
 
     public int getId() {
