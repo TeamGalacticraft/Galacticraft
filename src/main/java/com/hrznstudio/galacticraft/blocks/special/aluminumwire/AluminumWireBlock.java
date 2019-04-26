@@ -9,15 +9,20 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.VerticalEntityPosition;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -31,9 +36,47 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     private static BooleanProperty ATTACHED_UP = BooleanProperty.create("attached_up");
     private static BooleanProperty ATTACHED_DOWN = BooleanProperty.create("attached_down");
 
+    // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
+    private static final VoxelShape NORTH = createCuboidShape(8 - 3, 8 - 3, 0, 8 + 3, 8 + 3, 8 + 3);
+    private static final VoxelShape EAST = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 16, 8 + 3, 8 + 3);
+    private static final VoxelShape SOUTH = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 8 + 3, 16);
+    private static final VoxelShape WEST = createCuboidShape(0, 8 - 3, 8 - 3, 8 + 3, 8 + 3, 8 + 3);
+    private static final VoxelShape UP = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 16, 8 + 3);
+    private static final VoxelShape DOWN = createCuboidShape(8 - 3, 0, 8 - 3, 8 + 3, 8 + 3, 8 + 3);
+    private static final VoxelShape NONE = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 8 + 3, 8 + 3);    // 6x6x6 box in the center.
+
     public AluminumWireBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateFactory().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, VerticalEntityPosition verticalEntityPosition) {
+        ArrayList<VoxelShape> shapes = new ArrayList<>();
+
+        if (blockState.get(ATTACHED_NORTH)) {
+            shapes.add(NORTH);
+        }
+        if (blockState.get(ATTACHED_SOUTH)) {
+            shapes.add(SOUTH);
+        }
+        if (blockState.get(ATTACHED_EAST)) {
+            shapes.add(EAST);
+        }
+        if (blockState.get(ATTACHED_WEST)) {
+            shapes.add(WEST);
+        }
+        if (blockState.get(ATTACHED_UP)) {
+            shapes.add(UP);
+        }
+        if (blockState.get(ATTACHED_DOWN)) {
+            shapes.add(DOWN);
+        }
+        if (shapes.isEmpty()) {
+            return NONE;
+        } else {
+            return VoxelShapes.union(NONE, shapes.toArray(new VoxelShape[0]));
+        }
     }
 
     @Override
