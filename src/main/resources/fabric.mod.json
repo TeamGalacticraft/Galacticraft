@@ -33,7 +33,6 @@
     "tgc-utils": "*"
   },
   "custom": {
-    "modmenu:clientsideOnly": true,
     "roughlyenoughitems:plugins": [
       {
         "id": "galacticraft_plugin",
