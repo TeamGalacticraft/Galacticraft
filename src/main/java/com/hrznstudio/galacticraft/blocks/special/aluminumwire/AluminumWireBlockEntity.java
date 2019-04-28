@@ -39,4 +39,13 @@ public class AluminumWireBlockEntity extends BlockEntity implements Tickable, Wi
     public long getNetworkId() {
         return networkId;
     }
+
+    /*public boolean addToNetwork(BlockPos newWirePos) {
+        for (BlockEntity wire : WireUtils.getAdjacentWires(pos, world)) {
+            if (wire != null && wire.getPos() == newWirePos) {
+                return WireUtils.getNetworkFromId(networkId).addWire(world, newWirePos);
+            }
+        }
+        return false;
+    }*/
 }

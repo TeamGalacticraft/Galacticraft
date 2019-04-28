@@ -95,20 +95,24 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     }
 
     @Override
-    public void onPlaced(World world_1, BlockPos blockPos_1, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
-        if (world_1.getBlockEntity(blockPos_1).getType() == GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE) {
-            ((AluminumWireBlockEntity) world_1.getBlockEntity(blockPos_1)).init();
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity livingEntity, ItemStack stack) {
+        if (world.getBlockEntity(pos).getType() == GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE) {
+            ((AluminumWireBlockEntity) world.getBlockEntity(pos)).init();
+            WireNetwork.blockPlaced();
         }
-        WireNetwork.blockPlaced();
-
+        /*for (BlockEntity wire : WireUtils.getAdjacentWires(pos, world)) {
+            if (wire != null) {
+                ((AluminumWireBlockEntity)wire).addToNetwork(pos);
+            }
+        }*/
     }
 
     @Override
-    public void afterBreak(World world_1, PlayerEntity playerEntity_1, BlockPos blockPos_1, BlockState blockState_1, BlockEntity blockEntity_1, ItemStack itemStack_1) {
-        super.afterBreak(world_1, playerEntity_1, blockPos_1, blockState_1, blockEntity_1, itemStack_1);
-        if (world_1 instanceof ServerWorld) {
+    public void afterBreak(World world, PlayerEntity playerEntity_1, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack stack) {
+        super.afterBreak(world, playerEntity_1, pos, state, blockEntity, stack);
+        if (world instanceof ServerWorld) {
             WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
-                if (blockPos == blockPos_1) {
+                if (blockPos == pos) {
                     WireNetwork.networkMap.remove(wireNetwork, blockPos);
                 }
             });
@@ -134,8 +138,8 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState_1, Direction direction_1, BlockState blockState_2, IWorld world, BlockPos thisWire, BlockPos otherConnectable) {
-        return blockState_1.with(getPropForDirection(direction_1), (
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction_1, BlockState blockState_2, IWorld world, BlockPos thisWire, BlockPos otherConnectable) {
+        return state.with(getPropForDirection(direction_1), (
                 !(blockState_2).isAir()
                         && blockState_2.getBlock() instanceof WireConnectable
                         // get opposite of direction so the WireConnectable can check from its perspective.
@@ -150,7 +154,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
+    public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
@@ -161,27 +165,27 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
 
     @Environment(EnvType.CLIENT)
     @Override
-    public float getAmbientOcclusionLightLevel(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView blockView_1, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public boolean isTranslucent(BlockState state, BlockView blockView_1, BlockPos pos) {
         return true;
     }
 
     @Override
-    public boolean canSuffocate(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public boolean canSuffocate(BlockState state, BlockView blockView_1, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean isSimpleFullBlock(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public boolean isSimpleFullBlock(BlockState state, BlockView blockView_1, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean allowsSpawning(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, EntityType<?> entityType_1) {
+    public boolean allowsSpawning(BlockState state, BlockView blockView_1, BlockPos pos, EntityType<?> entityType_1) {
         return false;
     }
 

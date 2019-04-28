@@ -11,37 +11,44 @@ import net.minecraft.world.World;
 public class WireUtils {
 
     public static BlockPos getPosFromDirection(Direction direction, BlockPos pos) {
+        if (pos == null || direction == null) return null;
         if (direction == Direction.NORTH) {
-            return pos.add(0, 0, -1);
+            return pos.north();
         } else if (direction == Direction.SOUTH) {
-            return pos.add(0, 0, 1);
+            return pos.south();
         } else if (direction == Direction.EAST) {
-            return pos.add(1, 0, 0);
+            return pos.east();
         } else if (direction == Direction.WEST) {
-            return pos.add(-1, 0, 0);
+            return pos.west();
         } else if (direction == Direction.UP) {
-            return pos.add(0, 1, 0);
-        } else if (direction == Direction.DOWN) {
-            return pos.add(0, -1, 0);
+            return pos.up();
         } else {
-            return null;
+            return pos.down();
         }
     }
 
+    private static WireNetwork network;
+    public static WireNetwork getNetworkFromId(long id) {
+        network = null;
+        WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
+            if (wireNetwork.getId() == id) network = wireNetwork;
+        });
+        return network;
+    }
+    
     public static BlockEntity[] getAdjacentConsumers(BlockPos pos, World world) {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
-            BlockPos bp = getPosFromDirection(direction, pos);
-            Block blockEntity = world.getBlockState(bp).getBlock();
+            BlockPos adjacentBlockPos = getPosFromDirection(direction, pos);
+            Block block = world.getBlockState(adjacentBlockPos).getBlock();
 
-            if (blockEntity == null) {
+            if (block == null) {
                 continue;
             }
 
-            if (blockEntity instanceof WireConnectable) {
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, bp) == WireConnectionType.ENERGY_INPUT) {
-                    //System.out.println("consumer added to adjacent consumers");
+            if (block instanceof WireConnectable) {
+                if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_INPUT) {
                     adjacentConnections[direction.ordinal()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 }
             }
@@ -54,16 +61,15 @@ public class WireUtils {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
-            BlockPos bp = getPosFromDirection(direction, pos);
-            Block blockEntity = world.getBlockState(bp).getBlock();
+            BlockPos adjacentBlockPos = getPosFromDirection(direction, pos);
+            Block block = world.getBlockState(adjacentBlockPos).getBlock();
 
-            if (blockEntity == null) {
+            if (block == null) {
                 continue;
             }
 
-            if (blockEntity instanceof WireConnectable) {
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, bp) == WireConnectionType.ENERGY_OUTPUT) {
-                    //System.out.println("producer added to adjacent producers");
+            if (block instanceof WireConnectable) {
+                if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_OUTPUT) {
                     adjacentConnections[direction.ordinal()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 }
             }
@@ -82,7 +88,6 @@ public class WireUtils {
             }
 
             if (blockEntity instanceof WireBlockEntity) {
-                //System.out.println("wire added to adjacent wires");
                 adjacentConnections[direction.ordinal()] = blockEntity;
             }
         }
