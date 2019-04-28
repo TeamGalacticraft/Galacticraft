@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -27,6 +28,7 @@ public class AluminumWireBlockEntity extends BlockEntity implements Tickable, Wi
             tickedOnce = true;
             WireNetwork.blockPlaced();
         }
+        Galacticraft.logger.info(networkId);
     }
 
     public void init() {
