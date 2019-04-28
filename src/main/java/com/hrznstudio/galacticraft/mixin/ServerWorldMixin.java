@@ -15,8 +15,13 @@ import java.util.function.BooleanSupplier;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin {
 
-    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "tick", at = @At("HEAD"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.update());
+    }
+
+    @Inject(method = "close", at = @At("HEAD"))
+    private void close(CallbackInfo ci) {
+        WireNetwork.networkMap.clear();
     }
 }

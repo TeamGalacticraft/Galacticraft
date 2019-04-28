@@ -46,7 +46,6 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
         // Drain energy
         int extractEnergy = this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, ActionType.PERFORM);
         if (extractEnergy == 0) {
-            System.out.println("ExtractEnergy == 0");
             status = CompressorStatus.INACTIVE;
             return;
         } else {

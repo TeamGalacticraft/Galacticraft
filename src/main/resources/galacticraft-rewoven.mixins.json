@@ -6,8 +6,7 @@
     "PlayerEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "ServerWorldMixin",
-    "ClientWorldMixin"
+    "ServerWorldMixin"
   ],
   "client": [
     "PlayerInventoryScreenMixin",

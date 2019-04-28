@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AluminumWireBlockEntity extends BlockEntity implements Tickable, WireBlockEntity {
-    protected int networkId;
     private boolean tickedOnce = false;
+    protected long networkId;
 
     public AluminumWireBlockEntity() {
         super(GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE);
@@ -32,5 +32,9 @@ public class AluminumWireBlockEntity extends BlockEntity implements Tickable, Wi
     public void init() {
         networkId = new WireNetwork(this).getId(); //use id for easy replacement
         tickedOnce = true;
+    }
+
+    public long getNetworkId() {
+        return networkId;
     }
 }

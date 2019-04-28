@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
+import com.hrznstudio.galacticraft.api.blocks.WireBlock;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -9,9 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -19,31 +19,30 @@ public class WireNetwork {
 
     public static ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
     private static WireNetwork n;
-    private int id;
+    private long id;
     private ConcurrentMap<BlockEntity, WireConnectionType> wires = new ConcurrentHashMap<>();
     private ConcurrentMap<BlockEntity, Integer> energyNeed = new ConcurrentHashMap<>();
-    private int energyRequired;
-    private int energyFufilled;
-    private int z = Integer.MAX_VALUE;
+    private int energyAvailable;
+    private int energyFulfilled;
+    private int energyLeft;
+    private long z;
     private ConcurrentMap<BlockEntity, Integer> energy = new ConcurrentHashMap<>();
 
     WireNetwork(BlockEntity source) {
+        z = Long.MAX_VALUE;
+        networkMap.forEach((wireNetwork, blockPos) -> z = Math.min(wireNetwork.getId(), z));
         networkMap.forEach((wireNetwork, blockPos) -> {
-            z = Math.min(wireNetwork.getId(), z);
+            if (blockPos == source.getPos()) z = wireNetwork.getId() - 1;
         });
-        networkMap.forEach((wireNetwork, blockPos) -> {
-            if (blockPos == source.getPos()) z = wireNetwork.getId();
-        });
-        if (z == 0x7fffffff) { //No wires (unless there are 2,147,483,647 wire networks :P )
-            z = 0;
+        if (z == Long.MAX_VALUE) { //Nothing is in the networkMap (unless there are 9,223,372,036,854,775,806* (9.223 quintillion) wire networks (PLEASE, NEVER DO THIS)
+            z = (-1);
         }
-        id = z;
-        z = Integer.MAX_VALUE;
+        id = z + 1;
         networkMap.put(this, source.getPos());
         wires.put(source, WireConnectionType.WIRE);
     }
 
-    public static WireNetwork getNetworkFromId(int id) {
+    public static WireNetwork getNetworkFromId(long id) {
         n = null;
         networkMap.forEach((wireNetwork, blockPos) -> {
             if (wireNetwork.id == id) n = wireNetwork;
@@ -52,23 +51,27 @@ public class WireNetwork {
     }
 
     public static void blockPlaced() {
-        System.out.println("Placed!");
-
-        networkMap.forEach((wireNetwork, blockPos) -> {
-            wireNetwork.wires.forEach((blockEntity, wireConnectionType) -> {
-                BlockEntity[] adjacentWires = getAdjacentWires(blockPos, blockEntity.getWorld());
-                for (BlockEntity entity : adjacentWires) {
-                    if (entity != null) {
-                        wireNetwork.wires.putIfAbsent(entity, WireConnectionType.WIRE);
+        networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.wires.forEach((blockEntity, wireConnectionType) -> { //Every wire in every network
+            BlockEntity[] adjacentWires = getAdjacentWires(blockPos, blockEntity.getWorld());
+            for (BlockEntity entity : adjacentWires) {
+                if (entity != null) {
+                    if (((AluminumWireBlockEntity)entity).getNetworkId() != wireNetwork.getId()) {
+                        if (wireNetwork.wires.get(entity) == null) {
+                            wireNetwork.wires.put(entity, WireConnectionType.WIRE);
+                        } else {
+                            wireNetwork.wires.replace(entity, WireConnectionType.WIRE);
+                        }
                         try {
                             networkMap.remove(getNetworkFromId(((AluminumWireBlockEntity) entity).networkId)); //remove old one
-                        } catch (NullPointerException ignore) {}
-                        ((AluminumWireBlockEntity) entity).networkId = wireNetwork.getId();
+                        } catch (NullPointerException ignore) {
+                        } finally {
+                            ((AluminumWireBlockEntity) entity).networkId = wireNetwork.getId(); //NOT COMPATIBLE WITH OTHER MODS (YET)
+                        }
                     }
                 }
+            }
 
-            });
-        });
+        }));
     }
 
     public static BlockPos getPosFromDirection(Direction direction, BlockPos pos) {
@@ -89,20 +92,20 @@ public class WireNetwork {
         }
     }
 
-    public static BlockEntity[] getAdjacentConsumers(BlockPos pos, IWorld world) {
+    public static BlockEntity[] getAdjacentConsumers(BlockPos pos, World world) {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
-            Block blockEntity = world.getBlockState(getPosFromDirection(direction, pos)).getBlock();
-            System.out.println("," + pos.getX() +"," + pos.getY() +","+pos.getZ());
+            BlockPos bp = getPosFromDirection(direction, pos);
+            Block blockEntity = world.getBlockState(bp).getBlock();
 
             if (blockEntity == null) {
                 continue;
             }
 
             if (blockEntity instanceof WireConnectable) {
-                System.out.println("adhjkhjkahkjhjfdhjafsdhjjhkfd-con");
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction, pos, pos) == WireConnectionType.ENERGY_INPUT) {
+                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, bp) == WireConnectionType.ENERGY_INPUT) {
+                    System.out.println("consumer added to adjacent consumers");
                     adjacentConnections[direction.ordinal()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 }
             }
@@ -110,20 +113,21 @@ public class WireNetwork {
         return adjacentConnections;
     }
 
-    public static BlockEntity[] getAdjacentProducers(BlockPos pos, IWorld world) {
+    public static BlockEntity[] getAdjacentProducers(BlockPos pos, World world) {
+
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
-            Block blockEntity = world.getBlockState(getPosFromDirection(direction, pos)).getBlock();
-            System.out.println("," + pos.getX() +"," + pos.getY() +","+pos.getZ());
+            BlockPos bp = getPosFromDirection(direction, pos);
+            Block blockEntity = world.getBlockState(bp).getBlock();
 
             if (blockEntity == null) {
                 continue;
             }
 
             if (blockEntity instanceof WireConnectable) {
-                System.out.println("adhjkhjkahkjhjfdhjafsdhjjhkfd-pro");
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction, pos, pos) == WireConnectionType.ENERGY_OUTPUT) {
+                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, bp) == WireConnectionType.ENERGY_OUTPUT) {
+                    System.out.println("producer added to adjacent producers");
                     adjacentConnections[direction.ordinal()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 }
             }
@@ -131,7 +135,7 @@ public class WireNetwork {
         return adjacentConnections;
     }
 
-    public static BlockEntity[] getAdjacentWires(BlockPos pos, IWorld world) {
+    public static BlockEntity[] getAdjacentWires(BlockPos pos, World world) {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
@@ -142,14 +146,14 @@ public class WireNetwork {
             }
 
             if (blockEntity instanceof WireBlockEntity) {
-                System.out.println("adhjkhjkahkjhjfdhjafsdhjjhkfd-wire");
+                System.out.println("wire added to adjacent wires");
                 adjacentConnections[direction.ordinal()] = blockEntity;
             }
         }
         return adjacentConnections;
     }
 
-    public static BlockEntity[] getAdjacentConnections(BlockPos pos, IWorld world) {
+    public static BlockEntity[] getAdjacentConnections(BlockPos pos, World world) {
         final BlockEntity[] adjacentConnections = new BlockEntity[6];
 
         for (Direction direction : Direction.values()) {
@@ -185,37 +189,31 @@ public class WireNetwork {
         return null;
     }
 
-    private Map<BlockEntity, WireConnectionType> getWires() {
-        return wires;
-    }
-
     public void update() {
-        System.out.println("update");
         energyNeed.clear();
         energy.clear();
+        wires.forEach((blockEntity, wireConnectionType) -> System.out.println("BE: " + blockEntity + " Pos: " + blockEntity.getPos() + " ID: " + getId() + " Type: " + wireConnectionType + " BE ID: " + ((AluminumWireBlockEntity)blockEntity).getNetworkId()));
         wires.forEach((blockEntity, wireConnectionType) -> {
-            if (!(blockEntity.getWorld().getBlockState(blockEntity.getPos()).getBlock() instanceof WireBlockEntity)) {
+            if (!(blockEntity.getWorld().getBlockState(blockEntity.getPos()).getBlock() instanceof WireBlock)) {
                 wires.remove(blockEntity, wireConnectionType);
+                System.out.println("removed wire at " + blockEntity.getPos());
             }
-            System.out.println("wires.foreach");
             for (BlockEntity consumer : getAdjacentConsumers(blockEntity.getPos(), blockEntity.getWorld())) {
                 if (consumer != null) {
-                    System.out.println("notnull.foreach");
                     if (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() <= ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy()) {
                         if (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() < ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy()) {
                             ((MachineBlockEntity) consumer).getEnergy().setCurrentEnergy(((MachineBlockEntity) consumer).getEnergy().getMaxEnergy());
                         }
                     } else {
-                        energyNeed.put(consumer, (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() - ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy()));
+                        System.out.println("a");
+                        energyNeed.put(consumer, (((MachineBlockEntity) consumer).getEnergy().getMaxEnergy() - ((MachineBlockEntity) consumer).getEnergy().getCurrentEnergy())); //Amount the machine needs
                     }
                 }
             }
 
             for (BlockEntity producer : getAdjacentProducers(blockEntity.getPos(), blockEntity.getWorld())) {
-                System.out.println(producer);
                 if (producer != null) {
-                    System.out.println("for producer");
-                    if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() != 0) {
+                    if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() > 0) {
                         if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 100) {
                             energy.put(producer, 100);
                         } else if (((MachineBlockEntity) producer).getEnergy().getCurrentEnergy() >= 50) {
@@ -233,33 +231,89 @@ public class WireNetwork {
             }
         });
 
-        energyRequired = 0;
-        energyFufilled = 0;
-        for (int i : energyNeed.values()) {
-            energyRequired += i;
+        energyFulfilled = 0;
+        energyAvailable = 0;
+        energyLeft = 0;
+        for (int i : energy.values()) {
+            energyAvailable += i;
         }
-        energy.forEach((blockEntity, integer) -> {
-            System.out.println("energy.foreach energyfufilled");
+        energyNeed.forEach((consumer, energyNeeded) -> {
+            energyLeft = energyNeeded;
+            System.err.println("x");
+            if (energyNeeded > 0) {
+                if (energyAvailable >= energyNeeded) {
+                    System.out.println("energyAvailable >= energyNeeded");
+                    for (ConcurrentMap.Entry<BlockEntity, Integer> entry : energy.entrySet()) {
+                        if (((MachineBlockEntity) entry.getKey()).energy.getCurrentEnergy() >= energyLeft) {
+                            ((MachineBlockEntity) entry.getKey()).energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyLeft, ActionType.PERFORM);
+                            if (((MachineBlockEntity) entry.getKey()).getEnergy().getCurrentEnergy() < 1) {
+                                ((MachineBlockEntity) entry.getKey()).energy.setCurrentEnergy(0);
+                                energy.remove(entry.getKey(), entry.getValue());
+                            }
+                            break;
+                        } else if (((MachineBlockEntity) entry.getKey()).getEnergy().getCurrentEnergy() >= energyLeft) {
+                            System.out.println("energyAvailable !>= energyNeeded");
+                            if (((MachineBlockEntity) entry.getKey()).getEnergy().getCurrentEnergy() > 0) {
+                                int e = ((MachineBlockEntity) entry.getKey()).energy.getCurrentEnergy();
+                                ((MachineBlockEntity) entry.getKey()).energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, e, ActionType.PERFORM);
+                                energyNeeded -= e;
+                                energy.remove(entry.getKey(), entry.getValue());
+                            }
+                        }
+                    }
+                    energyAvailable -= energyNeeded;
+                    ((MachineBlockEntity) consumer).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyNeeded, ActionType.PERFORM);
+                } else {
+                    for (ConcurrentMap.Entry<BlockEntity, Integer> entry : energy.entrySet()) {
+                        if (((MachineBlockEntity) entry.getKey()).energy.getCurrentEnergy() >= energyLeft) {
+                            energyFulfilled += energyNeeded;
+                            ((MachineBlockEntity) entry.getKey()).energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyLeft, ActionType.PERFORM);
+                            if (((MachineBlockEntity) entry.getKey()).getEnergy().getCurrentEnergy() < 1) {
+                                ((MachineBlockEntity) entry.getKey()).energy.setCurrentEnergy(0);
+                                energy.remove(entry.getKey(), entry.getValue());
+                            }
+                            break;
+                        } else {
+                            if (((MachineBlockEntity) entry.getKey()).getEnergy().getCurrentEnergy() > 0) {
+                                energyFulfilled += ((MachineBlockEntity) entry.getKey()).energy.getCurrentEnergy();
+                                int e = ((MachineBlockEntity) entry.getKey()).energy.getCurrentEnergy(); //all energy
+                                ((MachineBlockEntity) entry.getKey()).energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, e, ActionType.PERFORM);
+                                energyNeeded -= energyFulfilled;
+                                energy.remove(entry.getKey(), entry.getValue());
+                            }
+                        }
+                    }
+                    energyAvailable -= energyFulfilled;
+                    if (energyAvailable < 0) {
+                        energyAvailable = 0;
+                    }
+                    ((MachineBlockEntity)consumer).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyFulfilled, ActionType.PERFORM);
+                    energyFulfilled = 0;
+                }
+            } else {
+                System.err.println("Energy needed is less than 0!");
+            }
+        });
+        /*energy.forEach((blockEntity, integer) -> {
             if (integer > 0) {
                 ((MachineBlockEntity)blockEntity).energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, integer, ActionType.PERFORM);
-                energyFufilled += integer;
+                energyFulfilled += integer;
             }
         });
         energyNeed.forEach((blockEntity, integer) -> {
-            System.out.println("filling consumer");
             if (integer > 0 ) {
-                if (integer <= energyFufilled) {
-                    energyFufilled -= integer;
+                if (integer <= energyFulfilled) {
+                    energyFulfilled -= integer;
                     ((MachineBlockEntity) blockEntity).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, integer, ActionType.PERFORM);
                 } else {
-                    ((MachineBlockEntity) blockEntity).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyFufilled, ActionType.PERFORM);
-                    energyFufilled = 0;
+                    ((MachineBlockEntity) blockEntity).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyFulfilled, ActionType.PERFORM);
+                    energyFulfilled = 0;
                 }
             }
-        });
+        });*/
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
