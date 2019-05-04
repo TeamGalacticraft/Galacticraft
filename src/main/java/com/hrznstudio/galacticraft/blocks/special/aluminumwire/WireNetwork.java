@@ -6,6 +6,7 @@ import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
+import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -17,7 +18,7 @@ public class WireNetwork {
 
     public static ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
     private long id;
-    private ConcurrentMap<BlockEntity, WireConnectionType> wires = new ConcurrentHashMap<>();
+    private ConcurrentSet<BlockEntity> wires = new ConcurrentSet<>();
     private ConcurrentMap<BlockEntity, Integer> energyNeed = new ConcurrentHashMap<>();
     private int energyAvailable;
     private int energyFulfilled;
@@ -36,25 +37,26 @@ public class WireNetwork {
         }
         id = lowestWireId + 1;
         networkMap.put(this, source.getPos());
-        wires.put(source, WireConnectionType.WIRE);
+        wires.add(source);
     }
 
-    private void blockPlacedLogic(BlockEntity blockEntity) {
-        BlockEntity[] adjacentWires = WireUtils.getAdjacentWires(blockEntity.getPos(), blockEntity.getWorld());
-        for (BlockEntity entity : adjacentWires) {
-            if (entity != null) {
-                if (((AluminumWireBlockEntity)entity).getNetworkId() != this.getId()) {
-                    if (this.wires.get(entity) == null) {
-                        this.wires.put(entity, WireConnectionType.WIRE);
+    private void blockPlacedLogic(BlockEntity source) {
+        BlockEntity[] adjacentWires = WireUtils.getAdjacentWires(source.getPos(), source.getWorld());
+        for (BlockEntity wire : adjacentWires) {
+            if (wire != null) {
+                if (((AluminumWireBlockEntity)wire).getNetworkId() != this.getId()) {
+                    if (!this.wires.contains(wire)) {
+                        this.wires.add(wire);
                     } else {
-                        this.wires.replace(entity, WireConnectionType.WIRE);
+                        this.wires.remove(wire); //refresh
+                        this.wires.add(wire);
                     }
                     try {
-                        networkMap.remove(WireUtils.getNetworkFromId(((AluminumWireBlockEntity) entity).networkId)); //remove old one
-                    } catch (NullPointerException ignore) {
-                    } finally {
-                        ((AluminumWireBlockEntity) entity).networkId = this.getId(); //NOT COMPATIBLE WITH OTHER MODS (YET)
-                        this.blockPlacedLogic(entity); //recursively do this
+                        networkMap.remove(WireUtils.getNetworkFromId(((AluminumWireBlockEntity) wire).getNetworkId())); //remove old one
+                    } catch (NullPointerException ignore) {}
+                    finally {
+                        ((AluminumWireBlockEntity) wire).networkId = this.getId(); //NOT COMPATIBLE WITH OTHER MODS (YET)
+                        this.blockPlacedLogic(wire); //recursively do this
                     }
                 }
             }
@@ -62,17 +64,8 @@ public class WireNetwork {
     }
 
     public static void blockPlaced() {
-        networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.wires.forEach((blockEntity, wireConnectionType) -> { //Every wire in every network
-            wireNetwork.blockPlacedLogic(blockEntity);
-        }));
+        networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.wires.forEach(wireNetwork::blockPlacedLogic)); //Every wire in every network
     }
-
-    /*public boolean addWire(World world, BlockPos pos) {
-        if (world.getBlockEntity(pos) == null) return false;
-        wires.put(world.getBlockEntity(pos), WireConnectionType.WIRE);
-        ((AluminumWireBlockEntity)world.getBlockEntity(pos)).networkId = getId();
-        return true;
-    }*/
 
     public void update() {
         energyNeed.clear();
@@ -81,11 +74,11 @@ public class WireNetwork {
         energyAvailable = 0;
         energyLeft = 0;
 
-        wires.forEach((blockEntity, wireConnectionType) -> Galacticraft.logger.debug("Pos: " + blockEntity.getPos() + " ID: " + getId() + " Type: " + wireConnectionType + " BE ID: " + ((AluminumWireBlockEntity)blockEntity).getNetworkId()));
+        wires.forEach((blockEntity) -> Galacticraft.logger.debug("Pos: " + blockEntity.getPos() + " ID: " + getId() + " BE ID: " + ((AluminumWireBlockEntity)blockEntity).getNetworkId()));
 
-        wires.forEach((blockEntity, wireConnectionType) -> {
+        wires.forEach((blockEntity) -> {
             if (!(blockEntity.getWorld().getBlockState(blockEntity.getPos()).getBlock() instanceof WireBlock)) {
-                wires.remove(blockEntity, wireConnectionType);
+                wires.remove(blockEntity);
                 Galacticraft.logger.debug("Removed wire at {}.", blockEntity.getPos());
             }
             for (BlockEntity consumer : WireUtils.getAdjacentConsumers(blockEntity.getPos(), blockEntity.getWorld())) {
@@ -111,8 +104,7 @@ public class WireNetwork {
                             energy.put(producer, 50);
                         } else if (producerEnergy.getCurrentEnergy() >= 25) {
                             energy.put(producer, 25);
-                        }
-                        if (producerEnergy.getCurrentEnergy() >= 10) {
+                        } else if (producerEnergy.getCurrentEnergy() >= 10) {
                             energy.put(producer, 10);
                         } else if (producerEnergy.getCurrentEnergy() >= 1) {
                             energy.put(producer, 1);

@@ -28,6 +28,7 @@ public class WireUtils {
     }
 
     private static WireNetwork network;
+
     public static WireNetwork getNetworkFromId(long id) {
         network = null;
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
