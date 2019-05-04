@@ -48,7 +48,7 @@ public class StandardWrenchItem extends Item {
 
     public boolean beforeBlockBreak(BlockState state, World world_1, BlockPos pos, PlayerEntity player) {
         if (!world_1.isClient) {
-            this.method_7759(player, state, world_1, pos, player.getStackInHand(Hand.MAIN));
+            this.method_7759(player, state, world_1, pos, player.getStackInHand(Hand.MAIN_HAND));
         }
 
         return false;

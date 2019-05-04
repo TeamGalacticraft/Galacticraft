@@ -31,13 +31,6 @@ import java.util.ArrayList;
  */
 public class AluminumWireBlock extends BlockWithEntity implements WireConnectable, WireBlock {
 
-    private static BooleanProperty ATTACHED_NORTH = BooleanProperty.create("attached_north");
-    private static BooleanProperty ATTACHED_EAST = BooleanProperty.create("attached_east");
-    private static BooleanProperty ATTACHED_SOUTH = BooleanProperty.create("attached_south");
-    private static BooleanProperty ATTACHED_WEST = BooleanProperty.create("attached_west");
-    private static BooleanProperty ATTACHED_UP = BooleanProperty.create("attached_up");
-    private static BooleanProperty ATTACHED_DOWN = BooleanProperty.create("attached_down");
-
     // If we start at 8,8,8 and subtract/add to/from 8, we do operations starting from the centre.
     private static final VoxelShape NORTH = createCuboidShape(8 - 3, 8 - 3, 0, 8 + 3, 8 + 3, 8 + 3);
     private static final VoxelShape EAST = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 16, 8 + 3, 8 + 3);
@@ -46,6 +39,12 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     private static final VoxelShape UP = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 16, 8 + 3);
     private static final VoxelShape DOWN = createCuboidShape(8 - 3, 0, 8 - 3, 8 + 3, 8 + 3, 8 + 3);
     private static final VoxelShape NONE = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 8 + 3, 8 + 3);    // 6x6x6 box in the center.
+    private static BooleanProperty ATTACHED_NORTH = BooleanProperty.create("attached_north");
+    private static BooleanProperty ATTACHED_EAST = BooleanProperty.create("attached_east");
+    private static BooleanProperty ATTACHED_SOUTH = BooleanProperty.create("attached_south");
+    private static BooleanProperty ATTACHED_WEST = BooleanProperty.create("attached_west");
+    private static BooleanProperty ATTACHED_UP = BooleanProperty.create("attached_up");
+    private static BooleanProperty ATTACHED_DOWN = BooleanProperty.create("attached_down");
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
@@ -98,25 +97,15 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity livingEntity, ItemStack stack) {
         if (world.getBlockEntity(pos).getType() == GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE) {
             ((AluminumWireBlockEntity) world.getBlockEntity(pos)).init();
-            WireNetwork.blockPlaced();
         }
-        /*for (BlockEntity wire : WireUtils.getAdjacentWires(pos, world)) {
-            if (wire != null) {
-                ((AluminumWireBlockEntity)wire).addToNetwork(pos);
-            }
-        }*/
     }
 
     @Override
-    public void afterBreak(World world, PlayerEntity playerEntity_1, BlockPos pos, BlockState state, BlockEntity blockEntity, ItemStack stack) {
-        super.afterBreak(world, playerEntity_1, pos, state, blockEntity, stack);
+    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState blockState, boolean b) {
         if (world instanceof ServerWorld) {
-            WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
-                if (blockPos == pos) {
-                    WireNetwork.networkMap.remove(wireNetwork, blockPos);
-                }
-            });
+            WireNetwork.blockBroken(WireUtils.getNetworkFromId(((AluminumWireBlockEntity) world.getBlockEntity(pos)).networkId));
         }
+        super.onBlockRemoved(state, world, pos, blockState, b);
     }
 
     private BooleanProperty getPropForDirection(Direction dir) {
