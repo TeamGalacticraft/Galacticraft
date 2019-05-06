@@ -20,7 +20,7 @@ minecraft {
 }
 allprojects {
     repositories {
-	    mavenLocal()
+	mavenLocal()
         maven { url "https://minecraft.curseforge.com/api/maven" }
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://mod-buildcraft.com/maven" }
@@ -81,12 +81,21 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
     from "LICENSE"
+    manifest {
+        attributes([
+                    "Implementation-Title": project.archives_base_name,
+                    "Implementation-Version": "${version}",
+                    "Implementation-Vendor" :"Horizon Studio",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                    "Maven-Artifact": "${group}:${archivesBaseName}:${version}",
+                    "ModSide": "BOTH",
+        ],)
+    }
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            // add all the jars that should be included when publishing to maven
             artifact(jar) {
                 builtBy remapJar
             }
@@ -95,10 +104,12 @@ publishing {
             }
         }
     }
-
-    // select the repositories you want to publish to
     repositories {
-        // uncomment to publish to the local maven
-        // mavenLocal()
+        maven {
+            url "s3://cdn.hrzn.studio/maven"
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+        }
     }
 }
