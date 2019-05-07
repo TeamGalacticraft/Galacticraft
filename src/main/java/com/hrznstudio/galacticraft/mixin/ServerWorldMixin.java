@@ -15,14 +15,20 @@ import java.util.function.BooleanSupplier;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin {
 
+    private boolean hasRunOnceForWorldReload = false;
+
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
-        //System.out.println(Thread.currentThread().getName());
+        if (!hasRunOnceForWorldReload) {
+            hasRunOnceForWorldReload = true;
+            WireNetwork.blockPlaced(); //Runs at the end of tick() - BE's should've ticked, meaning there are wires in the map... right?
+        }
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.update());
     }
 
     @Inject(method = "close", at = @At("HEAD"))
     private void close(CallbackInfo ci) {
         WireNetwork.networkMap.clear();
+        hasRunOnceForWorldReload = false;
     }
 }

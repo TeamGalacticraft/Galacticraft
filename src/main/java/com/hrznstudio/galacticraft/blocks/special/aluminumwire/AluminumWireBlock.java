@@ -100,15 +100,6 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
         }
     }
 
-    @Override
-    public void onBlockRemoved(BlockState blockState_1, World world_1, BlockPos blockPos_1, BlockState blockState_2, boolean boolean_1) {
-        if (world_1 instanceof ServerWorld && blockState_2.getBlock() != blockState_1.getBlock()) { //This method gets called every time the STATE changes.
-            System.out.println("iun");
-            WireNetwork.blockBroken(WireUtils.getNetworkFromId(((AluminumWireBlockEntity) world_1.getBlockEntity(blockPos_1)).networkId));
-        }
-        super.onBlockRemoved(blockState_1, world_1, blockPos_1, blockState_2, boolean_1);
-    }
-
     private BooleanProperty getPropForDirection(Direction dir) {
         switch (dir) {
             case SOUTH:

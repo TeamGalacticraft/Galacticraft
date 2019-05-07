@@ -1,9 +1,8 @@
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
-import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
+import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
@@ -11,6 +10,7 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.misc.Capes;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
+import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.WorldGenerator;
@@ -49,7 +49,6 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
     @Override
     public void onInitialize() {
         logger.info(GALACTICRAFT, "[Galacticraft] Initializing...");
-
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();

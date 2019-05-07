@@ -81,23 +81,6 @@ public class WireNetwork {
         networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.wires.forEach(wireNetwork::blockPlacedLogic)); //Every wire in every network
     }
 
-    /**
-     * Called when a wire is broken.
-     * @param network The network that the wire was in.
-     */
-    public static void blockBroken(WireNetwork network) { //why did I make this static
-        /*if (network != null) {
-            networkMap.remove(network);
-            for (BlockEntity blockEntity : network.wires) {
-                System.out.print(((WireBlockEntity) blockEntity).networkId + " ");
-                ((WireBlockEntity) blockEntity).onPlaced();
-                System.out.println(((WireBlockEntity) blockEntity).networkId);
-                network.wires.remove(blockEntity);
-            }
-            network.wires.clear();
-        }*/
-    }
-
     private void blockPlacedLogic(BlockEntity source) {
         BlockEntity[] adjacentWires = WireUtils.getAdjacentWires(source.getPos(), source.getWorld());
         for (BlockEntity wire : adjacentWires) {
@@ -111,8 +94,7 @@ public class WireNetwork {
                     }
                     try {
                         networkMap.remove(WireUtils.getNetworkFromId(((WireBlockEntity) wire).networkId)); //remove old one
-                    } catch (NullPointerException ignore) {
-                    } finally {
+                    } catch (NullPointerException ignore) {} finally {
                         ((WireBlockEntity) wire).networkId = this.getId();
                         this.blockPlacedLogic(wire); //recursively do this
                     }
