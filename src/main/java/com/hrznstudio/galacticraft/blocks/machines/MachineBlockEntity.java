@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.blocks.machines;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import com.hrznstudio.galacticraft.api.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
@@ -11,9 +11,12 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     public static final int DEFAULT_MAX_ENERGY = 15000;
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {

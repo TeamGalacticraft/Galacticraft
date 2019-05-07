@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.api.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

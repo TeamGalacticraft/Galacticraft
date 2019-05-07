@@ -10,6 +10,7 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlockEntity;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -27,6 +28,7 @@ public class GalacticraftBlockEntities {
     public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE), BlockEntityType.Builder.create(EnergyStorageModuleBlockEntity::new).build(null));
     public static final BlockEntityType<RefineryBlockEntity> REFINERY_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.REFINERY), BlockEntityType.Builder.create(RefineryBlockEntity::new).build(null));
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR), BlockEntityType.Builder.create(OxygenCollectorBlockEntity::new).build(null));
+    public static final BlockEntityType<AluminumWireBlockEntity> ALUMINUM_WIRE_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE), BlockEntityType.Builder.create(AluminumWireBlockEntity::new).build(null));
     public static void init() {
     }
 }

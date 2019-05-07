@@ -3,7 +3,9 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.MultiBlock;
 import com.hrznstudio.galacticraft.util.Rotatable;
@@ -40,7 +42,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable, MultiBlock, WireConnectable {
+public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable, MultiBlock, WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -204,12 +206,15 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         if (!(world.getBlockEntity(connectionTargetPos) instanceof BasicSolarPanelBlockEntity)) {
             Galacticraft.logger.error("Not a Solar Panel. Rejecting connection.");
-            return false;
+            return WireConnectionType.NONE;
         }
-        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
+        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
+            return WireConnectionType.ENERGY_OUTPUT;
+        }
+        return WireConnectionType.NONE;
     }
 
 }

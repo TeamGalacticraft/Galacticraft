@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.api.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

@@ -2,6 +2,8 @@ package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -34,7 +36,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable {
+public class CircuitFabricatorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
     private static final DirectionProperty FACING = DirectionProperty.create("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
     public CircuitFabricatorBlock(Settings settings) {
@@ -119,11 +121,14 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
     }
 
     @Override
-    public boolean canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         if (!(world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
             Galacticraft.logger.error("Not a fab. rejecting connection.");
-            return false;
+            return WireConnectionType.NONE;
         }
-        return world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir;
+        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
+            return WireConnectionType.ENERGY_INPUT;
+        }
+        return WireConnectionType.NONE;
     }
 }

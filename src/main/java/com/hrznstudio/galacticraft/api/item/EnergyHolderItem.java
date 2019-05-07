@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.api;
+package com.hrznstudio.galacticraft.api.item;
 
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.item.ItemStack;
