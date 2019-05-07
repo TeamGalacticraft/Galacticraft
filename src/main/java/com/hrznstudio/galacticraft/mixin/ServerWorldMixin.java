@@ -17,6 +17,7 @@ public abstract class ServerWorldMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
+        //System.out.println(Thread.currentThread().getName());
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.update());
     }
 

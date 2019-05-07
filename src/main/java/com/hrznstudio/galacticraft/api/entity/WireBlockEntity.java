@@ -13,6 +13,7 @@ public class WireBlockEntity extends BlockEntity {
 
     /**
      * The ID of the WireNetwork that this BlockEntity belongs to.
+     *
      * @see com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireNetwork
      */
     public long networkId;

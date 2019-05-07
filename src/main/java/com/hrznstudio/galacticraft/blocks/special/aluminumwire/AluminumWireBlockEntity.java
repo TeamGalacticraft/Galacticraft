@@ -21,6 +21,7 @@ public class AluminumWireBlockEntity extends WireBlockEntity implements Tickable
         if (WireUtils.getNetworkFromId(networkId) == null) {
             onPlaced();
         }
+        //Galacticraft.logger.info(networkId + " " + Thread.currentThread().getName());
     }
 
     public void init() {
