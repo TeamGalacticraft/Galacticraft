@@ -84,7 +84,7 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
                             if (booleans[(i5 * 16 + i6) * 8 + i7]) {
                                 blockPos_3 = pos.add(i5, i7 - 1, i6);
                                 if (Block.isNaturalDirt(world.getBlockState(blockPos_3).getBlock()) && world.getLightLevel(LightType.SKY, pos.add(i5, i7, i6)) > 0) {
-                                    world.setBlockState(blockPos_3, GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
+                                    world.setBlockState(blockPos_3, GalacticraftBlocks.MOON_TURF.getDefaultState(), 2);
                                 }
                             }
                         }
@@ -96,7 +96,7 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
                         for (i7 = 0; i7 < 8; ++i7) {
                             boolean_2 = !booleans[(i5 * 16 + i6) * 8 + i7] && (i5 < 15 && booleans[((i5 + 1) * 16 + i6) * 8 + i7] || i5 > 0 && booleans[((i5 - 1) * 16 + i6) * 8 + i7] || i6 < 15 && booleans[(i5 * 16 + i6 + 1) * 8 + i7] || i6 > 0 && booleans[(i5 * 16 + (i6 - 1)) * 8 + i7] || i7 < 7 && booleans[(i5 * 16 + i6) * 8 + i7 + 1] || i7 > 0 && booleans[(i5 * 16 + i6) * 8 + (i7 - 1)]);
                             if (boolean_2 && (i7 < 4 || rand.nextInt(2) != 0) && world.getBlockState(pos.add(i5, i7, i6)).getMaterial().isSolid()) {
-                                world.setBlockState(pos.add(i5, i7, i6), GalacticraftBlocks.MOON_TURF_BLOCK.getDefaultState(), 2);
+                                world.setBlockState(pos.add(i5, i7, i6), GalacticraftBlocks.MOON_TURF.getDefaultState(), 2);
                             }
                         }
                     }

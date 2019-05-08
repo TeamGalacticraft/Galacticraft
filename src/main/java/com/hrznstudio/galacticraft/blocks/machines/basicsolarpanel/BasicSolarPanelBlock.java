@@ -179,7 +179,7 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
     @Override
     public void onPlaced(World world_1, BlockPos basePos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
         for (BlockPos otherPart : getOtherParts(blockState_1, basePos)) {
-            BlockState defaultState = GalacticraftBlocks.BASIC_SOLAR_PANEL_PART_BLOCK.getDefaultState();
+            BlockState defaultState = GalacticraftBlocks.BASIC_SOLAR_PANEL_PART.getDefaultState();
             world_1.setBlockState(otherPart, defaultState);
 
             BlockEntity partEntity = world_1.getBlockEntity(otherPart);

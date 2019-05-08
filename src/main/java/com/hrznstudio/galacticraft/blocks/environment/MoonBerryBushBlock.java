@@ -88,7 +88,7 @@ public class MoonBerryBushBlock extends PlantBlock {
 
     @Override
     protected boolean canPlantOnTop(BlockState blockState, BlockView blockView, BlockPos blockPos) {
-        return blockState.getBlock() == GalacticraftBlocks.MOON_DIRT_BLOCK;
+        return blockState.getBlock() == GalacticraftBlocks.MOON_DIRT;
     }
 
     @Override

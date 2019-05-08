@@ -34,7 +34,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
     }
 
     public ItemStack getCategoryIcon() {
-        return new ItemStack(GalacticraftBlocks.COMPRESSOR_BLOCK);
+        return new ItemStack(GalacticraftBlocks.COMPRESSOR);
     }
 
     public String getCategoryName() {

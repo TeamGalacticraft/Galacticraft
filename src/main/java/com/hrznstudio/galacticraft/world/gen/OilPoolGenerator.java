@@ -19,10 +19,10 @@ public class OilPoolGenerator {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
                 if (biome.getCategory() == Biome.Category.DESERT) {
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL_BLOCK.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(2)));
+                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(2)));
                 }
                 else {
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL_BLOCK.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(1)));
+                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(1)));
                 }
             }
         }

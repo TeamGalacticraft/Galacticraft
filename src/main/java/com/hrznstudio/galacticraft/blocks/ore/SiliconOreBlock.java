@@ -18,6 +18,6 @@ public class SiliconOreBlock extends OreBlock {
 
     @Override
     public ItemStack getPickStack(BlockView blockView, BlockPos pos, BlockState state) {
-        return new ItemStack(GalacticraftBlocks.SILICON_ORE_BLOCK_ITEM);
+        return new ItemStack(GalacticraftBlocks.SILICON_ORE_ITEM);
     }
 }

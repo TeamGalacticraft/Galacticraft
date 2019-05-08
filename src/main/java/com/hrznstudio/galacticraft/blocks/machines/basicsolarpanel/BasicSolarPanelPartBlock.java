@@ -43,9 +43,9 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     @Override
     public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos pos, VerticalEntityPosition verticalEntityPosition_1) {
         Block down = blockView_1.getBlockState(pos.down()).getBlock();
-        if (down == GalacticraftBlocks.BASIC_SOLAR_PANEL_BLOCK) {
+        if (down == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
             return POLE_SHAPE;
-        } else if (blockView_1.getBlockState(pos.down().down()).getBlock() == GalacticraftBlocks.BASIC_SOLAR_PANEL_BLOCK) {
+        } else if (blockView_1.getBlockState(pos.down().down()).getBlock() == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
@@ -80,7 +80,7 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
 
     @Override
     public ItemStack getPickStack(BlockView blockView_1, BlockPos blockPos_1, BlockState blockState_1) {
-        return new ItemStack(GalacticraftBlocks.BASIC_SOLAR_PANEL_BLOCK);
+        return new ItemStack(GalacticraftBlocks.BASIC_SOLAR_PANEL);
     }
 
     @Override

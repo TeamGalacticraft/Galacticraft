@@ -109,8 +109,8 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         //If it isn't on the ground and it is below a block
         return (!viewableWorld.getBlockState(pos3).getBlock().equals(Blocks.AIR))
                 && (viewableWorld.getBlockState(pos2).getBlock().equals(Blocks.AIR)
-                || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.CAVERNOUS_VINE_BLOCK)
-                || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK));
+                || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.CAVERNOUS_VINE)
+                || viewableWorld.getBlockState(pos2).getBlock().equals(GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE));
     }
 
     @Override
@@ -137,7 +137,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     private BlockState getStateFromMeta(int meta) {
-        return GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK.getDefaultState().with(VINES, VineTypes.byMetadata(meta));
+        return GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE.getDefaultState().with(VINES, VineTypes.byMetadata(meta));
     }
 
     private int getVineLength(World world, BlockPos pos) {
@@ -160,7 +160,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         BlockPos abovePos = new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         BlockState stateAbove = world.getBlockState(abovePos);
 
-        if (stateAbove.getBlock() == GalacticraftBlocks.CAVERNOUS_VINE_BLOCK || stateAbove.getBlock() == GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE_BLOCK) {
+        if (stateAbove.getBlock() == GalacticraftBlocks.CAVERNOUS_VINE || stateAbove.getBlock() == GalacticraftBlocks.POISONOUS_CAVERNOUS_VINE) {
             switch (stateAbove.get(VINES).getMeta()) {
                 case 0:
                     world.setBlockState(blockPos, this.stateFactory.getDefaultState().with(WATERLOGGED, world.getBlockState(blockPos).getBlock() == Blocks.WATER).with(VINES, VineTypes.VINE_1));

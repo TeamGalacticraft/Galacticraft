@@ -10,7 +10,7 @@ import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
 
     MoonChunkGeneratorConfig() {
-        this.setDefaultBlock(GalacticraftBlocks.MOON_ROCK_BLOCK.getDefaultState());
+        this.setDefaultBlock(GalacticraftBlocks.MOON_ROCK.getDefaultState());
         this.setDefaultFluid(Blocks.AIR.getDefaultState());
     }
 

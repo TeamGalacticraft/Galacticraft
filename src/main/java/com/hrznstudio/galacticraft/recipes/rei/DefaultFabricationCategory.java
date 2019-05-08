@@ -34,7 +34,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     }
 
     public ItemStack getCategoryIcon() {
-        return new ItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR_BLOCK);
+        return new ItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR);
     }
 
     public String getCategoryName() {

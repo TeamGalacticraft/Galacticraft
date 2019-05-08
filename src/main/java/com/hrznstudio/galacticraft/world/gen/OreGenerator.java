@@ -34,24 +34,24 @@ public class OreGenerator {
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.ALUMINUM_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.COPPER_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.TIN_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.SILICON_ORE_BLOCK.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(3, 0, 0, 25)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.ALUMINUM_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.COPPER_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.TIN_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.SILICON_ORE.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(3, 0, 0, 25)));
             }
         }
     }
 
     public static void registerMoonOres() {
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK_BLOCK.getDefaultState(), GalacticraftBlocks.MOON_TIN_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK_BLOCK.getDefaultState(), GalacticraftBlocks.MOON_COPPER_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK_BLOCK.getDefaultState(), GalacticraftBlocks.CHEESE_ORE_BLOCK.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
+        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_TIN_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.CHEESE_ORE.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
     }
 
     public static void registerMarsOres() {
-        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE_BLOCK.getDefaultState(), GalacticraftBlocks.MARS_COPPER_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE_BLOCK.getDefaultState(), GalacticraftBlocks.MARS_TIN_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE_BLOCK.getDefaultState(), GalacticraftBlocks.DESH_ORE_BLOCK.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE.getDefaultState(), GalacticraftBlocks.MARS_COPPER_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE.getDefaultState(), GalacticraftBlocks.MARS_TIN_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE.getDefaultState(), GalacticraftBlocks.DESH_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
     }
 
     // This code is basically just copy-pasted

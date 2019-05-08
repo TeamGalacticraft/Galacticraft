@@ -64,7 +64,7 @@ public class MarsDimension extends Dimension implements SpaceDimension {
 
     public ChunkGenerator<?> createChunkGenerator() {
         MarsChunkGeneratorConfig cavesChunkGeneratorConfig_1 = GalacticraftChunkGeneratorTypes.MARS.createSettings();
-        cavesChunkGeneratorConfig_1.setDefaultBlock(GalacticraftBlocks.MARS_SURFACE_ROCK_BLOCK.getDefaultState());
+        cavesChunkGeneratorConfig_1.setDefaultBlock(GalacticraftBlocks.MARS_SURFACE_ROCK.getDefaultState());
         cavesChunkGeneratorConfig_1.setDefaultFluid(Blocks.AIR.getDefaultState());
         return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GalacticraftBiomes.MARS)), cavesChunkGeneratorConfig_1);
     }
