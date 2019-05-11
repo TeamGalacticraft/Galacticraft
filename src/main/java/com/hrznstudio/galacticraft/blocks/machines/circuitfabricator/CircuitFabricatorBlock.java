@@ -2,11 +2,11 @@ package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
-import com.hrznstudio.galacticraft.util.Rotatable;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;

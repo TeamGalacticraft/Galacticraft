@@ -1,9 +1,9 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import com.mojang.authlib.GameProfile;
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

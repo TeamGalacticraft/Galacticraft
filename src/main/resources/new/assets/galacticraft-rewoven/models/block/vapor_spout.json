@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up": "galacticraft-rewoven:block/vapor_spout_block_top",
+    "down": "galacticraft-rewoven:block/venus_rock",
+    "north": "galacticraft-rewoven:block/venus_rock",
+    "south": "galacticraft-rewoven:block/venus_rock",
+    "east": "galacticraft-rewoven:block/venus_rock",
+    "west": "galacticraft-rewoven:block/venus_rock",
+    "particle": "galacticraft-rewoven:block/venus_rock"
+  }
+}

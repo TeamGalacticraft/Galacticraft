@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.mojang.blaze3d.platform.GlStateManager;
 import me.shedaniel.rei.api.DisplaySettings;
 import me.shedaniel.rei.api.RecipeCategory;
 import me.shedaniel.rei.gui.widget.ItemSlotWidget;

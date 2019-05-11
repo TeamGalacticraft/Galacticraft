@@ -115,7 +115,7 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
         } else if (d == Direction.WEST) {
             return opposite == Direction.NORTH || opposite == Direction.SOUTH;
         } else {*/
-            return WireConnectionType.NONE;
+        return WireConnectionType.NONE;
         //}
     }
 }

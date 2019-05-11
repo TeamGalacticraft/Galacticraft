@@ -1,12 +1,12 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
+import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;

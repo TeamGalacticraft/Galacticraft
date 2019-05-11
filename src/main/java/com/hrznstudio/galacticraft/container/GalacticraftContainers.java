@@ -1,9 +1,9 @@
 package com.hrznstudio.galacticraft.container;
 
-import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelContainer;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorContainer;
+import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleContainer;

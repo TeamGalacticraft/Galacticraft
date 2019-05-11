@@ -11,7 +11,7 @@ import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public final class MoonBiome extends Biome {
-    
+
     public static final String ok = "ok Sarinsa";
 
     public MoonBiome() {

@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.mojang.datafixers.Dynamic;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;

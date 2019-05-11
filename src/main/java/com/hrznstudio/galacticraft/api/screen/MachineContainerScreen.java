@@ -15,8 +15,8 @@ import net.minecraft.util.Identifier;
  */
 public abstract class MachineContainerScreen extends ContainerScreen {
 
-    public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID,Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
-    public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID,Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
+    public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
+    public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
 
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
@@ -35,7 +35,7 @@ public abstract class MachineContainerScreen extends ContainerScreen {
     }
 
     public void drawConfigTabs() {
-        if(IS_CONFIG_OPEN) {
+        if (IS_CONFIG_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - CONFIG_PANEL_WIDTH, this.top + 3, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
             this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - CONFIG_PANEL_WIDTH + 22, this.top + 10, TextFormat.GRAY.getColor());
@@ -46,7 +46,7 @@ public abstract class MachineContainerScreen extends ContainerScreen {
     }
 
     public boolean checkTabsClick(double mouseX, double mouseY, int button) {
-        if(!IS_CONFIG_OPEN) {
+        if (!IS_CONFIG_OPEN) {
             if (mouseX >= this.left - CONFIG_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (CONFIG_TAB_HEIGHT + 3) && button == 0) {
                 IS_CONFIG_OPEN = true;
                 return true;
@@ -57,13 +57,13 @@ public abstract class MachineContainerScreen extends ContainerScreen {
                 return true;
             }
 
-            
+
         }
         return false;
     }
 
     public void drawTabTooltips(int mouseX, int mouseY) {
-        if(!IS_CONFIG_OPEN) {
+        if (!IS_CONFIG_OPEN) {
             if (mouseX >= this.left - CONFIG_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
                 this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
             }

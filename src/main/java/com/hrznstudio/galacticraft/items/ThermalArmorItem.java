@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

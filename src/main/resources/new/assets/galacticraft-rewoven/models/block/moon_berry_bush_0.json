@@ -1,0 +1,6 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "galacticraft-rewoven:block/moon_berry_bush_0"
+  }
+}

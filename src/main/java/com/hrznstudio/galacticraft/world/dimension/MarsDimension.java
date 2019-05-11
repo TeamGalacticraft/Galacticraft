@@ -1,10 +1,10 @@
 package com.hrznstudio.galacticraft.world.dimension;
 
-import com.hrznstudio.galacticraft.world.gen.chunk.MarsChunkGeneratorConfig;
 import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
+import com.hrznstudio.galacticraft.world.gen.chunk.MarsChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;

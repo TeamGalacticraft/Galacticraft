@@ -2,7 +2,10 @@ package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.blocks.GalacticraftStairsBlock;
-import com.hrznstudio.galacticraft.blocks.decoration.*;
+import com.hrznstudio.galacticraft.blocks.decoration.CheeseBlock;
+import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
+import com.hrznstudio.galacticraft.blocks.decoration.LightingPanelBlock;
+import com.hrznstudio.galacticraft.blocks.decoration.VacuumGlassBlock;
 import com.hrznstudio.galacticraft.blocks.environment.*;
 import com.hrznstudio.galacticraft.blocks.fluid.CrudeOilBlock;
 import com.hrznstudio.galacticraft.blocks.fluid.FuelBlock;
@@ -19,7 +22,6 @@ import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
 import com.hrznstudio.galacticraft.blocks.ore.SiliconOreBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.mojang.datafixers.kinds.Const;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
@@ -252,7 +254,8 @@ public class GalacticraftBlocks {
     public static final BlockItem ALUMINUM_WIRE_ITEM = registerBlockItem(new BlockItem(ALUMINUM_WIRE, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.ALUMINUM_WIRE);
     public static final BlockItem OXYGEN_PIPE_ITEM = registerBlockItem(new BlockItem(OXYGEN_PIPE, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.OXYGEN_PIPE);
 
-    public static void register() {}
+    public static void register() {
+    }
 
     private static Block registerBlock(Block block, String id) {
         return Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);

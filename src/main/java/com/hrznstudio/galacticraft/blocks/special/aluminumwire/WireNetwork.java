@@ -9,7 +9,6 @@ import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
 import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -94,7 +93,8 @@ public class WireNetwork {
                     }
                     try {
                         networkMap.remove(WireUtils.getNetworkFromId(((WireBlockEntity) wire).networkId)); //remove old one
-                    } catch (NullPointerException ignore) {} finally {
+                    } catch (NullPointerException ignore) {
+                    } finally {
                         ((WireBlockEntity) wire).networkId = this.getId();
                         this.blockPlacedLogic(wire); //recursively do this
                     }

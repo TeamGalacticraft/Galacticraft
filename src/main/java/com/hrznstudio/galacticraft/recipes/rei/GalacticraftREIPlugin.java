@@ -1,11 +1,11 @@
 package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
+import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
-import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
-import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import me.shedaniel.rei.api.REIPlugin;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.SpeedCraftFunctional;

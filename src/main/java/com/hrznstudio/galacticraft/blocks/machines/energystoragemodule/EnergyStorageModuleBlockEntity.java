@@ -1,10 +1,10 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
 

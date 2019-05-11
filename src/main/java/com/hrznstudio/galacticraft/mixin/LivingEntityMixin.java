@@ -2,8 +2,8 @@ package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
+import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import net.minecraft.entity.Entity;
@@ -23,12 +23,12 @@ public abstract class LivingEntityMixin {
 
     @Inject(method = "baseTick", at = @At("HEAD"))
     private void baseTick(CallbackInfo ci) {
-        air =  ((LivingEntity)(Object)this).getBreath();
+        air = ((LivingEntity) (Object) this).getBreath();
     }
 
     @Inject(method = "baseTick", at = @At("RETURN"))
     private void oxygenDamage(CallbackInfo ci) {
-        Entity entity = (LivingEntity)(Object)this;
+        Entity entity = (LivingEntity) (Object) this;
         if (entity.isAlive()) {
             if (entity.world.dimension instanceof SpaceDimension) {
                 if (!((SpaceDimension) entity.world.dimension).hasOxygen()) {

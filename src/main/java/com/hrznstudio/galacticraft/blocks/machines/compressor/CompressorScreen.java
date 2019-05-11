@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.hrznstudio.galacticraft.Constants;
+import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;

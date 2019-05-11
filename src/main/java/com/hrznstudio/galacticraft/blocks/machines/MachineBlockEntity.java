@@ -1,10 +1,10 @@
 package com.hrznstudio.galacticraft.blocks.machines;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
+import io.github.prospector.silk.util.ActionType;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

@@ -1,14 +1,14 @@
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 

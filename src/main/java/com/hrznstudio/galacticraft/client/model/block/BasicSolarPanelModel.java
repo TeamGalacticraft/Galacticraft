@@ -9,8 +9,7 @@ import net.minecraft.client.model.Model;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelModel extends Model
-{
+public class BasicSolarPanelModel extends Model {
     private Cuboid panelMain;
     private Cuboid sideHorizontal0;
     private Cuboid sideVertical0;
@@ -21,8 +20,7 @@ public class BasicSolarPanelModel extends Model
     private Cuboid sideHorizontal2;
     private Cuboid pole;
 
-    public BasicSolarPanelModel()
-    {
+    public BasicSolarPanelModel() {
         this.textureWidth = 256;
         this.textureHeight = 128;
         this.panelMain = new Cuboid(this, 0, 0);
@@ -81,15 +79,13 @@ public class BasicSolarPanelModel extends Model
         this.setRotation(this.pole, 0F, 0F, 0F);
     }
 
-    private void setRotation(Cuboid model, float x, float y, float z)
-    {
+    private void setRotation(Cuboid model, float x, float y, float z) {
         model.rotationPointX = x;
         model.rotationPointY = y;
         model.rotationPointZ = z;
     }
 
-    public void renderPanel()
-    {
+    public void renderPanel() {
         this.panelMain.render(0.0625F);
         this.sideHorizontal0.render(0.0625F);
         this.sideVertical0.render(0.0625F);
@@ -100,8 +96,7 @@ public class BasicSolarPanelModel extends Model
         this.sideHorizontal2.render(0.0625F);
     }
 
-    public void renderPole()
-    {
+    public void renderPole() {
         this.pole.render(0.0625F);
     }
 }
