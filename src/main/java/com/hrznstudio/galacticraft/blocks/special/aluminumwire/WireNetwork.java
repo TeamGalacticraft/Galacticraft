@@ -1,16 +1,17 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.WireBlock;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.github.prospector.silk.util.ActionType;
 import io.netty.util.internal.ConcurrentSet;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -36,15 +37,9 @@ public class WireNetwork {
      * The id of this network.
      */
     private long id;
-    private long highestWireId;
-    private long lowestWireId;
 
     private ConcurrentMap<BlockEntity, Integer> energyNeed = new ConcurrentHashMap<>();
     private ConcurrentMap<BlockEntity, Integer> energy = new ConcurrentHashMap<>();
-
-    private int energyAvailable;
-    private int energyFulfilled;
-    private int energyLeft;
 
     /**
      * Creates a new wire network.
@@ -52,12 +47,14 @@ public class WireNetwork {
      * @param source The BlockEntity that created the network
      */
     public WireNetwork(BlockEntity source) {
-        highestWireId = Long.MIN_VALUE;
-        lowestWireId = Long.MAX_VALUE;
-        networkMap.forEach((wireNetwork, blockPos) -> {
+        long highestWireId = Long.MIN_VALUE;
+        long lowestWireId = Long.MAX_VALUE;
+        //The next one after the lowest
+        for (Map.Entry<WireNetwork, BlockPos> entry : networkMap.entrySet()) {
+            WireNetwork wireNetwork = entry.getKey();
             highestWireId = Math.max(wireNetwork.getId(), highestWireId); //This method will only fail if there are already 9,223,372,036,854,775,806 wire networks.
             lowestWireId = Math.min(wireNetwork.getId(), lowestWireId);
-        }); //The next one after the lowest
+        }
         if (highestWireId == Long.MIN_VALUE) { //Nothing is in the networkMap - Impossible to have negative wire ids.
             highestWireId = 0;
         }
@@ -77,7 +74,13 @@ public class WireNetwork {
      * Called when a wire is placed.
      */
     public static void blockPlaced() {
-        networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.wires.forEach(wireNetwork::blockPlacedLogic)); //Every wire in every network
+        //Every wire in every network
+        for (Map.Entry<WireNetwork, BlockPos> entry : networkMap.entrySet()) {
+            WireNetwork wireNetwork = entry.getKey();
+            for (BlockEntity wire : wireNetwork.wires) {
+                wireNetwork.blockPlacedLogic(wire);
+            }
+        }
     }
 
     private void blockPlacedLogic(BlockEntity source) {
@@ -110,24 +113,22 @@ public class WireNetwork {
     public void update() {
         energyNeed.clear();
         energy.clear();
-        energyFulfilled = 0;
-        energyAvailable = 0;
-        energyLeft = 0;
+        int energyFulfilled = 0;
+        int energyAvailable = 0;
+        int energyLeft = 0;
 
-        boolean broken = false;
         for (BlockEntity wire : wires) {
-            if (!(wire.getWorld().getBlockState(wire.getPos()).getBlock() instanceof WireBlock) || wire.getWorld().getBlockEntity(wire.getPos()) == null) {
+            if ((wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.AIR || wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.CAVE_AIR ||
+                    wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.VOID_AIR ||
+                    wire.getWorld().getBlockState(wire.getPos()).getBlock() == null) ||
+                    !(wire.getWorld().getBlockEntity(wire.getPos()) instanceof WireBlockEntity)) {
                 wires.remove(wire);
                 Galacticraft.logger.debug("Removed wire at {}.", wire.getPos());
                 for (BlockEntity blockEntity1 : wires) {
                     ((WireBlockEntity) blockEntity1).onPlaced();
-                    broken = true;
                 }
-                if (broken) {
-                    wires.clear();
-                    networkMap.remove(this);
-                    return;
-                }
+                wires.clear();
+                return;
             } else {
                 ((WireBlockEntity) wire).networkId = getId();
             }
@@ -167,7 +168,9 @@ public class WireNetwork {
         for (int amount : energy.values()) {
             energyAvailable += amount;
         }
-        energyNeed.forEach((consumer, energyNeeded) -> {
+        for (Map.Entry<BlockEntity, Integer> e : energyNeed.entrySet()) {
+            BlockEntity consumer = e.getKey();
+            Integer energyNeeded = e.getValue();
             energyLeft = energyNeeded;
             if (energyNeeded > 0) {
                 if (energyAvailable >= energyNeeded) {
@@ -220,7 +223,7 @@ public class WireNetwork {
                     energyFulfilled = 0;
                 }
             }
-        });
+        }
     }
 
     /**
