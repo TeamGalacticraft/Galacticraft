@@ -6,9 +6,9 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -43,7 +43,7 @@ public class BasicSolarPanelScreen extends ContainerScreen {
     private World world;
 
     public BasicSolarPanelScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new BasicSolarPanelContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableTextComponent("ui.galacticraft-rewoven.basic_solar_panel.name"));
+        super(new BasicSolarPanelContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.basic_solar_panel.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
     }
@@ -69,7 +69,7 @@ public class BasicSolarPanelScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableTextComponent("block.galacticraft-rewoven.basic_solar_panel").getText(), (this.width / 2), this.top + 5, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.basic_solar_panel").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
@@ -94,21 +94,21 @@ public class BasicSolarPanelScreen extends ContainerScreen {
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-rewoven.machine.status", ((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
+            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", ((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
             if (((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).status == BasicSolarPanelStatus.COLLECTING) {
                 if (world.getTimeOfDay() > 6000) {
-                    toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((6000D - ((double) world.getTimeOfDay() - 6000D)) / 133.3333333333D)).setStyle(new Style().setColor(TextFormat.LIGHT_PURPLE)).getFormattedText());
+                    toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((6000D - ((double) world.getTimeOfDay() - 6000D)) / 133.3333333333D)).setStyle(new Style().setColor(ChatFormat.LIGHT_PURPLE)).getFormattedText());
                 } else {
-                    toolTipLines.add(new TranslatableTextComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((double) world.getTimeOfDay()) / 133.3333333333D)).setStyle(new Style().setColor(TextFormat.LIGHT_PURPLE)).getFormattedText());
+                    toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((double) world.getTimeOfDay()) / 133.3333333333D)).setStyle(new Style().setColor(ChatFormat.LIGHT_PURPLE)).getFormattedText());
                 }
             }
-            toolTipLines.add("\u00A76" + new TranslatableTextComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(TextFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableTextComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
-            this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
+            this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
         }
     }
 

@@ -17,13 +17,14 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -55,11 +56,11 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<TextComponent> list, TooltipContext tooltipContext) {
+    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Component> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(new Style().setColor(ChatFormat.GRAY)));
         } else {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
         }
     }
 
@@ -85,7 +86,7 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.with(FACING);
+        stateBuilder.add(FACING);
     }
 
     @Override

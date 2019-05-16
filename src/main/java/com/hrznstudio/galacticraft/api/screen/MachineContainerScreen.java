@@ -5,9 +5,9 @@ import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 
 /**
@@ -38,7 +38,7 @@ public abstract class MachineContainerScreen extends ContainerScreen {
         if (IS_CONFIG_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - CONFIG_PANEL_WIDTH, this.top + 3, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
-            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - CONFIG_PANEL_WIDTH + 22, this.top + 10, TextFormat.GRAY.getColor());
+            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - CONFIG_PANEL_WIDTH + 22, this.top + 10, ChatFormat.GRAY.getColor());
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
             this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
@@ -65,7 +65,7 @@ public abstract class MachineContainerScreen extends ContainerScreen {
     public void drawTabTooltips(int mouseX, int mouseY) {
         if (!IS_CONFIG_OPEN) {
             if (mouseX >= this.left - CONFIG_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
-                this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
             }
         }
     }

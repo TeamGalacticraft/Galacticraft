@@ -9,7 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
@@ -50,7 +50,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, VerticalEntityPosition verticalEntityPosition) {
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityContext EntityContext) {
         ArrayList<VoxelShape> shapes = new ArrayList<>();
 
         if (blockState.get(ATTACHED_NORTH)) {
@@ -129,7 +129,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
         super.appendProperties(stateFactory$Builder_1);
-        stateFactory$Builder_1.with(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
+        stateFactory$Builder_1.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
 
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.MIPPED_CUTOUT;
+        return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
     @Environment(EnvType.CLIENT)

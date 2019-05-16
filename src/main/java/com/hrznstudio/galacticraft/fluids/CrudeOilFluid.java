@@ -13,8 +13,8 @@ import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
-import net.minecraft.particle.DustParticleParameters;
-import net.minecraft.particle.ParticleParameters;
+import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateFactory;
 import net.minecraft.tag.FluidTags;
@@ -59,7 +59,7 @@ public class CrudeOilFluid extends BaseFluid {
     }
 
     @Environment(EnvType.CLIENT)
-    public ParticleParameters getParticle() {
+    public ParticleEffect getParticle() {
         return ParticleTypes.DRIPPING_WATER;
     }
 
@@ -72,7 +72,7 @@ public class CrudeOilFluid extends BaseFluid {
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(new DustParticleParameters(0.0f, 0.0f, 0.0f, 0.5f),
+            world.addParticle(new DustParticleEffect(0.0f, 0.0f, 0.0f, 0.5f),
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -141,7 +141,7 @@ public class CrudeOilFluid extends BaseFluid {
         @Override
         protected void appendProperties(StateFactory.Builder<Fluid, FluidState> stateBuilder) {
             super.appendProperties(stateBuilder);
-            stateBuilder.with(LEVEL);
+            stateBuilder.add(LEVEL);
         }
 
         @Override

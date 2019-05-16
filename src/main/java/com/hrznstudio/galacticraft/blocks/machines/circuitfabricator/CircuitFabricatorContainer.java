@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
@@ -40,7 +40,7 @@ public class CircuitFabricatorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a circuit fabricator!");
         }
         this.fabricator = (CircuitFabricatorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(fabricator.getInventory()) {
+        this.inventory = new InventoryFixedWrapper(fabricator.getInventory()) {
             @Override
             public void markDirty() {
                 fabricator.markDirty();

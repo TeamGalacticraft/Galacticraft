@@ -5,8 +5,8 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -33,11 +33,11 @@ public class CompressorScreen extends ContainerScreen {
     protected World world;
 
     public CompressorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        this(new CompressorContainer(syncId, blockPos, playerEntity), blockPos, playerEntity, new TranslatableTextComponent("ui.galacticraft-rewoven.compressor.name"));
+        this(new CompressorContainer(syncId, blockPos, playerEntity), blockPos, playerEntity, new TranslatableComponent("ui.galacticraft-rewoven.compressor.name"));
         this.containerHeight = 192;
     }
 
-    public CompressorScreen(CompressorContainer electricCompressorContainer, BlockPos blockPos, PlayerEntity playerEntity, TranslatableTextComponent textComponents) {
+    public CompressorScreen(CompressorContainer electricCompressorContainer, BlockPos blockPos, PlayerEntity playerEntity, TranslatableComponent textComponents) {
         super(electricCompressorContainer, playerEntity.inventory, textComponents);
         this.blockPos = blockPos;
         this.world = playerEntity.world;
@@ -71,12 +71,12 @@ public class CompressorScreen extends ContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.top + 6, TextFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.top + 6, ChatFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     protected String getContainerDisplayName() {
-        return new TranslatableTextComponent("block.galacticraft-rewoven.compressor").getText();
+        return new TranslatableComponent("block.galacticraft-rewoven.compressor").getText();
     }
 
     private void drawConfigTabs() {
@@ -122,7 +122,7 @@ public class CompressorScreen extends ContainerScreen {
     public void drawMouseoverTooltip(int mouseX, int mouseY) {
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
-            this.renderTooltip("\u00A77" + new TranslatableTextComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
+            this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
         }
     }
 

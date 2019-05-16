@@ -12,9 +12,9 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -43,16 +43,16 @@ public class GalacticraftCommands {
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
                 entities.forEach((Consumer<Entity>) entity -> {
                     teleport(entity, context.getSource().getMinecraftServer().getWorld(dimension));
-                    context.getSource().sendFeedback(new TranslatableTextComponent("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), dimension.toString()), true);
+                    context.getSource().sendFeedback(new TranslatableComponent("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), dimension.toString()), true);
                 });
                 return entities.size();
             } catch (IllegalArgumentException ignore) {
                 Entity entity = context.getSource().getEntity();
                 teleport(entity, context.getSource().getMinecraftServer().getWorld(dimension));
-                context.getSource().sendFeedback(new TranslatableTextComponent("commands.galacticraft-rewoven.dimensiontp.success.single", dimension.toString()), true);
+                context.getSource().sendFeedback(new TranslatableComponent("commands.galacticraft-rewoven.dimensiontp.success.single", dimension.toString()), true);
                 return 1;
             } catch (CommandSyntaxException ignore) {
-                context.getSource().sendError(new TranslatableTextComponent("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(new Style().setColor(TextFormat.RED)));
+                context.getSource().sendError(new TranslatableComponent("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(new Style().setColor(ChatFormat.RED)));
                 return -1;
             }
         } catch (Exception ignore) {

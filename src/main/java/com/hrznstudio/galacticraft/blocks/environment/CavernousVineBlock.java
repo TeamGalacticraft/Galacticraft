@@ -16,7 +16,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -43,7 +43,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         super.onBreak(world, blockPos, blockState, playerEntity);
 
         if (playerEntity.getActiveItem().getItem() instanceof ShearsItem) {
-            ItemScatterer.spawn(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(this.getItem(), 1));
+            ItemScatterer.spawn(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(this.asItem(), 1));
         }
     }
 
@@ -91,8 +91,8 @@ public class CavernousVineBlock extends Block implements Waterloggable {
 
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
-        builder.with(WATERLOGGED);
-        builder.with(VINES);
+        builder.add(WATERLOGGED);
+        builder.add(VINES);
     }
 
     @Override
@@ -175,7 +175,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         }
     }
 
-    public enum VineTypes implements StringRepresentable {
+    public enum VineTypes implements StringIdentifiable {
         VINE_0("vine_0", 0),
         VINE_1("vine_1", 1),
         VINE_2("vine_2", 2);

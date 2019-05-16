@@ -66,7 +66,7 @@ public class ClientResourcePackCreatorMixin {
         }
         File resourcePackFile = new File (MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1");
         if (resourcePackFile.isFile()) {
-            ResourcePackContainer packContainer = ResourcePackContainer.of("galacticraft-rewoven:new_textures", false, () -> new NewGalacticraftTexturePack(resourcePackFile), packContainerFactory, ResourcePackContainer.SortingDirection.TOP);
+            ResourcePackContainer packContainer = ResourcePackContainer.of("galacticraft-rewoven:new_textures", false, () -> new NewGalacticraftTexturePack(resourcePackFile), packContainerFactory, ResourcePackContainer.InsertionPosition.TOP);
             if (packContainer != null) {
                 map.put("galacticraft-rewoven:new_textures", packContainer);
             }

@@ -4,6 +4,7 @@ import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -14,14 +15,13 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustParticleParameters;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -49,11 +49,11 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<TextComponent> list, TooltipContext tooltipContext) {
+    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Component> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.oxygen_collector").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen_collector").setStyle(new Style().setColor(ChatFormat.GRAY)));
         } else {
-            list.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
         }
     }
 
@@ -79,7 +79,7 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.with(FACING);
+        stateBuilder.add(FACING);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
 
                 for (int int_1 = 0; int_1 < 32; ++int_1) {
                     world.addParticle(
-                            new DustParticleParameters(0.9f, 0.9f, 1.0f, 1.0F),
+                            new DustParticleEffect(0.9f, 0.9f, 1.0f, 1.0F),
                             pos.getX() + 0.5D,
                             (random.nextFloat() - 0.5D) * 0.5D + /*random.nextDouble() * 2.0D*/ 0.5D,
                             pos.getZ() + 0.5D,

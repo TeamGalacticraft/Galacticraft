@@ -1,9 +1,9 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
-import net.minecraft.text.TextFormat;
+import net.minecraft.ChatFormat;
 
 public enum CollectorStatus {
-    INACTIVE(TextFormat.RED.getColor()), NOT_ENOUGH_LEAVES(TextFormat.RED.getColor()), COLLECTING(TextFormat.GREEN.getColor());
+    INACTIVE(ChatFormat.RED.getColor()), NOT_ENOUGH_LEAVES(ChatFormat.RED.getColor()), COLLECTING(ChatFormat.GREEN.getColor());
 
     private int textColor;
 

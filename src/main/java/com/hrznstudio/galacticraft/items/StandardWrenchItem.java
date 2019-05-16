@@ -11,12 +11,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SystemUtil;
@@ -82,18 +83,18 @@ public class StandardWrenchItem extends Item {
                 if (property.getName().equals("facing")) {
                     BlockState blockState_2 = method_7758(state, property, player.isSneaking());
                     iWorld.setBlockState(pos, blockState_2, 18);
-                    stack.applyDamage(2, player, (playerEntity) -> playerEntity.sendEquipmentBreakStatus(EquipmentSlot.HAND_MAIN));
+                    stack.applyDamage(2, player, (playerEntity) -> playerEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
                 }
             }
         }
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, World world_1, List<TextComponent> list_1, TooltipContext tooltipContext_1) {
+    public void buildTooltip(ItemStack itemStack_1, World world_1, List<Component> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.standard_wrench").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list_1.add(new TranslatableComponent("tooltip.galacticraft-fabric.standard_wrench").setStyle(new Style().setColor(ChatFormat.GRAY)));
         } else {
-            list_1.add(new TranslatableTextComponent("tooltip.galacticraft-fabric.press_shift").setStyle(new Style().setColor(TextFormat.GRAY)));
+            list_1.add(new TranslatableComponent("tooltip.galacticraft-fabric.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
         }
     }
 }

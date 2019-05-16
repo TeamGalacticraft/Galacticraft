@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.entity.BlockEntity;
@@ -32,7 +32,7 @@ public class BasicSolarPanelContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a solar panel!");
         }
         this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(solarPanel.getInventory()) {
+        this.inventory = new InventoryFixedWrapper(solarPanel.getInventory()) {
             @Override
             public void markDirty() {
                 solarPanel.markDirty();

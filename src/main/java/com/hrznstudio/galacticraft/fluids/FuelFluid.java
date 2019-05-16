@@ -8,7 +8,7 @@ import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
-import net.minecraft.particle.ParticleParameters;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateFactory;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +43,7 @@ public class FuelFluid extends BaseFluid {
     }
 
     @Environment(EnvType.CLIENT)
-    public ParticleParameters getParticle() {
+    public ParticleEffect getParticle() {
         return ParticleTypes.DRIPPING_WATER;
     }
 
@@ -113,7 +113,7 @@ public class FuelFluid extends BaseFluid {
         @Override
         protected void appendProperties(StateFactory.Builder<Fluid, FluidState> stateBuilder) {
             super.appendProperties(stateBuilder);
-            stateBuilder.with(LEVEL);
+            stateBuilder.add(LEVEL);
         }
 
         @Override

@@ -1,23 +1,23 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
-import net.minecraft.text.Style;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public enum RefineryStatus {
 
     /**
      * Generator is active and is generating energy.
      */
-    REFINING(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.refining").setStyle(new Style().setColor(TextFormat.GREEN)).getFormattedText()),
+    REFINING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.refining").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(TextFormat.GOLD)).getFormattedText()),
+    IDLE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(ChatFormat.GOLD)).getFormattedText()),
     /**
      * The generator has no fuel.
      */
-    INACTIVE(new TranslatableTextComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(TextFormat.GRAY)).getFormattedText());
+    INACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
 
     private String name;
 

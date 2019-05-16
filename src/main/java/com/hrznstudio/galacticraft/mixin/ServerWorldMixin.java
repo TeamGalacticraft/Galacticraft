@@ -26,8 +26,7 @@ public abstract class ServerWorldMixin {
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> wireNetwork.update());
     }
 
-    @Inject(method = "close", at = @At("HEAD"))
-    private void close(CallbackInfo ci) {
+    public void close() {
         WireNetwork.networkMap.clear();
         hasRunOnceForWorldReload = false;
     }

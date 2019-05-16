@@ -10,7 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
@@ -41,7 +41,7 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos pos, VerticalEntityPosition verticalEntityPosition_1) {
+    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos pos, EntityContext EntityContext_1) {
         Block down = blockView_1.getBlockState(pos.down()).getBlock();
         if (down == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
             return POLE_SHAPE;

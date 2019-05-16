@@ -9,7 +9,7 @@ import net.minecraft.client.render.GuiLighting;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

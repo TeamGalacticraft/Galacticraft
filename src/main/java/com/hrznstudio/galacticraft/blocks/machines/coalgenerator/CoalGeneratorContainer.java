@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,7 +37,7 @@ public class CoalGeneratorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a coal generator!");
         }
         this.generator = (CoalGeneratorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(generator.getInventory()) {
+        this.inventory = new InventoryFixedWrapper(generator.getInventory()) {
             @Override
             public void markDirty() {
                 generator.markDirty();

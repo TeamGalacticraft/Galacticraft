@@ -1,8 +1,7 @@
 package com.hrznstudio.galacticraft.energy;
 
 import io.github.cottonmc.energy.api.EnergyType;
-import net.minecraft.text.StringTextComponent;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.TextComponent;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -15,7 +14,7 @@ public class OxygenEnergyType implements EnergyType {
 
     @Override
     public TextComponent getDisplayAmount(int amount) {
-        return new StringTextComponent(String.valueOf(amount));
+        return new TextComponent(String.valueOf(amount));
     }
 
     @Override

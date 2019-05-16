@@ -20,7 +20,7 @@ public class AbstractHorizontalDirectionalBlock extends Block {
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> blockStateBuilder) {
         super.appendProperties(blockStateBuilder);
-        blockStateBuilder.with(FACING);
+        blockStateBuilder.add(FACING);
     }
 
     @Override

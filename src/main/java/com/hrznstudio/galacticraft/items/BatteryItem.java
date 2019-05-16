@@ -10,10 +10,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.Style;
-import net.minecraft.text.TextComponent;
-import net.minecraft.text.TextFormat;
-import net.minecraft.text.TranslatableTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.world.World;
 
@@ -31,14 +32,14 @@ public class BatteryItem extends Item implements EnergyHolderItem {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void buildTooltip(ItemStack stack, World world, List<TextComponent> lines, TooltipContext context) {
+    public void buildTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
         int charge = stack.getOrCreateTag().getInt("Energy");
         if (stack.getDurability() - stack.getDamage() < 3334) {
-            lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(TextFormat.DARK_RED)));
+            lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(ChatFormat.DARK_RED)));
         } else if (stack.getDurability() - stack.getDamage() < 6667) {
-            lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(TextFormat.GOLD)));
+            lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(ChatFormat.GOLD)));
         } else {
-            lines.add(new TranslatableTextComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(TextFormat.GREEN)));
+            lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(ChatFormat.GREEN)));
         }
         super.buildTooltip(stack, world, lines, context);
     }

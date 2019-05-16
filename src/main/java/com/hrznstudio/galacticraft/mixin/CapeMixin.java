@@ -28,10 +28,10 @@ public abstract class CapeMixin {
 
     @Inject(at = @At("RETURN"), method = "loadTextures")
     private void loadTextures(CallbackInfo info) {
-        for (Entity r : MinecraftClient.getInstance().world.getPlayers()) {
-            if (r instanceof PlayerEntity) {
-                if (Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")) != null) {
-                    textures.put(MinecraftProfileTexture.Type.CAPE, Capes.getCapeMap().get(r.getUuidAsString().replace("-", "")));
+        for (Entity e : MinecraftClient.getInstance().world.getPlayers()) {
+            if (e instanceof PlayerEntity) {
+                if (Capes.getCapeMap().get(e.getUuidAsString().replace("-", "")) != null) {
+                    textures.put(MinecraftProfileTexture.Type.CAPE, Capes.getCapeMap().get(e.getUuidAsString().replace("-", "")));
                 }
             }
         }

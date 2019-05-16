@@ -23,6 +23,6 @@ public class CheeseBlock extends CakeBlock {
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.with(WATERLOGGED).with(BITES);
+        stateBuilder.add(WATERLOGGED).add(BITES);
     }
 }

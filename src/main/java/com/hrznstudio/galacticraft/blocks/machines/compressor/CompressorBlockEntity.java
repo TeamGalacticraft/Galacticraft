@@ -4,7 +4,7 @@ import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
@@ -53,7 +53,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
 
     @Override
     public void tick() {
-        PartialInventoryFixedWrapper inv = new PartialInventoryFixedWrapper(inventory.getSubInv(0, 9)) {
+        InventoryFixedWrapper inv = new InventoryFixedWrapper(inventory.getSubInv(0, 9)) {
             @Override
             public void markDirty() {
                 CompressorBlockEntity.this.markDirty();

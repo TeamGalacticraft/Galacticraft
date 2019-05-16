@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.mixin;
 import com.hrznstudio.galacticraft.container.button.SpaceRaceButtonWidget;
 import net.minecraft.client.gui.Screen;
 import net.minecraft.client.gui.menu.PauseMenuScreen;
-import net.minecraft.text.TextComponent;
+import net.minecraft.network.chat.TextComponent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

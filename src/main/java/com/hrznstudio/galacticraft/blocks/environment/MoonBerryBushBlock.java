@@ -8,10 +8,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PlantBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.VerticalEntityPosition;
+import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.DustParticleParameters;
+import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateFactory;
@@ -43,11 +43,11 @@ public class MoonBerryBushBlock extends PlantBlock {
         return new ItemStack(GalacticraftItems.MOON_BERRIES);
     }
 
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, VerticalEntityPosition verticalEntityPosition) {
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityContext EntityContext) {
         if (blockState.get(AGE) == 0) {
             return SMALL_SHAPE;
         } else {
-            return blockState.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(blockState, blockView, blockPos, verticalEntityPosition);
+            return blockState.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(blockState, blockView, blockPos, EntityContext);
         }
     }
 
@@ -83,7 +83,7 @@ public class MoonBerryBushBlock extends PlantBlock {
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.with(AGE);
+        stateBuilder.add(AGE);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MoonBerryBushBlock extends PlantBlock {
             int times = random.nextInt(4);
 
             for (int i = 0; i < times; i++) {
-                world.addParticle(new DustParticleParameters(0.5f, 0.5f, 1.0f, 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
+                world.addParticle(new DustParticleEffect(0.5f, 0.5f, 1.0f, 0.6f), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }

@@ -44,7 +44,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     public static Map<Item, Integer> createFuelTimeMap() {
         Map<Item, Integer> map = Maps.newLinkedHashMap();
         map.put(Items.COAL, 1600);
-        map.put(Blocks.COAL_BLOCK.getItem(), map.get(Items.COAL) * 9);
+        map.put(Blocks.COAL_BLOCK.asItem(), map.get(Items.COAL) * 9);
         map.put(Items.CHARCOAL, 1600);
         return map;
     }
