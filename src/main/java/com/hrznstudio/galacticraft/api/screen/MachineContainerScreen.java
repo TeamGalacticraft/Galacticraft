@@ -1,12 +1,12 @@
 package com.hrznstudio.galacticraft.api.screen;
 
 import com.hrznstudio.galacticraft.Constants;
+import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.ContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormat;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 

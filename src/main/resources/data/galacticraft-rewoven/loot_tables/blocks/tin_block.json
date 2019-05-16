@@ -1,7 +1,7 @@
 {
   "pools": [{
     "entries": [{
-      "name": "galacticraft-rewoven:tin",
+      "name": "galacticraft-rewoven:tin_block",
       "type": "minecraft:item"
     }],
     "rolls": 1,

@@ -2,6 +2,7 @@ package com.hrznstudio.galacticraft.blocks.environment;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.client.gui.Screen;
@@ -9,8 +10,6 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormat;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;

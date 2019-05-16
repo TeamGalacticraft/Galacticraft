@@ -1,7 +1,7 @@
 {
   "pools": [{
     "entries": [{
-      "name": "galacticraft-rewoven:copper",
+      "name": "galacticraft-rewoven:copper_block",
       "type": "minecraft:item"
     }],
     "rolls": 1,

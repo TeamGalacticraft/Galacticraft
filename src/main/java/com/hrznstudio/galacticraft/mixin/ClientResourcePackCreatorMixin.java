@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.xml.bind.annotation.adapters.HexBinaryAdapter;
 import java.io.*;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class ClientResourcePackCreatorMixin {
     private void registerContainer(Map<String, ResourcePackContainer> map, ResourcePackContainer.Factory<?> packContainerFactory, CallbackInfo ci) {
         if (!dl) {
             dl = true;
-            if (!new File (MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1").exists()) {
+            if (!new File(MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1").exists()) {
                 if (!new File(MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/").isDirectory()) {
                     new File(MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7").mkdirs();
                 }
@@ -49,7 +48,7 @@ public class ClientResourcePackCreatorMixin {
             } else {
                 try {
                     MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
-                    try (InputStream input = new FileInputStream(new File (MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1"))) {
+                    try (InputStream input = new FileInputStream(new File(MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1"))) {
                         byte[] buffer = new byte[8192];
                         int len = input.read(buffer);
                         while (len != -1) {
@@ -64,7 +63,7 @@ public class ClientResourcePackCreatorMixin {
                 }
             }
         }
-        File resourcePackFile = new File (MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1");
+        File resourcePackFile = new File(MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1");
         if (resourcePackFile.isFile()) {
             ResourcePackContainer packContainer = ResourcePackContainer.of("galacticraft-rewoven:new_textures", false, () -> new NewGalacticraftTexturePack(resourcePackFile), packContainerFactory, ResourcePackContainer.InsertionPosition.TOP);
             if (packContainer != null) {

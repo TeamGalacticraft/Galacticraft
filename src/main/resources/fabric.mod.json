@@ -31,13 +31,5 @@
     "libblockattributes": "*",
     "silk": "*",
     "tgc-utils": "*"
-  },
-  "custom": {
-    "roughlyenoughitems:plugins": [
-      {
-        "id": "galacticraft_plugin",
-        "class": "com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin"
-      }
-    ]
   }
 }

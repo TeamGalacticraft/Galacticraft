@@ -7,7 +7,6 @@ import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionTyp
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
-import net.minecraft.network.chat.Component;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
@@ -20,6 +19,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory;

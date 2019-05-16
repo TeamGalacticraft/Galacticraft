@@ -26,7 +26,7 @@ public abstract class ItemStackMixin {
         if (false && id.getNamespace().equals("galacticraft-rewoven")) {
             TextComponent returnVal = returnable.getReturnValue();
             if (returnVal.getStyle().getColor() == null) {
-                returnable.setReturnValue((TextComponent)returnVal.setStyle(returnVal.getStyle().setColor(ChatFormat.BLUE)));
+                returnable.setReturnValue((TextComponent) returnVal.setStyle(returnVal.getStyle().setColor(ChatFormat.BLUE)));
             }
         }
     }

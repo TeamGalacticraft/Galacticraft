@@ -1,7 +1,7 @@
 {
   "pools": [{
     "entries": [{
-      "name": "galacticraft-rewoven:lead",
+      "name": "galacticraft-rewoven:lead_block",
       "type": "minecraft:item"
     }],
     "rolls": 1,

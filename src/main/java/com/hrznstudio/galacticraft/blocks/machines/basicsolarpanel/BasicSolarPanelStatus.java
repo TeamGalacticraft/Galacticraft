@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
-import net.minecraft.network.chat.Style;
 import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 
 /**

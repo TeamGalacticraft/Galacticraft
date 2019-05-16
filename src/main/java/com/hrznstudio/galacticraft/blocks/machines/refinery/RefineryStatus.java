@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
-import net.minecraft.network.chat.Style;
 import net.minecraft.ChatFormat;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public enum RefineryStatus {
