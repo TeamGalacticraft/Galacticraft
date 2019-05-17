@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TorchBlock;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.chat.Component;

@@ -6,11 +6,11 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
-import me.shedaniel.rei.api.REIPlugin;
+import me.shedaniel.rei.api.REIPluginEntry;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.SpeedCraftFunctional;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Screen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
@@ -20,7 +20,7 @@ import java.awt.*;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 
-public class GalacticraftREIPlugin implements REIPlugin {
+public class GalacticraftREIPlugin implements REIPluginEntry {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
 
@@ -76,6 +76,11 @@ public class GalacticraftREIPlugin implements REIPlugin {
 
         recipeHelper.registerDefaultSpeedCraftButtonArea(COMPRESSING);
         recipeHelper.registerSpeedCraftButtonArea(CIRCUIT_FABRICATION, (bounds) -> new Rectangle((int) bounds.getMaxX() - 16, (int) bounds.getMinY() + 6, 10, 10));
+    }
+
+    @Override
+    public Identifier getPluginIdentifier() {
+        return new Identifier(Constants.MOD_ID, Constants.MOD_ID);
     }
 
     @Override

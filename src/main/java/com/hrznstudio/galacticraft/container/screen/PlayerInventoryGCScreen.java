@@ -4,8 +4,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import net.minecraft.client.gui.ContainerScreen;
-import net.minecraft.client.gui.ingame.PlayerInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCContainer> {
+public class PlayerInventoryGCScreen extends AbstractContainerScreen<PlayerInventoryGCContainer> {
     public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
 
     private float mouseX;
@@ -75,7 +75,7 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
         if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), left, left + 29)
                 && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), top - 26, top)) {
             System.out.println("Clicked on vanilla tab!");
-            minecraft.openScreen(new PlayerInventoryScreen(playerInventory.player));
+            minecraft.openScreen(new InventoryScreen(playerInventory.player));
         }
 
         return b;
@@ -89,7 +89,7 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
 
         int int_3 = this.left;
         int int_4 = this.top;
-        PlayerInventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
+        InventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
 
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 

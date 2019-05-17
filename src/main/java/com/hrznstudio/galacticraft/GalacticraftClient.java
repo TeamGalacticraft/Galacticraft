@@ -10,8 +10,6 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
-import com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin;
-import me.shedaniel.rei.RoughlyEnoughItemsCore;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -55,8 +53,6 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new OxygenCollectorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
 
         GalacticraftBlockEntityRenderers.register();
-
-        RoughlyEnoughItemsCore.registerPlugin(new Identifier(Constants.MOD_ID, "galacticraft_plugin"), new GalacticraftREIPlugin());
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {

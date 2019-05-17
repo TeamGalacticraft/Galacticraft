@@ -18,6 +18,9 @@
     ],
     "client": [
       "com.hrznstudio.galacticraft.GalacticraftClient"
+    ],
+    "rei_plugins": [
+      "com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin"
     ]
   },
   "mixins": [

@@ -8,7 +8,7 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.ChatFormat;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RefineryScreen extends ContainerScreen {
+public class RefineryScreen extends AbstractContainerScreen {
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));

@@ -3,8 +3,8 @@ package com.hrznstudio.galacticraft.mixin;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import net.minecraft.client.gui.ingame.AbstractPlayerInventoryScreen;
-import net.minecraft.client.gui.ingame.PlayerInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.GuiLighting;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerInventory;
@@ -20,8 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-@Mixin(PlayerInventoryScreen.class)
-public abstract class PlayerInventoryScreenMixin extends AbstractPlayerInventoryScreen<PlayerContainer> {
+@Mixin(InventoryScreen.class)
+public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerContainer> {
     public PlayerInventoryScreenMixin(PlayerContainer container, PlayerInventory playerInventory, TextComponent textComponent) {
         super(container, playerInventory, textComponent);
     }

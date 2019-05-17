@@ -2,7 +2,7 @@ package com.hrznstudio.galacticraft.api.screen;
 
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.ChatFormat;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
@@ -13,7 +13,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineContainerScreen extends ContainerScreen {
+public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));

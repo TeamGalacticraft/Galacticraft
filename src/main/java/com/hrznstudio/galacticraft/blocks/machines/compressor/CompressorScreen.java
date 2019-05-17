@@ -4,7 +4,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.ChatFormat;
-import net.minecraft.client.gui.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorScreen extends ContainerScreen {
+public class CompressorScreen extends AbstractContainerScreen {
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
