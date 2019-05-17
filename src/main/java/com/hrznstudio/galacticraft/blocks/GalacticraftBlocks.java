@@ -17,6 +17,7 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlock;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlock;
+import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
 import com.hrznstudio.galacticraft.blocks.ore.SiliconOreBlock;
@@ -135,6 +136,7 @@ public class GalacticraftBlocks {
     public static final Block BASIC_SOLAR_PANEL_PART = registerBlock(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 3600000.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
     public static final Block ENERGY_STORAGE_MODULE = registerBlock(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerBlock(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
+    public static final Block REFINERY = registerBlock(new RefineryBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
     // Liquids
     public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().build());
     public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().build());
@@ -250,6 +252,7 @@ public class GalacticraftBlocks {
     public static final BlockItem BASIC_SOLAR_PANEL_ITEM = registerBlockItem(new BlockItem(BASIC_SOLAR_PANEL, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.BASIC_SOLAR_PANEL);
     public static final BlockItem ENERGY_STORAGE_MODULE_ITEM = registerBlockItem(new BlockItem(ENERGY_STORAGE_MODULE, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final BlockItem OXYGEN_COLLECTOR_ITEM = registerBlockItem(new BlockItem(OXYGEN_COLLECTOR, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.OXYGEN_COLLECTOR);
+    public static final BlockItem REFINERY_ITEM = registerBlockItem(new BlockItem(REFINERY, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.REFINERY);
 
     public static final BlockItem ALUMINUM_WIRE_ITEM = registerBlockItem(new BlockItem(ALUMINUM_WIRE, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.ALUMINUM_WIRE);
     public static final BlockItem OXYGEN_PIPE_ITEM = registerBlockItem(new BlockItem(OXYGEN_PIPE, new Item.Settings().itemGroup(MACHINES_GROUP)), Constants.Blocks.OXYGEN_PIPE);
