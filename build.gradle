@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.1-SNAPSHOT'
+    id 'fabric-loom' version '0.2.2-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -47,7 +47,7 @@ dependencies {
     modCompile "roughly-enough-items:RoughlyEnoughItems:${project.rei_version}"
 
     //include everything mandatory inside the jar
-    include "net.fabricmc:fabric:${project.fabric_version}"
+    include "net.fabricmc:fabric-api:fabric-api:${project.fabric_version}"
     include "cloth:ClothEvents:${project.cloth_version}"
     include "cloth-config:ClothConfig:${project.cloth_config_version}"
     include "silk:SilkAPI:${project.silk_version}"
