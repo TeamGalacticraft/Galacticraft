@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.block.entity.BlockEntity;
@@ -32,7 +32,7 @@ public class BasicSolarPanelContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a solar panel!");
         }
         this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
-        this.inventory = new InventoryFixedWrapper(solarPanel.getInventory()) {
+        this.inventory = new PartialInventoryFixedWrapper(solarPanel.getInventory()) {
             @Override
             public void markDirty() {
                 solarPanel.markDirty();
@@ -44,17 +44,14 @@ public class BasicSolarPanelContainer extends Container {
             }
         };
 
-        // Coal Generator fuel slot
         this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
 
-        // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
-        // Hotbar slots
         for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
         }

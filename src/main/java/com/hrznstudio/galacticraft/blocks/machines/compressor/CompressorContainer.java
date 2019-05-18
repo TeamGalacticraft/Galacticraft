@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -37,7 +37,7 @@ public class CompressorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of a compressor!");
         }
         this.compressor = (CompressorBlockEntity) blockEntity;
-        this.inventory = new InventoryFixedWrapper(compressor.inventory) {
+        this.inventory = new PartialInventoryFixedWrapper(compressor.inventory) {
             @Override
             public void markDirty() {
                 compressor.markDirty();
