@@ -22,7 +22,7 @@ import java.util.zip.ZipFile;
 public class ClientResourcePackCreatorMixin {
 
     private boolean dl = false;
-    private boolean iWantTheResourcePack = true;
+    private boolean iWantTheResourcePack = false;
 
     @Inject(method = "registerContainer", at = @At("TAIL"), cancellable = true)
     private void registerContainer(Map<String, ResourcePackContainer> map, ResourcePackContainer.Factory<?> packContainerFactory, CallbackInfo ci) {
