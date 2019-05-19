@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
@@ -33,7 +33,7 @@ public class OxygenCollectorContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of an OxygenCollectorBlockEntity!");
         }
         this.module = (OxygenCollectorBlockEntity) blockEntity;
-        this.inventory = new InventoryFixedWrapper(module.getInventory()) {
+        this.inventory = new PartialInventoryFixedWrapper(module.getInventory()) {
             @Override
             public void markDirty() {
                 module.markDirty();
