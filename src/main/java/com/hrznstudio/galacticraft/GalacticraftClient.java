@@ -10,10 +10,16 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import java.lang.reflect.InvocationTargetException;
@@ -52,6 +58,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new EnergyStorageModuleScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new OxygenCollectorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
 
+        EntityRendererRegistry.INSTANCE.register(T1RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
         GalacticraftBlockEntityRenderers.register();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {

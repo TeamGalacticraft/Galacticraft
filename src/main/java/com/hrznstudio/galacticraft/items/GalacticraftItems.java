@@ -1,8 +1,10 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.*;
 import net.minecraft.util.Identifier;
@@ -164,6 +166,8 @@ public class GalacticraftItems {
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem((new Item.Settings()).itemGroup(ITEMS_GROUP));
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem((new Item.Settings()).itemGroup(ITEMS_GROUP));
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem((new Item.Settings()).itemGroup(ITEMS_GROUP));
+
+    public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 15714446, 9794134, (new Item.Settings()).itemGroup(ItemGroup.MISC)));
 
 
     public static void register() {

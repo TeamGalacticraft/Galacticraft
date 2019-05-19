@@ -17,10 +17,11 @@ version = project.mod_version + "+" + buildNum
 group = project.maven_group
 
 minecraft {
+    extractJars = true
 }
 allprojects {
     repositories {
-	    mavenLocal()
+        mavenLocal()
         maven { url "https://minecraft.curseforge.com/api/maven" }
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://mod-buildcraft.com/maven" }
@@ -35,19 +36,19 @@ dependencies {
     modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modCompile "cloth:ClothEvents:${project.cloth_version}"
-    modCompile "cloth-config:ClothConfig:${project.cloth_config_version}"
-    modCompile "silk:SilkAPI:${project.silk_version}"
-    modCompile "modmenu:ModMenu:${project.modmenu_version}"
+    modCompile("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
+    modCompile("cloth:ClothEvents:${project.cloth_version}") { transitive = false }
+    modCompile("cloth-config:ClothConfig:${project.cloth_config_version}") { transitive = false }
+    modCompile("silk:SilkAPI:${project.silk_version}") { transitive = false }
+    modCompile("modmenu:ModMenu:${project.modmenu_version}") { transitive = false }
 //    modCompile "cotton:cotton:${project.cotton_version}"
-    modCompile "io.github.cottonmc:cotton-energy:${project.energy_version}"
-    modCompile "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
-    modCompile "io.github.teamgalacticraft:TGC-Utils:${project.tgc_utils_version}"
-    modCompile "roughly-enough-items:RoughlyEnoughItems:${project.rei_version}"
+    modCompile("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
+    modCompile("alexiil.mc.lib:libblockattributes:${project.attributes_version}") { transitive = false }
+    modCompile("io.github.teamgalacticraft:TGC-Utils:${project.tgc_utils_version}") { transitive = false }
+    modCompile("roughly-enough-items:RoughlyEnoughItems:${project.rei_version}") { transitive = false }
 
     //include everything mandatory inside the jar
-    include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+//    include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     include "cloth:ClothEvents:${project.cloth_version}"
     include "cloth-config:ClothConfig:${project.cloth_config_version}"
     include "silk:SilkAPI:${project.silk_version}"
@@ -83,12 +84,12 @@ jar {
     from "LICENSE"
     manifest {
         attributes([
-                    "Implementation-Title": project.archives_base_name,
-                    "Implementation-Version": "${version}",
-                    "Implementation-Vendor" :"Horizon Studio",
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                    "Maven-Artifact": "${group}:${archivesBaseName}:${version}",
-                    "ModSide": "BOTH",
+                "Implementation-Title"    : project.archives_base_name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : "Horizon Studio",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "Maven-Artifact"          : "${group}:${archivesBaseName}:${version}",
+                "ModSide"                 : "BOTH",
         ],)
     }
 }
