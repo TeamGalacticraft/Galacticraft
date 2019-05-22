@@ -86,9 +86,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void setOwner(String uuid) {
-        if (owner.isEmpty()) {
-            owner = uuid;
-        }
+        owner = uuid;
     }
 
     public String getOwner() {

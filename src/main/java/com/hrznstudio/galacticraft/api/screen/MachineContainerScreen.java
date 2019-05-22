@@ -3,6 +3,7 @@ package com.hrznstudio.galacticraft.api.screen;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.ChatFormat;
@@ -18,10 +19,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.RayTraceContext;
-
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -30,6 +28,9 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
+
+    private final BlockPos pos;
+    private final World world;
 
     private static final int BUTTON_OFF_X = 0;
     private static final int BUTTON_OFF_Y = 240;
@@ -91,8 +92,19 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     private int selectedSecurityOption = 0; //0 = owner only, 1 = space race party only, 2 = public access
 
-    public MachineContainerScreen(Container container, PlayerInventory playerInventory, TextComponent textComponent) {
+    public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TextComponent textComponent) {
         super(container, playerInventory, textComponent);
+        this.pos = pos;
+        this.world = world;
+        if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+            if (((MachineBlockEntity) world.getBlockEntity(pos)).getOwner().isEmpty()) {
+                selectedSecurityOption = 0;
+            } else if (((MachineBlockEntity) world.getBlockEntity(pos)).getOwner().equals("%PARTY%")) {
+                selectedSecurityOption = 1;
+            } else {
+                selectedSecurityOption = 2;
+            }
+        }
     }
 
     //x(location on screen), y(location on screen), x(location in texture), y(location in texture), width of the snippet in the texture file, height of the snippet in the texture file
@@ -252,17 +264,30 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
             if (mouseX >= (this.left - 78) + 273 && mouseX <= (this.left - 78) + 19 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
                 this.selectedSecurityOption = 0;
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                    if (((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().isEmpty()) {
+                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).setOwner(this.playerInventory.player.getUuidAsString());
+                    }
+                }
                 this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
             if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
                 this.selectedSecurityOption = 1;
                 this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                    if (((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().equals("%PARTY%") || ((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().equals(playerInventory.player.getUuidAsString()) || ((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().isEmpty()) {
+                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).setOwner("%PARTY%");
+                    }
+                }
                 return true;
             }
             if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
                 this.selectedSecurityOption = 2;
                 this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).setOwner("");
+                }
                 return true;
             }
         }
@@ -306,11 +331,23 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             }
             if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
                 this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race").getText(),22), mouseX, mouseY);
-                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race_2").getText(), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
                 this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.public").getText(), mouseX, mouseY);
             }
         }
+    }
+
+    @Override
+    public boolean mouseClicked(double double_1, double double_2, int int_1) {
+        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().isEmpty() && !((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().equals(playerInventory.player.getUuidAsString())) {
+                return false;
+            } else if (((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().equals("%PARTY%")) {
+                //TODO space race stuffs
+                return false;
+            }
+        }
+        return this.checkTabsClick(double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
     }
 }
