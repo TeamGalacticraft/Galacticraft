@@ -2,6 +2,7 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;

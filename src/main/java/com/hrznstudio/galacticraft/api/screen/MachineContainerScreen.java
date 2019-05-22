@@ -1,22 +1,27 @@
 package com.hrznstudio.galacticraft.api.screen;
 
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
-import net.minecraft.client.network.packet.PlaySoundIdS2CPacket;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.sound.*;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.RayTraceContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -25,7 +30,6 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-    public static final Identifier ICONS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_ICONS));
 
     private static final int BUTTON_OFF_X = 0;
     private static final int BUTTON_OFF_Y = 240;
@@ -34,15 +38,15 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     private static final int BUTTONS_WIDTH = 16;
     private static final int BUTTONS_HEIGHT = 16;
 
-    private static final int REDSTONE_TORCH_OFF_X = 16;
-    private static final int REDSTONE_TORCH_OFF_Y = 16;
+    private static final int REDSTONE_TORCH_OFF_X = 224;
+    private static final int REDSTONE_TORCH_OFF_Y = 62;
 
-    private static final int LOCK_OWNER_X = 0;
-    private static final int LOCK_OWNER_Y = 0;
-    private static final int LOCK_PARTY_X = 16;
-    private static final int LOCK_PARTY_Y = 0;
-    private static final int LOCK_PUBLIC_X = 0;
-    private static final int LOCK_PULBIC_Y = 16;
+    private static final int LOCK_OWNER_X = 208;
+    private static final int LOCK_OWNER_Y = 48;
+    private static final int LOCK_PARTY_X = 224;
+    private static final int LOCK_PARTY_Y = 48;
+    private static final int LOCK_PUBLIC_X = 208;
+    private static final int LOCK_PUBLIC_Y = 64;
 
     private static final int ICONS_WIDTH = 16;
     private static final int ICONS_HEIGHT = 16;
@@ -85,6 +89,8 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public boolean IS_SECURITY_OPEN = false;
 
+    private int selectedSecurityOption = 0; //0 = owner only, 1 = space race party only, 2 = public access
+
     public MachineContainerScreen(Container container, PlayerInventory playerInventory, TextComponent textComponent) {
         super(container, playerInventory, textComponent);
     }
@@ -92,6 +98,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     //x(location on screen), y(location on screen), x(location in texture), y(location in texture), width of the snippet in the texture file, height of the snippet in the texture file
     public void drawConfigTabs() {
         if (IS_REDSTONE_OPEN) {
+
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - REDSTONE_PANEL_WIDTH, this.top + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 7);
@@ -107,38 +114,64 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             } else if (selectedRedstoneOption == 1) {
                 this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             } else if (selectedRedstoneOption == 2) {
-                this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             } else {
-                throw new IllegalStateException("The selected redstone config option is not valid!");
+                Galacticraft.logger.fatal("The selected redstone config option is not valid!");
+                Galacticraft.logger.fatal("The option has been automatically reset to 'ignore redstone'");
+                selectedRedstoneOption = 0;
             }
 
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26);
-            this.minecraft.getTextureManager().bindTexture(ICONS_TEXTURE);
-            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, REDSTONE_TORCH_OFF_X, REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-            this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE_TORCH), this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 25);
+            this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 23, REDSTONE_TORCH_OFF_X, REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
+            this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE_TORCH), this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 25 - 2);
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
             this.blit(this.left - REDSTONE_TAB_WIDTH, this.top + 3, REDSTONE_TAB_X, REDSTONE_TAB_Y, REDSTONE_TAB_WIDTH, REDSTONE_TAB_HEIGHT);
+            this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.left - REDSTONE_TAB_WIDTH + 4, this.top + 6);
         }
         if (IS_CONFIG_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - CONFIG_PANEL_WIDTH, this.top + 26, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
-            this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 28);
+            this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 29);
             this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 33, ChatFormat.GRAY.getColor());
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
             if (!IS_REDSTONE_OPEN) {
                 this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 26, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - CONFIG_TAB_WIDTH + 4, this.top + 26 + 3);
             } else {
                 this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 96, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - CONFIG_TAB_WIDTH + 4, this.top + 96 + 3);
             }
         }
         if (IS_SECURITY_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left + 176, this.top + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
-            this.minecraft.getTextureManager().bindTexture(ICONS_TEXTURE);
-            this.blit(this.left + 176 + 6, this.top + 3, LOCK_PARTY_X, LOCK_PARTY_Y, ICONS_WIDTH, ICONS_HEIGHT);
-            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security"), this.left + 176 + 23, this.top + 12, ChatFormat.GRAY.getColor());
+            this.blit(this.left + 176 + 4, this.top + 6, LOCK_PARTY_X, LOCK_PARTY_Y, ICONS_WIDTH, ICONS_HEIGHT);
+            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.left + 176 + 20, this.top + 12, ChatFormat.GRAY.getColor());
+
+            this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
+            this.blit(this.left + 174 + 21, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 43, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 65, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+
+            if (selectedSecurityOption == 0) {
+                this.blit(this.left + 174 + 21, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            } else if (selectedSecurityOption == 1) {
+                this.blit(this.left + 174 + 43, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            } else if (selectedSecurityOption == 2) {
+                this.blit(this.left + 174 + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            } else {
+                Galacticraft.logger.fatal("The selected security config option is not valid!");
+                Galacticraft.logger.fatal("The option has been reset to Owner-Only");
+                selectedSecurityOption = 0;
+            }
+
+            this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 65, this.top + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
             this.blit(this.left + 176, this.top + 3, SECURITY_TAB_X, SECURITY_TAB_Y, SECURITY_TAB_WIDTH, SECURITY_TAB_HEIGHT);
@@ -156,6 +189,22 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         } else {
             if (mouseX >= this.left - REDSTONE_PANEL_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 3) && button == 0) {
                 IS_REDSTONE_OPEN = false;
+                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+
+            if (mouseX >= (this.left - 78) && mouseX <= (this.left - 78) + 19 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                this.selectedRedstoneOption = 0;
+                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+            if (mouseX >= (this.left - 78)+ 22 && mouseX <= (this.left - 78) + 41 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                this.selectedRedstoneOption = 1;
+                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+            if (mouseX >= (this.left - 78) + 44 && mouseX <= (this.left - 78) + 63 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                this.selectedRedstoneOption = 2;
                 this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
@@ -196,6 +245,26 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
             }
+
+            this.blit(this.left + 174 + 21, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+
+            //273 = r->s
+
+            if (mouseX >= (this.left - 78) + 273 && mouseX <= (this.left - 78) + 19 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                this.selectedSecurityOption = 0;
+                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+            if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                this.selectedSecurityOption = 1;
+                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
+            if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                this.selectedSecurityOption = 2;
+                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                return true;
+            }
         }
         return false;
     }
@@ -204,6 +273,43 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         if (!IS_REDSTONE_OPEN) {
             if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
                 this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config").getText(), mouseX, mouseY);
+            }
+        } else {
+            if (mouseX >= (this.left - 78) && mouseX <= (this.left - 78) + 19 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
+                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore").getText(), mouseX, mouseY);
+            }
+            if (mouseX >= (this.left - 78) + 22 && mouseX <= (this.left - 78) + 41 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
+                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off").getText(), mouseX, mouseY);
+            }
+            if (mouseX >= (this.left - 78) + 44 && mouseX <= (this.left - 78) + 63 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
+                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on").getText(), mouseX, mouseY);
+            }
+        }
+        if (!IS_CONFIG_OPEN) {
+            if (IS_REDSTONE_OPEN) {
+                if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 96 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 96)) {
+
+                }
+            } else {
+                if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 26 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 26)) {
+
+                }
+            }
+        }
+        if (!IS_SECURITY_OPEN) {
+            if (mouseX >= this.left - SECURITY_TAB_WIDTH + 176 + 21 && mouseX <= this.left + 176 + 21 && mouseY >= this.top + 3 && mouseY <= this.top + (SECURITY_TAB_HEIGHT + 3)) {
+                this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config").getText(), mouseX, mouseY);
+            }
+        } else {
+            if (mouseX >= (this.left - 78) + 273 && mouseX <= (this.left - 78) + 19 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
+                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.private").getText(), mouseX, mouseY);
+            }
+            if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
+                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race").getText(),22), mouseX, mouseY);
+                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race_2").getText(), mouseX, mouseY);
+            }
+            if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
+                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.public").getText(), mouseX, mouseY);
             }
         }
     }

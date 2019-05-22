@@ -18,6 +18,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public static final int DEFAULT_MAX_ENERGY = 15000;
     public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
+    private String owner = "";
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
@@ -62,7 +63,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.toTag(tag);
         tag.putInt("Energy", getEnergy().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
-
+        tag.putString("Owner", getOwner());
         return tag;
     }
 
@@ -71,6 +72,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.fromTag(tag);
         getEnergy().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
+        owner = tag.getString("Owner");
     }
 
     @Override
@@ -83,4 +85,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return this.toTag(tag);
     }
 
+    public void setOwner(String uuid) {
+        if (owner.isEmpty()) {
+            owner = uuid;
+        }
+    }
+
+    public String getOwner() {
+        return owner;
+    }
 }
