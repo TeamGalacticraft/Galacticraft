@@ -30,7 +30,10 @@ if os.path.exists("capes.json"):
 
 capesJson = open('capes.json', 'x')
 
-jsonStr = json.dumps(players, indent=4)
+jsonObj = {}
+jsonObj["players"] = players
+
+jsonStr = json.dumps(jsonObj, indent=4)
 capesJson.write(jsonStr)
 capesJson.close()
 
