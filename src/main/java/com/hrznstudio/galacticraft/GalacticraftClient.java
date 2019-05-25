@@ -12,6 +12,8 @@ import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
+import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
+import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
@@ -30,9 +32,17 @@ import java.lang.reflect.Method;
  */
 public class GalacticraftClient implements ClientModInitializer {
 
+    public static JsonCapes jsonCapes;
+    public static CapeLoader capeLoader;
+
 
     @Override
     public void onInitializeClient() {
+        capeLoader = new CapeLoader();
+        jsonCapes = new JsonCapes();
+        capeLoader.register(jsonCapes);
+        capeLoader.load();
+
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.COAL_GENERATOR_SCREEN)));
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN)));
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_TABS)));

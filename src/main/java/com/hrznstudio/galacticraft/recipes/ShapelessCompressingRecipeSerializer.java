@@ -62,7 +62,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
 
     @Override
     public T read(Identifier id, JsonObject json) {
-//            String group = JsonHelper.getString(json, "group", "");
+//            String group = JsonHelper.getString(models, "group", "");
         DefaultedList<Ingredient> ingredients = getIngredients(JsonHelper.getArray(json, "ingredients"));
         if (ingredients.isEmpty()) {
             throw new JsonParseException("No ingredients for compressing recipe");

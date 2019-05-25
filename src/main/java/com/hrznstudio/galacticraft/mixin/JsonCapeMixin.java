@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.GalacticraftClient;
+import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
@@ -28,11 +29,17 @@ public abstract class JsonCapeMixin {
 
     @Inject(at = @At("RETURN"), method = "loadTextures")
     private void loadTextures(CallbackInfo callbackInfo) {
-        for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
-            if (entity instanceof PlayerEntity) {
-                textures.put(MinecraftProfileTexture.Type.CAPE, new Identifier(Constants.MOD_ID, "textures/cape/developer_cape.png"));
+        if(GalacticraftClient.jsonCapes.areCapesLoaded()) {
+            for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
+                if (entity instanceof PlayerEntity) {
+                    if(GalacticraftClient.jsonCapes.getCapePlayers().containsKey(entity.getUuid())) {
+                        JsonCapes.Cape cape = GalacticraftClient.jsonCapes.getCapePlayers().get(entity.getUuid()).getCape();
+                        textures.put(MinecraftProfileTexture.Type.CAPE, cape.getTexture());
+                    }
+                }
             }
         }
+
     }
 }
 
