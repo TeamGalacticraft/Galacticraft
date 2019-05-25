@@ -30,7 +30,7 @@ public class ConfigHandler {
     private Config config;
 
     public ConfigHandler() {
-        this.configFile = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/galacticraft.json");
+        this.configFile = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/galacticraft.models");
         try {
             loadConfig();
         } catch (IOException e) {
