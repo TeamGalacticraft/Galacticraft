@@ -34,5 +34,8 @@
     "libblockattributes": "*",
     "silk": "*",
     "tgc-utils": "*"
+  },
+  "suggests": {
+    "modmenu": "*"
   }
 }
