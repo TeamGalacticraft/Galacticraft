@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class CircuitFabricatorContainer extends Container {
 
-    //TODO not use this. recipes are added with models so we cant hardcode this anymore really.
+    //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
     private Inventory inventory;
     private BlockPos blockPos;
