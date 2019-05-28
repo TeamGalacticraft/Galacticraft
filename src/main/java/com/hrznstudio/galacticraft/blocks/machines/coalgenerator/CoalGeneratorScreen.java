@@ -68,15 +68,17 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().isEmpty() && !((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().equals(playerInventory.player.getUuidAsString())) {
-                DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
-                return;
-            } else if (((MachineBlockEntity) this.world.getBlockEntity(pos)).getOwner().equals("%PARTY%")) {
-                //TODO space race stuffs
-                DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
-                return;
+            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
+                if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("Team stuff pending").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+                    return;
+                } else if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("") || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty()) {
+                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
+                } else if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())){
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+                    return;
+                }
             }
-
         }
         super.render(mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.coal_generator").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());

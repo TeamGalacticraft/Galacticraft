@@ -16,6 +16,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
@@ -26,6 +27,7 @@ import java.util.Map;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
+
     private final List<Runnable> listeners = Lists.newArrayList();
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     public int fuelTimeMax;
