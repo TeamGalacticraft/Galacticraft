@@ -2,6 +2,7 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.api.configurable.SideOptions;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
@@ -9,7 +10,6 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.BlockOptionUtils;
 import io.github.cottonmc.energy.api.EnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
@@ -67,9 +67,9 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
 
         if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), ActionType.PERFORM);
+                getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), Simulation.ACTION);
             } else {
-                getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), ActionType.PERFORM);
+                getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), Simulation.ACTION);
             }
         }
         if (world.isClient) return;
@@ -77,7 +77,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
         ItemStack battery = getInventory().getInvStack(0);
         if (GalacticraftEnergy.isEnergyItem(battery) && this.getEnergy().getCurrentEnergy() > 0) {
             if (GalacticraftEnergy.getBatteryEnergy(battery) < GalacticraftEnergy.getMaxBatteryEnergy(battery)) {
-                getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
                 GalacticraftEnergy.incrementEnergy(battery, 1);
             }
         }
@@ -86,7 +86,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
             if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM));
+                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION));
                 }
             }
         }

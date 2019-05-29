@@ -1,10 +1,10 @@
 package com.hrznstudio.galacticraft.blocks.machines;
 
+import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -46,7 +46,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             if (itemEnergy > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
                 int energyToRemove = 5;
                 int amountFailedToInsert = item.extract(battery, energyToRemove);
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, ActionType.PERFORM);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, Simulation.ACTION);
             }
         }
     }

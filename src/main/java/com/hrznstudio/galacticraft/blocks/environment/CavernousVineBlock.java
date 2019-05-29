@@ -1,6 +1,5 @@
 package com.hrznstudio.galacticraft.blocks.environment;
 
-import blue.endless.jankson.annotation.Nullable;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
@@ -156,7 +155,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
         BlockPos abovePos = new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         BlockState stateAbove = world.getBlockState(abovePos);
 

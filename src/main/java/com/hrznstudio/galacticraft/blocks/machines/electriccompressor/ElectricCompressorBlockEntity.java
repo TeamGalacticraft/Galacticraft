@@ -8,7 +8,6 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
@@ -34,7 +33,7 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
             if (itemEnergy > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
                 int energyToRemove = 5;
                 int amountFailedToInsert = item.extract(battery, energyToRemove);
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, ActionType.PERFORM);
+                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, Simulation.ACTION);
             }
         }
     }
@@ -44,7 +43,7 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
         attemptChargeFromStack(inventory.getInvStack(CompressorBlockEntity.FUEL_INPUT_SLOT));
 
         // Drain energy
-        int extractEnergy = this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, ActionType.PERFORM);
+        int extractEnergy = this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
         if (extractEnergy == 0) {
             status = CompressorStatus.INACTIVE;
             return;

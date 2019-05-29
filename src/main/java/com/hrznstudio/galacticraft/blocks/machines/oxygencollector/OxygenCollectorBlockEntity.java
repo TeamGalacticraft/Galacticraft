@@ -1,12 +1,12 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
+import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -91,9 +91,9 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
             // If the oxygen capacity isn't full, add collected oxygen.
             if (this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
-                this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, ActionType.PERFORM);
+                this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
 
-                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, lastCollectAmount, ActionType.PERFORM);
+                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, lastCollectAmount, Simulation.ACTION);
             }
         } else {
             lastCollectAmount = 0;

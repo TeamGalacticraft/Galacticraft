@@ -44,7 +44,8 @@ public class ClientResourcePackCreatorMixin {
                             out.write(buffer, 0, lengthRead);
                             out.flush();
                         }
-                    } catch (IOException | NullPointerException ignore) {}
+                    } catch (IOException | NullPointerException ignore) {
+                    }
                 }
             }
             File resourcePackFile = new File(MinecraftClient.getInstance().runDirectory.toString() + "/assets/objects/b7/b7fee1c45fab62449d4b96c74f13bdbab05a30b1");

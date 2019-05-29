@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.energy;
 
 import io.github.cottonmc.energy.api.ElectricalEnergyType;
 import io.github.cottonmc.energy.api.EnergyType;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
 /**
@@ -16,20 +15,20 @@ public class GalacticraftEnergyType implements EnergyType {
     }
 
     @Override
-    public TextComponent getDisplayAmount(int amount) {
+    public TranslatableComponent getDisplayAmount(int amount) {
         float fAmount = (float) amount;
 
         if (fAmount < 1000) { // x < 1K
-            return new TextComponent(new TranslatableComponent("tooltip.galacticraft-rewoven.energy", fAmount).getText());
+            return new TranslatableComponent("tooltip.galacticraft-rewoven.energy", fAmount);
         } else if (fAmount < 1_000_000) { // 1K < x < 1M
             float tAmount = fAmount / 1000;
-            return new TextComponent(new TranslatableComponent("tooltip.galacticraft-rewoven.energy.k", tAmount).getText());
+            return new TranslatableComponent("tooltip.galacticraft-rewoven.energy.k", tAmount);
         } else if (fAmount < 1_000_000_000) { // 1M < x < 1G
             float tAmount = fAmount / 1_000_1000;
-            return new TextComponent(new TranslatableComponent("tooltip.galacticraft-rewoven.energy.m", tAmount).getText());
+            return new TranslatableComponent("tooltip.galacticraft-rewoven.energy.m", tAmount);
         } else { // 1G < x
             float tAmount = fAmount / 1_000_000_000;
-            return new TextComponent(new TranslatableComponent("tooltip.galacticraft-rewoven.energy.g", tAmount).getText());
+            return new TranslatableComponent("tooltip.galacticraft-rewoven.energy.g", tAmount);
         }
     }
 
