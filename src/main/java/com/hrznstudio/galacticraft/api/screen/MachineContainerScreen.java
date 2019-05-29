@@ -6,6 +6,7 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.resource.language.I18n;
@@ -108,6 +109,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 selectedSecurityOption = 2;
             } else if (!((MachineBlockEntity) world.getBlockEntity(pos)).owner.equals("") || !((MachineBlockEntity) world.getBlockEntity(pos)).owner.isEmpty()) {
                 selectedSecurityOption = 0;
+            } else {
                 (((MachineBlockEntity) world.getBlockEntity(pos)).isPublic) = true;
             }
         }

@@ -19,9 +19,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
-    public String owner = "";
-    public boolean isParty = false;
-    public boolean isPublic = false;
+    public volatile String owner = "";
+    public volatile boolean isParty = false;
+    public volatile boolean isPublic = true;
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
@@ -66,11 +66,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.toTag(tag);
         tag.putInt("Energy", getEnergy().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
-        System.out.println(owner);
         tag.putString("Owner", owner);
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
-        System.out.println(tag.getString("Owner"));
+        System.out.println(owner);
         return tag;
     }
 
@@ -82,7 +81,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         owner = tag.getString("Owner");
         isParty = tag.getBoolean("Party");
         isPublic = tag.getBoolean("Public");
-        System.out.println(tag.getString("Owner"));
+        System.out.println(owner);
     }
 
     @Override
