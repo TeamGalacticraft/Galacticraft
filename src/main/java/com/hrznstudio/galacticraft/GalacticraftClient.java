@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelScreen;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
@@ -8,20 +9,21 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
+import com.hrznstudio.galacticraft.client.render.fluid.OilFluidRenderHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
+import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
 import java.lang.reflect.InvocationTargetException;
@@ -59,6 +61,9 @@ public class GalacticraftClient implements ClientModInitializer {
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.OXYGEN_GEAR)));
         ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.OXYGEN_TANK)));
 
+        ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_FLUID_STILL)));
+        ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_FLUID_FLOWING)));
+
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
 
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COAL_GENERATOR_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new CoalGeneratorScreen(syncId, packetByteBuf.readBlockPos(), playerEntity));
@@ -71,6 +76,9 @@ public class GalacticraftClient implements ClientModInitializer {
 
         EntityRendererRegistry.INSTANCE.register(T1RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
         GalacticraftBlockEntityRenderers.register();
+
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.STILL_CRUDE_OIL, new OilFluidRenderHandler());
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_CRUDE_OIL, new OilFluidRenderHandler());
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {

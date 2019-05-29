@@ -13,7 +13,6 @@ import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.util.BlockOptionUtils;
 import io.github.cottonmc.energy.api.EnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -55,7 +54,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
             if (selectedOptions.get(direction).equals(SideOptions.POWER_INPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
+                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }
@@ -64,7 +63,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
 
         if (status == CircuitFabricatorStatus.IDLE) {
-            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
             this.progress = 0;
         }
 
@@ -77,7 +76,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
 
         if (status == CircuitFabricatorStatus.INACTIVE) {
-            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
             this.progress = 0;
             return;
         }
@@ -100,7 +99,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
                 if (getInventory().getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
                     if (this.progress < this.maxProgress) {
                         ++progress;
-                        this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                        this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
                     } else {
                         System.out.println("Finished crafting an item.");
                         this.progress = 0;

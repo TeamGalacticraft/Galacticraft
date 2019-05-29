@@ -1,17 +1,16 @@
 package com.hrznstudio.galacticraft.misc.capes;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.GalacticraftClient;
 import com.hrznstudio.galacticraft.api.capes.CapeListener;
 import com.hrznstudio.galacticraft.api.capes.models.CapePlayer;
 import com.hrznstudio.galacticraft.api.capes.models.CapesModel;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -29,7 +28,7 @@ public class JsonCapes implements CapeListener {
 
     @Override
     public void loadCapes(CapesModel capesModel) {
-        for(CapePlayer player : capesModel.getPlayers()) {
+        for (CapePlayer player : capesModel.getPlayers()) {
             capePlayers.put(player.getUuid(), player);
         }
 
@@ -55,6 +54,7 @@ public class JsonCapes implements CapeListener {
         ;
 
         String key;
+
         Cape(String key) {
             this.key = key;
         }

@@ -1,5 +1,7 @@
 package com.hrznstudio.galacticraft;
 
+import net.minecraft.util.Identifier;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -199,6 +201,10 @@ public class Constants {
         public static final String BACTERIAL_ACID_FLUID_STILL = "bacterial_acid_fluid_still";
         public static final String SULFURIC_ACID_FLUID_FLOWING = "sulfuric_acid_fluid_flowing";
         public static final String SULFURIC_ACID_FLUID_STILL = "sulfuric_acid_fluid_still";
+
+        public static Identifier getIdentifier(String s) {
+            return new Identifier(Constants.MOD_ID, "block/" + s);
+        }
     }
 
     //Items

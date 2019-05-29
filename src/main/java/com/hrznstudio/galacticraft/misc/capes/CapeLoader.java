@@ -24,7 +24,7 @@ public class CapeLoader {
     }
 
     public boolean register(CapeListener listener) {
-        if(!this.listeners.contains(listener)) {
+        if (!this.listeners.contains(listener)) {
             this.listeners.add(listener);
             return true;
         } else {
@@ -41,8 +41,8 @@ public class CapeLoader {
                 Thread.currentThread().interrupt();
             }
 
-            while(!Thread.currentThread().isInterrupted()) {
-                if(capesModel != null && this.listeners != null) {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (capesModel != null && this.listeners != null) {
                     CapesModel finalCapesModel = capesModel;
                     this.listeners.forEach(l -> l.loadCapes(finalCapesModel));
                     Thread.currentThread().interrupt();

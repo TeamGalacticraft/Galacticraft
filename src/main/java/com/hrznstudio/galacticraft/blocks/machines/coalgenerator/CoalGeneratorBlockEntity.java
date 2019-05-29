@@ -2,6 +2,7 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hrznstudio.galacticraft.api.configurable.SideOptions;
@@ -11,7 +12,6 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.BlockOptionUtils;
 import io.github.cottonmc.energy.api.EnergyAttribute;
-import io.github.prospector.silk.util.ActionType;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -98,7 +98,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
             if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, ActionType.PERFORM));
+                    getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }
@@ -106,7 +106,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
         if (getInventory().getInvStack(1).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
             if (GalacticraftEnergy.isEnergyItem(getInventory().getInvStack(1))) {
                 if (getInventory().getInvStack(1).getTag().getInt("Energy") < getInventory().getInvStack(1).getTag().getInt("MaxEnergy")) {
-                    getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                    getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
                     getInventory().getInvStack(1).getTag().putInt("Energy", this.getInventory().getInvStack(1).getTag().getInt("Energy") + 1);
                     getInventory().getInvStack(1).setDamage(this.getInventory().getInvStack(1).getDamage() - 1);
                 }
