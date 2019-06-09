@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -65,7 +66,13 @@ public class WireUtils {
 
             if (block instanceof WireConnectable) {
                 if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_INPUT) {
-                    adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
+                    if (world.getBlockEntity(adjacentBlockPos) instanceof MachineBlockEntity) {
+                        if (((MachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).isActive()) {
+                            adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos)); //Don't send energy to blocks that are not enabled
+                        }
+                    } else {
+                        adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
+                    }
                 }
             }
         }

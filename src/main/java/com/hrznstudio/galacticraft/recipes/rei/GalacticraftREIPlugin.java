@@ -1,8 +1,6 @@
 package com.hrznstudio.galacticraft.recipes.rei;
 
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
@@ -12,19 +10,12 @@ import me.shedaniel.rei.api.DisplayHelper;
 import me.shedaniel.rei.api.REIPluginEntry;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.SpeedCraftFunctional;
-import me.shedaniel.rei.client.ScreenHelper;
-import me.shedaniel.rei.listeners.ContainerScreenHooks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.recipe.Recipe;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

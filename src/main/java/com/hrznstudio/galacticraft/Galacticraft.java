@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -23,7 +24,11 @@ import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
 import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
@@ -37,7 +42,7 @@ import java.lang.reflect.Method;
  */
 public class Galacticraft implements ModInitializer, ModUpdateListener {
 
-    public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
+    public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     public static ConfigHandler configHandler = new ConfigHandler();
@@ -70,6 +75,61 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         WorldGenerator.register();
         Capes.updateCapeList();
 
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buffer) -> {
+            BlockPos pos = buffer.readBlockPos();
+            String setting = buffer.readString();
+            System.out.println("Received packet");
+            if (context.getPlayer().world.getBlockEntity(pos) == null) {
+                for (BlockEntity blockEntity : context.getPlayer().world.blockEntities) {
+                    if (blockEntity.getPos().equals(pos)) {
+                        if (blockEntity instanceof MachineBlockEntity) {
+                            ((MachineBlockEntity) blockEntity).redstoneOption = setting;
+                            System.out.println("Set to: " + setting);
+                        }
+                        return;
+                    }
+                }
+            } else if (context.getPlayer().world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).redstoneOption = setting;
+                System.out.println("Set to: " + setting);
+            } else {
+                System.out.println("Failed to find blockentity!");
+            }
+        }));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buffer) -> {
+            BlockPos pos = buffer.readBlockPos();
+            String owner = buffer.readString();
+            boolean isParty = false;
+            boolean isPublic = false;
+            System.out.println("Received packet");
+            if (owner.contains("_Public")) {
+                owner = owner.replace("_Public", "");
+                isPublic = true;
+            } else if (owner.contains("_Party")) {
+                owner = owner.replace("_Party", "");
+                isParty = true;
+            }
+            if (context.getPlayer().world.getBlockEntity(pos) == null) {
+                for (BlockEntity blockEntity : context.getPlayer().world.blockEntities) {
+                    if (blockEntity.getPos().equals(pos)) {
+                        if (blockEntity instanceof MachineBlockEntity) {
+                            ((MachineBlockEntity) blockEntity).owner = owner;
+                            ((MachineBlockEntity) blockEntity).isPublic = isPublic;
+                            ((MachineBlockEntity) blockEntity).isParty = isParty;
+                            System.out.println("The owner is: " + owner + " Status: " + isParty + " " + isPublic);
+                        }
+                        return;
+                    }
+                }
+            } else if (context.getPlayer().world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).owner = owner;
+                ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isPublic = isPublic;
+                ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isParty = isParty;
+                System.out.println("The owner is: " + owner + " " + isParty + " " + isPublic);
+            }
+        }));
+
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {
                 Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
@@ -79,7 +139,7 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
                 logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
             }
         }
-
+        modUpdateChecker.register(this::onUpdate);
     }
 
     @Override

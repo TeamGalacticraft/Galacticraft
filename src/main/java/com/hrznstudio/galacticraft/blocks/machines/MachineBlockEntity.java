@@ -3,29 +3,47 @@ package com.hrznstudio.galacticraft.blocks.machines;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.IWorld;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, WireConnectable {
+
     public static final int DEFAULT_MAX_ENERGY = 15000;
+
     public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
 
-    public volatile String owner = "";
-    public volatile boolean isParty = false;
-    public volatile boolean isPublic = true;
+    public String owner = "";
+    public boolean isParty = false;
+    public boolean isPublic = true;
+
+    public String redstoneOption = "DISABLED";
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
         this.energy.listen(this::markDirty);
+    }
+
+    public boolean isActive() {
+        if (this.getWorld().isReceivingRedstonePower(pos) && redstoneOption.equals("OFF")) {
+            return false;
+        } else if (!this.getWorld().isReceivingRedstonePower(pos) && redstoneOption.equals("ON")) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -69,7 +87,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         tag.putString("Owner", owner);
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
-        System.out.println(owner);
+        tag.putString("Redstone", redstoneOption);
+        System.out.println(redstoneOption);
         return tag;
     }
 
@@ -81,7 +100,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         owner = tag.getString("Owner");
         isParty = tag.getBoolean("Party");
         isPublic = tag.getBoolean("Public");
-        System.out.println(owner);
+        redstoneOption = tag.getString("Redstone");
     }
 
     @Override
@@ -92,5 +111,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         return this.toTag(tag);
+    }
+
+    @Override
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.NONE;
     }
 }

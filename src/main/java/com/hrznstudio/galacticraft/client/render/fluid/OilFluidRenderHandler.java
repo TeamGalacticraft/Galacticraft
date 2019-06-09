@@ -1,7 +1,6 @@
 package com.hrznstudio.galacticraft.client.render.fluid;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.fabricmc.fabric.api.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.impl.client.texture.FabricSprite;
 import net.minecraft.client.texture.Sprite;

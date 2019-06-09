@@ -115,7 +115,7 @@ public class WireNetwork {
         energy.clear();
         int energyFulfilled = 0;
         int energyAvailable = 0;
-        int energyLeft = 0;
+        int energyLeft;
 
         for (BlockEntity wire : wires) {
             if ((wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.AIR || wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.CAVE_AIR ||

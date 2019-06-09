@@ -48,6 +48,9 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
     @Override
     public void tick() {
+        if (!this.isActive()) {
+            return;
+        }
         int prev = getEnergy().getCurrentEnergy();
 
         for (Direction direction : Direction.values()) {

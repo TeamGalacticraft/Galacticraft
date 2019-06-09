@@ -16,7 +16,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
@@ -41,6 +40,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);
+        energy.listen(this::markDirty);
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -62,6 +62,10 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
 
     @Override
     public void tick() {
+        if (!this.isActive()) {
+            return;
+        }
+
         int prev = getEnergy().getCurrentEnergy();
 
         if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {

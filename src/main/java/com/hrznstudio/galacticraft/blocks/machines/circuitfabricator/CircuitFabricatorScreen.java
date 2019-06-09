@@ -1,11 +1,11 @@
 package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.ChatFormat;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorScreen extends AbstractContainerScreen {
+public class CircuitFabricatorScreen extends MachineContainerScreen {
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
@@ -51,7 +51,7 @@ public class CircuitFabricatorScreen extends AbstractContainerScreen {
 
 
     public CircuitFabricatorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new CircuitFabricatorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.circuit_fabricator.name"));
+        super(new CircuitFabricatorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, playerEntity.world, blockPos, new TranslatableComponent("ui.galacticraft-rewoven.circuit_fabricator.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
         this.containerHeight = 192;
@@ -83,11 +83,6 @@ public class CircuitFabricatorScreen extends AbstractContainerScreen {
         super.render(mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.circuit_fabricator").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
-    }
-
-    private void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {

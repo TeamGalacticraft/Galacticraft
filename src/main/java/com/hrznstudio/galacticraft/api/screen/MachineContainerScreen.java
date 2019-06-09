@@ -1,13 +1,13 @@
 package com.hrznstudio.galacticraft.api.screen;
 
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
+import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormat;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -15,10 +15,11 @@ import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -65,7 +66,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public boolean IS_REDSTONE_OPEN = false;
 
-    private int selectedRedstoneOption = 0; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
+    private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
 
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
@@ -93,11 +94,14 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
 
-    public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TextComponent textComponent) {
+    public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TranslatableComponent textComponent) {
         super(container, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
         if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+            if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("NOT_SET")) {
+                ((MachineBlockEntity) world.getBlockEntity(pos)).owner = "";
+            }
             if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty && ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
                 Galacticraft.logger.fatal("The selected security option is both 'party' and 'public'!");
                 Galacticraft.logger.fatal("The option has been automatically reset to public");
@@ -112,10 +116,11 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             } else {
                 (((MachineBlockEntity) world.getBlockEntity(pos)).isPublic) = true;
             }
+
+            this.selectedRedstoneOption = ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption;
         }
     }
 
-    //x(location on screen), y(location on screen), x(location in texture), y(location in texture), width of the snippet in the texture file, height of the snippet in the texture file
     public void drawConfigTabs() {
         if (IS_REDSTONE_OPEN) {
 
@@ -129,16 +134,17 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
 
-            if (selectedRedstoneOption == 0) {
+            if (selectedRedstoneOption.equals("DISABLED")) {
                 this.blit(this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            } else if (selectedRedstoneOption == 1) {
+            } else if (selectedRedstoneOption.equals("OFF")) {
                 this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            } else if (selectedRedstoneOption == 2) {
+            } else if (selectedRedstoneOption.equals("ON")) {
                 this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             } else {
                 Galacticraft.logger.fatal("The selected redstone config option is not valid!");
                 Galacticraft.logger.fatal("The option has been automatically reset to 'ignore redstone'");
-                selectedRedstoneOption = 0;
+                MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("DISABLED")));
+                selectedRedstoneOption = "DISABLED";
             }
 
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26);
@@ -187,6 +193,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
                     ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
                     ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public")));
                     selectedSecurityOption = 2;
                     Galacticraft.logger.fatal("The option has been reset to Public");
                 }
@@ -218,19 +225,31 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             }
 
             if (mouseX >= (this.left - 78) && mouseX <= (this.left - 78) + 19 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                this.selectedRedstoneOption = 0;
-                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                return true;
+                if (this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                    this.selectedRedstoneOption = "DISABLED";
+                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "DISABLED";
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("DISABLED")));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
             }
             if (mouseX >= (this.left - 78)+ 22 && mouseX <= (this.left - 78) + 41 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                this.selectedRedstoneOption = 1;
-                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                return true;
+                if (this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                    this.selectedRedstoneOption = "OFF"; //r=o
+                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "OFF";
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("OFF")));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
             }
             if (mouseX >= (this.left - 78) + 44 && mouseX <= (this.left - 78) + 63 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                this.selectedRedstoneOption = 2;
-                this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                return true;
+                if (this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "ON";
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("ON")));
+                    this.selectedRedstoneOption = "ON";
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
             }
         }
 
@@ -257,6 +276,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 return true;
             }
         }
+
         if (!IS_SECURITY_OPEN) {
             if (mouseX >= this.left - SECURITY_TAB_WIDTH + 176 + 21 && mouseX <= this.left + 176 + 21 && mouseY >= this.top + 3 && mouseY <= this.top + (SECURITY_TAB_HEIGHT + 3) && button == 0) {
                 IS_SECURITY_OPEN = true;
@@ -280,9 +300,9 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString())));
                         this.selectedSecurityOption = 0;
                         this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                        System.out.println(((MachineBlockEntity) this.world.getBlockEntity(pos)).owner);
                         return true;
                     }
                 }
@@ -294,9 +314,9 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner = playerInventory.player.getUuidAsString();
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = true;
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Party")));
                         this.selectedSecurityOption = 1;
                         this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                        System.out.println(((MachineBlockEntity) this.world.getBlockEntity(pos)).owner);
                         return true;
                     }
                 }
@@ -307,15 +327,34 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
                         ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
+                        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public")));
                         this.selectedSecurityOption = 2;
                         this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                        System.out.println(((MachineBlockEntity) this.world.getBlockEntity(pos)).owner);
                         return true;
                     }
                 }
             }
         }
         return false;
+    }
+
+    @Override
+    public void render(int int_1, int int_2, float float_1) {
+        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
+                if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("Team stuff pending").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+                    //TODO space race stuffs
+                    return;
+                }
+                if ((!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+                    return;
+                }
+            }
+
+        }
+        super.render(int_1, int_2, float_1);
     }
 
     public void drawTabTooltips(int mouseX, int mouseY) {
@@ -365,12 +404,17 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1) {
         if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() && !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(playerInventory.player.getUuidAsString())) {
-                return false;
-            } else if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("%PARTY%")) {
-                //TODO space race stuffs
-                return false;
+            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
+                if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
+                    //TODO space race stuffs
+                    return false;
+                }
+
+                if ((!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
+                    return false;
+                }
             }
+
         }
         return this.checkTabsClick(double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
     }

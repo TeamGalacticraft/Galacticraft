@@ -2,14 +2,12 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.mojang.blaze3d.platform.GlStateManager;
 import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
 import net.minecraft.ChatFormat;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +23,6 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
     private static final int ENERGY_Y = Constants.TextureCoordinates.ENERGY_LIGHT_Y;
@@ -41,7 +38,7 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
     private World world;
 
     public CoalGeneratorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new CoalGeneratorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, playerEntity.world, blockPos, new TextComponent(new TranslatableComponent("ui.galacticraft-rewoven.coal_generator.name").getFormattedText()));
+        super(new CoalGeneratorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, playerEntity.world, blockPos, new TranslatableComponent("ui.galacticraft-rewoven.coal_generator.name"));
         this.pos = blockPos;
         this.world = playerEntity.world;
         this.containerHeight = 176;
@@ -59,7 +56,6 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
         energyDisplayX = leftPos + 10;
         energyDisplayY = topPos + 28;
 
-        //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
@@ -67,19 +63,6 @@ public class CoalGeneratorScreen extends MachineContainerScreen {
 
     @Override
     public void render(int mouseX, int mouseY, float v) {
-        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
-                if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
-                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("Team stuff pending").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
-                    return;
-                } else if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("") || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty()) {
-                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
-                } else if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())){
-                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
-                    return;
-                }
-            }
-        }
         super.render(mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.coal_generator").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
