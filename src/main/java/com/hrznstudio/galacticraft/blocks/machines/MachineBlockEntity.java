@@ -3,23 +3,18 @@ package com.hrznstudio.galacticraft.blocks.machines;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.IWorld;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, WireConnectable {
+public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
 
     public static final int DEFAULT_MAX_ENERGY = 15000;
 
@@ -88,7 +83,6 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
         tag.putString("Redstone", redstoneOption);
-        System.out.println(redstoneOption);
         return tag;
     }
 
@@ -111,10 +105,5 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         return this.toTag(tag);
-    }
-
-    @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireConnectionType.NONE;
     }
 }

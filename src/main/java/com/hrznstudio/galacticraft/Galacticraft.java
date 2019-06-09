@@ -78,22 +78,17 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
             String setting = buffer.readString();
-            System.out.println("Received packet");
             if (context.getPlayer().world.getBlockEntity(pos) == null) {
                 for (BlockEntity blockEntity : context.getPlayer().world.blockEntities) {
                     if (blockEntity.getPos().equals(pos)) {
                         if (blockEntity instanceof MachineBlockEntity) {
                             ((MachineBlockEntity) blockEntity).redstoneOption = setting;
-                            System.out.println("Set to: " + setting);
                         }
                         return;
                     }
                 }
             } else if (context.getPlayer().world.getBlockEntity(pos) instanceof MachineBlockEntity) {
                 ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).redstoneOption = setting;
-                System.out.println("Set to: " + setting);
-            } else {
-                System.out.println("Failed to find blockentity!");
             }
         }));
 
@@ -102,7 +97,6 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
             String owner = buffer.readString();
             boolean isParty = false;
             boolean isPublic = false;
-            System.out.println("Received packet");
             if (owner.contains("_Public")) {
                 owner = owner.replace("_Public", "");
                 isPublic = true;
@@ -117,7 +111,6 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
                             ((MachineBlockEntity) blockEntity).owner = owner;
                             ((MachineBlockEntity) blockEntity).isPublic = isPublic;
                             ((MachineBlockEntity) blockEntity).isParty = isParty;
-                            System.out.println("The owner is: " + owner + " Status: " + isParty + " " + isPublic);
                         }
                         return;
                     }
@@ -126,7 +119,6 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
                 ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).owner = owner;
                 ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isPublic = isPublic;
                 ((MachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isParty = isParty;
-                System.out.println("The owner is: " + owner + " " + isParty + " " + isPublic);
             }
         }));
 
