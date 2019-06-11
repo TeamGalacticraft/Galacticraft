@@ -35,17 +35,12 @@ import java.lang.reflect.Method;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Galacticraft implements ModInitializer, ModUpdateListener {
+public class Galacticraft implements ModInitializer {
 
     public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     public static ConfigHandler configHandler = new ConfigHandler();
-    private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
-            Constants.MOD_ID,
-            "https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/updates.json",
-            true
-    );
 
     @Override
     public void onInitialize() {
@@ -80,12 +75,5 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
             }
         }
 
-    }
-
-    @Override
-    public void onUpdate(UpdateInfo updateInfo) {
-        if (updateInfo.getStatus() == UpdateInfo.VersionStatus.OUTDATED) {
-            logger.info("Galacticraft: Rewoven is outdated.");
-        }
     }
 }

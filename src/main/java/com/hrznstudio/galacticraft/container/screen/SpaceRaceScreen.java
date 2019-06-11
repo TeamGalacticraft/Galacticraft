@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.container.screen;
 
-import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
+import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;

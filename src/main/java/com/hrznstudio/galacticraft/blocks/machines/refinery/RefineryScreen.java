@@ -6,7 +6,7 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.mojang.blaze3d.platform.GlStateManager;
-import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
+import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
