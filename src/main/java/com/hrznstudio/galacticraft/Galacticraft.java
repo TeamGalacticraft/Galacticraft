@@ -123,6 +123,5 @@ public class Galacticraft implements ModInitializer {
                 logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
             }
         }
-        modUpdateChecker.register(this::onUpdate);
     }
 }
