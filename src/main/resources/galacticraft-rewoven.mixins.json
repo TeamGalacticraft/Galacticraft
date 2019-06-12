@@ -12,7 +12,8 @@
     "PlayerInventoryScreenMixin",
     "PauseMenuScreenMixin",
     "JsonCapeMixin",
-    "ClientResourcePackCreatorMixin"
+    "ClientResourcePackCreatorMixin",
+    "InGameHudMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {

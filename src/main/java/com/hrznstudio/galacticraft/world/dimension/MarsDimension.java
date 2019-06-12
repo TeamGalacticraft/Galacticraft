@@ -125,7 +125,7 @@ public class MarsDimension extends Dimension implements SpaceDimension {
 
     @Override
     public float getGravity() {
-        return 0;
+        return 0.38F;
     }
 
     @Override

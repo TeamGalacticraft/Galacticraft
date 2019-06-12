@@ -8,9 +8,13 @@ import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.dimension.Dimension;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -23,6 +27,13 @@ public abstract class LivingEntityMixin {
 
     @Inject(method = "baseTick", at = @At("HEAD"))
     private void baseTick(CallbackInfo ci) {
+        try {
+            if (((PlayerEntity) (Object) this).isCreative()) {
+                air = 0;
+                return;
+            }
+        } catch (ClassCastException ignore) {
+        }
         air = ((LivingEntity) (Object) this).getBreath();
     }
 
@@ -56,4 +67,25 @@ public abstract class LivingEntityMixin {
             }
         }
     }
+
+    @ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 1, index = 11, name = "double_1")
+    private double gravityEffect(double double_1) {
+        if (((LivingEntity) (Object) this).world.getDimension() instanceof SpaceDimension) {
+            if (double_1 < -((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 2) {
+                double_1 += ((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity();
+            }
+        }
+        return double_1;
+    }
+
+    @ModifyVariable(method = "jump", at = @At(value = "FIELD"), ordinal = 0, index = 8, name = "float_2")
+    private float gravityJumpEffect(float float_2) {
+        if (((LivingEntity) (Object) this).world.getDimension() instanceof SpaceDimension) {
+            if (float_2 > 0) {
+                float_2 = float_2 + (((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 4);
+            }
+        }
+        return float_2;
+    }
+
 }
