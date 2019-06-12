@@ -19,9 +19,6 @@ import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTyp
 import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateChecker;
-import io.github.teamgalacticraft.tgcutils.api.updatechecker.ModUpdateListener;
-import io.github.teamgalacticraft.tgcutils.api.updatechecker.UpdateInfo;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
@@ -35,17 +32,12 @@ import java.lang.reflect.Method;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Galacticraft implements ModInitializer, ModUpdateListener {
+public class Galacticraft implements ModInitializer {
 
     public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     public static ConfigHandler configHandler = new ConfigHandler();
-    private ModUpdateChecker modUpdateChecker = new ModUpdateChecker(
-            Constants.MOD_ID,
-            "https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/updates.json",
-            true
-    );
 
     @Override
     public void onInitialize() {
@@ -80,12 +72,5 @@ public class Galacticraft implements ModInitializer, ModUpdateListener {
             }
         }
 
-    }
-
-    @Override
-    public void onUpdate(UpdateInfo updateInfo) {
-        if (updateInfo.getStatus() == UpdateInfo.VersionStatus.OUTDATED) {
-            logger.info("Galacticraft: Rewoven is outdated.");
-        }
     }
 }
