@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.container.button;
 
 import com.hrznstudio.galacticraft.container.screen.SpaceRaceScreen;
-import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
+import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
