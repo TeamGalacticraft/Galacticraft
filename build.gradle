@@ -1,8 +1,7 @@
 plugins {
-    id 'fabric-loom' version '0.2.2-SNAPSHOT'
+    id 'fabric-loom' version '0.2.4-SNAPSHOT'
     id 'maven-publish'
 }
-
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -44,7 +43,6 @@ dependencies {
 //    modCompile "cotton:cotton:${project.cotton_version}"
     modCompile("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
     modCompile("alexiil.mc.lib:libblockattributes:${project.attributes_version}") { transitive = false }
-    modCompile("io.github.teamgalacticraft:TGC-Utils:${project.tgc_utils_version}") { transitive = false }
     modCompile("roughly-enough-items:RoughlyEnoughItems:${project.rei_version}") { transitive = false }
 
     //include everything mandatory inside the jar
@@ -55,7 +53,6 @@ dependencies {
 //    include "cotton:cotton:${project.cotton_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
     include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
-    include "io.github.teamgalacticraft:TGC-Utils:${project.tgc_utils_version}"
 }
 
 processResources {
