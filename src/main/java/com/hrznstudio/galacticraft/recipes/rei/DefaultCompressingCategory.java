@@ -5,8 +5,10 @@ import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.shedaniel.rei.api.DisplaySettings;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.gui.widget.ItemSlotWidget;
+import me.shedaniel.rei.api.Renderable;
+import me.shedaniel.rei.api.Renderer;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
+import me.shedaniel.rei.gui.widget.SlotWidget;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -33,8 +35,9 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         return GalacticraftREIPlugin.COMPRESSING;
     }
 
-    public ItemStack getCategoryIcon() {
-        return new ItemStack(GalacticraftBlocks.COMPRESSOR);
+    @Override
+    public Renderer getIcon() {
+        return Renderable.fromItemStack(new ItemStack(GalacticraftBlocks.COMPRESSOR));
     }
 
     public String getCategoryName() {
@@ -67,14 +70,14 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         DefaultCompressingDisplay recipeDisplay = recipeDisplaySupplier.get();
         List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1(bounds)));
         List<List<ItemStack>> input = recipeDisplaySupplier.get().getInput();
-        List<ItemSlotWidget> slots = Lists.newArrayList();
+        List<SlotWidget> slots = Lists.newArrayList();
 
         // 3x3 grid
         // Output
         int i;
         for (i = 0; i < 3; ++i) {
             for (int x = 0; x < 3; ++x) {
-                slots.add(new ItemSlotWidget(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1, Lists.newArrayList(), false, true, true));
+                slots.add(new SlotWidget(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1, Lists.newArrayList(), false, true, true));
             }
         }
         for (i = 0; i < input.size(); ++i) {
@@ -88,17 +91,17 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         }
 
         widgets.addAll(slots);
-        widgets.add(new ItemSlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput(), false, true, true) {
+        widgets.add(new SlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput(), false, true, true) {
             @Override
             protected String getItemCountOverlay(ItemStack currentStack) {
-                if (currentStack.getAmount() == 1)
+                if (currentStack.getCount() == 1)
                     return "";
-                if (currentStack.getAmount() < 1)
-                    return "§c" + currentStack.getAmount();
-                return currentStack.getAmount() + "";
+                if (currentStack.getCount() < 1)
+                    return "§c" + currentStack.getCount();
+                return currentStack.getCount() + "";
             }
         });
-        widgets.add(new ItemSlotWidget(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(ItemStack::new).collect(Collectors.toList()), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(ItemStack::new).collect(Collectors.toList()), false, true, true));
         return widgets;
     }
 

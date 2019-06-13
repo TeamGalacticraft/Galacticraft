@@ -68,7 +68,7 @@ public class GalacticraftEnergy {
         CompoundTag tag = stack.getOrCreateTag();
         tag.putInt("Energy", newEnergy);
         stack.setTag(tag);
-        stack.setDamage(stack.getDurability() - newEnergy);
+        stack.setDamage(stack.getMaxDamage() - newEnergy);
     }
 
     public static boolean isOxygenItem(ItemStack itemStack) {

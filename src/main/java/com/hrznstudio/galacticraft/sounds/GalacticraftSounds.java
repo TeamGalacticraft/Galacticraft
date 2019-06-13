@@ -26,19 +26,19 @@ public class GalacticraftSounds {
     public static final SoundEvent SHUTTLE_SHUTTLE = new SoundEvent(new Identifier(Constants.MOD_ID, "shuttle.shuttle"));
 
     public static void register() {
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, MUSIC_MUSIC_SPACE);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, PLAYER_UNLOCKCHEST);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, PLAYER_PARACHUTE);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, PLAYER_OPENAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, PLAYER_CLOSEAIRLOCK);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, ENTITY_SLIME_DEATH);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, ENTITY_OOH);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, ENTITY_OUCH);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, ENTITY_BOSSLAUGH);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, ENTITY_BOSSDEATH);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, ENTITY_ASTROMINER);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, AMBIENCE_SINGLEDRIP);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, AMBIENCE_SCARYSCAPE);
-        Registry.register(Registry.SOUND_EVENT, Constants.MOD_ID, SHUTTLE_SHUTTLE);
+        Registry.register(Registry.SOUND_EVENT, MUSIC_MUSIC_SPACE.getId(), MUSIC_MUSIC_SPACE);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_UNLOCKCHEST.getId(), PLAYER_UNLOCKCHEST);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_PARACHUTE.getId(), PLAYER_PARACHUTE);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_OPENAIRLOCK.getId(), PLAYER_OPENAIRLOCK);
+        Registry.register(Registry.SOUND_EVENT, PLAYER_CLOSEAIRLOCK.getId(), PLAYER_CLOSEAIRLOCK);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_SLIME_DEATH.getId(), ENTITY_SLIME_DEATH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_OOH.getId(), ENTITY_OOH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_OUCH.getId(), ENTITY_OUCH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSLAUGH.getId(), ENTITY_BOSSLAUGH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_BOSSDEATH.getId(), ENTITY_BOSSDEATH);
+        Registry.register(Registry.SOUND_EVENT, ENTITY_ASTROMINER.getId(), ENTITY_ASTROMINER);
+        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getId(), AMBIENCE_SINGLEDRIP);
+        Registry.register(Registry.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getId(), AMBIENCE_SCARYSCAPE);
+        Registry.register(Registry.SOUND_EVENT, SHUTTLE_SHUTTLE.getId(), SHUTTLE_SHUTTLE);
     }
 }

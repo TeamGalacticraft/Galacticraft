@@ -31,7 +31,7 @@ public class OxygenTankItem extends Item {
 
     public OxygenTankItem(Settings settings) {
         super(settings);
-        this.maxOxygen = getDurability();
+        this.maxOxygen = getMaxDamage();
     }
 
     public static int getOxygenCount(ItemStack stack) {
@@ -43,15 +43,15 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void appendItemsForGroup(ItemGroup itemGroup_1, DefaultedList<ItemStack> list) {
-        if (this.isInItemGroup(itemGroup_1)) {
+    public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> list) {
+        if (this.isIn(itemGroup_1)) {
             list.add(applyDefaultTags(new ItemStack(this), 0));
             list.add(applyDefaultTags(new ItemStack(this), maxOxygen));
         }
     }
 
     @Override
-    public void onCrafted(ItemStack tank, World world_1, PlayerEntity playerEntity_1) {
+    public void onCraft(ItemStack tank, World world_1, PlayerEntity playerEntity_1) {
         applyDefaultTags(tank, 0);
     }
 
@@ -59,16 +59,16 @@ public class OxygenTankItem extends Item {
         CompoundTag tag = item.getOrCreateTag();
         tag.putInt(MAX_OXYGEN_NBT_KEY, this.maxOxygen);
         tag.putInt(OXYGEN_NBT_KEY, currentOxy);
-        item.setDamage(getDurability() - currentOxy);
+        item.setDamage(getMaxDamage() - currentOxy);
 
         return item;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void buildTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
         lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
-        super.buildTooltip(stack, world, lines, context);
+        super.appendTooltip(stack, world, lines, context);
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {

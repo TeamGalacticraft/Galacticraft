@@ -28,7 +28,7 @@ import java.util.Random;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CavernousVineBlock extends Block implements Waterloggable {
-    protected static final EnumProperty<VineTypes> VINES = EnumProperty.create("vinetype", VineTypes.class);
+    protected static final EnumProperty<VineTypes> VINES = EnumProperty.of("vinetype", VineTypes.class);
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public CavernousVineBlock(Settings settings) {

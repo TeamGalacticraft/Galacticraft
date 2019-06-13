@@ -110,7 +110,7 @@ public class SpaceRaceScreen extends Screen {
 //        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
 //
 //        GuiLighting.enableForItems();
-//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.left + 6, this.top - 20);
-//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getDefaultStack(), this.left + 35, this.top - 20);
+//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getStackForRender(), this.left + 6, this.top - 20);
+//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getStackForRender(), this.left + 35, this.top - 20);
     }
 }

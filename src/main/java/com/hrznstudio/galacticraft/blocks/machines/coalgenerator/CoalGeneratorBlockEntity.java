@@ -78,7 +78,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
             this.fuelTimeCurrent = 0;
             this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem());
 
-            this.getInventory().getInvStack(0).setAmount(this.getInventory().getInvStack(0).getAmount() - 1);
+            this.getInventory().getInvStack(0).setCount(this.getInventory().getInvStack(0).getCount() - 1);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {

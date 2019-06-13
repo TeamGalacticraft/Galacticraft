@@ -5,8 +5,10 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.mojang.blaze3d.platform.GlStateManager;
 import me.shedaniel.rei.api.DisplaySettings;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.gui.widget.ItemSlotWidget;
+import me.shedaniel.rei.api.Renderable;
+import me.shedaniel.rei.api.Renderer;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
+import me.shedaniel.rei.gui.widget.SlotWidget;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GuiLighting;
@@ -17,7 +19,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,8 +34,9 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         return GalacticraftREIPlugin.CIRCUIT_FABRICATION;
     }
 
-    public ItemStack getCategoryIcon() {
-        return new ItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR);
+    @Override
+    public Renderer getIcon() {
+        return Renderable.fromItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
     }
 
     public String getCategoryName() {
@@ -47,7 +49,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
 //        final Point startPoint = new Point((int) bounds.getCenterX() - 41, (int) bounds.getCenterY() - 27);
 
         class NamelessClass_1 extends RecipeBaseWidget {
-            NamelessClass_1(Rectangle bounds) {
+            private NamelessClass_1(Rectangle bounds) {
                 super(bounds);
             }
 
@@ -74,21 +76,21 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         // Redstone
         // User input
         // Output
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 0) + 1, startPoint.y + 1, Arrays.asList(new ItemStack(Items.DIAMOND)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 7) + 1, startPoint.y + 1, recipeDisplay.getInput().get(0), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 0) + 1, startPoint.y + 1, Collections.singletonList(new ItemStack(Items.DIAMOND)), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 7) + 1, startPoint.y + 1, recipeDisplay.getInput().get(0), false, true, true));
 
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Arrays.asList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Arrays.asList(new ItemStack(Items.REDSTONE)), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Collections.singletonList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Collections.singletonList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Collections.singletonList(new ItemStack(Items.REDSTONE)), false, true, true));
 
-        widgets.add(new ItemSlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput(), false, true, true) {
+        widgets.add(new SlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput(), false, true, true) {
             @Override
             protected String getItemCountOverlay(ItemStack currentStack) {
-                if (currentStack.getAmount() == 1)
+                if (currentStack.getCount() == 1)
                     return "";
-                if (currentStack.getAmount() < 1)
-                    return "§c" + currentStack.getAmount();
-                return currentStack.getAmount() + "";
+                if (currentStack.getCount() < 1)
+                    return "§c" + currentStack.getCount();
+                return currentStack.getCount() + "";
             }
         });
         return widgets;

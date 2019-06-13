@@ -351,7 +351,7 @@ public class Constants {
         public static final String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
         public static final String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
-        public static final String TIER_3_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
+        public static final String TIER_3_ROCKET_SCHEMATIC = "tier_3_rocket_schematic";
         public static final String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         public static final String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         public static final String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";

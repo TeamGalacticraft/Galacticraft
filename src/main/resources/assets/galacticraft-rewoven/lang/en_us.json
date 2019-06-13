@@ -258,5 +258,12 @@
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",
 
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
-  "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!"
+  "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
+
+  "config.galacticraft-rewoven.gravity": "Gravity",
+  "config.galacticraft-rewoven.gravity.moon": "Moon",
+  "config.galacticraft-rewoven.gravity.mars": "Mars",
+  "config.galacticraft-rewoven.": "",
+  "config.galacticraft-rewoven.": "",
+  "config.galacticraft-rewoven.": ""
 }

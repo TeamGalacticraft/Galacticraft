@@ -69,7 +69,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
         } else if (ingredients.size() > 9) {
             throw new JsonParseException("Too many ingredients for compressing recipe");
         } else {
-            ItemStack result = ShapelessCompressingRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+            ItemStack result = ShapelessCompressingRecipe.getStack(JsonHelper.getObject(json, "result"));
             return factory.create(id, /*group, */result, ingredients);
         }
     }
