@@ -38,7 +38,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
-    private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
+    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public EnergyStorageModuleBlock(Settings settings) {
         super(settings);
@@ -90,7 +90,7 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
     }
 
     @Override

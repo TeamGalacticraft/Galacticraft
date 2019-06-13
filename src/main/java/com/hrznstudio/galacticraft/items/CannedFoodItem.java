@@ -16,13 +16,13 @@ public class CannedFoodItem extends Item {
     }
 
     @Override
-    public ItemStack onItemFinishedUsing(ItemStack stack, World world, LivingEntity entity) {
+    public ItemStack finishUsing(ItemStack stack, World world, LivingEntity entity) {
         if (entity instanceof PlayerEntity) {
             PlayerEntity player = (PlayerEntity) entity;
             player.eatFood(world, stack);
             player.dropStack(new ItemStack(GalacticraftItems.TIN_CANISTER));
         }
-        stack.subtractAmount(1);
+        stack.decrement(1);
         return stack;
     }
 

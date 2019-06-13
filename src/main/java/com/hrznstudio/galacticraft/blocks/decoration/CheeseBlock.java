@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.IntegerProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 
 /**
@@ -13,7 +13,7 @@ import net.minecraft.state.property.Properties;
  */
 public class CheeseBlock extends CakeBlock {
 
-    private static final IntegerProperty BITES = IntegerProperty.create("bites", 0, 6);
+    private static final IntProperty BITES = IntProperty.of("bites", 0, 6);
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public CheeseBlock(Settings settings) {

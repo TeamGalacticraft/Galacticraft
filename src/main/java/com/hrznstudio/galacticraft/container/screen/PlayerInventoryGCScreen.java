@@ -61,8 +61,8 @@ public class PlayerInventoryGCScreen extends AbstractContainerScreen<PlayerInven
         this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
 
         GuiLighting.enableForItems();
-        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getDefaultStack(), this.left + 6, this.top - 20);
-        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.left + 35, this.top - 20);
+        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.left + 6, this.top - 20);
+        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.left + 35, this.top - 20);
     }
 
     @Override

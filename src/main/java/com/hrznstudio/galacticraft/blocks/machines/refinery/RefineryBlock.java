@@ -37,7 +37,7 @@ import java.util.List;
 
 public class RefineryBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
 
-    private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
+    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public RefineryBlock(Settings settings) {
         super(settings);
@@ -89,7 +89,7 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.stateFactory.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
+        return this.stateFactory.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
     }
 
     @Override

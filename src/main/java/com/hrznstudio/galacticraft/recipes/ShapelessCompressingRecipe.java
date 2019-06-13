@@ -32,7 +32,7 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
         this.input = input;
     }
 
-    static ItemStack getItemStack(JsonObject json) {
+    static ItemStack getStack(JsonObject json) {
         String itemId = JsonHelper.getString(json, "item");
         Item ingredientItem = Registry.ITEM.getOrEmpty(new Identifier(itemId)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + itemId + "'"));
         if (json.has("data")) {

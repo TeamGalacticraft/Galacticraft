@@ -37,12 +37,12 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     private static final VoxelShape UP = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 16, 8 + 3);
     private static final VoxelShape DOWN = createCuboidShape(8 - 3, 0, 8 - 3, 8 + 3, 8 + 3, 8 + 3);
     private static final VoxelShape NONE = createCuboidShape(8 - 3, 8 - 3, 8 - 3, 8 + 3, 8 + 3, 8 + 3);    // 6x6x6 box in the center.
-    private static BooleanProperty ATTACHED_NORTH = BooleanProperty.create("attached_north");
-    private static BooleanProperty ATTACHED_EAST = BooleanProperty.create("attached_east");
-    private static BooleanProperty ATTACHED_SOUTH = BooleanProperty.create("attached_south");
-    private static BooleanProperty ATTACHED_WEST = BooleanProperty.create("attached_west");
-    private static BooleanProperty ATTACHED_UP = BooleanProperty.create("attached_up");
-    private static BooleanProperty ATTACHED_DOWN = BooleanProperty.create("attached_down");
+    private static BooleanProperty ATTACHED_NORTH = BooleanProperty.of("attached_north");
+    private static BooleanProperty ATTACHED_EAST = BooleanProperty.of("attached_east");
+    private static BooleanProperty ATTACHED_SOUTH = BooleanProperty.of("attached_south");
+    private static BooleanProperty ATTACHED_WEST = BooleanProperty.of("attached_west");
+    private static BooleanProperty ATTACHED_UP = BooleanProperty.of("attached_up");
+    private static BooleanProperty ATTACHED_DOWN = BooleanProperty.of("attached_down");
 
     public AluminumWireBlock(Settings settings) {
         super(settings);

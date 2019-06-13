@@ -96,7 +96,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
             ItemStack resultStack = getResultFromRecipeStack();
             if (getInventory().getInvStack(6).isEmpty() || getInventory().getInvStack(6).getItem() == resultStack.getItem()) {
-                if (getInventory().getInvStack(6).getAmount() < resultStack.getMaxAmount()) {
+                if (getInventory().getInvStack(6).getCount() < resultStack.getMaxCount()) {
                     if (this.progress < this.maxProgress) {
                         ++progress;
                         this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
@@ -105,14 +105,14 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
                         this.progress = 0;
 
                         if (!world.isClient) {
-                            getInventory().getInvStack(1).subtractAmount(1);
-                            getInventory().getInvStack(2).subtractAmount(1);
-                            getInventory().getInvStack(3).subtractAmount(1);
-                            getInventory().getInvStack(4).subtractAmount(1);
-                            getInventory().getInvStack(5).subtractAmount(1);
+                            getInventory().getInvStack(1).decrement(1);
+                            getInventory().getInvStack(2).decrement(1);
+                            getInventory().getInvStack(3).decrement(1);
+                            getInventory().getInvStack(4).decrement(1);
+                            getInventory().getInvStack(5).decrement(1);
 
                             if (!getInventory().getInvStack(6).isEmpty()) {
-                                getInventory().getInvStack(6).addAmount(resultStack.getAmount());
+                                getInventory().getInvStack(6).increment(resultStack.getCount());
                             } else {
                                 getInventory().setInvStack(6, resultStack, Simulation.ACTION);
                             }
@@ -141,7 +141,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
         if (getInventory().getInvStack(6).isEmpty()) {
             return true;
         } else if (getInventory().getInvStack(6).getItem() == itemStack.getItem()) {
-            return (getInventory().getInvStack(6).getAmount() + itemStack.getAmount()) <= itemStack.getMaxAmount();
+            return (getInventory().getInvStack(6).getCount() + itemStack.getCount()) <= itemStack.getMaxCount();
         } else {
             return false;
         }

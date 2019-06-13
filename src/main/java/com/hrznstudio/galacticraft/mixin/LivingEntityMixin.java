@@ -38,10 +38,10 @@ public abstract class LivingEntityMixin {
                         air = 0;
                         try {
                             SimpleFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
-                            if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(6).getDurability() - gearInventory.getInvStack(6).getDamage()) > 0)) {
+                            if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(6).getMaxDamage() - gearInventory.getInvStack(6).getDamage()) > 0)) {
                                 gearInventory.getInvStack(6).setDamage(gearInventory.getInvStack(6).getDamage() + 1);
                                 return;
-                            } else if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(7).getDurability() - gearInventory.getInvStack(7).getDamage()) > 0)) {
+                            } else if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(7).getMaxDamage() - gearInventory.getInvStack(7).getDamage()) > 0)) {
                                 gearInventory.getInvStack(7).setDamage(gearInventory.getInvStack(7).getDamage() + 1);
                                 return;
                             }

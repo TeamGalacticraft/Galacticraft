@@ -77,7 +77,7 @@ public class BasicSolarPanelContainer extends Container {
             } else if (!this.insertItem(itemStack1, 0, this.solarPanel.getInventory().getSlotCount(), false)) {
                 return ItemStack.EMPTY;
             }
-            if (itemStack1.getAmount() == 0) {
+            if (itemStack1.getCount() == 0) {
                 slot.setStack(ItemStack.EMPTY);
             } else {
                 slot.markDirty();

@@ -23,7 +23,7 @@ import net.minecraft.world.IWorld;
  */
 public class GratingBlock extends Block implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.create("grating_state", GratingState.class);
+    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
 
     public GratingBlock(Settings settings) {
         super(settings);
@@ -42,9 +42,9 @@ public class GratingBlock extends Block implements Waterloggable {
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
         BlockState blockState = this.getDefaultState().with(GRATING_STATE, GratingState.LOWER).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
         BlockPos blockPos = context.getBlockPos();
-        Direction direction = context.getFacing();
+        Direction direction = context.getPlayerFacing();
 
-        return direction != Direction.DOWN && (direction == Direction.UP || context.getPos().y - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.with(GRATING_STATE, GratingState.UPPER);
+        return direction != Direction.DOWN && (direction == Direction.UP || context.getBlockPos().getY() - (double) blockPos.getY() <= 0.5D) ? blockState : blockState.with(GRATING_STATE, GratingState.UPPER);
     }
 
     @Override

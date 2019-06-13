@@ -35,7 +35,7 @@ public class StandardWrenchItem extends Item {
 
     public StandardWrenchItem(Settings settings) {
         super(settings);
-        settings.durability(256);
+        settings.maxDamage(256);
     }
 
     private static <T extends Comparable<T>> BlockState method_7758(BlockState state, Property<T> property, boolean sneaking) {
@@ -59,7 +59,7 @@ public class StandardWrenchItem extends Item {
         World world_1 = itemUsageContext_1.getWorld();
         if (!world_1.isClient && player != null) {
             BlockPos pos = itemUsageContext_1.getBlockPos();
-            this.method_7759(player, world_1.getBlockState(pos), world_1, pos, itemUsageContext_1.getItemStack());
+            this.method_7759(player, world_1.getBlockState(pos), world_1, pos, itemUsageContext_1.getStack());
         }
 
         return ActionResult.SUCCESS;
@@ -73,7 +73,7 @@ public class StandardWrenchItem extends Item {
             Collection<Property<?>> collection = stateFactory.getProperties();
             String string_1 = Registry.BLOCK.getId(block).toString();
             if (!collection.isEmpty()) {
-                CompoundTag compoundTag_1 = stack.getOrCreateSubCompoundTag("wrenchProp");
+                CompoundTag compoundTag_1 = stack.getOrCreateSubTag("wrenchProp");
                 String string_2 = compoundTag_1.getString(string_1);
                 Property<?> property = stateFactory.getProperty(string_2);
                 if (property == null) {
@@ -82,14 +82,14 @@ public class StandardWrenchItem extends Item {
                 if (property.getName().equals("facing")) {
                     BlockState blockState_2 = method_7758(state, property, player.isSneaking());
                     iWorld.setBlockState(pos, blockState_2, 18);
-                    stack.applyDamage(2, player, (playerEntity) -> playerEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
+                    stack.damage(2, player, (playerEntity) -> playerEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
                 }
             }
         }
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, World world_1, List<Component> list_1, TooltipContext tooltipContext_1) {
+    public void appendTooltip(ItemStack itemStack_1, World world_1, List<Component> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
             list_1.add(new TranslatableComponent("tooltip.galacticraft-fabric.standard_wrench").setStyle(new Style().setColor(ChatFormat.GRAY)));
         } else {
