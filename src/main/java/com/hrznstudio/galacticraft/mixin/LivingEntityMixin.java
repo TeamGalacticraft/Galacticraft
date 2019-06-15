@@ -71,7 +71,7 @@ public abstract class LivingEntityMixin {
     @ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 1, index = 11, name = "double_1")
     private double gravityEffect(double double_1) {
         if (((LivingEntity) (Object) this).world.getDimension() instanceof SpaceDimension) {
-            if (double_1 < -((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 2) {
+            if (double_1 < -((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 3.5) {
                 double_1 += ((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity();
             }
         }
@@ -82,7 +82,7 @@ public abstract class LivingEntityMixin {
     private float gravityJumpEffect(float float_2) {
         if (((LivingEntity) (Object) this).world.getDimension() instanceof SpaceDimension) {
             if (float_2 > 0) {
-                float_2 = float_2 + (((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 4);
+                float_2 = float_2 + (((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 5);
             }
         }
         return float_2;

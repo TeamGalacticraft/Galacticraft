@@ -35,13 +35,12 @@ import java.lang.reflect.Method;
 public class Galacticraft implements ModInitializer {
 
     public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
-    private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     public static ConfigHandler configHandler = new ConfigHandler();
 
     @Override
     public void onInitialize() {
-        logger.info(GALACTICRAFT, "[Galacticraft] Initializing...");
+        logger.info("Initializing...");
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();

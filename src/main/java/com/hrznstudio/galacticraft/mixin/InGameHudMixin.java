@@ -3,6 +3,7 @@ package com.hrznstudio.galacticraft.mixin;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
@@ -38,24 +39,32 @@ public abstract class InGameHudMixin extends DrawableHelper{
 
     @Inject(method = "draw", at = @At(value = "TAIL"))
     private void draw(float float_1, CallbackInfo ci) {
-        this.client.getProfiler().push("jumpBar"); //Totally the jump bar
-        GlStateManager.pushMatrix();
-        client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
-        this.blit(this.scaledWidth - 17, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-        this.blit(this.scaledWidth - 34, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
 
-        SimpleFixedItemInv gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
-        if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem) {
-            this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * (((double)gearInventory.getInvStack(6).getMaxDamage() - (double)gearInventory.getInvStack(6).getDamage()) / (double)gearInventory.getInvStack(6).getMaxDamage()))));
+        if (client.player.world.dimension instanceof SpaceDimension && !((SpaceDimension) client.player.world.dimension).hasOxygen()) {
+            this.client.getProfiler().push("jumpBar"); //Totally the jump bar
+            GlStateManager.pushMatrix();
+            client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
+            this.blit(this.scaledWidth - 17, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+            this.blit(this.scaledWidth - 34, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+
+            SimpleFixedItemInv gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
+            if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem) {
+                this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(6).getMaxDamage() - (double) gearInventory.getInvStack(6).getDamage()) / (double) gearInventory.getInvStack(6).getMaxDamage()))));
+            } else if (client.player.isCreative()) {
+                this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
+            }
+            if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem) {
+                this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(7).getMaxDamage() - (double) gearInventory.getInvStack(7).getDamage()) / (double) gearInventory.getInvStack(7).getMaxDamage()))));
+            } else if (client.player.isCreative()) {
+                this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
+            }
+
+
+            //this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 1000D) / 3000D))));
+            //this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 2500D) / 3000D))));
+
+            GlStateManager.popMatrix();
+            this.client.getProfiler().pop();
         }
-        if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem) {
-            this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * (((double)gearInventory.getInvStack(7).getMaxDamage() - (double)gearInventory.getInvStack(7).getDamage()) / (double)gearInventory.getInvStack(7).getMaxDamage()))));
-        }
-
-        //this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 1000D) / 3000D))));
-        //this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 2500D) / 3000D))));
-
-        GlStateManager.popMatrix();
-        this.client.getProfiler().pop();
     }
 }
