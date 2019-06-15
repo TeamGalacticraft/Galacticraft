@@ -5,15 +5,15 @@ import com.google.gson.GsonBuilder;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.util.FileUtils;
-import me.shedaniel.cloth.api.ConfigScreenBuilder;
-import me.shedaniel.cloth.gui.ClothConfigScreen;
-import me.shedaniel.cloth.gui.entries.*;
+import me.shedaniel.clothconfig2.api.ConfigBuilder;
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.client.resource.language.I18n;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -91,24 +91,21 @@ public class ConfigHandler {
     @Environment(EnvType.CLIENT)
     public void openConfigScreen() {
         Screen parentScreen = MinecraftClient.getInstance().currentScreen;
-        ClothConfigScreen.Builder builder = new ClothConfigScreen.Builder(parentScreen, new TranslatableComponent(Constants.Config.TITLE).getText(), null);
-        ConfigScreenBuilder.CategoryBuilder general = builder.addCategory(new TranslatableComponent(Constants.Config.GENERAL).getText());
-        general.addOption(new BooleanListEntry(Constants.Config.BOOLEAN, config.aBoolean, aBoolean -> config.aBoolean = aBoolean));
-        general.addOption(new DoubleListEntry(Constants.Config.DOUBLE, config.aDouble, aDouble -> config.aDouble = aDouble));
-        general.addOption(new FloatListEntry(Constants.Config.FLOAT, config.aFloat, aFloat -> config.aFloat = aFloat));
-        general.addOption(new IntegerListEntry(Constants.Config.INT, config.anInt, anInt -> config.anInt = anInt));
-        general.addOption(new LongListEntry(Constants.Config.LONG, config.aLong, aLong -> config.aLong = aLong));
-        general.addOption(new StringListEntry(Constants.Config.STRING, config.string, string -> config.string = string));
-        general.addOption(new IntegerSliderEntry(Constants.Config.INT_SLIDER, 100, 0, config.anIntS, anInt -> config.anIntS = anInt));
-        general.addOption(new LongSliderEntry(Constants.Config.LONG_SLIDER, 100, 0, Math.toIntExact(config.aLongS), aLong -> config.aLongS = aLong));
-
-        builder.setOnSave(savedConfig -> {
+        ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parentScreen).setTitle(I18n.translate(Constants.Config.TITLE)).setSavingRunnable(() -> {
             try {
                 ConfigHandler.this.saveConfig();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+
+        SubCategoryBuilder subCatGravity = ConfigEntryBuilder.create().startSubCategory(Constants.Config.GRAVITY);
+        subCatGravity.add(0, ConfigEntryBuilder.create().startFloatField(Constants.Config.MOON_GRAVITY, config.moonGravity).setMax(2.0F).setMin(0.01F).setSaveConsumer(aFloat -> this.config.moonGravity = aFloat).build());
+        subCatGravity.add(1, ConfigEntryBuilder.create().startFloatField(Constants.Config.MARS_GRAVITY, config.marsGravity).setMax(2.0F).setMin(0.01F).setSaveConsumer(aFloat -> this.config.marsGravity = aFloat).build());
+
+        builder.getOrCreateCategory(Constants.Config.GENERAL)
+                .addEntry(subCatGravity.build())
+        ;
 
         MinecraftClient.getInstance().openScreen(builder.build());
     }

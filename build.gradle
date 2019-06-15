@@ -12,7 +12,7 @@ ext {
 }
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + "+" + buildNum
+version = project.mod_version + "+build." + buildNum
 group = project.maven_group
 
 minecraft {
@@ -37,19 +37,19 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modCompile("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
     modCompile("cloth:ClothEvents:${project.cloth_version}") { transitive = false }
-    modCompile("cloth-config:ClothConfig:${project.cloth_config_version}") { transitive = false }
-    modCompile("silk:SilkAPI:${project.silk_version}") { transitive = false }
-    modCompile("modmenu:ModMenu:${project.modmenu_version}") { transitive = false }
+    modCompile("cloth-config:ClothConfig2:${project.cloth_config_version}") { transitive = false }
+    modCompile("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
+    modCompile("io.github.prospector.modmenu:ModMenu:${project.modmenu_version}") { transitive = false }
 //    modCompile "cotton:cotton:${project.cotton_version}"
     modCompile("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
     modCompile("alexiil.mc.lib:libblockattributes:${project.attributes_version}") { transitive = false }
-    modCompile("roughly-enough-items:RoughlyEnoughItems:${project.rei_version}") { transitive = false }
+    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") { transitive = true }
 
     //include everything mandatory inside the jar
 //    include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     include "cloth:ClothEvents:${project.cloth_version}"
-    include "cloth-config:ClothConfig:${project.cloth_config_version}"
-    include "silk:SilkAPI:${project.silk_version}"
+    include "cloth-config:ClothConfig2:${project.cloth_config_version}"
+    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
 //    include "cotton:cotton:${project.cotton_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
     include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"

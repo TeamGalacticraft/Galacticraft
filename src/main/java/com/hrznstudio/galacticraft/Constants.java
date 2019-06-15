@@ -351,23 +351,18 @@ public class Constants {
         public static final String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
         public static final String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
-        public static final String TIER_3_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
+        public static final String TIER_3_ROCKET_SCHEMATIC = "tier_3_rocket_schematic";
         public static final String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         public static final String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         public static final String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
     }
 
     public static class Config {
-        public static final String TITLE = "ui.galacticraft-rewoven.config.title";
-        public static final String GENERAL = "ui.galacticraft-rewoven.config.general";
-        public static final String BOOLEAN = "ui.galacticraft-rewoven.config.boolean";
-        public static final String DOUBLE = "ui.galacticraft-rewoven.config.double";
-        public static final String FLOAT = "ui.galacticraft-rewoven.config.float";
-        public static final String INT = "ui.galacticraft-rewoven.config.int";
-        public static final String INT_SLIDER = "ui.galacticraft-rewoven.config.intslider";
-        public static final String LONG = "ui.galacticraft-rewoven.config.long";
-        public static final String LONG_SLIDER = "ui.galacticraft-rewoven.config.longslider";
-        public static final String STRING = "ui.galacticraft-rewoven.config.string";
+        public static final String TITLE = "config.galacticraft-rewoven.title";
+        public static final String GENERAL = "config.galacticraft-rewoven.general";
+        public static final String GRAVITY = "config.galacticraft-rewoven.gravity";
+        public static final String MOON_GRAVITY = "config.galacticraft-rewoven.gravity.moon";
+        public static final String MARS_GRAVITY = "config.galacticraft-rewoven.gravity.mars";
     }
 
     public static class Energy {

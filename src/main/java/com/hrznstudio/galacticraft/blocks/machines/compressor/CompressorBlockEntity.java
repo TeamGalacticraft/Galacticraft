@@ -75,7 +75,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
                 } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
                     this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
                     this.fuelTime = maxFuelTime;
-                    fuel.subtractAmount(1);
+                    fuel.decrement(1);
                     status = CompressorStatus.PROCESSING;
                 } else {
                     // Can't start processing any new materials anyway, dont waste fuel.
@@ -113,14 +113,14 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
 
     protected void craftItem(ItemStack craftingResult) {
         for (int i = 0; i < 9; i++) {
-            inventory.getInvStack(i).subtractAmount(1);
+            inventory.getInvStack(i).decrement(1);
         }
 
         ItemStack output = inventory.getInvStack(OUTPUT_SLOT);
         if (output.isEmpty()) {
             inventory.setInvStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION);
         } else {
-            inventory.getInvStack(OUTPUT_SLOT).addAmount(craftingResult.getAmount());
+            inventory.getInvStack(OUTPUT_SLOT).increment(craftingResult.getCount());
         }
     }
 
@@ -148,7 +148,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
         if (inventory.getInvStack(OUTPUT_SLOT).isEmpty()) {
             return true;
         } else if (inventory.getInvStack(OUTPUT_SLOT).getItem() == itemStack.getItem()) {
-            return (inventory.getInvStack(OUTPUT_SLOT).getAmount() + itemStack.getAmount()) <= itemStack.getMaxAmount();
+            return (inventory.getInvStack(OUTPUT_SLOT).getCount() + itemStack.getCount()) <= itemStack.getMaxCount();
         } else {
             return false;
         }

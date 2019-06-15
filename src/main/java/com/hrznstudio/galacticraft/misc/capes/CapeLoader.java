@@ -8,6 +8,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class CapeLoader {
         new Thread(() -> {
             CapesModel capesModel = null;
             try {
-                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/capes.json")), CapesModel.class);
+                capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
             } catch (IOException e) {
                 Thread.currentThread().interrupt();
             }

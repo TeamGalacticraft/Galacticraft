@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Random;
 
 public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntityProvider, MachineBlock {
-    private static final DirectionProperty FACING = Properties.FACING_HORIZONTAL;
+    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public OxygenCollectorBlock(Settings settings) {
         super(settings);
@@ -84,7 +84,7 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerHorizontalFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
     }
 
     @Override

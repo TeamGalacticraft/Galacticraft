@@ -20,8 +20,8 @@ public abstract class ItemStackMixin {
     @Shadow
     public abstract Item getItem();
 
-    @Inject(method = "getDisplayName", at = @At("RETURN"), cancellable = true)
-    private void getDisplayName(CallbackInfoReturnable<TextComponent> returnable) {
+    @Inject(method = "getCustomName", at = @At("RETURN"), cancellable = true)
+    private void getCustomName(CallbackInfoReturnable<TextComponent> returnable) {
         Identifier id = Registry.ITEM.getId(getItem());
         if (false && id.getNamespace().equals("galacticraft-rewoven")) {
             TextComponent returnVal = returnable.getReturnValue();

@@ -67,20 +67,20 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
             ItemStack item = inventory.getInvStack(i);
 
             // If slot is not empty ( must be an ingredient if we've made it this far ), and there is less than 2 items in the slot, we cannot craft two.
-            if (!item.isEmpty() && item.getAmount() < 2) {
+            if (!item.isEmpty() && item.getCount() < 2) {
                 canCraftTwo = false;
                 break;
             }
         }
         if (canCraftTwo) {
-            if (inventory.getInvStack(OUTPUT_SLOT).getAmount() > craftingResult.getMaxAmount() || inventory.getInvStack(SECOND_OUTPUT_SLOT).getAmount() > craftingResult.getMaxAmount()) {
+            if (inventory.getInvStack(OUTPUT_SLOT).getCount() > craftingResult.getMaxCount() || inventory.getInvStack(SECOND_OUTPUT_SLOT).getCount() > craftingResult.getMaxCount()) {
                 // There would be too many items in the output slot. Just craft one.
                 canCraftTwo = false;
             }
         }
 
         for (int i = 0; i < 9; i++) {
-            inventory.getInvStack(i).subtractAmount(canCraftTwo ? 2 : 1);
+            inventory.getInvStack(i).decrement(canCraftTwo ? 2 : 1);
         }
 
         // <= because otherwise it loops only once and puts in only one slot
@@ -90,7 +90,7 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
                 inventory.setInvStack(i, craftingResult, Simulation.ACTION);
             } else {
                 // Multiply the end result by 2.
-                inventory.getInvStack(i).addAmount(craftingResult.getAmount());
+                inventory.getInvStack(i).increment(craftingResult.getCount());
             }
         }
     }

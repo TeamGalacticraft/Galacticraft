@@ -31,21 +31,21 @@ public class BatteryItem extends Item implements EnergyHolderItem {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void buildTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
         int charge = stack.getOrCreateTag().getInt("Energy");
-        if (stack.getDurability() - stack.getDamage() < 3334) {
+        if (stack.getMaxDamage() - stack.getDamage() < 3334) {
             lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(ChatFormat.DARK_RED)));
-        } else if (stack.getDurability() - stack.getDamage() < 6667) {
+        } else if (stack.getMaxDamage() - stack.getDamage() < 6667) {
             lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(ChatFormat.GOLD)));
         } else {
             lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(new Style().setColor(ChatFormat.GREEN)));
         }
-        super.buildTooltip(stack, world, lines, context);
+        super.appendTooltip(stack, world, lines, context);
     }
 
     @Override
-    public void appendItemsForGroup(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
-        if (this.isInItemGroup(group)) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
+        if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
             GalacticraftEnergy.setEnergy(charged, 0);
             groupStacks.add(charged);
@@ -57,7 +57,7 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     }
 
     @Override
-    public void onCrafted(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
+    public void onCraft(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
         CompoundTag batteryTag = battery.getOrCreateTag();
         batteryTag.putInt("Energy", 0);
         batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
@@ -66,8 +66,8 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     }
 
     @Override
-    public ItemStack getDefaultStack() {
-        return super.getDefaultStack();
+    public ItemStack getStackForRender() {
+        return super.getStackForRender();
     }
 
     @Override
