@@ -98,9 +98,9 @@ public class ConfigHandler {
             }
         });
 
-        SubCategoryBuilder subCatGravity = ConfigEntryBuilder.create().startSubCategory("config.galacticraft-rewoven.gravity");
-        subCatGravity.add(0, ConfigEntryBuilder.create().startFloatField("config.galacticraft-rewoven.gravity.moon", 0.062F).setMax(2.0F).setMin(0.01F).build());
-        subCatGravity.add(1, ConfigEntryBuilder.create().startFloatField("config.galacticraft-rewoven.gravity.mars", 0.038F).setMax(2.0F).setMin(0.01F).build());
+        SubCategoryBuilder subCatGravity = ConfigEntryBuilder.create().startSubCategory(Constants.Config.GRAVITY);
+        subCatGravity.add(0, ConfigEntryBuilder.create().startFloatField(Constants.Config.MOON_GRAVITY, 0.062F).setMax(2.0F).setMin(0.01F).build());
+        subCatGravity.add(1, ConfigEntryBuilder.create().startFloatField(Constants.Config.MARS_GRAVITY, 0.038F).setMax(2.0F).setMin(0.01F).build());
 
         builder.getOrCreateCategory(Constants.Config.GENERAL)
                 .addEntry(subCatGravity.build())
