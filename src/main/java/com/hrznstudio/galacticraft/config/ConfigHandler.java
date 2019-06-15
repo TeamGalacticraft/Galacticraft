@@ -13,6 +13,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resource.language.I18n;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -90,7 +91,7 @@ public class ConfigHandler {
     @Environment(EnvType.CLIENT)
     public void openConfigScreen() {
         Screen parentScreen = MinecraftClient.getInstance().currentScreen;
-        ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parentScreen).setTitle(Constants.Config.TITLE).setSavingRunnable(() -> {
+        ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parentScreen).setTitle(I18n.translate(Constants.Config.TITLE)).setSavingRunnable(() -> {
             try {
                 ConfigHandler.this.saveConfig();
             } catch (IOException e) {
@@ -99,8 +100,8 @@ public class ConfigHandler {
         });
 
         SubCategoryBuilder subCatGravity = ConfigEntryBuilder.create().startSubCategory(Constants.Config.GRAVITY);
-        subCatGravity.add(0, ConfigEntryBuilder.create().startFloatField(Constants.Config.MOON_GRAVITY, 0.062F).setMax(2.0F).setMin(0.01F).build());
-        subCatGravity.add(1, ConfigEntryBuilder.create().startFloatField(Constants.Config.MARS_GRAVITY, 0.038F).setMax(2.0F).setMin(0.01F).build());
+        subCatGravity.add(0, ConfigEntryBuilder.create().startFloatField(Constants.Config.MOON_GRAVITY, config.moonGravity).setMax(2.0F).setMin(0.01F).setSaveConsumer(aFloat -> this.config.moonGravity = aFloat).build());
+        subCatGravity.add(1, ConfigEntryBuilder.create().startFloatField(Constants.Config.MARS_GRAVITY, config.marsGravity).setMax(2.0F).setMin(0.01F).setSaveConsumer(aFloat -> this.config.marsGravity = aFloat).build());
 
         builder.getOrCreateCategory(Constants.Config.GENERAL)
                 .addEntry(subCatGravity.build())
