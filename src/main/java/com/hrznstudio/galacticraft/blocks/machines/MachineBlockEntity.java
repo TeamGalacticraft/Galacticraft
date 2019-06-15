@@ -2,6 +2,8 @@ package com.hrznstudio.galacticraft.blocks.machines;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import com.google.common.collect.Lists;
+import com.hrznstudio.galacticraft.api.configurable.SideOptions;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
@@ -10,6 +12,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+
+import java.util.ArrayList;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -26,6 +30,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public boolean isPublic = true;
 
     public String redstoneOption = "DISABLED";
+    
+    public SideOptions[] config = {SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK};
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
@@ -35,10 +41,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public boolean isActive() {
         if (this.getWorld().isReceivingRedstonePower(pos) && redstoneOption.equals("OFF")) {
             return false;
-        } else if (!this.getWorld().isReceivingRedstonePower(pos) && redstoneOption.equals("ON")) {
-            return false;
-        }
-        return true;
+        } else return this.getWorld().isReceivingRedstonePower(pos) || !redstoneOption.equals("ON");
     }
 
     /**
@@ -83,6 +86,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
         tag.putString("Redstone", redstoneOption);
+        tag.putString("Config", config[0].name() + "," + config[1].name() + "," + config[2].name() + "," + config[3].name() + "," + config[4].name() + "," + config[5].name());
         return tag;
     }
 
@@ -95,6 +99,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         isParty = tag.getBoolean("Party");
         isPublic = tag.getBoolean("Public");
         redstoneOption = tag.getString("Redstone");
+        
     }
 
     @Override

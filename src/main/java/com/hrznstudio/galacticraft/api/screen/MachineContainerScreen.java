@@ -2,9 +2,10 @@ package com.hrznstudio.galacticraft.api.screen;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.configurable.SideOptions;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import io.github.teamgalacticraft.tgcutils.api.drawable.DrawableUtils;
+import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormat;
 import net.minecraft.client.MinecraftClient;
@@ -59,12 +60,12 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     private static final int REDSTONE_TAB_WIDTH = 22;
     private static final int REDSTONE_TAB_HEIGHT = 22;
 
-    private static final int REDSTONE_PANEL_X = 0; //Top-left corner of panel in texture file - X value
-    private static final int REDSTONE_PANEL_Y = 0; //Top-left corner of panel in texture file - Y value
+    private static final int REDSTONE_PANEL_X = 0;
+    private static final int REDSTONE_PANEL_Y = 0;
     private static final int REDSTONE_PANEL_WIDTH = 99;
     private static final int REDSTONE_PANEL_HEIGHT = 91;
 
-    public boolean IS_REDSTONE_OPEN = false;
+    private boolean IS_REDSTONE_OPEN = false;
 
     private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
 
@@ -73,12 +74,12 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
 
-    private static final int CONFIG_PANEL_X = 0; //Top-left corner of panel in texture file - X value
-    private static final int CONFIG_PANEL_Y = 93; //Top-left corner of panel in texture file - Y value
+    private static final int CONFIG_PANEL_X = 0;
+    private static final int CONFIG_PANEL_Y = 93;
     private static final int CONFIG_PANEL_WIDTH = 99;
     private static final int CONFIG_PANEL_HEIGHT = 91;
 
-    public boolean IS_CONFIG_OPEN = false;
+    private boolean IS_CONFIG_OPEN = false;
 
     private static final int SECURITY_TAB_X = 23;
     private static final int SECURITY_TAB_Y = 23;
@@ -90,14 +91,17 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     private static final int SECURITY_PANEL_WIDTH = 99;
     private static final int SECURITY_PANEL_HEIGHT = 91;
 
-    public boolean IS_SECURITY_OPEN = false;
+    private boolean IS_SECURITY_OPEN = false;
 
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
+
+    private SideOptions[] config = {SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK}; //N,S,E,W,U,D
 
     public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TranslatableComponent textComponent) {
         super(container, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
+
         if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof MachineBlockEntity) {
             if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("NOT_SET")) {
                 ((MachineBlockEntity) world.getBlockEntity(pos)).owner = "";
@@ -118,6 +122,8 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             }
 
             this.selectedRedstoneOption = ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption;
+
+            this.config = ((MachineBlockEntity) world.getBlockEntity(pos)).config;
         }
     }
 
@@ -134,17 +140,22 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
 
-            if (selectedRedstoneOption.equals("DISABLED")) {
-                this.blit(this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            } else if (selectedRedstoneOption.equals("OFF")) {
-                this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            } else if (selectedRedstoneOption.equals("ON")) {
-                this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            } else {
-                Galacticraft.logger.fatal("The selected redstone config option is not valid!");
-                Galacticraft.logger.fatal("The option has been automatically reset to 'ignore redstone'");
-                MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("DISABLED")));
-                selectedRedstoneOption = "DISABLED";
+            switch (selectedRedstoneOption) {
+                case "DISABLED":
+                    this.blit(this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                    break;
+                case "OFF":
+                    this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                    break;
+                case "ON":
+                    this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                    break;
+                default:
+                    Galacticraft.logger.fatal("The selected redstone config option is not valid!");
+                    Galacticraft.logger.fatal("The option has been automatically reset to 'ignore redstone'");
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("DISABLED")));
+                    selectedRedstoneOption = "DISABLED";
+                    break;
             }
 
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26);
@@ -357,7 +368,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         super.render(int_1, int_2, float_1);
     }
 
-    public void drawTabTooltips(int mouseX, int mouseY) {
+    protected void drawTabTooltips(int mouseX, int mouseY) {
         if (!IS_REDSTONE_OPEN) {
             if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
                 this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config").getText(), mouseX, mouseY);
