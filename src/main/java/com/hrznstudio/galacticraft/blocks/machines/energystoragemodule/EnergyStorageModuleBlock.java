@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -37,7 +38,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
+public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public EnergyStorageModuleBlock(Settings settings) {
@@ -86,6 +87,26 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(FACING);
+    }
+
+    @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return true;
     }
 
     @Override

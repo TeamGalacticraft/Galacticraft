@@ -1,8 +1,14 @@
 package com.hrznstudio.galacticraft.api.configurable;
 
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -56,8 +62,45 @@ public enum SideOption implements StringIdentifiable {
         return sideOptions[0].name() + "," + sideOptions[1].name() + "," + sideOptions[2].name() + "," + sideOptions[3].name() + "," + sideOptions[4].name() + "," + sideOptions[5].name();
     }
 
+    public static List<SideOption> getApplicableValuesForMachine(Block block) {
+        if (block instanceof ConfigurableElectricMachineBlock) {
+            List<SideOption> options = new ArrayList<>();
+            options.add(SideOption.BLANK);
+            if (((ConfigurableElectricMachineBlock) block).consumesOxygen()) {
+                options.add(SideOption.OXYGEN_INPUT);
+            }
+            if (((ConfigurableElectricMachineBlock) block).generatesOxygen()) {
+                options.add(SideOption.OXYGEN_OUTPUT);
+            }
+            if (((ConfigurableElectricMachineBlock) block).consumesPower()) {
+                options.add(SideOption.POWER_INPUT);
+            }
+            if (((ConfigurableElectricMachineBlock) block).generatesPower()) {
+                options.add(SideOption.POWER_OUTPUT);
+            }
+            return options;
+        }
+        return new ArrayList<>();
+    }
+
     @Override
     public String asString() {
         return this.name().toLowerCase();
+    }
+
+    public SideOption nextValidOption(Block block) {
+        try {
+            if (getApplicableValuesForMachine(block).contains(SideOption.values()[this.ordinal() + 1])) {
+                return SideOption.values()[this.ordinal() + 1];
+            } else {
+                return SideOption.values()[this.ordinal() + 1].nextValidOption(block);
+            }
+        } catch (ArrayIndexOutOfBoundsException ignore) {
+            if (getApplicableValuesForMachine(block).contains(SideOption.values()[0])) {
+                return SideOption.values()[0];
+            } else {
+                return SideOption.values()[0].nextValidOption(block);
+            }
+        }
     }
 }

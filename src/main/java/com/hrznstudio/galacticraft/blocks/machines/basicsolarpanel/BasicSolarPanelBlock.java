@@ -68,6 +68,26 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return true;
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return blankConfig(this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()));
     }

@@ -81,7 +81,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
 
-    private SideOption[] sideOptions = null;
+    private SideOption[] sideOptions = null; //Front, Back, Right, Left, Up, Down
 
     public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TranslatableComponent textComponent) {
         super(container, playerInventory, textComponent);
@@ -155,9 +155,18 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         if (IS_CONFIG_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - CONFIG_PANEL_WIDTH, this.top + 26, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
-            this.blit(this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 49, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 49, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 49, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+
+            //Front, Back, Right, Left, top, bottom
+
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.top + 49 + 3, getXForOption(sideOptions[4]), getYForOption(sideOptions[4]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //TOP - Top
+
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 21 - 5, this.top + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[2]), getYForOption(sideOptions[2]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT - right
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.top + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[0]), getYForOption(sideOptions[0]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT-CENTER - Front
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 65 - 6 - 5, this.top + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[3]), getYForOption(sideOptions[3]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE RIGHT-CENTER - left
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 87 - 9 - 5, this.top + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[1]), getYForOption(sideOptions[1]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //RIGHT - Back
+
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.top + 49 + 36 + 3, getXForOption(sideOptions[5]), getYForOption(sideOptions[5]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
+
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 29);
             this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 33, ChatFormat.GRAY.getColor());
         } else {
@@ -273,6 +282,66 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 IS_CONFIG_OPEN = false;
                 this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                 return true;
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left  && mouseY >= this.top + 49 + 3 && mouseY <= this.top + 68 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.TOP_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.TOP_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("top_config," + this.world.getBlockState(pos).get(SideOption.TOP_SIDE_OPTION).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.RIGHT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.RIGHT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("right_config," + this.world.getBlockState(pos).get(SideOption.RIGHT_SIDE_OPTION).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.FRONT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.FRONT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("front_config," + this.world.getBlockState(pos).get(SideOption.FRONT_SIDE_OPTION).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.LEFT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.LEFT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("left_config," + this.world.getBlockState(pos).get(SideOption.LEFT_SIDE_OPTION).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.BACK_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.BACK_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("back_config," + this.world.getBlockState(pos).get(SideOption.BACK_SIDE_OPTION).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left  && mouseY >= this.top + 49 + 3 + 18 + 18 && mouseY <= this.top + 68 + 18 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.BOTTOM_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.BOTTOM_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("bottom_config," + this.world.getBlockState(pos).get(SideOption.BOTTOM_SIDE_OPTION).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
             }
         }
 
@@ -416,5 +485,39 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
         }
         return this.checkTabsClick(double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
+    }
+
+    private int getXForOption(SideOption option) {
+        switch (option) {
+            case BLANK:
+                return 224; //32
+            case POWER_INPUT:
+                return 224; //0
+            case POWER_OUTPUT:
+                return 224; //16
+            case OXYGEN_INPUT:
+                return 240; //32
+            case OXYGEN_OUTPUT:
+                return 240; //16
+            default:
+                return 0;
+        }
+    }
+
+    private int getYForOption(SideOption option) {
+        switch (option) {
+            case BLANK:
+                return 32; //224
+            case POWER_INPUT:
+                return 0; //224
+            case POWER_OUTPUT:
+                return 16; //224
+            case OXYGEN_INPUT:
+                return 32; //240
+            case OXYGEN_OUTPUT:
+                return 16; //240
+            default:
+                return 0;
+        }
     }
 }

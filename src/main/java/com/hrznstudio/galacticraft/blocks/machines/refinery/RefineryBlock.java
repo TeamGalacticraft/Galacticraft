@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
@@ -35,7 +36,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class RefineryBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
+public class RefineryBlock extends ConfigurableElectricMachineBlock implements Rotatable , WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
@@ -85,6 +86,26 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(FACING);
+    }
+
+    @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return false;
     }
 
     @Override

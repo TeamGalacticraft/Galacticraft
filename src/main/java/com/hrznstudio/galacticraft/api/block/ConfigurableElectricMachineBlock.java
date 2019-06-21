@@ -33,4 +33,10 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     public static SideOption[] optionsToArray(BlockState state) {
         return new SideOption[]{state.get(SideOption.FRONT_SIDE_OPTION), state.get(SideOption.BACK_SIDE_OPTION), state.get(SideOption.RIGHT_SIDE_OPTION), state.get(SideOption.LEFT_SIDE_OPTION), state.get(SideOption.TOP_SIDE_OPTION), state.get(SideOption.BOTTOM_SIDE_OPTION)};
     }
+
+    abstract public boolean consumesOxygen();
+    abstract public boolean generatesOxygen();
+
+    abstract public boolean consumesPower();
+    abstract public boolean generatesPower();
 }

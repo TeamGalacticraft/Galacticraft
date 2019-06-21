@@ -6,6 +6,7 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
@@ -61,12 +62,12 @@ public class GalacticraftPackets {
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
-            SideOption[] options = SideOption.fromTag(buffer.readString());
+            String data = buffer.readString();
+
             if (context.getPlayer().world.getBlockState(pos) != null) {
                 if (context.getPlayer().world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                            .with(SideOption.FRONT_SIDE_OPTION, options[0]).with(SideOption.BACK_SIDE_OPTION, options[1]).with(SideOption.RIGHT_SIDE_OPTION, options[2])
-                            .with(SideOption.LEFT_SIDE_OPTION, options[3]).with(SideOption.TOP_SIDE_OPTION, options[4]).with(SideOption.BOTTOM_SIDE_OPTION, options[5]));
+                            .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.values()), SideOption.valueOf(data.split(",")[1])));
                 }
             }
         }));

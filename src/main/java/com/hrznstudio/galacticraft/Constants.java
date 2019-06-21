@@ -11,7 +11,7 @@ public class Constants {
 
     // Blocks
     public static class Blocks {
-        public static final String ITEM_GROUP_BLOCKS = "block";
+        public static final String ITEM_GROUP_BLOCKS = "blocks";
         public static final String ITEM_GROUP_MACHINES = "machines";
 
         // Natural

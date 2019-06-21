@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
@@ -31,7 +32,7 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Random;
 
-public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntityProvider, MachineBlock {
+public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock implements Rotatable, MachineBlock {
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public OxygenCollectorBlock(Settings settings) {
@@ -80,6 +81,26 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(FACING);
+    }
+
+    @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return true;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return false;
     }
 
     @Override

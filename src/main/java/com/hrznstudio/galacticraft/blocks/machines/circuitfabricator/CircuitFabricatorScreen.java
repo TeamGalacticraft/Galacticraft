@@ -74,6 +74,7 @@ public class CircuitFabricatorScreen extends MachineContainerScreen {
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight + 26);
         this.drawEnergyBufferBar();
+
         this.drawProgressBar();
         this.drawConfigTabs();
     }
