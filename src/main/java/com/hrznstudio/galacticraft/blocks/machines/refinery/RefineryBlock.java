@@ -119,14 +119,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements R
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof ConfigurableElectricMachineBlockEntity)) {
-            Galacticraft.logger.error("Not a fab. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_INPUT;
-        }
-        return WireConnectionType.NONE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

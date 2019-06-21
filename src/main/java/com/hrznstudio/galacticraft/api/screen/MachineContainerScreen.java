@@ -284,7 +284,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 return true;
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left  && mouseY >= this.top + 49 + 3 && mouseY <= this.top + 68 && button == 0) {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 && mouseY <= this.top + 68 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.TOP_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.TOP_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("top_config," + this.world.getBlockState(pos).get(SideOption.TOP_SIDE_OPTION).name())));
@@ -294,7 +294,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 }
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.RIGHT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.RIGHT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("right_config," + this.world.getBlockState(pos).get(SideOption.RIGHT_SIDE_OPTION).name())));
@@ -304,7 +304,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 }
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.FRONT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.FRONT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("front_config," + this.world.getBlockState(pos).get(SideOption.FRONT_SIDE_OPTION).name())));
@@ -314,7 +314,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 }
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.LEFT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.LEFT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("left_config," + this.world.getBlockState(pos).get(SideOption.LEFT_SIDE_OPTION).name())));
@@ -324,7 +324,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 }
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.left  && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.BACK_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.BACK_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("back_config," + this.world.getBlockState(pos).get(SideOption.BACK_SIDE_OPTION).name())));
@@ -334,7 +334,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 }
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left  && mouseY >= this.top + 49 + 3 + 18 + 18 && mouseY <= this.top + 68 + 18 + 18 && button == 0) {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 + 18 + 18 && mouseY <= this.top + 68 + 18 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.BOTTOM_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.BOTTOM_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("bottom_config," + this.world.getBlockState(pos).get(SideOption.BOTTOM_SIDE_OPTION).name())));

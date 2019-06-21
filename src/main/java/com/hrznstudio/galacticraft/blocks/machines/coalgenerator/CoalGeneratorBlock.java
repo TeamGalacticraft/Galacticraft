@@ -140,14 +140,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof CoalGeneratorBlockEntity)) {
-            Galacticraft.logger.error("Not a Coal Generator. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_OUTPUT;
-        }
-        return WireConnectionType.NONE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

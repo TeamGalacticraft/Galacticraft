@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 public class ElectricCompressorBlock extends CompressorBlock implements WireConnectable, MachineBlock {
     public ElectricCompressorBlock(Settings settings) {
@@ -37,13 +38,6 @@ public class ElectricCompressorBlock extends CompressorBlock implements WireConn
 
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
-            Galacticraft.logger.error("Not an electric compressor. rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_INPUT;
-        }
         return WireConnectionType.NONE;
     }
 }

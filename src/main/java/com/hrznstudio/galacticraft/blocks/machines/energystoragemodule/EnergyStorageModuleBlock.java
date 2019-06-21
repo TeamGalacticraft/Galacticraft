@@ -121,22 +121,6 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
 
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
-            Galacticraft.logger.error("Not a Energy Storage Module. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }/*
-        Direction d = world.getBlockState(connectionTargetPos).get(FACING);
-        System.out.println(opposite);
-        if (d == Direction.NORTH) {
-            return opposite == Direction.WEST || opposite == Direction.EAST;
-        } else if (d == Direction.SOUTH) {
-            return opposite == Direction.WEST || opposite == Direction.EAST;
-        } else if (d == Direction.EAST) {
-            return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else if (d == Direction.WEST) {
-            return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else {*/
-        return WireConnectionType.NONE;
-        //}
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

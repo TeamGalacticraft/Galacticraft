@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.api.configurable;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
