@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

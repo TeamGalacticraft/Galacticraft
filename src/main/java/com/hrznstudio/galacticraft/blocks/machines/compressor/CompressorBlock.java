@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
-import com.hrznstudio.galacticraft.api.blocks.AbstractHorizontalDirectionalBlock;
+import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;

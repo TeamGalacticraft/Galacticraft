@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.blocks.GalacticraftStairsBlock;
+import com.hrznstudio.galacticraft.api.block.GalacticraftStairsBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.CheeseBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.LightingPanelBlock;

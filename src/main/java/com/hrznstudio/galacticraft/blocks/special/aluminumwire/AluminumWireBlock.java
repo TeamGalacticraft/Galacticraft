@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
-import com.hrznstudio.galacticraft.api.blocks.WireBlock;
+import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;

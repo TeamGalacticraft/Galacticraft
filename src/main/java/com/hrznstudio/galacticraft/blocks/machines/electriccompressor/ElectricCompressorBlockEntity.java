@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -13,7 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
     static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(MachineBlockEntity.DEFAULT_MAX_ENERGY, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(ConfigurableElectricMachineBlockEntity.DEFAULT_MAX_ENERGY, GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     public ElectricCompressorBlockEntity() {
         super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);

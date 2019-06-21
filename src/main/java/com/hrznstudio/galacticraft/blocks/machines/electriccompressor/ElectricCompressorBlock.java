@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;

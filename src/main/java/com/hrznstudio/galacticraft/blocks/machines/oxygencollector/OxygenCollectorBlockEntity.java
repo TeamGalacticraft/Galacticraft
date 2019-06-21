@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.Simulation;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
@@ -15,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
-public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable, BlockEntityClientSerializable {
+public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, BlockEntityClientSerializable {
     public static int BATTERY_SLOT = 0;
     public CollectorStatus status = CollectorStatus.INACTIVE;
     public int lastCollectAmount = 0;

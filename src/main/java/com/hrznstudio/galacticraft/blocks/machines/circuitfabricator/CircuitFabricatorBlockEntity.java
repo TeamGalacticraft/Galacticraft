@@ -3,8 +3,8 @@ package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.api.configurable.SideOptions;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -27,18 +27,18 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     private final int maxProgress = 300;
     public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
-    public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_INPUT};
-    public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    public SideOption[] sideOptions = {SideOption.BLANK, SideOption.POWER_INPUT};
+    public Map<Direction, SideOption> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
     private int progress;
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        selectedOptions.put(Direction.SOUTH, SideOptions.POWER_INPUT);
+        selectedOptions.put(Direction.SOUTH, SideOption.POWER_INPUT);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
         int prev = getEnergy().getCurrentEnergy();
 
         for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOptions.POWER_INPUT)) {
+            if (selectedOptions.get(direction).equals(SideOption.POWER_INPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));

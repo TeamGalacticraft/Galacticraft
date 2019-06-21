@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
@@ -99,7 +99,7 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
 
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof MachineBlockEntity)) {
+        if (!(world.getBlockEntity(connectionTargetPos) instanceof ConfigurableElectricMachineBlockEntity)) {
             Galacticraft.logger.error("Not a fab. Rejecting connection.");
             return WireConnectionType.NONE;
         }

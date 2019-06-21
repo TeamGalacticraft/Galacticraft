@@ -29,7 +29,7 @@ public abstract class JsonCapeMixin {
 
     @Inject(at = @At("RETURN"), method = "loadTextures")
     private void loadTextures(CallbackInfo callbackInfo) {
-        if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
+        /*if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
             for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
                 if (entity instanceof PlayerEntity) {
                     if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(entity.getUuid())) {
@@ -38,7 +38,7 @@ public abstract class JsonCapeMixin {
                     }
                 }
             }
-        }
+        }*/
 
     }
 }

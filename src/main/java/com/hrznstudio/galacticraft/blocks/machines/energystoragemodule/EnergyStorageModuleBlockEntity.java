@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
@@ -11,7 +11,7 @@ import net.minecraft.util.Tickable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static int MAX_ENERGY = 60000;
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;

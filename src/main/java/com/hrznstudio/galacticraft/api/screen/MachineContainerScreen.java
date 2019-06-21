@@ -2,8 +2,9 @@ package com.hrznstudio.galacticraft.api.screen;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.configurable.SideOptions;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
@@ -31,105 +32,89 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-
-    private final BlockPos pos;
-    private final World world;
-
     private static final int BUTTON_OFF_X = 0;
     private static final int BUTTON_OFF_Y = 240;
     private static final int BUTTON_ON_X = 0;
     private static final int BUTTON_ON_Y = 224;
     private static final int BUTTONS_WIDTH = 16;
     private static final int BUTTONS_HEIGHT = 16;
-
     private static final int REDSTONE_TORCH_OFF_X = 224;
     private static final int REDSTONE_TORCH_OFF_Y = 62;
-
     private static final int LOCK_OWNER_X = 208;
     private static final int LOCK_OWNER_Y = 48;
     private static final int LOCK_PARTY_X = 224;
     private static final int LOCK_PARTY_Y = 48;
     private static final int LOCK_PUBLIC_X = 208;
     private static final int LOCK_PUBLIC_Y = 64;
-
     private static final int ICONS_WIDTH = 16;
     private static final int ICONS_HEIGHT = 16;
-
     private static final int REDSTONE_TAB_X = 0;
     private static final int REDSTONE_TAB_Y = 46;
     private static final int REDSTONE_TAB_WIDTH = 22;
     private static final int REDSTONE_TAB_HEIGHT = 22;
-
     private static final int REDSTONE_PANEL_X = 0;
     private static final int REDSTONE_PANEL_Y = 0;
     private static final int REDSTONE_PANEL_WIDTH = 99;
     private static final int REDSTONE_PANEL_HEIGHT = 91;
-
-    private boolean IS_REDSTONE_OPEN = false;
-
-    private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
-
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-
     private static final int CONFIG_PANEL_X = 0;
     private static final int CONFIG_PANEL_Y = 93;
     private static final int CONFIG_PANEL_WIDTH = 99;
     private static final int CONFIG_PANEL_HEIGHT = 91;
-
-    private boolean IS_CONFIG_OPEN = false;
-
     private static final int SECURITY_TAB_X = 23;
     private static final int SECURITY_TAB_Y = 23;
     private static final int SECURITY_TAB_WIDTH = 22;
     private static final int SECURITY_TAB_HEIGHT = 22;
-
     private static final int SECURITY_PANEL_X = 101;
     private static final int SECURITY_PANEL_Y = 0;
     private static final int SECURITY_PANEL_WIDTH = 99;
     private static final int SECURITY_PANEL_HEIGHT = 91;
-
+    private final BlockPos pos;
+    private final World world;
+    private boolean IS_REDSTONE_OPEN = false;
+    private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
+    private boolean IS_CONFIG_OPEN = false;
     private boolean IS_SECURITY_OPEN = false;
 
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
 
-    private SideOptions[] config = {SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK, SideOptions.BLANK}; //N,S,E,W,U,D
+    private SideOption[] sideOptions = null;
 
     public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TranslatableComponent textComponent) {
         super(container, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
 
-        if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-            if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("NOT_SET")) {
-                ((MachineBlockEntity) world.getBlockEntity(pos)).owner = "";
+        if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+            if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("NOT_SET")) {
+                ((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).owner = "";
             }
-            if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty && ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
+            if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty && ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
                 Galacticraft.logger.fatal("The selected security option is both 'party' and 'public'!");
                 Galacticraft.logger.fatal("The option has been automatically reset to public");
-                ((MachineBlockEntity) world.getBlockEntity(pos)).isParty = false;
+                ((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).isParty = false;
             }
-            if (((MachineBlockEntity) world.getBlockEntity(pos)).isParty) {
+            if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).isParty) {
                 selectedSecurityOption = 1;
-            } else if (((MachineBlockEntity) world.getBlockEntity(pos)).isPublic) {
+            } else if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).isPublic) {
                 selectedSecurityOption = 2;
-            } else if (!((MachineBlockEntity) world.getBlockEntity(pos)).owner.equals("") || !((MachineBlockEntity) world.getBlockEntity(pos)).owner.isEmpty()) {
+            } else if (!((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).owner.equals("") || !((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).owner.isEmpty()) {
                 selectedSecurityOption = 0;
             } else {
-                (((MachineBlockEntity) world.getBlockEntity(pos)).isPublic) = true;
+                (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(pos)).isPublic) = true;
             }
 
-            this.selectedRedstoneOption = ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption;
+            this.selectedRedstoneOption = ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption;
 
-            this.config = ((MachineBlockEntity) world.getBlockEntity(pos)).config;
+            this.sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
         }
     }
 
     public void drawConfigTabs() {
         if (IS_REDSTONE_OPEN) {
-
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - REDSTONE_PANEL_WIDTH, this.top + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 7);
@@ -151,7 +136,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                     this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                     break;
                 default:
-                    Galacticraft.logger.fatal("The selected redstone config option is not valid!");
+                    Galacticraft.logger.fatal("The selected redstone sideOptions option is not valid!");
                     Galacticraft.logger.fatal("The option has been automatically reset to 'ignore redstone'");
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("DISABLED")));
                     selectedRedstoneOption = "DISABLED";
@@ -170,6 +155,9 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         if (IS_CONFIG_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - CONFIG_PANEL_WIDTH, this.top + 26, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 49, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 43, this.top + 49, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left - REDSTONE_PANEL_WIDTH + 65, this.top + 49, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 29);
             this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 33, ChatFormat.GRAY.getColor());
         } else {
@@ -200,10 +188,10 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             } else if (selectedSecurityOption == 2) {
                 this.blit(this.left + 174 + 65, this.top + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             } else {
-                Galacticraft.logger.fatal("The selected security config option is not valid!");
-                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
-                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
+                Galacticraft.logger.fatal("The selected security sideOptions option is not valid!");
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+                    ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
+                    ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public")));
                     selectedSecurityOption = 2;
                     Galacticraft.logger.fatal("The option has been reset to Public");
@@ -236,26 +224,26 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             }
 
             if (mouseX >= (this.left - 78) && mouseX <= (this.left - 78) + 19 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                if (this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+                if (this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                     this.selectedRedstoneOption = "DISABLED";
-                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "DISABLED";
+                    ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "DISABLED";
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("DISABLED")));
                     this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;
                 }
             }
-            if (mouseX >= (this.left - 78)+ 22 && mouseX <= (this.left - 78) + 41 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                if (this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
+            if (mouseX >= (this.left - 78) + 22 && mouseX <= (this.left - 78) + 41 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
+                if (this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                     this.selectedRedstoneOption = "OFF"; //r=o
-                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "OFF";
+                    ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "OFF";
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("OFF")));
                     this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;
                 }
             }
             if (mouseX >= (this.left - 78) + 44 && mouseX <= (this.left - 78) + 63 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                if (this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-                    ((MachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "ON";
+                if (this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+                    ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).redstoneOption = "ON";
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("ON")));
                     this.selectedRedstoneOption = "ON";
                     this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -303,14 +291,14 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
             this.blit(this.left + 174 + 21, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
 
-            //273 = r->s
+            //273 = r -> s
 
             if (mouseX >= (this.left - 78) + 273 && mouseX <= (this.left - 78) + 19 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-                    if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString()) || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) {
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+                    if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString()) || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) {
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString())));
                         this.selectedSecurityOption = 0;
                         this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -320,11 +308,11 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             }
             if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
 
-                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-                    if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(playerInventory.player.getUuidAsString()) || (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(""))) {
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner = playerInventory.player.getUuidAsString();
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = true;
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+                    if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(playerInventory.player.getUuidAsString()) || (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(""))) {
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = playerInventory.player.getUuidAsString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = true;
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Party")));
                         this.selectedSecurityOption = 1;
                         this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -333,11 +321,11 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 }
             }
             if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41 && button == 0) {
-                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-                    if (((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("") || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
-                        ((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
+                if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+                    if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("") || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public")));
                         this.selectedSecurityOption = 2;
                         this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
@@ -351,14 +339,14 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     @Override
     public void render(int int_1, int int_2, float float_1) {
-        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
-                if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
-                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("Team stuff pending").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+            if (!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
+                if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("Team stuff pending...").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
                     //TODO space race stuffs
                     return;
                 }
-                if ((!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
+                if ((!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
                     DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
                     return;
                 }
@@ -387,7 +375,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         if (!IS_CONFIG_OPEN) {
             if (IS_REDSTONE_OPEN) {
                 if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 96 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 96)) {
-
+                    //TODO this is just a marker - TODO remove this?
                 }
             } else {
                 if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 26 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 26)) {
@@ -404,7 +392,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
                 this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.private").getText(), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race").getText(),22), mouseX, mouseY);
+                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race").getText(), 22), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
                 this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.public").getText(), mouseX, mouseY);
@@ -414,14 +402,14 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1) {
-        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof MachineBlockEntity) {
-            if (!((MachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
-                if (((MachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
+        if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
+            if (!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
+                if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
                     //TODO space race stuffs
                     return false;
                 }
 
-                if ((!((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((MachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
+                if ((!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
                     return false;
                 }
             }

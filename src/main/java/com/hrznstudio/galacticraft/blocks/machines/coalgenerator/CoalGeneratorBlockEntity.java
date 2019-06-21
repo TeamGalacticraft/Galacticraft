@@ -5,8 +5,8 @@ import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.hrznstudio.galacticraft.api.configurable.SideOptions;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -25,21 +25,21 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private final List<Runnable> listeners = Lists.newArrayList();
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     public int fuelTimeMax;
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
-    public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
-    public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    public SideOption[] sideOptions = {SideOption.BLANK, SideOption.POWER_OUTPUT};
+    public Map<Direction, SideOption> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
     private float heat = 0.0f;
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);
+        selectedOptions.put(Direction.SOUTH, SideOption.POWER_OUTPUT);
         energy.listen(this::markDirty);
     }
 
@@ -99,7 +99,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
         }
 
         for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
+            if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));

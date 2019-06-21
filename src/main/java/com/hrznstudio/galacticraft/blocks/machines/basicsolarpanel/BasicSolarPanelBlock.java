@@ -3,7 +3,8 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlock extends BlockWithEntity implements AttributeProvider, Rotatable, MultiBlock, WireConnectable, MachineBlock {
+public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, MultiBlock, WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
@@ -68,7 +69,7 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return blankConfig(this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()));
     }
 
     @Override

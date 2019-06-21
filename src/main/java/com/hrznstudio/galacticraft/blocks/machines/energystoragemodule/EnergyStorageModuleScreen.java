@@ -2,8 +2,8 @@ package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
