@@ -46,6 +46,7 @@ public class JsonCapes implements CapeListener {
         VENUS("venus"),
         EARTH("earth"),
         MARS("mars"),
+        MOON("moon"),
         JUPITER("jupiter"),
         SATURN("saturn"),
         URANUS("uranus"),
@@ -69,6 +70,10 @@ public class JsonCapes implements CapeListener {
 
         public Identifier getTexture() {
             return new Identifier(Constants.MOD_ID, "textures/cape/cape_" + this.key + ".png");
+        }
+
+        public static Cape valueOfIgnoreCase(String key) {
+            return valueOf(key.toUpperCase());
         }
     }
 }

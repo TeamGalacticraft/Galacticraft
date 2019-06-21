@@ -3,7 +3,10 @@
 
 Galacticraft: Rewoven is a port of the popular space mod Galacticraft made for the [Fabric modloader](https://fabricmc.net/2018/12/10/announcement.html).
 
-## Setting up a modding environment
+## Addon Development
+If you are a mod developer and want to create an addon for Galacticraft: Rewoven we have documentation available [here](https://stellarhorizons.github.io/Galacticraft-Rewoven/). 
+
+## Contributing
 Depending on what IDE you use to write Java in, there will be different ways to setup your environment.
 If you are running Windows you need to remove the `./` that is in front of the command.
 

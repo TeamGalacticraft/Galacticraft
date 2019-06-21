@@ -27,14 +27,18 @@ public abstract class JsonCapeMixin {
     @Final
     private Map<MinecraftProfileTexture.Type, Identifier> textures;
 
-    @Inject(at = @At("RETURN"), method = "loadTextures")
+    @Inject(at = @At("TAIL"), method = "loadTextures")
     private void loadTextures(CallbackInfo callbackInfo) {
         /*if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
             for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
                 if (entity instanceof PlayerEntity) {
-                    if (GalacticraftClient.jsonCapes.getCapePlayers().containsKey(entity.getUuid())) {
-                        JsonCapes.Cape cape = GalacticraftClient.jsonCapes.getCapePlayers().get(entity.getUuid()).getCape();
-                        textures.put(MinecraftProfileTexture.Type.CAPE, cape.getTexture());
+                    if (GalacticraftClient.jsonCapes.getCapePlayers().get(entity.getUuid()) != null) {
+                        if(this.textures != null) {
+                            JsonCapes.Cape cape = GalacticraftClient.jsonCapes.getCapePlayers().get(entity.getUuid()).getCape();
+                            if(GalacticraftClient.jsonCapes.getCapePlayers().get(entity.getUuid()) != null) {
+                                textures.put(MinecraftProfileTexture.Type.CAPE, cape.getTexture());
+                            }
+                        }
                     }
                 }
             }
