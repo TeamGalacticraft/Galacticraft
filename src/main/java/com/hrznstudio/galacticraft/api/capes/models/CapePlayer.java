@@ -12,13 +12,7 @@ public class CapePlayer {
 
     private UUID uuid;
     private String name;
-    private JsonCapes.Cape cape;
-
-    public CapePlayer(String uuid, String name, String cape) {
-        this.uuid = UUID.fromString(uuid);
-        this.name = name;
-        this.cape = JsonCapes.Cape.valueOf(cape);
-    }
+    private String cape;
 
     public UUID getUuid() {
         return uuid;
@@ -29,6 +23,8 @@ public class CapePlayer {
     }
 
     public JsonCapes.Cape getCape() {
-        return cape;
+        JsonCapes.Cape cape = JsonCapes.Cape.valueOfIgnoreCase(this.cape);
+        if(cape == null) return JsonCapes.Cape.EARTH;
+        else return cape;
     }
 }
