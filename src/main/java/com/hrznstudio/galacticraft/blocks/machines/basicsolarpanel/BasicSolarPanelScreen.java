@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelScreen extends AbstractContainerScreen {
+public class BasicSolarPanelScreen extends MachineContainerScreen {
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
@@ -43,7 +44,7 @@ public class BasicSolarPanelScreen extends AbstractContainerScreen {
     private World world;
 
     public BasicSolarPanelScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new BasicSolarPanelContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.basic_solar_panel.name"));
+        super(new BasicSolarPanelContainer(syncId, blockPos, playerEntity), playerEntity.inventory, playerEntity.world, blockPos, new TranslatableComponent("ui.galacticraft-rewoven.basic_solar_panel.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
     }
@@ -71,11 +72,6 @@ public class BasicSolarPanelScreen extends AbstractContainerScreen {
         super.render(mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.basic_solar_panel").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
-    }
-
-    private void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {

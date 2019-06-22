@@ -490,15 +490,15 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     private int getXForOption(SideOption option) {
         switch (option) {
             case BLANK:
-                return 224; //32
+                return 224; //240
             case POWER_INPUT:
-                return 224; //0
+                return 206; //0
             case POWER_OUTPUT:
-                return 224; //16
+                return 206; //17
             case OXYGEN_INPUT:
-                return 240; //32
+                return 240; //0
             case OXYGEN_OUTPUT:
-                return 240; //16
+                return 240; //17
             default:
                 return 0;
         }
@@ -507,15 +507,15 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     private int getYForOption(SideOption option) {
         switch (option) {
             case BLANK:
-                return 32; //224
+                return 240; //224
             case POWER_INPUT:
-                return 0; //224
+                return 0; //206
             case POWER_OUTPUT:
-                return 16; //224
+                return 17; //206
             case OXYGEN_INPUT:
-                return 32; //240
+                return 0; //240
             case OXYGEN_OUTPUT:
-                return 16; //240
+                return 17; //240
             default:
                 return 0;
         }

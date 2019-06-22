@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorScreen extends AbstractContainerScreen {
+public class OxygenCollectorScreen extends MachineContainerScreen {
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
@@ -47,7 +48,7 @@ public class OxygenCollectorScreen extends AbstractContainerScreen {
     private World world;
 
     public OxygenCollectorScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new OxygenCollectorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.oxygen_collector.name"));
+        super(new OxygenCollectorContainer(syncId, blockPos, playerEntity), playerEntity.inventory, playerEntity.world, blockPos, new TranslatableComponent("ui.galacticraft-rewoven.oxygen_collector.name"));
         this.blockPos = blockPos;
         this.world = playerEntity.world;
         this.containerHeight = 181;
@@ -97,11 +98,6 @@ public class OxygenCollectorScreen extends AbstractContainerScreen {
 
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("ui.galacticraft-rewoven.machine.collecting", collector.lastCollectAmount).getText(), (this.width / 2) + 10, statusY + 12, ChatFormat.DARK_GRAY.getColor());
         this.drawMouseoverTooltip(mouseX, mouseY);
-    }
-
-    private void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {

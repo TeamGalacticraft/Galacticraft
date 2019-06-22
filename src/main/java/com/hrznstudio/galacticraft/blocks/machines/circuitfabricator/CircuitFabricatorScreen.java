@@ -22,7 +22,6 @@ import java.util.List;
 public class CircuitFabricatorScreen extends MachineContainerScreen {
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
@@ -38,10 +37,7 @@ public class CircuitFabricatorScreen extends MachineContainerScreen {
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 50;
     private static final int PROGRESS_HEIGHT = 10;
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
+
     BlockPos blockPos;
     private int energyDisplayX;
     private int energyDisplayY;
