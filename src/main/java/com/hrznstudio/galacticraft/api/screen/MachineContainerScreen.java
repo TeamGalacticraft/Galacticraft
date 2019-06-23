@@ -1,19 +1,28 @@
 package com.hrznstudio.galacticraft.api.screen;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer.MachineContainerConstructor;
+
+import net.fabricmc.fabric.api.container.ContainerFactory;
+
 import net.minecraft.ChatFormat;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineContainerScreen extends AbstractContainerScreen {
+public abstract class MachineContainerScreen<C extends MachineContainer<?>> extends AbstractContainerScreen<C> {
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
@@ -30,8 +39,22 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     public static boolean IS_CONFIG_OPEN = false;
 
-    public MachineContainerScreen(Container container, PlayerInventory playerInventory, TextComponent textComponent) {
+    public MachineContainerScreen(C container, PlayerInventory playerInventory, BaseComponent textComponent) {
         super(container, playerInventory, textComponent);
+    }
+
+    public static <T extends MachineBlockEntity> ContainerFactory<AbstractContainerScreen> createFactory(
+        Class<T> machineClass, MachineContainerConstructor<? extends MachineContainerScreen<?>, T> constructor) 
+    {
+        return (syncId, id, player, buffer) -> {
+            BlockPos pos = buffer.readBlockPos();
+            BlockEntity be = player.world.getBlockEntity(pos);
+            if (machineClass.isInstance(be)) {
+                return constructor.create(syncId, player, machineClass.cast(be));
+            } else {
+                return null;
+            }
+        };
     }
 
     public void drawConfigTabs() {

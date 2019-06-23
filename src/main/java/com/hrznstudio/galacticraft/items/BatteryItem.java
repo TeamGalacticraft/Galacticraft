@@ -30,6 +30,11 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     }
 
     @Override
+    public int getMaxEnergy(ItemStack battery) {
+        return MAX_ENERGY;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
         int charge = stack.getOrCreateTag().getInt("Energy");

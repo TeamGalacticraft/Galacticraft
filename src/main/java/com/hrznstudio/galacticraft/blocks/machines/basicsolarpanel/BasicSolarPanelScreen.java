@@ -1,16 +1,19 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
+
+import net.fabricmc.fabric.api.container.ContainerFactory;
+
 import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -19,7 +22,9 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelScreen extends AbstractContainerScreen {
+public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPanelContainer> {
+
+    public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelScreen::new);
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
     private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
@@ -37,14 +42,12 @@ public class BasicSolarPanelScreen extends AbstractContainerScreen {
     private static final int CONFIG_TAB_Y = 69;
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
-    BlockPos blockPos;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
     private World world;
 
-    public BasicSolarPanelScreen(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(new BasicSolarPanelContainer(syncId, blockPos, playerEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.basic_solar_panel.name"));
-        this.blockPos = blockPos;
+    public BasicSolarPanelScreen(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
+        super(new BasicSolarPanelContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.basic_solar_panel.name"));
         this.world = playerEntity.world;
     }
 
@@ -73,14 +76,14 @@ public class BasicSolarPanelScreen extends AbstractContainerScreen {
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
-    private void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-    }
+//    public void drawConfigTabs() {
+//        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
+//        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+//    }
 
     private void drawEnergyBufferBar() {
-        float currentEnergy = (float) ((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
-        float maxEnergy = (float) ((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
+        float currentEnergy = container.energy.get();
+        float maxEnergy = container.getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
         //this.drawTexturedReact(...)
@@ -94,16 +97,16 @@ public class BasicSolarPanelScreen extends AbstractContainerScreen {
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", ((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
-            if (((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).status == BasicSolarPanelStatus.COLLECTING) {
+            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", container.blockEntity.status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
+            if (container.blockEntity.status == BasicSolarPanelStatus.COLLECTING) {
                 if (world.getTimeOfDay() > 6000) {
                     toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((6000D - ((double) world.getTimeOfDay() - 6000D)) / 133.3333333333D)).setStyle(new Style().setColor(ChatFormat.LIGHT_PURPLE)).getFormattedText());
                 } else {
                     toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((double) world.getTimeOfDay()) / 133.3333333333D)).setStyle(new Style().setColor(ChatFormat.LIGHT_PURPLE)).getFormattedText());
                 }
             }
-            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((BasicSolarPanelBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).getFormattedText() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

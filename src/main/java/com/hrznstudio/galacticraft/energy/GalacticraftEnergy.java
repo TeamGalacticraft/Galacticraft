@@ -9,6 +9,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import alexiil.mc.lib.attributes.item.filter.ItemClassFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 
@@ -20,6 +24,8 @@ public class GalacticraftEnergy {
 
     public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType();
     public static final EnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
+
+    public static final ItemFilter ENERGY_HOLDER_ITEM_FILTER = new ItemClassFilter(EnergyHolderItem.class);
 
     public static void register() {
         Registry.register(CottonEnergy.ENERGY_REGISTRY, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
@@ -43,7 +49,7 @@ public class GalacticraftEnergy {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        return battery.getTag().getInt("MaxEnergy");
+        return ((EnergyHolderItem) battery.getItem()).getMaxEnergy(battery);
     }
 
     public static void incrementEnergy(ItemStack stack, int energyToAdd) {

@@ -85,7 +85,7 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
         if (!(be instanceof CoalGeneratorBlockEntity)) return;
         CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) be;
         to.offer(generator.getEnergy());
-        generator.getInventory().offerSelfAsAttribute(to, null, null);
+        generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override

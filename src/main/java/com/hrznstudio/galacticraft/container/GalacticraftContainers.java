@@ -29,9 +29,9 @@ public class GalacticraftContainers {
     public static void register() {
         ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player));
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, (syncId, id, player, buf) -> new CoalGeneratorContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, (syncId, id, player, buf) -> new CircuitFabricatorContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, (syncId, id, player, buf) -> new BasicSolarPanelContainer(syncId, buf.readBlockPos(), player));
+        ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, CoalGeneratorContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, (syncId, id, player, buf) -> new CompressorContainer(syncId, buf.readBlockPos(), player));
         ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, (syncId, id, player, buf) -> new ElectricCompressorContainer(syncId, buf.readBlockPos(), player));
         ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, (syncId, id, player, buf) -> new EnergyStorageModuleContainer(syncId, buf.readBlockPos(), player));

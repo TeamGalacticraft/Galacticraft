@@ -92,7 +92,7 @@ public class BasicSolarPanelBlock extends BlockWithEntity implements AttributePr
         BasicSolarPanelBlockEntity generator = (BasicSolarPanelBlockEntity) be;
         to.offer(generator.getEnergy());
         to.offer(generator);
-//        generator.getItems().offerSelfAsAttribute(to, null, null);
+        generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override

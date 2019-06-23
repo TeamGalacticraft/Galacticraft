@@ -1,8 +1,15 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
+import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlockEntity;
+import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+
+import net.fabricmc.fabric.api.container.ContainerFactory;
+
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
@@ -14,30 +21,17 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelContainer extends Container {
+public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBlockEntity> {
+
+    public static final ContainerFactory<Container> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelContainer::new);
+
     private final Inventory inventory;
-    private BlockPos blockPos;
     private BasicSolarPanelBlockEntity solarPanel;
-    private PlayerEntity playerEntity;
 
-    public BasicSolarPanelContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(null, syncId);
-        this.blockPos = blockPos;
-        this.playerEntity = playerEntity;
-
-        BlockEntity blockEntity = playerEntity.world.getBlockEntity(blockPos);
-
-        if (!(blockEntity instanceof BasicSolarPanelBlockEntity)) {
-            // TODO: Move this logic somewhere else to just not open this at all.
-            throw new IllegalStateException("Found " + blockEntity + " instead of a solar panel!");
-        }
-        this.solarPanel = (BasicSolarPanelBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(solarPanel.getInventory()) {
-            @Override
-            public void markDirty() {
-                solarPanel.markDirty();
-            }
-
+    public BasicSolarPanelContainer(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
+        super(syncId, playerEntity, blockEntity);
+        this.solarPanel = blockEntity;
+        this.inventory = new InventoryFixedWrapper(solarPanel.getInventory()) {
             @Override
             public boolean canPlayerUseInv(PlayerEntity player) {
                 return BasicSolarPanelContainer.this.canUse(player);
@@ -91,5 +85,4 @@ public class BasicSolarPanelContainer extends Container {
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
     }
-
 }

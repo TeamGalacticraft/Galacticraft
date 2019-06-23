@@ -35,4 +35,9 @@ public enum CoalGeneratorStatus {
     public String toString() {
         return name;
     }
+
+    public static CoalGeneratorStatus get(int index) {
+        if (index < 0) return ACTIVE;
+        return values()[index % values().length];
+    }
 }

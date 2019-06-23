@@ -4,6 +4,10 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.item.ItemStack;
 
 public interface EnergyHolderItem {
+
+    /** @return The maximum energy that the given {@link ItemStack} can store. */
+    int getMaxEnergy(ItemStack battery);
+
     /**
      * If this is overridden to return true, energy will always be extracted and inserting of energy will be denied.
      *
