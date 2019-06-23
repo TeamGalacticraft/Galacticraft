@@ -1,0 +1,31 @@
+{
+  "name": "coal_generator",
+  "mod-id": "galacticraft-rewoven",
+  "sides": {
+    "north": {
+      "texture": "block/coal_generator"
+    },
+    "south": {
+      "texture": "block/machine_side"
+    },
+    "east": {
+      "texture": "block/machine_side"
+    },
+    "west": {
+      "texture": "block/machine_side"
+    },
+    "up": {
+      "texture": "block/machine"
+    },
+    "down": {
+        "texture": "block/machine"
+    }
+},
+  "options": [
+    {
+      "option": "powerout",
+      "texture": "block/machine_power_output"
+    }
+  ],
+  "particle": "block/machine"
+}
