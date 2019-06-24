@@ -9,13 +9,12 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
-import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -52,7 +51,7 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
     private World world;
 
     public OxygenCollectorScreen(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
-        super(new OxygenCollectorContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.oxygen_collector.name"));
+        super(new OxygenCollectorContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.oxygen_collector.name"));
         this.world = playerEntity.world;
         this.containerHeight = 181;
     }
@@ -80,25 +79,25 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.oxygen_collector").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_collector").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
 //        DrawableUtils.drawCenteredString(this.minecraft.textRenderer,
 //                new TranslatableComponent("ui.galacticraft-rewoven.machine.status",
 //                        new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.active").applyFormat(ChatFormat.GREEN)
 //                ).getText(), this.left + 90, this.top + 28, ChatFormat.DARK_GRAY.getTextColor());
-        String statusText = new TranslatableComponent("ui.galacticraft-rewoven.machine.status").getText();
+        String statusText = new TranslatableText("ui.galacticraft-rewoven.machine.status").asFormattedString();
 
 
         int statusX = this.left + 38;
         int statusY = this.top + 64;
 
-        minecraft.textRenderer.draw(statusText, statusX, statusY, ChatFormat.DARK_GRAY.getColor());
+        minecraft.textRenderer.draw(statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
         String status = container.blockEntity.status == CollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
                 : container.blockEntity.status == CollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
                 : "ui.galacticraft-rewoven.machinestatus.inactive";
-        minecraft.textRenderer.draw(new TranslatableComponent(status).getText(), statusX + minecraft.textRenderer.getStringWidth(statusText), statusY, container.blockEntity.status.getTextColor());
+        minecraft.textRenderer.draw(new TranslatableText(status).asFormattedString(), statusX + minecraft.textRenderer.getStringWidth(statusText), statusY, container.blockEntity.status.getTextColor());
 
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("ui.galacticraft-rewoven.machine.collecting", container.lastCollectAmount.get()).getText(), (this.width / 2) + 10, statusY + 12, ChatFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", container.lastCollectAmount.get()).asFormattedString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
@@ -133,21 +132,21 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + OVERLAY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + OVERLAY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
 //            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
-            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
 //            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
-            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(container.oxygen.get()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(OxygenCollectorBlockEntity.MAX_OXYGEN)).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(container.oxygen.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(OxygenCollectorBlockEntity.MAX_OXYGEN)).asFormattedString() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 21 && mouseY <= this.top + (22 + 21)) {
-            this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
+            this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asFormattedString(), mouseX, mouseY);
         }
     }
 }

@@ -7,14 +7,14 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 
 public class ElectricCompressorScreen extends CompressorScreen {
 
     public static final ContainerFactory<AbstractContainerScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
 
     public ElectricCompressorScreen(int syncId, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity) {
-        super(new ElectricCompressorContainer(syncId, playerEntity, blockEntity), playerEntity, new TranslatableComponent("ui.galacticraft-rewoven.electric_compressor.name"));
+        super(new ElectricCompressorContainer(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("ui.galacticraft-rewoven.electric_compressor.name"));
         this.containerHeight = 199;
     }
 
@@ -37,6 +37,6 @@ public class ElectricCompressorScreen extends CompressorScreen {
 
     @Override
     protected String getContainerDisplayName() {
-        return new TranslatableComponent("block.galacticraft-rewoven.electric_compressor").getText();
+        return new TranslatableText("block.galacticraft-rewoven.electric_compressor").asFormattedString();
     }
 }

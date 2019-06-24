@@ -316,4 +316,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_ROCKET_SCHEMATIC), TIER_3_ROCKET_SCHEMATIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ASTRO_MINER_SCHEMATIC), ASTRO_MINER_SCHEMATIC);
     }
+
+    public static boolean isRocketItem(Item item) {
+        return item == GalacticraftItems.ROCKET_SPAWN_EGG;
+    }
 }

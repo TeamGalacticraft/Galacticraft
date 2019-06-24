@@ -9,7 +9,6 @@ import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.ChatFormat;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,12 +17,15 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -39,6 +41,7 @@ import java.util.List;
 public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    private static final EnumProperty SIDES = EnumProperty.of("sides", CoalGeneratorSides.class);
 
     public CoalGeneratorBlock(Settings settings) {
         super(settings);
@@ -62,7 +65,7 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()).with(SIDES, CoalGeneratorSides.DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT);
     }
 
     @Override
@@ -89,11 +92,11 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Component> list_1, TooltipContext tooltipContext_1) {
+    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableComponent("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
     }
 
@@ -128,5 +131,22 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
             return WireConnectionType.ENERGY_OUTPUT;
         }
         return WireConnectionType.NONE;
+    }
+
+    public enum CoalGeneratorSides implements StringIdentifiable {
+        DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT("default"),
+        POWERIN("powerin"),
+        POWEROUT("powerout"),
+        ;
+
+        String name;
+        CoalGeneratorSides(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return name;
+        }
     }
 }

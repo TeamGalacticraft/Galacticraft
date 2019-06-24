@@ -1,9 +1,9 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import net.minecraft.ChatFormat;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,13 +20,13 @@ public abstract class ItemStackMixin {
     @Shadow
     public abstract Item getItem();
 
-    @Inject(method = "getCustomName", at = @At("RETURN"), cancellable = true)
-    private void getCustomName(CallbackInfoReturnable<TextComponent> returnable) {
+    @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
+    private void getName(CallbackInfoReturnable<Text> returnable) {
         Identifier id = Registry.ITEM.getId(getItem());
         if (false && id.getNamespace().equals("galacticraft-rewoven")) {
-            TextComponent returnVal = returnable.getReturnValue();
+            Text returnVal = returnable.getReturnValue();
             if (returnVal.getStyle().getColor() == null) {
-                returnable.setReturnValue((TextComponent) returnVal.setStyle(returnVal.getStyle().setColor(ChatFormat.BLUE)));
+                returnable.setReturnValue(returnVal.setStyle(returnVal.getStyle().setColor(Formatting.BLUE)));
             }
         }
     }

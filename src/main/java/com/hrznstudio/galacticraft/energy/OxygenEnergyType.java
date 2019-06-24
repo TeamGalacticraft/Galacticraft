@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.energy;
 
 import io.github.cottonmc.energy.api.EnergyType;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -13,8 +13,8 @@ public class OxygenEnergyType implements EnergyType {
     }
 
     @Override
-    public TranslatableComponent getDisplayAmount(int amount) {
-        return new TranslatableComponent(String.valueOf(amount)); //If there is nothing matching this key, Minecraft will just display the key
+    public TranslatableText getDisplayAmount(int amount) {
+        return new TranslatableText(String.valueOf(amount)); //If there is nothing matching this key, Minecraft will just display the key
     }
 
     @Override

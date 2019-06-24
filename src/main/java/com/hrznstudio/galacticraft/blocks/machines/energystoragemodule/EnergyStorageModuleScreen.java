@@ -8,14 +8,13 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
-import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +46,7 @@ public class EnergyStorageModuleScreen extends MachineContainerScreen<EnergyStor
     private int energyDisplayY = 0;
 
     public EnergyStorageModuleScreen(int syncId, PlayerEntity playerEntity, EnergyStorageModuleBlockEntity blockEntity) {
-        super(new EnergyStorageModuleContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableComponent("ui.galacticraft-rewoven.energy_storage_module.name"));
+        super(new EnergyStorageModuleContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.energy_storage_module.name"));
 //        this.containerHeight = 166;
     }
 
@@ -72,7 +71,7 @@ public class EnergyStorageModuleScreen extends MachineContainerScreen<EnergyStor
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.energy_storage_module").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.energy_storage_module").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
@@ -96,13 +95,13 @@ public class EnergyStorageModuleScreen extends MachineContainerScreen<EnergyStor
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).getFormattedText() + "\u00A7r");
+            toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + 24) {
-            this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.side_config").getText(), mouseX, mouseY);
+            this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asFormattedString(), mouseX, mouseY);
         }
     }
 }

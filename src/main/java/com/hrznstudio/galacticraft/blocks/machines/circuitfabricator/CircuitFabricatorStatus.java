@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
-import net.minecraft.ChatFormat;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -11,15 +11,15 @@ public enum CircuitFabricatorStatus {
     /**
      * Fabricator is active and is processing.
      */
-    PROCESSING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.processing").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText()),
+    PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
     /**
      * Fabricator is not processing.
      */
-    IDLE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(ChatFormat.GOLD)).getFormattedText()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
      * The fabricator has been switched off.
      */
-    INACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
 
 
     private String name;

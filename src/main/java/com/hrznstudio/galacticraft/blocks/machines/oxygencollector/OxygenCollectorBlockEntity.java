@@ -3,13 +3,12 @@ package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 
-import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
+import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -40,8 +39,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     }
 
     private int collectOxygen(BlockPos center) {
-        if (world.dimension instanceof SpaceDimension) {
-            if (!((SpaceDimension) world.dimension).hasOxygen()) {
+        if (world.dimension instanceof CelestialBody) {
+            if (!((CelestialBody) world.dimension).hasOxygen()) {
                 int minX = center.getX() - 5;
                 int minY = center.getY() - 5;
                 int minZ = center.getZ() - 5;

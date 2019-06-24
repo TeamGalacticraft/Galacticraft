@@ -10,7 +10,7 @@ import net.minecraft.client.render.GuiLighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 /**
@@ -24,7 +24,7 @@ public class PlayerInventoryGCScreen extends AbstractContainerScreen<PlayerInven
 
     public PlayerInventoryGCScreen(PlayerEntity player) {
 //        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableComponent(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player), player.inventory, new TranslatableComponent(Constants.MOD_ID + ".player_inv_screen"));
+        super(new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {

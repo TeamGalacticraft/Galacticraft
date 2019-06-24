@@ -107,6 +107,13 @@ public class ConfigHandler {
                 .addEntry(subCatGravity.build())
         ;
 
+        SubCategoryBuilder debugSubCat = ConfigEntryBuilder.create().startSubCategory(Constants.Config.DEBUG);
+        debugSubCat.add(0, ConfigEntryBuilder.create().startBooleanToggle(Constants.Config.DEBUG_LOGGING, config.debugLogging).setSaveConsumer(aBoolean -> this.config.debugLogging = aBoolean).build());
+
+        builder.getOrCreateCategory(Constants.Config.DEBUG)
+                .addEntry(debugSubCat.build())
+                ;
+
         MinecraftClient.getInstance().openScreen(builder.build());
     }
 }

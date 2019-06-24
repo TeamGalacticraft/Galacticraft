@@ -8,11 +8,11 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
-import net.minecraft.ChatFormat;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
     private int energyDisplayY = 0;
 
     public CoalGeneratorScreen(int syncId, PlayerEntity player, CoalGeneratorBlockEntity blockEntity) {
-        super(new CoalGeneratorContainer(syncId, player, blockEntity), player.inventory, new TranslatableComponent("ui.galacticraft-rewoven.coal_generator.name"));
+        super(new CoalGeneratorContainer(syncId, player, blockEntity), player.inventory, new TranslatableText("ui.galacticraft-rewoven.coal_generator.name"));
         this.containerHeight = 176;
     }
 
@@ -66,7 +66,7 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableComponent("block.galacticraft-rewoven.coal_generator").getText(), (this.width / 2), this.top + 5, ChatFormat.DARK_GRAY.getColor());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.coal_generator").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
@@ -86,9 +86,9 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", container.blockEntity.status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
-            toolTipLines.add("\u00A76" + new TranslatableComponent("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(ChatFormat.BLUE))).getFormattedText() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableComponent("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).getFormattedText() + "\u00A7r");
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", container.blockEntity.status.toString()).setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
+            toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

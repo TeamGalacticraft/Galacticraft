@@ -35,7 +35,6 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         return GalacticraftREIPlugin.COMPRESSING;
     }
 
-    @Override
     public Renderer getIcon() {
         return Renderable.fromItemStack(new ItemStack(GalacticraftBlocks.COMPRESSOR));
     }
