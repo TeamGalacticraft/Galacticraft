@@ -1,12 +1,18 @@
 package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+
+import net.fabricmc.fabric.api.container.ContainerFactory;
+
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.FurnaceOutputSlot;
+import net.minecraft.container.Property;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -18,34 +24,22 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorContainer extends Container {
+public class CircuitFabricatorContainer extends MachineContainer<CircuitFabricatorBlockEntity> {
+
+    public static final ContainerFactory<Container> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorContainer::new);
 
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
     private Inventory inventory;
-    private BlockPos blockPos;
-    private CircuitFabricatorBlockEntity fabricator;
-    private PlayerEntity playerEntity;
 
+    public final Property progress = Property.create();
+    private final Property status = Property.create();
 
-    public CircuitFabricatorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(null, syncId);
-        this.blockPos = blockPos;
-        this.playerEntity = playerEntity;
-
-        BlockEntity blockEntity = playerEntity.world.getBlockEntity(blockPos);
-
-        if (!(blockEntity instanceof CircuitFabricatorBlockEntity)) {
-            // TODO: Move this logic somewhere else to just not open this at all.
-            throw new IllegalStateException("Found " + blockEntity + " instead of a circuit fabricator!");
-        }
-        this.fabricator = (CircuitFabricatorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(fabricator.getInventory()) {
-            @Override
-            public void markDirty() {
-                fabricator.markDirty();
-            }
-
+    public CircuitFabricatorContainer(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
+        super(syncId, playerEntity, blockEntity);
+        addProperty(progress);
+        addProperty(status);
+        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
             @Override
             public boolean canPlayerUseInv(PlayerEntity player) {
                 return CircuitFabricatorContainer.this.canUse(player);
@@ -89,7 +83,7 @@ public class CircuitFabricatorContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.fabricator.getInventory().getSlotCount()) {
+            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
@@ -112,4 +106,17 @@ public class CircuitFabricatorContainer extends Container {
         return true;
     }
 
+    @Override
+    public void sendContentUpdates() {
+        progress.set(blockEntity.getProgress());
+        status.set(blockEntity.status.ordinal());
+        super.sendContentUpdates();
+    }
+
+    @Override
+    public void setProperties(int index, int value) {
+        super.setProperties(index, value);
+        blockEntity.progress = progress.get();
+        blockEntity.status = CircuitFabricatorStatus.values()[status.get()];
+    }
 }

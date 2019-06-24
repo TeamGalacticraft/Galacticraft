@@ -1,6 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+
 import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -15,11 +17,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
-public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable, BlockEntityClientSerializable {
-    public static int BATTERY_SLOT = 0;
+public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable {
+    public static final int MAX_OXYGEN = 5000;
+    public static final int BATTERY_SLOT = 0;
+
     public CollectorStatus status = CollectorStatus.INACTIVE;
     public int lastCollectAmount = 0;
-    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(5000, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
+    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -28,6 +32,11 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     @Override
     protected int getInvSize() {
         return 1;
+    }
+
+    @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
     private int collectOxygen(BlockPos center) {
@@ -68,7 +77,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
     @Override
     public void tick() {
-        attemptChargeFromStack(getInventory().getInvStack(BATTERY_SLOT));
+        if (world.isClient) {
+            return;
+        }
+        attemptChargeFromStack(BATTERY_SLOT);
 
         // Only collect every 20 ticks
         if (world.random.nextInt(10) != 0) {

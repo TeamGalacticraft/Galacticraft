@@ -32,4 +32,12 @@ public enum CircuitFabricatorStatus {
     public String toString() {
         return name;
     }
+
+    public static CircuitFabricatorStatus get(int index) {
+        switch (index) {
+            case 0: return PROCESSING;
+            case 1: return IDLE;
+            default: return INACTIVE;
+        }
+    }
 }

@@ -1,12 +1,18 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
+
+import net.fabricmc.fabric.api.container.ContainerFactory;
+
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.FurnaceOutputSlot;
+import net.minecraft.container.Property;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -17,37 +23,29 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorContainer extends Container {
+public class CompressorContainer extends MachineContainer<CompressorBlockEntity> {
+
+    public static final ContainerFactory<Container> FACTORY = createFactory(CompressorBlockEntity.class, CompressorContainer::new);
+
     protected Inventory inventory;
     protected int outputSlotId = 0;
     private ItemStack itemStack;
-    private BlockPos blockPos;
-    private CompressorBlockEntity compressor;
-    private PlayerEntity playerEntity;
 
-    public CompressorContainer(int syncId, BlockPos blockPos, PlayerEntity playerEntity) {
-        super(null, syncId);
-        this.blockPos = blockPos;
-        this.playerEntity = playerEntity;
+    public final Property status = Property.create();
+    public final Property progress = Property.create();
+    public final Property fuelTime = Property.create();
 
-        BlockEntity blockEntity = playerEntity.world.getBlockEntity(blockPos);
-
-        if (!(blockEntity instanceof CompressorBlockEntity)) {
-            // TODO: Move this logic somewhere else to just not open this at all.
-            throw new IllegalStateException("Found " + blockEntity + " instead of a compressor!");
-        }
-        this.compressor = (CompressorBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(compressor.inventory) {
-            @Override
-            public void markDirty() {
-                compressor.markDirty();
-            }
-
+    public CompressorContainer(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
+        super(syncId, playerEntity, blockEntity);
+        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
             @Override
             public boolean canPlayerUseInv(PlayerEntity player) {
                 return CompressorContainer.this.canUse(player);
             }
         };
+        addProperty(status);
+        addProperty(progress);
+        addProperty(fuelTime);
 
         // 3x3 comprerssor input grid
         int slot = 0;
@@ -103,7 +101,7 @@ public class CompressorContainer extends Container {
                 return itemStack;
             }
 
-            if (slotId < this.compressor.inventory.getSlotCount()) {
+            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
                     return ItemStack.EMPTY;
@@ -125,4 +123,19 @@ public class CompressorContainer extends Container {
         return true;
     }
 
+    @Override
+    public void sendContentUpdates() {
+        status.set(blockEntity.status.ordinal());
+        progress.set(blockEntity.getProgress());
+        fuelTime.set(blockEntity.fuelTime);
+        super.sendContentUpdates();
+    }
+    
+    @Override
+    public void setProperties(int index, int value) {
+        super.setProperties(index, value);
+        blockEntity.status = CompressorStatus.get(status.get());
+        blockEntity.progress = progress.get();
+        blockEntity.fuelTime = fuelTime.get();
+    }
 }

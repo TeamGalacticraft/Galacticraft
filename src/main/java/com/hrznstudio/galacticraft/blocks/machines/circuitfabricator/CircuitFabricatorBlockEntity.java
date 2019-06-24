@@ -1,8 +1,10 @@
 package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
-import alexiil.mc.lib.attributes.DefaultedAttribute;
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+
 import com.hrznstudio.galacticraft.api.configurable.SideOptions;
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -28,17 +30,34 @@ import java.util.Optional;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements Tickable {
-    public final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
+
+    private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
+    private static final ItemFilter[] SLOT_FILTERS;
+
+    static {
+        SLOT_FILTERS = new ItemFilter[7];
+        SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS[1] = new ExactItemFilter(mandatoryMaterials[0]);
+        SLOT_FILTERS[2] = new ExactItemFilter(mandatoryMaterials[1]);
+        SLOT_FILTERS[3] = new ExactItemFilter(mandatoryMaterials[2]);
+        SLOT_FILTERS[4] = new ExactItemFilter(mandatoryMaterials[3]);
+        SLOT_FILTERS[5] = null;// This is filled in by #getFilterForSlot
+        SLOT_FILTERS[6] = ConstantItemFilter.ANYTHING;
+    }
+
     private final int maxProgress = 300;
     public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
     public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_INPUT};
     public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
-    private int progress;
+    int progress;
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         selectedOptions.put(Direction.SOUTH, SideOptions.POWER_INPUT);
+        // Stop automation from inserting into the output or extracting from the inputs.
+        getLimitedInventory().getSubRule(1, 6).disallowExtraction();
+        getLimitedInventory().getRule(6).filterInserts(ConstantItemFilter.NOTHING);
     }
 
     @Override
@@ -47,19 +66,27 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
     }
 
     @Override
-    public void tick() {
-        int prev = getEnergy().getCurrentEnergy();
+    protected ItemFilter getFilterForSlot(int slot) {
+        if (slot == 5) {
+            return this::isValidRecipe;
+        }
+        return SLOT_FILTERS[slot];
+    }
 
+    @Override
+    public void tick() {
+        if (world.isClient) {
+            return;
+        }
         for (Direction direction : Direction.values()) {
             if (selectedOptions.get(direction).equals(SideOptions.POWER_INPUT)) {
-                EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
+                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }
-        // Inventory stack 0 will only ever be a battery because the slot only accepts that type.
-        attemptChargeFromStack(this.getInventory().getInvStack(0));
+        attemptChargeFromStack(0);
 
 
         if (status == CircuitFabricatorStatus.IDLE) {
@@ -93,34 +120,19 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
         }
 
         if (status == CircuitFabricatorStatus.PROCESSING) {
-
             ItemStack resultStack = getResultFromRecipeStack();
-            if (getInventory().getInvStack(6).isEmpty() || getInventory().getInvStack(6).getItem() == resultStack.getItem()) {
-                if (getInventory().getInvStack(6).getCount() < resultStack.getMaxCount()) {
-                    if (this.progress < this.maxProgress) {
-                        ++progress;
-                        this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-                    } else {
-                        System.out.println("Finished crafting an item.");
-                        this.progress = 0;
+            if (this.progress < this.maxProgress) {
+                ++progress;
+                this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+            } else {
+                this.progress = 0;
 
-                        if (!world.isClient) {
-                            getInventory().getInvStack(1).decrement(1);
-                            getInventory().getInvStack(2).decrement(1);
-                            getInventory().getInvStack(3).decrement(1);
-                            getInventory().getInvStack(4).decrement(1);
-                            getInventory().getInvStack(5).decrement(1);
-
-                            if (!getInventory().getInvStack(6).isEmpty()) {
-                                getInventory().getInvStack(6).increment(resultStack.getCount());
-                            } else {
-                                getInventory().setInvStack(6, resultStack, Simulation.ACTION);
-                            }
-                        }
-
-                        markDirty();
-                    }
-                }
+                getInventory().getSlot(1).extract(1);
+                getInventory().getSlot(2).extract(1);
+                getInventory().getSlot(3).extract(1);
+                getInventory().getSlot(4).extract(1);
+                getInventory().getSlot(5).extract(1);
+                getInventory().getSlot(6).insert(resultStack);
             }
         }
     }
@@ -138,13 +150,8 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
     }
 
     private boolean canPutStackInResultSlot(ItemStack itemStack) {
-        if (getInventory().getInvStack(6).isEmpty()) {
-            return true;
-        } else if (getInventory().getInvStack(6).getItem() == itemStack.getItem()) {
-            return (getInventory().getInvStack(6).getCount() + itemStack.getCount()) <= itemStack.getMaxCount();
-        } else {
-            return false;
-        }
+        ItemStack leftover = getInventory().getSlot(6).attemptInsertion(itemStack, Simulation.SIMULATE);
+        return leftover.isEmpty();
     }
 
     public int getProgress() {
@@ -153,10 +160,6 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
     public int getMaxProgress() {
         return this.maxProgress;
-    }
-
-    public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
-        return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
     }
 
     // This is just for testing

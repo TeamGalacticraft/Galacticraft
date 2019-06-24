@@ -1,6 +1,11 @@
 package com.hrznstudio.galacticraft.blocks.machines;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.ItemInvSlotChangeListener.ItemInvSlotListener;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -16,12 +21,26 @@ import net.minecraft.nbt.CompoundTag;
  */
 public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
     public static final int DEFAULT_MAX_ENERGY = 15000;
-    public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
-    private SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize());
+    public final SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    private final SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize()) {
+
+        @Override
+        public boolean isItemValidForSlot(int slot, ItemStack item) {
+            return getFilterForSlot(slot).matches(item);
+        }
+
+        @Override
+        public ItemFilter getFilterForSlot(int slot) {
+            return MachineBlockEntity.this.getFilterForSlot(slot);
+        }
+    };
+    private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
+    private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
 
     public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
         this.energy.listen(this::markDirty);
+        this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
     }
 
     /**
@@ -33,20 +52,61 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return DEFAULT_MAX_ENERGY;
     }
 
+    /** @return The {@link ItemFilter} for the given slot of {@link #getInventory()}. */
+    protected ItemFilter getFilterForSlot(int slot) {
+        return ConstantItemFilter.ANYTHING;
+    }
+
+    /** @return The maximum amount of energy that can be transfered to or from a battery in this machine per call to
+     *         {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)} */
+    protected int getBatteryTransferRate() {
+        return 20;
+    }
+
     public SimpleEnergyAttribute getEnergy() {
         return energy;
     }
 
-    // Tries charging the block entity with the given itemstack
-    protected void attemptChargeFromStack(ItemStack battery) {
-        if (GalacticraftEnergy.isEnergyItem(battery)) {
-            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(battery);
-            EnergyHolderItem item = (EnergyHolderItem) battery.getItem();
+    /**
+     * Tries to charge this machine from the item in the given slot in this {@link #getInventory}.
+     */
+    protected void attemptChargeFromStack(int slot) {
+        if (energy.getCurrentEnergy() >= energy.getMaxEnergy()) {
+            return;
+        }
+        ItemStack stack = inventory.getInvStack(slot);
+        if (GalacticraftEnergy.isEnergyItem(stack)) {
+            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(stack);
+            EnergyHolderItem item = (EnergyHolderItem) stack.getItem();
 
-            if (itemEnergy > 0 && energy.getCurrentEnergy() < energy.getMaxEnergy()) {
+            if (itemEnergy > 0) {
+                stack = stack.copy();
                 int energyToRemove = 5;
-                int amountFailedToInsert = item.extract(battery, energyToRemove);
+                int amountFailedToInsert = item.extract(stack, energyToRemove);
                 energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, Simulation.ACTION);
+                inventory.forceSetInvStack(slot, stack);
+            }
+        }
+    }
+
+    /**
+     * Tries to drain some of this machine's power into the item in the given slot in this {@link #getInventory}.
+     */
+    protected void attemptDrainPowerToStack(int slot) {
+        int available = Math.min(getBatteryTransferRate(), energy.getCurrentEnergy());
+        if (available <= 0) {
+            return;
+        }
+        ItemStack stack = inventory.getInvStack(slot);
+        if (GalacticraftEnergy.isEnergyItem(stack)) {
+            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(stack);
+            int itemMaxEnergy = GalacticraftEnergy.getMaxBatteryEnergy(stack);
+            EnergyHolderItem item = (EnergyHolderItem) stack.getItem();
+            if (itemEnergy < itemMaxEnergy) {
+                stack = stack.copy();
+                int leftover = item.insert(stack, available);
+                energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - leftover, Simulation.ACTION);
+                inventory.forceSetInvStack(slot, stack);
             }
         }
     }
@@ -55,6 +115,17 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final SimpleFixedItemInv getInventory() {
         return inventory;
+    }
+
+    /** @return A {@link LimitedFixedItemInv} that can be used to limit what neighbouring blocks do with the
+     *         {@link #getExposedInventory() exposed inventory}. */
+    public final LimitedFixedItemInv getLimitedInventory() {
+        return limitedInventory;
+    }
+
+    /** @return The {@link FixedItemInv} that is exposed to neighbouring blocks via attributes. */
+    public final FixedItemInv getExposedInventory() {
+        return exposedInventory;
     }
 
     @Override

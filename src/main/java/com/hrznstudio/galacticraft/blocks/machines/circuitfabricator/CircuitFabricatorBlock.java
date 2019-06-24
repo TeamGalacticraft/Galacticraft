@@ -87,7 +87,7 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
         if (!(be instanceof CircuitFabricatorBlockEntity)) return;
         CircuitFabricatorBlockEntity fabricator = (CircuitFabricatorBlockEntity) be;
         to.offer(fabricator.getEnergy());
-        fabricator.getInventory().offerSelfAsAttribute(to, null, null);
+        fabricator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override

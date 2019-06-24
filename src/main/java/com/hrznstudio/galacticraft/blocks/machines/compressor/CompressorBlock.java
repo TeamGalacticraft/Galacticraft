@@ -86,11 +86,11 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
             if (blockEntity instanceof CompressorBlockEntity) {
                 CompressorBlockEntity be = (CompressorBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.inventory.getSlotCount(); i++) {
-                    ItemStack itemStack = be.inventory.getInvStack(i);
+                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = be.getInventory().getInvStack(i);
 
-                    if (itemStack != null) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    if (!itemStack.isEmpty()) {
+                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack.copy()));
                     }
                 }
             }
