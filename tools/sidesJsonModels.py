@@ -79,7 +79,6 @@ sides = config['sides']
 faces = ["north", "south", "east", "west"]
 options = config['options']
 options.append({'option': 'default'})
-print(options)
 state = json.loads('{"variants": {}}')
 
 if os.path.exists("model_output"):
@@ -122,16 +121,17 @@ for north in options:
                             d_texture = down['texture']
 
                         tag = ''.join([
+                            'north=',
                             north['option'],
-                            '-',
+                            ',south=',
                             south['option'],
-                            '-',
+                            ',east=',
                             east['option'],
-                            '-',
+                            ',west=',
                             west['option'],
-                            '-',
+                            ',up=',
                             up['option'],
-                            '-',
+                            ',down=',
                             down['option']
                         ])
 
@@ -145,7 +145,7 @@ y = -90
 for face in faces:
     y += 90
     for tag in models:
-        state['variants'][''.join(["facing=", face, ",sides=", tag])] = {
+        state['variants'][''.join(["facing=", face, ",", tag])] = {
             "model": config['mod-id'] + ':block/' + config['name'] + "/" + tag,
             "y": y
         }
@@ -168,29 +168,45 @@ class_name = ""
 for s in config["name"].split('_'):
     class_name += s.capitalize()
 
-class_name += "Sides"
+class_name += "SideOptions"
 
-enum_text = "public enum " + class_name + " {\n"
+enum_text = "public enum " + class_name + " implements StringIdentifiable {\n"
 
-for model in models:
-    enum_text += "    " + model.upper() + "(\"" + model.lower() + "\"),\n"
+for o in options:
+    enum_text += "    " + o["option"].upper() + "(\"" + o["option"].lower() + "\"),\n"
 
-enum_text += "    ;\n\n    String name;\n    " + class_name + "(String name) implements StringIdentifiable {\n        this.name = name;\n    }\n    @Override\n    public String asString() {\n        return this.name;\n    }\n}"
+enum_text += "    ;\n\n    String name;\n    " + class_name + "(String name) {\n        this.name = name;\n    }\n    @Override\n    public String asString() {\n        return this.name;\n    }\n}"
 
 java_text = ''.join([
     "private final static DirectionProperty FACING = DirectionProperty.of(\"facing\", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);\n",
-    "private final static EnumProperty SIDES = EnumProperty.of(\"sides\", " + class_name + ".class);\n",
+    "private final static EnumProperty NORTH = EnumProperty.of(\"north\", " + class_name + ".class);\n",
+    "private final static EnumProperty SOUTH = EnumProperty.of(\"south\", " + class_name + ".class);\n",
+    "private final static EnumProperty EAST = EnumProperty.of(\"east\", " + class_name + ".class);\n",
+    "private final static EnumProperty WEST = EnumProperty.of(\"west\", " + class_name + ".class);\n",
+    "private final static EnumProperty UP = EnumProperty.of(\"up\", " + class_name + ".class);\n",
+    "private final static EnumProperty DOWN = EnumProperty.of(\"down\", " + class_name + ".class);\n",
     "\n",
     "@Override\n",
     "public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {\n",
     "    super.appendProperties(stateBuilder);\n",
     "    stateBuilder.add(FACING);\n",
-    "    stateBuilder.add(SIDES);\n",
+    "    stateBuilder.add(NORTH);\n",
+    "    stateBuilder.add(SOUTH);\n",
+    "    stateBuilder.add(EAST);\n",
+    "    stateBuilder.add(WEST);\n",
+    "    stateBuilder.add(UP);\n",
+    "    stateBuilder.add(DOWN);\n",
     "}\n",
     "\n",
     "@Override\n",
     "public BlockState getPlacementState(ItemPlacementContext context) {\n",
-    "    return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()).with(SIDES, " + class_name + ".DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT);\n",
+    "    return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())\n"
+    "                                    .with(NORTH, " + class_name + ".DEFAULT)\n",
+    "                                    .with(SOUTH, " + class_name + ".DEFAULT)\n",
+    "                                    .with(EAST, " + class_name + ".DEFAULT)\n",
+    "                                    .with(WEST, " + class_name + ".DEFAULT)\n",
+    "                                    .with(UP, " + class_name + ".DEFAULT)\n",
+    "                                    .with(DOWN, " + class_name + ".DEFAULT)\n",
     "}\n\n\n\n",
     enum_text
 ])
