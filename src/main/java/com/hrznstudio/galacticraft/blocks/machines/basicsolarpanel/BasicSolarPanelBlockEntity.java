@@ -45,6 +45,9 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
 
     @Override
     public void tick() {
+        if (world.isClient) {
+            return;
+        }
         long time = world.getTimeOfDay();
         while (true) {
             if (time <= -1) {
@@ -54,18 +57,15 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
             time -= 24000;
         }
 
-        if ((time > 250 && time < 12000)) {
-            if (getEnergy().getCurrentEnergy() <= getEnergy().getMaxEnergy()) {
+        if (world.isRaining() || world.isThundering()) {
+            status = BasicSolarPanelStatus.RAINING;
+        } else if ((time > 250 && time < 12000)) {
+            if (getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.COLLECTING;
             } else {
-                getEnergy().setCurrentEnergy(getEnergy().getMaxEnergy());
                 status = BasicSolarPanelStatus.FULL;
             }
-        } else if (world.isRaining() || world.isThundering()) {
-            status = BasicSolarPanelStatus.RAINING;
-        }
-
-        if (time <= 250 || time >= 12000) {
+        } else {
             status = BasicSolarPanelStatus.NIGHT;
         }
 
@@ -76,7 +76,6 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
                 getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), Simulation.ACTION);
             }
         }
-        if (world.isClient) return;
 
         attemptDrainPowerToStack(0);
 

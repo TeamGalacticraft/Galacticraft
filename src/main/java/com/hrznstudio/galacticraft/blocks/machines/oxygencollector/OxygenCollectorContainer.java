@@ -7,14 +7,12 @@ import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 
 import net.fabricmc.fabric.api.container.ContainerFactory;
 
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Property;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -25,6 +23,7 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
     private ItemStack itemStack;
     private Inventory inventory;
 
+    public final Property status = Property.create();
     public final Property oxygen = Property.create();
     public final Property lastCollectAmount = Property.create();
 
@@ -36,6 +35,7 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
                 return OxygenCollectorContainer.this.canUse(player);
             }
         };
+        addProperty(status);
         addProperty(oxygen);
         addProperty(lastCollectAmount);
 
@@ -93,11 +93,18 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
     }
-    
+
     @Override
     public void sendContentUpdates() {
+        status.set(blockEntity.status.ordinal());
         oxygen.set(blockEntity.getOxygen().getCurrentEnergy());
         lastCollectAmount.set(blockEntity.lastCollectAmount);
         super.sendContentUpdates();
+    }
+    
+    @Override
+    public void setProperties(int index, int value) {
+        super.setProperties(index, value);
+        blockEntity.status = CollectorStatus.get(status.get());
     }
 }

@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
+import net.minecraft.container.Property;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -28,6 +29,8 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
     private final Inventory inventory;
     private BasicSolarPanelBlockEntity solarPanel;
 
+    private final Property status = Property.create();
+
     public BasicSolarPanelContainer(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
         this.solarPanel = blockEntity;
@@ -37,6 +40,7 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
                 return BasicSolarPanelContainer.this.canUse(player);
             }
         };
+        addProperty(status);
 
         this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
 
@@ -84,5 +88,17 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
     @Override
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
+    }
+
+    @Override
+    public void sendContentUpdates() {
+        status.set(blockEntity.status.ordinal());
+        super.sendContentUpdates();
+    }
+
+    @Override
+    public void setProperties(int index, int value) {
+        super.setProperties(index, value);
+        blockEntity.status = BasicSolarPanelStatus.get(status.get());
     }
 }

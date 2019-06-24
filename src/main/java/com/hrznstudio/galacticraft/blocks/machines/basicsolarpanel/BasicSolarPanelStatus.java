@@ -39,4 +39,9 @@ public enum BasicSolarPanelStatus {
     public String toString() {
         return name;
     }
+
+    public static BasicSolarPanelStatus get(int index) {
+        if (index < 0) index=0;
+        return values()[index % values().length];
+    }
 }
