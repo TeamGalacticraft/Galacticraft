@@ -1,13 +1,13 @@
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
@@ -21,6 +21,15 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
     @Override
     protected int getInvSize() {
         return super.getInvSize() + 1;
+    }
+
+    @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        if (slot == FUEL_INPUT_SLOT) {
+            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        } else {
+            return super.getFilterForSlot(slot);
+        }
     }
 
     @Override
@@ -63,7 +72,7 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
             }
         }
         if (canCraftTwo) {
-            if (getInventory().getInvStack(OUTPUT_SLOT).getCount() > craftingResult.getMaxCount() || getInventory().getInvStack(SECOND_OUTPUT_SLOT).getCount() > craftingResult.getMaxCount()) {
+            if (getInventory().getInvStack(OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount() || getInventory().getInvStack(SECOND_OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount()) {
                 // There would be too many items in the output slot. Just craft one.
                 canCraftTwo = false;
             }

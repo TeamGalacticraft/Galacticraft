@@ -32,9 +32,9 @@ public class GalacticraftContainers {
         ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, CoalGeneratorContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, (syncId, id, player, buf) -> new CompressorContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, (syncId, id, player, buf) -> new ElectricCompressorContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, (syncId, id, player, buf) -> new EnergyStorageModuleContainer(syncId, buf.readBlockPos(), player));
-        ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, (syncId, id, player, buf) -> new OxygenCollectorContainer(syncId, buf.readBlockPos(), player));
+        ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, CompressorContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorContainer.ELECTRIC_FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorContainer.FACTORY);
     }
 }

@@ -27,8 +27,8 @@ public abstract class MachineContainer<T extends MachineBlockEntity> extends Con
         addProperty(energy);
     }
 
-    public static <C extends MachineContainer<T>, T extends MachineBlockEntity> ContainerFactory<Container> createFactory(
-        Class<T> machineClass, MachineContainerConstructor<C, T> constructor) 
+    public static <T extends MachineBlockEntity> ContainerFactory<Container> createFactory(
+        Class<T> machineClass, MachineContainerConstructor<? extends Container, T> constructor) 
     {
         return (syncId, id, player, buffer) -> {
             BlockPos pos = buffer.readBlockPos();

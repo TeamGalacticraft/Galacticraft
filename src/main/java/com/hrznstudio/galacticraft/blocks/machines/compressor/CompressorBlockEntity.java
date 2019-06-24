@@ -4,14 +4,19 @@ import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 
 import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -33,7 +38,7 @@ public class CompressorBlockEntity extends MachineBlockEntity implements Tickabl
     public CompressorStatus status = CompressorStatus.INACTIVE;
     public int fuelTime;
     public int maxFuelTime;
-    private int progress;
+    int progress;
 
     public CompressorBlockEntity() {
         this(GalacticraftBlockEntities.COMPRESSOR_TYPE);
@@ -46,6 +51,15 @@ public class CompressorBlockEntity extends MachineBlockEntity implements Tickabl
     @Override
     protected int getInvSize() {
         return 11;
+    }
+
+    @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        if (slot == FUEL_INPUT_SLOT) {
+            return AbstractFurnaceBlockEntity::canUseAsFuel;
+        } else {
+            return super.getFilterForSlot(slot);
+        }
     }
 
     @Override

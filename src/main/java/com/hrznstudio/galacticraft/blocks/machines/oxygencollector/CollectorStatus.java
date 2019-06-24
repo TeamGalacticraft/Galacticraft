@@ -14,4 +14,9 @@ public enum CollectorStatus {
     public int getTextColor() {
         return textColor;
     }
+
+    public static CollectorStatus get(int index) {
+        if (index < 0) return values()[0];
+        return values()[index % values().length];
+    }
 }
