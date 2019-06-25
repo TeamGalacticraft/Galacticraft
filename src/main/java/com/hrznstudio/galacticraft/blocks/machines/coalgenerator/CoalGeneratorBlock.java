@@ -40,8 +40,13 @@ import java.util.List;
  */
 public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
 
-    private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
-    private static final EnumProperty SIDES = EnumProperty.of("sides", CoalGeneratorSides.class);
+    private final static DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    private final static EnumProperty NORTH = EnumProperty.of("north", CoalGeneratorSideOptions.class);
+    private final static EnumProperty SOUTH = EnumProperty.of("south", CoalGeneratorSideOptions.class);
+    private final static EnumProperty EAST = EnumProperty.of("east", CoalGeneratorSideOptions.class);
+    private final static EnumProperty WEST = EnumProperty.of("west", CoalGeneratorSideOptions.class);
+    private final static EnumProperty UP = EnumProperty.of("up", CoalGeneratorSideOptions.class);
+    private final static EnumProperty DOWN = EnumProperty.of("down", CoalGeneratorSideOptions.class);
 
     public CoalGeneratorBlock(Settings settings) {
         super(settings);
@@ -61,11 +66,24 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
+        stateBuilder.add(NORTH);
+        stateBuilder.add(SOUTH);
+        stateBuilder.add(EAST);
+        stateBuilder.add(WEST);
+        stateBuilder.add(UP);
+        stateBuilder.add(DOWN);
     }
+
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()).with(SIDES, CoalGeneratorSides.DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT);
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
+                .with(NORTH, CoalGeneratorSideOptions.DEFAULT)
+                .with(SOUTH, CoalGeneratorSideOptions.DEFAULT)
+                .with(EAST, CoalGeneratorSideOptions.DEFAULT)
+                .with(WEST, CoalGeneratorSideOptions.DEFAULT)
+                .with(UP, CoalGeneratorSideOptions.DEFAULT)
+                .with(DOWN, CoalGeneratorSideOptions.DEFAULT);
     }
 
     @Override
@@ -133,20 +151,18 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
         return WireConnectionType.NONE;
     }
 
-    public enum CoalGeneratorSides implements StringIdentifiable {
-        DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT_DEFAULT("default"),
-        POWERIN("powerin"),
+    public enum CoalGeneratorSideOptions implements StringIdentifiable {
         POWEROUT("powerout"),
+        DEFAULT("default"),
         ;
 
         String name;
-        CoalGeneratorSides(String name) {
+        CoalGeneratorSideOptions(String name) {
             this.name = name;
         }
-
         @Override
         public String asString() {
-            return name;
+            return this.name;
         }
     }
 }
