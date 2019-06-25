@@ -1,14 +1,14 @@
 package com.hrznstudio.galacticraft.blocks.machines;
 
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.Property;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
-public abstract class MachineContainer<T extends MachineBlockEntity> extends Container {
+public abstract class MachineContainer<T extends ConfigurableElectricMachineBlockEntity> extends Container {
 
     @FunctionalInterface
     public interface MachineContainerConstructor<C, T> {
@@ -27,7 +27,7 @@ public abstract class MachineContainer<T extends MachineBlockEntity> extends Con
         addProperty(energy);
     }
 
-    public static <T extends MachineBlockEntity> ContainerFactory<Container> createFactory(
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<Container> createFactory(
         Class<T> machineClass, MachineContainerConstructor<? extends Container, T> constructor) 
     {
         return (syncId, id, player, buffer) -> {

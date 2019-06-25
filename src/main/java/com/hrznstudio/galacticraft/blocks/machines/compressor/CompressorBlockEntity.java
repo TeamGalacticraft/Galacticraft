@@ -4,19 +4,14 @@ import alexiil.mc.lib.attributes.DefaultedAttribute;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
-import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -31,7 +26,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
@@ -63,7 +58,7 @@ public class CompressorBlockEntity extends MachineBlockEntity implements Tickabl
     }
 
     @Override
-    protected int getMaxEnergy() {
+    public int getMaxEnergy() {
         return 0;
     }
 

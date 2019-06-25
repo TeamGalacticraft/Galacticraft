@@ -1,14 +1,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRenderer;
-import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.ModelWithArms;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;

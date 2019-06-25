@@ -1,5 +1,7 @@
 package com.hrznstudio.galacticraft.energy;
 
+import alexiil.mc.lib.attributes.item.filter.ItemClassFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
@@ -9,10 +11,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-
-import alexiil.mc.lib.attributes.item.filter.ItemClassFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 

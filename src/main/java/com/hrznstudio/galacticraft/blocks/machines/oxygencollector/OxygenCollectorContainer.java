@@ -1,12 +1,9 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.container.Container;
 import net.minecraft.container.Property;
 import net.minecraft.container.Slot;

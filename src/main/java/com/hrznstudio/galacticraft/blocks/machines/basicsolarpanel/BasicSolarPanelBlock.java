@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
@@ -10,7 +9,6 @@ import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionTyp
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.MultiBlock;
 import com.hrznstudio.galacticraft.util.Rotatable;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

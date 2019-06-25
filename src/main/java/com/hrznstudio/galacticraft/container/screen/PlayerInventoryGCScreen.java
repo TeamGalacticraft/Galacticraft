@@ -23,7 +23,7 @@ public class PlayerInventoryGCScreen extends AbstractContainerScreen<PlayerInven
     private float mouseY;
 
     public PlayerInventoryGCScreen(PlayerEntity player) {
-//        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableComponent(Constants.MOD_ID + ".player_inv_screen"));
+//        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
         super(new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
     }
 

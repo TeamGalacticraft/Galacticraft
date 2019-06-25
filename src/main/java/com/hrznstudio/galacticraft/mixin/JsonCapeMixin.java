@@ -1,12 +1,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.GalacticraftClient;
-import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
