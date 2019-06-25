@@ -14,18 +14,24 @@ import java.util.List;
  */
 public enum SideOption implements StringIdentifiable {
 
-    BLANK,
-    POWER_INPUT,
-    POWER_OUTPUT,
-    OXYGEN_INPUT,
-    OXYGEN_OUTPUT;
+    BLANK("default"),
+    POWER_INPUT("powerin"),
+    POWER_OUTPUT("powerout"),
+    OXYGEN_INPUT("oxygenin"),
+    OXYGEN_OUTPUT("oxygenout");
 
-    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("front_config", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("back_config", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("right_config", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("left_config", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("top_config", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("bottom_config", SideOption.class, SideOption.values());
+    private String name;
+
+    SideOption(String name) {
+        this.name = name;
+    }
+
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.values());
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.values());
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.values());
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.values());
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.values());
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.values());
 
     public static EnumProperty<SideOption> getOptionForDirection(Direction direction) {
         switch (direction) {
@@ -43,22 +49,6 @@ public enum SideOption implements StringIdentifiable {
                 return SideOption.BOTTOM_SIDE_OPTION;
         }
         return null;
-    }
-
-    public static SideOption[] fromTag(String s) {
-        String[] options = s.split(",");
-        SideOption[] sideOptions = new SideOption[6];
-        sideOptions[0] = SideOption.valueOf(options[0]);
-        sideOptions[1] = SideOption.valueOf(options[1]);
-        sideOptions[2] = SideOption.valueOf(options[2]);
-        sideOptions[3] = SideOption.valueOf(options[3]);
-        sideOptions[4] = SideOption.valueOf(options[4]);
-        sideOptions[5] = SideOption.valueOf(options[5]);
-        return sideOptions;
-    }
-
-    public static String toTag(SideOption[] sideOptions) {
-        return sideOptions[0].name() + "," + sideOptions[1].name() + "," + sideOptions[2].name() + "," + sideOptions[3].name() + "," + sideOptions[4].name() + "," + sideOptions[5].name();
     }
 
     public static List<SideOption> getApplicableValuesForMachine(Block block) {
@@ -84,7 +74,7 @@ public enum SideOption implements StringIdentifiable {
 
     @Override
     public String asString() {
-        return this.name().toLowerCase();
+        return this.name;
     }
 
     public SideOption nextValidOption(Block block) {
