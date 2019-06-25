@@ -15,6 +15,11 @@ public class InfiniteBatteryItem extends Item implements EnergyHolderItem {
     }
 
     @Override
+    public int getMaxEnergy(ItemStack battery) {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
     public boolean hasEnchantmentGlint(ItemStack itemStack_1) {
         return true;
     }

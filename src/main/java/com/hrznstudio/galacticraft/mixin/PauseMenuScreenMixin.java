@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.mixin;
 import com.hrznstudio.galacticraft.container.button.SpaceRaceButtonWidget;
 import net.minecraft.client.gui.screen.PauseScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(PauseScreen.class)
 public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(TextComponent textComponent_1) {
+    protected PauseMenuScreenMixin(Text textComponent_1) {
         super(textComponent_1);
     }
 

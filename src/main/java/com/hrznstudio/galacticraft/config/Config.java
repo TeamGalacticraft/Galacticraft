@@ -6,4 +6,5 @@ package com.hrznstudio.galacticraft.config;
 public class Config {
     public float moonGravity = 0.062F;
     public float marsGravity = 0.038F;
+    public boolean debugLogging = true;
 }

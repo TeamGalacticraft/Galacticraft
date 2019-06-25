@@ -10,8 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
@@ -66,8 +66,8 @@ public class OxygenTankItem extends Item {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void appendTooltip(ItemStack stack, World world, List<Component> lines, TooltipContext context) {
-        lines.add(new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
+    public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
         super.appendTooltip(stack, world, lines, context);
     }
 

@@ -1,23 +1,23 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
-import net.minecraft.ChatFormat;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 public enum CompressorStatus {
 
     /**
      * Generator is active and is generating energy.
      */
-    PROCESSING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText()),
+    PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(ChatFormat.GOLD)).getFormattedText()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
      * The generator has no fuel.
      */
-    INACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
 
     private String name;
 
@@ -30,4 +30,11 @@ public enum CompressorStatus {
         return name;
     }
 
+    public static CompressorStatus get(int index) {
+        switch (index) {
+            case 0: return PROCESSING;
+            case 1: return IDLE;
+            default: return INACTIVE;
+        }
+    }
 }

@@ -1,13 +1,13 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
+import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -15,11 +15,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
-public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, BlockEntityClientSerializable {
-    public static int BATTERY_SLOT = 0;
+public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+    public static final int MAX_OXYGEN = 5000;
+    public static final int BATTERY_SLOT = 0;
+
     public CollectorStatus status = CollectorStatus.INACTIVE;
     public int lastCollectAmount = 0;
-    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(5000, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
+    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -30,9 +32,14 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         return 1;
     }
 
+    @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+    }
+
     private int collectOxygen(BlockPos center) {
-        if (world.dimension instanceof SpaceDimension) {
-            if (!((SpaceDimension) world.dimension).hasOxygen()) {
+        if (world.dimension instanceof CelestialBody) {
+            if (!((CelestialBody) world.dimension).hasOxygen()) {
                 int minX = center.getX() - 5;
                 int minY = center.getY() - 5;
                 int minZ = center.getZ() - 5;
@@ -68,7 +75,10 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
     @Override
     public void tick() {
-        attemptChargeFromStack(getInventory().getInvStack(BATTERY_SLOT));
+        if (world.isClient || !isActive()) {
+            return;
+        }
+        attemptChargeFromStack(BATTERY_SLOT);
 
         // Only collect every 20 ticks
         if (world.random.nextInt(10) != 0) {

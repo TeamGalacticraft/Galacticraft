@@ -9,7 +9,7 @@ import net.minecraft.client.render.GuiLighting;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(InventoryScreen.class)
 public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerContainer> {
-    public PlayerInventoryScreenMixin(PlayerContainer container, PlayerInventory playerInventory, TextComponent textComponent) {
+    public PlayerInventoryScreenMixin(PlayerContainer container, PlayerInventory playerInventory, Text textComponent) {
         super(container, playerInventory, textComponent);
     }
 

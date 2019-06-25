@@ -42,7 +42,7 @@ dependencies {
     modCompile("io.github.prospector.modmenu:ModMenu:${project.modmenu_version}") { transitive = false }
 //    modCompile "cotton:cotton:${project.cotton_version}"
     modCompile("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
-    modCompile("alexiil.mc.lib:libblockattributes:${project.attributes_version}") { transitive = false }
+    modCompile "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
     modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") { transitive = true }
 
     //include everything mandatory inside the jar
@@ -52,7 +52,10 @@ dependencies {
     include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
 //    include "cotton:cotton:${project.cotton_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
-    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
+    include "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
+
+    // Needed for LBA in order for eclipse to work
+    compile "com.google.code.findbugs:jsr305:3.0.1"
 }
 
 processResources {

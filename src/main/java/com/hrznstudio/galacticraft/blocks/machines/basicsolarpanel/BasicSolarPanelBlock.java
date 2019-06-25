@@ -12,7 +12,6 @@ import com.hrznstudio.galacticraft.util.MultiBlock;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.ChatFormat;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -23,11 +22,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -113,15 +113,15 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
         BasicSolarPanelBlockEntity generator = (BasicSolarPanelBlockEntity) be;
         to.offer(generator.getEnergy());
         to.offer(generator);
-//        generator.getItems().offerSelfAsAttribute(to, null, null);
+        generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Component> list_1, TooltipContext tooltipContext_1) {
+    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableComponent("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
     }
 

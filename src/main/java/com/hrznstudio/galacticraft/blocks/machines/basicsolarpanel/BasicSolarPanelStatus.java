@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
-import net.minecraft.ChatFormat;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -11,24 +11,23 @@ public enum BasicSolarPanelStatus {
     /**
      * Solar panel is active and is generating energy.
      */
-    COLLECTING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.collecting").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText()),
+    COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
     /**
      * Solar Panel is generating energy, but the buffer is full.
      */
-    FULL(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.full").setStyle(new Style().setColor(ChatFormat.GOLD)).getFormattedText()),
+    FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
      * Solar Panel is generating energy, but less efficiently.
      */
-    RAINING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.raining").setStyle(new Style().setColor(ChatFormat.DARK_AQUA)).getFormattedText()),
+    RAINING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.raining").setStyle(new Style().setColor(Formatting.DARK_AQUA)).asFormattedString()),
     /**
      * Solar Panel is not generating energy.
      */
-    NIGHT(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.night").setStyle(new Style().setColor(ChatFormat.BLUE)).getFormattedText()),
+    NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night").setStyle(new Style().setColor(Formatting.BLUE)).asFormattedString()),
     /**
      * The sun is not visible.
      */
-    BLOCKED(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.blocked").setStyle(new Style().setColor(ChatFormat.DARK_GRAY)).getFormattedText());
-
+    BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked").setStyle(new Style().setColor(Formatting.DARK_GRAY)).asFormattedString());
     private String name;
 
     BasicSolarPanelStatus(String name) {
@@ -38,5 +37,10 @@ public enum BasicSolarPanelStatus {
     @Override
     public String toString() {
         return name;
+    }
+
+    public static BasicSolarPanelStatus get(int index) {
+        if (index < 0) index=0;
+        return values()[index % values().length];
     }
 }

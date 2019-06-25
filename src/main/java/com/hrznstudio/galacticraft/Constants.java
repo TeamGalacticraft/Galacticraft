@@ -363,6 +363,9 @@ public class Constants {
         public static final String GRAVITY = "config.galacticraft-rewoven.gravity";
         public static final String MOON_GRAVITY = "config.galacticraft-rewoven.gravity.moon";
         public static final String MARS_GRAVITY = "config.galacticraft-rewoven.gravity.mars";
+
+        public static final String DEBUG = "config.galacticraft-rewoven.debug";
+        public static final String DEBUG_LOGGING = "config.galacticraft-rewoven.debug.logging";
     }
 
     public static class Energy {
@@ -395,6 +398,9 @@ public class Constants {
         public static final String OXYGEN_MASK = "slot/oxygen_mask";
         public static final String OXYGEN_GEAR = "slot/oxygen_gear";
         public static final String OXYGEN_TANK = "slot/oxygen_tank";
+
+        public static final String MAP_SCREEN = "gui/map";
+        public static final String PLANET_ICONS = "gui/planet_icons";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";

@@ -5,21 +5,25 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer.MachineContainerConstructor;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
-import net.minecraft.ChatFormat;
+import net.fabricmc.fabric.api.container.ContainerFactory;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.container.Container;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +32,7 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineContainerScreen extends AbstractContainerScreen {
+public abstract class MachineContainerScreen<C extends MachineContainer<?>> extends AbstractContainerScreen<C> {
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
@@ -83,7 +87,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
 
     private SideOption[] sideOptions = null; //Front, Back, Right, Left, Up, Down
 
-    public MachineContainerScreen(Container container, PlayerInventory playerInventory, World world, BlockPos pos, TranslatableComponent textComponent) {
+    public MachineContainerScreen(C container, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
         super(container, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
@@ -113,12 +117,26 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         }
     }
 
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<AbstractContainerScreen> createFactory(
+        Class<T> machineClass, MachineContainerConstructor<? extends MachineContainerScreen<?>, T> constructor) 
+    {
+        return (syncId, id, player, buffer) -> {
+            BlockPos pos = buffer.readBlockPos();
+            BlockEntity be = player.world.getBlockEntity(pos);
+            if (machineClass.isInstance(be)) {
+                return constructor.create(syncId, player, machineClass.cast(be));
+            } else {
+                return null;
+            }
+        };
+    }
+
     public void drawConfigTabs() {
         if (IS_REDSTONE_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - REDSTONE_PANEL_WIDTH, this.top + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 7);
-            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 12, ChatFormat.GRAY.getColor());
+            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 12, Formatting.GRAY.getColorValue());
 
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left - REDSTONE_PANEL_WIDTH + 21, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
@@ -168,7 +186,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             this.blit(this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.top + 49 + 36 + 3, getXForOption(sideOptions[5]), getYForOption(sideOptions[5]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
 
             this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.left - REDSTONE_PANEL_WIDTH + 6, this.top + 29);
-            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 33, ChatFormat.GRAY.getColor());
+            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.left - REDSTONE_PANEL_WIDTH + 23, this.top + 33, Formatting.GRAY.getColorValue());
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
             if (!IS_REDSTONE_OPEN) {
@@ -183,7 +201,7 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left + 176, this.top + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
             this.blit(this.left + 176 + 4, this.top + 6, LOCK_PARTY_X, LOCK_PARTY_Y, ICONS_WIDTH, ICONS_HEIGHT);
-            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.left + 176 + 20, this.top + 12, ChatFormat.GRAY.getColor());
+            this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.left + 176 + 20, this.top + 12, Formatting.GRAY.getColorValue());
 
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left + 174 + 21, this.top + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
@@ -210,7 +228,6 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
             this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left + 174 + 65, this.top + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
             this.blit(this.left + 176, this.top + 3, SECURITY_TAB_X, SECURITY_TAB_Y, SECURITY_TAB_WIDTH, SECURITY_TAB_HEIGHT);
@@ -411,12 +428,12 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
             if (!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) {
                 if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty) {
-                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("Team stuff pending...").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableText("Team stuff pending...").asString(), (this.width / 2), this.top + 50, Formatting.DARK_RED.getColorValue());
                     //TODO space race stuffs
                     return;
                 }
                 if ((!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
-                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableComponent("ui.galacticraft-rewoven.not_your_machine").getText(), (this.width / 2), this.top + 50, ChatFormat.DARK_RED.getColor());
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft-rewoven.not_your_machine").asString(), (this.width / 2), this.top + 50, Formatting.DARK_RED.getColorValue());
                     return;
                 }
             }
@@ -428,17 +445,17 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
     protected void drawTabTooltips(int mouseX, int mouseY) {
         if (!IS_REDSTONE_OPEN) {
             if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 3 && mouseY <= this.top + (22 + 3)) {
-                this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config").asString(), mouseX, mouseY);
             }
         } else {
             if (mouseX >= (this.left - 78) && mouseX <= (this.left - 78) + 19 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore").asString(), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 22 && mouseX <= (this.left - 78) + 41 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off").asString(), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 44 && mouseX <= (this.left - 78) + 63 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on").asString(), mouseX, mouseY);
             }
         }
         if (!IS_CONFIG_OPEN) {
@@ -454,21 +471,20 @@ public abstract class MachineContainerScreen extends AbstractContainerScreen {
         }
         if (!IS_SECURITY_OPEN) {
             if (mouseX >= this.left - SECURITY_TAB_WIDTH + 176 + 21 && mouseX <= this.left + 176 + 21 && mouseY >= this.top + 3 && mouseY <= this.top + (SECURITY_TAB_HEIGHT + 3)) {
-                this.renderTooltip("\u00A77" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config").asString(), mouseX, mouseY);
             }
         } else {
             if (mouseX >= (this.left - 78) + 273 && mouseX <= (this.left - 78) + 19 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.private").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private").asString(), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.space_race").getText(), 22), mouseX, mouseY);
+                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race").asString(), 22), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableComponent("ui.galacticraft-rewoven.tabs.security_config.public").getText(), mouseX, mouseY);
+                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public").asString(), mouseX, mouseY);
             }
         }
     }
-
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1) {
         if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {

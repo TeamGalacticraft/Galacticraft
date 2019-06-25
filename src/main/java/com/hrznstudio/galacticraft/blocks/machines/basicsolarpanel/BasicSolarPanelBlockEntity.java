@@ -1,11 +1,11 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
 
 import java.util.List;
@@ -28,7 +28,15 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+    }
+
+    @Override
     public void tick() {
+        if (world.isClient || !isActive()) {
+            return;
+        }
         long time = world.getTimeOfDay();
         while (true) {
             if (time <= -1) {
@@ -38,18 +46,15 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
             time -= 24000;
         }
 
-        if ((time > 250 && time < 12000)) {
-            if (getEnergy().getCurrentEnergy() <= getEnergy().getMaxEnergy()) {
+        if (world.isRaining() || world.isThundering()) {
+            status = BasicSolarPanelStatus.RAINING;
+        } else if ((time > 250 && time < 12000)) {
+            if (getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.COLLECTING;
             } else {
-                getEnergy().setCurrentEnergy(getEnergy().getMaxEnergy());
                 status = BasicSolarPanelStatus.FULL;
             }
-        } else if (world.isRaining() || world.isThundering()) {
-            status = BasicSolarPanelStatus.RAINING;
-        }
-
-        if (time <= 250 || time >= 12000) {
+        } else {
             status = BasicSolarPanelStatus.NIGHT;
         }
 
@@ -60,14 +65,22 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
                 getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), Simulation.ACTION);
             }
         }
-        if (world.isClient) return;
 
-        ItemStack battery = getInventory().getInvStack(0);
-        if (GalacticraftEnergy.isEnergyItem(battery) && this.getEnergy().getCurrentEnergy() > 0) {
-            if (GalacticraftEnergy.getBatteryEnergy(battery) < GalacticraftEnergy.getMaxBatteryEnergy(battery)) {
-                getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-                GalacticraftEnergy.incrementEnergy(battery, 1);
+        attemptDrainPowerToStack(0);
+
+        /*for (Direction direction : Direction.values()) {
+            if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
+                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
+                if (energyAttribute.canInsertEnergy()) {
+                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION));
+                }
             }
-        }
+        }*/
+
+    }
+
+    @Override
+    protected int getBatteryTransferRate() {
+        return 10;
     }
 }

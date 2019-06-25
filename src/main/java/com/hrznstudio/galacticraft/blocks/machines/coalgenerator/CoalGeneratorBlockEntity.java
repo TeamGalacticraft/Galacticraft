@@ -1,8 +1,9 @@
 package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
-import alexiil.mc.lib.attributes.DefaultedAttribute;
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
@@ -27,6 +28,13 @@ import java.util.Map;
  */
 public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
+    private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
+
+    static {
+        SLOT_FILTERS[0] = AggregateItemFilter.anyOf(createFuelTimeMap().keySet().stream().map(ExactItemFilter::new).toArray(ItemFilter[]::new));
+        SLOT_FILTERS[1] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+    }
+
     private final List<Runnable> listeners = Lists.newArrayList();
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     public int fuelTimeMax;
@@ -40,7 +48,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
         selectedOptions.put(Direction.SOUTH, SideOption.POWER_OUTPUT);
-        energy.listen(this::markDirty);
+        getLimitedInventory().getRule(0).disallowExtraction();
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -61,11 +69,15 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     }
 
     @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        return SLOT_FILTERS[slot];
+    }
+
+    @Override
     public void tick() {
-        if (!this.isActive()) {
+        if (world.isClient || !isActive()) {
             return;
         }
-
         int prev = getEnergy().getCurrentEnergy();
 
         if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
@@ -78,7 +90,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             this.fuelTimeCurrent = 0;
             this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem());
 
-            this.getInventory().getInvStack(0).setCount(this.getInventory().getInvStack(0).getCount() - 1);
+            getInventory().getSlot(0).extract(1);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {
@@ -100,25 +112,12 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         for (Direction direction : Direction.values()) {
             if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
-                EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
+                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }
-
-        if (getInventory().getInvStack(1).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
-            if (GalacticraftEnergy.isEnergyItem(getInventory().getInvStack(1))) {
-                if (getInventory().getInvStack(1).getTag().getInt("Energy") < getInventory().getInvStack(1).getTag().getInt("MaxEnergy")) {
-                    getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-                    getInventory().getInvStack(1).getTag().putInt("Energy", this.getInventory().getInvStack(1).getTag().getInt("Energy") + 1);
-                    getInventory().getInvStack(1).setDamage(this.getInventory().getInvStack(1).getDamage() - 1);
-                }
-            }
-        }
-    }
-
-    public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
-        return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
+        attemptDrainPowerToStack(1);
     }
 }
