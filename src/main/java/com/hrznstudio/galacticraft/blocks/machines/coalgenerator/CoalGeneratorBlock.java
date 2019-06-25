@@ -4,12 +4,10 @@ import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
-import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
-import javafx.geometry.Side;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderLayer;
@@ -46,6 +44,12 @@ import java.util.List;
 public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
 
     private final static DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    private final static EnumProperty NORTH = EnumProperty.of("north", CoalGeneratorSideOptions.class);
+    private final static EnumProperty SOUTH = EnumProperty.of("south", CoalGeneratorSideOptions.class);
+    private final static EnumProperty EAST = EnumProperty.of("east", CoalGeneratorSideOptions.class);
+    private final static EnumProperty WEST = EnumProperty.of("west", CoalGeneratorSideOptions.class);
+    private final static EnumProperty UP = EnumProperty.of("up", CoalGeneratorSideOptions.class);
+    private final static EnumProperty DOWN = EnumProperty.of("down", CoalGeneratorSideOptions.class);
 
     public CoalGeneratorBlock(Settings settings) {
         super(settings);
@@ -65,6 +69,12 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
+        stateBuilder.add(NORTH);
+        stateBuilder.add(SOUTH);
+        stateBuilder.add(EAST);
+        stateBuilder.add(WEST);
+        stateBuilder.add(UP);
+        stateBuilder.add(DOWN);
     }
 
 
@@ -91,11 +101,12 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
-                .with(SideOption.FRONT_SIDE_OPTION, SideOption.BLANK)
-                .with(SideOption.BACK_SIDE_OPTION, SideOption.BLANK)
-                .with(SideOption.LEFT_SIDE_OPTION, SideOption.BLANK)
-                .with(SideOption.TOP_SIDE_OPTION, SideOption.BLANK)
-                .with(SideOption.BOTTOM_SIDE_OPTION, SideOption.BLANK);
+                .with(NORTH, CoalGeneratorSideOptions.DEFAULT)
+                .with(SOUTH, CoalGeneratorSideOptions.DEFAULT)
+                .with(EAST, CoalGeneratorSideOptions.DEFAULT)
+                .with(WEST, CoalGeneratorSideOptions.DEFAULT)
+                .with(UP, CoalGeneratorSideOptions.DEFAULT)
+                .with(DOWN, CoalGeneratorSideOptions.DEFAULT);
     }
 
     @Override
@@ -154,5 +165,20 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
+    }
+
+    public enum CoalGeneratorSideOptions implements StringIdentifiable {
+        POWEROUT("powerout"),
+        DEFAULT("default"),
+        ;
+
+        String name;
+        CoalGeneratorSideOptions(String name) {
+            this.name = name;
+        }
+        @Override
+        public String asString() {
+            return this.name;
+        }
     }
 }
