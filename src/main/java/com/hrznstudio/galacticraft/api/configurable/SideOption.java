@@ -1,18 +1,9 @@
 package com.hrznstudio.galacticraft.api.configurable;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
-import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
