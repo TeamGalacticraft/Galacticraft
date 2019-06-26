@@ -6,7 +6,9 @@ import alexiil.mc.lib.attributes.item.ItemInvSlotChangeListener.ItemInvSlotListe
 import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.item.impl.DelegatingFixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.SimpleLimitedFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
@@ -40,8 +42,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
     };
 
-    private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
-    private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
+    private final LimitedFixedItemInv limitedInventory = new SimpleLimitedFixedItemInv(inventory);
+    private final FixedItemInv exposedInventory = new DelegatingFixedItemInv(limitedInventory);
 
 
     public ConfigurableElectricMachineBlockEntity(BlockEntityType<?> blockEntityType) {
