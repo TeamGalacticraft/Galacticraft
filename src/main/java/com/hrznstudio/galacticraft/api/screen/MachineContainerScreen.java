@@ -11,6 +11,7 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.container.ContainerFactory;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
@@ -21,6 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -301,40 +304,17 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 return true;
             }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 && mouseY <= this.top + 68 && button == 0) {
-                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.TOP_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.TOP_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("up," + this.world.getBlockState(pos).get(SideOption.TOP_SIDE_OPTION).name())));
-                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
-                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    return true;
-                }
-            }
-
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
-                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.RIGHT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.RIGHT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("east," + this.world.getBlockState(pos).get(SideOption.RIGHT_SIDE_OPTION).name())));
-                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
-                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    return true;
-                }
-            }
-
             if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.FRONT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.FRONT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("north," + this.world.getBlockState(pos).get(SideOption.FRONT_SIDE_OPTION).name())));
-                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
-                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-                    return true;
-                }
-            }
 
-            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
-                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.LEFT_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.LEFT_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("west," + this.world.getBlockState(pos).get(SideOption.LEFT_SIDE_OPTION).name())));
+                    BlockState state = this.world.getBlockState(pos);
+                    state.get(EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())));
+                    BlockState newState = state.with(EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())),
+                            state.get(EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+                                    .nextValidOption(state.getBlock()));
+
+                    this.world.setBlockState(pos, newState);
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("north" + "," + newState.get(EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))).name())));
                     sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
                     this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;
@@ -343,8 +323,66 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
 
             if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.BACK_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.BACK_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("south," + this.world.getBlockState(pos).get(SideOption.BACK_SIDE_OPTION).name())));
+
+                    BlockState state = this.world.getBlockState(pos);
+                    state.get(EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())));
+                    BlockState newState = state.with(EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())),
+                            state.get(EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+                                    .nextValidOption(state.getBlock()));
+
+                    this.world.setBlockState(pos, newState);
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("south" + "," + newState.get(EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+
+                    BlockState state = this.world.getBlockState(pos);
+                    state.get(EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())));
+                    BlockState newState = state.with(EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())),
+                            state.get(EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+                                    .nextValidOption(state.getBlock()));
+
+                    this.world.setBlockState(pos, newState);
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("east" + "," + newState.get(EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+
+                    BlockState state = this.world.getBlockState(pos);
+                    state.get(EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())));
+                    BlockState newState = state.with(EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())),
+                            state.get(EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+                                    .nextValidOption(state.getBlock()));
+
+                    this.world.setBlockState(pos, newState);
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("west" + "," + newState.get(EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))).name())));
+                    sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                    this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                    return true;
+                }
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 && mouseY <= this.top + 68 && button == 0) {
+                if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
+
+                    BlockState state = this.world.getBlockState(pos);
+                    state.get(EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())));
+                    BlockState newState = state.with(EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())),
+                            state.get(EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+                                    .nextValidOption(state.getBlock()));
+
+                    this.world.setBlockState(pos, newState);
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("up" + "," + newState.get(EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))).name())));
                     sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
                     this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;
@@ -353,8 +391,15 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
 
             if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 + 18 + 18 && mouseY <= this.top + 68 + 18 + 18 && button == 0) {
                 if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    this.world.setBlockState(pos, this.world.getBlockState(pos).with(SideOption.BOTTOM_SIDE_OPTION, this.world.getBlockState(pos).get(SideOption.BOTTOM_SIDE_OPTION).nextValidOption(this.world.getBlockState(pos).getBlock())));
-                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("down," + this.world.getBlockState(pos).get(SideOption.BOTTOM_SIDE_OPTION).name())));
+
+                    BlockState state = this.world.getBlockState(pos);
+                    state.get(EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())));
+                    BlockState newState = state.with(EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())),
+                            state.get(EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+                                    .nextValidOption(state.getBlock()));
+
+                    this.world.setBlockState(pos, newState);
+                    MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString("down" + "," + newState.get(EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))).name())));
                     sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
                     this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     return true;

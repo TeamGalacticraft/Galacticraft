@@ -87,7 +87,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return blankConfig(this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite()));
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
     }
 
     @Override

@@ -67,7 +67,7 @@ public class GalacticraftPackets {
             if (context.getPlayer().world.getBlockState(pos) != null) {
                 if (context.getPlayer().world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
                     context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                            .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.values()), SideOption.valueOf(data.split(",")[1])));
+                            .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())), SideOption.valueOf(data.split(",")[1])));
                 }
             }
         }));

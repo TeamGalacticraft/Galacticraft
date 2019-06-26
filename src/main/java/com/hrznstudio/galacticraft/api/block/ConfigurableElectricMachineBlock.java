@@ -3,11 +3,13 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.util.WireConnectable;
+import javafx.geometry.Side;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -19,25 +21,17 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         super(block$Settings_1);
     }
 
-    public BlockState blankConfig(BlockState state) {
-        return state.with(SideOption.FRONT_SIDE_OPTION, SideOption.BLANK).with(SideOption.BACK_SIDE_OPTION, SideOption.BLANK)
-                .with(SideOption.RIGHT_SIDE_OPTION, SideOption.BLANK).with(SideOption.LEFT_SIDE_OPTION, SideOption.BLANK)
-                .with(SideOption.TOP_SIDE_OPTION, SideOption.BLANK).with(SideOption.BOTTOM_SIDE_OPTION, SideOption.BLANK);
-    }
-
-    @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
-        super.appendProperties(stateFactory$Builder_1);
-        stateFactory$Builder_1.add(SideOption.FRONT_SIDE_OPTION);
-        stateFactory$Builder_1.add(SideOption.BACK_SIDE_OPTION);
-        stateFactory$Builder_1.add(SideOption.RIGHT_SIDE_OPTION);
-        stateFactory$Builder_1.add(SideOption.LEFT_SIDE_OPTION);
-        stateFactory$Builder_1.add(SideOption.TOP_SIDE_OPTION);
-        stateFactory$Builder_1.add(SideOption.BOTTOM_SIDE_OPTION);
-    }
-
     public static SideOption[] optionsToArray(BlockState state) {
-        return new SideOption[]{state.get(SideOption.FRONT_SIDE_OPTION), state.get(SideOption.BACK_SIDE_OPTION), state.get(SideOption.RIGHT_SIDE_OPTION), state.get(SideOption.LEFT_SIDE_OPTION), state.get(SideOption.TOP_SIDE_OPTION), state.get(SideOption.BOTTOM_SIDE_OPTION)};
+        if (state.getBlock() instanceof ConfigurableElectricMachineBlock) {
+            return new SideOption[]{state.get(EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
+                    state.get(EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
+                    state.get(EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
+                    state.get(EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
+                    state.get(EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
+                    state.get(EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+            };
+        }
+        return new SideOption[] {SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK};
     }
 
     abstract public boolean consumesOxygen();
