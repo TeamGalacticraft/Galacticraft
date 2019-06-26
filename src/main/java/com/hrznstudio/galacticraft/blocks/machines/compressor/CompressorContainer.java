@@ -1,15 +1,11 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
 import net.minecraft.container.FurnaceOutputSlot;
 import net.minecraft.container.Property;
@@ -18,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

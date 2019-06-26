@@ -3,4 +3,4 @@
  *
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-package com.hrznstudio.galacticraft.api.blocks;
+package com.hrznstudio.galacticraft.api.block;

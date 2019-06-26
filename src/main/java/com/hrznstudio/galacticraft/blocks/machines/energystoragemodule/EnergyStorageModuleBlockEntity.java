@@ -1,16 +1,15 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.util.Tickable;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static int MAX_ENERGY = 60000;
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;
@@ -41,7 +40,7 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
 
     @Override
     public void tick() {
-        if (world.isClient) {
+        if (world.isClient || !isActive()) {
             return;
         }
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);

@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.api.blocks;
+package com.hrznstudio.galacticraft.api.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

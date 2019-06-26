@@ -1,14 +1,13 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -37,7 +36,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
+public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public EnergyStorageModuleBlock(Settings settings) {
@@ -89,6 +88,26 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
     }
 
     @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return true;
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
     }
@@ -100,22 +119,6 @@ public class EnergyStorageModuleBlock extends Block implements Rotatable, BlockE
 
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof EnergyStorageModuleBlockEntity)) {
-            Galacticraft.logger.error("Not a Energy Storage Module. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }/*
-        Direction d = world.getBlockState(connectionTargetPos).get(FACING);
-        System.out.println(opposite);
-        if (d == Direction.NORTH) {
-            return opposite == Direction.WEST || opposite == Direction.EAST;
-        } else if (d == Direction.SOUTH) {
-            return opposite == Direction.WEST || opposite == Direction.EAST;
-        } else if (d == Direction.EAST) {
-            return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else if (d == Direction.WEST) {
-            return opposite == Direction.NORTH || opposite == Direction.SOUTH;
-        } else {*/
-        return WireConnectionType.NONE;
-        //}
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

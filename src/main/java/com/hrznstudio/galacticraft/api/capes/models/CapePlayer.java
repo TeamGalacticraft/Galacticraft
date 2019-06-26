@@ -24,7 +24,7 @@ public class CapePlayer {
 
     public JsonCapes.Cape getCape() {
         JsonCapes.Cape cape = JsonCapes.Cape.valueOfIgnoreCase(this.cape);
-        if(cape == null) return JsonCapes.Cape.EARTH;
+        if (cape == null) return JsonCapes.Cape.EARTH;
         else return cape;
     }
 }

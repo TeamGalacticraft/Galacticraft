@@ -1,12 +1,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.GalacticraftClient;
-import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +24,7 @@ public abstract class JsonCapeMixin {
 
     @Inject(at = @At("TAIL"), method = "loadTextures")
     private void loadTextures(CallbackInfo callbackInfo) {
-        if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
+        /*if (GalacticraftClient.jsonCapes.areCapesLoaded()) {
             for (Entity entity : MinecraftClient.getInstance().world.getPlayers()) {
                 if (entity instanceof PlayerEntity) {
                     if (GalacticraftClient.jsonCapes.getCapePlayers().get(entity.getUuid()) != null) {
@@ -42,7 +37,7 @@ public abstract class JsonCapeMixin {
                     }
                 }
             }
-        }
+        }*/
 
     }
 }

@@ -6,6 +6,7 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
+import me.shedaniel.rei.api.DisplayHelper;
 import me.shedaniel.rei.api.REIPluginEntry;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.SpeedCraftFunctional;
@@ -94,5 +95,10 @@ public class GalacticraftREIPlugin implements REIPluginEntry {
                 recipeHelper.registerDisplay(COMPRESSING, new DefaultShapedCompressingDisplay((ShapedCompressingRecipe) value));
             }
         }
+    }
+
+    @Override
+    public void registerBounds(DisplayHelper displayHelper) {
+
     }
 }

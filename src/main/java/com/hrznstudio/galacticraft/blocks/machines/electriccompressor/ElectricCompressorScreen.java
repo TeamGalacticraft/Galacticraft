@@ -2,9 +2,7 @@ package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
@@ -14,7 +12,7 @@ public class ElectricCompressorScreen extends CompressorScreen {
     public static final ContainerFactory<AbstractContainerScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
 
     public ElectricCompressorScreen(int syncId, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity) {
-        super(new ElectricCompressorContainer(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("ui.galacticraft-rewoven.electric_compressor.name"));
+        super(new ElectricCompressorContainer(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("ui.galacticraft-rewoven.electric_compressor.name"));
         this.containerHeight = 199;
     }
 

@@ -3,17 +3,16 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,6 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
     private static final int ENERGY_Y = Constants.TextureCoordinates.ENERGY_LIGHT_Y;
@@ -37,11 +35,15 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
     private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
+
+    private final BlockPos pos;
+
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
 
     public CoalGeneratorScreen(int syncId, PlayerEntity player, CoalGeneratorBlockEntity blockEntity) {
-        super(new CoalGeneratorContainer(syncId, player, blockEntity), player.inventory, new TranslatableText("ui.galacticraft-rewoven.coal_generator.name"));
+        super(new CoalGeneratorContainer(syncId, player, blockEntity), player.inventory, player.getEntityWorld(), blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.coal_generator.name"));
+        this.pos = blockEntity.getPos();
         this.containerHeight = 176;
     }
 
@@ -57,7 +59,6 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
         energyDisplayX = leftPos + 10;
         energyDisplayY = topPos + 28;
 
-        //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
@@ -89,14 +90,8 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
             toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", container.blockEntity.status.toString()).setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
             toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
             toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
-
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
         this.drawTabTooltips(mouseX, mouseY);
-    }
-
-    @Override
-    public boolean mouseClicked(double double_1, double double_2, int int_1) {
-        return this.checkTabsClick(double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
     }
 }

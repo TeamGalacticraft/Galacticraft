@@ -9,6 +9,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.misc.Capes;
+import com.hrznstudio.galacticraft.network.packet.GalacticraftPackets;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
@@ -34,7 +35,7 @@ import java.lang.reflect.Method;
  */
 public class Galacticraft implements ModInitializer {
 
-    public static Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
+    public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
     private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     public static ConfigHandler configHandler = new ConfigHandler();
@@ -61,6 +62,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.init();
         WorldGenerator.register();
         Capes.updateCapeList();
+        GalacticraftPackets.register();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {
@@ -71,6 +73,5 @@ public class Galacticraft implements ModInitializer {
                 logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
             }
         }
-
     }
 }

@@ -2,9 +2,8 @@ package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
@@ -16,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
-public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable {
+public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int MAX_OXYGEN = 5000;
     public static final int BATTERY_SLOT = 0;
 
@@ -76,7 +75,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
     @Override
     public void tick() {
-        if (world.isClient) {
+        if (world.isClient || !isActive()) {
             return;
         }
         attemptChargeFromStack(BATTERY_SLOT);

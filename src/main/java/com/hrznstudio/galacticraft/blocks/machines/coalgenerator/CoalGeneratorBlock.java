@@ -2,14 +2,18 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -25,7 +29,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -38,15 +41,16 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
+public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
 
     private final static DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
-    private final static EnumProperty NORTH = EnumProperty.of("north", CoalGeneratorSideOptions.class);
-    private final static EnumProperty SOUTH = EnumProperty.of("south", CoalGeneratorSideOptions.class);
-    private final static EnumProperty EAST = EnumProperty.of("east", CoalGeneratorSideOptions.class);
-    private final static EnumProperty WEST = EnumProperty.of("west", CoalGeneratorSideOptions.class);
-    private final static EnumProperty UP = EnumProperty.of("up", CoalGeneratorSideOptions.class);
-    private final static EnumProperty DOWN = EnumProperty.of("down", CoalGeneratorSideOptions.class);
+
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
 
     public CoalGeneratorBlock(Settings settings) {
         super(settings);
@@ -66,24 +70,45 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
-        stateBuilder.add(NORTH);
-        stateBuilder.add(SOUTH);
-        stateBuilder.add(EAST);
-        stateBuilder.add(WEST);
-        stateBuilder.add(UP);
-        stateBuilder.add(DOWN);
+
+        stateBuilder.add(FRONT_SIDE_OPTION);
+        stateBuilder.add(BACK_SIDE_OPTION);
+        stateBuilder.add(RIGHT_SIDE_OPTION);
+        stateBuilder.add(LEFT_SIDE_OPTION);
+        stateBuilder.add(TOP_SIDE_OPTION);
+        stateBuilder.add(BOTTOM_SIDE_OPTION);
     }
 
 
     @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return true;
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
-                .with(NORTH, CoalGeneratorSideOptions.DEFAULT)
-                .with(SOUTH, CoalGeneratorSideOptions.DEFAULT)
-                .with(EAST, CoalGeneratorSideOptions.DEFAULT)
-                .with(WEST, CoalGeneratorSideOptions.DEFAULT)
-                .with(UP, CoalGeneratorSideOptions.DEFAULT)
-                .with(DOWN, CoalGeneratorSideOptions.DEFAULT);
+                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
+                .with(BACK_SIDE_OPTION, SideOption.BLANK)
+                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
+                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
+                .with(TOP_SIDE_OPTION, SideOption.BLANK)
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
     }
 
     @Override
@@ -140,29 +165,7 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof CoalGeneratorBlockEntity)) {
-            Galacticraft.logger.error("Not a Coal Generator. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_OUTPUT;
-        }
-        return WireConnectionType.NONE;
-    }
-
-    public enum CoalGeneratorSideOptions implements StringIdentifiable {
-        POWEROUT("powerout"),
-        DEFAULT("default"),
-        ;
-
-        String name;
-        CoalGeneratorSideOptions(String name) {
-            this.name = name;
-        }
-        @Override
-        public String asString() {
-            return this.name;
-        }
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

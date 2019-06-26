@@ -4,9 +4,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -41,12 +39,12 @@ public class CompressorScreen extends MachineContainerScreen<CompressorContainer
     protected World world;
 
     public CompressorScreen(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
-        this(new CompressorContainer(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("ui.galacticraft-rewoven.compressor.name"));
+        this(new CompressorContainer(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("ui.galacticraft-rewoven.compressor.name"));
         this.containerHeight = 192;
     }
 
-    public CompressorScreen(CompressorContainer electricCompressorContainer, PlayerEntity playerEntity, Text textComponents) {
-        super(electricCompressorContainer, playerEntity.inventory, textComponents);
+    public CompressorScreen(CompressorContainer electricCompressorContainer, PlayerEntity playerEntity, CompressorBlockEntity blockEntity, Text textComponents) {
+        super(electricCompressorContainer, playerEntity.inventory, playerEntity.world, blockEntity.getPos(), textComponents);
         this.world = playerEntity.world;
     }
 

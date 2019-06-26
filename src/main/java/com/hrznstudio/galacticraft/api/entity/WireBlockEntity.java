@@ -18,13 +18,13 @@ public class WireBlockEntity extends BlockEntity {
      */
     public long networkId;
 
+    public WireBlockEntity(BlockEntityType<?> blockEntityType_1) {
+        super(blockEntityType_1);
+    }
+
     public void onPlaced() {
         networkId = new WireNetwork(this).getId();
         tickedOnce = true;
         WireNetwork.blockPlaced();
-    }
-
-    public WireBlockEntity(BlockEntityType<?> blockEntityType_1) {
-        super(blockEntityType_1);
     }
 }

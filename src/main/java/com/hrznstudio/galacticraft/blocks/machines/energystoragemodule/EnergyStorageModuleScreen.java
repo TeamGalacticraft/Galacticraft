@@ -3,18 +3,15 @@ package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +24,6 @@ public class EnergyStorageModuleScreen extends MachineContainerScreen<EnergyStor
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ENERGY_STORAGE_MODULE_SCREEN));
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
 
     private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
     private static final int ENERGY_Y = Constants.TextureCoordinates.ENERGY_LIGHT_Y;
@@ -37,16 +33,11 @@ public class EnergyStorageModuleScreen extends MachineContainerScreen<EnergyStor
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
     private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
-    BlockPos blockPos;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
 
     public EnergyStorageModuleScreen(int syncId, PlayerEntity playerEntity, EnergyStorageModuleBlockEntity blockEntity) {
-        super(new EnergyStorageModuleContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.energy_storage_module.name"));
+        super(new EnergyStorageModuleContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.energy_storage_module.name"));
 //        this.containerHeight = 166;
     }
 
@@ -73,11 +64,6 @@ public class EnergyStorageModuleScreen extends MachineContainerScreen<EnergyStor
         super.render(mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.energy_storage_module").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
-    }
-
-    public void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {

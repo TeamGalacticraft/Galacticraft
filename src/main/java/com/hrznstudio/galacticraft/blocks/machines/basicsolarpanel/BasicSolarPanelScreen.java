@@ -5,15 +5,14 @@ import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
     public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelScreen::new);
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
@@ -38,17 +36,16 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
     private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
     private static final int ENERGY_DIMMED_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int ENERGY_DIMMED_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
     private int energyDisplayX = 0;
     private int energyDisplayY = 0;
     private World world;
+    private BlockPos blockPos;
+
 
     public BasicSolarPanelScreen(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
-        super(new BasicSolarPanelContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.basic_solar_panel.name"));
+        super(new BasicSolarPanelContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.basic_solar_panel.name"));
         this.world = playerEntity.world;
+        this.blockPos = blockEntity.getPos();
     }
 
     @Override
@@ -75,11 +72,6 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
-
-//    public void drawConfigTabs() {
-//        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-//        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-//    }
 
     private void drawEnergyBufferBar() {
         float currentEnergy = container.energy.get();

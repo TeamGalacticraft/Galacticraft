@@ -1,12 +1,14 @@
-package com.hrznstudio.galacticraft.blocks.machines;
+package com.hrznstudio.galacticraft.api.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.ItemInvSlotChangeListener.ItemInvSlotListener;
+import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.item.impl.DelegatingFixedItemInv;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.SimpleLimitedFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
@@ -19,11 +21,16 @@ import net.minecraft.nbt.CompoundTag;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
-    public static final int DEFAULT_MAX_ENERGY = 15000;
-    public final SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
-    private final SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize()) {
+public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
 
+    public static final int DEFAULT_MAX_ENERGY = 15000;
+    public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    public String owner = "";
+    public boolean isParty = false;
+    public boolean isPublic = true;
+    public String redstoneOption = "DISABLED";
+
+    private final SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize()) {
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack item) {
             return getFilterForSlot(slot).matches(item);
@@ -31,16 +38,24 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
         @Override
         public ItemFilter getFilterForSlot(int slot) {
-            return MachineBlockEntity.this.getFilterForSlot(slot);
+            return ConfigurableElectricMachineBlockEntity.this.getFilterForSlot(slot);
         }
     };
-    private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
-    private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
 
-    public MachineBlockEntity(BlockEntityType<?> blockEntityType) {
+    private final LimitedFixedItemInv limitedInventory = new SimpleLimitedFixedItemInv(inventory);
+    private final FixedItemInv exposedInventory = new DelegatingFixedItemInv(limitedInventory);
+
+
+    public ConfigurableElectricMachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
         this.energy.listen(this::markDirty);
         this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
+    }
+
+    public boolean isActive() {
+        if (this.getWorld().isReceivingRedstonePower(pos) && redstoneOption.equals("OFF")) {
+            return false;
+        } else return this.getWorld().isReceivingRedstonePower(pos) || !redstoneOption.equals("ON");
     }
 
     /**
@@ -48,7 +63,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
      *
      * @return Energy capacity of this machine.
      */
-    protected int getMaxEnergy() {
+    public int getMaxEnergy() {
         return DEFAULT_MAX_ENERGY;
     }
 
@@ -133,7 +148,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.toTag(tag);
         tag.putInt("Energy", getEnergy().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
-
+        tag.putString("Owner", owner);
+        tag.putBoolean("Party", isParty);
+        tag.putBoolean("Public", isPublic);
+        tag.putString("Redstone", redstoneOption);
         return tag;
     }
 
@@ -142,6 +160,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.fromTag(tag);
         getEnergy().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
+        owner = tag.getString("Owner");
+        isParty = tag.getBoolean("Party");
+        isPublic = tag.getBoolean("Public");
+        redstoneOption = tag.getString("Redstone");
     }
 
     @Override
@@ -153,5 +175,4 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public CompoundTag toClientTag(CompoundTag tag) {
         return this.toTag(tag);
     }
-
 }

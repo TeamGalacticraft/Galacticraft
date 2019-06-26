@@ -2,8 +2,8 @@ package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import io.netty.util.internal.ConcurrentSet;
@@ -115,7 +115,7 @@ public class WireNetwork {
         energy.clear();
         int energyFulfilled = 0;
         int energyAvailable = 0;
-        int energyLeft = 0;
+        int energyLeft;
 
         for (BlockEntity wire : wires) {
             if ((wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.AIR || wire.getWorld().getBlockState(wire.getPos()).getBlock() == Blocks.CAVE_AIR ||
@@ -134,7 +134,7 @@ public class WireNetwork {
             }
             for (BlockEntity consumer : WireUtils.getAdjacentConsumers(wire.getPos(), wire.getWorld())) {
                 if (consumer != null) {
-                    SimpleEnergyAttribute consumerEnergy = ((MachineBlockEntity) consumer).getEnergy();
+                    SimpleEnergyAttribute consumerEnergy = ((ConfigurableElectricMachineBlockEntity) consumer).getEnergy();
                     if (consumerEnergy.getMaxEnergy() <= consumerEnergy.getCurrentEnergy()) {
                         if (consumerEnergy.getMaxEnergy() < consumerEnergy.getCurrentEnergy()) {
                             consumerEnergy.setCurrentEnergy(consumerEnergy.getMaxEnergy());
@@ -147,7 +147,7 @@ public class WireNetwork {
 
             for (BlockEntity producer : WireUtils.getAdjacentProducers(wire.getPos(), wire.getWorld())) {
                 if (producer != null) {
-                    SimpleEnergyAttribute producerEnergy = ((MachineBlockEntity) producer).getEnergy();
+                    SimpleEnergyAttribute producerEnergy = ((ConfigurableElectricMachineBlockEntity) producer).getEnergy();
                     if (producerEnergy.getCurrentEnergy() > 0) {
                         if (producerEnergy.getCurrentEnergy() >= 100) {
                             energy.put(producer, 100);
@@ -175,7 +175,7 @@ public class WireNetwork {
             if (energyNeeded > 0) {
                 if (energyAvailable >= energyNeeded) {
                     for (ConcurrentMap.Entry<BlockEntity, Integer> entry : energy.entrySet()) {
-                        MachineBlockEntity blockEntity = ((MachineBlockEntity) entry.getKey());
+                        ConfigurableElectricMachineBlockEntity blockEntity = ((ConfigurableElectricMachineBlockEntity) entry.getKey());
                         if (blockEntity.energy.getCurrentEnergy() >= energyLeft) {
                             blockEntity.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyLeft, Simulation.ACTION);
                             if (blockEntity.getEnergy().getCurrentEnergy() < 1) {
@@ -193,10 +193,10 @@ public class WireNetwork {
                         }
                     }
                     energyAvailable -= energyNeeded;
-                    ((MachineBlockEntity) consumer).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyNeeded, Simulation.ACTION);
+                    ((ConfigurableElectricMachineBlockEntity) consumer).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyNeeded, Simulation.ACTION);
                 } else {
                     for (ConcurrentMap.Entry<BlockEntity, Integer> entry : energy.entrySet()) {
-                        MachineBlockEntity blockEntity = ((MachineBlockEntity) entry.getKey());
+                        ConfigurableElectricMachineBlockEntity blockEntity = ((ConfigurableElectricMachineBlockEntity) entry.getKey());
                         if (blockEntity.energy.getCurrentEnergy() >= energyLeft) {
                             energyFulfilled += energyNeeded;
                             blockEntity.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyLeft, Simulation.ACTION);
@@ -219,7 +219,7 @@ public class WireNetwork {
                     if (energyAvailable < 0) {
                         energyAvailable = 0;
                     }
-                    ((MachineBlockEntity) consumer).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyFulfilled, Simulation.ACTION);
+                    ((ConfigurableElectricMachineBlockEntity) consumer).energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyFulfilled, Simulation.ACTION);
                     energyFulfilled = 0;
                 }
             }

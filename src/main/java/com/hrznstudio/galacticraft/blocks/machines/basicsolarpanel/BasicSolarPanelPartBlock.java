@@ -116,7 +116,6 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
         }
 
         BlockPos basePos = ((BasicSolarPanelPartBlockEntity) partEntity).basePos;
-        System.out.println("base pos: " + basePos);
 
         BlockState base = world_1.getBlockState(basePos);
         BasicSolarPanelBlock baseBlock = (BasicSolarPanelBlock) base.getBlock();

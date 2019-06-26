@@ -3,14 +3,10 @@ package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorContainer;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.container.Container;
 import net.minecraft.container.FurnaceOutputSlot;
-import net.minecraft.container.Property;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 
 public class ElectricCompressorContainer extends CompressorContainer {
 

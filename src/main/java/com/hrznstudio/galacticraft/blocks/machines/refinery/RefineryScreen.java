@@ -4,8 +4,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
@@ -102,7 +102,7 @@ public class RefineryScreen extends AbstractContainerScreen {
         super.drawMouseoverTooltip(mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + OVERLAY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + OVERLAY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-//            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
+//            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(Formatting.GRAY)).getFormattedText());
             toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
             toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).asFormattedString() + "\u00A7r");
 
@@ -110,7 +110,7 @@ public class RefineryScreen extends AbstractContainerScreen {
         }
         if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
-//            toolTipLines.add(new TranslatableComponent("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
+//            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(Formatting.GRAY)).getFormattedText());
             toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getOxygen().getCurrentEnergy()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
             toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getOxygen().getMaxEnergy())).asFormattedString() + "\u00A7r");
 

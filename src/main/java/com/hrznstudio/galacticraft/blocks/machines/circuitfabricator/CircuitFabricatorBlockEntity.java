@@ -4,9 +4,8 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-
-import com.hrznstudio.galacticraft.api.configurable.SideOptions;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -29,7 +28,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     private static final ItemFilter[] SLOT_FILTERS;
@@ -47,14 +46,14 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
     private final int maxProgress = 300;
     public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
-    public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_INPUT};
-    public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    public SideOption[] sideOptions = {SideOption.BLANK, SideOption.POWER_INPUT};
+    public Map<Direction, SideOption> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
     int progress;
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        selectedOptions.put(Direction.SOUTH, SideOptions.POWER_INPUT);
+        selectedOptions.put(Direction.SOUTH, SideOption.POWER_INPUT);
         // Stop automation from inserting into the output or extracting from the inputs.
         getLimitedInventory().getSubRule(1, 6).disallowExtraction();
         getLimitedInventory().getRule(6).filterInserts(ConstantItemFilter.NOTHING);
@@ -75,11 +74,11 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity implements 
 
     @Override
     public void tick() {
-        if (world.isClient) {
+        if (world.isClient || !isActive()) {
             return;
         }
         for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOptions.POWER_INPUT)) {
+            if (selectedOptions.get(direction).equals(SideOption.POWER_INPUT)) {
                 EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));

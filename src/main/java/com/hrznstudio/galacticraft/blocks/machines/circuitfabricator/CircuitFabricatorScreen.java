@@ -5,20 +5,16 @@ import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
-
 import net.fabricmc.fabric.api.container.ContainerFactory;
-
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -27,7 +23,6 @@ public class CircuitFabricatorScreen extends MachineContainerScreen<CircuitFabri
     public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorScreen::new);
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
@@ -43,20 +38,14 @@ public class CircuitFabricatorScreen extends MachineContainerScreen<CircuitFabri
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 50;
     private static final int PROGRESS_HEIGHT = 10;
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
 
-    BlockPos blockPos;
     private int energyDisplayX;
     private int energyDisplayY;
     private int progressDisplayX;
     private int progressDisplayY;
 
-
     public CircuitFabricatorScreen(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
-        super(new CircuitFabricatorContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.circuit_fabricator.name"));
+        super(new CircuitFabricatorContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.circuit_fabricator.name"));
         this.containerHeight = 192;
     }
 
@@ -77,6 +66,7 @@ public class CircuitFabricatorScreen extends MachineContainerScreen<CircuitFabri
         //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight + 26);
         this.drawEnergyBufferBar();
+
         this.drawProgressBar();
         this.drawConfigTabs();
     }
@@ -86,11 +76,6 @@ public class CircuitFabricatorScreen extends MachineContainerScreen<CircuitFabri
         super.render(mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.circuit_fabricator").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
-    }
-
-    public void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     private void drawEnergyBufferBar() {
