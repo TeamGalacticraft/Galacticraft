@@ -33,31 +33,6 @@ public enum SideOption implements StringIdentifiable {
         this.name = name;
     }
 
-    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.values());
-    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.values());
-
-    public static EnumProperty<SideOption> getOptionForDirection(Direction direction) {
-        switch (direction) {
-            case NORTH:
-                return SideOption.FRONT_SIDE_OPTION;
-            case SOUTH:
-                return SideOption.BACK_SIDE_OPTION;
-            case EAST:
-                return SideOption.RIGHT_SIDE_OPTION;
-            case WEST:
-                return SideOption.LEFT_SIDE_OPTION;
-            case UP:
-                return SideOption.TOP_SIDE_OPTION;
-            case DOWN:
-                return SideOption.BOTTOM_SIDE_OPTION;
-        }
-        return null;
-    }
-
     public static List<SideOption> getApplicableValuesForMachine(Block block) {
         if (block instanceof ConfigurableElectricMachineBlock) {
             List<SideOption> options = new ArrayList<>();
@@ -98,5 +73,20 @@ public enum SideOption implements StringIdentifiable {
                 return SideOption.values()[0].nextValidOption(block);
             }
         }
+    }
+
+    public String[] getFormattedName() {
+        if (this == SideOption.BLANK) {
+            return new String[] {"\u00a78Blank"};
+        } else if (this == SideOption.OXYGEN_INPUT) {
+            return new String[] {"\u00a7bOxygen \u00a7ain"};
+        } else if (this == SideOption.OXYGEN_OUTPUT) {
+            return new String[] {"\u00a78Oxygen \u00a74out"};
+        } else if (this == SideOption.POWER_INPUT) {
+            return new String[] {"\u00a7dPower \u00a7ain"};
+        } else if (this == SideOption.POWER_OUTPUT) {
+            return new String[] {"\u00a7dPower \u00a74out"};
+        }
+        return new String[] {""};
     }
 }

@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.api.screen;
 
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
@@ -31,6 +32,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -228,8 +232,8 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 }
             }
 
-            this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y + 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y + 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left + 174 + 65, this.top + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
@@ -506,12 +510,36 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         if (!IS_CONFIG_OPEN) {
             if (IS_REDSTONE_OPEN) {
                 if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 96 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 96)) {
-                    //TODO this is just a marker - TODO remove this?
+                    this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asString(), mouseX, mouseY);
                 }
             } else {
                 if (mouseX >= this.left - REDSTONE_TAB_WIDTH && mouseX <= this.left && mouseY >= this.top + 26 && mouseY <= this.top + (REDSTONE_TAB_HEIGHT + 26)) {
-
+                    this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asString(), mouseX, mouseY);
                 }
+            }
+        } else {
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18) {
+                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.north"), this.sideOptions[0].getFormattedName()), mouseX, mouseY);
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18) {
+                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.south"), this.sideOptions[1].getFormattedName()), mouseX, mouseY);
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18) {
+                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.east"), this.sideOptions[2].getFormattedName()), mouseX, mouseY);
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.left && mouseY >= this.top + 49 + 3 + 18 && mouseY <= this.top + 68 + 18) {
+                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.west"), this.sideOptions[3].getFormattedName()), mouseX, mouseY);
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 && mouseY <= this.top + 68) {
+                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.up"), this.sideOptions[4].getFormattedName()), mouseX, mouseY);
+            }
+
+            if (mouseX >= this.left - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.left && mouseY >= this.top + 49 + 3 + 18 + 18 && mouseY <= this.top + 68 + 18 + 18) {
+                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.down"), this.sideOptions[5].getFormattedName()), mouseX, mouseY);
             }
         }
         if (!IS_SECURITY_OPEN) {
