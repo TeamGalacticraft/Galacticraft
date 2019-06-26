@@ -31,9 +31,8 @@
     "fabric": "*",
     "cotton": "*",
     "cotton-energy": "*",
-    "libblockattributes": "*",
-    "silk": "*",
-    "tgc-utils": "*"
+    "libblockattributes_items": ">=0.4.5",
+    "silk": "*"
   },
   "suggests": {
     "modmenu": "*"

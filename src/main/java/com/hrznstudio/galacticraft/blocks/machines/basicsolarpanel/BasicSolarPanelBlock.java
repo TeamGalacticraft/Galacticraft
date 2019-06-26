@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -22,6 +23,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -35,6 +37,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,6 +48,13 @@ import java.util.List;
 public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, MultiBlock, MachineBlock {
 
     private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
 
     public BasicSolarPanelBlock(Settings settings) {
         super(settings);
@@ -63,6 +74,13 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
+
+        stateBuilder.add(FRONT_SIDE_OPTION);
+        stateBuilder.add(BACK_SIDE_OPTION);
+        stateBuilder.add(RIGHT_SIDE_OPTION);
+        stateBuilder.add(LEFT_SIDE_OPTION);
+        stateBuilder.add(TOP_SIDE_OPTION);
+        stateBuilder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -87,7 +105,13 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
+                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
+                .with(BACK_SIDE_OPTION, SideOption.BLANK)
+                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
+                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
+                .with(TOP_SIDE_OPTION, SideOption.BLANK)
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
     }
 
     @Override
@@ -183,6 +207,11 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
         parts.add(backRight);
 
         return parts;
+    }
+
+    @Override
+    public List<Direction> getDisabledConfigFaces() {
+        return Collections.singletonList(Direction.UP);
     }
 
     @Override

@@ -42,8 +42,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
     };
 
-    private final LimitedFixedItemInv limitedInventory = new SimpleLimitedFixedItemInv(inventory);
-    private final FixedItemInv exposedInventory = new DelegatingFixedItemInv(limitedInventory);
+    private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
+    private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
 
 
     public ConfigurableElectricMachineBlockEntity(BlockEntityType<?> blockEntityType) {

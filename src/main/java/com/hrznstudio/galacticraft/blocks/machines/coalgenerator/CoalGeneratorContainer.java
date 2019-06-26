@@ -21,7 +21,7 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
 
     public static final ContainerFactory<Container> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorContainer::new);
 
-    private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL};
+    private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
     private ItemStack itemStack;
     private Inventory inventory;
 

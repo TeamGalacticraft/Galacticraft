@@ -24,7 +24,7 @@ class Model:
         self.cfg = cfg
 
     def save(self):
-        filename = os.path.join("model_output", "models", "block", self.cfg['name'], self.tag + ".json")
+        filename = os.path.join("model_output", "models", "block", self.cfg['name'], self.tag.replace('north=', '').replace(',south=', '').replace(',east=', '').replace(',west=', '').replace(',up=', '').replace(',down=', '') + ".json")
         if os.path.exists(filename):
             os.remove(filename)
 
@@ -146,7 +146,7 @@ for face in faces:
     y += 90
     for tag in models:
         state['variants'][''.join(["facing=", face, ",", tag])] = {
-            "model": config['mod-id'] + ':block/' + config['name'] + "/" + tag,
+            "model": config['mod-id'] + ':block/' + config['name'] + "/" + tag.replace('north=', '').replace(',south=', '').replace(',east=', '').replace(',west=', '').replace(',up=', '').replace(',down=', ''),
             "y": y
         }
 
@@ -157,7 +157,7 @@ blockstates.write(json.dumps(state, indent=4))
 writes += 1
 blockstates.close()
 item = open('model_output/models/item/' + config['name'] + '.json', 'w+')
-item.write(json.dumps({"parent": config['mod-id'] + ":block/" + config['name'] + "/default-default-default-default-default-default"}, indent=4))
+item.write(json.dumps({"parent": config['mod-id'] + ":block/" + config['name'] + "/defaultdefaultdefaultdefaultdefaultdefault"}, indent=4))
 writes += 1
 item.close()
 config_file.close()
@@ -201,13 +201,13 @@ java_text = ''.join([
     "@Override\n",
     "public BlockState getPlacementState(ItemPlacementContext context) {\n",
     "    return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())\n"
-    "                                    .with(NORTH, " + class_name + ".DEFAULT)\n",
-    "                                    .with(SOUTH, " + class_name + ".DEFAULT)\n",
-    "                                    .with(EAST, " + class_name + ".DEFAULT)\n",
-    "                                    .with(WEST, " + class_name + ".DEFAULT)\n",
-    "                                    .with(UP, " + class_name + ".DEFAULT)\n",
-    "                                    .with(DOWN, " + class_name + ".DEFAULT)\n",
-    "}\n\n\n\n",
+    "        .with(NORTH, " + class_name + ".DEFAULT)\n",
+    "        .with(SOUTH, " + class_name + ".DEFAULT)\n",
+    "        .with(EAST, " + class_name + ".DEFAULT)\n",
+    "        .with(WEST, " + class_name + ".DEFAULT)\n",
+    "        .with(UP, " + class_name + ".DEFAULT)\n",
+    "        .with(DOWN, " + class_name + ".DEFAULT)\n",
+    "}\n\n\n",
     enum_text
 ])
 java.write(java_text)

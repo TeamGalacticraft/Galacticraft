@@ -1,19 +1,1028 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "galacticraft-rewoven:block/circuit_fabricator"
-    },
-    "facing=east": {
-      "model": "galacticraft-rewoven:block/circuit_fabricator",
-      "y": 90
-    },
-    "facing=south": {
-      "model": "galacticraft-rewoven:block/circuit_fabricator",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "galacticraft-rewoven:block/circuit_fabricator",
-      "y": 270
+    "variants": {
+        "facing=north,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=powerin,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerinpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerindefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultpowerin",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=powerin,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerinpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerindefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultpowerin",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=powerin,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerinpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerindefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultpowerin",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerinpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerinpowerindefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerinpowerindefaultdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerinpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultpowerindefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=powerin,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/powerindefaultdefaultdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerinpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerinpowerindefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerin,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultpowerindefaultdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerinpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerin,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultpowerindefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerin,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerin,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerinpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerin,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerin,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultpowerindefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=powerin,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerinpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=powerin,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultpowerindefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=default,down=powerin": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultpowerin",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/circuit_fabricator/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 270
+        }
     }
-  }
 }
