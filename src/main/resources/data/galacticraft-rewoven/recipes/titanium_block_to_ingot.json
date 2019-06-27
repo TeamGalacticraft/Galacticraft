@@ -2,7 +2,7 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:titanium"
+      "item": "galacticraft-rewoven:titanium_block"
     }
   ],
   "result": {

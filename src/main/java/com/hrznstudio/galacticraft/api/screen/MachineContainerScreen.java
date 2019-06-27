@@ -39,51 +39,79 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
+
     private static final int BUTTON_OFF_X = 0;
     private static final int BUTTON_OFF_Y = 240;
+
     private static final int BUTTON_ON_X = 0;
     private static final int BUTTON_ON_Y = 224;
+
     private static final int BUTTONS_WIDTH = 16;
     private static final int BUTTONS_HEIGHT = 16;
-    private static final int REDSTONE_TORCH_OFF_X = 224;
-    private static final int REDSTONE_TORCH_OFF_Y = 62;
+
     private static final int LOCK_OWNER_X = 208;
     private static final int LOCK_OWNER_Y = 48;
+
     private static final int LOCK_PARTY_X = 224;
     private static final int LOCK_PARTY_Y = 48;
+
     private static final int LOCK_PUBLIC_X = 208;
     private static final int LOCK_PUBLIC_Y = 64;
+
     private static final int ICONS_WIDTH = 16;
     private static final int ICONS_HEIGHT = 16;
+
+    private static final int REDSTONE_TORCH_OFF_X = 224;
+    private static final int REDSTONE_TORCH_OFF_Y = 62;
+
     private static final int REDSTONE_TAB_X = 0;
     private static final int REDSTONE_TAB_Y = 46;
+
     private static final int REDSTONE_TAB_WIDTH = 22;
     private static final int REDSTONE_TAB_HEIGHT = 22;
+
     private static final int REDSTONE_PANEL_X = 0;
     private static final int REDSTONE_PANEL_Y = 0;
+
     private static final int REDSTONE_PANEL_WIDTH = 99;
     private static final int REDSTONE_PANEL_HEIGHT = 91;
+
+
     private static final int CONFIG_TAB_X = 0;
     private static final int CONFIG_TAB_Y = 69;
+
     private static final int CONFIG_TAB_WIDTH = 22;
     private static final int CONFIG_TAB_HEIGHT = 22;
+
     private static final int CONFIG_PANEL_X = 0;
     private static final int CONFIG_PANEL_Y = 93;
+
     private static final int CONFIG_PANEL_WIDTH = 99;
     private static final int CONFIG_PANEL_HEIGHT = 91;
+
+
     private static final int SECURITY_TAB_X = 23;
     private static final int SECURITY_TAB_Y = 23;
+
     private static final int SECURITY_TAB_WIDTH = 22;
     private static final int SECURITY_TAB_HEIGHT = 22;
+
     private static final int SECURITY_PANEL_X = 101;
     private static final int SECURITY_PANEL_Y = 0;
+
     private static final int SECURITY_PANEL_WIDTH = 99;
     private static final int SECURITY_PANEL_HEIGHT = 91;
+
+
     private final BlockPos pos;
     private final World world;
+
     private boolean IS_REDSTONE_OPEN = false;
+
     private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
+
     private boolean IS_CONFIG_OPEN = false;
+
     private boolean IS_SECURITY_OPEN = false;
 
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
@@ -203,7 +231,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         if (IS_SECURITY_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left + 176, this.top + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
-            this.blit(this.left + 176 + 4, this.top + 6, LOCK_PARTY_X, LOCK_PARTY_Y, ICONS_WIDTH, ICONS_HEIGHT);
+            this.blit(this.left + 176 + 4, this.top + 6, LOCK_PARTY_X, LOCK_PARTY_Y - 1, ICONS_WIDTH, ICONS_HEIGHT);
             this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.left + 176 + 20, this.top + 12, Formatting.GRAY.getColorValue());
 
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -228,8 +256,8 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 }
             }
 
-            this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y + 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y + 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y - 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y - 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left + 174 + 65, this.top + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
@@ -478,7 +506,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                     return;
                 }
                 if ((!((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) && !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
-                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft-rewoven.not_your_machine").asString(), (this.width / 2), this.top + 50, Formatting.DARK_RED.getColorValue());
+                    DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.not_your_machine").asString(), (this.width / 2), this.top + 50, Formatting.DARK_RED.getColorValue());
                     return;
                 }
             }
@@ -604,5 +632,11 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
             default:
                 return 0;
         }
+    }
+
+    @Override
+    protected void drawMouseoverTooltip(int int_1, int int_2) {
+        super.drawMouseoverTooltip(int_1, int_2);
+        drawTabTooltips(int_1, int_2);
     }
 }

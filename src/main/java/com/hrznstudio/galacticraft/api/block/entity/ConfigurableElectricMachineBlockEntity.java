@@ -25,9 +25,19 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     public static final int DEFAULT_MAX_ENERGY = 15000;
     public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    /**
+     * The UUID of the player that viewed the GUI of this machine first
+     */
     public String owner = "";
     public boolean isParty = false;
     public boolean isPublic = true;
+    /**
+     * The selected redstone control option.
+     * Can may *only* take any of the below values:
+     * DISABLED: Ignores all redstone signals
+     * OFF: When powered, the machine turns off
+     * ON: The machine will only work when powered
+     */
     public String redstoneOption = "DISABLED";
 
     private final SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize()) {
@@ -53,9 +63,16 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     public boolean isActive() {
-        if (this.getWorld().isReceivingRedstonePower(pos) && redstoneOption.equals("OFF")) {
-            return false;
-        } else return this.getWorld().isReceivingRedstonePower(pos) || !redstoneOption.equals("ON");
+        switch (this.redstoneOption) {
+            default:
+                return true;
+            case "OFF":
+                return !this.getWorld().isReceivingRedstonePower(pos);
+            case "ON":
+                return this.getWorld().isReceivingRedstonePower(pos);
+        }
+
+
     }
 
     /**
@@ -106,6 +123,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     /**
      * Tries to drain some of this machine's power into the item in the given slot in this {@link #getInventory}.
+     * @param slot The slot id of the item
      */
     protected void attemptDrainPowerToStack(int slot) {
         int available = Math.min(getBatteryTransferRate(), energy.getCurrentEnergy());

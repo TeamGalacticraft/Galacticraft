@@ -2,7 +2,7 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:copper"
+      "item": "galacticraft-rewoven:copper_block"
     }
   ],
   "result": {

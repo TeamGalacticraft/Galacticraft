@@ -75,9 +75,11 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
     @Override
     public void tick() {
+
         if (world.isClient || !isActive()) {
             return;
         }
+
         int prev = getEnergy().getCurrentEnergy();
 
         if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
