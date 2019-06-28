@@ -18,8 +18,6 @@ import org.apache.logging.log4j.MarkerManager;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    private static final Marker ENERGY = MarkerManager.getMarker("Energy");
-
     public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType();
     public static final EnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
 

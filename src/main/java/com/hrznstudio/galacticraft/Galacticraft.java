@@ -8,7 +8,6 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.misc.Capes;
 import com.hrznstudio.galacticraft.network.packet.GalacticraftPackets;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
@@ -36,13 +35,12 @@ import java.lang.reflect.Method;
 public class Galacticraft implements ModInitializer {
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
-    private static final Marker GALACTICRAFT = MarkerManager.getMarker("Galacticraft");
 
     public static ConfigHandler configHandler = new ConfigHandler();
 
     @Override
     public void onInitialize() {
-        logger.info(GALACTICRAFT, "[Galacticraft] Initializing...");
+        logger.info("[Galacticraft] Initializing...");
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();
@@ -61,7 +59,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftDimensions.init();
         GalacticraftSurfaceBuilders.init();
         WorldGenerator.register();
-        Capes.updateCapeList();
         GalacticraftPackets.register();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {

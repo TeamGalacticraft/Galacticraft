@@ -18,4 +18,9 @@ public class OilFluidRenderHandler implements FluidRenderHandler {
     public Sprite[] getFluidSprites(ExtendedBlockView view, BlockPos pos, FluidState state) {
         return new Sprite[]{STILL_TEXTURE, FLOWING_TEXTURE};
     }
+
+    @Override
+    public int getFluidColor(ExtendedBlockView view, BlockPos pos, FluidState state) {
+        return 0;
+    }
 }

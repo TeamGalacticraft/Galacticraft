@@ -26,6 +26,7 @@ import java.util.function.Consumer;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftCommands {
+
     public static void register() {
         CommandRegistry.INSTANCE.register(false, source -> source.register(
                 LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")

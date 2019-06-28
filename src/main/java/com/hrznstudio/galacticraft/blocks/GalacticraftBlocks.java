@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.GalacticraftStairsBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.CheeseBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
@@ -24,11 +25,13 @@ import com.hrznstudio.galacticraft.blocks.ore.SiliconOreBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
 import net.minecraft.item.*;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.SystemUtil;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
@@ -37,6 +40,19 @@ import org.apache.logging.log4j.MarkerManager;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBlocks {
+
+    public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
+            // Set the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF))
+            .build();
+
+    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
+            // Set the the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR))
+            .build();
+
     // Blocks
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build()), Constants.Blocks.MOON_TURF);
     public static final Block MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F).build()), Constants.Blocks.MOON_ROCK);
@@ -127,144 +143,41 @@ public class GalacticraftBlocks {
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.CAVERNOUS_VINE);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
+
     // Machines
-    public static final Block CIRCUIT_FABRICATOR = registerBlock(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.CIRCUIT_FABRICATOR);
-    public static final Block COMPRESSOR = registerBlock(new CompressorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COMPRESSOR);
-    public static final Block ELECTRIC_COMPRESSOR = registerBlock(new ElectricCompressorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ELECTRIC_COMPRESSOR);
-    public static final Block COAL_GENERATOR = registerBlock(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COAL_GENERATOR);
-    public static final Block BASIC_SOLAR_PANEL = registerBlock(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(1.0F, 3600000.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL);
-    public static final Block BASIC_SOLAR_PANEL_PART = registerBlock(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 3600000.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
-    public static final Block ENERGY_STORAGE_MODULE = registerBlock(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
-    public static final Block OXYGEN_COLLECTOR = registerBlock(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
-    public static final Block REFINERY = registerBlock(new RefineryBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
+    public static final Block CIRCUIT_FABRICATOR = registerMachine(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.CIRCUIT_FABRICATOR);
+    public static final Block COMPRESSOR = registerMachine(new CompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COMPRESSOR);
+    public static final Block ELECTRIC_COMPRESSOR = registerMachine(new ElectricCompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ELECTRIC_COMPRESSOR);
+    public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COAL_GENERATOR);
+    public static final Block BASIC_SOLAR_PANEL = registerMachine(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL);
+    public static final Block BASIC_SOLAR_PANEL_PART = registerMachine(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
+    public static final Block ENERGY_STORAGE_MODULE = registerMachine(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
+    public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
+    public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
+
     // Liquids
-    public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(Material.WATER).noCollision().build());
+    public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
+            .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
+            .strength(100.0F, 1000.0F).dropsNothing().build());
     public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().build());
-
-
-    public static final BlockItem CRUDE_OIL_ITEM = registerBlockItem(new BlockItem(CRUDE_OIL, new Item.Settings()), Constants.Blocks.CRUDE_OIL);
-    public static final BlockItem BASIC_SOLAR_PANEL_PART_ITEM = registerBlockItem(new BlockItem(BASIC_SOLAR_PANEL_PART, new Item.Settings()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
-
-    private static final Marker BLOCKS = MarkerManager.getMarker("Blocks"); // Galacticraft/Blocks
-    public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
-            // Set the tab icon
-            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF))
-            .build();
-    // Block Items
-    public static final BlockItem MOON_TURF_ITEM = registerBlockItem(new BlockItem(MOON_TURF, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_TURF);
-    public static final BlockItem MOON_ROCK_ITEM = registerBlockItem(new BlockItem(MOON_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_ROCK);
-    public static final BlockItem MOON_DIRT_ITEM = registerBlockItem(new BlockItem(MOON_DIRT, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_DIRT);
-    public static final BlockItem MOON_DUNGEON_BRICKS_ITEM = registerBlockItem(new BlockItem(MOON_DUNGEON_BRICKS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_DUNGEON_BRICKS);
-    public static final BlockItem MARS_SURFACE_ROCK_ITEM = registerBlockItem(new BlockItem(MARS_SURFACE_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_SURFACE_ROCK);
-    public static final BlockItem MARS_SUB_SURFACE_ROCK_ITEM = registerBlockItem(new BlockItem(MARS_SUB_SURFACE_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_SUB_SURFACE_ROCK);
-    public static final BlockItem MARS_STONE_ITEM = registerBlockItem(new BlockItem(MARS_STONE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_STONE);
-    public static final BlockItem MARS_COBBLESTONE_ITEM = registerBlockItem(new BlockItem(MARS_COBBLESTONE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_COBBLESTONE);
-    public static final BlockItem MARS_DUNGEON_BRICKS_ITEM = registerBlockItem(new BlockItem(MARS_DUNGEON_BRICKS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_DUNGEON_BRICKS);
-    public static final BlockItem DENSE_ICE_ITEM = registerBlockItem(new BlockItem(DENSE_ICE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DENSE_ICE);
-    public static final BlockItem ASTEROID_ROCK_ITEM = registerBlockItem(new BlockItem(ASTEROID_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ASTEROID_ROCK);
-    public static final BlockItem ASTEROID_ROCK_ITEM_1 = registerBlockItem(new BlockItem(ASTEROID_ROCK_1, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ASTEROID_ROCK_1);
-    public static final BlockItem ASTEROID_ROCK_ITEM_2 = registerBlockItem(new BlockItem(ASTEROID_ROCK_2, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ASTEROID_ROCK_2);
-    public static final BlockItem VENUS_ROCK_ITEM = registerBlockItem(new BlockItem(VENUS_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VENUS_ROCK);
-    public static final BlockItem VENUS_ROCK_ITEM_1 = registerBlockItem(new BlockItem(VENUS_ROCK_1, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VENUS_ROCK_1);
-    public static final BlockItem VENUS_ROCK_ITEM_2 = registerBlockItem(new BlockItem(VENUS_ROCK_2, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VENUS_ROCK_2);
-    public static final BlockItem VENUS_ROCK_ITEM_3 = registerBlockItem(new BlockItem(VENUS_ROCK_3, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VENUS_ROCK_3);
-    public static final BlockItem VENUS_ROCK_ITEM_SCORCHED = registerBlockItem(new BlockItem(VENUS_ROCK_SCORCHED, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VENUS_ROCK_SCORCHED);
-    public static final BlockItem VOLCANIC_ROCK_ITEM = registerBlockItem(new BlockItem(VOLCANIC_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VOLCANIC_ROCK);
-    public static final BlockItem SCORCHED_ROCK_ITEM = registerBlockItem(new BlockItem(SCORCHED_ROCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.SCORCHED_ROCK);
-    public static final BlockItem PUMICE_ITEM = registerBlockItem(new BlockItem(PUMICE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.PUMICE);
-    public static final BlockItem VAPOR_SPOUT_ITEM = registerBlockItem(new BlockItem(VAPOR_SPOUT, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VAPOR_SPOUT);
-    public static final BlockItem COPPER_ORE_ITEM = registerBlockItem(new BlockItem(COPPER_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.COPPER_ORE);
-    public static final BlockItem TIN_ORE_ITEM = registerBlockItem(new BlockItem(TIN_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_ORE);
-    public static final BlockItem ALUMINUM_ORE_ITEM = registerBlockItem(new BlockItem(ALUMINUM_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ALUMINUM_ORE);
-    public static final BlockItem SILICON_ORE_ITEM = registerBlockItem(new BlockItem(SILICON_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.SILICON_ORE);
-    public static final BlockItem ASTEROID_ALUMINUM_ORE_ITEM = registerBlockItem(new BlockItem(ASTEROID_ALUMINUM_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ASTEROID_ALUMINUM_ORE);
-    public static final BlockItem CHEESE_ORE_ITEM = registerBlockItem(new BlockItem(CHEESE_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.CHEESE_ORE);
-    public static final BlockItem CHEESE_BLOCK_ITEM = registerBlockItem(new BlockItem(CHEESE_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.CHEESE);
-    public static final BlockItem MOON_COPPER_ORE_ITEM = registerBlockItem(new BlockItem(MOON_COPPER_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_COPPER_ORE);
-    public static final BlockItem MARS_COPPER_ORE_ITEM = registerBlockItem(new BlockItem(MARS_COPPER_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_COPPER_ORE);
-    public static final BlockItem DESH_ORE_ITEM = registerBlockItem(new BlockItem(DESH_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DESH_ORE);
-    public static final BlockItem ILMENITE_ORE_ITEM = registerBlockItem(new BlockItem(ILMENITE_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ILMENITE_ORE);
-    public static final BlockItem MARS_IRON_ORE_ITEM = registerBlockItem(new BlockItem(MARS_IRON_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_IRON_ORE);
-    public static final BlockItem ASTEROID_IRON_ORE_ITEM = registerBlockItem(new BlockItem(ASTEROID_IRON_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ASTEROID_IRON_ORE);
-    public static final BlockItem MOON_TIN_ORE_ITEM = registerBlockItem(new BlockItem(MOON_TIN_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_TIN_ORE);
-    public static final BlockItem MARS_TIN_ORE_ITEM = registerBlockItem(new BlockItem(MARS_TIN_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_TIN_ORE);
-    public static final BlockItem GALENA_ORE_ITEM = registerBlockItem(new BlockItem(GALENA_ORE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.GALENA_ORE);
-    public static final BlockItem COPPER_BLOCK_ITEM = registerBlockItem(new BlockItem(COPPER_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.COPPER_BLOCK);
-    public static final BlockItem TIN_BLOCK_ITEM = registerBlockItem(new BlockItem(TIN_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_BLOCK);
-    public static final BlockItem ALUMINUM_BLOCK_ITEM = registerBlockItem(new BlockItem(ALUMINUM_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.ALUMINUM_BLOCK);
-    public static final BlockItem SILICON_BLOCK_ITEM = registerBlockItem(new BlockItem(SILICON_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.SILICON_BLOCK);
-    public static final BlockItem SOLID_METEORIC_IRON_BLOCK_ITEM = registerBlockItem(new BlockItem(SOLID_METEORIC_IRON_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.SOLID_METEORIC_IRON_BLOCK);
-    public static final BlockItem DESH_BLOCK_ITEM = registerBlockItem(new BlockItem(DESH_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DESH_BLOCK);
-    public static final BlockItem TITANIUM_BLOCK_ITEM = registerBlockItem(new BlockItem(TITANIUM_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TITANIUM_BLOCK);
-    public static final BlockItem LEAD_BLOCK_ITEM = registerBlockItem(new BlockItem(LEAD_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.LEAD_BLOCK);
-    public static final BlockItem TIN_DECORATION_BLOCK_ITEM = registerBlockItem(new BlockItem(TIN_DECORATION_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION);
-    public static final BlockItem TIN_DECORATION_BLOCK_ITEM_1 = registerBlockItem(new BlockItem(TIN_DECORATION_BLOCK_1, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_BLOCK_1);
-    public static final BlockItem DARK_DECORATION_BLOCK_ITEM = registerBlockItem(new BlockItem(DARK_DECORATION_BLOCK, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DARK_DECORATION);
-    public static final BlockItem GRATING_ITEM = registerBlockItem(new BlockItem(GRATING, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.GRATING);
-    public static final BlockItem SQUARE_LIGHTING_PANEL_ITEM = registerBlockItem(new BlockItem(SQUARE_LIGHTING_PANEL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.SQUARE_LIGHTING_PANEL);
-    public static final BlockItem SPOTLIGHT_LIGHTING_PANEL_ITEM = registerBlockItem(new BlockItem(SPOTLIGHT_LIGHTING_PANEL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.SPOTLIGHT_LIGHTING_PANEL);
-    public static final BlockItem LINEAR_LIGHTING_PANEL_ITEM = registerBlockItem(new BlockItem(LINEAR_LIGHTING_PANEL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.LINEAR_LIGHTING_PANEL);
-    public static final BlockItem DARK_LIGHTING_PANEL_ITEM = registerBlockItem(new BlockItem(DARK_LIGHTING_PANEL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DARK_LIGHTING_PANEL);
-    public static final BlockItem DARK_ANGLE_LIGHTING_PANEL_ITEM = registerBlockItem(new BlockItem(DARK_ANGLE_LIGHTING_PANEL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DARK_ANGLE_LIGHTING_PANEL);
-    public static final BlockItem VACUUM_GLASS_ITEM = registerBlockItem(new BlockItem(VACUUM_GLASS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.VACUUM_GLASS);
-    public static final BlockItem CLEAR_VACUUM_GLASS_ITEM = registerBlockItem(new BlockItem(CLEAR_VACUUM_GLASS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.CLEAR_VACUUM_GLASS);
-    public static final BlockItem TIN_VACUUM_GLASS_ITEM = registerBlockItem(new BlockItem(TIN_VACUUM_GLASS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_VACUUM_GLASS);
-    public static final BlockItem STRONG_VACUUM_GLASS_ITEM = registerBlockItem(new BlockItem(STRONG_VACUUM_GLASS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.STRONG_VACUUM_GLASS);
-    public static final BlockItem WALKWAY_ITEM = registerBlockItem(new BlockItem(WALKWAY, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.WALKWAY);
-    public static final BlockItem WIRE_WALKWAY_ITEM = registerBlockItem(new BlockItem(WIRE_WALKWAY, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.WIRE_WALKWAY);
-    public static final BlockItem PIPE_WALKWAY_ITEM = registerBlockItem(new BlockItem(PIPE_WALKWAY, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.PIPE_WALKWAY);
-    public static final BlockItem TIN_DECORATION_SLAB_ITEM = registerBlockItem(new BlockItem(TIN_DECORATION_SLAB, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_SLAB);
-    public static final BlockItem TIN_DECORATION_SLAB_ITEM_1 = registerBlockItem(new BlockItem(TIN_DECORATION_SLAB_1, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_SLAB_1);
-    public static final BlockItem DARK_DECORATION_SLAB_ITEM = registerBlockItem(new BlockItem(DARK_DECORATION_SLAB, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.DARK_DECORATION_SLAB);
-    public static final BlockItem MARS_COBBLESTONE_SLAB_ITEM = registerBlockItem(new BlockItem(MARS_COBBLESTONE_SLAB, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_COBBLESTONE_SLAB);
-    public static final BlockItem MARS_DUNGEON_BRICKS_SLAB_ITEM = registerBlockItem(new BlockItem(MARS_DUNGEON_BRICKS_SLAB, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_DUNGEON_BRICKS_SLAB);
-    public static final BlockItem MOON_DUNGEON_BRICKS_SLAB_ITEM = registerBlockItem(new BlockItem(MOON_DUNGEON_BRICKS_SLAB, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_DUNGEON_BRICKS_SLAB);
-    public static final BlockItem MOON_ROCK_SLAB_ITEM = registerBlockItem(new BlockItem(MOON_ROCK_SLAB, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_ROCK_SLAB);
-    public static final BlockItem MOON_ROCK_STAIRS_ITEM = registerBlockItem(new BlockItem(MOON_ROCK_STAIRS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_ROCK_STAIRS);
-    public static final BlockItem MOON_DUNGEON_BRICKS_STAIRS_ITEM = registerBlockItem(new BlockItem(MOON_DUNGEON_BRICKS_STAIRS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_DUNGEON_BRICKS_STAIRS);
-    public static final BlockItem TIN_DECORATION_STAIRS_ITEM = registerBlockItem(new BlockItem(TIN_DECORATION_STAIRS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_STAIRS);
-    public static final BlockItem TIN_DECORATION_STAIRS_ITEM_1 = registerBlockItem(new BlockItem(TIN_DECORATION_STAIRS_1, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_STAIRS_1);
-    public static final BlockItem MARS_DUNGEON_BRICKS_STAIRS_ITEM = registerBlockItem(new BlockItem(MARS_DUNGEON_BRICKS_STAIRS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_DUNGEON_BRICKS_STAIRS);
-    public static final BlockItem MARS_COBBLESTONE_STAIRS_ITEM = registerBlockItem(new BlockItem(MARS_COBBLESTONE_STAIRS, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_COBBLESTONE_STAIRS);
-    public static final BlockItem TIN_WALL_ITEM = registerBlockItem(new BlockItem(TIN_WALL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_WALL);
-    public static final BlockItem TIN_WALL_ITEM_1 = registerBlockItem(new BlockItem(TIN_WALL_1, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.TIN_DECORATION_WALL_1);
-    public static final BlockItem MOON_ROCK_WALL_ITEM = registerBlockItem(new BlockItem(MOON_ROCK_WALL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_ROCK_WALL);
-    public static final BlockItem MOON_DUNGEON_BRICKS_WALL_ITEM = registerBlockItem(new BlockItem(MOON_DUNGEON_BRICKS_WALL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_DUNGEON_BRICKS_WALL);
-    public static final BlockItem MARS_COBBLESTONE_WALL_ITEM = registerBlockItem(new BlockItem(MARS_COBBLESTONE_WALL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_COBBLESTONE_WALL);
-    public static final BlockItem MARS_DUNGEON_BRICKS_WALL_ITEM = registerBlockItem(new BlockItem(MARS_DUNGEON_BRICKS_WALL, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MARS_DUNGEON_BRICKS_WALL);
-    public static final BlockItem UNLIT_TORCH_ITEM = registerBlockItem(new BlockItem(UNLIT_TORCH, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.UNLIT_TORCH);
-    public static final BlockItem GLOWSTONE_TORCH_ITEM = registerBlockItem(new WallStandingBlockItem(GLOWSTONE_TORCH, GLOWSTONE_WALL_TORCH, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.GLOWSTONE_TORCH);
-    public static final BlockItem CAVERNOUS_VINE_ITEM = registerBlockItem(new BlockItem(CAVERNOUS_VINE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.CAVERNOUS_VINE);
-    public static final BlockItem POISONOUS_CAVERNOUS_VINE_ITEM = registerBlockItem(new BlockItem(POISONOUS_CAVERNOUS_VINE, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
-    public static final BlockItem MOON_BERRY_BUSH_ITEM = registerBlockItem(new BlockItem(MOON_BERRY_BUSH, new Item.Settings().group(BLOCKS_GROUP)), Constants.Blocks.MOON_BERRY_BUSH);
-
-    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
-            // Set the the tab icon
-            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR))
-            .build();
-
-    public static final BlockItem CIRCUIT_FABRICATOR_ITEM = registerBlockItem(new BlockItem(CIRCUIT_FABRICATOR, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.CIRCUIT_FABRICATOR);
-    public static final BlockItem COMPRESSOR_ITEM = registerBlockItem(new BlockItem(COMPRESSOR, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.COMPRESSOR);
-    public static final BlockItem ELECTRIC_COMPRESSOR_ITEM = registerBlockItem(new BlockItem(ELECTRIC_COMPRESSOR, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.ELECTRIC_COMPRESSOR);
-    public static final BlockItem COAL_GENERATOR_ITEM = registerBlockItem(new BlockItem(COAL_GENERATOR, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.COAL_GENERATOR);
-    public static final BlockItem BASIC_SOLAR_PANEL_ITEM = registerBlockItem(new BlockItem(BASIC_SOLAR_PANEL, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.BASIC_SOLAR_PANEL);
-    public static final BlockItem ENERGY_STORAGE_MODULE_ITEM = registerBlockItem(new BlockItem(ENERGY_STORAGE_MODULE, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.ENERGY_STORAGE_MODULE);
-    public static final BlockItem OXYGEN_COLLECTOR_ITEM = registerBlockItem(new BlockItem(OXYGEN_COLLECTOR, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.OXYGEN_COLLECTOR);
-    public static final BlockItem REFINERY_ITEM = registerBlockItem(new BlockItem(REFINERY, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.REFINERY);
-
-    public static final BlockItem ALUMINUM_WIRE_ITEM = registerBlockItem(new BlockItem(ALUMINUM_WIRE, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.ALUMINUM_WIRE);
-    public static final BlockItem OXYGEN_PIPE_ITEM = registerBlockItem(new BlockItem(OXYGEN_PIPE, new Item.Settings().group(MACHINES_GROUP)), Constants.Blocks.OXYGEN_PIPE);
 
     public static void register() {
     }
 
     private static Block registerBlock(Block block, String id) {
-        return Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
+        Block registered = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(BLOCKS_GROUP)){
+            @Override
+            public String getTranslationKey() {
+                return SystemUtil.createTranslationKey("block", Registry.BLOCK.getId(this.getBlock()));
+            }
+        });
+        return registered;
     }
 
-    private static BlockItem registerBlockItem(BlockItem blockItem, String id) {
-        return Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), blockItem);
+    private static Block registerMachine(Block block, String id) {
+        Block registered = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(MACHINES_GROUP)));
+        return registered;
     }
 }

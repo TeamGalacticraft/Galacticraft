@@ -231,7 +231,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         if (IS_SECURITY_OPEN) {
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
             this.blit(this.left + 176, this.top + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
-            this.blit(this.left + 176 + 4, this.top + 6, LOCK_PARTY_X, LOCK_PARTY_Y - 1, ICONS_WIDTH, ICONS_HEIGHT);
+            this.blit(this.left + 176 + 4, this.top + 6, LOCK_PARTY_X, LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
             this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.left + 176 + 20, this.top + 12, Formatting.GRAY.getColorValue());
 
             this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -256,12 +256,12 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 }
             }
 
-            this.blit(this.left + 174 + 21, this.top + 27 - 2, LOCK_OWNER_X, LOCK_OWNER_Y - 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-            this.blit(this.left + 174 + 43, this.top + 27 - 2, LOCK_PARTY_X, LOCK_PARTY_Y - 1, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 21, this.top + 27, LOCK_OWNER_X, LOCK_OWNER_Y + 2, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+            this.blit(this.left + 174 + 43, this.top + 27, LOCK_PARTY_X, LOCK_PARTY_Y + 2, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             this.blit(this.left + 174 + 65, this.top + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
         } else {
             this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
-            this.blit(this.left + 176, this.top + 3, SECURITY_TAB_X, SECURITY_TAB_Y, SECURITY_TAB_WIDTH, SECURITY_TAB_HEIGHT);
+            this.blit(this.left + 176, this.top + 5, SECURITY_TAB_X, SECURITY_TAB_Y, SECURITY_TAB_WIDTH, SECURITY_TAB_HEIGHT);
         }
     }
 
@@ -575,7 +575,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private").asString(), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 22 + 273 && mouseX <= (this.left - 78) + 41 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
-                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race").asString(), 22), mouseX, mouseY);
+                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race", "[TEAM NAME]\u00a7r").asString(), 150), mouseX, mouseY);
             }
             if (mouseX >= (this.left - 78) + 44 + 273 && mouseX <= (this.left - 78) + 63 + 273 - 3 && mouseY >= this.top + 26 && mouseY <= this.top + 41) {
                 this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public").asString(), mouseX, mouseY);

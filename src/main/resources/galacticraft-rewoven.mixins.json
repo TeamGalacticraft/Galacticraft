@@ -11,8 +11,7 @@
   "client": [
     "PlayerInventoryScreenMixin",
     "PauseMenuScreenMixin",
-    "JsonCapeMixin",
-    "ClientResourcePackCreatorMixin"
+    "JsonCapeMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {
