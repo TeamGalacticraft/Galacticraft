@@ -20,10 +20,10 @@ import net.minecraft.item.ItemStack;
  */
 public class PlayerInventoryGCContainer extends Container {
     private static final String[] EMPTY_ARMOR_SLOT_IDS = new String[]{
-            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_HEAD,
-            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_CHEST,
-            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_PANTS,
-            Constants.MOD_ID + ":" + Constants.ScreenTextures.THERMAL_BOOTS};
+            Constants.MOD_ID + ":" + Constants.SlotSprites.THERMAL_HEAD,
+            Constants.MOD_ID + ":" + Constants.SlotSprites.THERMAL_CHEST,
+            Constants.MOD_ID + ":" + Constants.SlotSprites.THERMAL_PANTS,
+            Constants.MOD_ID + ":" + Constants.SlotSprites.THERMAL_BOOTS};
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static int OXYGEN_TANK_1_SLOT = 6, OXYGEN_TANK_2_SLOT = 7;
 
@@ -63,13 +63,13 @@ public class PlayerInventoryGCContainer extends Container {
         this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK) {
             @Override
             public String getBackgroundSprite() {
-                return Constants.MOD_ID + ":" + Constants.ScreenTextures.OXYGEN_MASK;
+                return Constants.MOD_ID + ":" + Constants.SlotSprites.OXYGEN_MASK;
             }
         });
         this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR) {
             @Override
             public String getBackgroundSprite() {
-                return Constants.MOD_ID + ":" + Constants.ScreenTextures.OXYGEN_GEAR;
+                return Constants.MOD_ID + ":" + Constants.SlotSprites.OXYGEN_GEAR;
             }
         });
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
@@ -156,7 +156,7 @@ public class PlayerInventoryGCContainer extends Container {
 
         @Override
         public String getBackgroundSprite() {
-            return Constants.MOD_ID + ":" + Constants.ScreenTextures.OXYGEN_TANK;
+            return Constants.MOD_ID + ":" + Constants.SlotSprites.OXYGEN_TANK;
         }
     }
 }
