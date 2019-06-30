@@ -1,7 +1,6 @@
 package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.GalacticraftStairsBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.CheeseBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
@@ -28,13 +27,14 @@ import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
-import net.minecraft.item.*;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.SystemUtil;
 import net.minecraft.util.registry.Registry;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -137,9 +137,9 @@ public class GalacticraftBlocks {
     public static final Block DESH_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.DESH_BLOCK);
     public static final Block TITANIUM_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.TITANIUM_BLOCK);
     public static final Block LEAD_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.LEAD_BLOCK);
-    public static final Block UNLIT_TORCH = registerBlock(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
+    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
     public static final Block GLOWSTONE_TORCH = registerBlock(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).sounds(BlockSoundGroup.WOOD).build()), Constants.Blocks.GLOWSTONE_TORCH);
-    public static final Block GLOWSTONE_WALL_TORCH = registerBlock(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).dropsLike(GLOWSTONE_TORCH).sounds(BlockSoundGroup.WOOD).build()), Constants.Blocks.GLOWSTONE_WALL_TORCH);
+    public static final Block GLOWSTONE_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH).build()), Constants.Blocks.GLOWSTONE_WALL_TORCH);
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.CAVERNOUS_VINE);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
@@ -150,7 +150,7 @@ public class GalacticraftBlocks {
     public static final Block ELECTRIC_COMPRESSOR = registerMachine(new ElectricCompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ELECTRIC_COMPRESSOR);
     public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COAL_GENERATOR);
     public static final Block BASIC_SOLAR_PANEL = registerMachine(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL);
-    public static final Block BASIC_SOLAR_PANEL_PART = registerMachine(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
+    public static final Block BASIC_SOLAR_PANEL_PART = registerBlockWithoutItem(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
@@ -164,9 +164,13 @@ public class GalacticraftBlocks {
     public static void register() {
     }
 
+    private static Block registerBlockWithoutItem(Block block, String id) {
+        return Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
+    }
+
     private static Block registerBlock(Block block, String id) {
-        Block registered = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(BLOCKS_GROUP)){
+        Block registered = registerBlockWithoutItem(block, id);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(BLOCKS_GROUP)) {
             @Override
             public String getTranslationKey() {
                 return SystemUtil.createTranslationKey("block", Registry.BLOCK.getId(this.getBlock()));
