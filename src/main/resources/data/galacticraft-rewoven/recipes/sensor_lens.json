@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "RPR",
+    "PGP",
+    "RPR"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "P": {
+      "item": "galacticraft-rewoven:compressed_meteoric_iron"
+    },
+    "G": {
+      "item": "minecraft:glass_pane"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:sensor_lens"
+  }
+}
