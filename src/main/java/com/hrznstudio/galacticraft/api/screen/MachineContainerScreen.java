@@ -99,20 +99,20 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
     private static final int SECURITY_PANEL_X = 101;
     private static final int SECURITY_PANEL_Y = 0;
 
-    private static final int SECURITY_PANEL_WIDTH = 99;
-    private static final int SECURITY_PANEL_HEIGHT = 91;
+    public static final int SECURITY_PANEL_WIDTH = 99;
+    public static final int SECURITY_PANEL_HEIGHT = 91;
 
 
     private final BlockPos pos;
     private final World world;
 
-    private boolean IS_REDSTONE_OPEN = false;
+    public boolean IS_REDSTONE_OPEN = false;
 
     private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
 
     private boolean IS_CONFIG_OPEN = false;
 
-    private boolean IS_SECURITY_OPEN = false;
+    public boolean IS_SECURITY_OPEN = false;
 
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
 

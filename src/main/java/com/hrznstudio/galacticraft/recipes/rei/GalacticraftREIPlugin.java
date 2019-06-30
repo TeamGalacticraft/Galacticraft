@@ -1,6 +1,8 @@
 package com.hrznstudio.galacticraft.recipes.rei;
 
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
@@ -10,12 +12,16 @@ import me.shedaniel.rei.api.DisplayHelper;
 import me.shedaniel.rei.api.REIPluginEntry;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.SpeedCraftFunctional;
+import me.shedaniel.rei.client.ScreenHelper;
+import me.shedaniel.rei.listeners.ContainerScreenHooks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
 import java.awt.*;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -99,6 +105,19 @@ public class GalacticraftREIPlugin implements REIPluginEntry {
 
     @Override
     public void registerBounds(DisplayHelper displayHelper) {
+        displayHelper.getBaseBoundsHandler().registerExclusionZones(MachineContainerScreen.class, isOnRightSide -> {
+            ContainerScreenHooks screenHooks = ScreenHelper.getLastContainerScreenHooks();
+            AbstractContainerScreen screen = ScreenHelper.getLastContainerScreen();
+            MachineContainerScreen machineScreen = (MachineContainerScreen) screen;
+            List<Rectangle> l = Lists.newArrayList();
 
+            if (machineScreen.IS_SECURITY_OPEN) {
+                l.add(new Rectangle(screenHooks.rei_getContainerLeft() + screenHooks.rei_getContainerWidth(), screenHooks.rei_getContainerTop(), MachineContainerScreen.SECURITY_PANEL_WIDTH, MachineContainerScreen.SECURITY_PANEL_HEIGHT));
+            } else {
+                l.add(new Rectangle(screenHooks.rei_getContainerLeft() + screenHooks.rei_getContainerWidth(), screenHooks.rei_getContainerTop(), 20, 20));
+            }
+
+            return l;
+        });
     }
 }
