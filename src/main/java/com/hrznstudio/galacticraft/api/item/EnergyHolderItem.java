@@ -3,6 +3,9 @@ package com.hrznstudio.galacticraft.api.item;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public interface EnergyHolderItem {
 
     /** @return The maximum energy that the given {@link ItemStack} can store. */

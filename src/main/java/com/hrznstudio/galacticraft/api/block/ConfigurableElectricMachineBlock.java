@@ -13,7 +13,9 @@ import net.minecraft.world.IWorld;
 
 import java.util.List;
 
-
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements MachineBlock, WireConnectable {
 
     public ConfigurableElectricMachineBlock(Settings block$Settings_1) {

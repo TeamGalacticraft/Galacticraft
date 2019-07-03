@@ -11,6 +11,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class T1RocketEntity extends Entity implements RocketEntity {
     private int fuel;
 
@@ -57,7 +60,6 @@ public class T1RocketEntity extends Entity implements RocketEntity {
             this.world.createExplosion(this, this.x, this.y + (double) (this.getHeight() / 16.0F), this.z, 2.0F, Explosion.DestructionType.BREAK);
             this.remove();
         }
-
         super.tick();
     }
 

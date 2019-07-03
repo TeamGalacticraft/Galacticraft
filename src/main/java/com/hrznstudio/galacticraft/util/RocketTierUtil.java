@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.util;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
 
 /**
- * @author Joe van der Zwet (https://joezwet.me)
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketTierUtil {
 

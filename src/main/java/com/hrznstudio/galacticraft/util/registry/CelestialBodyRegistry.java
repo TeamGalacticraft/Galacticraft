@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Joe van der Zwet (https://joezwet.me)
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CelestialBodyRegistry {
 

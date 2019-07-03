@@ -19,7 +19,6 @@ public class CrudeOilBlock extends FluidBlock {
         super(fluid, settings);
     }
 
-    @Deprecated
     public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
         if (entity instanceof LivingEntity && this.getFluidState(blockState).getFluid().isStill(this.getFluidState(blockState))) {
             if (entity instanceof PlayerEntity) {

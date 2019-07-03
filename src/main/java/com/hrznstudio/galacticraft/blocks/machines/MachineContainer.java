@@ -8,6 +8,9 @@ import net.minecraft.container.Property;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public abstract class MachineContainer<T extends ConfigurableElectricMachineBlockEntity> extends Container {
 
     @FunctionalInterface

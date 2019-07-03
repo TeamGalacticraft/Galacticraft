@@ -10,6 +10,9 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
     static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 

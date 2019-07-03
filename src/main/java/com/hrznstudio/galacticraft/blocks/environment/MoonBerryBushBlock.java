@@ -27,6 +27,9 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonBerryBushBlock extends PlantBlock {
 
     public static final IntProperty AGE = Properties.AGE_3;

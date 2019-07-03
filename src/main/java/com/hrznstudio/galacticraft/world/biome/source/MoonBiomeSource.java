@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonBiomeSource extends BiomeSource {
     private final Biome[] biomes;
 

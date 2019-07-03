@@ -20,7 +20,6 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
-import com.hrznstudio.galacticraft.blocks.ore.SiliconOreBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -33,7 +32,6 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.SystemUtil;
 import net.minecraft.util.registry.Registry;
 
 /**
@@ -74,7 +72,7 @@ public class GalacticraftBlocks {
     public static final Block VENUS_ROCK_SCORCHED = registerBlock(new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.VENUS_ROCK_SCORCHED);
     public static final Block VOLCANIC_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(2.2F, 0.5F).build()), Constants.Blocks.VOLCANIC_ROCK);
     public static final Block SCORCHED_ROCK = registerBlock(new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build()), Constants.Blocks.SCORCHED_ROCK);
-    public static final Block PUMICE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).resistance(1.0F).build()), Constants.Blocks.PUMICE);
+    public static final Block PUMICE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.PUMICE);
     public static final Block VAPOR_SPOUT = registerBlock(new VaporSpoutBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build()), Constants.Blocks.VAPOR_SPOUT);
     public static final Block TIN_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION);
     public static final Block TIN_DECORATION_BLOCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_BLOCK_1);
@@ -116,7 +114,7 @@ public class GalacticraftBlocks {
     public static final Block COPPER_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.COPPER_ORE);
     public static final Block TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.TIN_ORE);
     public static final Block ALUMINUM_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.ALUMINUM_ORE);
-    public static final Block SILICON_ORE = registerBlock(new SiliconOreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.SILICON_ORE);
+    public static final Block SILICON_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.SILICON_ORE);
     public static final Block ASTEROID_ALUMINUM_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.ASTEROID_ALUMINUM_ORE);
     public static final Block CHEESE_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F).build()), Constants.Blocks.CHEESE_ORE);
     public static final Block CHEESE_BLOCK = registerBlock(new CheeseBlock(FabricBlockSettings.of(Material.CAKE).build()), Constants.Blocks.CHEESE);
@@ -170,12 +168,7 @@ public class GalacticraftBlocks {
 
     private static Block registerBlock(Block block, String id) {
         Block registered = registerBlockWithoutItem(block, id);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(BLOCKS_GROUP)) {
-            @Override
-            public String getTranslationKey() {
-                return SystemUtil.createTranslationKey("block", Registry.BLOCK.getId(this.getBlock()));
-            }
-        });
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(BLOCKS_GROUP)));
         return registered;
     }
 

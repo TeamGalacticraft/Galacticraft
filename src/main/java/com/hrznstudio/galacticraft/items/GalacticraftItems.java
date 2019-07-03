@@ -148,8 +148,8 @@ public class GalacticraftItems {
     public static final Item OXYGEN_MASK = new Item((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item OXYGEN_GEAR = new Item((new Item.Settings()).group(ITEMS_GROUP));
 
-    public static final Item SHIELD_CONTROLLER = new GCAccessorys((new Item.Settings()).group(ITEMS_GROUP));
-    public static final Item FREQUENCY_MODULE = new GCAccessorys((new Item.Settings()).group(ITEMS_GROUP));
+    public static final Item SHIELD_CONTROLLER = new GCAccessories((new Item.Settings()).group(ITEMS_GROUP));
+    public static final Item FREQUENCY_MODULE = new GCAccessories((new Item.Settings()).group(ITEMS_GROUP));
 
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(900));
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(1800));

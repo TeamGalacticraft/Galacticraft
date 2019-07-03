@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * @author Joe van der Zwet (https://joezwet.me)
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(HeldItemFeatureRenderer.class)
 public  class HeldItemFeatureRendererMixin {

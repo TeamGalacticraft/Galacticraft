@@ -13,6 +13,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ElectricCompressorBlock extends CompressorBlock implements WireConnectable, MachineBlock {
     public ElectricCompressorBlock(Settings settings) {
         super(settings);

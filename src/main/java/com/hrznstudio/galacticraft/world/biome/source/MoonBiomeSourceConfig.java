@@ -4,6 +4,9 @@ import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.minecraft.world.biome.source.BiomeSourceConfig;
 import net.minecraft.world.level.LevelProperties;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonBiomeSourceConfig implements BiomeSourceConfig {
 
     private LevelProperties levelProperties;

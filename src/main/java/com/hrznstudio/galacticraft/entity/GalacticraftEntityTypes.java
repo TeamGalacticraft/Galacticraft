@@ -11,6 +11,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftEntityTypes {
 
     public static final EntityType<EntityMoonVillager> MOON_VILLAGER = FabricEntityTypeBuilder.create(EntityCategory.CREATURE, EntityMoonVillager::new).build();

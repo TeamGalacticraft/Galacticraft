@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.api.space;
 import net.minecraft.util.Identifier;
 
 /**
- * @author Joe van der Zwet (https://joezwet.me)
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public interface CelestialBodyIcon {
     Identifier getTexture();

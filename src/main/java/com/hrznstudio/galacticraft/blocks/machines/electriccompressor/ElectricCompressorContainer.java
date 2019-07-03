@@ -8,6 +8,9 @@ import net.minecraft.container.Container;
 import net.minecraft.container.FurnaceOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ElectricCompressorContainer extends CompressorContainer {
 
     public static final ContainerFactory<Container> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorContainer::new);

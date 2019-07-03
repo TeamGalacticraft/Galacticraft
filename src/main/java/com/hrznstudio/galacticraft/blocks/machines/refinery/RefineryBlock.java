@@ -33,6 +33,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class RefineryBlock extends ConfigurableElectricMachineBlock implements Rotatable , WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;

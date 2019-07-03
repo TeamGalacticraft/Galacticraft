@@ -10,8 +10,10 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class RefineryContainer extends Container {
-
 
     private ItemStack itemStack;
     private Inventory inventory;

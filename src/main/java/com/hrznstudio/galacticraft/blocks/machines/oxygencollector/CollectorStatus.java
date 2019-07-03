@@ -2,6 +2,9 @@ package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import net.minecraft.util.Formatting;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum CollectorStatus {
     INACTIVE(Formatting.RED.getColorValue()),
     NOT_ENOUGH_LEAVES(Formatting.RED.getColorValue()),

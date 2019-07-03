@@ -81,7 +81,6 @@ public class GalacticraftREIPlugin implements REIPluginEntry {
             }
         });
 
-        recipeHelper.registerDefaultSpeedCraftButtonArea(COMPRESSING);
         recipeHelper.registerSpeedCraftButtonArea(CIRCUIT_FABRICATION, (bounds) -> new Rectangle((int) bounds.getMaxX() - 16, (int) bounds.getMinY() + 6, 10, 10));
     }
 

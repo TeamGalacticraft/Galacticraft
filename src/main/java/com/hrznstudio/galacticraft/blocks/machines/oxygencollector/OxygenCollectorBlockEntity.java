@@ -15,6 +15,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int MAX_OXYGEN = 5000;
     public static final int BATTERY_SLOT = 0;
