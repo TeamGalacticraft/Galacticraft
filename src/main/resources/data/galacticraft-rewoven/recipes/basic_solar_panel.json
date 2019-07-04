@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SFS",
+    "SPS",
+    "WAW"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "F": {
+      "item": "galacticraft-rewoven:full_solar_panel"
+    },
+    "P": {
+      "item": "galacticraft-rewoven:steel_pole"
+    },
+    "W": {
+      "item": "galacticraft-rewoven:aluminum_wire"
+    },
+    "A": {
+      "item": "galacticraft-rewoven:basic_wafer"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:basic_solar_panel"
+  }
+}
