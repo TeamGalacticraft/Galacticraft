@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " P ",
+    "PCP",
+    "P P"
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft-rewoven:oxygen_concentrator"
+    },
+    "P": {
+      "item": "galacticraft-rewoven:oxygen_pipe"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:oxygen_gear"
+  }
+}
