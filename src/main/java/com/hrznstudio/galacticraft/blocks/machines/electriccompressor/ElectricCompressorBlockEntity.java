@@ -1,19 +1,37 @@
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
+import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
+import com.hrznstudio.galacticraft.util.WireConnectable;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Tickable;
+
+import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
+public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, WireConnectable {
+    public static final int FUEL_INPUT_SLOT = 9;
+    public static final int OUTPUT_SLOT = 10;
+    private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
+    public CompressorStatus status = CompressorStatus.INACTIVE;
+    public int fuelTime;
+    public int maxFuelTime;
+    int progress;
     static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
     public ElectricCompressorBlockEntity() {
@@ -22,7 +40,15 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
 
     @Override
     protected int getInvSize() {
-        return super.getInvSize() + 1;
+        return 12;
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public int getMaxProgress() {
+        return maxProgress;
     }
 
     @Override
@@ -39,28 +65,50 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
         return ConfigurableElectricMachineBlockEntity.DEFAULT_MAX_ENERGY;
     }
 
-    @Override
     public void tick() {
+        if (!active()) {
+            return;
+        }
         attemptChargeFromStack(FUEL_INPUT_SLOT);
-
         // Drain energy
         int extractEnergy = this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
         if (extractEnergy == 0) {
             status = CompressorStatus.INACTIVE;
+            progress = 0;
             return;
         } else {
             status = CompressorStatus.PROCESSING;
         }
 
-        super.tick();
+        InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+            @Override
+            public boolean canPlayerUseInv(PlayerEntity var1) {
+                return true;
+            }
+        };
+
+        if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv)) {
+            status = CompressorStatus.IDLE;
+//            System.out.println("IDLE. RETURNING");
+        }
+
+        if (status == CompressorStatus.PROCESSING && isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+            ItemStack resultStack = getResultFromRecipeStack(inv);
+            this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 3, Simulation.ACTION);
+            this.progress++;
+
+            if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
+                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.3F, this.world.random.nextFloat() * 0.1F + 0.9F);
+            }
+
+            if (this.progress == maxProgress) {
+                this.progress = 0;
+
+                craftItem(resultStack);
+            }
+        }
     }
 
-    @Override
-    protected boolean shouldUseFuel() {
-        return false;
-    }
-
-    @Override
     protected void craftItem(ItemStack craftingResult) {
         boolean canCraftTwo = true;
 
@@ -112,6 +160,38 @@ public class ElectricCompressorBlockEntity extends CompressorBlockEntity {
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         return this.toTag(tag);
+    }
+
+
+    public ItemStack getResultFromRecipeStack(Inventory inv) {
+        // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
+
+        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(inv);
+        if (shapelessRecipe.isPresent()) {
+            return shapelessRecipe.get().craft(inv);
+        }
+        return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
+    }
+
+    private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
+        Optional<ShapelessCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
+        return firstMatch;
+    }
+
+    private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
+        Optional<ShapedCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
+        return firstMatch;
+    }
+
+    protected boolean canPutStackInResultSlot(ItemStack itemStack) {
+        return getInventory().getSlot(OUTPUT_SLOT).attemptInsertion(itemStack, Simulation.SIMULATE).isEmpty();
+    }
+
+    public boolean isValidRecipe(Inventory input) {
+        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(input);
+        Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
+
+        return shapelessRecipe.isPresent() || shapedRecipe.isPresent();
     }
 
 }

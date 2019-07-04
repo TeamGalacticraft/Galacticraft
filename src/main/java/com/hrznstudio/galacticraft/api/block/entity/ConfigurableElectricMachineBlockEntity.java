@@ -60,7 +60,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
     }
 
-    public boolean isActive() {
+    public boolean active() {
         switch (this.redstoneOption) {
             default:
                 return true;
@@ -111,7 +111,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
             if (itemEnergy > 0) {
                 stack = stack.copy();
-                int energyToRemove = 5;
+                int energyToRemove = 10;
                 int amountFailedToInsert = item.extract(stack, energyToRemove);
                 energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, Simulation.ACTION);
                 inventory.forceSetInvStack(slot, stack);

@@ -34,7 +34,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
     @Override
     public void tick() {
-        if (world.isClient || !isActive()) {
+        if (world.isClient || !active()) {
             return;
         }
         long time = world.getTimeOfDay();

@@ -8,5 +8,6 @@ import net.minecraft.client.render.entity.model.EntityModel;
  */
 public class RocketEntityModel extends EntityModel<T1RocketEntity> {
     public RocketEntityModel() {
+
     }
 }

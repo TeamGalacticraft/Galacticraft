@@ -74,7 +74,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     @Override
     public void tick() {
-        if (world.isClient || !isActive()) {
+        if (world.isClient || !active()) {
             return;
         }
         for (Direction direction : Direction.values()) {

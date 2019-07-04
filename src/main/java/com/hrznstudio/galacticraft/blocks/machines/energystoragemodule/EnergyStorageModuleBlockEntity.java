@@ -40,7 +40,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
 
     @Override
     public void tick() {
-        if (world.isClient || !isActive()) {
+        if (world.isClient || !active()) {
             return;
         }
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);

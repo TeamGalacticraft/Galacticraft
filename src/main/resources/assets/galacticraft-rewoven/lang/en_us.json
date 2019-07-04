@@ -268,8 +268,8 @@
 
   "ui.galacticraft-rewoven.tabs.redstone_activation_config": "Redstone",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore": "Ignore Redstone",
-  "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off": "Redstone enables the machine",
-  "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on": "Redstone disables the machine",
+  "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off": "Redstone disables the machine",
+  "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on": "Redstone enables the machine",
 
   "ui.galacticraft-rewoven.tabs.side_config": "Configuration",
   "ui.galacticraft-rewoven.tabs.side_config.north": "Front",

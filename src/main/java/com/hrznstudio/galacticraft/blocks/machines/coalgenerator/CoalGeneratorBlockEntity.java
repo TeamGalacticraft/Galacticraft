@@ -76,7 +76,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     @Override
     public void tick() {
 
-        if (world.isClient || !isActive()) {
+        if (world.isClient || !active()) {
             return;
         }
 

@@ -1,10 +1,13 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
+import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.fabric.api.container.ContainerFactory;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -17,15 +20,24 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorScreen extends MachineContainerScreen<CompressorContainer> {
+public class CompressorScreen extends AbstractContainerScreen<CompressorContainer> {
 
     public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreen::new);
 
-    private static final Identifier CONFIG_TABS = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<AbstractContainerScreen> createFactory(
+            Class<T> machineClass, MachineContainer.MachineContainerConstructor<? extends AbstractContainerScreen<?>, T> constructor)
+    {
+        return (syncId, id, player, buffer) -> {
+            BlockPos pos = buffer.readBlockPos();
+            BlockEntity be = player.world.getBlockEntity(pos);
+            if (machineClass.isInstance(be)) {
+                return constructor.create(syncId, player, machineClass.cast(be));
+            } else {
+                return null;
+            }
+        };
+    }
+
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -44,7 +56,7 @@ public class CompressorScreen extends MachineContainerScreen<CompressorContainer
     }
 
     public CompressorScreen(CompressorContainer electricCompressorContainer, PlayerEntity playerEntity, CompressorBlockEntity blockEntity, Text textComponents) {
-        super(electricCompressorContainer, playerEntity.inventory, playerEntity.world, blockEntity.getPos(), textComponents);
+        super(electricCompressorContainer, playerEntity.inventory, textComponents);
         this.world = playerEntity.world;
     }
 
@@ -70,7 +82,6 @@ public class CompressorScreen extends MachineContainerScreen<CompressorContainer
 
         this.drawFuelProgressBar();
         this.drawCraftProgressBar();
-        this.drawConfigTabs();
     }
 
     @Override
@@ -82,11 +93,6 @@ public class CompressorScreen extends MachineContainerScreen<CompressorContainer
 
     protected String getContainerDisplayName() {
         return new TranslatableText("block.galacticraft-rewoven.compressor").asFormattedString();
-    }
-
-    public void drawConfigTabs() {
-        this.minecraft.getTextureManager().bindTexture(CONFIG_TABS);
-        this.blit(this.left - CONFIG_TAB_WIDTH, this.top + 3, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
     }
 
     protected void drawFuelProgressBar() {

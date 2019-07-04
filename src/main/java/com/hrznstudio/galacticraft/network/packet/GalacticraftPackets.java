@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftPackets {
-
     public static void register() {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
