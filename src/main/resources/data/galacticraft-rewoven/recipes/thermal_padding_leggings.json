@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "C C",
+    "CCC",
+    "CCC"
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft-rewoven:thermal_cloth"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:thermal_padding_leggings"
+  }
+}
