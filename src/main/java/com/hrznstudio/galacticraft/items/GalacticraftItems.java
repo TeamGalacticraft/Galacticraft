@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -166,6 +167,7 @@ public class GalacticraftItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
 
+    private static final Item GLOWSTONE_TORCH = new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP));
     public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 15714446, 9794134, (new Item.Settings()).group(ItemGroup.MISC)));
 
 
@@ -315,6 +317,8 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CARGO_ROCKET_SCHEMATIC), CARGO_ROCKET_SCHEMATIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_ROCKET_SCHEMATIC), TIER_3_ROCKET_SCHEMATIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ASTRO_MINER_SCHEMATIC), ASTRO_MINER_SCHEMATIC);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH);
     }
 
     public static boolean isRocketItem(Item item) {
