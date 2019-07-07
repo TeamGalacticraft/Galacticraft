@@ -287,11 +287,11 @@ public class Constants {
         public static final String BUGGY_STORAGE = "buggy_storage";
         public static final String BUGGY_WHEEL = "buggy_wheel";
         //TOOLS + WEAPONS
-        public static final String STEEL_SWORD = "steel_sword";
-        public static final String STEEL_SHOVEL = "steel_shovel";
-        public static final String STEEL_PICKAXE = "steel_pickaxe";
-        public static final String STEEL_AXE = "steel_axe";
-        public static final String STEEL_HOE = "steel_hoe";
+        public static final String HEAVY_DUTY_SWORD = "heavy_duty_sword";
+        public static final String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";
+        public static final String HEAVY_DUTY_PICKAXE = "heavy_duty_pickaxe";
+        public static final String HEAVY_DUTY_AXE = "heavy_duty_axe";
+        public static final String HEAVY_DUTY_HOE = "heavy_duty_hoe";
 
         public static final String DESH_SWORD = "desh_sword";
         public static final String DESH_SHOVEL = "desh_shovel";

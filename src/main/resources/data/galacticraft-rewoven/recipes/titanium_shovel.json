@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "T",
+    "I",
+    "I"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:compressed_titanium"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:titanium_shovel"
+  }
+}
