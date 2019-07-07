@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.api.entity;
 
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 
@@ -14,7 +14,7 @@ public class WireBlockEntity extends BlockEntity {
     /**
      * The ID of the WireNetwork that this BlockEntity belongs to.
      *
-     * @see com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireNetwork
+     * @see WireNetwork
      */
     public long networkId;
 

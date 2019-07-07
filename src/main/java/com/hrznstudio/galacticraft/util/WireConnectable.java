@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.util;
 
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;

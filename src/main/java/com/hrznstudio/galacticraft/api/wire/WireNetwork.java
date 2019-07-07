@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
+package com.hrznstudio.galacticraft.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -11,6 +11,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -28,6 +30,8 @@ public class WireNetwork {
      */
     public static ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
 
+    private static ConcurrentMap<BlockPos, WireNetwork> networkMap_TEMP = new ConcurrentHashMap<>();
+
     /**
      * A set containing all the wires inside of a network.
      */
@@ -38,7 +42,6 @@ public class WireNetwork {
      */
     private long id;
 
-    private ConcurrentMap<BlockEntity, Integer> energyNeed = new ConcurrentHashMap<>();
     private ConcurrentMap<BlockEntity, Integer> energy = new ConcurrentHashMap<>();
 
     /**
@@ -55,6 +58,11 @@ public class WireNetwork {
             highestWireId = Math.max(wireNetwork.getId(), highestWireId); //This method will only fail if there are already 9,223,372,036,854,775,806 wire networks.
             lowestWireId = Math.min(wireNetwork.getId(), lowestWireId);
         }
+        for (Map.Entry<BlockPos, WireNetwork> entry : networkMap_TEMP.entrySet()) {
+            WireNetwork wireNetwork = entry.getValue();
+            highestWireId = Math.max(wireNetwork.getId(), highestWireId); //This method will only fail if there are already 9,223,372,036,854,775,806 wire networks.
+            lowestWireId = Math.min(wireNetwork.getId(), lowestWireId);
+        }
         if (highestWireId == Long.MIN_VALUE) { //Nothing is in the networkMap - Impossible to have negative wire ids.
             highestWireId = 0;
         }
@@ -66,7 +74,7 @@ public class WireNetwork {
         } else {
             id = 1 + highestWireId;
         }
-        networkMap.put(this, source.getPos());
+        networkMap_TEMP.put(source.getPos(), this);
         wires.add(source);
     }
 
@@ -76,34 +84,49 @@ public class WireNetwork {
     public static void blockPlaced() {
         //Every wire in every network
         for (Map.Entry<WireNetwork, BlockPos> entry : networkMap.entrySet()) {
-            WireNetwork wireNetwork = entry.getKey();
-            for (BlockEntity wire : wireNetwork.wires) {
-                wireNetwork.blockPlacedLogic(wire);
-            }
+            entry.getKey().wires.stream().findFirst().ifPresent(entry.getKey()::blockPlacedLogic);
         }
+        if (!networkMap_TEMP.isEmpty()) {
+            networkMap_TEMP.forEach(((blockPos, network) -> networkMap.put(network, blockPos)));
+        }
+        networkMap_TEMP.clear();
     }
 
     private void blockPlacedLogic(BlockEntity source) {
-        BlockEntity[] adjacentWires = WireUtils.getAdjacentWires(source.getPos(), source.getWorld());
-        for (BlockEntity wire : adjacentWires) {
-            if (wire != null) {
-                if (((WireBlockEntity) wire).networkId != this.getId()) {
-                    if (!this.wires.contains(wire)) {
+        List<BlockEntity> sourceWires = new ArrayList<>();
+        sourceWires.add(source);
+        do {
+            for (BlockEntity wire : WireUtils.getAdjacentWires(sourceWires.get(0).getPos(), sourceWires.get(0).getWorld())) {
+                if (wire != null) {
+                    if (((WireBlockEntity) wire).networkId != this.getId()) {
                         this.wires.add(wire);
-                    } else {
-                        this.wires.remove(wire); //refresh (is it really necessary?)
-                        this.wires.add(wire);
-                    }
-                    try {
-                        networkMap.remove(WireUtils.getNetworkFromId(((WireBlockEntity) wire).networkId)); //remove old one
-                    } catch (NullPointerException ignore) {
-                    } finally {
+                        try {
+                            if (WireUtils.getNetworkFromId(((WireBlockEntity) wire).networkId) != null) {
+                                WireNetwork network = WireUtils.getNetworkFromId(((WireBlockEntity) wire).networkId);
+                                networkMap.remove(WireUtils.getNetworkFromId(((WireBlockEntity) wire).networkId));
+                                for (BlockEntity blockEntity : network.wires) {
+                                    if (blockEntity instanceof WireBlockEntity) {
+                                        ((WireBlockEntity) blockEntity).networkId = this.getId();
+                                    }
+                                }
+                            }
+                        } catch (NullPointerException ignore) {
+                        }
+
+                        if (networkMap_TEMP.get(wire.getPos()) != null) {
+                            networkMap_TEMP.remove(wire.getPos());
+                        }
+
                         ((WireBlockEntity) wire).networkId = this.getId();
-                        this.blockPlacedLogic(wire); //recursively do this
+//                        this.blockPlacedLogic(wire); //recursively do this
+                        sourceWires.add(wire);
                     }
                 }
             }
-        }
+            BlockEntity e = sourceWires.get(0);
+            sourceWires.remove(e);
+            System.out.println(sourceWires.size());
+        } while (sourceWires.size() > 0);
     }
 
     /**
@@ -111,7 +134,7 @@ public class WireNetwork {
      * Runs every tick.
      */
     public void update() {
-        energyNeed.clear();
+        ConcurrentMap<BlockEntity, Integer> energyNeed = new ConcurrentHashMap<>();
         energy.clear();
         int energyFulfilled = 0;
         int energyAvailable = 0;

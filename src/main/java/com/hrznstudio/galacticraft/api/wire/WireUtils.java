@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
+package com.hrznstudio.galacticraft.api.wire;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;

@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
+package com.hrznstudio.galacticraft.api.wire;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
