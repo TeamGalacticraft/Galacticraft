@@ -125,7 +125,6 @@ public class WireNetwork {
             }
             BlockEntity e = sourceWires.get(0);
             sourceWires.remove(e);
-            System.out.println(sourceWires.size());
         } while (sourceWires.size() > 0);
     }
 
