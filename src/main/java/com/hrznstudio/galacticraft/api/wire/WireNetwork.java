@@ -83,9 +83,8 @@ public class WireNetwork {
      */
     public static void blockPlaced() {
         //Every wire in every network
-        for (Map.Entry<WireNetwork, BlockPos> entry : networkMap.entrySet()) {
-            entry.getKey().wires.stream().findFirst().ifPresent(entry.getKey()::blockPlacedLogic);
-        }
+        networkMap.forEach((key, value) -> key.wires.forEach(key::blockPlacedLogic));
+
         if (!networkMap_TEMP.isEmpty()) {
             networkMap_TEMP.forEach(((blockPos, network) -> networkMap.put(network, blockPos)));
         }
