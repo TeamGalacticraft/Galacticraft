@@ -2,15 +2,18 @@ package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.ChatFormat;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -18,11 +21,13 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -36,9 +41,16 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
+public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
 
-    private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    private final static DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT);
 
     public CoalGeneratorBlock(Settings settings) {
         super(settings);
@@ -58,11 +70,45 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
+
+        stateBuilder.add(FRONT_SIDE_OPTION);
+        stateBuilder.add(BACK_SIDE_OPTION);
+        stateBuilder.add(RIGHT_SIDE_OPTION);
+        stateBuilder.add(LEFT_SIDE_OPTION);
+        stateBuilder.add(TOP_SIDE_OPTION);
+        stateBuilder.add(BOTTOM_SIDE_OPTION);
+    }
+
+
+    @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return true;
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
+                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
+                .with(BACK_SIDE_OPTION, SideOption.BLANK)
+                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
+                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
+                .with(TOP_SIDE_OPTION, SideOption.BLANK)
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
     }
 
     @Override
@@ -85,15 +131,15 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
         if (!(be instanceof CoalGeneratorBlockEntity)) return;
         CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) be;
         to.offer(generator.getEnergy());
-        generator.getInventory().offerSelfAsAttribute(to, null, null);
+        generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Component> list_1, TooltipContext tooltipContext_1) {
+    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableComponent("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
     }
 
@@ -119,14 +165,7 @@ public class CoalGeneratorBlock extends BlockWithEntity implements AttributeProv
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof CoalGeneratorBlockEntity)) {
-            Galacticraft.logger.error("Not a Coal Generator. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_OUTPUT;
-        }
-        return WireConnectionType.NONE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

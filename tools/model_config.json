@@ -1,0 +1,35 @@
+{
+  "name": "oxygen_collector",
+  "mod-id": "galacticraft-rewoven",
+  "sides": {
+    "north": {
+      "texture": "block/oxygen_collector"
+    },
+    "south": {
+      "texture": "block/oxygen_collector"
+    },
+    "east": {
+      "texture": "block/oxygen_collector"
+    },
+    "west": {
+      "texture": "block/oxygen_collector"
+    },
+    "up": {
+      "texture": "block/oxygen_collector"
+    },
+    "down": {
+        "texture": "block/oxygen_collector"
+    }
+},
+  "options": [
+    {
+      "option": "powerin",
+      "texture": "block/machine_power_input"
+    },
+	{
+      "option": "oxygenout",
+      "texture": "block/machine_oxygen_output"
+    }
+  ],
+  "particle": "block/machine"
+}

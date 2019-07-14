@@ -287,11 +287,11 @@ public class Constants {
         public static final String BUGGY_STORAGE = "buggy_storage";
         public static final String BUGGY_WHEEL = "buggy_wheel";
         //TOOLS + WEAPONS
-        public static final String STEEL_SWORD = "steel_sword";
-        public static final String STEEL_SHOVEL = "steel_shovel";
-        public static final String STEEL_PICKAXE = "steel_pickaxe";
-        public static final String STEEL_AXE = "steel_axe";
-        public static final String STEEL_HOE = "steel_hoe";
+        public static final String HEAVY_DUTY_SWORD = "heavy_duty_sword";
+        public static final String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";
+        public static final String HEAVY_DUTY_PICKAXE = "heavy_duty_pickaxe";
+        public static final String HEAVY_DUTY_AXE = "heavy_duty_axe";
+        public static final String HEAVY_DUTY_HOE = "heavy_duty_hoe";
 
         public static final String DESH_SWORD = "desh_sword";
         public static final String DESH_SHOVEL = "desh_shovel";
@@ -363,6 +363,9 @@ public class Constants {
         public static final String GRAVITY = "config.galacticraft-rewoven.gravity";
         public static final String MOON_GRAVITY = "config.galacticraft-rewoven.gravity.moon";
         public static final String MARS_GRAVITY = "config.galacticraft-rewoven.gravity.mars";
+
+        public static final String DEBUG = "config.galacticraft-rewoven.debug";
+        public static final String DEBUG_LOGGING = "config.galacticraft-rewoven.debug.logging";
     }
 
     public static class Energy {
@@ -388,6 +391,15 @@ public class Constants {
         public static final String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
         public static final String OVERLAY = "gui/overlay";
 
+        public static final String MAP_SCREEN = "gui/map";
+        public static final String PLANET_ICONS = "gui/planet_icons";
+
+        public static String getRaw(String path) {
+            return "textures/" + path + ".png";
+        }
+    }
+
+    public static class SlotSprites {
         public static final String THERMAL_HEAD = "slot/thermal_helmet";
         public static final String THERMAL_CHEST = "slot/thermal_chestpiece";
         public static final String THERMAL_PANTS = "slot/thermal_leggings";
@@ -395,10 +407,6 @@ public class Constants {
         public static final String OXYGEN_MASK = "slot/oxygen_mask";
         public static final String OXYGEN_GEAR = "slot/oxygen_gear";
         public static final String OXYGEN_TANK = "slot/oxygen_tank";
-
-        public static String getRaw(String path) {
-            return "textures/" + path + ".png";
-        }
     }
 
     public static class Entities {

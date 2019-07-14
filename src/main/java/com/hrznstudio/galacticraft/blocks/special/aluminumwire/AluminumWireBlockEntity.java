@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.api.wire.WireUtils;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.util.Tickable;
 

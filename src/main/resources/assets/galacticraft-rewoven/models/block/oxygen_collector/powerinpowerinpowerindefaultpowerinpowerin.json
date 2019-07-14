@@ -1,0 +1,12 @@
+{
+    "parent": "block/cube",
+    "textures": {
+        "north": "galacticraft-rewoven:block/machine_power_input",
+        "south": "galacticraft-rewoven:block/machine_power_input",
+        "east": "galacticraft-rewoven:block/machine_power_input",
+        "west": "galacticraft-rewoven:block/oxygen_collector",
+        "up": "galacticraft-rewoven:block/machine_power_input",
+        "down": "galacticraft-rewoven:block/machine_power_input",
+        "particle": "galacticraft-rewoven:block/machine"
+    }
+}

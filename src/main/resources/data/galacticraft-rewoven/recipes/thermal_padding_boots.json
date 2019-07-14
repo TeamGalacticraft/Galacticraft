@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "C C",
+    "C C"
+  ],
+  "key": {
+    "C": {
+      "item": "galacticraft-rewoven:thermal_cloth"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:thermal_padding_boots"
+  }
+}

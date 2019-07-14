@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -101,11 +102,11 @@ public class GalacticraftItems {
     public static final Item BUGGY_WHEEL = new Item(new Item.Settings().group(ITEMS_GROUP));
 
     //TOOLS + WEAPONS
-    public static final Item STEEL_SWORD = new GCSwordItem(GalacticraftToolMaterials.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP));
-    public static final Item STEEL_SHOVEL = new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP));
-    public static final Item STEEL_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP));
-    public static final Item STEEL_AXE = new GCAxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP));
-    public static final Item STEEL_HOE = new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP));
+    public static final Item HEAVY_DUTY_SWORD = new GCSwordItem(GalacticraftToolMaterials.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP));
+    public static final Item HEAVY_DUTY_SHOVEL = new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP));
+    public static final Item HEAVY_DUTY_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP));
+    public static final Item HEAVY_DUTY_AXE = new GCAxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP));
+    public static final Item HEAVY_DUTY_HOE = new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP));
 
     public static final Item DESH_SWORD = new GCSwordItem(GalacticraftToolMaterials.DESH, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item DESH_SHOVEL = new ShovelItem(GalacticraftToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP));
@@ -148,8 +149,8 @@ public class GalacticraftItems {
     public static final Item OXYGEN_MASK = new Item((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item OXYGEN_GEAR = new Item((new Item.Settings()).group(ITEMS_GROUP));
 
-    public static final Item SHIELD_CONTROLLER = new GCAccessorys((new Item.Settings()).group(ITEMS_GROUP));
-    public static final Item FREQUENCY_MODULE = new GCAccessorys((new Item.Settings()).group(ITEMS_GROUP));
+    public static final Item SHIELD_CONTROLLER = new GCAccessories((new Item.Settings()).group(ITEMS_GROUP));
+    public static final Item FREQUENCY_MODULE = new GCAccessories((new Item.Settings()).group(ITEMS_GROUP));
 
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(900));
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(1800));
@@ -166,6 +167,7 @@ public class GalacticraftItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
 
+    private static final Item GLOWSTONE_TORCH = new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP));
     public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 15714446, 9794134, (new Item.Settings()).group(ItemGroup.MISC)));
 
 
@@ -252,11 +254,11 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_WHEEL), BUGGY_WHEEL);
 
         //TOOLS + WEAPONS
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_SWORD), STEEL_SWORD);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_SHOVEL), STEEL_SHOVEL);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_PICKAXE), STEEL_PICKAXE);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_AXE), STEEL_AXE);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STEEL_HOE), STEEL_HOE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_SWORD), HEAVY_DUTY_SWORD);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_SHOVEL), HEAVY_DUTY_SHOVEL);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_PICKAXE), HEAVY_DUTY_PICKAXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_AXE), HEAVY_DUTY_AXE);
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_HOE), HEAVY_DUTY_HOE);
 
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SWORD), DESH_SWORD);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SHOVEL), DESH_SHOVEL);
@@ -315,5 +317,11 @@ public class GalacticraftItems {
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CARGO_ROCKET_SCHEMATIC), CARGO_ROCKET_SCHEMATIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_ROCKET_SCHEMATIC), TIER_3_ROCKET_SCHEMATIC);
         Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ASTRO_MINER_SCHEMATIC), ASTRO_MINER_SCHEMATIC);
+
+        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), GLOWSTONE_TORCH);
+    }
+
+    public static boolean isRocketItem(Item item) {
+        return item == GalacticraftItems.ROCKET_SPAWN_EGG;
     }
 }

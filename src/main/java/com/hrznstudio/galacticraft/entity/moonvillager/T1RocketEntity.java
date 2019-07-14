@@ -1,5 +1,8 @@
 package com.hrznstudio.galacticraft.entity.moonvillager;
 
+import com.hrznstudio.galacticraft.api.space.RocketEntity;
+import com.hrznstudio.galacticraft.api.space.RocketTier;
+import com.hrznstudio.galacticraft.misc.RocketTiers;
 import net.minecraft.client.network.packet.EntitySpawnS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -8,7 +11,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
-public class T1RocketEntity extends Entity {
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+public class T1RocketEntity extends Entity implements RocketEntity {
     private int fuel;
 
     public T1RocketEntity(EntityType<T1RocketEntity> type, World world_1) {
@@ -54,7 +60,16 @@ public class T1RocketEntity extends Entity {
             this.world.createExplosion(this, this.x, this.y + (double) (this.getHeight() / 16.0F), this.z, 2.0F, Explosion.DestructionType.BREAK);
             this.remove();
         }
-
         super.tick();
+    }
+
+    @Override
+    public RocketTier getRocketTier() {
+        return RocketTiers.tierOne;
+    }
+
+    @Override
+    public int getFuel() {
+        return this.fuel;
     }
 }

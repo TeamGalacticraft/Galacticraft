@@ -1,13 +1,21 @@
 package com.hrznstudio.galacticraft.world.dimension;
 
-import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
+import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.space.CelestialBody;
+import com.hrznstudio.galacticraft.api.space.CelestialBodyIcon;
+import com.hrznstudio.galacticraft.api.space.RocketTier;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.misc.RocketTiers;
+import com.hrznstudio.galacticraft.util.registry.CelestialBodyRegistry;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import com.hrznstudio.galacticraft.world.gen.chunk.MarsChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -22,10 +30,11 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MarsDimension extends Dimension implements SpaceDimension {
+public class MarsDimension extends Dimension implements CelestialBody {
 
     public MarsDimension(World worldIn, DimensionType typeIn) {
         super(worldIn, typeIn);
+        CelestialBodyRegistry.register(this);
     }
 
     @Override
@@ -124,13 +133,63 @@ public class MarsDimension extends Dimension implements SpaceDimension {
     }
 
     @Override
+    public RocketTier accessTier() {
+        return RocketTiers.tierTwo;
+    }
+
+    @Override
+    public CelestialBody getParent() {
+        return null;
+    }
+
+    @Override
+    public double getOrbitSize() {
+        return 30d;
+    }
+
+    @Override
     public float getGravity() {
-        return 0.38F;
+        return Galacticraft.configHandler.getConfig().marsGravity;
     }
 
     @Override
     public boolean hasOxygen() {
         return false;
+    }
+
+    @Override
+    public CelestialBodyIcon getIcon() {
+        return new CelestialBodyIcon() {
+            @Override
+            public Identifier getTexture() {
+                return new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLANET_ICONS);
+            }
+
+            @Override
+            public int getX() {
+                return 48;
+            }
+
+            @Override
+            public int getY() {
+                return 0;
+            }
+
+            @Override
+            public int getWidth() {
+                return 16;
+            }
+
+            @Override
+            public int getHeight() {
+                return 16;
+            }
+        };
+    }
+
+    @Override
+    public String getName() {
+        return I18n.translate("mars");
     }
 
 }

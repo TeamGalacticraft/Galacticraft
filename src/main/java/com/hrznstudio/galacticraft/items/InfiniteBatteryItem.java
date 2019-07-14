@@ -4,6 +4,9 @@ import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class InfiniteBatteryItem extends Item implements EnergyHolderItem {
     public InfiniteBatteryItem(Settings settings) {
         super(settings);
@@ -12,6 +15,11 @@ public class InfiniteBatteryItem extends Item implements EnergyHolderItem {
     @Override
     public boolean isInfinite() {
         return true;
+    }
+
+    @Override
+    public int getMaxEnergy(ItemStack battery) {
+        return Integer.MAX_VALUE;
     }
 
     @Override

@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " A ",
+    "IRI",
+    "DBD"
+  ],
+  "key": {
+    "A": {
+      "item": "galacticraft-rewoven:compressed_aluminum"
+    },
+    "I": {
+      "item": "galacticraft-rewoven:compressed_iron"
+    },
+    "R": {
+      "item": "minecraft:repeater"
+    },
+    "D": {
+      "item": "minecraft:redstone"
+    },
+    "B": {
+      "item": "galacticraft-rewoven:basic_wafer"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:frequency_module"
+  }
+}

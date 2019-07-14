@@ -4,17 +4,17 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.registry.CommandRegistry;
-import net.minecraft.ChatFormat;
 import net.minecraft.command.arguments.DimensionArgumentType;
 import net.minecraft.command.arguments.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -26,6 +26,7 @@ import java.util.function.Consumer;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftCommands {
+
     public static void register() {
         CommandRegistry.INSTANCE.register(false, source -> source.register(
                 LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
@@ -43,16 +44,16 @@ public class GalacticraftCommands {
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
                 entities.forEach((Consumer<Entity>) entity -> {
                     teleport(entity, context.getSource().getMinecraftServer().getWorld(dimension));
-                    context.getSource().sendFeedback(new TranslatableComponent("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), dimension.toString()), true);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), dimension.toString()), true);
                 });
                 return entities.size();
             } catch (IllegalArgumentException ignore) {
                 Entity entity = context.getSource().getEntity();
                 teleport(entity, context.getSource().getMinecraftServer().getWorld(dimension));
-                context.getSource().sendFeedback(new TranslatableComponent("commands.galacticraft-rewoven.dimensiontp.success.single", dimension.toString()), true);
+                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", dimension.toString()), true);
                 return 1;
             } catch (CommandSyntaxException ignore) {
-                context.getSource().sendError(new TranslatableComponent("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(new Style().setColor(ChatFormat.RED)));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(new Style().setColor(Formatting.RED)));
                 return -1;
             }
         } catch (Exception ignore) {

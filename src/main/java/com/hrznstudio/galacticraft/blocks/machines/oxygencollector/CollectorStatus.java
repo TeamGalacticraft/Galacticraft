@@ -1,9 +1,14 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
-import net.minecraft.ChatFormat;
+import net.minecraft.util.Formatting;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum CollectorStatus {
-    INACTIVE(ChatFormat.RED.getColor()), NOT_ENOUGH_LEAVES(ChatFormat.RED.getColor()), COLLECTING(ChatFormat.GREEN.getColor());
+    INACTIVE(Formatting.RED.getColorValue()),
+    NOT_ENOUGH_LEAVES(Formatting.RED.getColorValue()),
+    COLLECTING(Formatting.GREEN.getColorValue());
 
     private int textColor;
 
@@ -13,5 +18,10 @@ public enum CollectorStatus {
 
     public int getTextColor() {
         return textColor;
+    }
+
+    public static CollectorStatus get(int index) {
+        if (index < 0) return values()[0];
+        return values()[index % values().length];
     }
 }

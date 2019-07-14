@@ -1,16 +1,13 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -19,12 +16,13 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -35,7 +33,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class RefineryBlock extends Block implements Rotatable, BlockEntityProvider, WireConnectable, MachineBlock {
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+public class RefineryBlock extends ConfigurableElectricMachineBlock implements Rotatable , WireConnectable, MachineBlock {
 
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
@@ -54,11 +55,11 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Component> list, TooltipContext tooltipContext) {
+    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.refinery").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.refinery").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
     }
 
@@ -88,6 +89,26 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
     }
 
     @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return false;
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.stateFactory.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
     }
@@ -98,14 +119,7 @@ public class RefineryBlock extends Block implements Rotatable, BlockEntityProvid
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof MachineBlockEntity)) {
-            Galacticraft.logger.error("Not a fab. Rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_INPUT;
-        }
-        return WireConnectionType.NONE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

@@ -2,15 +2,18 @@ package com.hrznstudio.galacticraft.blocks.machines.circuitfabricator;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.ChatFormat;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
@@ -18,11 +21,13 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -36,8 +41,15 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlock extends BlockWithEntity implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
+public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
     private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
 
     public CircuitFabricatorBlock(Settings settings) {
         super(settings);
@@ -62,11 +74,43 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
+        stateBuilder.add(FRONT_SIDE_OPTION);
+        stateBuilder.add(BACK_SIDE_OPTION);
+        stateBuilder.add(RIGHT_SIDE_OPTION);
+        stateBuilder.add(LEFT_SIDE_OPTION);
+        stateBuilder.add(TOP_SIDE_OPTION);
+        stateBuilder.add(BOTTOM_SIDE_OPTION);
+    }
+
+    @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return false;
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
+                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
+                .with(BACK_SIDE_OPTION, SideOption.BLANK)
+                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
+                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
+                .with(TOP_SIDE_OPTION, SideOption.BLANK)
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
     }
 
     @Override
@@ -87,15 +131,15 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
         if (!(be instanceof CircuitFabricatorBlockEntity)) return;
         CircuitFabricatorBlockEntity fabricator = (CircuitFabricatorBlockEntity) be;
         to.offer(fabricator.getEnergy());
-        fabricator.getInventory().offerSelfAsAttribute(to, null, null);
+        fabricator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Component> list, TooltipContext tooltipContext) {
+    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
     }
 
@@ -121,14 +165,7 @@ public class CircuitFabricatorBlock extends BlockWithEntity implements Attribute
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        if (!(world.getBlockEntity(connectionTargetPos) instanceof CircuitFabricatorBlockEntity)) {
-            Galacticraft.logger.error("Not a fab. rejecting connection.");
-            return WireConnectionType.NONE;
-        }
-        if (world.getBlockState(connectionTargetPos).get(FACING).getOpposite() == dir) {
-            return WireConnectionType.ENERGY_INPUT;
-        }
-        return WireConnectionType.NONE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

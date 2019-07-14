@@ -32,18 +32,18 @@ dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}"
-    modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modCompile("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
-    modCompile("cloth:ClothEvents:${project.cloth_version}") { transitive = false }
-    modCompile("cloth-config:ClothConfig2:${project.cloth_config_version}") { transitive = false }
-    modCompile("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
-    modCompile("io.github.prospector.modmenu:ModMenu:${project.modmenu_version}") { transitive = false }
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
+    modImplementation("cloth:ClothEvents:${project.cloth_version}") { transitive = false }
+    modImplementation("cloth-config:ClothConfig2:${project.cloth_config_version}") { transitive = false }
+    modImplementation("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
+    modImplementation("io.github.prospector.modmenu:ModMenu:${project.modmenu_version}")
 //    modCompile "cotton:cotton:${project.cotton_version}"
-    modCompile("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
-    modCompile("alexiil.mc.lib:libblockattributes:${project.attributes_version}") { transitive = false }
-    modCompile("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") { transitive = true }
+    modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
+    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+    modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}")
 
     //include everything mandatory inside the jar
 //    include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -52,7 +52,10 @@ dependencies {
     include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
 //    include "cotton:cotton:${project.cotton_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
-    include "alexiil.mc.lib:libblockattributes:${project.attributes_version}"
+    include "alexiil.mc.lib:libblockattributes-all:${project.attributes_version}"
+
+    // Needed for LBA in order for eclipse to work
+    compile "com.google.code.findbugs:jsr305:3.0.1"
 }
 
 processResources {

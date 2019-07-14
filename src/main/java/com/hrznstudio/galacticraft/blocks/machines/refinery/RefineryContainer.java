@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
@@ -10,8 +10,10 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class RefineryContainer extends Container {
-
 
     private ItemStack itemStack;
     private Inventory inventory;
@@ -32,7 +34,7 @@ public class RefineryContainer extends Container {
             throw new IllegalStateException("Found " + blockEntity + " instead of an OxygenCollectorBlockEntity!");
         }
         this.refinery = (RefineryBlockEntity) blockEntity;
-        this.inventory = new PartialInventoryFixedWrapper(refinery.getInventory()) {
+        this.inventory = new InventoryFixedWrapper(refinery.getInventory()) {
             @Override
             public void markDirty() {
                 refinery.markDirty();

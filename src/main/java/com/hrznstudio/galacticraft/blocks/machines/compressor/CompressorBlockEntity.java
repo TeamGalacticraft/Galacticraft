@@ -1,18 +1,17 @@
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
-import alexiil.mc.lib.attributes.DefaultedAttribute;
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.impl.PartialInventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -21,22 +20,25 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Direction;
 
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable {
+public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
     public CompressorStatus status = CompressorStatus.INACTIVE;
     public int fuelTime;
     public int maxFuelTime;
-    protected SimpleFixedItemInv inventory;
-    private int progress;
+    int progress;
+
+    @Override
+    public SimpleEnergyAttribute getEnergy() {
+        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    }
 
     public CompressorBlockEntity() {
         this(GalacticraftBlockEntities.COMPRESSOR_TYPE);
@@ -44,21 +46,33 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
 
     public CompressorBlockEntity(BlockEntityType<?> electricCompressorType) {
         super(electricCompressorType);
-        this.inventory = new SimpleFixedItemInv(getInventorySize());
     }
 
-    protected int getInventorySize() {
+    @Override
+    protected int getInvSize() {
         return 11;
     }
 
     @Override
-    public void tick() {
-        PartialInventoryFixedWrapper inv = new PartialInventoryFixedWrapper(inventory.getSubInv(0, 9)) {
-            @Override
-            public void markDirty() {
-                CompressorBlockEntity.this.markDirty();
-            }
+    protected ItemFilter getFilterForSlot(int slot) {
+        if (slot == FUEL_INPUT_SLOT) {
+            return AbstractFurnaceBlockEntity::canUseAsFuel;
+        } else {
+            return super.getFilterForSlot(slot);
+        }
+    }
 
+    @Override
+    public int getMaxEnergy() {
+        return 0;
+    }
+
+    @Override
+    public void tick() {
+        if (!this.active()) {
+            return;
+        }
+        InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
             @Override
             public boolean canPlayerUseInv(PlayerEntity var1) {
                 return true;
@@ -67,19 +81,21 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
 
         if (shouldUseFuel()) {
             if (this.fuelTime <= 0) {
-                ItemStack fuel = inventory.getInvStack(FUEL_INPUT_SLOT);
+                ItemStack fuel = getInventory().getInvStack(FUEL_INPUT_SLOT);
                 if (fuel.isEmpty()) {
                     // Machine out of fuel and no fuel present.
                     status = CompressorStatus.INACTIVE;
+                    progress = 0;
                     return;
                 } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
                     this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
                     this.fuelTime = maxFuelTime;
-                    fuel.decrement(1);
+                    getInventory().getSlot(FUEL_INPUT_SLOT).extract(1);
                     status = CompressorStatus.PROCESSING;
                 } else {
                     // Can't start processing any new materials anyway, dont waste fuel.
                     status = CompressorStatus.INACTIVE;
+                    progress = 0;
                     return;
                 }
             }
@@ -88,7 +104,6 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
 
         if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv)) {
             status = CompressorStatus.IDLE;
-//            System.out.println("IDLE. RETURNING");
         }
 
         if (status == CompressorStatus.PROCESSING && isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
@@ -107,21 +122,15 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
         }
     }
 
-    protected boolean shouldUseFuel() {
+    private boolean shouldUseFuel() {
         return true;
     }
 
-    protected void craftItem(ItemStack craftingResult) {
+    private void craftItem(ItemStack craftingResult) {
         for (int i = 0; i < 9; i++) {
-            inventory.getInvStack(i).decrement(1);
+            getInventory().getSlot(i).extract(1);
         }
-
-        ItemStack output = inventory.getInvStack(OUTPUT_SLOT);
-        if (output.isEmpty()) {
-            inventory.setInvStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION);
-        } else {
-            inventory.getInvStack(OUTPUT_SLOT).increment(craftingResult.getCount());
-        }
+        getInventory().getSlot(OUTPUT_SLOT).insert(craftingResult);
     }
 
     private ItemStack getResultFromRecipeStack(Inventory inv) {
@@ -135,27 +144,15 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     }
 
     private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
-        Optional<ShapelessCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-        return firstMatch;
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
     }
 
     private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
-        Optional<ShapedCompressingRecipe> firstMatch = this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
-        return firstMatch;
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
     }
 
-    private boolean canPutStackInResultSlot(ItemStack itemStack) {
-        if (inventory.getInvStack(OUTPUT_SLOT).isEmpty()) {
-            return true;
-        } else if (inventory.getInvStack(OUTPUT_SLOT).getItem() == itemStack.getItem()) {
-            return (inventory.getInvStack(OUTPUT_SLOT).getCount() + itemStack.getCount()) <= itemStack.getMaxCount();
-        } else {
-            return false;
-        }
-    }
-
-    public FixedItemInv getItems() {
-        return this.inventory;
+    protected boolean canPutStackInResultSlot(ItemStack itemStack) {
+        return getInventory().getSlot(OUTPUT_SLOT).attemptInsertion(itemStack, Simulation.SIMULATE).isEmpty();
     }
 
     public int getProgress() {
@@ -166,11 +163,7 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
         return this.maxProgress;
     }
 
-    public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
-        return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
-    }
-
-    private boolean isValidRecipe(Inventory input) {
+    public boolean isValidRecipe(Inventory input) {
         Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(input);
         Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
 
@@ -181,7 +174,6 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
 
-        tag.put("Inventory", inventory.toTag());
         tag.putInt("Progress", this.progress);
 
         if (this.shouldUseFuel()) {
@@ -195,22 +187,10 @@ public class CompressorBlockEntity extends BlockEntity implements Tickable, Bloc
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
 
-        this.inventory.fromTag(tag.getCompound("Inventory"));
         this.progress = tag.getInt("Progress");
 
         if (this.shouldUseFuel()) {
             this.fuelTime = tag.getInt("FuelTime");
         }
     }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
-    }
-
 }

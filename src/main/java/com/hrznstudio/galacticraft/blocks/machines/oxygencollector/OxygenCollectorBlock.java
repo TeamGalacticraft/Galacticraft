@@ -1,12 +1,15 @@
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
-import com.hrznstudio.galacticraft.api.blocks.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.ChatFormat;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -15,24 +18,38 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import java.util.List;
 import java.util.Random;
 
-public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntityProvider, MachineBlock {
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock implements Rotatable, MachineBlock {
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
 
     public OxygenCollectorBlock(Settings settings) {
         super(settings);
@@ -49,12 +66,27 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Component> list, TooltipContext tooltipContext) {
+    public boolean isTranslucent(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+        return false;
+    }
+
+    @Override
+    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.oxygen_collector").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list.add(new TranslatableComponent("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(ChatFormat.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState blockState_1) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.SOLID;
     }
 
     @Override
@@ -80,11 +112,44 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(FACING);
+
+        stateBuilder.add(FRONT_SIDE_OPTION);
+        stateBuilder.add(BACK_SIDE_OPTION);
+        stateBuilder.add(RIGHT_SIDE_OPTION);
+        stateBuilder.add(LEFT_SIDE_OPTION);
+        stateBuilder.add(TOP_SIDE_OPTION);
+        stateBuilder.add(BOTTOM_SIDE_OPTION);
+    }
+
+    @Override
+    public boolean consumesOxygen() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesOxygen() {
+        return true;
+    }
+
+    @Override
+    public boolean consumesPower() {
+        return true;
+    }
+
+    @Override
+    public boolean generatesPower() {
+        return false;
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
+                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
+                .with(BACK_SIDE_OPTION, SideOption.BLANK)
+                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
+                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
+                .with(TOP_SIDE_OPTION, SideOption.BLANK)
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
     }
 
     @Override
@@ -116,5 +181,10 @@ public class OxygenCollectorBlock extends Block implements Rotatable, BlockEntit
                 }
             }
         }
+    }
+
+    @Override
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 }

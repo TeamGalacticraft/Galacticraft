@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.blocks.decoration;
 
-import com.hrznstudio.galacticraft.api.blocks.AbstractHorizontalDirectionalBlock;
+import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

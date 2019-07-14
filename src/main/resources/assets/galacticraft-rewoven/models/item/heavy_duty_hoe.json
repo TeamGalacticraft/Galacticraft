@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "galacticraft-rewoven:item/heavy_duty_hoe"
+  }
+}

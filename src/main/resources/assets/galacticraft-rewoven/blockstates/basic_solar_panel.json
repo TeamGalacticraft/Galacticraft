@@ -1,19 +1,1028 @@
 {
-  "variants": {
-    "facing=north": {
-      "model": "galacticraft-rewoven:block/basic_solar_panel"
-    },
-    "facing=east": {
-      "model": "galacticraft-rewoven:block/basic_solar_panel",
-      "y": 90
-    },
-    "facing=south": {
-      "model": "galacticraft-rewoven:block/basic_solar_panel",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "galacticraft-rewoven:block/basic_solar_panel",
-      "y": 270
+    "variants": {
+        "facing=north,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=powerout,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutdefault",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultpowerout",
+            "y": 0
+        },
+        "facing=north,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 0
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=powerout,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutdefault",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultpowerout",
+            "y": 90
+        },
+        "facing=south,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 90
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=powerout,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutdefault",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultpowerout",
+            "y": 180
+        },
+        "facing=east,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 180
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutpoweroutdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutpoweroutdefaultdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultpoweroutdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=powerout,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/poweroutdefaultdefaultdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutpoweroutdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=powerout,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultpoweroutdefaultdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=powerout,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultpoweroutdefaultdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerout,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerout,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerout,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=powerout,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultpoweroutdefaultdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=powerout,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=powerout,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultpoweroutdefault",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=default,down=powerout": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultpowerout",
+            "y": 270
+        },
+        "facing=west,north=default,south=default,east=default,west=default,up=default,down=default": {
+            "model": "galacticraft-rewoven:block/basic_solar_panel/defaultdefaultdefaultdefaultdefaultdefault",
+            "y": 270
+        }
     }
-  }
 }

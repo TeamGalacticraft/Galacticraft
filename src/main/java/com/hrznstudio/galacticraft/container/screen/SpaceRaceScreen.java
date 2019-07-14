@@ -4,7 +4,7 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.TranslatableText;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -19,7 +19,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     public SpaceRaceScreen() {
-        super(new TranslatableComponent("menu.space_race_manager"));
+        super(new TranslatableText("menu.space_race_manager"));
     }
 
     private boolean isAnimationComplete() {

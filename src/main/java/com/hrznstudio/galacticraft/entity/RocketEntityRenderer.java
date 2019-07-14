@@ -1,14 +1,20 @@
 package com.hrznstudio.galacticraft.entity;
 
+import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
+import com.hrznstudio.galacticraft.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
 import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.util.Identifier;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class RocketEntityRenderer extends EntityRenderer<T1RocketEntity> {
     private static final Identifier SKIN = new Identifier("textures/entity/cow/cow.png");
-    protected final RocketEntityModel model = new RocketEntityModel();
+    protected final BasicSolarPanelModel model = new BasicSolarPanelModel();
 
     public RocketEntityRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
         super(entityRenderDispatcher_1);

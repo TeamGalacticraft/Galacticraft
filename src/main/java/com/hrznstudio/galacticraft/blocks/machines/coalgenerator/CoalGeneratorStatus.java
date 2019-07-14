@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
-import net.minecraft.ChatFormat;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -11,19 +11,19 @@ public enum CoalGeneratorStatus {
     /**
      * Generator is active and is generating energy.
      */
-    ACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText()),
+    ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(ChatFormat.GOLD)).getFormattedText()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
      * The generator has no fuel.
      */
-    INACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText()),
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString()),
     /**
      * The generator is warming up.
      */
-    WARMING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.warming").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText());
+    WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString());
 
     private String name;
 
@@ -34,5 +34,10 @@ public enum CoalGeneratorStatus {
     @Override
     public String toString() {
         return name;
+    }
+
+    public static CoalGeneratorStatus get(int index) {
+        if (index < 0) return ACTIVE;
+        return values()[index % values().length];
     }
 }

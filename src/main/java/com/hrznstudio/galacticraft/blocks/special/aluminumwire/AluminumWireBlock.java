@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
-import com.hrznstudio.galacticraft.api.blocks.WireBlock;
+import com.hrznstudio.galacticraft.api.block.WireBlock;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;
@@ -81,13 +82,36 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
-        state.with(ATTACHED_NORTH, false);
-        state.with(ATTACHED_EAST, false);
-        state.with(ATTACHED_SOUTH, false);
-        state.with(ATTACHED_WEST, false);
-        state.with(ATTACHED_UP, false);
-        state.with(ATTACHED_DOWN, false);
-
+        if (canWireConnect(context.getWorld(), Direction.NORTH.getOpposite(), context.getBlockPos(), context.getBlockPos().north()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.NORTH.getOpposite(), context.getBlockPos(), context.getBlockPos().north()).equals(WireConnectionType.ENERGY_INPUT)) {
+            state.with(ATTACHED_NORTH, true);
+        } else {
+            state.with(ATTACHED_NORTH, false);
+        }
+        if (canWireConnect(context.getWorld(), Direction.EAST.getOpposite(), context.getBlockPos(), context.getBlockPos().east()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.EAST.getOpposite(), context.getBlockPos(), context.getBlockPos().east()).equals(WireConnectionType.ENERGY_INPUT)) {
+            state.with(ATTACHED_EAST, true);
+        } else {
+            state.with(ATTACHED_EAST, false);
+        }
+        if (canWireConnect(context.getWorld(), Direction.SOUTH.getOpposite(), context.getBlockPos(), context.getBlockPos().south()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.SOUTH.getOpposite(), context.getBlockPos(), context.getBlockPos().south()).equals(WireConnectionType.ENERGY_INPUT)) {
+            state.with(ATTACHED_SOUTH, true);
+        } else {
+            state.with(ATTACHED_SOUTH, false);
+        }
+        if (canWireConnect(context.getWorld(), Direction.WEST.getOpposite(), context.getBlockPos(), context.getBlockPos().west()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.WEST.getOpposite(), context.getBlockPos(), context.getBlockPos().west()).equals(WireConnectionType.ENERGY_INPUT)) {
+            state.with(ATTACHED_WEST, true);
+        } else {
+            state.with(ATTACHED_WEST, false);
+        }
+        if (canWireConnect(context.getWorld(), Direction.UP.getOpposite(), context.getBlockPos(), context.getBlockPos().up()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.UP.getOpposite(), context.getBlockPos(), context.getBlockPos().up()).equals(WireConnectionType.ENERGY_INPUT)) {
+            state.with(ATTACHED_UP, true);
+        } else {
+            state.with(ATTACHED_UP, false);
+        }
+        if (canWireConnect(context.getWorld(), Direction.DOWN.getOpposite(), context.getBlockPos(), context.getBlockPos().down()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.DOWN.getOpposite(), context.getBlockPos(), context.getBlockPos().down()).equals(WireConnectionType.ENERGY_INPUT)) {
+            state.with(ATTACHED_NORTH, true);
+        } else {
+            state.with(ATTACHED_NORTH, false);
+        }
         return state;
     }
 

@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "MYM",
+    "MFM",
+    "HVH"
+  ],
+  "key": {
+    "M": {
+      "item": "galacticraft-rewoven:compressed_meteoric_iron"
+    },
+    "Y": {
+      "item": "minecraft:yellow_wool"
+    },
+    "F": {
+      "item": "galacticraft-rewoven:filled_fuel_canister"
+    },
+    "H": {
+      "item": "galacticraft-rewoven:heavy_plating"
+    },
+    "V": {
+      "item": "galacticraft-rewoven:oxygen_vent"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:engine_t1booster"
+  }
+}

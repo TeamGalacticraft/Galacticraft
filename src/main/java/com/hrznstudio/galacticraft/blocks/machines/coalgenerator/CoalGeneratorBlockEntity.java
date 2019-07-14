@@ -1,12 +1,13 @@
 package com.hrznstudio.galacticraft.blocks.machines.coalgenerator;
 
-import alexiil.mc.lib.attributes.DefaultedAttribute;
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.hrznstudio.galacticraft.api.configurable.SideOptions;
-import com.hrznstudio.galacticraft.blocks.machines.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -25,20 +26,29 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+
+    private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
+
+    static {
+        SLOT_FILTERS[0] = AggregateItemFilter.anyOf(createFuelTimeMap().keySet().stream().map(ExactItemFilter::new).toArray(ItemFilter[]::new));
+        SLOT_FILTERS[1] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+    }
+
     private final List<Runnable> listeners = Lists.newArrayList();
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     public int fuelTimeMax;
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
-    public SideOptions[] sideOptions = {SideOptions.BLANK, SideOptions.POWER_OUTPUT};
-    public Map<Direction, SideOptions> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    public SideOption[] sideOptions = {SideOption.BLANK, SideOption.POWER_OUTPUT};
+    public Map<Direction, SideOption> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
     private float heat = 0.0f;
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        selectedOptions.put(Direction.SOUTH, SideOptions.POWER_OUTPUT);
+        selectedOptions.put(Direction.SOUTH, SideOption.POWER_OUTPUT);
+        getLimitedInventory().getRule(0).disallowExtraction();
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -59,7 +69,17 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     }
 
     @Override
+    protected ItemFilter getFilterForSlot(int slot) {
+        return SLOT_FILTERS[slot];
+    }
+
+    @Override
     public void tick() {
+
+        if (world.isClient || !active()) {
+            return;
+        }
+
         int prev = getEnergy().getCurrentEnergy();
 
         if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
@@ -72,7 +92,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
             this.fuelTimeCurrent = 0;
             this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem());
 
-            this.getInventory().getInvStack(0).setCount(this.getInventory().getInvStack(0).getCount() - 1);
+            getInventory().getSlot(0).extract(1);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {
@@ -93,26 +113,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
         }
 
         for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOptions.POWER_OUTPUT)) {
-                EnergyAttribute energyAttribute = getNeighborAttribute(EnergyAttribute.ENERGY_ATTRIBUTE, direction);
+            if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
+                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
                     getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }
-
-        if (getInventory().getInvStack(1).getTag() != null && getEnergy().getCurrentEnergy() > 0) {
-            if (GalacticraftEnergy.isEnergyItem(getInventory().getInvStack(1))) {
-                if (getInventory().getInvStack(1).getTag().getInt("Energy") < getInventory().getInvStack(1).getTag().getInt("MaxEnergy")) {
-                    getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-                    getInventory().getInvStack(1).getTag().putInt("Energy", this.getInventory().getInvStack(1).getTag().getInt("Energy") + 1);
-                    getInventory().getInvStack(1).setDamage(this.getInventory().getInvStack(1).getDamage() - 1);
-                }
-            }
-        }
-    }
-
-    public <T> T getNeighborAttribute(DefaultedAttribute<T> attr, Direction dir) {
-        return attr.getFirst(getWorld(), getPos().offset(dir), SearchOptions.inDirection(dir));
+        attemptDrainPowerToStack(1);
     }
 }

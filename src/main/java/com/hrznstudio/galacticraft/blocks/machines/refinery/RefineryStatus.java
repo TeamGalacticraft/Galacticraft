@@ -1,23 +1,26 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
-import net.minecraft.ChatFormat;
-import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.text.Style;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum RefineryStatus {
 
     /**
      * Generator is active and is generating energy.
      */
-    REFINING(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.refining").setStyle(new Style().setColor(ChatFormat.GREEN)).getFormattedText()),
+    REFINING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(ChatFormat.GOLD)).getFormattedText()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
      * The generator has no fuel.
      */
-    INACTIVE(new TranslatableComponent("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(ChatFormat.GRAY)).getFormattedText());
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
 
     private String name;
 

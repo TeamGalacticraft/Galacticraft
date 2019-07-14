@@ -1,5 +1,7 @@
 package com.hrznstudio.galacticraft.energy;
 
+import alexiil.mc.lib.attributes.item.filter.ItemClassFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
@@ -16,10 +18,10 @@ import org.apache.logging.log4j.MarkerManager;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    private static final Marker ENERGY = MarkerManager.getMarker("Energy");
-
     public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType();
     public static final EnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
+
+    public static final ItemFilter ENERGY_HOLDER_ITEM_FILTER = new ItemClassFilter(EnergyHolderItem.class);
 
     public static void register() {
         Registry.register(CottonEnergy.ENERGY_REGISTRY, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
@@ -43,7 +45,7 @@ public class GalacticraftEnergy {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        return battery.getTag().getInt("MaxEnergy");
+        return ((EnergyHolderItem) battery.getItem()).getMaxEnergy(battery);
     }
 
     public static void incrementEnergy(ItemStack stack, int energyToAdd) {
