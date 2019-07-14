@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.mixin;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.hrznstudio.galacticraft.api.world.dimension.SpaceDimension;
+import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
@@ -40,7 +40,7 @@ public abstract class InGameHudMixin extends DrawableHelper{
     @Inject(method = "draw", at = @At(value = "TAIL"))
     private void draw(float float_1, CallbackInfo ci) {
 
-        if (client.player.world.dimension instanceof SpaceDimension && !((SpaceDimension) client.player.world.dimension).hasOxygen()) {
+        if (client.player.world.dimension instanceof CelestialBody && !((CelestialBody) client.player.world.dimension).hasOxygen()) {
             this.client.getProfiler().push("jumpBar"); //Totally the jump bar
             GlStateManager.pushMatrix();
             client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));

@@ -68,11 +68,11 @@ public abstract class LivingEntityMixin {
         }
     }
 
-    @ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 1, index = 11, name = "double_1")
+    /*@ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 1, index = 11, name = "double_1")
     private double gravityEffect(double double_1) {
-        if (((LivingEntity) (Object) this).world.getDimension() instanceof SpaceDimension) {
-            if (double_1 < -((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 3.5) {
-                double_1 += ((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity();
+        if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
+            if (double_1 < (-((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 2.5D)) {
+                double_1 += ((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity();
             }
         }
         return double_1;
@@ -80,12 +80,12 @@ public abstract class LivingEntityMixin {
 
     @ModifyVariable(method = "jump", at = @At(value = "FIELD"), ordinal = 0, index = 8, name = "float_2")
     private float gravityJumpEffect(float float_2) {
-        if (((LivingEntity) (Object) this).world.getDimension() instanceof SpaceDimension) {
+        if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
             if (float_2 > 0) {
-                float_2 = float_2 + (((SpaceDimension) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 5);
+                float_2 = float_2 + (((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 7);
             }
         }
         return float_2;
-    }
+    }*/
 
 }
