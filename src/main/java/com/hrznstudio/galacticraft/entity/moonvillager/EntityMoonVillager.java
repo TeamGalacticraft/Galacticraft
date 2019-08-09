@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AbsoluteHand;
+import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 
 public class EntityMoonVillager extends LivingEntity {
@@ -29,7 +29,7 @@ public class EntityMoonVillager extends LivingEntity {
     }
 
     @Override
-    public AbsoluteHand getMainHand() {
+    public Arm getMainArm() {
         return null;
     }
 }

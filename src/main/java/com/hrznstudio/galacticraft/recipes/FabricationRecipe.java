@@ -38,7 +38,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
 
     @Override
     public DefaultedList<Ingredient> getPreviewInputs() {
-        DefaultedList<Ingredient> list = DefaultedList.create();
+        DefaultedList<Ingredient> list = DefaultedList.of();
         list.add(this.input);
         return list;
     }

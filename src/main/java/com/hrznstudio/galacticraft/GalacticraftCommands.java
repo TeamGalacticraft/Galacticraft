@@ -31,7 +31,7 @@ public class GalacticraftCommands {
         CommandRegistry.INSTANCE.register(false, source -> source.register(
                 LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                         .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                        .then(CommandManager.argument("dimension", DimensionArgumentType.create())
+                        .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                                 .executes(GalacticraftCommands::teleport)
                                 .then(CommandManager.argument("entities", EntityArgumentType.entities())
                                         .executes((GalacticraftCommands::teleport))))));
@@ -91,7 +91,7 @@ public class GalacticraftCommands {
                     return;
                 }
 
-                entity.method_5878(entity_2);
+                entity.copyFrom(entity_2);
                 entity.setPosition(x, y, z);
                 world.method_18769(entity);
                 entity_2.removed = true;

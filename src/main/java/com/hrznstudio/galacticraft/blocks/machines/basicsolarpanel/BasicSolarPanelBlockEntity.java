@@ -38,17 +38,11 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
             return;
         }
         long time = world.getTimeOfDay();
-        while (true) {
-            if (time <= -1) {
-                time += 24000;
-                break;
-            }
-            time -= 24000;
-        }
+        time %= 24000;
 
         if (world.isRaining() || world.isThundering()) {
             status = BasicSolarPanelStatus.RAINING;
-        } else if ((time > 250 && time < 12000)) {
+        } else if (time > 250 && time < 12000) {
             if (getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.COLLECTING;
             } else {

@@ -22,7 +22,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
     }
 
     private static DefaultedList<Ingredient> getIngredients(JsonArray jsonArray_1) {
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.create();
+        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.of();
 
         for (int int_1 = 0; int_1 < jsonArray_1.size(); ++int_1) {
             Ingredient ingredient_1 = Ingredient.fromJson(jsonArray_1.get(int_1));
@@ -50,7 +50,7 @@ public class ShapelessCompressingRecipeSerializer<T extends ShapelessCompressing
     public T read(Identifier id, PacketByteBuf packet) {
 //            String group = packet.readString(32767);
         int ingredientCount = packet.readVarInt();
-        DefaultedList<Ingredient> ingredients = DefaultedList.create(ingredientCount, Ingredient.EMPTY);
+        DefaultedList<Ingredient> ingredients = DefaultedList.ofSize(ingredientCount, Ingredient.EMPTY);
 
         for (int index = 0; index < ingredients.size(); ++index) {
             ingredients.set(index, Ingredient.fromPacket(packet));

@@ -9,6 +9,8 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.energy.api.EnergyAttribute;
+import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
@@ -19,7 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable {
+public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyAttributeProvider {
 
     public static final int DEFAULT_MAX_ENERGY = 15000;
     public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
@@ -94,6 +96,11 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     public SimpleEnergyAttribute getEnergy() {
+        return energy;
+    }
+
+    @Override
+    public SimpleEnergyAttribute getEnergyAttribute() {
         return energy;
     }
 

@@ -40,7 +40,7 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
         int int_1 = packet.readVarInt();
         int int_2 = packet.readVarInt();
         String group = packet.readString(32767);
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.create(int_1 * int_2, Ingredient.EMPTY);
+        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.ofSize(int_1 * int_2, Ingredient.EMPTY);
 
         for (int int_3 = 0; int_3 < defaultedList_1.size(); ++int_3) {
             defaultedList_1.set(int_3, Ingredient.fromPacket(packet));

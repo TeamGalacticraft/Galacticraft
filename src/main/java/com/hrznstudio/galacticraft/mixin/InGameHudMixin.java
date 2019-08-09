@@ -37,7 +37,7 @@ public abstract class InGameHudMixin extends DrawableHelper{
     private static final int OXYGEN_OVERLAY_X = 24;
     private static final int OXYGEN_OVERLAY_Y = 80;
 
-    @Inject(method = "draw", at = @At(value = "TAIL"))
+    @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(float float_1, CallbackInfo ci) {
 
         if (client.player.world.dimension instanceof CelestialBody && !((CelestialBody) client.player.world.dimension).hasOxygen()) {

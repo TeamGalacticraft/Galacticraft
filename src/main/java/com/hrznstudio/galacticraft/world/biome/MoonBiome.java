@@ -36,7 +36,7 @@ public final class MoonBiome extends Biome {
     }
 
     @Override
-    public float getTemperature(BlockPos blockPos) {
+    protected float computeTemperature(BlockPos blockPos_1) {
         return 0;
     }
 

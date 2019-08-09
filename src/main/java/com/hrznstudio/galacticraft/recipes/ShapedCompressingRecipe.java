@@ -45,7 +45,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
     }
 
     static DefaultedList<Ingredient> getIngredients(String[] strings_1, Map<String, Ingredient> map_1, int int_1, int int_2) {
-        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.create(int_1 * int_2, Ingredient.EMPTY);
+        DefaultedList<Ingredient> defaultedList_1 = DefaultedList.ofSize(int_1 * int_2, Ingredient.EMPTY);
         Set<String> set_1 = Sets.newHashSet(map_1.keySet());
         set_1.remove(" ");
 
