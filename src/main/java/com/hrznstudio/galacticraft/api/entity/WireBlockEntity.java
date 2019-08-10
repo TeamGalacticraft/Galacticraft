@@ -4,6 +4,8 @@ import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 
+import java.util.UUID;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -16,7 +18,7 @@ public class WireBlockEntity extends BlockEntity {
      *
      * @see WireNetwork
      */
-    public long networkId;
+    public UUID networkId;
 
     public WireBlockEntity(BlockEntityType<?> blockEntityType_1) {
         super(blockEntityType_1);

@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -29,19 +30,17 @@ public class WireNetwork {
      */
     public static ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
 
-    private static ConcurrentMap<BlockPos, WireNetwork> networkMap_TEMP = new ConcurrentHashMap<>();
+    protected static ConcurrentMap<BlockPos, WireNetwork> networkMap_TEMP = new ConcurrentHashMap<>();
 
     /**
      * A set containing all the wires inside of a network.
      */
-    private ConcurrentSet<WireBlockEntity> wires = new ConcurrentSet<>();
+    protected final ConcurrentSet<WireBlockEntity> wires = new ConcurrentSet<>();
 
     /**
      * The id of this network.
      */
-    private long id;
-
-    private ConcurrentMap<BlockEntity, Integer> producerEnergy = new ConcurrentHashMap<>();
+    private UUID id;
 
     /**
      * Creates a new wire network.
@@ -49,30 +48,7 @@ public class WireNetwork {
      * @param source The (Wire)BlockEntity that created the network
      */
     public WireNetwork(WireBlockEntity source) {
-        long highestWireId = Long.MIN_VALUE;
-        long lowestWireId = Long.MAX_VALUE;
-        //The next one after the lowest
-        for (Map.Entry<WireNetwork, BlockPos> entry : networkMap.entrySet()) {
-            WireNetwork wireNetwork = entry.getKey();
-            highestWireId = Math.max(wireNetwork.getId(), highestWireId); //This method will only fail if there are already 9,223,372,036,854,775,806 wire networks.
-            lowestWireId = Math.min(wireNetwork.getId(), lowestWireId);
-        }
-        for (Map.Entry<BlockPos, WireNetwork> entry : networkMap_TEMP.entrySet()) {
-            WireNetwork wireNetwork = entry.getValue();
-            highestWireId = Math.max(wireNetwork.getId(), highestWireId); //This method will only fail if there are already 9,223,372,036,854,775,806 wire networks.
-            lowestWireId = Math.min(wireNetwork.getId(), lowestWireId);
-        }
-        if (highestWireId == Long.MIN_VALUE) { //Nothing is in the networkMap - Impossible to have negative wire ids.
-            highestWireId = 0;
-        }
-        if (lowestWireId == Long.MAX_VALUE) {
-            lowestWireId = Long.MIN_VALUE;
-        }
-        if (lowestWireId > 0) {
-            id = lowestWireId - 1;
-        } else {
-            id = 1 + highestWireId;
-        }
+        id = UUID.randomUUID();
         networkMap_TEMP.put(source.getPos(), this);
         wires.add(source);
     }
@@ -127,11 +103,17 @@ public class WireNetwork {
      * Runs every tick.
      */
     public void update() {
-        ConcurrentMap<BlockEntity, Integer> consumerPowerMap = new ConcurrentHashMap<>();
-        producerEnergy.clear();
+        System.out.println(WireNetwork.networkMap.size());
+        ConcurrentSet<BlockEntity> consumerPowerRequirement = new ConcurrentSet<>();
+        ConcurrentSet<BlockEntity> producerPower = new ConcurrentSet<>();
         int energyAvailable = 0;
         int energyNeeded = 0;
         int energyLeft = 0;
+
+        if (wires.isEmpty()) {
+            networkMap.remove(this);
+            return;
+        }
 
         for (WireBlockEntity wire : wires) {
             if (!(wire.getWorld().getBlockEntity(wire.getPos()) instanceof WireBlockEntity)) {
@@ -149,7 +131,7 @@ public class WireNetwork {
                 if (consumer != null) {
                     EnergyAttribute consumerEnergy = ((EnergyAttributeProvider) consumer).getEnergyAttribute();
                     if (consumerEnergy.getCurrentEnergy() < consumerEnergy.getMaxEnergy()) {
-                        consumerPowerMap.put(consumer, (consumerEnergy.getMaxEnergy() - consumerEnergy.getCurrentEnergy())); //Amount the machine needs
+                        consumerPowerRequirement.add(consumer); //Amount the machine needs
                         energyNeeded += (consumerEnergy.getMaxEnergy() - consumerEnergy.getCurrentEnergy());
                     }
                 }
@@ -158,28 +140,23 @@ public class WireNetwork {
 
             for (BlockEntity producer : WireUtils.getAdjacentProducers(wire.getPos(), wire.getWorld())) {
                 if (producer != null) {
-                    producerEnergy.put(producer, ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy());
+                    producerPower.add(producer);
+                    energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
                 }
             }
         }
 
-        for (int amount : producerEnergy.values()) {
-            energyAvailable += amount;
-        }
-
         if (energyLeft > 0) {
-            int amountPerConsumer = energyAvailable / consumerPowerMap.size();
-            for (Map.Entry<BlockEntity, Integer> entry : consumerPowerMap.entrySet()) {
-                BlockEntity consumer = entry.getKey();
+            int amountPerConsumer = energyAvailable / consumerPowerRequirement.size();
+            for (BlockEntity consumer: consumerPowerRequirement) {
                 energyAvailable -= amountPerConsumer;
                 int amountExtracted = 0;
-                for (Map.Entry<BlockEntity, Integer> e : producerEnergy.entrySet()) {
-                    BlockEntity producer = e.getKey();
+                for (BlockEntity producer : producerPower) {
                      amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
 
                     if (amountExtracted <= amountPerConsumer) {
                         if (((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy() <= 0) {
-                            producerEnergy.remove(producer);
+                            producerPower.remove(producer);
                         }
                     }
 
@@ -188,7 +165,7 @@ public class WireNetwork {
                     }
                 }
                 energyAvailable += ((EnergyAttributeProvider) consumer).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
-                consumerPowerMap.remove(consumer);
+                consumerPowerRequirement.remove(consumer);
             }
         }
     }
@@ -196,7 +173,7 @@ public class WireNetwork {
     /**
      * @return The ID of the network
      */
-    public long getId() {
+    public UUID getId() {
         return id;
     }
 

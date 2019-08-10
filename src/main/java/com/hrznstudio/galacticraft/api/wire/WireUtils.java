@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.api.wire;
 
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -9,6 +10,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
+import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -39,9 +42,23 @@ public class WireUtils {
      * Attempts to find a WireNetwork with a certain ID.
      *
      * @param id The ID of the wanted WireNetwork
-     * @return The wire network with the specified ID.
+     * @return The network with the specified ID.
      */
-    public static WireNetwork getNetworkFromId(long id) {
+    public static WireNetwork getNetworkFromId(UUID id) {
+        network = null;
+        WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
+            if (wireNetwork.getId() == id) network = wireNetwork;
+        });
+        return network;
+    }
+
+    /**
+     * Attempts to find a temporary WireNetwork with a certain ID.
+     *
+     * @param id The ID of the wanted WireNetwork
+     * @return The network with the specified ID.
+     */
+    public static WireNetwork getTempNetworkFromId(UUID id) {
         network = null;
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
             if (wireNetwork.getId() == id) network = wireNetwork;
@@ -139,6 +156,27 @@ public class WireUtils {
             BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, pos));
 
             if (blockEntity instanceof WireBlockEntity) {
+                if (world.getBlockEntity(pos) instanceof WireBlockEntity) {
+                    WireBlockEntity base = (WireBlockEntity)world.getBlockEntity(pos);
+                    if (((WireBlockEntity) blockEntity).networkId != base.networkId) {
+                        Galacticraft.logger.debug("Converting a wire at {} from the network with the id: {} to {}", blockEntity.getPos(), ((WireBlockEntity) blockEntity).networkId, base.networkId);
+                        try {
+                            WireUtils.getNetworkFromId(((WireBlockEntity) blockEntity).networkId).wires.forEach(wireBlockEntity -> {
+                                wireBlockEntity.networkId = base.networkId;
+                                WireUtils.getNetworkFromId(base.networkId).wires.add(base);
+                            });
+                            WireNetwork.networkMap.remove(WireUtils.getNetworkFromId(((WireBlockEntity) blockEntity).networkId));
+                        } catch (NullPointerException ignore) {
+                            try {
+                                WireNetwork.networkMap_TEMP.remove(blockEntity.getPos());
+                                ((WireBlockEntity) blockEntity).networkId = base.networkId;
+                                WireUtils.getNetworkFromId(base.networkId).wires.add(((WireBlockEntity) blockEntity));
+                            } catch (Exception ignore2) {}
+                        }
+                        ((WireBlockEntity) blockEntity).networkId = base.networkId;
+
+                    }
+                }
                 adjacentConnections[direction.getId()] = (WireBlockEntity)blockEntity;
             }
         }
