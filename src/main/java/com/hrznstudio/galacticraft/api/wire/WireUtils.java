@@ -3,6 +3,7 @@ package com.hrznstudio.galacticraft.api.wire;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.util.WireConnectable;
+import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
@@ -68,16 +69,27 @@ public class WireUtils {
                 if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_INPUT) {
                     if (world.getBlockEntity(adjacentBlockPos) instanceof ConfigurableElectricMachineBlockEntity) {
                         if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).active()) {
-                            adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos)); //Don't send energy to block that are not enabled
+                            adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos)); //Don't send energy to blocks that are not enabled
                         }
                     } else {
                         adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
+                    }
+                }
+            } else {
+                if (world.getBlockEntity(adjacentBlockPos) != null) {
+                    if (world.getBlockEntity(adjacentBlockPos) instanceof EnergyAttributeProvider) {
+                        if (((EnergyAttributeProvider) world.getBlockEntity(adjacentBlockPos)).getEnergyAttribute() != null) {
+                            if (((EnergyAttributeProvider) world.getBlockEntity(adjacentBlockPos)).getEnergyAttribute().canInsertEnergy()) {
+                                adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
+                            }
+                        }
                     }
                 }
             }
         }
         return adjacentConnections;
     }
+
 
     /**
      * @param pos   The source block's position.
@@ -99,6 +111,16 @@ public class WireUtils {
             if (block instanceof WireConnectable) {
                 if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_OUTPUT) {
                     adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
+                } else {
+                    if (world.getBlockEntity(adjacentBlockPos) != null) {
+                        if (world.getBlockEntity(adjacentBlockPos) instanceof EnergyAttributeProvider) {
+                            if (((EnergyAttributeProvider) world.getBlockEntity(adjacentBlockPos)).getEnergyAttribute() != null) {
+                                if (((EnergyAttributeProvider) world.getBlockEntity(adjacentBlockPos)).getEnergyAttribute().canInsertEnergy()) {
+                                    adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -110,41 +132,14 @@ public class WireUtils {
      * @param world The world the block is located in.
      * @return An array of all the adjacent wires.
      */
-    public static BlockEntity[] getAdjacentWires(BlockPos pos, World world) {
-        final BlockEntity[] adjacentConnections = new BlockEntity[6];
+    public static WireBlockEntity[] getAdjacentWires(BlockPos pos, World world) {
+        final WireBlockEntity[] adjacentConnections = new WireBlockEntity[6];
 
         for (Direction direction : Direction.values()) {
             BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, pos));
-            if (blockEntity == null) {
-                continue;
-            }
 
             if (blockEntity instanceof WireBlockEntity) {
-                adjacentConnections[direction.getId()] = blockEntity;
-            }
-        }
-        return adjacentConnections;
-    }
-
-    /**
-     * @param pos   The source block's position.
-     * @param world The world the block is located in.
-     * @return An array of all the adjacent connections
-     */
-    public static BlockEntity[] getAdjacentConnections(BlockPos pos, World world) {
-        final BlockEntity[] adjacentConnections = new BlockEntity[6];
-
-        for (Direction direction : Direction.values()) {
-            BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, pos));
-
-            if (blockEntity == null) {
-                continue;
-            }
-
-            if (blockEntity instanceof WireConnectable) {
-                if (((WireConnectable) blockEntity).canWireConnect(world, direction.getOpposite(), pos, blockEntity.getPos()) != WireConnectionType.NONE) {
-                    adjacentConnections[direction.getId()] = blockEntity;
-                }
+                adjacentConnections[direction.getId()] = (WireBlockEntity)blockEntity;
             }
         }
         return adjacentConnections;

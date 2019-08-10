@@ -88,7 +88,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
             return;
         }
 
-        if (this.getEnergy().getCurrentEnergy() > 0) {
+        if (this.getEnergyAttribute().getCurrentEnergy() > 0) {
             this.status = CollectorStatus.COLLECTING;
         } else {
             this.status = CollectorStatus.INACTIVE;
@@ -104,7 +104,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
             // If the oxygen capacity isn't full, add collected oxygen.
             if (this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
-                this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
 
                 this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, lastCollectAmount, Simulation.ACTION);
             }

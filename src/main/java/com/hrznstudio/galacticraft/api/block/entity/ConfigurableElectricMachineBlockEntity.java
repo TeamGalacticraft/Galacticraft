@@ -24,7 +24,7 @@ import net.minecraft.nbt.CompoundTag;
 public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyAttributeProvider {
 
     public static final int DEFAULT_MAX_ENERGY = 15000;
-    public SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     /**
      * The UUID of the player that viewed the GUI of this machine first
      */
@@ -71,8 +71,6 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             case "ON":
                 return this.getWorld().isReceivingRedstonePower(pos);
         }
-
-
     }
 
     /**
@@ -89,14 +87,10 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         return ConstantItemFilter.ANYTHING;
     }
 
-    /** @return The maximum amount of energy that can be transfered to or from a battery in this machine per call to
+    /** @return The maximum amount of energy that can be transferred to or from a battery in this machine per call to
      *         {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)} */
     protected int getBatteryTransferRate() {
         return 20;
-    }
-
-    public SimpleEnergyAttribute getEnergy() {
-        return energy;
     }
 
     @Override
@@ -169,7 +163,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Energy", getEnergy().getCurrentEnergy());
+        tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
         tag.putString("Owner", owner);
         tag.putBoolean("Party", isParty);
@@ -181,7 +175,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        getEnergy().setCurrentEnergy(tag.getInt("Energy"));
+        getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
         owner = tag.getString("Owner");
         isParty = tag.getBoolean("Party");

@@ -91,8 +91,8 @@ public class RefineryScreen extends AbstractContainerScreen {
     }
 
     private void drawEnergyBufferBar() {
-        float currentEnergy = (float) ((RefineryBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy();
-        float maxEnergy = (float) ((RefineryBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy();
+        float currentEnergy = (float) ((RefineryBlockEntity) world.getBlockEntity(blockPos)).getEnergyAttribute().getCurrentEnergy();
+        float maxEnergy = (float) ((RefineryBlockEntity) world.getBlockEntity(blockPos)).getEnergyAttribute().getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
         this.minecraft.getTextureManager().bindTexture(OVERLAY);
@@ -106,8 +106,8 @@ public class RefineryScreen extends AbstractContainerScreen {
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + OVERLAY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + OVERLAY_HEIGHT) {
             List<String> toolTipLines = new ArrayList<>();
 //            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", ((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).status.toString()).setStyle(new Style().setColor(Formatting.GRAY)).getFormattedText());
-            toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getCurrentEnergy()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
-            toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getEnergy().getMaxEnergy())).asFormattedString() + "\u00A7r");
+            toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getEnergyAttribute().getCurrentEnergy()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
+            toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(((OxygenCollectorBlockEntity) world.getBlockEntity(blockPos)).getEnergyAttribute().getMaxEnergy())).asFormattedString() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

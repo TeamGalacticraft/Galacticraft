@@ -80,9 +80,9 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             return;
         }
 
-        int prev = getEnergy().getCurrentEnergy();
+        int prev = getEnergyAttribute().getCurrentEnergy();
 
-        if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
+        if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy()) {
             if (status == CoalGeneratorStatus.INACTIVE) {
                 this.status = CoalGeneratorStatus.WARMING;
             } else {
@@ -104,7 +104,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         if (status == CoalGeneratorStatus.ACTIVE) {
             fuelTimeCurrent++;
-            getEnergy().setCurrentEnergy(Math.min(getEnergy().getMaxEnergy(), getEnergy().getCurrentEnergy() + fuelEnergyPerTick));
+            getEnergyAttribute().setCurrentEnergy(Math.min(getEnergyAttribute().getMaxEnergy(), getEnergyAttribute().getCurrentEnergy() + fuelEnergyPerTick));
 
             if (fuelTimeCurrent >= fuelTimeMax) {
                 this.status = CoalGeneratorStatus.IDLE;
@@ -116,7 +116,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
+                    getEnergyAttribute().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }

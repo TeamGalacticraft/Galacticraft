@@ -130,7 +130,7 @@ public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock imp
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof CircuitFabricatorBlockEntity)) return;
         CircuitFabricatorBlockEntity fabricator = (CircuitFabricatorBlockEntity) be;
-        to.offer(fabricator.getEnergy());
+        to.offer(fabricator.getEnergyAttribute());
         fabricator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 

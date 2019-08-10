@@ -81,7 +81,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             if (selectedOptions.get(direction).equals(SideOption.POWER_INPUT)) {
                 EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
+                    this.getEnergyAttribute().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
                 }
             }
         }
@@ -94,7 +94,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
 
-        if (getEnergy().getCurrentEnergy() <= 0) {
+        if (getEnergyAttribute().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.INACTIVE;
         } else {
             status = CircuitFabricatorStatus.IDLE;
@@ -122,7 +122,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
-                this.getEnergy().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
             } else {
                 this.progress = 0;
 

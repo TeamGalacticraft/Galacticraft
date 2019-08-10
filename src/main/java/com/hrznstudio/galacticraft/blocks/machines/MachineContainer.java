@@ -46,7 +46,7 @@ public abstract class MachineContainer<T extends ConfigurableElectricMachineBloc
 
     @Override
     public void sendContentUpdates() {
-        energy.set(blockEntity.getEnergy().getCurrentEnergy());
+        energy.set(blockEntity.getEnergyAttribute().getCurrentEnergy());
         super.sendContentUpdates();
     }
 

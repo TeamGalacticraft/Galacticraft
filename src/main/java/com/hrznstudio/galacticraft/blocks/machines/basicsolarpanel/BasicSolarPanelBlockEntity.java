@@ -43,7 +43,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
         if (world.isRaining() || world.isThundering()) {
             status = BasicSolarPanelStatus.RAINING;
         } else if (time > 250 && time < 12000) {
-            if (getEnergy().getCurrentEnergy() < getEnergy().getMaxEnergy()) {
+            if (getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.COLLECTING;
             } else {
                 status = BasicSolarPanelStatus.FULL;
@@ -54,9 +54,9 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), Simulation.ACTION);
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), Simulation.ACTION);
             } else {
-                getEnergy().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), Simulation.ACTION);
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), Simulation.ACTION);
             }
         }
 
@@ -66,7 +66,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
             if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
                 EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
                 if (energyAttribute.canInsertEnergy()) {
-                    this.getEnergy().setCurrentEnergy(energyAttribute.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION));
+                    this.getEnergyAttribute().setCurrentEnergy(energyAttribute.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION));
                 }
             }
         }*/

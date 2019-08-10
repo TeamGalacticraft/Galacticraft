@@ -71,7 +71,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         }
         attemptChargeFromStack(FUEL_INPUT_SLOT);
         // Drain energy
-        int extractEnergy = this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
+        int extractEnergy = this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
         if (extractEnergy == 0) {
             status = CompressorStatus.INACTIVE;
             progress = 0;
@@ -94,7 +94,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
         if (status == CompressorStatus.PROCESSING && isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
-            this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 3, Simulation.ACTION);
+            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 3, Simulation.ACTION);
             this.progress++;
 
             if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
@@ -141,7 +141,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Energy", energy.getCurrentEnergy());
+        tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
 
         return tag;
     }
@@ -149,7 +149,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
-        energy.setCurrentEnergy(tag.getInt("Energy"));
+        getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
     }
 
     @Override

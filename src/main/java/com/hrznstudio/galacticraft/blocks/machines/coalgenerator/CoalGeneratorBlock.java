@@ -130,7 +130,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof CoalGeneratorBlockEntity)) return;
         CoalGeneratorBlockEntity generator = (CoalGeneratorBlockEntity) be;
-        to.offer(generator.getEnergy());
+        to.offer(generator.getEnergyAttribute());
         generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
     }
 

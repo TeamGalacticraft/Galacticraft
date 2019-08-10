@@ -36,7 +36,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     int progress;
 
     @Override
-    public SimpleEnergyAttribute getEnergy() {
+    public SimpleEnergyAttribute getEnergyAttribute() {
         return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
     }
 
