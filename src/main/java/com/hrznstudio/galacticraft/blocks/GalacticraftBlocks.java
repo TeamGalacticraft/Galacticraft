@@ -2,10 +2,7 @@ package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.GalacticraftStairsBlock;
-import com.hrznstudio.galacticraft.blocks.decoration.CheeseBlock;
-import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
-import com.hrznstudio.galacticraft.blocks.decoration.LightingPanelBlock;
-import com.hrznstudio.galacticraft.blocks.decoration.VacuumGlassBlock;
+import com.hrznstudio.galacticraft.blocks.decoration.*;
 import com.hrznstudio.galacticraft.blocks.environment.*;
 import com.hrznstudio.galacticraft.blocks.fluid.CrudeOilBlock;
 import com.hrznstudio.galacticraft.blocks.fluid.FuelBlock;
@@ -141,6 +138,9 @@ public class GalacticraftBlocks {
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.CAVERNOUS_VINE);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
+
+    //DUMMY BLOCKS - REQUIRED FOR ENTITY .OBJ FILE RENDERING
+    public static final Block ROCKET_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_T1);
 
     // Machines
     public static final Block CIRCUIT_FABRICATOR = registerMachine(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.CIRCUIT_FABRICATOR);

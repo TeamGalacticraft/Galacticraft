@@ -1,44 +1,38 @@
 package com.hrznstudio.galacticraft.entity;
 
-import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
-import com.hrznstudio.galacticraft.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketEntityRenderer extends EntityRenderer<T1RocketEntity> {
-    private static final Identifier SKIN = new Identifier("textures/entity/cow/cow.png");
-    protected final BasicSolarPanelModel model = new BasicSolarPanelModel();
 
     public RocketEntityRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
         super(entityRenderDispatcher_1);
     }
 
     @Override
-    public void render(T1RocketEntity entity_1, double double_1, double double_2, double double_3, float float_1, float float_2) {
+    public void render(T1RocketEntity entity, double x, double y, double z, float f, float partialTickTime) {
         GlStateManager.pushMatrix();
-        this.bindEntityTexture(entity_1);
-        if (this.renderOutlines) {
-            GlStateManager.enableColorMaterial();
-            GlStateManager.setupSolidRenderingTextureCombine(this.getOutlineColor(entity_1));
-        }
-        if (this.renderOutlines) {
-            GlStateManager.tearDownSolidRenderingTextureCombine();
-            GlStateManager.disableColorMaterial();
-        }
-
+        MinecraftClient client = MinecraftClient.getInstance();
+        GlStateManager.translated(x, y, z);
+        client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
+        BakedModel model = client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_RENDER_BLOCK.getDefaultState());
+        client.getBlockRenderManager().getModelRenderer().render(model, 1, 1, 1, 1);
         GlStateManager.popMatrix();
-        super.render(entity_1, double_1, double_2, double_3, float_1, float_2);
+        super.render(entity, x, y, z, f, partialTickTime);
     }
 
     @Override
     protected Identifier getTexture(T1RocketEntity var1) {
-        return SKIN;
+        return null;
     }
 }

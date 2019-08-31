@@ -19,12 +19,11 @@ import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTyp
 import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -60,6 +59,8 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.init();
         WorldGenerator.register();
         GalacticraftPackets.register();
+
+        OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {

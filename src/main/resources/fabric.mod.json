@@ -6,7 +6,7 @@
   "name": "Galacticraft: Rewoven",
   "icon": "assets/galacticraft-rewoven/icon.png",
   "description": "FabricMC port of Galacticraft",
-  "licence": "Galacticraft License",
+  "licence": "MIT",
   "contact": {
     "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven"
   },

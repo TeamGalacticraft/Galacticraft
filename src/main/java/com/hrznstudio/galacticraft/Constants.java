@@ -173,6 +173,9 @@ public class Constants {
         public static final String ASTRO_MINER_BASE = "astro_miner_base";
         public static final String SHORT_RANGE_TELEPAD = "short_range_telepad";
 
+        // Dummy render blocks
+        public static final String ROCKET_T1 = "rocket_one";
+
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
         public static final String BASIC_SOLAR_PANEL_PART = "basic_solar_panel_part";
@@ -411,7 +414,7 @@ public class Constants {
 
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
-        public static final String T1_ROCKET = "t1_rocket";
+        public static final String T1_ROCKET = "rocket_one";
     }
 
     public static class TextureCoordinates {

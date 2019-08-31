@@ -25,6 +25,9 @@ allprojects {
         maven { url "https://www.curseforge.com/api/maven" }
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://mod-buildcraft.com/maven" }
+        maven { url "https://maven.abusedmaster.xyz" }
+        maven { url "https://repo1.maven.org/maven2" }
+        mavenCentral()
     }
 }
 
@@ -40,19 +43,20 @@ dependencies {
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
     modImplementation("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
-//    modCompile "cotton:cotton:${project.cotton_version}" { transitive = false }
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") { transitive = false }
+    modImplementation("com.github.NerdHubMC:FOML:${foml_version}") { transitive = true }
 
     //include everything mandatory inside the jar
-//    include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    //include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
     include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
-//    include "cotton:cotton:${project.cotton_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
     include "alexiil.mc.lib:libblockattributes-all:${project.attributes_version}"
+    include "com.github.NerdHubMC:FOML:${foml_version}"
 
     // Needed for LBA in order for eclipse to work
     compile "com.google.code.findbugs:jsr305:3.0.1"
