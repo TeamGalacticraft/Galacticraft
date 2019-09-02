@@ -4,6 +4,7 @@ import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -36,6 +37,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -112,7 +114,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new CoalGeneratorBlockEntity();
     }
 
@@ -135,12 +137,8 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
-    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.coal_generator").setStyle(new Style().setColor(Formatting.GRAY)));
-        } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
-        }
+    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+        return new TranslatableText("tooltip.galacticraft-rewoven.coal_generator");
     }
 
     @Override
@@ -167,5 +165,10 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
+    }
+
+    @Override
+    public List<Direction> disabledSides() {
+        return Collections.EMPTY_LIST;
     }
 }

@@ -103,7 +103,6 @@ public class WireNetwork {
      * Runs every tick.
      */
     public void update() {
-        System.out.println(WireNetwork.networkMap.size());
         ConcurrentSet<BlockEntity> consumerPowerRequirement = new ConcurrentSet<>();
         ConcurrentSet<BlockEntity> producerPower = new ConcurrentSet<>();
         int energyAvailable = 0;

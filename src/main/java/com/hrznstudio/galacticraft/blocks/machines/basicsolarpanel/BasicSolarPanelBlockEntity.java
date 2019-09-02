@@ -14,7 +14,6 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
-    private final List<Runnable> listeners = Lists.newArrayList();
 
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
 
@@ -37,14 +36,15 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
         if (world.isClient || !active()) {
             return;
         }
-        long time = world.getTimeOfDay();
-        time %= 24000;
+        double time = world.getTimeOfDay() % 24000;
 
-        if (world.isRaining() || world.isThundering()) {
-            status = BasicSolarPanelStatus.RAINING;
-        } else if (time > 250 && time < 12000) {
+        if (time > 0 && time < 12000) {
             if (getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy()) {
-                status = BasicSolarPanelStatus.COLLECTING;
+                if (world.isRaining() || world.isThundering()) {
+                    status = BasicSolarPanelStatus.RAINING;
+                } else {
+                    status = BasicSolarPanelStatus.COLLECTING;
+                }
             } else {
                 status = BasicSolarPanelStatus.FULL;
             }
@@ -54,23 +54,20 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - ((double) time - 6000D)) / 133.3333333333D), Simulation.ACTION);
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - (time - 6000D)) / 133.3333333333D), Simulation.ACTION);
             } else {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((double) time / 133.3333333333D)), Simulation.ACTION);
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 133.3333333333D)), Simulation.ACTION);
+            }
+        }
+        if (status == BasicSolarPanelStatus.RAINING) {
+            if (time > 6000) {
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((6000D - (time - 6000D)) / 133.3333333333D) / 10D), Simulation.ACTION);
+            } else {
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 133.3333333333D) / 10), Simulation.ACTION);
             }
         }
 
         attemptDrainPowerToStack(0);
-
-        /*for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
-                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
-                if (energyAttribute.canInsertEnergy()) {
-                    this.getEnergyAttribute().setCurrentEnergy(energyAttribute.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION));
-                }
-            }
-        }*/
-
     }
 
     @Override

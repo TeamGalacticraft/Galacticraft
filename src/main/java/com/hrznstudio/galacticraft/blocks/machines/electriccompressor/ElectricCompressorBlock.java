@@ -2,6 +2,7 @@ package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -35,6 +36,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,7 +77,6 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
         return false;
     }
 
-    @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext itemPlacementContext_1) {
         return super.getPlacementState(itemPlacementContext_1).with(FACING, itemPlacementContext_1.getPlayerFacing().getOpposite()).with(FRONT_SIDE_OPTION, SideOption.BLANK)
@@ -99,7 +100,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView var1) {
+    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1) {
         return new ElectricCompressorBlockEntity();
     }
 
@@ -109,12 +110,8 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(new Style().setColor(Formatting.GRAY)));
-        } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
-        }
+    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+        return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(new Style().setColor(Formatting.GRAY));
     }
 
     @Override
@@ -156,5 +153,10 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
                 }
             }
         }
+    }
+
+    @Override
+    public List<Direction> disabledSides() {
+        return Collections.EMPTY_LIST;
     }
 }

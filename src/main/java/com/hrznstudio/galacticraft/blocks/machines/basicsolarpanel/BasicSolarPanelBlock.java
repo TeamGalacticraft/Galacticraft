@@ -4,9 +4,10 @@ import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.MultiBlock;
 import com.hrznstudio.galacticraft.util.Rotatable;
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
@@ -21,9 +23,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -114,7 +118,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new BasicSolarPanelBlockEntity();
     }
 
@@ -135,15 +139,6 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
         to.offer(generator.getEnergyAttribute());
         to.offer(generator);
         generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
-    }
-
-    @Override
-    public void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(new Style().setColor(Formatting.GRAY)));
-        } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
-        }
     }
 
     @Override
@@ -256,4 +251,16 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
+
+    @Override
+    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel");
+    }
+
+    @Override
+    public List<Direction> disabledSides() {
+        return Collections.singletonList(Direction.UP);
+    }
+
+
 }

@@ -10,6 +10,8 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.UUID;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -44,11 +46,13 @@ public class GalacticraftPackets {
                 owner = owner.replace("_Party", "");
                 isParty = true;
             }
+            String ownerUsername = buffer.readString();
             if (context.getPlayer().world.getBlockEntity(pos) == null) {
                 for (BlockEntity blockEntity : context.getPlayer().world.blockEntities) { //uh-oh
                     if (blockEntity.getPos().equals(pos)) {
                         if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).owner = owner;
+                            ((ConfigurableElectricMachineBlockEntity) blockEntity).ownerUsername = ownerUsername;
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
                         }
@@ -57,6 +61,7 @@ public class GalacticraftPackets {
                 }
             } else if (context.getPlayer().world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                 ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).owner = owner;
+                ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).ownerUsername = ownerUsername;
                 ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isPublic = isPublic;
                 ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isParty = isParty;
             }

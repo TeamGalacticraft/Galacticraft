@@ -23,18 +23,19 @@ public class WireUtils {
 
     public static BlockPos getPosFromDirection(Direction direction, BlockPos pos) {
         if (pos == null || direction == null) return null;
-        if (direction == Direction.NORTH) {
-            return pos.north();
-        } else if (direction == Direction.SOUTH) {
-            return pos.south();
-        } else if (direction == Direction.EAST) {
-            return pos.east();
-        } else if (direction == Direction.WEST) {
-            return pos.west();
-        } else if (direction == Direction.UP) {
-            return pos.up();
-        } else {
-            return pos.down();
+        switch (direction) {
+            case NORTH:
+                return pos.north();
+            case SOUTH:
+                return pos.south();
+            case EAST:
+                return pos.east();
+            case WEST:
+                return pos.west();
+            case UP:
+                return pos.up();
+            default:
+                return pos.down();
         }
     }
 
@@ -45,20 +46,6 @@ public class WireUtils {
      * @return The network with the specified ID.
      */
     public static WireNetwork getNetworkFromId(UUID id) {
-        network = null;
-        WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
-            if (wireNetwork.getId() == id) network = wireNetwork;
-        });
-        return network;
-    }
-
-    /**
-     * Attempts to find a temporary WireNetwork with a certain ID.
-     *
-     * @param id The ID of the wanted WireNetwork
-     * @return The network with the specified ID.
-     */
-    public static WireNetwork getTempNetworkFromId(UUID id) {
         network = null;
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
             if (wireNetwork.getId() == id) network = wireNetwork;

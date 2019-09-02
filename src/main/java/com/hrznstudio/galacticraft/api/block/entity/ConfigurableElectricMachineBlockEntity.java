@@ -17,6 +17,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.Direction;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -29,6 +32,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * The UUID of the player that viewed the GUI of this machine first
      */
     public String owner = "";
+    public String ownerUsername = "";
     public boolean isParty = false;
     public boolean isPublic = true;
     /**
@@ -37,6 +41,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * DISABLED: Ignores all redstone signals
      * OFF: When powered, the machine turns off
      * ON: The machine will only work when powered
+     *
+     * TODO: Enum constant
      */
     public String redstoneOption = "DISABLED";
 
@@ -166,6 +172,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
         tag.putString("Owner", owner);
+        tag.putString("OwnerUsername", ownerUsername);
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
         tag.putString("Redstone", redstoneOption);
@@ -178,6 +185,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
         owner = tag.getString("Owner");
+        ownerUsername = tag.getString("OwnerUsername");
         isParty = tag.getBoolean("Party");
         isPublic = tag.getBoolean("Public");
         redstoneOption = tag.getString("Redstone");
