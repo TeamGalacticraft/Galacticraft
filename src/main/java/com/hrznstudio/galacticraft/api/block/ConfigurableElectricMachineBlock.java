@@ -305,17 +305,6 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         return stack;
     }
 
-    @Override
-    public void onBreak(World world_1, BlockPos blockPos_1, BlockState blockState_1, PlayerEntity playerEntity_1) {
-        super.onBreak(world_1, blockPos_1, blockState_1, playerEntity_1);
-        BlockEntity entity = world_1.getBlockEntity(blockPos_1);
-        if (entity instanceof ConfigurableElectricMachineBlockEntity) {
-            CompoundTag tag = new CompoundTag();
-            tag = entity.toTag(tag);
-tag
-        }
-    }
-
     public abstract Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1);
 
     public abstract List<Direction> disabledSides();
