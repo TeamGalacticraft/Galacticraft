@@ -1,0 +1,5 @@
+steps:
+- name: 'adoptopenjdk/openjdk8-openj9'
+  args:
+    - './gradlew'
+    - 'build'
