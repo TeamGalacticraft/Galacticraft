@@ -13,7 +13,7 @@ public class CelestialBodyRegistry {
     public static List<CelestialBody> bodies = new ArrayList<>();
 
     public static CelestialBody register(CelestialBody celestialBody) {
-        if(!bodies.contains(celestialBody)) {
+        if (!bodies.contains(celestialBody)) {
             bodies.add(celestialBody);
         }
         return celestialBody;

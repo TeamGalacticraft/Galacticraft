@@ -20,9 +20,8 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
     public static final ContainerFactory<Container> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelContainer::new);
 
     private final Inventory inventory;
-    private BasicSolarPanelBlockEntity solarPanel;
-
     private final Property status = Property.create();
+    private BasicSolarPanelBlockEntity solarPanel;
 
     public BasicSolarPanelContainer(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);

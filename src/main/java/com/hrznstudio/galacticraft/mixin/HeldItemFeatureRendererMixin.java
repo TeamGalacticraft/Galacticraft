@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(HeldItemFeatureRenderer.class)
-public  class HeldItemFeatureRendererMixin {
+public class HeldItemFeatureRendererMixin {
 
     @Inject(method = "method_4192", at = @At("TAIL"))
     private void method_4192(LivingEntity livingEntity_1, ItemStack itemStack_1, ModelTransformation.Type modelTransformation$Type_1, Arm absoluteHand_1, CallbackInfo ci) {
@@ -29,7 +29,7 @@ public  class HeldItemFeatureRendererMixin {
             GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
             boolean boolean_1 = absoluteHand_1 == Arm.LEFT;
-            GlStateManager.translatef((float)(boolean_1 ? -1 : 1) / 16.0F, 50F, -0.625F);
+            GlStateManager.translatef((float) (boolean_1 ? -1 : 1) / 16.0F, 50F, -0.625F);
             //MinecraftClient.getInstance().getFirstPersonRenderer().renderItemFromSide(livingEntity_1, itemStack_1, modelTransformation$Type_1, boolean_1);
             GlStateManager.popMatrix();
             return; // leave this, it stops normal item rendering if its a rocket.

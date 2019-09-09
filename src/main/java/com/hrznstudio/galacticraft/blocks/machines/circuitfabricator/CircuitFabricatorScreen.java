@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -108,9 +109,6 @@ public class CircuitFabricatorScreen extends MachineContainerScreen<CircuitFabri
             toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
-        }
-        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 2 && mouseY <= this.top + (22 + 2)) {
-            this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asFormattedString(), mouseX, mouseY);
         }
     }
 }

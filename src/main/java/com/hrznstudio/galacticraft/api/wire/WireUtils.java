@@ -72,7 +72,7 @@ public class WireUtils {
             if (block instanceof WireConnectable) {
                 if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_INPUT) {
                     if (world.getBlockEntity(adjacentBlockPos) instanceof ConfigurableElectricMachineBlockEntity) {
-                        if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).active()) {
+                        if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).enabled()) {
                             adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos)); //Don't send energy to blocks that are not enabled
                         }
                     } else {
@@ -144,7 +144,7 @@ public class WireUtils {
 
             if (blockEntity instanceof WireBlockEntity) {
                 if (world.getBlockEntity(pos) instanceof WireBlockEntity) {
-                    WireBlockEntity base = (WireBlockEntity)world.getBlockEntity(pos);
+                    WireBlockEntity base = (WireBlockEntity) world.getBlockEntity(pos);
                     if (((WireBlockEntity) blockEntity).networkId != base.networkId) {
                         Galacticraft.logger.debug("Converting a wire at {} from the network with the id: {} to {}", blockEntity.getPos(), ((WireBlockEntity) blockEntity).networkId, base.networkId);
                         try {
@@ -158,13 +158,14 @@ public class WireUtils {
                                 WireNetwork.networkMap_TEMP.remove(blockEntity.getPos());
                                 ((WireBlockEntity) blockEntity).networkId = base.networkId;
                                 WireUtils.getNetworkFromId(base.networkId).wires.add(((WireBlockEntity) blockEntity));
-                            } catch (Exception ignore2) {}
+                            } catch (Exception ignore2) {
+                            }
                         }
                         ((WireBlockEntity) blockEntity).networkId = base.networkId;
 
                     }
                 }
-                adjacentConnections[direction.getId()] = (WireBlockEntity)blockEntity;
+                adjacentConnections[direction.getId()] = (WireBlockEntity) blockEntity;
             }
         }
         return adjacentConnections;

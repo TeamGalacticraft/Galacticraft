@@ -28,16 +28,19 @@ public enum CompressorStatus {
         this.name = name;
     }
 
+    public static CompressorStatus get(int index) {
+        switch (index) {
+            case 0:
+                return PROCESSING;
+            case 1:
+                return IDLE;
+            default:
+                return INACTIVE;
+        }
+    }
+
     @Override
     public String toString() {
         return name;
-    }
-
-    public static CompressorStatus get(int index) {
-        switch (index) {
-            case 0: return PROCESSING;
-            case 1: return IDLE;
-            default: return INACTIVE;
-        }
     }
 }

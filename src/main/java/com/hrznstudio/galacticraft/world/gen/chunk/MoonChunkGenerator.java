@@ -110,12 +110,12 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         f1 = f1 * 0.9F + 0.1F;
         f2 = (f2 * 4.0F - 1.0F) / 8.0F;
         doubles[0] = (double) f2 + this.method_16414(i, i2);
-        doubles[1] = (double) f1;
+        doubles[1] = f1;
         return doubles;
     }
 
     private double method_16414(int i, int i2) {
-        double d = this.noiseSampler.sample((double) (i * 200), 10.0D, (double) (i2 * 200), 1.0D, 0.0D, true) / 8000.0D;
+        double d = this.noiseSampler.sample(i * 200, 10.0D, i2 * 200, 1.0D, 0.0D, true) / 8000.0D;
         if (d < 0.0D) {
             d = -d * 0.3D;
         }

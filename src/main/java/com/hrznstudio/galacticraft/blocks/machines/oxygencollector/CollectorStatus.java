@@ -16,12 +16,12 @@ public enum CollectorStatus {
         this.textColor = textColor;
     }
 
-    public int getTextColor() {
-        return textColor;
-    }
-
     public static CollectorStatus get(int index) {
         if (index < 0) return values()[0];
         return values()[index % values().length];
+    }
+
+    public int getTextColor() {
+        return textColor;
     }
 }

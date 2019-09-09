@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "down": "galacticraft-rewoven:block/detailed_tin_decoration_top",
+    "up": "galacticraft-rewoven:block/tin_decoration",
+    "north": "galacticraft-rewoven:block/detailed_tin_decoration_side",
+    "south": "galacticraft-rewoven:block/detailed_tin_decoration_side",
+    "west": "galacticraft-rewoven:block/detailed_tin_decoration_side",
+    "east": "galacticraft-rewoven:block/detailed_tin_decoration_side",
+    "particle": "galacticraft-rewoven:block/detailed_tin_decoration_side"
+  }
+}

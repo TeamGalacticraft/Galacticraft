@@ -10,15 +10,19 @@ import net.minecraft.util.Formatting;
 public enum RefineryStatus {
 
     /**
-     * Generator is active and is generating energy.
+     * Refinery is active and is converting oil into fuel.
      */
-    REFINING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
+    ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
     /**
-     * Generator has fuel but buffer is full.
+     * Refinery has oil but the fuel tank is full.
      */
-    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
+    FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
-     * The generator has no fuel.
+     * The refinery has no oil.
+     */
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.BLACK)).asFormattedString()),
+    /**
+     * The refinery has no energy.
      */
     INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
 

@@ -63,7 +63,7 @@ public class MarsDimension extends Dimension implements CelestialBody {
         f3 = f3 * (f2 * 0.94F + 0.06F);
         f4 = f4 * (f2 * 0.94F + 0.06F);
         f5 = f5 * (f2 * 0.91F + 0.09F);
-        return new Vec3d((double) f3, (double) f4, (double) f5);
+        return new Vec3d(f3, f4, f5);
     }
 
     @Override

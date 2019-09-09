@@ -16,8 +16,8 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<BasicSolarPanelBlockEntity> {
 
-    public BasicSolarPanelModel model = new BasicSolarPanelModel();
     private static Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
+    public BasicSolarPanelModel model = new BasicSolarPanelModel();
 
     @Override
     public void render(BasicSolarPanelBlockEntity entity, double x, double y, double z, float f, int i) {

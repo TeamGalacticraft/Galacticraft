@@ -1,9 +1,7 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
-import com.hrznstudio.galacticraft.client.render.block.entity.BasicSolarPanelBlockEntityRenderer;
 import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
-import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;

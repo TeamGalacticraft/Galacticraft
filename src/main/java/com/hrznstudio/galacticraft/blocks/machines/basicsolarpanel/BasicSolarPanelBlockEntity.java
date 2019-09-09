@@ -2,13 +2,10 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.util.Tickable;
-
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -33,7 +30,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
     @Override
     public void tick() {
-        if (world.isClient || !active()) {
+        if (world.isClient || !enabled()) {
             return;
         }
         double time = world.getTimeOfDay() % 24000;

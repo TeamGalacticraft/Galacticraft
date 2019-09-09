@@ -27,12 +27,12 @@ import java.util.Optional;
 public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, WireConnectable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
+    static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
     public CompressorStatus status = CompressorStatus.INACTIVE;
     public int fuelTime;
     public int maxFuelTime;
     int progress;
-    static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
     public ElectricCompressorBlockEntity() {
         super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
@@ -66,7 +66,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     public void tick() {
-        if (!active()) {
+        if (!enabled()) {
             return;
         }
         attemptChargeFromStack(FUEL_INPUT_SLOT);

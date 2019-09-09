@@ -112,7 +112,7 @@ public class ConfigHandler {
 
         builder.getOrCreateCategory(Constants.Config.DEBUG)
                 .addEntry(debugSubCat.build())
-                ;
+        ;
 
         MinecraftClient.getInstance().openScreen(builder.build());
     }

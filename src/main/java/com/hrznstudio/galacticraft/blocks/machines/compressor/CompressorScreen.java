@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -23,31 +22,14 @@ import net.minecraft.world.World;
 public class CompressorScreen extends AbstractContainerScreen<CompressorContainer> {
 
     public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreen::new);
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<AbstractContainerScreen> createFactory(
-            Class<T> machineClass, MachineContainer.MachineContainerConstructor<? extends AbstractContainerScreen<?>, T> constructor)
-    {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
-    }
-
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
     protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
     protected int progressDisplayX;
-
     protected int progressDisplayY;
     protected BlockPos blockPos;
-
     protected World world;
 
     public CompressorScreen(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
@@ -58,6 +40,19 @@ public class CompressorScreen extends AbstractContainerScreen<CompressorContaine
     public CompressorScreen(CompressorContainer electricCompressorContainer, PlayerEntity playerEntity, CompressorBlockEntity blockEntity, Text textComponents) {
         super(electricCompressorContainer, playerEntity.inventory, textComponents);
         this.world = playerEntity.world;
+    }
+
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<AbstractContainerScreen> createFactory(
+            Class<T> machineClass, MachineContainer.MachineContainerConstructor<? extends AbstractContainerScreen<?>, T> constructor) {
+        return (syncId, id, player, buffer) -> {
+            BlockPos pos = buffer.readBlockPos();
+            BlockEntity be = player.world.getBlockEntity(pos);
+            if (machineClass.isInstance(be)) {
+                return constructor.create(syncId, player, machineClass.cast(be));
+            } else {
+                return null;
+            }
+        };
     }
 
     protected String getBackgroundLocation() {

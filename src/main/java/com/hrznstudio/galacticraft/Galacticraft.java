@@ -11,6 +11,7 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.network.packet.GalacticraftPackets;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
+import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
@@ -23,8 +24,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
-import org.apache.logging.log4j.MarkerManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -60,6 +59,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.init();
         WorldGenerator.register();
         GalacticraftPackets.register();
+        GalacticraftFluidTags.register();
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             try {

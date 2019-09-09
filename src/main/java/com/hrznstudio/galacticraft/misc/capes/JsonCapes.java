@@ -60,6 +60,10 @@ public class JsonCapes implements CapeListener {
             this.key = key;
         }
 
+        public static Cape valueOfIgnoreCase(String key) {
+            return valueOf(key.toUpperCase());
+        }
+
         public boolean equals(String key) {
             return this.key.equals(key);
         }
@@ -70,10 +74,6 @@ public class JsonCapes implements CapeListener {
 
         public Identifier getTexture() {
             return new Identifier(Constants.MOD_ID, "textures/cape/cape_" + this.key + ".png");
-        }
-
-        public static Cape valueOfIgnoreCase(String key) {
-            return valueOf(key.toUpperCase());
         }
     }
 }

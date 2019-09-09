@@ -3,9 +3,9 @@ package com.hrznstudio.galacticraft.recipes.rei;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.shedaniel.rei.api.DisplaySettings;
+import me.shedaniel.math.api.Point;
+import me.shedaniel.math.api.Rectangle;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.api.Renderable;
 import me.shedaniel.rei.api.Renderer;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
 import me.shedaniel.rei.gui.widget.SlotWidget;
@@ -18,11 +18,11 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -36,7 +36,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
 
     @Override
     public Renderer getIcon() {
-        return Renderable.fromItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
+        return Renderer.fromItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
     }
 
     public String getCategoryName() {
@@ -45,7 +45,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
 
     @SuppressWarnings("PointlessArithmeticExpression")
     public List<Widget> setupDisplay(Supplier<DefaultFabricationDisplay> recipeDisplaySupplier, Rectangle bounds) {
-        final Point startPoint = new Point((int) bounds.getCenterX() - 81, (int) bounds.getCenterY() - 41);
+        final Point startPoint = new Point(bounds.getCenterX() - 81, bounds.getCenterY() - 41);
 //        final Point startPoint = new Point((int) bounds.getCenterX() - 41, (int) bounds.getCenterY() - 27);
 
         class NamelessClass_1 extends RecipeBaseWidget {
@@ -76,43 +76,29 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         // Redstone
         // User input
         // Output
-        widgets.add(new SlotWidget(startPoint.x + (18 * 0) + 1, startPoint.y + 1, Collections.singletonList(new ItemStack(Items.DIAMOND)), false, true, true));
-        widgets.add(new SlotWidget(startPoint.x + (18 * 7) + 1, startPoint.y + 1, recipeDisplay.getInput().get(0), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 0) + 1, startPoint.y + 1, Collections.singletonList(Renderer.fromItemStack(new ItemStack(Items.DIAMOND))), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 7) + 1, startPoint.y + 1, recipeDisplay.getInput().get(0).stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));
 
-        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Collections.singletonList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
-        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Collections.singletonList(new ItemStack(GalacticraftItems.RAW_SILICON)), false, true, true));
-        widgets.add(new SlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Collections.singletonList(new ItemStack(Items.REDSTONE)), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Collections.singletonList(Renderer.fromItemStack(new ItemStack(GalacticraftItems.RAW_SILICON))), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Collections.singletonList(Renderer.fromItemStack(new ItemStack(GalacticraftItems.RAW_SILICON))), false, true, true));
+        widgets.add(new SlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Collections.singletonList(Renderer.fromItemStack(new ItemStack(Items.REDSTONE))), false, true, true));
 
-        widgets.add(new SlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput(), false, true, true) {
-            @Override
-            protected String getItemCountOverlay(ItemStack currentStack) {
-                if (currentStack.getCount() == 1)
-                    return "";
-                if (currentStack.getCount() < 1)
-                    return "§c" + currentStack.getCount();
-                return currentStack.getCount() + "";
-            }
-        });
+        widgets.add(new SlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput().stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));
         return widgets;
     }
 
     @Override
-    public DisplaySettings<DefaultFabricationDisplay> getDisplaySettings() {
-        return new DisplaySettings<DefaultFabricationDisplay>() {
-            @Override
-            public int getDisplayHeight(RecipeCategory recipeCategory) {
-                return 90;
-            }
+    public int getDisplayHeight() {
+        return 90;
+    }
 
-            @Override
-            public int getDisplayWidth(RecipeCategory recipeCategory, DefaultFabricationDisplay recipeDisplay) {
-                return 170;
-            }
+    @Override
+    public int getDisplayWidth(DefaultFabricationDisplay display) {
+        return 170;
+    }
 
-            @Override
-            public int getMaximumRecipePerPage(RecipeCategory recipeCategory) {
-                return 99;
-            }
-        };
+    @Override
+    public int getMaximumRecipePerPage() {
+        return 99;
     }
 }

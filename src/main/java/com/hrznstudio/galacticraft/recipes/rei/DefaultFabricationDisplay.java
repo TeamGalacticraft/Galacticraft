@@ -8,7 +8,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -25,11 +24,6 @@ public class DefaultFabricationDisplay implements RecipeDisplay {
             this.input.add(Arrays.asList(ingredient.getStackArray()));
         });
         this.output = Arrays.asList(recipe.getOutput());
-    }
-
-    @Override
-    public Optional getRecipe() {
-        return Optional.ofNullable(this.display);
     }
 
     @Override

@@ -34,13 +34,13 @@ public enum BasicSolarPanelStatus {
         this.name = name;
     }
 
+    public static BasicSolarPanelStatus get(int index) {
+        if (index < 0) index = 0;
+        return values()[index % values().length];
+    }
+
     @Override
     public String toString() {
         return name;
-    }
-
-    public static BasicSolarPanelStatus get(int index) {
-        if (index < 0) index=0;
-        return values()[index % values().length];
     }
 }

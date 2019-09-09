@@ -109,12 +109,12 @@ public class MarsChunkGenerator extends SurfaceChunkGenerator<MarsChunkGenerator
         float_1 = float_1 * 0.9F + 0.1F;
         float_2 = (float_2 * 4.0F - 1.0F) / 8.0F;
         doubles_1[0] = (double) float_2 + this.method_16414(int_1, int_2);
-        doubles_1[1] = (double) float_1;
+        doubles_1[1] = float_1;
         return doubles_1;
     }
 
     private double method_16414(int int_1, int int_2) {
-        double double_1 = this.noiseSampler.sample((double) (int_1 * 200), 10.0D, (double) (int_2 * 200), 1.0D, 0.0D, true) / 8000.0D;
+        double double_1 = this.noiseSampler.sample(int_1 * 200, 10.0D, int_2 * 200, 1.0D, 0.0D, true) / 8000.0D;
         if (double_1 < 0.0D) {
             double_1 = -double_1 * 0.3D;
         }

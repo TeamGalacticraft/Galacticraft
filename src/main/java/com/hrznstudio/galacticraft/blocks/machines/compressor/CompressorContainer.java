@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
-import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -21,14 +20,12 @@ import net.minecraft.item.ItemStack;
 public class CompressorContainer extends MachineContainer<CompressorBlockEntity> {
 
     public static final ContainerFactory<Container> FACTORY = createFactory(CompressorBlockEntity.class, CompressorContainer::new);
-
-    protected Inventory inventory;
-    protected int outputSlotId = 0;
-    private ItemStack itemStack;
-
     public final Property status = Property.create();
     public final Property progress = Property.create();
     public final Property fuelTime = Property.create();
+    protected Inventory inventory;
+    protected int outputSlotId = 0;
+    private ItemStack itemStack;
 
     public CompressorContainer(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
@@ -123,7 +120,7 @@ public class CompressorContainer extends MachineContainer<CompressorBlockEntity>
         fuelTime.set(blockEntity.fuelTime);
         super.sendContentUpdates();
     }
-    
+
     @Override
     public void setProperties(int index, int value) {
         super.setProperties(index, value);

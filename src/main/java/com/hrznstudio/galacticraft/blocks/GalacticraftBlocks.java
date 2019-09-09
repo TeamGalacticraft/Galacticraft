@@ -39,18 +39,20 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftBlocks {
 
+    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
+    public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).sounds(BlockSoundGroup.WOOD).build()), Constants.Blocks.GLOWSTONE_TORCH);
+    public static final Block GLOWSTONE_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH).build()), Constants.Blocks.GLOWSTONE_WALL_TORCH);
+    public static final Block BASIC_SOLAR_PANEL_PART = registerBlockWithoutItem(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
+    // Liquids
+    public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
+            .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
+            .strength(100.0F, 1000.0F).dropsNothing().build());
+    public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().build());
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
             // Set the tab icon
             .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF))
             .build();
-
-    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
-            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
-            // Set the the tab icon
-            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR))
-            .build();
-
     // Blocks
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build()), Constants.Blocks.MOON_TURF);
     public static final Block MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F).build()), Constants.Blocks.MOON_ROCK);
@@ -65,17 +67,14 @@ public class GalacticraftBlocks {
     public static final Block ASTEROID_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build()), Constants.Blocks.ASTEROID_ROCK);
     public static final Block ASTEROID_ROCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build()), Constants.Blocks.ASTEROID_ROCK_1);
     public static final Block ASTEROID_ROCK_2 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build()), Constants.Blocks.ASTEROID_ROCK_2);
-    public static final Block VENUS_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.VENUS_ROCK);
-    public static final Block VENUS_ROCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.VENUS_ROCK_1);
-    public static final Block VENUS_ROCK_2 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.VENUS_ROCK_2);
-    public static final Block VENUS_ROCK_3 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.VENUS_ROCK_3);
-    public static final Block VENUS_ROCK_SCORCHED = registerBlock(new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.VENUS_ROCK_SCORCHED);
+    public static final Block SOFT_VENUS_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.SOFT_VENUS_ROCK);
+    public static final Block HARD_VENUS_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.HARD_VENUS_ROCK);
+    public static final Block SCORCHED_VENUS_ROCK = registerBlock(new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.SCORCHED_VENUS_ROCK);
     public static final Block VOLCANIC_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(2.2F, 0.5F).build()), Constants.Blocks.VOLCANIC_ROCK);
-    public static final Block SCORCHED_ROCK = registerBlock(new ScorchedRockBlock(FabricBlockSettings.of(Material.STONE).ticksRandomly().build()), Constants.Blocks.SCORCHED_ROCK);
     public static final Block PUMICE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.PUMICE);
     public static final Block VAPOR_SPOUT = registerBlock(new VaporSpoutBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build()), Constants.Blocks.VAPOR_SPOUT);
     public static final Block TIN_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION);
-    public static final Block TIN_DECORATION_BLOCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_BLOCK_1);
+    public static final Block TIN_DECORATION_BLOCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.DETAILED_TIN_DECORATION);
     public static final Block DARK_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build()), Constants.Blocks.DARK_DECORATION);
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.GRATING);
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL).build()), Constants.Blocks.ALUMINUM_WIRE);
@@ -93,7 +92,7 @@ public class GalacticraftBlocks {
     public static final Block WIRE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.PIPE_WALKWAY);
     public static final Block PIPE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.WIRE_WALKWAY);
     public static final Block TIN_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_SLAB);
-    public static final Block TIN_DECORATION_SLAB_1 = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_SLAB_1);
+    public static final Block TIN_DECORATION_SLAB_1 = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.DETAILED_TIN_DECORATION_SLAB);
     public static final Block DARK_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.DARK_DECORATION_SLAB);
     public static final Block MARS_COBBLESTONE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.MARS_COBBLESTONE_SLAB);
     public static final Block MARS_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MARS_DUNGEON_BRICKS_SLAB);
@@ -102,7 +101,7 @@ public class GalacticraftBlocks {
     public static final Block MOON_ROCK_STAIRS = registerBlock(new GalacticraftStairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_ROCK_STAIRS);
     public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new GalacticraftStairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_DUNGEON_BRICKS_STAIRS);
     public static final Block TIN_DECORATION_STAIRS = registerBlock(new GalacticraftStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.TIN_DECORATION_STAIRS);
-    public static final Block TIN_DECORATION_STAIRS_1 = registerBlock(new GalacticraftStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.TIN_DECORATION_STAIRS_1);
+    public static final Block TIN_DECORATION_STAIRS_1 = registerBlock(new GalacticraftStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS);
     public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new GalacticraftStairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build()), Constants.Blocks.MARS_DUNGEON_BRICKS_STAIRS);
     public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new GalacticraftStairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build()), Constants.Blocks.MARS_COBBLESTONE_STAIRS);
     public static final Block TIN_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_WALL);
@@ -135,29 +134,23 @@ public class GalacticraftBlocks {
     public static final Block DESH_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.DESH_BLOCK);
     public static final Block TITANIUM_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.TITANIUM_BLOCK);
     public static final Block LEAD_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.LEAD_BLOCK);
-    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
-    public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).sounds(BlockSoundGroup.WOOD).build()), Constants.Blocks.GLOWSTONE_TORCH);
-    public static final Block GLOWSTONE_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH).build()), Constants.Blocks.GLOWSTONE_WALL_TORCH);
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.CAVERNOUS_VINE);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
-
+    public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(
+            new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_MACHINES))
+            // Set the the tab icon
+            .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR))
+            .build();
     // Machines
     public static final Block CIRCUIT_FABRICATOR = registerMachine(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.CIRCUIT_FABRICATOR);
     public static final Block COMPRESSOR = registerMachine(new CompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COMPRESSOR);
     public static final Block ELECTRIC_COMPRESSOR = registerMachine(new ElectricCompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ELECTRIC_COMPRESSOR);
     public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.COAL_GENERATOR);
     public static final Block BASIC_SOLAR_PANEL = registerMachine(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL);
-    public static final Block BASIC_SOLAR_PANEL_PART = registerBlockWithoutItem(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
-
-    // Liquids
-    public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.STILL_CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
-            .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
-            .strength(100.0F, 1000.0F).dropsNothing().build());
-    public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.STILL_FUEL, FabricBlockSettings.of(Material.WATER).noCollision().build());
 
     public static void register() {
     }

@@ -31,13 +31,13 @@ public enum CoalGeneratorStatus {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return name;
-    }
-
     public static CoalGeneratorStatus get(int index) {
         if (index < 0) return ACTIVE;
         return values()[index % values().length];
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

@@ -7,7 +7,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -26,10 +25,10 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
         this.output = Arrays.asList(recipe.getOutput());
     }
 
-    @Override
-    public Optional getRecipe() {
-        return Optional.ofNullable(this.display);
-    }
+    //@Override
+    //public Optional getRecipe() {
+    //    return Optional.ofNullable(this.display);
+    //}
 
     @Override
     public List<List<ItemStack>> getInput() {

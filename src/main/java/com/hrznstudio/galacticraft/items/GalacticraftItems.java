@@ -14,12 +14,12 @@ import net.minecraft.util.registry.Registry;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftItems {
+    public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 15714446, 9794134, (new Item.Settings()).group(ItemGroup.MISC)));
+    private static final Item GLOWSTONE_TORCH = new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP));
     public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP))
             .icon(() -> new ItemStack(GalacticraftItems.CANVAS))
             .build();
-
-
     // MATERIALS
     public static final Item ALUMINUM_INGOT = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item COPPER_INGOT = new Item(new Item.Settings().group(ITEMS_GROUP));
@@ -67,8 +67,6 @@ public class GalacticraftItems {
     public static final Item ISOTHERMAL_FABRIC = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item ORION_DRIVE = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item ATMOSPHERIC_VALVE = new Item(new Item.Settings().group(ITEMS_GROUP));
-
-
     //FOOD
     public static final Item MOON_BERRIES = new Item(new Item.Settings().food(GCFoodSettings.MOON_BERRIES).group(ITEMS_GROUP));
     public static final Item CHEESE_CURD = new Item(new Item.Settings().food(GCFoodSettings.CHEESE_CURD).group(ITEMS_GROUP));
@@ -77,13 +75,11 @@ public class GalacticraftItems {
     public static final Item GROUND_BEEF = new Item(new Item.Settings().food(GCFoodSettings.GROUND_BEEF).group(ITEMS_GROUP));
     public static final Item BEEF_PATTY = new Item(new Item.Settings().food(GCFoodSettings.BEEF_PATTY).group(ITEMS_GROUP));
     public static final Item CHEESEBURGER = new Item(new Item.Settings().food(GCFoodSettings.CHEESEBURGER).group(ITEMS_GROUP));
-
     public static final Item CANNED_DEHYDRATED_APPLE = new CannedFoodItem(new Item.Settings().food(GCFoodSettings.DEHYDRATED_APPLE).group(ITEMS_GROUP));
     public static final Item CANNED_DEHYDRATED_CARROT = new CannedFoodItem(new Item.Settings().food(GCFoodSettings.DEHYDRATED_CARROT).group(ITEMS_GROUP));
     public static final Item CANNED_DEHYDRATED_MELON = new CannedFoodItem(new Item.Settings().food(GCFoodSettings.DEHYDRATED_MELON).group(ITEMS_GROUP));
     public static final Item CANNED_DEHYDRATED_POTATO = new CannedFoodItem(new Item.Settings().food(GCFoodSettings.DEHYDRATED_POTATO).group(ITEMS_GROUP));
     public static final Item CANNED_BEEF = new CannedFoodItem(new Item.Settings().food(GCFoodSettings.CANNED_BEEF).group(ITEMS_GROUP));
-
     //ROCKET PARTS
     public static final Item TIER_1_HEAVY_DUTY_PLATE = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = new Item(new Item.Settings().group(ITEMS_GROUP));
@@ -95,39 +91,31 @@ public class GalacticraftItems {
     public static final Item ROCKET_FIN = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item HEAVY_ROCKET_FIN = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item TIER_1_BOOSTER = new Item(new Item.Settings().group(ITEMS_GROUP));
-
     //BUGGY PARTS
     public static final Item BUGGY_SEAT = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item BUGGY_STORAGE = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item BUGGY_WHEEL = new Item(new Item.Settings().group(ITEMS_GROUP));
-
     //TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = new GCSwordItem(GalacticraftToolMaterials.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item HEAVY_DUTY_SHOVEL = new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item HEAVY_DUTY_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item HEAVY_DUTY_AXE = new GCAxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item HEAVY_DUTY_HOE = new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP));
-
     public static final Item DESH_SWORD = new GCSwordItem(GalacticraftToolMaterials.DESH, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item DESH_SHOVEL = new ShovelItem(GalacticraftToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item DESH_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.DESH, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item DESH_AXE = new GCAxeItem(GalacticraftToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item DESH_HOE = new HoeItem(GalacticraftToolMaterials.DESH, -1.0F, new Item.Settings().group(ITEMS_GROUP));
-
     public static final Item TITANIUM_SWORD = new GCSwordItem(GalacticraftToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item TITANIUM_SHOVEL = new ShovelItem(GalacticraftToolMaterials.TITANIUM, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item TITANIUM_PICKAXE = new GCPickaxeItem(GalacticraftToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item TITANIUM_AXE = new GCAxeItem(GalacticraftToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP));
     public static final Item TITANIUM_HOE = new HoeItem(GalacticraftToolMaterials.TITANIUM, -1.0F, new Item.Settings().group(ITEMS_GROUP));
-
     public static final Item STANDARD_WRENCH = new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP));
-
     public static final Item BATTERY = new BatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY));
     public static final Item INFINITE_BATTERY = new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY));
-
     //Fluid buckets
     public static final BucketItem CRUDE_OIL_BUCKET = new BucketItem(GalacticraftFluids.STILL_CRUDE_OIL, new Item.Settings().group(ITEMS_GROUP));
-
     //GC INVENTORY
     public static final Item PARACHUTE = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item ORANGE_PARACHUTE = new Item(new Item.Settings().group(ITEMS_GROUP));
@@ -145,31 +133,22 @@ public class GalacticraftItems {
     public static final Item GREEN_PARACHUTE = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item RED_PARACHUTE = new Item(new Item.Settings().group(ITEMS_GROUP));
     public static final Item BLACK_PARACHUTE = new Item(new Item.Settings().group(ITEMS_GROUP));
-
     public static final Item OXYGEN_MASK = new Item((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item OXYGEN_GEAR = new Item((new Item.Settings()).group(ITEMS_GROUP));
-
     public static final Item SHIELD_CONTROLLER = new GCAccessories((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item FREQUENCY_MODULE = new GCAccessories((new Item.Settings()).group(ITEMS_GROUP));
-
     public static final Item SMALL_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(900));
     public static final Item MEDIUM_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(1800));
     public static final Item LARGE_OXYGEN_TANK = new OxygenTankItem((new Item.Settings()).group(ITEMS_GROUP).maxDamage(2700));
-
     public static final Item THERMAL_PADDING_HELMET = new ThermalArmorItem((new Item.Settings()).group(ITEMS_GROUP), EquipmentSlot.HEAD);
     public static final Item THERMAL_PADDING_CHESTPIECE = new ThermalArmorItem((new Item.Settings()).group(ITEMS_GROUP), EquipmentSlot.CHEST);
     public static final Item THERMAL_PADDING_LEGGINGS = new ThermalArmorItem((new Item.Settings()).group(ITEMS_GROUP), EquipmentSlot.LEGS);
     public static final Item THERMAL_PADDING_BOOTS = new ThermalArmorItem((new Item.Settings()).group(ITEMS_GROUP), EquipmentSlot.FEET);
-
     public static final Item TIER_2_ROCKET_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item CARGO_ROCKET_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item MOON_BUGGY_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item TIER_3_ROCKET_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
     public static final Item ASTRO_MINER_SCHEMATIC = new SchematicItem((new Item.Settings()).group(ITEMS_GROUP));
-
-    private static final Item GLOWSTONE_TORCH = new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP));
-    public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 15714446, 9794134, (new Item.Settings()).group(ItemGroup.MISC)));
-
 
     public static void register() {
         //MATERIALS

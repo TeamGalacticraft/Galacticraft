@@ -8,7 +8,9 @@ import net.minecraft.item.ItemStack;
  */
 public interface EnergyHolderItem {
 
-    /** @return The maximum energy that the given {@link ItemStack} can store. */
+    /**
+     * @return The maximum energy that the given {@link ItemStack} can store.
+     */
     int getMaxEnergy(ItemStack battery);
 
     /**

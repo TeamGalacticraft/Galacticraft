@@ -21,14 +21,12 @@ import net.minecraft.item.Items;
  */
 public class CircuitFabricatorContainer extends MachineContainer<CircuitFabricatorBlockEntity> {
 
-    public static final ContainerFactory<Container> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorContainer::new);
-
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
-    private Inventory inventory;
-
+    public static final ContainerFactory<Container> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorContainer::new);
     public final Property progress = Property.create();
     private final Property status = Property.create();
+    private Inventory inventory;
 
     public CircuitFabricatorContainer(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);

@@ -24,10 +24,8 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import org.apache.http.impl.conn.Wire;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -100,7 +98,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
         return state;
     }
 
-    private BooleanProperty propFromDirection (Direction direction) {
+    private BooleanProperty propFromDirection(Direction direction) {
         switch (direction) {
             case NORTH:
                 return ATTACHED_NORTH;

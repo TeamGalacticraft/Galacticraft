@@ -40,81 +40,53 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
 
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-
-    private static final int BUTTON_OFF_X = 0;
-    private static final int BUTTON_OFF_Y = 240;
-
-    private static final int BUTTON_ON_X = 0;
-    private static final int BUTTON_ON_Y = 224;
-
-    private static final int BUTTONS_WIDTH = 16;
-    private static final int BUTTONS_HEIGHT = 16;
-
-    private static final int LOCK_OWNER_X = 208;
-    private static final int LOCK_OWNER_Y = 48;
-
-    private static final int LOCK_PARTY_X = 224;
-    private static final int LOCK_PARTY_Y = 48;
-
-    private static final int LOCK_PUBLIC_X = 208;
-    private static final int LOCK_PUBLIC_Y = 64;
-
-    private static final int ICONS_WIDTH = 16;
-    private static final int ICONS_HEIGHT = 16;
-
-    private static final int REDSTONE_TORCH_OFF_X = 224;
-    private static final int REDSTONE_TORCH_OFF_Y = 62;
-
-    private static final int REDSTONE_TAB_X = 0;
-    private static final int REDSTONE_TAB_Y = 46;
-
-    private static final int REDSTONE_TAB_WIDTH = 22;
-    private static final int REDSTONE_TAB_HEIGHT = 22;
-
-    private static final int REDSTONE_PANEL_X = 0;
-    private static final int REDSTONE_PANEL_Y = 0;
-
-    private static final int REDSTONE_PANEL_WIDTH = 99;
-    private static final int REDSTONE_PANEL_HEIGHT = 91;
-
-
-    private static final int CONFIG_TAB_X = 0;
-    private static final int CONFIG_TAB_Y = 69;
-
-    private static final int CONFIG_TAB_WIDTH = 22;
-    private static final int CONFIG_TAB_HEIGHT = 22;
-
-    private static final int CONFIG_PANEL_X = 0;
-    private static final int CONFIG_PANEL_Y = 93;
-
-    private static final int CONFIG_PANEL_WIDTH = 99;
-    private static final int CONFIG_PANEL_HEIGHT = 91;
-
-
-    private static final int SECURITY_TAB_X = 23;
-    private static final int SECURITY_TAB_Y = 23;
-
-    private static final int SECURITY_TAB_WIDTH = 22;
-    private static final int SECURITY_TAB_HEIGHT = 22;
-
-    private static final int SECURITY_PANEL_X = 101;
-    private static final int SECURITY_PANEL_Y = 0;
-
     public static final int SECURITY_PANEL_WIDTH = 99;
     public static final int SECURITY_PANEL_HEIGHT = 91;
-
-
+    private static final int BUTTON_OFF_X = 0;
+    private static final int BUTTON_OFF_Y = 240;
+    private static final int BUTTON_ON_X = 0;
+    private static final int BUTTON_ON_Y = 224;
+    private static final int BUTTONS_WIDTH = 16;
+    private static final int BUTTONS_HEIGHT = 16;
+    private static final int LOCK_OWNER_X = 208;
+    private static final int LOCK_OWNER_Y = 48;
+    private static final int LOCK_PARTY_X = 224;
+    private static final int LOCK_PARTY_Y = 48;
+    private static final int LOCK_PUBLIC_X = 208;
+    private static final int LOCK_PUBLIC_Y = 64;
+    private static final int ICONS_WIDTH = 16;
+    private static final int ICONS_HEIGHT = 16;
+    private static final int REDSTONE_TORCH_OFF_X = 224;
+    private static final int REDSTONE_TORCH_OFF_Y = 62;
+    private static final int REDSTONE_TAB_X = 0;
+    private static final int REDSTONE_TAB_Y = 46;
+    private static final int REDSTONE_TAB_WIDTH = 22;
+    private static final int REDSTONE_TAB_HEIGHT = 22;
+    private static final int REDSTONE_PANEL_X = 0;
+    private static final int REDSTONE_PANEL_Y = 0;
+    private static final int REDSTONE_PANEL_WIDTH = 99;
+    private static final int REDSTONE_PANEL_HEIGHT = 91;
+    private static final int CONFIG_TAB_X = 0;
+    private static final int CONFIG_TAB_Y = 69;
+    private static final int CONFIG_TAB_WIDTH = 22;
+    private static final int CONFIG_TAB_HEIGHT = 22;
+    private static final int CONFIG_PANEL_X = 0;
+    private static final int CONFIG_PANEL_Y = 93;
+    private static final int CONFIG_PANEL_WIDTH = 99;
+    private static final int CONFIG_PANEL_HEIGHT = 91;
+    private static final int SECURITY_TAB_X = 23;
+    private static final int SECURITY_TAB_Y = 23;
+    private static final int SECURITY_TAB_WIDTH = 22;
+    private static final int SECURITY_TAB_HEIGHT = 22;
+    private static final int SECURITY_PANEL_X = 101;
+    private static final int SECURITY_PANEL_Y = 0;
     private final BlockPos pos;
     private final World world;
 
     public boolean IS_REDSTONE_OPEN = false;
-
-    private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
-
-    private boolean IS_CONFIG_OPEN = false;
-
     public boolean IS_SECURITY_OPEN = false;
-
+    private String selectedRedstoneOption = "DISABLED"; //0 = disabled (redstone doesn't matter), 1 = off (if redstone is off, the machine is on), 2 = on (if redstone is on, the machine turns off)
+    private boolean IS_CONFIG_OPEN = false;
     private int selectedSecurityOption; //0 = owner only, 1 = space race party only, 2 = public access
 
     private SideOption[] sideOptions = null; //Front, Back, Right, Left, Up, Down
@@ -166,8 +138,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
     }
 
     public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<AbstractContainerScreen> createFactory(
-        Class<T> machineClass, MachineContainerConstructor<? extends MachineContainerScreen<?>, T> constructor) 
-    {
+            Class<T> machineClass, MachineContainerConstructor<? extends MachineContainerScreen<?>, T> constructor) {
         return (syncId, id, player, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
             BlockEntity be = player.world.getBlockEntity(pos);
@@ -601,6 +572,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
             }
         }
     }
+
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1) {
         if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {

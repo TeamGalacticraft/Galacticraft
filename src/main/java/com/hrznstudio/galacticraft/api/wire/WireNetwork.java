@@ -12,7 +12,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -82,7 +81,8 @@ public class WireNetwork {
                                     blockEntity.networkId = this.getId();
                                 }
                             }
-                        } catch (NullPointerException ignore) {}
+                        } catch (NullPointerException ignore) {
+                        }
 
                         if (networkMap_TEMP.get(wire.getPos()) != null) {
                             networkMap_TEMP.remove(wire.getPos());
@@ -147,11 +147,11 @@ public class WireNetwork {
 
         if (energyLeft > 0) {
             int amountPerConsumer = energyAvailable / consumerPowerRequirement.size();
-            for (BlockEntity consumer: consumerPowerRequirement) {
+            for (BlockEntity consumer : consumerPowerRequirement) {
                 energyAvailable -= amountPerConsumer;
                 int amountExtracted = 0;
                 for (BlockEntity producer : producerPower) {
-                     amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
+                    amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
 
                     if (amountExtracted <= amountPerConsumer) {
                         if (((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy() <= 0) {

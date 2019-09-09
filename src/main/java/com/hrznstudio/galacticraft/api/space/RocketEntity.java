@@ -5,5 +5,6 @@ package com.hrznstudio.galacticraft.api.space;
  */
 public interface RocketEntity {
     RocketTier getRocketTier();
+
     int getFuel();
 }

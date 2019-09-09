@@ -8,6 +8,7 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorContaine
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleContainer;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorContainer;
+import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryContainer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.util.Identifier;
 
@@ -31,6 +32,7 @@ public class GalacticraftContainers {
 
         ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, CoalGeneratorContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(REFINERY_CONTAINER, RefineryContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, CompressorContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorContainer.ELECTRIC_FACTORY);

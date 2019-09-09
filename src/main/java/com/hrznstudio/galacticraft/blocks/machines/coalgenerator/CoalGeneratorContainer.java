@@ -19,13 +19,11 @@ import net.minecraft.item.Items;
  */
 public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockEntity> {
 
-    public static final ContainerFactory<Container> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorContainer::new);
-
     private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
+    public static final ContainerFactory<Container> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorContainer::new);
+    public final Property status = Property.create();
     private ItemStack itemStack;
     private Inventory inventory;
-
-    public final Property status = Property.create();
 
     public CoalGeneratorContainer(int syncId, PlayerEntity playerEntity, CoalGeneratorBlockEntity generator) {
         super(syncId, playerEntity, generator);
@@ -89,7 +87,7 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
     public boolean canUse(PlayerEntity playerEntity) {
         return true;
     }
-    
+
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());

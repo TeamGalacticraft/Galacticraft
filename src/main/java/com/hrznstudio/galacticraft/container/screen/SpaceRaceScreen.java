@@ -13,13 +13,13 @@ public class SpaceRaceScreen extends Screen {
     private int widthSize = 0;
     private int heightSize = 0;
 
+    public SpaceRaceScreen() {
+        super(new TranslatableText("menu.space_race_manager"));
+    }
+
     @Override
     public boolean isPauseScreen() {
         return false;
-    }
-
-    public SpaceRaceScreen() {
-        super(new TranslatableText("menu.space_race_manager"));
     }
 
     private boolean isAnimationComplete() {

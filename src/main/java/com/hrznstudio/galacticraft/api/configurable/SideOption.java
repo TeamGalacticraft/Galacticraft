@@ -68,16 +68,16 @@ public enum SideOption implements StringIdentifiable {
 
     public String[] getFormattedName() {
         if (this == SideOption.BLANK) {
-            return new String[] {"\u00a78Blank"};
+            return new String[]{"\u00a78Blank"};
         } else if (this == SideOption.OXYGEN_INPUT) {
-            return new String[] {"\u00a7bOxygen \u00a7ain"};
+            return new String[]{"\u00a7bOxygen \u00a7ain"};
         } else if (this == SideOption.OXYGEN_OUTPUT) {
-            return new String[] {"\u00a78Oxygen \u00a74out"};
+            return new String[]{"\u00a78Oxygen \u00a74out"};
         } else if (this == SideOption.POWER_INPUT) {
-            return new String[] {"\u00a7dPower \u00a7ain"};
+            return new String[]{"\u00a7dPower \u00a7ain"};
         } else if (this == SideOption.POWER_OUTPUT) {
-            return new String[] {"\u00a7dPower \u00a74out"};
+            return new String[]{"\u00a7dPower \u00a74out"};
         }
-        return new String[] {""};
+        return new String[]{""};
     }
 }

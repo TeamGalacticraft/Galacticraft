@@ -9,8 +9,8 @@ import net.minecraft.entity.Entity;
 public class GravityUtil {
 
     public static void updatePosition(Entity entity, double motionX, double motionY, double motionZ) {
-        if(entity.world.dimension instanceof CelestialBody) {
-            if(!entity.noClip) {
+        if (entity.world.dimension instanceof CelestialBody) {
+            if (!entity.noClip) {
 
             }
         }

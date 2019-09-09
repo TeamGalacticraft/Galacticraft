@@ -18,24 +18,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
-public abstract class InGameHudMixin extends DrawableHelper{
-
-    @Shadow
-    private int scaledWidth;
-
-    @Shadow
-    private int scaledHeight;
-
-    @Shadow @Final private MinecraftClient client;
+public abstract class InGameHudMixin extends DrawableHelper {
 
     private static final int OXYGEN_X = 0;
     private static final int OXYGEN_Y = 40;
-
     private static final int OXYGEN_WIDTH = 12;
     private static final int OXYGEN_HEIGHT = 40;
-
     private static final int OXYGEN_OVERLAY_X = 24;
     private static final int OXYGEN_OVERLAY_Y = 80;
+    @Shadow
+    private int scaledWidth;
+    @Shadow
+    private int scaledHeight;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(float float_1, CallbackInfo ci) {

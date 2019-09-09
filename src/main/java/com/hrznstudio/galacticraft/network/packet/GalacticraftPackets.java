@@ -10,8 +10,6 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.UUID;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */

@@ -78,7 +78,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
     @Override
     public void tick() {
-        if (world.isClient || !active()) {
+        if (world.isClient || !enabled()) {
             return;
         }
         attemptChargeFromStack(BATTERY_SLOT);

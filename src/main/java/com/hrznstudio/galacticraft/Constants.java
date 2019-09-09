@@ -28,13 +28,11 @@ public class Constants {
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
-        public static final String VENUS_ROCK = "venus_rock";
-        public static final String VENUS_ROCK_1 = "venus_rock_block_1";
-        public static final String VENUS_ROCK_2 = "venus_rock_block_2";
-        public static final String VENUS_ROCK_3 = "venus_rock_block_3";
-        public static final String VENUS_ROCK_SCORCHED = "venus_rock_block_scorched";
+
+        public static final String SOFT_VENUS_ROCK = "soft_venus_rock";
+        public static final String HARD_VENUS_ROCK = "hard_venus_rock";
+        public static final String SCORCHED_VENUS_ROCK = "scorched_venus_rock";
         public static final String VOLCANIC_ROCK = "volcanic_rock";
-        public static final String SCORCHED_ROCK = "scorched_rock";
         public static final String PUMICE = "pumice";
         public static final String VAPOR_SPOUT = "vapor_spout";
 
@@ -67,7 +65,7 @@ public class Constants {
 
         // Decorative BLocks
         public static final String TIN_DECORATION = "tin_decoration";
-        public static final String TIN_DECORATION_BLOCK_1 = "tin_decoration_block_1";
+        public static final String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
         public static final String DARK_DECORATION = "dark_decoration";
         public static final String GRATING = "grating";
         public static final String SQUARE_LIGHTING_PANEL = "lighting_panel_block_square";
@@ -83,7 +81,7 @@ public class Constants {
         public static final String WIRE_WALKWAY = "walkway_block_wire";
         public static final String PIPE_WALKWAY = "walkway_block_pipe";
         public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
-        public static final String TIN_DECORATION_SLAB_1 = "tin_decoration_slab_1";
+        public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
         public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
         public static final String MARS_DUNGEON_BRICKS_SLAB = "mars_dungeon_bricks_slab";
@@ -92,7 +90,7 @@ public class Constants {
         public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
         public static final String MOON_DUNGEON_BRICKS_STAIRS = "moon_dungeon_bricks_stairs";
         public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
-        public static final String TIN_DECORATION_STAIRS_1 = "tin_decoration_stairs_1";
+        public static final String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
         public static final String MARS_DUNGEON_BRICKS_STAIRS = "mars_dungeon_bricks_stairs";
         public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
@@ -380,6 +378,7 @@ public class Constants {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
         public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
+        public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";

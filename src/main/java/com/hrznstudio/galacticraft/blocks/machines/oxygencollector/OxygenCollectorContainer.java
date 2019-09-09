@@ -16,13 +16,11 @@ import net.minecraft.item.ItemStack;
  */
 public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBlockEntity> {
     public static final ContainerFactory<Container> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorContainer::new);
-
-    private ItemStack itemStack;
-    private Inventory inventory;
-
     public final Property status = Property.create();
     public final Property oxygen = Property.create();
     public final Property lastCollectAmount = Property.create();
+    private ItemStack itemStack;
+    private Inventory inventory;
 
     public OxygenCollectorContainer(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
@@ -98,7 +96,7 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
         lastCollectAmount.set(blockEntity.lastCollectAmount);
         super.sendContentUpdates();
     }
-    
+
     @Override
     public void setProperties(int index, int value) {
         super.setProperties(index, value);

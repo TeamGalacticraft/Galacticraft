@@ -14,7 +14,6 @@ import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,14 +42,13 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
-    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-
     public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public EnergyStorageModuleBlock(Settings settings) {
         super(settings);

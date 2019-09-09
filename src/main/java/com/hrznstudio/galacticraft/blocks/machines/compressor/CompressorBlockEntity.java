@@ -5,7 +5,6 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
@@ -35,17 +34,17 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     public int maxFuelTime;
     int progress;
 
-    @Override
-    public SimpleEnergyAttribute getEnergyAttribute() {
-        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
-    }
-
     public CompressorBlockEntity() {
         this(GalacticraftBlockEntities.COMPRESSOR_TYPE);
     }
 
     public CompressorBlockEntity(BlockEntityType<?> electricCompressorType) {
         super(electricCompressorType);
+    }
+
+    @Override
+    public SimpleEnergyAttribute getEnergyAttribute() {
+        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     @Override
     public void tick() {
-        if (!this.active()) {
+        if (!this.enabled()) {
             return;
         }
         InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {

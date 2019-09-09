@@ -1,17 +1,21 @@
 package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderLayer;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,11 +23,9 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Style;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -38,52 +40,44 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlock extends ConfigurableElectricMachineBlock implements Rotatable , WireConnectable, MachineBlock {
-
-    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+public class RefineryBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
+    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT);
+    private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
     public RefineryBlock(Settings settings) {
         super(settings);
     }
 
-
     @Override
-    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) {
-            return true;
-        }
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.REFINERY_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
-        return true;
+    public BlockRenderType getRenderType(BlockState blockState_1) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
-    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.refinery");
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.SOLID;
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
-
-        if (blockEntity != null) {
-            if (blockEntity instanceof RefineryBlockEntity) {
-                RefineryBlockEntity be = (RefineryBlockEntity) blockEntity;
-
-                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = be.getInventory().getInvStack(i);
-
-                    if (itemStack != null) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
-                    }
-                }
-            }
-        }
+    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
+        return new RefineryBlockEntity();
     }
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
+        super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
+        stateBuilder.add(FRONT_SIDE_OPTION);
+        stateBuilder.add(BACK_SIDE_OPTION);
+        stateBuilder.add(RIGHT_SIDE_OPTION);
+        stateBuilder.add(LEFT_SIDE_OPTION);
+        stateBuilder.add(TOP_SIDE_OPTION);
+        stateBuilder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -108,12 +102,60 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements R
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.stateFactory.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
+                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
+                .with(BACK_SIDE_OPTION, SideOption.BLANK)
+                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
+                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
+                .with(TOP_SIDE_OPTION, SideOption.BLANK)
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
     }
 
     @Override
-    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
-        return new RefineryBlockEntity();
+    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+        if (world.isClient) {
+            return true;
+        }
+
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.REFINERY_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        return true;
+    }
+
+    @Override
+    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
+        Direction dir = to.getSearchDirection();
+        if (dir != null) return;
+        BlockEntity be = world.getBlockEntity(pos);
+        if (!(be instanceof RefineryBlockEntity)) return;
+        RefineryBlockEntity refinery = (RefineryBlockEntity) be;
+        to.offer(refinery.getEnergyAttribute());
+        refinery.getExposedInventory().offerSelfAsAttribute(to, null, null);
+    }
+
+    @Override
+    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+        return new TranslatableText("tooltip.galacticraft-rewoven.refinery");
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
+        super.onBreak(world, blockPos, blockState, playerEntity);
+
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+
+        if (blockEntity != null) {
+            if (blockEntity instanceof RefineryBlockEntity) {
+                RefineryBlockEntity RefineryBlockEntity = (RefineryBlockEntity) blockEntity;
+
+                for (int i = 0; i < RefineryBlockEntity.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = RefineryBlockEntity.getInventory().getInvStack(i);
+
+                    if (itemStack != null) {
+                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    }
+                }
+            }
+        }
     }
 
     @Override
