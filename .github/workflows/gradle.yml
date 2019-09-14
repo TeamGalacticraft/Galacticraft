@@ -22,9 +22,13 @@ jobs:
       if: success()
       env:
         WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: ./discord.sh success $WEBHOOK_URL
+      run: |
+        chmod +x discord.sh
+        ./discord.sh success $WEBHOOK_URL
     - name: Push Failure to Discord
       if: failure()
       env:
         WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: ./discord.sh failure $WEBHOOK_URL
+      run: |
+       chmod +x discord.sh
+       ./discord.sh failure $WEBHOOK_URL
