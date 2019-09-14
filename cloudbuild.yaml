@@ -3,3 +3,4 @@ steps:
   args:
     - './gradlew'
     - 'build'
+    - '--stacktrace'
