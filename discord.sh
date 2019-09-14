@@ -33,7 +33,7 @@ CREDITS="$GITHUB_ACTOR ran action"
 URL="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 TIMESTAMP=$(date --utc +%FT%TZ)
 WEBHOOK_DATA='{
-  "username": "",
+  "username": "Github Actions",
   "avatar_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
   "embeds": [ {
     "color": '$EMBED_COLOR',
@@ -48,7 +48,7 @@ WEBHOOK_DATA='{
     "fields": [
       {
         "name": "Commit",
-        "value": "'"[\`${TRAVIS_COMMIT:0:7}\`](https://github.com/$$GITHUB_REPOSITORY/commit/$GITHUB_SHA)"'",
+        "value": "'"[\`${GITHUB_SHA:0:7}\`](https://github.com/$$GITHUB_REPOSITORY/commit/$GITHUB_SHA)"'",
         "inline": true
       }
     ],
