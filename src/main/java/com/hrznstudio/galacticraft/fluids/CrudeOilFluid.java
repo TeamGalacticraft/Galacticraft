@@ -62,7 +62,7 @@ public class CrudeOilFluid extends BaseFluid {
 
     @Override
     public Fluid getStill() {
-        return GalacticraftFluids.STILL_CRUDE_OIL;
+        return GalacticraftFluids.CRUDE_OIL;
     }
 
     @Override

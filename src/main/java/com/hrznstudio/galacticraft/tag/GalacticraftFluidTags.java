@@ -23,14 +23,17 @@
 package com.hrznstudio.galacticraft.tag;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 
 public class GalacticraftFluidTags {
-    public static final Tag<Fluid> OIL = Tag.Builder.<Fluid>create().add(GalacticraftFluids.STILL_CRUDE_OIL, GalacticraftFluids.FLOWING_CRUDE_OIL).build(new Identifier(Constants.MOD_ID, "oil"));
-    public static final Tag<Fluid> FUEL = Tag.Builder.<Fluid>create().add(GalacticraftFluids.STILL_FUEL, GalacticraftFluids.FLOWING_FUEL).build(new Identifier(Constants.MOD_ID, "fuel"));
+    public static final Tag<Fluid> OIL = Tag.Builder.<Fluid>create().add(GalacticraftFluids.CRUDE_OIL, GalacticraftFluids.FLOWING_CRUDE_OIL).build(new Identifier(Constants.MOD_ID, "oil"));
+    public static final Tag<Fluid> FUEL = Tag.Builder.<Fluid>create().add(GalacticraftFluids.FUEL, GalacticraftFluids.FLOWING_FUEL).build(new Identifier(Constants.MOD_ID, "fuel"));
+    public static final Tag<Block> WALLS = Tag.Builder.<Block>create().add(GalacticraftBlocks.DETAILED_TIN_DECORATION_STAIRS, GalacticraftBlocks.MARS_COBBLESTONE_STAIRS, GalacticraftBlocks.MARS_DUNGEON_BRICKS_STAIRS, GalacticraftBlocks.MOON_DUNGEON_BRICKS_STAIRS, GalacticraftBlocks.MOON_ROCK_STAIRS, GalacticraftBlocks.TIN_DECORATION_STAIRS).build(new Identifier("walls"));
 
     public static void register() {
     }

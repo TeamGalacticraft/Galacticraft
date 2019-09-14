@@ -1,8 +1,0 @@
-{
-    "parent": "block/slab_top",
-    "textures": {
-        "bottom": "galacticraft-rewoven:block/moon_dungeon_bricks",
-        "top": "galacticraft-rewoven:block/moon_dungeon_bricks",
-        "side": "galacticraft-rewoven:block/moon_dungeon_bricks"
-    }
-}

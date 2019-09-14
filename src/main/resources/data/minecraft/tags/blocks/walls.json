@@ -1,6 +1,11 @@
 {
   "replace": false,
   "values": [
-    "galacticraft-rewoven:mars_cobblestone_wall"
+    "galacticraft-rewoven:mars_cobblestone_wall",
+    "galacticraft-rewoven:tin_decoration_wall",
+    "galacticraft-rewoven:detailed_tin_decoration_wall",
+    "galacticraft-rewoven:mars_dungeon_brick_wall",
+    "galacticraft-rewoven:moon_dungeon_brick_wall",
+    "galacticraft-rewoven:moon_rock_wall"
   ]
 }

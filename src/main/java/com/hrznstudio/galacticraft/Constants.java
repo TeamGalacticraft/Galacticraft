@@ -40,12 +40,12 @@ public class Constants {
         public static final String MOON_TURF = "moon_turf";
         public static final String MOON_ROCK = "moon_rock";
         public static final String MOON_DIRT = "moon_dirt";
-        public static final String MOON_DUNGEON_BRICKS = "moon_dungeon_bricks";
+        public static final String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
         public static final String MARS_SURFACE_ROCK = "mars_surface_rock";
         public static final String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
-        public static final String MARS_DUNGEON_BRICKS = "mars_dungeon_bricks";
+        public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
         public static final String DENSE_ICE = "dense_ice";
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
@@ -106,22 +106,22 @@ public class Constants {
         public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
         public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
-        public static final String MARS_DUNGEON_BRICKS_SLAB = "mars_dungeon_bricks_slab";
-        public static final String MOON_DUNGEON_BRICKS_SLAB = "moon_dungeon_bricks_slab";
+        public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
+        public static final String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
         public static final String MOON_ROCK_SLAB = "moon_rock_slab";
         public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
-        public static final String MOON_DUNGEON_BRICKS_STAIRS = "moon_dungeon_bricks_stairs";
+        public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
         public static final String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
-        public static final String MARS_DUNGEON_BRICKS_STAIRS = "mars_dungeon_bricks_stairs";
+        public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
         public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
-        public static final String TIN_DECORATION_WALL_1 = "tin_decoration_wall_1";
+        public static final String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
         public static final String MOON_ROCK_WALL = "moon_rock_wall";
 
-        public static final String MOON_DUNGEON_BRICKS_WALL = "moon_dungeon_bricks_wall";
+        public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
-        public static final String MARS_DUNGEON_BRICKS_WALL = "mars_dungeon_bricks_wall";
+        public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
         public static final String UNLIT_TORCH = "unlit_torch";
@@ -331,6 +331,7 @@ public class Constants {
 
         //Fluid buckets
         public static final String CRUDE_OIL_BUCKET = "crude_oil_bucket";
+        public static final String FUEL_BUCKET = "fuel_bucket";
 
         //GC INVENTORY
         public static final String PARACHUTE = "parachute";

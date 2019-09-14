@@ -29,7 +29,6 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryContainer;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.fluid.OilFluidRenderHandler;
@@ -105,7 +104,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(T1RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
         GalacticraftBlockEntityRenderers.register();
 
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.STILL_CRUDE_OIL, new OilFluidRenderHandler());
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.CRUDE_OIL, new OilFluidRenderHandler());
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_CRUDE_OIL, new OilFluidRenderHandler());
 
         if (FabricLoader.getInstance().isModLoaded("modmenu")) {

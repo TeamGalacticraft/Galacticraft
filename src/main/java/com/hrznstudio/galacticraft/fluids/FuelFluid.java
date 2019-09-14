@@ -51,7 +51,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     public Fluid getStill() {
-        return GalacticraftFluids.STILL_FUEL;
+        return GalacticraftFluids.FUEL;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class FuelFluid extends BaseFluid {
         return 0;
     }
 
-    public static class Flowing extends CrudeOilFluid {
+    public static class Flowing extends FuelFluid {
 
         @Override
         protected void appendProperties(StateFactory.Builder<Fluid, FluidState> stateBuilder) {

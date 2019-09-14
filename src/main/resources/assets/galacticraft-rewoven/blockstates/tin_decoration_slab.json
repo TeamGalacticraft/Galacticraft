@@ -1,7 +1,7 @@
 {
     "variants": {
-        "type=bottom": { "model": "galacticraft-rewoven:block/galacticraft-rewoven" },
-        "type=top": { "model": "galacticraft-rewoven:block/galacticraft-rewoven_top" },
-        "type=double": { "model": "galacticraft-rewoven:block/galacticraft-rewoven" }
+        "type=bottom": { "model": "galacticraft-rewoven:block/tin_decoration_slab" },
+        "type=top": { "model": "galacticraft-rewoven:block/tin_decoration_slab_top" },
+        "type=double": { "model": "galacticraft-rewoven:block/tin_decoration" }
     }
 }
