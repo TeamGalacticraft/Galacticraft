@@ -29,7 +29,6 @@ import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
 import me.shedaniel.math.api.Rectangle;
-import me.shedaniel.rei.api.AutoTransferHandler;
 import me.shedaniel.rei.api.DisplayHelper;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.plugins.REIPluginV0;

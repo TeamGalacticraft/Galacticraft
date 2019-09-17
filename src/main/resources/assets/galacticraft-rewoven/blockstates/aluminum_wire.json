@@ -177,7 +177,7 @@
     "attached_north=false,attached_east=false,attached_south=false,attached_west=true,attached_up=false,attached_down=false": {
       "model": "galacticraft-rewoven:block/aluminum_wire/w"
     },
-    " attached_north=true,attached_east=false,attached_south=true,attached_west=true,attached_up=true,attached_down=false": {
+    "attached_north=true,attached_east=false,attached_south=true,attached_west=true,attached_up=true,attached_down=false": {
       "model": "galacticraft-rewoven:block/aluminum_wire/nswu"
     },
     "attached_north=false,attached_east=true,attached_south=false,attached_west=false,attached_up=false,attached_down=true": {

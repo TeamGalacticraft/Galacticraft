@@ -22,31 +22,44 @@
 
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
-import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
-import com.hrznstudio.galacticraft.api.wire.WireUtils;
+import com.hrznstudio.galacticraft.api.block.WireBlock;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.minecraft.util.Tickable;
+import com.hrznstudio.galacticraft.util.WireConnectable;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class AluminumWireBlockEntity extends WireBlockEntity implements Tickable {
+public class SealableAluminumWireBlock extends BlockWithEntity implements WireConnectable, WireBlock {
 
-    public AluminumWireBlockEntity() {
-        super(GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE);
+    public SealableAluminumWireBlock(Settings settings) {
+        super(settings);
     }
 
     @Override
-    public void tick() {
-        if (!tickedOnce) {
-            onPlaced();
-        }
-        if (WireUtils.getNetworkFromId(networkId) == null) {
-            onPlaced();
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity livingEntity, ItemStack stack) {
+        if (world.getBlockEntity(pos).getType() == GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE) {
+            ((AluminumWireBlockEntity) world.getBlockEntity(pos)).init();
         }
     }
 
-    public void init() {
-        onPlaced();
+    @Override
+    public BlockEntity createBlockEntity(BlockView blockView) {
+        return new AluminumWireBlockEntity();
+    }
+
+    @Override
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.WIRE;
     }
 }

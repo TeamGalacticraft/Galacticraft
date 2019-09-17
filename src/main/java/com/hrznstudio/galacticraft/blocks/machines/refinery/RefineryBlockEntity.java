@@ -24,22 +24,26 @@ package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidProviderItem;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Ref;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.FuelFluid;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.FishBucketItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
@@ -48,26 +52,13 @@ import net.minecraft.util.Tickable;
  */
 public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
-    private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     private static final ItemFilter[] SLOT_FILTERS;
 
     static {
         SLOT_FILTERS = new ItemFilter[3];
         SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
-        SLOT_FILTERS[1] = new ExactItemFilter(Items.BUCKET);
-        SLOT_FILTERS[2] = stack -> {
-            if (stack.getItem() instanceof FluidProviderItem) {
-                FluidVolume output = ((FluidProviderItem) stack.getItem()).drain(new Ref<>(stack));
-                if (output.getFluidKey() == FluidKeys.EMPTY) {
-                    return true;
-                } else {
-                    ((FluidProviderItem) stack.getItem()).fill(new Ref<>(stack), new Ref<>(output));
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        };
+        SLOT_FILTERS[1] = stack -> stack.getItem() instanceof FluidProviderItem;
+        SLOT_FILTERS[2] = stack -> stack.getItem() instanceof FluidProviderItem;
     }
 
     private final SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(2, FluidVolume.BUCKET * 10) {
@@ -78,7 +69,6 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             } else if (tank == 1) {
                 return fluidKey -> fluidKey.withAmount(FluidVolume.BUCKET).getRawFluid().matches(GalacticraftFluidTags.FUEL);
             } else {
-                System.out.println("2!?");
                 return fluidKey -> false;
             }
         }
@@ -90,7 +80,6 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             } else if (tank == 1) {
                 return fluid.withAmount(FluidVolume.BUCKET).getRawFluid().matches(GalacticraftFluidTags.FUEL);
             } else {
-                System.out.println("2!?");
                 return false;
             }
         }
@@ -120,11 +109,11 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         attemptChargeFromStack(0);
 
         if (getInventory().getInvStack(1).getItem() instanceof FluidProviderItem) {
-            FluidVolume output = ((FluidProviderItem) getInventory().getInvStack(1).getItem()).drain(new Ref<>(getInventory().getInvStack(1)));
+            Ref<ItemStack> ref = new Ref<>(getInventory().getInvStack(1));
+            FluidVolume output = ((FluidProviderItem) getInventory().getInvStack(1).getItem()).drain(ref);
             if (output.getRawFluid().matches(GalacticraftFluidTags.OIL)) {
-                this.fluidInv.getTank(1).insert(output);
-            } else {
-                ((FluidProviderItem) getInventory().getInvStack(1).getItem()).fill(new Ref<>(getInventory().getInvStack(1)), new Ref<>(output));
+                this.fluidInv.getTank(0).insert(output);
+                getInventory().setInvStack(1, ref.obj, Simulation.ACTION);
             }
         }
 
@@ -133,16 +122,26 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             return;
         }
 
-        if (!fluidInv.getInvFluid(1).isEmpty() && !fluidInv.getInvFluid(2).isEmpty()) {
+        if (!fluidInv.getInvFluid(0).isEmpty() && !(fluidInv.getInvFluid(1).getAmount() >= fluidInv.getMaxAmount(1))) {
             this.status = RefineryStatus.ACTIVE;
         } else {
             this.status = RefineryStatus.IDLE;
         }
 
         if (status == RefineryStatus.ACTIVE) {
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-            FluidVolume extracted = this.fluidInv.getTank(1).extract(10);
-            this.fluidInv.insert(FluidVolume.create(new FuelFluid(), extracted.getAmount()));
+            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
+            FluidVolume extracted = this.fluidInv.getTank(0).extract(10);
+            this.fluidInv.getTank(1).insert(FluidVolume.create(GalacticraftFluids.FUEL, extracted.getAmount()));
+        }
+
+        if (getInventory().getInvStack(2).getItem() instanceof FluidProviderItem) {
+            Ref<ItemStack> stackRef = new Ref<>(getInventory().getInvStack(2));
+            Ref<FluidVolume> fluidRef = new Ref<>(fluidInv.getTank(1).attemptExtraction(ConstantFluidFilter.ANYTHING, FluidVolume.BUCKET, Simulation.ACTION));
+            ((FluidProviderItem) getInventory().getInvStack(2).getItem()).fill(stackRef, fluidRef);
+            if (stackRef.obj != getInventory().getInvStack(2)) {
+                getInventory().setInvStack(2, stackRef.obj, Simulation.ACTION);
+            }
+            fluidInv.getTank(1).insert(fluidRef.obj);
         }
     }
 

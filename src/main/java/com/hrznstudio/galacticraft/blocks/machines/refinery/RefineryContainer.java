@@ -51,6 +51,11 @@ public class RefineryContainer extends MachineContainer<RefineryBlockEntity> {
             public boolean canPlayerUseInv(PlayerEntity player) {
                 return RefineryContainer.this.canUse(player);
             }
+
+            @Override
+            public int getInvSize() {
+                return blockEntity.getInvSize();
+            }
         };
         // Energy slot
         this.addSlot(new ChargeSlot(this.inventory, 0, 8, 79));
@@ -59,11 +64,21 @@ public class RefineryContainer extends MachineContainer<RefineryBlockEntity> {
             public boolean canInsert(ItemStack itemStack_1) {
                 return itemStack_1.getItem() instanceof FluidProviderItem;
             }
+
+            @Override
+            public int getMaxStackAmount() {
+                return 1;
+            }
         });
         this.addSlot(new Slot(this.inventory, 2, 8 + (18 * 3), 79) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
                 return itemStack_1.getItem() instanceof FluidProviderItem;
+            }
+
+            @Override
+            public int getMaxStackAmount() {
+                return 1;
             }
         });
 

@@ -42,6 +42,7 @@ import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import io.github.prospector.silk.block.SilkStairsBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
@@ -69,7 +70,9 @@ public class GalacticraftBlocks {
     public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(100.0F, 1000.0F).dropsNothing().build());
-    public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(Material.WATER).noCollision().build());
+    public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
+            .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
+            .strength(50.0F, 50.0F).dropsNothing().build());
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
             // Set the tab icon
@@ -96,10 +99,11 @@ public class GalacticraftBlocks {
     public static final Block PUMICE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F).build()), Constants.Blocks.PUMICE);
     public static final Block VAPOR_SPOUT = registerBlock(new VaporSpoutBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F).build()), Constants.Blocks.VAPOR_SPOUT);
     public static final Block TIN_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION);
-    public static final Block TIN_DECORATION_BLOCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.DETAILED_TIN_DECORATION);
+    public static final Block DETAILED_TIN_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.DETAILED_TIN_DECORATION);
     public static final Block DARK_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F).build()), Constants.Blocks.DARK_DECORATION);
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.GRATING);
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL).build()), Constants.Blocks.ALUMINUM_WIRE);
+    public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION_BLOCK).build()), Constants.Blocks.SEALABLE_ALUMINUM_WIRE);
     public static final Block OXYGEN_PIPE = registerBlock(new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).sounds(BlockSoundGroup.GLASS).build()), Constants.Blocks.OXYGEN_PIPE);
     public static final Block SQUARE_LIGHTING_PANEL = registerBlock(new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build()), Constants.Blocks.SQUARE_LIGHTING_PANEL);
     public static final Block SPOTLIGHT_LIGHTING_PANEL = registerBlock(new LightingPanelBlock(FabricBlockSettings.of(Material.METAL).build(), 3.0f), Constants.Blocks.SPOTLIGHT_LIGHTING_PANEL);
@@ -123,7 +127,7 @@ public class GalacticraftBlocks {
     public static final Block MOON_ROCK_STAIRS = registerBlock(new SilkStairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_ROCK_STAIRS);
     public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new SilkStairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS);
     public static final Block TIN_DECORATION_STAIRS = registerBlock(new SilkStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.TIN_DECORATION_STAIRS);
-    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new SilkStairsBlock(TIN_DECORATION_BLOCK_1.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS);
+    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new SilkStairsBlock(DETAILED_TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS);
     public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new SilkStairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build()), Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS);
     public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new SilkStairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build()), Constants.Blocks.MARS_COBBLESTONE_STAIRS);
     public static final Block TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_WALL);

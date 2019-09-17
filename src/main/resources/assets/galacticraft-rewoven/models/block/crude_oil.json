@@ -1,5 +1,5 @@
 {
-  "variants": {
-    "": { "model": "block/water" }
+  "textures": {
+    "particle": "block/crude_oil_still"
   }
 }

@@ -161,8 +161,8 @@ public class GalacticraftItems {
     public static final Item BATTERY = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), new BatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
     public static final Item INFINITE_BATTERY = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.INFINITE_BATTERY), new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
     //Fluid buckets
-    public static final BucketItem CRUDE_OIL_BUCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CRUDE_OIL_BUCKET), new BucketItem(GalacticraftFluids.CRUDE_OIL, new Item.Settings().group(ITEMS_GROUP)));
-    public static final BucketItem FUEL_BUCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FUEL_BUCKET), new BucketItem(GalacticraftFluids.FUEL, new Item.Settings().group(ITEMS_GROUP)));
+    public static final BucketItem CRUDE_OIL_BUCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CRUDE_OIL_BUCKET), new BucketItem(GalacticraftFluids.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).group(ITEMS_GROUP)));
+    public static final BucketItem FUEL_BUCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FUEL_BUCKET), new BucketItem(GalacticraftFluids.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).group(ITEMS_GROUP)));
     //GC INVENTORY
     public static final Item PARACHUTE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.PARACHUTE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ORANGE_PARACHUTE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ORANGE_PARACHUTE), new Item(new Item.Settings().group(ITEMS_GROUP)));

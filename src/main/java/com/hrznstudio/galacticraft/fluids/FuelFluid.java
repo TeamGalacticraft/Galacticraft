@@ -22,10 +22,13 @@
 
 package com.hrznstudio.galacticraft.fluids;
 
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidBlock;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -61,7 +64,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     public Item getBucketItem() {
-        return null;
+        return GalacticraftItems.FUEL_BUCKET;
     }
 
     @Environment(EnvType.CLIENT)
@@ -117,7 +120,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     protected BlockState toBlockState(FluidState fluidState) {
-        return null;
+        return GalacticraftBlocks.FUEL.getDefaultState().with(FluidBlock.LEVEL, method_15741(fluidState));
     }
 
     @Override
