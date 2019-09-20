@@ -1,11 +1,33 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.shedaniel.rei.api.DisplaySettings;
+import me.shedaniel.math.api.Point;
+import me.shedaniel.math.api.Rectangle;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.api.Renderable;
 import me.shedaniel.rei.api.Renderer;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
 import me.shedaniel.rei.gui.widget.SlotWidget;
@@ -18,7 +40,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,7 +57,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
     }
 
     public Renderer getIcon() {
-        return Renderable.fromItemStack(new ItemStack(GalacticraftBlocks.COMPRESSOR));
+        return Renderer.fromItemStack(new ItemStack(GalacticraftBlocks.COMPRESSOR));
     }
 
     public String getCategoryName() {
@@ -44,8 +65,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
     }
 
     public List<Widget> setupDisplay(Supplier<DefaultCompressingDisplay> recipeDisplaySupplier, Rectangle bounds) {
-        final Point startPoint = new Point((int) bounds.getCenterX() - 68, (int) bounds.getCenterY() - 37);
-//        final Point startPoint = new Point((int) bounds.getCenterX() - 41, (int) bounds.getCenterY() - 27);
+        final Point startPoint = new Point(bounds.getCenterX() - 68, bounds.getCenterY() - 37);
 
         class NamelessClass_1 extends RecipeBaseWidget {
             NamelessClass_1(Rectangle bounds) {
@@ -90,8 +110,8 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         }
 
         widgets.addAll(slots);
-        widgets.add(new SlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput(), false, true, true) {
-            @Override
+        widgets.add(new SlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput().stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));/* {
+
             protected String getItemCountOverlay(ItemStack currentStack) {
                 if (currentStack.getCount() == 1)
                     return "";
@@ -99,8 +119,10 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
                     return "§c" + currentStack.getCount();
                 return currentStack.getCount() + "";
             }
-        });
-        widgets.add(new SlotWidget(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(ItemStack::new).collect(Collectors.toList()), false, true, true));
+        });*/
+        widgets.add(new SlotWidget(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4,
+                AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(ItemStack::new)
+                        .collect(Collectors.toList()).stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));
         return widgets;
     }
 
@@ -137,22 +159,17 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
     }
 
     @Override
-    public DisplaySettings<DefaultCompressingDisplay> getDisplaySettings() {
-        return new DisplaySettings<DefaultCompressingDisplay>() {
-            @Override
-            public int getDisplayHeight(RecipeCategory recipeCategory) {
-                return 84;
-            }
+    public int getMaximumRecipePerPage() {
+        return 99;
+    }
 
-            @Override
-            public int getDisplayWidth(RecipeCategory recipeCategory, DefaultCompressingDisplay recipeDisplay) {
-                return 146;
-            }
+    @Override
+    public int getDisplayHeight() {
+        return 84;
+    }
 
-            @Override
-            public int getMaximumRecipePerPage(RecipeCategory recipeCategory) {
-                return 99;
-            }
-        };
+    @Override
+    public int getDisplayWidth(DefaultCompressingDisplay display) {
+        return 146;
     }
 }

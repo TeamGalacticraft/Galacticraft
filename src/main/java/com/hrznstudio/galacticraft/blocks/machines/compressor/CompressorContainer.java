@@ -1,8 +1,29 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
-import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -21,14 +42,12 @@ import net.minecraft.item.ItemStack;
 public class CompressorContainer extends MachineContainer<CompressorBlockEntity> {
 
     public static final ContainerFactory<Container> FACTORY = createFactory(CompressorBlockEntity.class, CompressorContainer::new);
-
-    protected Inventory inventory;
-    protected int outputSlotId = 0;
-    private ItemStack itemStack;
-
     public final Property status = Property.create();
     public final Property progress = Property.create();
     public final Property fuelTime = Property.create();
+    protected Inventory inventory;
+    protected int outputSlotId = 0;
+    private ItemStack itemStack;
 
     public CompressorContainer(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
@@ -123,7 +142,7 @@ public class CompressorContainer extends MachineContainer<CompressorBlockEntity>
         fuelTime.set(blockEntity.fuelTime);
         super.sendContentUpdates();
     }
-    
+
     @Override
     public void setProperties(int index, int value) {
         super.setProperties(index, value);

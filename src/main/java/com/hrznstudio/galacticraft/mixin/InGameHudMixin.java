@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
@@ -18,24 +40,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
-public abstract class InGameHudMixin extends DrawableHelper{
-
-    @Shadow
-    private int scaledWidth;
-
-    @Shadow
-    private int scaledHeight;
-
-    @Shadow @Final private MinecraftClient client;
+public abstract class InGameHudMixin extends DrawableHelper {
 
     private static final int OXYGEN_X = 0;
     private static final int OXYGEN_Y = 40;
-
     private static final int OXYGEN_WIDTH = 12;
     private static final int OXYGEN_HEIGHT = 40;
-
     private static final int OXYGEN_OVERLAY_X = 24;
     private static final int OXYGEN_OVERLAY_Y = 80;
+    @Shadow
+    private int scaledWidth;
+    @Shadow
+    private int scaledHeight;
+    @Shadow
+    @Final
+    private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(float float_1, CallbackInfo ci) {

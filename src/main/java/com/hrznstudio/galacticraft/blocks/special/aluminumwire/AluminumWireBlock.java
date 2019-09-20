@@ -1,9 +1,33 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
 import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireUtils;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.WireConnectable;
+import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -82,37 +106,37 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
-        if (canWireConnect(context.getWorld(), Direction.NORTH.getOpposite(), context.getBlockPos(), context.getBlockPos().north()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.NORTH.getOpposite(), context.getBlockPos(), context.getBlockPos().north()).equals(WireConnectionType.ENERGY_INPUT)) {
-            state.with(ATTACHED_NORTH, true);
-        } else {
-            state.with(ATTACHED_NORTH, false);
+        for (Direction direction : Direction.values()) {
+            Block block = context.getWorld().getBlockState(WireUtils.getPosFromDirection(direction, context.getBlockPos())).getBlock();
+            if (block instanceof WireConnectable) {
+                if (((WireConnectable) block).canWireConnect(context.getWorld(), direction.getOpposite(), context.getBlockPos(), WireUtils.getPosFromDirection(direction, context.getBlockPos())) != WireConnectionType.NONE) {
+                    state = state.with(propFromDirection(direction), true);
+                }
+            } else if (block instanceof EnergyAttributeProvider) {
+                state = state.with(propFromDirection(direction), true);
+            }
         }
-        if (canWireConnect(context.getWorld(), Direction.EAST.getOpposite(), context.getBlockPos(), context.getBlockPos().east()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.EAST.getOpposite(), context.getBlockPos(), context.getBlockPos().east()).equals(WireConnectionType.ENERGY_INPUT)) {
-            state.with(ATTACHED_EAST, true);
-        } else {
-            state.with(ATTACHED_EAST, false);
-        }
-        if (canWireConnect(context.getWorld(), Direction.SOUTH.getOpposite(), context.getBlockPos(), context.getBlockPos().south()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.SOUTH.getOpposite(), context.getBlockPos(), context.getBlockPos().south()).equals(WireConnectionType.ENERGY_INPUT)) {
-            state.with(ATTACHED_SOUTH, true);
-        } else {
-            state.with(ATTACHED_SOUTH, false);
-        }
-        if (canWireConnect(context.getWorld(), Direction.WEST.getOpposite(), context.getBlockPos(), context.getBlockPos().west()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.WEST.getOpposite(), context.getBlockPos(), context.getBlockPos().west()).equals(WireConnectionType.ENERGY_INPUT)) {
-            state.with(ATTACHED_WEST, true);
-        } else {
-            state.with(ATTACHED_WEST, false);
-        }
-        if (canWireConnect(context.getWorld(), Direction.UP.getOpposite(), context.getBlockPos(), context.getBlockPos().up()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.UP.getOpposite(), context.getBlockPos(), context.getBlockPos().up()).equals(WireConnectionType.ENERGY_INPUT)) {
-            state.with(ATTACHED_UP, true);
-        } else {
-            state.with(ATTACHED_UP, false);
-        }
-        if (canWireConnect(context.getWorld(), Direction.DOWN.getOpposite(), context.getBlockPos(), context.getBlockPos().down()).equals(WireConnectionType.ENERGY_OUTPUT) || canWireConnect(context.getWorld(), Direction.DOWN.getOpposite(), context.getBlockPos(), context.getBlockPos().down()).equals(WireConnectionType.ENERGY_INPUT)) {
-            state.with(ATTACHED_NORTH, true);
-        } else {
-            state.with(ATTACHED_NORTH, false);
-        }
+
         return state;
+    }
+
+    private BooleanProperty propFromDirection(Direction direction) {
+        switch (direction) {
+            case NORTH:
+                return ATTACHED_NORTH;
+            case SOUTH:
+                return ATTACHED_SOUTH;
+            case EAST:
+                return ATTACHED_EAST;
+            case WEST:
+                return ATTACHED_WEST;
+            case UP:
+                return ATTACHED_UP;
+            case DOWN:
+                return ATTACHED_DOWN;
+            default:
+                return null;
+        }
     }
 
     @Override

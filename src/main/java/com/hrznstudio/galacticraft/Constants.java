@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft;
 
 import net.minecraft.util.Identifier;
@@ -18,23 +40,21 @@ public class Constants {
         public static final String MOON_TURF = "moon_turf";
         public static final String MOON_ROCK = "moon_rock";
         public static final String MOON_DIRT = "moon_dirt";
-        public static final String MOON_DUNGEON_BRICKS = "moon_dungeon_bricks";
+        public static final String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
         public static final String MARS_SURFACE_ROCK = "mars_surface_rock";
         public static final String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
-        public static final String MARS_DUNGEON_BRICKS = "mars_dungeon_bricks";
+        public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
         public static final String DENSE_ICE = "dense_ice";
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
-        public static final String VENUS_ROCK = "venus_rock";
-        public static final String VENUS_ROCK_1 = "venus_rock_block_1";
-        public static final String VENUS_ROCK_2 = "venus_rock_block_2";
-        public static final String VENUS_ROCK_3 = "venus_rock_block_3";
-        public static final String VENUS_ROCK_SCORCHED = "venus_rock_block_scorched";
+
+        public static final String SOFT_VENUS_ROCK = "soft_venus_rock";
+        public static final String HARD_VENUS_ROCK = "hard_venus_rock";
+        public static final String SCORCHED_VENUS_ROCK = "scorched_venus_rock";
         public static final String VOLCANIC_ROCK = "volcanic_rock";
-        public static final String SCORCHED_ROCK = "scorched_rock";
         public static final String PUMICE = "pumice";
         public static final String VAPOR_SPOUT = "vapor_spout";
 
@@ -67,7 +87,7 @@ public class Constants {
 
         // Decorative BLocks
         public static final String TIN_DECORATION = "tin_decoration";
-        public static final String TIN_DECORATION_BLOCK_1 = "tin_decoration_block_1";
+        public static final String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
         public static final String DARK_DECORATION = "dark_decoration";
         public static final String GRATING = "grating";
         public static final String SQUARE_LIGHTING_PANEL = "lighting_panel_block_square";
@@ -83,25 +103,25 @@ public class Constants {
         public static final String WIRE_WALKWAY = "walkway_block_wire";
         public static final String PIPE_WALKWAY = "walkway_block_pipe";
         public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
-        public static final String TIN_DECORATION_SLAB_1 = "tin_decoration_slab_1";
+        public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
         public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
-        public static final String MARS_DUNGEON_BRICKS_SLAB = "mars_dungeon_bricks_slab";
-        public static final String MOON_DUNGEON_BRICKS_SLAB = "moon_dungeon_bricks_slab";
+        public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
+        public static final String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
         public static final String MOON_ROCK_SLAB = "moon_rock_slab";
         public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
-        public static final String MOON_DUNGEON_BRICKS_STAIRS = "moon_dungeon_bricks_stairs";
+        public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
-        public static final String TIN_DECORATION_STAIRS_1 = "tin_decoration_stairs_1";
-        public static final String MARS_DUNGEON_BRICKS_STAIRS = "mars_dungeon_bricks_stairs";
+        public static final String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
+        public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
         public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
-        public static final String TIN_DECORATION_WALL_1 = "tin_decoration_wall_1";
+        public static final String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
         public static final String MOON_ROCK_WALL = "moon_rock_wall";
 
-        public static final String MOON_DUNGEON_BRICKS_WALL = "moon_dungeon_bricks_wall";
+        public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
-        public static final String MARS_DUNGEON_BRICKS_WALL = "mars_dungeon_bricks_wall";
+        public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
         public static final String UNLIT_TORCH = "unlit_torch";
@@ -196,14 +216,14 @@ public class Constants {
 
     // Fluids
     public static class Fluids {
-        public static final String CRUDE_OIL_FLUID_FLOWING = "crude_oil_fluid_flowing";
-        public static final String CRUDE_OIL_FLUID_STILL = "crude_oil_fluid_still";
-        public static final String FUEL_FLUID_FLOWING = "fuel_fluid_flowing";
-        public static final String FUEL_FLUID_STILL = "fuel_fluid_still";
-        public static final String BACTERIAL_ACID_FLUID_FLOWING = "bacterial_acid_fluid_flowing";
-        public static final String BACTERIAL_ACID_FLUID_STILL = "bacterial_acid_fluid_still";
-        public static final String SULFURIC_ACID_FLUID_FLOWING = "sulfuric_acid_fluid_flowing";
-        public static final String SULFURIC_ACID_FLUID_STILL = "sulfuric_acid_fluid_still";
+        public static final String CRUDE_OIL_FLOWING = "crude_oil_flowing";
+        public static final String CRUDE_OIL_STILL = "crude_oil_still";
+        public static final String FUEL_FLOWING = "fuel_flowing";
+        public static final String FUEL_STILL = "fuel_still";
+        public static final String BACTERIAL_ACID_FLOWING = "bacterial_acid_flowing";
+        public static final String BACTERIAL_ACID_STILL = "bacterial_acid_still";
+        public static final String SULFURIC_ACID_FLOWING = "sulfuric_acid_flowing";
+        public static final String SULFURIC_ACID_STILL = "sulfuric_acid_still";
 
         public static Identifier getIdentifier(String s) {
             return new Identifier(Constants.MOD_ID, "block/" + s);
@@ -314,6 +334,7 @@ public class Constants {
 
         //Fluid buckets
         public static final String CRUDE_OIL_BUCKET = "crude_oil_bucket";
+        public static final String FUEL_BUCKET = "fuel_bucket";
 
         //GC INVENTORY
         public static final String PARACHUTE = "parachute";
@@ -383,6 +404,7 @@ public class Constants {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
         public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
+        public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";

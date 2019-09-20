@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.api.wire;
 
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -23,18 +45,19 @@ public class WireUtils {
 
     public static BlockPos getPosFromDirection(Direction direction, BlockPos pos) {
         if (pos == null || direction == null) return null;
-        if (direction == Direction.NORTH) {
-            return pos.north();
-        } else if (direction == Direction.SOUTH) {
-            return pos.south();
-        } else if (direction == Direction.EAST) {
-            return pos.east();
-        } else if (direction == Direction.WEST) {
-            return pos.west();
-        } else if (direction == Direction.UP) {
-            return pos.up();
-        } else {
-            return pos.down();
+        switch (direction) {
+            case NORTH:
+                return pos.north();
+            case SOUTH:
+                return pos.south();
+            case EAST:
+                return pos.east();
+            case WEST:
+                return pos.west();
+            case UP:
+                return pos.up();
+            default:
+                return pos.down();
         }
     }
 
@@ -45,20 +68,6 @@ public class WireUtils {
      * @return The network with the specified ID.
      */
     public static WireNetwork getNetworkFromId(UUID id) {
-        network = null;
-        WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
-            if (wireNetwork.getId() == id) network = wireNetwork;
-        });
-        return network;
-    }
-
-    /**
-     * Attempts to find a temporary WireNetwork with a certain ID.
-     *
-     * @param id The ID of the wanted WireNetwork
-     * @return The network with the specified ID.
-     */
-    public static WireNetwork getTempNetworkFromId(UUID id) {
         network = null;
         WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
             if (wireNetwork.getId() == id) network = wireNetwork;
@@ -85,7 +94,7 @@ public class WireUtils {
             if (block instanceof WireConnectable) {
                 if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_INPUT) {
                     if (world.getBlockEntity(adjacentBlockPos) instanceof ConfigurableElectricMachineBlockEntity) {
-                        if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).active()) {
+                        if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).enabled()) {
                             adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos)); //Don't send energy to blocks that are not enabled
                         }
                     } else {
@@ -157,7 +166,7 @@ public class WireUtils {
 
             if (blockEntity instanceof WireBlockEntity) {
                 if (world.getBlockEntity(pos) instanceof WireBlockEntity) {
-                    WireBlockEntity base = (WireBlockEntity)world.getBlockEntity(pos);
+                    WireBlockEntity base = (WireBlockEntity) world.getBlockEntity(pos);
                     if (((WireBlockEntity) blockEntity).networkId != base.networkId) {
                         Galacticraft.logger.debug("Converting a wire at {} from the network with the id: {} to {}", blockEntity.getPos(), ((WireBlockEntity) blockEntity).networkId, base.networkId);
                         try {
@@ -171,13 +180,14 @@ public class WireUtils {
                                 WireNetwork.networkMap_TEMP.remove(blockEntity.getPos());
                                 ((WireBlockEntity) blockEntity).networkId = base.networkId;
                                 WireUtils.getNetworkFromId(base.networkId).wires.add(((WireBlockEntity) blockEntity));
-                            } catch (Exception ignore2) {}
+                            } catch (Exception ignore2) {
+                            }
                         }
                         ((WireBlockEntity) blockEntity).networkId = base.networkId;
 
                     }
                 }
-                adjacentConnections[direction.getId()] = (WireBlockEntity)blockEntity;
+                adjacentConnections[direction.getId()] = (WireBlockEntity) blockEntity;
             }
         }
         return adjacentConnections;

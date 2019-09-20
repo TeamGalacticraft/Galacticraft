@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.world.gen;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
@@ -68,12 +90,12 @@ public class OreGenerator {
             float float_2 = (float) featureConfig.size / 8.0F;
             int size = MathHelper.ceil(((float) featureConfig.size / 16.0F * 2.0F + 1.0F) / 2.0F);
 
-            double x1 = (double) ((float) blockPos.getX() + MathHelper.sin(float_1) * float_2);
-            double x2 = (double) ((float) blockPos.getX() - MathHelper.sin(float_1) * float_2);
-            double z1 = (double) ((float) blockPos.getZ() + MathHelper.cos(float_1) * float_2);
-            double z2 = (double) ((float) blockPos.getZ() - MathHelper.cos(float_1) * float_2);
-            double double_5 = (double) (blockPos.getY() + random.nextInt(3) - 2);
-            double double_6 = (double) (blockPos.getY() + random.nextInt(3) - 2);
+            double x1 = (float) blockPos.getX() + MathHelper.sin(float_1) * float_2;
+            double x2 = (float) blockPos.getX() - MathHelper.sin(float_1) * float_2;
+            double z1 = (float) blockPos.getZ() + MathHelper.cos(float_1) * float_2;
+            double z2 = (float) blockPos.getZ() - MathHelper.cos(float_1) * float_2;
+            double double_5 = blockPos.getY() + random.nextInt(3) - 2;
+            double double_6 = blockPos.getY() + random.nextInt(3) - 2;
 
             int int_3 = blockPos.getX() - MathHelper.ceil(float_2) - size;
             int int_4 = blockPos.getY() - 2 - size;
@@ -106,9 +128,9 @@ public class OreGenerator {
             double double_15;
             for (int_8 = 0; int_8 < oreGenConfig.size; ++int_8) {
                 float float_1 = (float) int_8 / (float) oreGenConfig.size;
-                double_12 = MathHelper.lerp((double) float_1, double_1, double_2);
-                double_13 = MathHelper.lerp((double) float_1, double_5, double_6);
-                double_14 = MathHelper.lerp((double) float_1, double_3, double_4);
+                double_12 = MathHelper.lerp(float_1, double_1, double_2);
+                double_13 = MathHelper.lerp(float_1, double_5, double_6);
+                double_14 = MathHelper.lerp(float_1, double_3, double_4);
                 double_15 = random.nextDouble() * (double) oreGenConfig.size / 16.0D;
                 double double_11 = ((double) (MathHelper.sin(3.1415927F * float_1) + 1.0F) * double_15 + 1.0D) / 2.0D;
                 doubles_1[int_8 * 4] = double_12;

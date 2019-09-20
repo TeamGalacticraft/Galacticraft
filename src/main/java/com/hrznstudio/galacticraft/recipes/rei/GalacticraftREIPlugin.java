@@ -1,62 +1,72 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
-import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
+import me.shedaniel.math.api.Rectangle;
 import me.shedaniel.rei.api.DisplayHelper;
-import me.shedaniel.rei.api.REIPluginEntry;
 import me.shedaniel.rei.api.RecipeHelper;
-import me.shedaniel.rei.api.SpeedCraftFunctional;
-import me.shedaniel.rei.client.ScreenHelper;
+import me.shedaniel.rei.api.plugins.REIPluginV0;
+import me.shedaniel.rei.impl.ScreenHelper;
 import me.shedaniel.rei.listeners.ContainerScreenHooks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import net.fabricmc.loader.api.SemanticVersion;
+import net.fabricmc.loader.util.version.VersionParsingException;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
-import java.awt.*;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 
-public class GalacticraftREIPlugin implements REIPluginEntry {
+public class GalacticraftREIPlugin implements REIPluginV0 {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
 
+
     @Override
+    public SemanticVersion getMinimumVersion() throws VersionParsingException {
+        return SemanticVersion.parse("3.0-pre");
+    }
+
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
         recipeHelper.registerCategory(new DefaultCompressingCategory());
     }
 
-    @Override
+    /*@Override
     public void registerOthers(RecipeHelper recipeHelper) {
-        recipeHelper.registerSpeedCraftFunctional(CIRCUIT_FABRICATION, new SpeedCraftFunctional<DefaultFabricationDisplay>() {
-            public Class[] getFunctioningFor() {
-                return new Class[]{CircuitFabricatorScreen.class};
-            }
-
-            public boolean performAutoCraft(Screen screen, DefaultFabricationDisplay recipe) {
-                if (!recipe.getRecipe().isPresent()) {
-                    return false;
-                } else if (screen instanceof CircuitFabricatorScreen) {
-                    MinecraftClient.getInstance().interactionManager.clickRecipe(MinecraftClient.getInstance().player.container.syncId, (Recipe) recipe.getRecipe().get(), Screen.hasShiftDown());
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-            public boolean acceptRecipe(Screen screen, DefaultFabricationDisplay recipe) {
-                return screen instanceof CircuitFabricatorScreen;
+        recipeHelper.registerAutoCraftingHandler(new AutoTransferHandler() {
+            @Override
+            public Result handle(Context context) {
+                return null;
             }
         });
 
@@ -82,7 +92,7 @@ public class GalacticraftREIPlugin implements REIPluginEntry {
         });
 
         recipeHelper.registerSpeedCraftButtonArea(CIRCUIT_FABRICATION, (bounds) -> new Rectangle((int) bounds.getMaxX() - 16, (int) bounds.getMinY() + 6, 10, 10));
-    }
+    }*/
 
     @Override
     public Identifier getPluginIdentifier() {

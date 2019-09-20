@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.api.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
@@ -9,7 +31,6 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -24,22 +45,6 @@ import net.minecraft.nbt.CompoundTag;
 public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyAttributeProvider {
 
     public static final int DEFAULT_MAX_ENERGY = 15000;
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
-    /**
-     * The UUID of the player that viewed the GUI of this machine first
-     */
-    public String owner = "";
-    public boolean isParty = false;
-    public boolean isPublic = true;
-    /**
-     * The selected redstone control option.
-     * Can may *only* take any of the below values:
-     * DISABLED: Ignores all redstone signals
-     * OFF: When powered, the machine turns off
-     * ON: The machine will only work when powered
-     */
-    public String redstoneOption = "DISABLED";
-
     private final SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize()) {
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack item) {
@@ -51,9 +56,26 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             return ConfigurableElectricMachineBlockEntity.this.getFilterForSlot(slot);
         }
     };
-
     private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
     private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
+    /**
+     * The UUID of the player that viewed the GUI of this machine first
+     */
+    public String owner = "";
+    public String ownerUsername = "";
+    public boolean isParty = false;
+    public boolean isPublic = true;
+    /**
+     * The selected redstone control option.
+     * Can may *only* take any of the below values:
+     * DISABLED: Ignores all redstone signals
+     * OFF: When powered, the machine turns off
+     * ON: The machine will only work when powered
+     * <p>
+     * TODO: Enum constant
+     */
+    public String redstoneOption = "DISABLED";
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
 
 
     public ConfigurableElectricMachineBlockEntity(BlockEntityType<?> blockEntityType) {
@@ -62,7 +84,12 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
     }
 
-    public boolean active() {
+    /**
+     * Whether the current machine is enabled
+     *
+     * @return The state of the machine
+     */
+    public boolean enabled() {
         switch (this.redstoneOption) {
             default:
                 return true;
@@ -82,13 +109,17 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         return DEFAULT_MAX_ENERGY;
     }
 
-    /** @return The {@link ItemFilter} for the given slot of {@link #getInventory()}. */
+    /**
+     * @return The {@link ItemFilter} for the given slot of {@link #getInventory()}.
+     */
     protected ItemFilter getFilterForSlot(int slot) {
         return ConstantItemFilter.ANYTHING;
     }
 
-    /** @return The maximum amount of energy that can be transferred to or from a battery in this machine per call to
-     *         {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)} */
+    /**
+     * @return The maximum amount of energy that can be transferred to or from a battery in this machine per call to
+     * {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)}
+     */
     protected int getBatteryTransferRate() {
         return 20;
     }
@@ -122,6 +153,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     /**
      * Tries to drain some of this machine's power into the item in the given slot in this {@link #getInventory}.
+     *
      * @param slot The slot id of the item
      */
     protected void attemptDrainPowerToStack(int slot) {
@@ -149,13 +181,17 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         return inventory;
     }
 
-    /** @return A {@link LimitedFixedItemInv} that can be used to limit what neighbouring blocks do with the
-     *         {@link #getExposedInventory() exposed inventory}. */
+    /**
+     * @return A {@link LimitedFixedItemInv} that can be used to limit what neighbouring blocks do with the
+     * {@link #getExposedInventory() exposed inventory}.
+     */
     public final LimitedFixedItemInv getLimitedInventory() {
         return limitedInventory;
     }
 
-    /** @return The {@link FixedItemInv} that is exposed to neighbouring blocks via attributes. */
+    /**
+     * @return The {@link FixedItemInv} that is exposed to neighbouring blocks via attributes.
+     */
     public final FixedItemInv getExposedInventory() {
         return exposedInventory;
     }
@@ -166,6 +202,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
         tag.putString("Owner", owner);
+        tag.putString("OwnerUsername", ownerUsername);
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
         tag.putString("Redstone", redstoneOption);
@@ -178,6 +215,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
         owner = tag.getString("Owner");
+        ownerUsername = tag.getString("OwnerUsername");
         isParty = tag.getBoolean("Party");
         isPublic = tag.getBoolean("Public");
         redstoneOption = tag.getString("Redstone");

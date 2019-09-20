@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.blocks.machines.compressor;
 
 import alexiil.mc.lib.attributes.Simulation;
@@ -5,7 +27,6 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
@@ -35,17 +56,17 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     public int maxFuelTime;
     int progress;
 
-    @Override
-    public SimpleEnergyAttribute getEnergyAttribute() {
-        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
-    }
-
     public CompressorBlockEntity() {
         this(GalacticraftBlockEntities.COMPRESSOR_TYPE);
     }
 
     public CompressorBlockEntity(BlockEntityType<?> electricCompressorType) {
         super(electricCompressorType);
+    }
+
+    @Override
+    public SimpleEnergyAttribute getEnergyAttribute() {
+        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
     }
 
     @Override
@@ -69,7 +90,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     @Override
     public void tick() {
-        if (!this.active()) {
+        if (!this.enabled()) {
             return;
         }
         InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {

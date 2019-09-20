@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.4-SNAPSHOT'
+    id 'fabric-loom' version '0.2.5-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -45,8 +45,12 @@ dependencies {
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
     modImplementation("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
-    modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") { transitive = false }
     modImplementation("com.github.NerdHubMC:FOML:${foml_version}") { transitive = true }
+    modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+        exclude group: 'me.shedaniel.cloth', module: 'config-2'
+        exclude group: 'me.shedaniel.cloth', module: 'config-events'
+        //need fiber things embedded in REI
+    }
 
     //include everything mandatory inside the jar
     //include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"

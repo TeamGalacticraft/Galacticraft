@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 
 import alexiil.mc.lib.attributes.Simulation;
@@ -27,12 +49,12 @@ import java.util.Optional;
 public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, WireConnectable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
+    static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
     public CompressorStatus status = CompressorStatus.INACTIVE;
     public int fuelTime;
     public int maxFuelTime;
     int progress;
-    static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
 
     public ElectricCompressorBlockEntity() {
         super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
@@ -66,7 +88,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     public void tick() {
-        if (!active()) {
+        if (!enabled()) {
             return;
         }
         attemptChargeFromStack(FUEL_INPUT_SLOT);
