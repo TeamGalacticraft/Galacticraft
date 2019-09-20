@@ -22,11 +22,8 @@
 
 package com.hrznstudio.galacticraft.fluids;
 
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.NormalFluidKey;
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.fluid.BaseFluid;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -41,7 +38,6 @@ public class GalacticraftFluids {
     public static final BaseFluid FLOWING_FUEL = Registry.register(Registry.FLUID, new Identifier(Constants.MOD_ID, Constants.Fluids.FUEL_FLOWING), new FuelFluid.Flowing());
 
     public static void register() {
-        FluidKeys.put(CRUDE_OIL, NormalFluidKey.builder(CRUDE_OIL, new Identifier(Constants.MOD_ID, "block/crude_oil_still"), new TranslatableText("block.galacticraft-rewoven.crude_oil")).build());
-        FluidKeys.put(FUEL, NormalFluidKey.builder(FUEL, new Identifier(Constants.MOD_ID, "block/fuel_still"), new TranslatableText("block.galacticraft-rewoven.crude_oil")).build());
+
     }
 }

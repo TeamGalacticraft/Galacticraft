@@ -62,17 +62,21 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftBlocks {
 
+    // Special Blocks
     public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
     public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).sounds(BlockSoundGroup.WOOD).build()), Constants.Blocks.GLOWSTONE_TORCH);
     public static final Block GLOWSTONE_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH).build()), Constants.Blocks.GLOWSTONE_WALL_TORCH);
     public static final Block BASIC_SOLAR_PANEL_PART = registerBlockWithoutItem(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
+
     // Liquids
-    public static final FluidBlock CRUDE_OIL = new CrudeOilBlock(GalacticraftFluids.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
+    public static final FluidBlock CRUDE_OIL = registerFlammableFluidBlock(new CrudeOilBlock(GalacticraftFluids.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
-            .strength(100.0F, 1000.0F).dropsNothing().build());
-    public static final FluidBlock FUEL = new FuelBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
+            .strength(100.0F, 1000.0F).dropsNothing().build()), Constants.Blocks.CRUDE_OIL);
+
+    public static final FluidBlock FUEL = registerFlammableFluidBlock(new FuelBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
-            .strength(50.0F, 50.0F).dropsNothing().build());
+            .strength(50.0F, 50.0F).dropsNothing().build()), Constants.Blocks.FUEL);
+
     public static ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
             // Set the tab icon
@@ -184,6 +188,12 @@ public class GalacticraftBlocks {
 
     private static Block registerBlockWithoutItem(Block block, String id) {
         return Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
+    }
+
+    private static FluidBlock registerFlammableFluidBlock(FluidBlock block, String id) {
+        FluidBlock registered =  Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
+        ((FireBlock) Blocks.FIRE).registerFlammableBlock(registered, 80, 80);
+        return registered;
     }
 
     private static Block registerBlock(Block block, String id) {

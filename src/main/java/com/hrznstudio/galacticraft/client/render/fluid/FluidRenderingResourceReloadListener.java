@@ -31,11 +31,15 @@ public class FluidRenderingResourceReloadListener implements SimpleSynchronousRe
 
     @Override
     public void apply(ResourceManager var1) {
-        //noinspection Convert2Lambda
         FluidRenderHandler oilRenderHandler = new FluidRenderHandler() {
             @Override
             public Sprite[] getFluidSprites(ExtendedBlockView view, BlockPos pos, FluidState state) {
                 return new Sprite[]{ MinecraftClient.getInstance().getSpriteAtlas().getSprite(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), MinecraftClient.getInstance().getSpriteAtlas().getSprite(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing")) };
+            }
+
+            @Override
+            public int getFluidColor(ExtendedBlockView view, BlockPos pos, FluidState state) {
+                return -1;
             }
         };
 
@@ -47,7 +51,7 @@ public class FluidRenderingResourceReloadListener implements SimpleSynchronousRe
 
             @Override
             public int getFluidColor(ExtendedBlockView view, BlockPos pos, FluidState state) {
-                return 15117351;
+                return -1;
             }
         };
 

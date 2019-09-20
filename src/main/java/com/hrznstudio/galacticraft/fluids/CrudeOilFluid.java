@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.fluids;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -54,7 +55,6 @@ import java.util.Random;
  */
 public class CrudeOilFluid extends BaseFluid {
 
-
     @Override
     public Fluid getFlowing() {
         return GalacticraftFluids.FLOWING_CRUDE_OIL;
@@ -67,7 +67,7 @@ public class CrudeOilFluid extends BaseFluid {
 
     @Override
     protected boolean isInfinite() {
-        return true;
+        return false;
     }
 
     @Override
@@ -87,7 +87,7 @@ public class CrudeOilFluid extends BaseFluid {
 
     @Override
     public boolean method_15777(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.matches(FluidTags.WATER);
+        return direction == Direction.DOWN && !fluid.matches(GalacticraftFluidTags.OIL);
     }
 
     @Override
