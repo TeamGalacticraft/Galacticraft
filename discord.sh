@@ -29,7 +29,6 @@ AUTHOR_NAME="$(git log -1 "$GITHUB_SHA" --pretty="%aN")"
 COMMITTER_NAME="$(git log -1 "$GITHUB_SHA" --pretty="%cN")"
 COMMIT_SUBJECT="$(git log -1 "$GITHUB_SHA" --pretty="%s")"
 COMMIT_MESSAGE="$(git log -1 "$GITHUB_SHA" --pretty="%b")" | sed -E ':a;N;$!ba;s/\r{0,1}\n/\\n/g'
-CREDITS="$GITHUB_ACTOR ran action"
 URL="https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA"
 TIMESTAMP=$(date --utc +%FT%TZ)
 WEBHOOK_DATA='{
@@ -44,7 +43,7 @@ WEBHOOK_DATA='{
     },
     "title": "'"$COMMIT_SUBJECT"'",
     "url": "'"$URL"'",
-    "description": "'"${COMMIT_MESSAGE//$'\n'/ }"\\n\\n"$CREDITS"'",
+    "description": "'"${COMMIT_MESSAGE//$'\n'/ }"'",
     "fields": [
       {
         "name": "Commit",
