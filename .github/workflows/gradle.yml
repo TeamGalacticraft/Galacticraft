@@ -17,7 +17,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./gradlew clean build --info
+      run: ./gradlew build --stacktrace
     - name: Push Success to Discord
       if: success()
       env:
