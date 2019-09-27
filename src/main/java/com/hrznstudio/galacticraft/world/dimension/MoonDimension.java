@@ -72,7 +72,7 @@ public class MoonDimension extends Dimension implements CelestialBody {
 
     @Override
     public Vec3d getFogColor(float v, float v1) {
-        return new Vec3d(0, 0, 0);
+        return new Vec3d(0.26796875D, 0.1796875D, 0.0D);
     }
 
     @Override
