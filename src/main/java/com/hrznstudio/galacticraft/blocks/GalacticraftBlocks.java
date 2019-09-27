@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.GalacticraftStairsBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.*;
 import com.hrznstudio.galacticraft.blocks.environment.*;
 import com.hrznstudio.galacticraft.blocks.fluid.CrudeOilBlock;
@@ -167,7 +166,10 @@ public class GalacticraftBlocks {
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
 
     //DUMMY BLOCKS - REQUIRED FOR ENTITY .OBJ FILE RENDERING
-    public static final Block ROCKET_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_T1);
+    public static final Block ROCKET_BASE_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_BASE);
+    public static final Block ROCKET_FIN_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_FINS);
+    public static final Block ROCKET_TOP_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_TOP);
+    public static final Block ROCKET_BOTTOM_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_BOTTOM);
 
     // Machines
     public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(

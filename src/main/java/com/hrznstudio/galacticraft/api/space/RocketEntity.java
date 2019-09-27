@@ -31,4 +31,9 @@ public interface RocketEntity {
     RocketTier getRocketTier();
 
     SimpleFixedFluidInv getFuel();
+
+    float[] getColor();
+
+    void setColor(float[] rgba);
+
 }

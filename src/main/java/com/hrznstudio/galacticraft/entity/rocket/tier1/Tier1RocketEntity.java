@@ -20,12 +20,13 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.moonvillager;
+package com.hrznstudio.galacticraft.entity.rocket.tier1;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.space.RocketEntity;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
@@ -35,6 +36,7 @@ import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.util.ActionResult;
@@ -49,32 +51,47 @@ import net.minecraft.world.explosion.Explosion;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class T1RocketEntity extends Entity implements RocketEntity, FluidInsertable {
+public class Tier1RocketEntity extends Entity implements RocketEntity, FluidInsertable {
     private SimpleFixedFluidInv fuel = new SimpleFixedFluidInv(1, 10000);
 
-    public T1RocketEntity(EntityType<T1RocketEntity> type, World world_1) {
+    private float[] color = {1, 1, 1, 0};
+
+    public Tier1RocketEntity(EntityType<Tier1RocketEntity> type, World world_1) {
         super(type, world_1);
+    }
+
+    @Override
+    public float[] getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(float[] rgba) {
+        this.color = rgba;
     }
 
     @Override
     public ActionResult interactAt(PlayerEntity playerEntity_1, Vec3d vec3d_1, Hand hand_1) {
         playerEntity_1.startRiding(this);
+        System.out.println("interactAt");
         return ActionResult.SUCCESS;
     }
 
     @Override
     public boolean interact(PlayerEntity playerEntity_1, Hand hand_1) {
         playerEntity_1.startRiding(this);
+        System.out.println("interact");
         return true;
     }
 
+
     @Override
-    protected void readCustomDataFromTag(CompoundTag tag) {
+    public void readCustomDataFromTag(CompoundTag tag) {
         this.fuel.fromTag(tag);
     }
 
     @Override
-    protected void writeCustomDataToTag(CompoundTag tag) {
+    public void writeCustomDataToTag(CompoundTag tag) {
         this.fuel.toTag(tag);
     }
 
@@ -87,6 +104,11 @@ public class T1RocketEntity extends Entity implements RocketEntity, FluidInserta
     public void handleFallDamage(float float_1, float float_2) {
         super.handleFallDamage(float_1, float_2);
         this.world.createExplosion(this, this.x, this.y + (double) (this.getHeight() / 16.0F), this.z, this.fuel.getTank(0).get().getAmount() / 3000.0F + 2, Explosion.DestructionType.BREAK);
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorItems() {
+        return () -> Lists.asList(ItemStack.EMPTY, new ItemStack[]{ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY}).iterator();
     }
 
     @Override

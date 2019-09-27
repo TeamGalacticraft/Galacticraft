@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
+import com.hrznstudio.galacticraft.entity.rocket.tier1.Tier1RocketEntity;
 import net.fabricmc.fabric.impl.network.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
@@ -107,7 +107,7 @@ public class GalacticraftPackets {
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "t1_rocket_spawn"), ((context, byteBuf) -> {
-            EntityType<T1RocketEntity> type = (EntityType<T1RocketEntity>) Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
+            EntityType<Tier1RocketEntity> type = (EntityType<Tier1RocketEntity>) Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
             int entityID = byteBuf.readVarInt();
             UUID entityUUID = byteBuf.readUuid();
             double x = byteBuf.readDouble();
@@ -116,7 +116,7 @@ public class GalacticraftPackets {
             float pitch = (byteBuf.readByte() * 360) / 256.0F;
             float yaw = (byteBuf.readByte() * 360) / 256.0F;
             Runnable spawn = () -> {
-                T1RocketEntity entity = new T1RocketEntity(type, MinecraftClient.getInstance().world);
+                Tier1RocketEntity entity = new Tier1RocketEntity(type, MinecraftClient.getInstance().world);
                 entity.updateTrackedPosition(x, y, z);
                 entity.x = x;
                 entity.y = y;

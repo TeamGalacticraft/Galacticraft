@@ -24,4 +24,5 @@ public class DummyRenderBlock extends Block {
     public float getBlastResistance() {
         return 100000000000000000.0F;
     }
+
 }

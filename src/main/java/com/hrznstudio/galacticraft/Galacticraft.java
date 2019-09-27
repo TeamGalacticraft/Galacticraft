@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.api.space.RocketEntity;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -44,7 +45,9 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.ActionResult;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,6 +86,16 @@ public class Galacticraft implements ModInitializer {
         WorldGenerator.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
+
+        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
+            if (!player.isSpectator()) {
+                if (entity instanceof RocketEntity) {
+                    System.out.println("Interact Callback");
+                    return entity.interactAt(player, hitResult.getPos(), hand);
+                }
+            }
+            return ActionResult.PASS;
+        });
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
 

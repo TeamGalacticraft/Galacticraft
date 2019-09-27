@@ -194,7 +194,10 @@ public class Constants {
         public static final String SHORT_RANGE_TELEPAD = "short_range_telepad";
 
         // Dummy render blocks
-        public static final String ROCKET_T1 = "rocket_one";
+        public static final String TIER_1_ROCKET_BASE = "tier_1_rocket_base";
+        public static final String TIER_1_ROCKET_FINS = "tier_1_rocket_fins";
+        public static final String TIER_1_ROCKET_TOP = "tier_1_rocket_top";
+        public static final String TIER_1_ROCKET_BOTTOM = "tier_1_rocket_bottom";
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
@@ -436,7 +439,7 @@ public class Constants {
 
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
-        public static final String T1_ROCKET = "rocket_one";
+        public static final String T1_ROCKET = "tier_1_rocket";
     }
 
     public static class TextureCoordinates {
