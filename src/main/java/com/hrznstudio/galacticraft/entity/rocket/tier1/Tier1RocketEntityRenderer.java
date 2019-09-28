@@ -29,7 +29,6 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.hit.HitResult;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -44,21 +43,18 @@ public class Tier1RocketEntityRenderer extends EntityRenderer<Tier1RocketEntity>
     public void render(Tier1RocketEntity entity, double x, double y, double z, float f, float partialTickTime) {
         GlStateManager.pushMatrix();
         MinecraftClient client = MinecraftClient.getInstance();
-        GlStateManager.translated(x, y + 1.5, z);
+        GlStateManager.translated(x, y + 2.0D, z);
         client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_BASE_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_BASE_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-
-        GlStateManager.translated(0.0, -0.5, 0.0);
-        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_FIN_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_FIN_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-        GlStateManager.translated(0.0, -0.75, 0.0);
+        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_BODY_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_BODY_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        GlStateManager.translated(0.0D, -0.5D + -0.5D, 0.0D);
+        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_THRUSTER_TIER_1_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_THRUSTER_TIER_1_RENDER_BLOCK.getDefaultState()), 1, 1, 1, 1);
+        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_FINS_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_FINS_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        GlStateManager.translated(0.0D, -1.0D + 0.5D, 0.0D);
         client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_BOTTOM_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_BOTTOM_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-        GlStateManager.translated(0.0, 1.25 + 2.0, 0.0);
-        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_TOP_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_TOP_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        GlStateManager.translated(0.0D, 1.5D + 1.75D, 0.0D);
+        client.getBlockRenderManager().getModelRenderer().render(GalacticraftBlocks.ROCKET_TOP_BASIC_RENDER_BLOCK.getDefaultState(), client.getBlockRenderManager().getModel(GalacticraftBlocks.ROCKET_TOP_BASIC_RENDER_BLOCK.getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
         GlStateManager.popMatrix();
         super.render(entity, x, y, z, f, partialTickTime);
-        if (MinecraftClient.getInstance().hitResult.getType() == HitResult.Type.ENTITY) {
-            System.out.println(MinecraftClient.getInstance().hitResult.getPos());
-        }
     }
 
     @Override

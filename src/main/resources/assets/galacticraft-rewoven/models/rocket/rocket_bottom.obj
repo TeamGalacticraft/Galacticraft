@@ -1,6 +1,6 @@
-# Blender v2.79 (sub 0) OBJ File: 'GCRocketTop1.blend'
+# Blender v2.79 (sub 0) OBJ File: 'rocketbottomFinalV2.blend'
 # www.blender.org
-mtllib rocket/tier_1_rocket_bottom.mtl
+mtllib rocket/rocket_bottom.mtl
 o RocketBottom_Cube.013
 v -0.437500 -0.375000 0.437500
 v -0.437500 -0.125000 0.437500
@@ -92,10 +92,10 @@ vt 0.328125 0.781250
 vt 0.328125 0.796875
 vt 0.156250 0.796875
 vt 0.156250 0.781250
-vt 0.156250 0.796875
-vt 0.156250 0.781250
 vt 0.328125 0.781250
 vt 0.328125 0.796875
+vt 0.156250 0.796875
+vt 0.156250 0.781250
 vt 0.328125 0.812500
 vt 0.328125 0.984375
 vt 0.156250 0.984375

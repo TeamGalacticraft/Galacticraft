@@ -166,10 +166,14 @@ public class GalacticraftBlocks {
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
 
     //DUMMY BLOCKS - REQUIRED FOR ENTITY .OBJ FILE RENDERING
-    public static final Block ROCKET_BASE_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_BASE);
-    public static final Block ROCKET_FIN_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_FINS);
-    public static final Block ROCKET_TOP_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_TOP);
-    public static final Block ROCKET_BOTTOM_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.TIER_1_ROCKET_BOTTOM);
+    public static final Block ROCKET_BODY_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_BODY);
+    public static final Block ROCKET_TOP_BASIC_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_TOP_BASIC);
+    public static final Block ROCKET_TOP_ADVANCED_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_TOP_ADVANCED);
+    public static final Block ROCKET_TOP_SLOPED_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_TOP_SLOPED);
+    public static final Block ROCKET_BOTTOM_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_BOTTOM);
+    public static final Block ROCKET_FINS_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_FINS);
+    public static final Block ROCKET_THRUSTER_TIER_1_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_THRUSTER_TIER_1);
+    public static final Block ROCKET_THRUSTER_TIER_2_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE).build()), Constants.Blocks.ROCKET_THRUSTER_TIER_2);
 
     // Machines
     public static ItemGroup MACHINES_GROUP = FabricItemGroupBuilder.create(

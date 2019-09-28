@@ -12,7 +12,7 @@ public class DummyRenderBlock extends Block {
 
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.SOLID;
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override

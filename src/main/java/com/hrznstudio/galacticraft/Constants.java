@@ -194,10 +194,14 @@ public class Constants {
         public static final String SHORT_RANGE_TELEPAD = "short_range_telepad";
 
         // Dummy render blocks
-        public static final String TIER_1_ROCKET_BASE = "tier_1_rocket_base";
-        public static final String TIER_1_ROCKET_FINS = "tier_1_rocket_fins";
-        public static final String TIER_1_ROCKET_TOP = "tier_1_rocket_top";
-        public static final String TIER_1_ROCKET_BOTTOM = "tier_1_rocket_bottom";
+        public static final String ROCKET_BODY = "rocket_body";
+        public static final String ROCKET_BOTTOM = "rocket_bottom";
+        public static final String ROCKET_FINS = "rocket_fins";
+        public static final String ROCKET_THRUSTER_TIER_1 = "rocket_thruster_tier_1";
+        public static final String ROCKET_THRUSTER_TIER_2 = "rocket_thruster_tier_2";
+        public static final String ROCKET_TOP_BASIC = "rocket_top_basic";
+        public static final String ROCKET_TOP_ADVANCED = "rocket_top_advanced";
+        public static final String ROCKET_TOP_SLOPED = "rocket_top_sloped";
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
