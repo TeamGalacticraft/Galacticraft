@@ -18,17 +18,15 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew build --stacktrace
-    - name: Push Success to Discord
-      if: success()
+    - uses: actions/setup-ruby@v1
+    - name: Send Webhook Notification
+      if: always()
       env:
+        JOB_STATUS: ${{ job.status }}
         WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        HOOK_OS_NAME: ${{ runner.os }}
+        WORKFLOW_NAME: ${{ github.workflow }}
       run: |
-        chmod +x discord.sh
-        ./discord.sh success $WEBHOOK_URL
-    - name: Push Failure to Discord
-      if: failure()
-      env:
-        WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: |
-       chmod +x discord.sh
-       ./discord.sh failure $WEBHOOK_URL
+        git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git webhook
+        bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+      shell: bash
