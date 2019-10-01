@@ -57,7 +57,6 @@ dependencies {
     modCompile("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
-//    include "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
     include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
@@ -66,7 +65,7 @@ dependencies {
     include "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
     include "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
     include "teamreborn:energy:+"
-
+	
     // Needed for LBA in order for eclipse to work
     compile "com.google.code.findbugs:jsr305:3.0.1"
     //REI
