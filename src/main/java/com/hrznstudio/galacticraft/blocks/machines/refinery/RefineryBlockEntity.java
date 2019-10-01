@@ -107,6 +107,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         }
 
         attemptChargeFromStack(0);
+        trySpreadEnergy();
 
         if (getInventory().getInvStack(1).getItem() instanceof FluidProviderItem) {
             Ref<ItemStack> ref = new Ref<>(getInventory().getInvStack(1));

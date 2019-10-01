@@ -34,6 +34,8 @@ import net.minecraft.util.Tickable;
  */
 public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
+    public int visiblePanels;
+
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
 
     public BasicSolarPanelBlockEntity() {
@@ -71,21 +73,35 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
             status = BasicSolarPanelStatus.NIGHT;
         }
 
-        if (status == BasicSolarPanelStatus.COLLECTING) {
-            if (time > 6000) {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - (time - 6000D)) / 133.3333333333D), Simulation.ACTION);
-            } else {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 133.3333333333D)), Simulation.ACTION);
+        double i = 0;
+        for (int z = -1; z < 2; z++) {
+            for (int y = -1; y < 2; y++) {
+                if (world.isSkyVisible(pos.add(z, 2, y))) {
+                    i++;
+                }
             }
         }
-        if (status == BasicSolarPanelStatus.RAINING) {
+        visiblePanels = (int) i;
+        i /= 9;
+        if (i == 0) status = BasicSolarPanelStatus.BLOCKED;
+
+        if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((6000D - (time - 6000D)) / 133.3333333333D) / 10D), Simulation.ACTION);
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((int) ((6000D - (time - 6000D)) / 705.882353D) * i), Simulation.ACTION);
             } else {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 133.3333333333D) / 10), Simulation.ACTION);
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 705.882353D) * i), Simulation.ACTION);
             }
         }
 
+        if (status == BasicSolarPanelStatus.RAINING) {
+            if (time > 6000) {
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((int) (((6000D - (time - 6000D)) / 705.882353D) / 3) * i), Simulation.ACTION);
+            } else {
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((int) ((time / 705.882353D) / 3) * i), Simulation.ACTION);
+            }
+        }
+
+        trySpreadEnergy();
         attemptDrainPowerToStack(0);
     }
 

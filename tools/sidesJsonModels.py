@@ -2,7 +2,6 @@ import os
 import json
 import sys
 
-
 def mod_id(texture, cfg):
     return cfg['mod-id'] + ":" + texture
 
@@ -76,7 +75,7 @@ def print_progress(iteration, total, prefix='', suffix='', decimals=1, bar_lengt
 config_file = open('model_config.json', 'r')
 config = json.loads(config_file.read())
 sides = config['sides']
-faces = ["north", "south", "east", "west"]
+faces = ["north", "east", "south", "west"]
 options = config['options']
 options.append({'option': 'default'})
 state = json.loads('{"variants": {}}')

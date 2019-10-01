@@ -24,7 +24,9 @@ package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.fabric.api.dimension.v1.FabricDimensionType;
+import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.dimension.DimensionType;
 
 /**

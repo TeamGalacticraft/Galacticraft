@@ -67,5 +67,6 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
         }
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);
         attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
+        trySpreadEnergy();
     }
 }

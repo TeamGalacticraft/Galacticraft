@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
@@ -66,7 +66,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
             this.blit(this.scaledWidth - 17, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
             this.blit(this.scaledWidth - 34, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
 
-            SimpleFixedItemInv gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
+            FullFixedItemInv gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
             if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem) {
                 this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(6).getMaxDamage() - (double) gearInventory.getInvStack(6).getDamage()) / (double) gearInventory.getInvStack(6).getMaxDamage()))));
             } else if (client.player.isCreative()) {

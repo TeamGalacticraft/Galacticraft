@@ -258,515 +258,515 @@
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=powerout,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=powerout,south=default,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=powerout,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultpoweroutpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultpoweroutdefault",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultdefaultpowerout",
-            "y": 90
+            "y": 180
         },
         "facing=south,north=default,south=default,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultdefaultdefault",
-            "y": 90
+            "y": 180
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=powerout,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutdefaultdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultpoweroutdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=powerout,south=default,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutdefaultdefaultdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutpoweroutdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=powerout,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultpoweroutdefaultdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=powerout,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultpoweroutdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=powerout,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=powerout,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=powerout,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultpoweroutdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=default,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultpoweroutpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=default,up=powerout,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultpoweroutdefault",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=default,up=default,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultdefaultpowerout",
-            "y": 180
+            "y": 90
         },
         "facing=east,north=default,south=default,east=default,west=default,up=default,down=default": {
             "model": "galacticraft-rewoven:block/coal_generator/defaultdefaultdefaultdefaultdefaultdefault",
-            "y": 180
+            "y": 90
         },
         "facing=west,north=powerout,south=powerout,east=powerout,west=powerout,up=powerout,down=powerout": {
             "model": "galacticraft-rewoven:block/coal_generator/poweroutpoweroutpoweroutpoweroutpoweroutpowerout",

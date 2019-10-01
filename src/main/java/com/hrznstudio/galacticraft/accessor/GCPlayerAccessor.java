@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.accessor;
 
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 
 /**
@@ -31,5 +31,5 @@ import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 public interface GCPlayerAccessor {
     PlayerInventoryGCContainer getGCContainer();
 
-    SimpleFixedItemInv getGearInventory();
+    FullFixedItemInv getGearInventory();
 }

@@ -156,6 +156,8 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 getInventory().getSlot(6).insert(resultStack);
             }
         }
+
+        trySpreadEnergy();
     }
 
     // This is just for testing purposes

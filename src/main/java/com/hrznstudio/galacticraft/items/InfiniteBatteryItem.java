@@ -25,11 +25,13 @@ package com.hrznstudio.galacticraft.items;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class InfiniteBatteryItem extends Item implements EnergyHolderItem {
+public class InfiniteBatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
     public InfiniteBatteryItem(Settings settings) {
         super(settings);
     }
@@ -48,4 +50,15 @@ public class InfiniteBatteryItem extends Item implements EnergyHolderItem {
     public boolean hasEnchantmentGlint(ItemStack itemStack_1) {
         return true;
     }
+
+    @Override
+    public double getMaxStoredPower() {
+        return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.INFINITE;
+    }
+
 }

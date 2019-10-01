@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -38,13 +39,15 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
+import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergyTier;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BatteryItem extends Item implements EnergyHolderItem {
+public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
     public static final int MAX_ENERGY = 10000;
 
     public BatteryItem(Settings settings) {
@@ -93,11 +96,6 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     }
 
     @Override
-    public ItemStack getStackForRender() {
-        return super.getStackForRender();
-    }
-
-    @Override
     public int getEnchantability() {
         return 0;
     }
@@ -105,5 +103,15 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     @Override
     public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
         return false;
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(BatteryItem.MAX_ENERGY);
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.LOW;
     }
 }

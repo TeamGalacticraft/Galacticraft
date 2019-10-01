@@ -59,11 +59,11 @@ public interface EnergyHolderItem {
 
         int batteryEnergy = GalacticraftEnergy.getBatteryEnergy(battery);
         if (energyToRemove > batteryEnergy) {
-            GalacticraftEnergy.decrementEnergy(battery, batteryEnergy);
+            GalacticraftEnergy.extractBatteryEnergy(battery, batteryEnergy);
             return energyToRemove - batteryEnergy;
         }
 
-        GalacticraftEnergy.decrementEnergy(battery, energyToRemove);
+        GalacticraftEnergy.extractBatteryEnergy(battery, energyToRemove);
         return 0;
     }
 
@@ -90,7 +90,7 @@ public interface EnergyHolderItem {
             return (batteryEnergy + energyToAdd) - maxEnergy;
         }
 
-        GalacticraftEnergy.incrementEnergy(battery, energyToAdd);
+        GalacticraftEnergy.insertBatteryEnergy(battery, energyToAdd);
         return 0;
     }
 }

@@ -259,7 +259,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     public void onPlaced(World world_1, BlockPos blockPos_1, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
         super.onPlaced(world_1, blockPos_1, blockState_1, livingEntity_1, itemStack_1);
         if (world_1.getBlockEntity(blockPos_1) instanceof ConfigurableElectricMachineBlockEntity && livingEntity_1 instanceof PlayerEntity) {
-            ((ConfigurableElectricMachineBlockEntity) world_1.getBlockEntity(blockPos_1)).ownerUsername = livingEntity_1.getName().asString();
+            ((ConfigurableElectricMachineBlockEntity) world_1.getBlockEntity(blockPos_1)).username = livingEntity_1.getName().asString();
             ((ConfigurableElectricMachineBlockEntity) world_1.getBlockEntity(blockPos_1)).owner = livingEntity_1.getUuidAsString();
         }
     }

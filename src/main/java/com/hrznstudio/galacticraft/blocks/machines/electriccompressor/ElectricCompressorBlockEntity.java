@@ -129,6 +129,8 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
                 craftItem(resultStack);
             }
         }
+
+        trySpreadEnergy();
     }
 
     protected void craftItem(ItemStack craftingResult) {

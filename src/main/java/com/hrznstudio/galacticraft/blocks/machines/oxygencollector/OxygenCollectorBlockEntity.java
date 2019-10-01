@@ -104,6 +104,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
             return;
         }
         attemptChargeFromStack(BATTERY_SLOT);
+        trySpreadEnergy();
 
         // Only collect every 20 ticks
         if (world.random.nextInt(10) != 0) {

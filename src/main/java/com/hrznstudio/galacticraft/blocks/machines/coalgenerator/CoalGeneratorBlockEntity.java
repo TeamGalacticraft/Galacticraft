@@ -28,8 +28,12 @@ import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -39,6 +43,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
@@ -57,27 +62,23 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
         SLOT_FILTERS[1] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
-    private final List<Runnable> listeners = Lists.newArrayList();
     public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
     public int fuelTimeMax;
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
-    public SideOption[] sideOptions = {SideOption.BLANK, SideOption.POWER_OUTPUT};
-    public Map<Direction, SideOption> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
     private float heat = 0.0f;
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
-        selectedOptions.put(Direction.SOUTH, SideOption.POWER_OUTPUT);
         getLimitedInventory().getRule(0).disallowExtraction();
     }
 
-    public static Map<Item, Integer> createFuelTimeMap() {
-        Map<Item, Integer> map = Maps.newLinkedHashMap();
-        map.put(Items.COAL, 1600);
-        map.put(Blocks.COAL_BLOCK.asItem(), map.get(Items.COAL) * 9);
-        map.put(Items.CHARCOAL, 1600);
+    public static Map<Item, Pair<Integer, Integer>> createFuelTimeMap() {
+        Map<Item, Pair<Integer, Integer>> map = Maps.newLinkedHashMap();
+        map.put(Items.COAL, new Pair<>(1600, 3));
+        map.put(Blocks.COAL_BLOCK.asItem(), new Pair<>(1600 * 9, 4));
+        map.put(Items.CHARCOAL, new Pair<>(1600, 3));
         return map;
     }
 
@@ -97,51 +98,40 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
     @Override
     public void tick() {
-
         if (world.isClient || !enabled()) {
             return;
         }
 
-        int prev = getEnergyAttribute().getCurrentEnergy();
+        if (canUseAsFuel(getInventory().getInvStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE)) {
+            this.status = CoalGeneratorStatus.WARMING;
 
-        if (canUseAsFuel(getInventory().getInvStack(0)) && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy()) {
-            if (status == CoalGeneratorStatus.INACTIVE) {
-                this.status = CoalGeneratorStatus.WARMING;
-            } else {
-                this.status = CoalGeneratorStatus.ACTIVE;
-            }
-            this.fuelTimeMax = 200;
+            this.fuelTimeMax = createFuelTimeMap().get(getInventory().getInvStack(0).getItem()).getLeft();
             this.fuelTimeCurrent = 0;
-            this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem());
+            this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem()).getRight();
 
-            getInventory().getSlot(0).extract(1);
+            ItemStack stack = getInventory().getInvStack(0).copy();
+            stack.decrement(1);
+            getInventory().forceSetInvStack(0, stack);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {
-            if (this.heat >= 10.0f) {
+            if (this.heat >= 1.0f) {
                 this.status = CoalGeneratorStatus.ACTIVE;
             }
-            this.heat += 0.1f;
+            this.heat += 0.005f; //10 secs of heating - 1/8th of the time is spent heating (in this case) when it comes to coal/charcoal
         }
 
-        if (status == CoalGeneratorStatus.ACTIVE) {
+        if (status == CoalGeneratorStatus.ACTIVE || this.status == CoalGeneratorStatus.WARMING) {
             fuelTimeCurrent++;
-            getEnergyAttribute().setCurrentEnergy(Math.min(getEnergyAttribute().getMaxEnergy(), getEnergyAttribute().getCurrentEnergy() + fuelEnergyPerTick));
+            getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (fuelEnergyPerTick * heat), Simulation.ACTION);
 
             if (fuelTimeCurrent >= fuelTimeMax) {
-                this.status = CoalGeneratorStatus.IDLE;
+                this.status = CoalGeneratorStatus.INACTIVE;
                 this.fuelTimeCurrent = 0;
             }
         }
 
-        for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOption.POWER_OUTPUT)) {
-                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
-                if (energyAttribute.canInsertEnergy()) {
-                    getEnergyAttribute().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
-                }
-            }
-        }
+        trySpreadEnergy();
         attemptDrainPowerToStack(1);
     }
 }

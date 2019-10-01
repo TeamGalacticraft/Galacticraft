@@ -121,15 +121,15 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         if (world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
             if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty()) {
                 ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
-                ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername = this.playerInventory.player.getName().asString();
+                ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username = this.playerInventory.player.getName().asString();
                 ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
                 ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString()).writeString(this.playerInventory.player.getName().asString())));
                 this.selectedSecurityOption = 1;
             } else {
-                if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername.isEmpty()) {
+                if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username.isEmpty()) {
                     if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(playerInventory.player.getUuidAsString())) {
-                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername = playerInventory.player.getName().asString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username = playerInventory.player.getName().asString();
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public").writeString(this.playerInventory.player.getName().asString())));
                     }
                 }
@@ -149,7 +149,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic) = true;
                 selectedSecurityOption = 2;
                 ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = playerInventory.player.getUuidAsString();
-                ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername = playerInventory.player.getName().asString();
+                ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username = playerInventory.player.getName().asString();
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public").writeString(this.playerInventory.player.getName().asString())));
             }
 
@@ -465,7 +465,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                     if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString()) || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("")) {
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
-                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername = this.playerInventory.player.getName().asString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username = this.playerInventory.player.getName().asString();
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString()).writeString(this.playerInventory.player.getName().asString())));
@@ -480,7 +480,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                     if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(playerInventory.player.getUuidAsString()) || (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(""))) {
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
-                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername = this.playerInventory.player.getName().asString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username = this.playerInventory.player.getName().asString();
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = true;
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = false;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Party").writeString(this.playerInventory.player.getName().asString())));
@@ -494,7 +494,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                 if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                     if (((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals("") || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.isEmpty() || ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner.equals(this.playerInventory.player.getUuidAsString())) {
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).owner = this.playerInventory.player.getUuidAsString();
-                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).ownerUsername = this.playerInventory.player.getName().asString();
+                        ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).username = this.playerInventory.player.getName().asString();
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isParty = false;
                         ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).isPublic = true;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeString(this.playerInventory.player.getUuidAsString() + "_Public").writeString(this.playerInventory.player.getName().asString())));
