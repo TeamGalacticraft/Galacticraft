@@ -113,9 +113,16 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
             if (container.blockEntity.status == BasicSolarPanelStatus.COLLECTING) {
                 long time = world.getTimeOfDay() % 24000;
                 if (time > 6000) {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) / 3) * container.blockEntity.visiblePanels / 9).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
                 } else {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((int) ((time / 705.882353D) / 3) * container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                }
+            } else if (container.blockEntity.status == BasicSolarPanelStatus.RAINING) {
+                long time = world.getTimeOfDay() % 24000;
+                if (time > 6000) {
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((((6000D - (time - 6000D)) / 705.882353D) / 3.0D) + 0.5D)* (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                } else {
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((time / 705.882353D) / 3.0D) + 0.5D) * (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
                 }
             }
             toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");

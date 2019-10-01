@@ -260,6 +260,8 @@
   "ui.galacticraft-rewoven.machinestatus.idle": "Idle",
   "ui.galacticraft-rewoven.machinestatus.warming": "Warming",
   "ui.galacticraft-rewoven.machinestatus.inactive": "Inactive",
+  "ui.galacticraft-rewoven.machinestatus.not_enough_power": "Not Enough Power",
+  "ui.galacticraft-rewoven.machinestatus.off": "Off",
   "ui.galacticraft-rewoven.machinestatus.processing": "Processing",
   "ui.galacticraft-rewoven.machinestatus.collecting": "Collecting",
   "ui.galacticraft-rewoven.machinestatus.raining": "Raining",

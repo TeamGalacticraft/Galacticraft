@@ -63,11 +63,9 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
     private int energyDisplayY = 0;
     private int oxygenDisplayX = 0;
     private int oxygenDisplayY = 0;
-    private World world;
 
     public OxygenCollectorScreen(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
         super(new OxygenCollectorContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.oxygen_collector.name"));
-        this.world = playerEntity.world;
         this.containerHeight = 181;
     }
 
@@ -85,7 +83,6 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
         oxygenDisplayX = leftPos + 33;
         oxygenDisplayY = topPos + 18;
 
-        //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
@@ -109,7 +106,7 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
 
         String status = container.blockEntity.status == CollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
                 : container.blockEntity.status == CollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
-                : "ui.galacticraft-rewoven.machinestatus.inactive";
+                : container.blockEntity.status == CollectorStatus.FULL ? "ui.galacticraft-rewoven.machinestatus.full" : "ui.galacticraft-rewoven.machinestatus.inactive";
         minecraft.textRenderer.draw(new TranslatableText(status).asFormattedString(), statusX + minecraft.textRenderer.getStringWidth(statusText), statusY, container.blockEntity.status.getTextColor());
 
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", container.lastCollectAmount.get()).asFormattedString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());

@@ -181,7 +181,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
         }
 
         OxygenCollectorBlockEntity collector = (OxygenCollectorBlockEntity) blockEntity;
-        if (collector.lastCollectAmount > 0) {
+        if (collector.collectionAmount > 0) {
             for (int particleCount = 0; particleCount < 10; particleCount++) {
                 Random random = world.random;
 

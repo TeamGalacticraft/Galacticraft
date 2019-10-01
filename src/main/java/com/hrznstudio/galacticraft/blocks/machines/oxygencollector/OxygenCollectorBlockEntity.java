@@ -45,7 +45,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     public static final int BATTERY_SLOT = 0;
 
     public CollectorStatus status = CollectorStatus.INACTIVE;
-    public int lastCollectAmount = 0;
+    public int collectionAmount = 0;
     private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
 
     public OxygenCollectorBlockEntity() {
@@ -72,7 +72,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
                 int maxY = center.getY() + 5;
                 int maxZ = center.getZ() + 5;
 
-                int leafBlocks = 0;
+                float leafBlocks = 0;
 
                 for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
                     BlockState blockState = world.getBlockState(pos);
@@ -82,19 +82,19 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
                     if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
                         leafBlocks++;
                     } else if (blockState.getBlock() instanceof CropBlock) {
-                        leafBlocks++;
+                        leafBlocks += 0.75F;
                     }
                 }
 
                 if (leafBlocks < 2) return 0;
 
-                double oxyCount = 20 * (leafBlocks / 14);
-                return (int) Math.ceil(oxyCount);
+                double oxyCount = 20 * (leafBlocks / 14.0F);
+                return (int) Math.ceil(oxyCount) / 20; //every tick
             } else {
-                return 183;
+                return 183 / 20;
             }
         } else {
-            return 183;
+            return 183 / 20;
         }
     }
 
@@ -106,11 +106,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         attemptChargeFromStack(BATTERY_SLOT);
         trySpreadEnergy();
 
-        // Only collect every 20 ticks
-        if (world.random.nextInt(10) != 0) {
-            return;
-        }
-
         if (this.getEnergyAttribute().getCurrentEnergy() > 0) {
             this.status = CollectorStatus.COLLECTING;
         } else {
@@ -118,21 +113,23 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         }
 
         if (status == CollectorStatus.COLLECTING) {
-            lastCollectAmount = collectOxygen(this.pos);
+            collectionAmount = collectOxygen(this.pos);
 
-            if (this.lastCollectAmount <= 0) {
+            if (this.collectionAmount <= 0) {
                 this.status = CollectorStatus.NOT_ENOUGH_LEAVES;
                 return;
             }
 
             // If the oxygen capacity isn't full, add collected oxygen.
-            if (this.getOxygen().getMaxEnergy() != this.oxygen.getCurrentEnergy()) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
+            if (this.getOxygen().getMaxEnergy() > this.oxygen.getCurrentEnergy()) {
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 4, Simulation.ACTION);
 
-                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, lastCollectAmount, Simulation.ACTION);
+                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, collectionAmount, Simulation.ACTION);
+            } else {
+                status = CollectorStatus.FULL;
             }
         } else {
-            lastCollectAmount = 0;
+            collectionAmount = 0;
         }
     }
 

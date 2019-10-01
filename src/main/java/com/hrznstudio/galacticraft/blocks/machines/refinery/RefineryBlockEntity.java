@@ -100,6 +100,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         return SLOT_FILTERS[slot];
     }
 
+    private long ticks = 0;
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {
@@ -120,6 +121,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
 
         if (getEnergyAttribute().getCurrentEnergy() <= 0) {
             status = RefineryStatus.INACTIVE;
+            ticks = 0;
             return;
         }
 
@@ -127,11 +129,25 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             this.status = RefineryStatus.ACTIVE;
         } else {
             this.status = RefineryStatus.IDLE;
+            ticks = 0;
         }
 
-        if (status == RefineryStatus.ACTIVE) {
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
-            FluidVolume extracted = this.fluidInv.getTank(0).extract(10);
+        if (status == RefineryStatus.ACTIVE) { //Perfection = 1.48148148
+            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION); //1.0
+
+            if (ticks++ % 10 == 0) {
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 4, Simulation.ACTION); //1.4
+            }
+
+            if (ticks % 100 == 0) {
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 8, Simulation.ACTION); //1.48
+            }
+
+            if (ticks % 1000 == 0) {
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION); //1.48[2] (close enough)
+            }
+
+            FluidVolume extracted = this.fluidInv.getTank(0).extract(1);
             this.fluidInv.getTank(1).insert(FluidVolume.create(GalacticraftFluids.FUEL, extracted.getAmount()));
         }
 

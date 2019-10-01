@@ -33,6 +33,7 @@ import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
 import com.hrznstudio.galacticraft.util.WireConnectable;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -52,8 +53,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
     public CompressorStatus status = CompressorStatus.INACTIVE;
-    public int fuelTime;
-    public int maxFuelTime;
     int progress;
 
     public ElectricCompressorBlockEntity() {
@@ -87,19 +86,10 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         return ConfigurableElectricMachineBlockEntity.DEFAULT_MAX_ENERGY;
     }
 
+    private int ticks = 0;
     public void tick() {
-        if (!enabled()) {
+        if (!enabled() || world.isClient) {
             return;
-        }
-        attemptChargeFromStack(FUEL_INPUT_SLOT);
-        // Drain energy
-        int extractEnergy = this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
-        if (extractEnergy == 0) {
-            status = CompressorStatus.INACTIVE;
-            progress = 0;
-            return;
-        } else {
-            status = CompressorStatus.PROCESSING;
         }
 
         InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
@@ -109,12 +99,16 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
             }
         };
 
-        if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv)) {
+        attemptChargeFromStack(FUEL_INPUT_SLOT);
+        if (getEnergyAttribute().getCurrentEnergy() < 1) {
+            status = CompressorStatus.INACTIVE;
+        } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+            status = CompressorStatus.PROCESSING;
+        } else {
             status = CompressorStatus.IDLE;
-//            System.out.println("IDLE. RETURNING");
         }
 
-        if (status == CompressorStatus.PROCESSING && isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+        if (status == CompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
             this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 3, Simulation.ACTION);
             this.progress++;
@@ -127,6 +121,17 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
                 this.progress = 0;
 
                 craftItem(resultStack);
+            }
+        } else if (status == CompressorStatus.INACTIVE) {
+            if (progress > 0) {
+                progress--;
+            }
+        } else {
+            if (ticks++ % 2 == 0) {
+                getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+            }
+            if (progress > 0) {
+                progress--;
             }
         }
 
