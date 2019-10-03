@@ -54,15 +54,15 @@ public class GalacticraftEnergy {
         return itemStack.getItem() instanceof EnergyHolderItem || itemStack.getItem() instanceof EnergyHolder;
     }
 
-    public static int getBatteryEnergy(ItemStack battery) {
+    public static int getEnergy(ItemStack battery) {
         if (!isEnergyItem(battery)) {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        if (battery.getItem() instanceof EnergyHolder) {
-            return GalacticraftEnergy.convertFromTR(Energy.of(battery).getEnergy());
-        } else if (battery.getItem() instanceof EnergyHolderItem) {
+        if (battery.getItem() instanceof EnergyHolderItem) {
             return battery.hasTag() && battery.getTag().containsKey("Energy") ? battery.getTag().getInt("Energy") : Integer.MAX_VALUE;
+        } else if (battery.getItem() instanceof EnergyHolder) {
+            return GalacticraftEnergy.convertFromTR(Energy.of(battery).getEnergy());
         }
         throw new IllegalArgumentException("It's a battery but it's not :(");
     }
@@ -72,17 +72,20 @@ public class GalacticraftEnergy {
      * @param amount The amount of energy to extract from the battery
      * @return The amount of energy that could not be extracted
      */
-    public static int extractBatteryEnergy(ItemStack battery, int amount) {
+    public static int extractEnergy(ItemStack battery, int amount) {
         if (!isEnergyItem(battery)) {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        if (battery.getItem() instanceof EnergyHolder) {
+        if (battery.getItem() instanceof EnergyHolderItem) {
+            if (battery.getItem() instanceof EnergyHolder) {
+                Energy.of(battery).extract(convertToTR(amount));
+            }
+            return ((EnergyHolderItem) battery.getItem()).extract(battery, amount);
+        } else if (battery.getItem() instanceof EnergyHolder) {
             double amountTR = GalacticraftEnergy.convertToTR(amount);
             double out = amountTR - Energy.of(battery).extract(amountTR);
             return GalacticraftEnergy.convertFromTR(out);
-        } else if (battery.getItem() instanceof EnergyHolderItem) {
-            return ((EnergyHolderItem) battery.getItem()).extract(battery, amount);
         } else {
             return amount;
         }
@@ -92,17 +95,20 @@ public class GalacticraftEnergy {
      * @param amount The amount of energy to inset into the battery
      * @return The amount of energy that could not be inserted
      */
-    public static int insertBatteryEnergy(ItemStack battery, int amount) {
+    public static int insertEnergy(ItemStack battery, int amount) {
         if (!isEnergyItem(battery)) {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
 
-        if (battery.getItem() instanceof EnergyHolder) {
+        if (battery.getItem() instanceof EnergyHolderItem) {
+            if (battery.getItem() instanceof EnergyHolder) {
+                Energy.of(battery).insert(convertToTR(amount));
+            }
+            return amount - ((EnergyHolderItem) battery.getItem()).insert(battery, amount);
+        } else if (battery.getItem() instanceof EnergyHolder) {
             double amountTR = GalacticraftEnergy.convertToTR(amount);
             double out = amountTR - Energy.of(battery).insert(amountTR);
             return GalacticraftEnergy.convertFromTR(out);
-        } else if (battery.getItem() instanceof EnergyHolderItem) {
-            return ((EnergyHolderItem) battery.getItem()).insert(battery, amount);
         } else {
             return amount;
         }
@@ -112,10 +118,12 @@ public class GalacticraftEnergy {
      * @param battery The battery in question
      * @return The max amount of energy the battery can hold
      */
-    public static int getMaxBatteryEnergy(ItemStack battery) {
+    public static int getMaxEnergy(ItemStack battery) {
         if (!isEnergyItem(battery)) {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
-        } else if (battery.getItem() instanceof EnergyHolderItem) {
+        }
+
+        if (battery.getItem() instanceof EnergyHolderItem) {
             return ((EnergyHolderItem) battery.getItem()).getMaxEnergy(battery);
         } else if (battery.getItem() instanceof EnergyHolder) {
             return GalacticraftEnergy.convertFromTR(Energy.of(battery).getMaxStored());
@@ -133,7 +141,9 @@ public class GalacticraftEnergy {
             tag.putInt("Energy", newEnergy);
             stack.setTag(tag);
             stack.setDamage(stack.getMaxDamage() - newEnergy);
-        } else if (stack.getItem() instanceof EnergyHolder) {
+        }
+
+        if (stack.getItem() instanceof EnergyHolder) {
             Energy.of(stack).set(GalacticraftEnergy.convertToTR(newEnergy));
         }
     }
@@ -154,6 +164,9 @@ public class GalacticraftEnergy {
     }
 
     public static double convertToTR(int amount) {
+        if (amount == 0) {
+            return 0;
+        }
         double output = amount;
         output *= 1.2D;
         output -= output % 1;

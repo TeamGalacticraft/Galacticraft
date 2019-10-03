@@ -39,6 +39,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
+import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 
@@ -93,6 +94,7 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
         batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
+        GalacticraftEnergy.setEnergy(battery, 0);
     }
 
     @Override

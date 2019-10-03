@@ -46,6 +46,9 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +56,7 @@ import java.util.Map;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
 
     private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
 
@@ -133,5 +136,25 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         trySpreadEnergy();
         attemptDrainPowerToStack(1);
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
     }
 }

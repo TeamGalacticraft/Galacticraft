@@ -46,11 +46,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
 
     private static final ItemFilter[] SLOT_FILTERS;
 
@@ -129,7 +132,11 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             this.status = RefineryStatus.ACTIVE;
         } else {
             this.status = RefineryStatus.IDLE;
-            ticks = 0;
+        }
+        if (status == RefineryStatus.IDLE) {
+            if (ticks % 600 == 0) {
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+            }
         }
 
         if (status == RefineryStatus.ACTIVE) { //Perfection = 1.48148148
@@ -173,5 +180,25 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         fluidInv.fromTag(tag.getCompound("FluidInventory"));
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
     }
 }

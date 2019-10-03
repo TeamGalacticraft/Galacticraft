@@ -36,11 +36,14 @@ import net.minecraft.block.LeavesBlock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
     public static final int MAX_OXYGEN = 5000;
     public static final int BATTERY_SLOT = 0;
 
@@ -98,6 +101,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         }
     }
 
+    long ticks = 0;
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {
@@ -110,6 +114,12 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
             this.status = CollectorStatus.COLLECTING;
         } else {
             this.status = CollectorStatus.INACTIVE;
+        }
+
+        if (this.status == CollectorStatus.INACTIVE) {
+            if (ticks++ % 1200 == 0) {
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+            }
         }
 
         if (status == CollectorStatus.COLLECTING) {
@@ -160,5 +170,25 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
     public EnergyAttribute getOxygen() {
         return this.oxygen;
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
     }
 }

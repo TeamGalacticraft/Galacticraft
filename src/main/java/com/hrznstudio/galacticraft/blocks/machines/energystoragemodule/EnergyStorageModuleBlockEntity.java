@@ -27,11 +27,14 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.util.Tickable;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
     public static int MAX_ENERGY = 60000;
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;
@@ -68,5 +71,25 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);
         attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
         trySpreadEnergy();
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
     }
 }

@@ -28,11 +28,14 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.util.Tickable;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
 
     public int visiblePanels;
 
@@ -124,4 +127,24 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     protected int getBatteryTransferRate() {
         return 10;
     }
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
+    }
+
 }

@@ -43,6 +43,9 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 import java.util.Map;
 import java.util.Optional;
@@ -50,7 +53,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     private static final ItemFilter[] SLOT_FILTERS;
@@ -98,7 +101,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
         if (!enabled()) {
             this.status = CircuitFabricatorStatus.OFF;
-            if (ticks++ % 5 == 0) {
+            if (ticks++ % 2400 == 0) {
                 getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
             }
             return;
@@ -107,7 +110,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
 
         if (status == CircuitFabricatorStatus.IDLE) {
-            if (ticks++ % 2 == 0) {
+            if (ticks++ % 1200 == 0) {
                 getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
             }
             if (this.progress > 0) {
@@ -147,7 +150,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 ++progress;
                 this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 4, Simulation.ACTION);
             } else {
-                this.progress = 0;
+                progress = 0;
 
                 getInventory().getSlot(1).extract(1);
                 getInventory().getSlot(2).extract(1);
@@ -212,5 +215,25 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         progress = tag.getInt("Progress");
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
     }
 }

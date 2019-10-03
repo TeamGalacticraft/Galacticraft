@@ -143,7 +143,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
         ItemStack stack = inventory.getInvStack(slot);
         if (GalacticraftEnergy.isEnergyItem(stack)) {
-            int amountFailedToInsert = GalacticraftEnergy.extractBatteryEnergy(stack, energy.getMaxEnergy() - energy.getCurrentEnergy());
+            int amountFailedToInsert = GalacticraftEnergy.extractEnergy(stack, energy.getMaxEnergy() - energy.getCurrentEnergy());
             this.energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (energy.getMaxEnergy() - energy.getCurrentEnergy()) - amountFailedToInsert, Simulation.ACTION);
         }
     }
@@ -160,7 +160,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
         ItemStack stack = inventory.getInvStack(slot).copy();
         if (GalacticraftEnergy.isEnergyItem(stack)) {
-            int i = GalacticraftEnergy.insertBatteryEnergy(stack, available);
+            int i = GalacticraftEnergy.insertEnergy(stack, available);
             this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, Simulation.ACTION);
             inventory.forceSetInvStack(slot, stack);
         }

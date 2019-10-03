@@ -23,8 +23,13 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DefaultedList;
+import net.minecraft.world.World;
+import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergyTier;
 
@@ -53,7 +58,7 @@ public class InfiniteBatteryItem extends Item implements EnergyHolderItem, Energ
 
     @Override
     public double getMaxStoredPower() {
-        return Integer.MAX_VALUE;
+        return Double.MAX_VALUE;
     }
 
     @Override
@@ -61,4 +66,21 @@ public class InfiniteBatteryItem extends Item implements EnergyHolderItem, Energ
         return EnergyTier.INFINITE;
     }
 
+    @Override
+    public void onCraft(ItemStack itemStack_1, World world_1, PlayerEntity playerEntity_1) {
+        super.onCraft(itemStack_1, world_1, playerEntity_1);
+        Energy.of(itemStack_1).set(Double.MAX_VALUE);
+    }
+
+    @Override
+    public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> defaultedList_1) {
+        ItemStack stack = new ItemStack(this);
+        Energy.of(stack).set(Double.MAX_VALUE);
+        defaultedList_1.add(stack);
+    }
+
+    @Override
+    public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
+        return false;
+    }
 }

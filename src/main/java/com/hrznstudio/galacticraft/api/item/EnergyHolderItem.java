@@ -57,14 +57,17 @@ public interface EnergyHolderItem {
             return 0;
         }
 
-        int batteryEnergy = GalacticraftEnergy.getBatteryEnergy(battery);
-        if (energyToRemove > batteryEnergy) {
-            GalacticraftEnergy.extractBatteryEnergy(battery, batteryEnergy);
-            return energyToRemove - batteryEnergy;
+        if (battery.getTag() != null && battery.getTag().containsKey("Energy")) {
+            int stored = battery.getTag().getInt("Energy");
+            if (stored >= energyToRemove) {
+                GalacticraftEnergy.setEnergy(battery, stored - energyToRemove);
+            } else {
+                int failed = (stored - energyToRemove) * -1;
+                GalacticraftEnergy.setEnergy(battery, stored - (energyToRemove - failed));
+                return failed;
+            }
         }
-
-        GalacticraftEnergy.extractBatteryEnergy(battery, energyToRemove);
-        return 0;
+        return energyToRemove;
     }
 
     /**
@@ -72,7 +75,7 @@ public interface EnergyHolderItem {
      *
      * @param battery     The battery that energy should be added to.
      * @param energyToAdd The amount of energy to add to the battery.
-     * @return The amount of energy that could not be added from this battery
+     * @return The amount of energy that could not be added to this battery
      */
     default int insert(ItemStack battery, int energyToAdd) {
         if (isInfinite()) {
@@ -80,17 +83,16 @@ public interface EnergyHolderItem {
             return energyToAdd;
         }
 
-        int batteryEnergy = GalacticraftEnergy.getBatteryEnergy(battery);
-        int maxEnergy = GalacticraftEnergy.getMaxBatteryEnergy(battery);
-
-        if (batteryEnergy + energyToAdd > maxEnergy) {
-            // Could not add all the energy to the battery. Add what we can and return the leftover.
-
-            GalacticraftEnergy.setEnergy(battery, maxEnergy);
-            return (batteryEnergy + energyToAdd) - maxEnergy;
+        if (battery.getTag() != null && battery.getTag().containsKey("Energy")) {
+            int stored = battery.getTag().getInt("Energy");
+            if (stored + energyToAdd <= getMaxEnergy(battery)) {
+                GalacticraftEnergy.setEnergy(battery, stored + energyToAdd);
+            } else {
+                int failed = (stored + energyToAdd) - getMaxEnergy(battery);
+                GalacticraftEnergy.setEnergy(battery, stored + (energyToAdd - failed));
+                return failed;
+            }
         }
-
-        GalacticraftEnergy.insertBatteryEnergy(battery, energyToAdd);
-        return 0;
+        return energyToAdd;
     }
 }
