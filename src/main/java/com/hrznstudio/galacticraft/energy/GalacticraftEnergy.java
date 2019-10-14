@@ -79,10 +79,9 @@ public class GalacticraftEnergy {
 
         if (battery.getItem() instanceof EnergyHolderItem) {
             if (battery.getItem() instanceof EnergyHolder) {
-                int i = ((EnergyHolderItem) battery.getItem()).getEnergy(battery);
-                System.out.println(((EnergyHolderItem) battery.getItem()).getEnergy(battery));
+                battery.getTag().putBoolean("skipGC", true); //marks if this extraction will lead to gc logic
                 Energy.of(battery).extract(convertToTR(amount));
-                System.out.println(((EnergyHolderItem) battery.getItem()).getEnergy(battery));
+                battery.getTag().putBoolean("skipGC", false);
             }
             return ((EnergyHolderItem) battery.getItem()).extract(battery, amount);
         } else if (battery.getItem() instanceof EnergyHolder) {
@@ -105,7 +104,9 @@ public class GalacticraftEnergy {
 
         if (battery.getItem() instanceof EnergyHolderItem) {
             if (battery.getItem() instanceof EnergyHolder) {
+                battery.getTag().putBoolean("skipGC", true);
                 Energy.of(battery).insert(convertToTR(amount));
+                battery.getTag().putBoolean("skipGC", false);
             }
             return amount - ((EnergyHolderItem) battery.getItem()).insert(battery, amount);
         } else if (battery.getItem() instanceof EnergyHolder) {
@@ -147,7 +148,9 @@ public class GalacticraftEnergy {
         }
 
         if (stack.getItem() instanceof EnergyHolder) {
+            stack.getTag().putBoolean("skipGC", true);
             Energy.of(stack).set(GalacticraftEnergy.convertToTR(newEnergy));
+            stack.getTag().putBoolean("skipGC", false);
         }
     }
 

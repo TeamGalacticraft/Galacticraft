@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -44,8 +45,10 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import team.reborn.energy.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -95,47 +98,58 @@ public class Galacticraft implements ModInitializer {
 
 
 
-//        Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
-//            if(object instanceof ItemStack){
-//                return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
-//            }
-//            return false;
-//        }, object -> {
-//            final ItemStack stack = (ItemStack) object;
-//            final EnergyHolder energyHolder = (EnergyHolder) stack.getItem();
-//            return new EnergyStorage() {
-//                @Override
-//                public double getStored(EnergySide face) {
-//                    validateNBT();
-//                    return stack.getOrCreateTag().getDouble("energy");
-//                }
-//
-//                @Override
-//                public void setStored(double amount) {
-//                    validateNBT();
-//                    if (stack.getItem() instanceof EnergyHolderItem) {
-//                        stack.getTag().putInt("Energy", Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
-//                        stack.setDamage(stack.getMaxDamage() - Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
-//                    }
-//                    stack.getTag().putDouble("energy", amount);
-//                }
-//
-//                @Override
-//                public double getMaxStoredPower() {
-//                    return energyHolder.getMaxStoredPower();
-//                }
-//
-//                @Override
-//                public EnergyTier getTier() {
-//                    return energyHolder.getTier();
-//                }
-//
-//                private void validateNBT() {
-//                    if (!stack.hasTag()) {
-//                        stack.getOrCreateTag().putDouble("energy", 0);
-//                    }
-//                }
-//            };
-//        });
+        Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
+            if(object instanceof ItemStack){
+                return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
+            }
+            return false;
+        }, object -> {
+            final ItemStack stack = (ItemStack) object;
+            final EnergyHolder energyHolder = (EnergyHolder) stack.getItem();
+            return new EnergyStorage() {
+                @Override
+                public double getStored(EnergySide face) {
+                    validateNBT();
+                    return stack.getOrCreateTag().getDouble("energy");
+                }
+
+                @Override
+                public void setStored(double amount) {
+                    validateNBT();
+                    if (stack.getItem() instanceof EnergyHolderItem && stack.hasTag() && !stack.getTag().getBoolean("skipGC")) {
+                        if (!((EnergyHolderItem) stack.getItem()).isInfinite()) {
+                            if (amount == getMaxStoredPower()) { //5 off :/
+                                stack.getTag().putInt("Energy", ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack));
+                                stack.getTag().putInt("Damage", 0);
+                            } else {
+                                stack.getTag().putInt("Energy", Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
+                                stack.setDamage(stack.getMaxDamage() - Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
+                            }
+                        } else {
+                            return;
+                        }
+                    } else {
+                        System.out.println("ohyes");
+                    }
+                    stack.getTag().putDouble("energy", amount);
+                }
+
+                @Override
+                public double getMaxStoredPower() {
+                    return energyHolder.getMaxStoredPower();
+                }
+
+                @Override
+                public EnergyTier getTier() {
+                    return energyHolder.getTier();
+                }
+
+                private void validateNBT() {
+                    if (!stack.hasTag()) {
+                        stack.getOrCreateTag().putDouble("energy", 0);
+                    }
+                }
+            };
+        });
     }
 }

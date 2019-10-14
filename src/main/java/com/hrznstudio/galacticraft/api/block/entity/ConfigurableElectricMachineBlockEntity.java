@@ -127,7 +127,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)}
      */
     protected int getBatteryTransferRate() {
-        return 20;
+        return 50;
     }
 
     @Override

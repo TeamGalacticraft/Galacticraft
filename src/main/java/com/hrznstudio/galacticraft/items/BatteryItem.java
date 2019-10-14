@@ -55,7 +55,10 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
 
     @Override
     public int getMaxEnergy(ItemStack battery) {
-        return MAX_ENERGY;
+        if (battery.getItem() instanceof BatteryItem) {
+            return MAX_ENERGY;
+        }
+        throw new IllegalArgumentException(battery + "is not a GC battery!" + "(com.hrznstudio.galacticraft.items.BatteryItem)");
     }
 
     @Override
@@ -90,6 +93,7 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
         CompoundTag batteryTag = battery.getOrCreateTag();
         batteryTag.putInt("Energy", 0);
         batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
+        batteryTag.putBoolean("skipGC", false);
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
         GalacticraftEnergy.setEnergy(battery, 0);

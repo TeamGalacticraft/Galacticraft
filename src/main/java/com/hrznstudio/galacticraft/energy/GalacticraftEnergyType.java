@@ -65,12 +65,12 @@ public class GalacticraftEnergyType implements EnergyType {
     @Override
     public int convertFrom(EnergyType type, int amount) {
         if (type == this) return amount;
-        return (type instanceof ElectricalEnergyType) ? amount * 30 : 0;
+        return (type instanceof ElectricalEnergyType) ? amount * 192 : 0;
     }
 
     @Override
     public int convertTo(EnergyType type, int amount) {
         if (type == this) return amount;
-        return (type instanceof ElectricalEnergyType) ? (int) Math.floor(amount / 30f) : 0;
+        return (type instanceof ElectricalEnergyType) ? (int) Math.floor(amount / 192f) : 0;
     }
 }
