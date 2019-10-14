@@ -26,31 +26,20 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.api.wire.WireUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.util.BlockOptionUtils;
-import io.github.cottonmc.energy.api.EnergyAttribute;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Direction;
 import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyStorage;
 import team.reborn.energy.EnergyTier;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,10 +67,10 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     }
 
     public static Map<Item, Pair<Integer, Integer>> createFuelTimeMap() {
-        Map<Item, Pair<Integer, Integer>> map = Maps.newLinkedHashMap();
-        map.put(Items.COAL, new Pair<>(1600, 3));
-        map.put(Blocks.COAL_BLOCK.asItem(), new Pair<>(1600 * 9, 4));
-        map.put(Items.CHARCOAL, new Pair<>(1600, 3));
+        Map<Item, Pair<Integer, Integer>> map = Maps.newLinkedHashMap(); //Time (in ticks), energy per tick
+        map.put(Items.COAL, new Pair<>(320, 120)); //1 coal will power 4 T1 machines // 120gj/t over 320 ticks
+        map.put(Blocks.COAL_BLOCK.asItem(), new Pair<>(320 * 10, 120)); //lasts longer
+        map.put(Items.CHARCOAL, new Pair<>(320, 120));
         return map;
     }
 
@@ -103,6 +92,14 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     public void tick() {
         if (world.isClient || !enabled()) {
             return;
+        }
+
+        if (status == CoalGeneratorStatus.IDLE || status == CoalGeneratorStatus.INACTIVE) {
+            if (heat >= 1.0F) {
+                heat--;
+            } else {
+                heat = 0;
+            }
         }
 
         if (canUseAsFuel(getInventory().getInvStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE)) {
@@ -156,5 +153,10 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     @Override
     public EnergyTier getTier() {
         return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return 0;
     }
 }

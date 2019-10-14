@@ -92,4 +92,9 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
     public EnergyTier getTier() {
         return EnergyTier.MEDIUM;
     }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return 0;
+    }
 }

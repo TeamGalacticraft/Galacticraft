@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
 
 import com.hrznstudio.galacticraft.api.block.WireBlock;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.api.wire.WireUtils;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -109,7 +109,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
         for (Direction direction : Direction.values()) {
             Block block = context.getWorld().getBlockState(WireUtils.getPosFromDirection(direction, context.getBlockPos())).getBlock();
             if (block instanceof WireConnectable) {
-                if (((WireConnectable) block).canWireConnect(context.getWorld(), direction.getOpposite(), context.getBlockPos(), WireUtils.getPosFromDirection(direction, context.getBlockPos())) != WireConnectionType.NONE) {
+                if (((WireConnectable) block).canWireConnect(context.getWorld(), direction.getOpposite(), context.getBlockPos(), WireUtils.getPosFromDirection(direction, context.getBlockPos())) != WireNetwork.WireConnectionType.NONE) {
                     state = state.with(propFromDirection(direction), true);
                 }
             } else if (block instanceof EnergyAttributeProvider) {
@@ -170,7 +170,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
                 !(blockState_2).isAir()
                         && blockState_2.getBlock() instanceof WireConnectable
                         // get opposite of direction so the WireConnectable can check from its perspective.
-                        && (((WireConnectable) blockState_2.getBlock()).canWireConnect(world, direction_1.getOpposite(), thisWire, otherConnectable) != WireConnectionType.NONE)
+                        && (((WireConnectable) blockState_2.getBlock()).canWireConnect(world, direction_1.getOpposite(), thisWire, otherConnectable) != WireNetwork.WireConnectionType.NONE)
         ));
     }
 
@@ -222,7 +222,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireConnectionType.WIRE;
+    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireNetwork.WireConnectionType.WIRE;
     }
 }

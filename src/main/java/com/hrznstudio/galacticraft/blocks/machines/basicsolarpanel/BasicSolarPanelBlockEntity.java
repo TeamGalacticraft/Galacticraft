@@ -51,6 +51,11 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
+    public int getEnergyUsagePerTick() {
+        return 0;
+    }
+
+    @Override
     protected ItemFilter getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }

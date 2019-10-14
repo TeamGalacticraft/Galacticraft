@@ -39,9 +39,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergyTier;
+import team.reborn.energy.*;
 
 import java.util.List;
 
@@ -49,7 +47,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
-    public static final int MAX_ENERGY = 10000;
+    public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
         super(settings);
@@ -78,11 +76,11 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(charged, 0);
+            GalacticraftEnergy.setEnergy(charged, MAX_ENERGY);
             groupStacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(depleted, MAX_ENERGY);
+            GalacticraftEnergy.setEnergy(depleted, 0);
             groupStacks.add(depleted);
         }
     }
@@ -116,4 +114,5 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
     public EnergyTier getTier() {
         return EnergyTier.LOW;
     }
+
 }

@@ -105,6 +105,9 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {
+            if (!enabled()) {
+                idleEnergyDecrement(true);
+            }
             return;
         }
         attemptChargeFromStack(BATTERY_SLOT);
@@ -117,9 +120,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         }
 
         if (this.status == CollectorStatus.INACTIVE) {
-            if (ticks++ % 1200 == 0) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-            }
+            idleEnergyDecrement(false);
         }
 
         if (status == CollectorStatus.COLLECTING) {
@@ -132,7 +133,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
             // If the oxygen capacity isn't full, add collected oxygen.
             if (this.getOxygen().getMaxEnergy() > this.oxygen.getCurrentEnergy()) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 4, Simulation.ACTION);
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
 
                 this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, collectionAmount, Simulation.ACTION);
             } else {
@@ -190,5 +191,10 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     @Override
     public EnergyTier getTier() {
         return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
     }
 }

@@ -32,7 +32,6 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -49,7 +48,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, WireConnectable, EnergyStorage {
+public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
@@ -88,9 +87,11 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         return ConfigurableElectricMachineBlockEntity.DEFAULT_MAX_ENERGY;
     }
 
-    private int ticks = 0;
     public void tick() {
         if (!enabled() || world.isClient) {
+            if (!enabled()) {
+                idleEnergyDecrement(true);
+            }
             return;
         }
 
@@ -112,7 +113,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
         if (status == CompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 3, Simulation.ACTION);
+            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
             this.progress++;
 
             if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
@@ -129,9 +130,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
                 progress--;
             }
         } else {
-            if (ticks++ % 1200 == 0) {
-                getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-            }
+            idleEnergyDecrement(false);
             if (progress > 0) {
                 progress--;
             }
@@ -243,5 +242,10 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public EnergyTier getTier() {
         return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
     }
 }

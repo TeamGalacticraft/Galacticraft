@@ -24,25 +24,18 @@ package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidProviderItem;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Ref;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.fluids.FuelFluid;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.FishBucketItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
@@ -103,10 +96,12 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         return SLOT_FILTERS[slot];
     }
 
-    private long ticks = 0;
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {
+            if (!enabled()) {
+                idleEnergyDecrement(true);
+            }
             return;
         }
 
@@ -124,7 +119,6 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
 
         if (getEnergyAttribute().getCurrentEnergy() <= 0) {
             status = RefineryStatus.INACTIVE;
-            ticks = 0;
             return;
         }
 
@@ -134,25 +128,12 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             this.status = RefineryStatus.IDLE;
         }
         if (status == RefineryStatus.IDLE) {
-            if (ticks % 600 == 0) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-            }
+            idleEnergyDecrement(false);
         }
 
-        if (status == RefineryStatus.ACTIVE) { //Perfection = 1.48148148
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION); //1.0
+        if (status == RefineryStatus.ACTIVE) {
+            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION); //x2 an average machine
 
-            if (ticks++ % 10 == 0) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 4, Simulation.ACTION); //1.4
-            }
-
-            if (ticks % 100 == 0) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 8, Simulation.ACTION); //1.48
-            }
-
-            if (ticks % 1000 == 0) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION); //1.48[2] (close enough)
-            }
 
             FluidVolume extracted = this.fluidInv.getTank(0).extract(1);
             this.fluidInv.getTank(1).insert(FluidVolume.create(GalacticraftFluids.FUEL, extracted.getAmount()));
@@ -200,5 +181,10 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     @Override
     public EnergyTier getTier() {
         return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return GalacticraftEnergy.Values.T2_MACHINE_ENERGY_USAGE;
     }
 }

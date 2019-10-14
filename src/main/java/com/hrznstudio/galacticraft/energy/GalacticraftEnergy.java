@@ -40,7 +40,7 @@ import team.reborn.energy.EnergyHolder;
  */
 public class GalacticraftEnergy {
     public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType(); //TODO Fix energy values. 1 coal = 4800gj (MAX HEAT), (according to Forge GC) Coal gen should power 4 T1 machines, 1200Gj/action?
-    // GJ is worth LESS than TR Energy - GL:TR = 6:5
+    // GJ is worth LESS than TR Energy
     public static final EnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
 
     public static final ItemFilter ENERGY_HOLDER_ITEM_FILTER = GalacticraftEnergy::isEnergyItem;
@@ -79,7 +79,10 @@ public class GalacticraftEnergy {
 
         if (battery.getItem() instanceof EnergyHolderItem) {
             if (battery.getItem() instanceof EnergyHolder) {
+                int i = ((EnergyHolderItem) battery.getItem()).getEnergy(battery);
+                System.out.println(((EnergyHolderItem) battery.getItem()).getEnergy(battery));
                 Energy.of(battery).extract(convertToTR(amount));
+                System.out.println(((EnergyHolderItem) battery.getItem()).getEnergy(battery));
             }
             return ((EnergyHolderItem) battery.getItem()).extract(battery, amount);
         } else if (battery.getItem() instanceof EnergyHolder) {
@@ -158,7 +161,7 @@ public class GalacticraftEnergy {
     }
 
     public static int convertFromTR(double amount) {
-        amount *= 1.2D;
+        amount *= Values.TR_GC_CONVERSION_RATE;
         amount -= amount % 1;
         return (int) amount;
     }
@@ -168,8 +171,25 @@ public class GalacticraftEnergy {
             return 0;
         }
         double output = amount;
-        output *= 1.2D;
+        output /= Values.TR_GC_CONVERSION_RATE;
         output -= output % 1;
         return output;
+    }
+
+    public static class Values {
+        public static final int T1_MACHINE_ENERGY_USAGE = 20;
+        public static final int T2_MACHINE_ENERGY_USAGE = 30;
+
+        public static final double TR_GC_CONVERSION_RATE = 9.6;
+
+        private static long tick = 0;
+
+        public static void incrementTick() {
+            tick++;
+        }
+
+        public static long getTick() {
+            return tick;
+        }
     }
 }
