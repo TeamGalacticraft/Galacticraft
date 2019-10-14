@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -55,6 +55,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -63,12 +64,12 @@ import java.util.Random;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock implements Rotatable, MachineBlock {
-    public static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
-    public static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
-    public static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
-    public static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
-    public static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
-    public static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public OxygenCollectorBlock(Settings settings) {
@@ -181,7 +182,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
         }
 
         OxygenCollectorBlockEntity collector = (OxygenCollectorBlockEntity) blockEntity;
-        if (collector.lastCollectAmount > 0) {
+        if (collector.collectionAmount > 0) {
             for (int particleCount = 0; particleCount < 10; particleCount++) {
                 Random random = world.random;
 
@@ -200,12 +201,12 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 
     @Override
     public List<Direction> disabledSides() {
-        return Collections.EMPTY_LIST;
+        return new ArrayList<>();
     }
 }

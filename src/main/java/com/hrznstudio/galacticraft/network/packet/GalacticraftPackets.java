@@ -32,77 +32,87 @@ import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
+
+import java.nio.ByteBuffer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftPackets {
     public static void register() {
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            String setting = buffer.readString();
-            if (context.getPlayer().world.getBlockEntity(pos) == null) { //WHY
-                for (BlockEntity blockEntity : context.getPlayer().world.blockEntities) { //uh-oh
-                    if (blockEntity.getPos().equals(pos)) {
-                        if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = setting;
-                        }
-                        return;
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
+                    if (blockEntity == null) {
+                        System.out.println("Doesn't work");
+                    } else if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = buffer.readString();
                     }
-                }
-            } else if (context.getPlayer().world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
-                ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).redstoneOption = setting;
+                });
+            } else {
+                System.out.println("NO.");
             }
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            String owner = buffer.readString();
-            boolean isParty = false;
-            boolean isPublic = false;
-            if (owner.contains("_Public")) {
-                owner = owner.replace("_Public", "");
-                isPublic = true;
-            } else if (owner.contains("_Party")) {
-                owner = owner.replace("_Party", "");
-                isParty = true;
-            }
-            String ownerUsername = buffer.readString();
-            if (context.getPlayer().world.getBlockEntity(pos) == null) {
-                for (BlockEntity blockEntity : context.getPlayer().world.blockEntities) { //uh-oh
-                    if (blockEntity.getPos().equals(pos)) {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
+                    if (blockEntity == null) {
+                        System.out.println("Noooo");
+                    } else {
+                        boolean isParty = false;
+                        boolean isPublic = false;
+                        String owner = buffer.readString();
+                        if (owner.contains("_Public")) {
+                            owner = owner.replace("_Public", "");
+                            isPublic = true;
+                        } else if (owner.contains("_Party")) {
+                            owner = owner.replace("_Party", "");
+                            isParty = true;
+                        }
+                        String username = buffer.readString();
                         if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).owner = owner;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).ownerUsername = ownerUsername;
+                            ((ConfigurableElectricMachineBlockEntity) blockEntity).username = username;
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
                         }
-                        return;
                     }
-                }
-            } else if (context.getPlayer().world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
-                ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).owner = owner;
-                ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).ownerUsername = ownerUsername;
-                ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isPublic = isPublic;
-                ((ConfigurableElectricMachineBlockEntity) context.getPlayer().world.getBlockEntity(pos)).isParty = isParty;
+                });
+            } else {
+                System.out.println("NO");
             }
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            String data = buffer.readString();
-
-            if (context.getPlayer().world.getBlockState(pos) != null) {
-                if (context.getPlayer().world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                            .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())), SideOption.valueOf(data.split(",")[1])));
-                }
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    BlockPos pos = buffer.readBlockPos();
+                    BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
+                    if (blockEntity != null) {
+                        if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                            String data = buffer.readString();
+                            context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
+                                    .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
+                                            SideOption.valueOf(data.split(",")[1])));
+                        }
+                    }
+                });
+            } else {
+                System.out.println("Nope");
             }
         }));
 

@@ -82,7 +82,6 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
         energyDisplayX = leftPos + 10;
         energyDisplayY = topPos + 9;
 
-        //this.drawTexturedRect(...)
         this.blit(leftPos, topPos, 0, 0, this.containerWidth, this.containerHeight);
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
@@ -100,7 +99,6 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
         float maxEnergy = container.getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
-        //this.drawTexturedReact(...)
         this.minecraft.getTextureManager().bindTexture(OVERLAY);
         this.blit(energyDisplayX, energyDisplayY, ENERGY_DIMMED_X, ENERGY_DIMMED_Y, ENERGY_DIMMED_WIDTH, ENERGY_DIMMED_HEIGHT);
         this.blit(energyDisplayX, (energyDisplayY - (int) (ENERGY_HEIGHT * energyScale)) + ENERGY_HEIGHT, ENERGY_X, ENERGY_Y, ENERGY_WIDTH, (int) (ENERGY_HEIGHT * energyScale));
@@ -113,14 +111,23 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
             List<String> toolTipLines = new ArrayList<>();
             toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", container.blockEntity.status.toString()).setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
             if (container.blockEntity.status == BasicSolarPanelStatus.COLLECTING) {
-                if (world.getTimeOfDay() > 6000) {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((6000D - ((double) world.getTimeOfDay() - 6000D)) / 133.3333333333D)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                long time = world.getTimeOfDay() % 24000;
+                if (time > 6000) {
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
                 } else {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((double) world.getTimeOfDay()) / 133.3333333333D)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                }
+            } else if (container.blockEntity.status == BasicSolarPanelStatus.RAINING) {
+                long time = world.getTimeOfDay() % 24000;
+                if (time > 6000) {
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((((6000D - (time - 6000D)) / 705.882353D) / 3.0D) + 0.5D)* (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
+                } else {
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((time / 705.882353D) / 3.0D) + 0.5D) * (container.blockEntity.visiblePanels / 9)).setStyle(new Style().setColor(Formatting.LIGHT_PURPLE)).asFormattedString());
                 }
             }
             toolTipLines.add("\u00A76" + new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(container.energy.get()).setStyle(new Style().setColor(Formatting.BLUE))).asFormattedString() + "\u00A7r");
             toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.blocked_panels", container.blockEntity.visiblePanels).setStyle(new Style().setColor(Formatting.YELLOW)).asFormattedString());
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }

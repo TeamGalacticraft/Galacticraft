@@ -27,30 +27,27 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
-import com.hrznstudio.galacticraft.util.BlockOptionUtils;
-import io.github.cottonmc.energy.api.EnergyAttribute;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Direction;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
-import java.util.Map;
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     private static final ItemFilter[] SLOT_FILTERS;
@@ -67,15 +64,11 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     private final int maxProgress = 300;
-    public CircuitFabricatorStatus status = CircuitFabricatorStatus.INACTIVE;
-    public SideOption[] sideOptions = {SideOption.BLANK, SideOption.POWER_INPUT};
-    public Map<Direction, SideOption> selectedOptions = BlockOptionUtils.getDefaultSideOptions();
+    public CircuitFabricatorStatus status = CircuitFabricatorStatus.IDLE;
     int progress;
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
-        //automatically mark dirty whenever the energy attribute is changed
-        selectedOptions.put(Direction.SOUTH, SideOption.POWER_INPUT);
         // Stop automation from inserting into the output or extracting from the inputs.
         getLimitedInventory().getSubRule(1, 6).disallowExtraction();
         getLimitedInventory().getRule(6).filterInserts(ConstantItemFilter.NOTHING);
@@ -96,36 +89,36 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     @Override
     public void tick() {
-        if (world.isClient || !enabled()) {
+        if (world.isClient) {
             return;
         }
-        for (Direction direction : Direction.values()) {
-            if (selectedOptions.get(direction).equals(SideOption.POWER_INPUT)) {
-                EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
-                if (energyAttribute.canInsertEnergy()) {
-                    this.getEnergyAttribute().setCurrentEnergy(energyAttribute.insertEnergy(new GalacticraftEnergyType(), 1, Simulation.ACTION));
-                }
-            }
+        if (!enabled()) {
+            this.status = CircuitFabricatorStatus.OFF;
+            idleEnergyDecrement(true);
+            return;
         }
         attemptChargeFromStack(0);
 
 
         if (status == CircuitFabricatorStatus.IDLE) {
-            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-            this.progress = 0;
+            idleEnergyDecrement(false);
+            if (this.progress > 0) {
+                progress--;
+            }
         }
 
 
         if (getEnergyAttribute().getCurrentEnergy() <= 0) {
-            status = CircuitFabricatorStatus.INACTIVE;
+            status = CircuitFabricatorStatus.NOT_ENOUGH_POWER;
         } else {
             status = CircuitFabricatorStatus.IDLE;
         }
 
 
-        if (status == CircuitFabricatorStatus.INACTIVE) {
-            //this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
-            this.progress = 0;
+        if (status == CircuitFabricatorStatus.NOT_ENOUGH_POWER) {
+            if (progress > 0) {
+                this.progress--;
+            }
             return;
         }
 
@@ -135,7 +128,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 this.status = CircuitFabricatorStatus.PROCESSING;
             }
         } else {
-            if (this.status != CircuitFabricatorStatus.INACTIVE) {
+            if (this.status != CircuitFabricatorStatus.NOT_ENOUGH_POWER) {
                 this.status = CircuitFabricatorStatus.IDLE;
             }
         }
@@ -144,9 +137,9 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
             } else {
-                this.progress = 0;
+                progress = 0;
 
                 getInventory().getSlot(1).extract(1);
                 getInventory().getSlot(2).extract(1);
@@ -156,13 +149,15 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 getInventory().getSlot(6).insert(resultStack);
             }
         }
+
+        trySpreadEnergy();
     }
 
     // This is just for testing purposes
     private ItemStack getResultFromRecipeStack() {
         BasicInventory inv = new BasicInventory(getInventory().getInvStack(5));
         // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
-        FabricationRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("No recipe present????"));
+        FabricationRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("Not a valid recipe."));
         return recipe.craft(inv);
     }
 
@@ -210,4 +205,35 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         super.fromTag(tag);
         progress = tag.getInt("Progress");
     }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        /*if (world.getBlockState(pos).getBlock() instanceof WireConnectable) {
+            if (((WireConnectable) world.getBlockState(pos).getBlock()).canWireConnect(world, ConfigurableElectricMachineBlock.energySideToDirection(face),  pos.offset(ConfigurableElectricMachineBlock.energySideToDirection(face)), pos) != WireNetwork.WireConnectionType.NONE) {
+                return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+            }
+        }*/
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
+    }
+
 }

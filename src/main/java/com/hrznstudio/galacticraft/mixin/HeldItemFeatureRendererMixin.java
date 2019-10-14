@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(HeldItemFeatureRenderer.class)
-public class HeldItemFeatureRendererMixin {
+public abstract class HeldItemFeatureRendererMixin {
 
     @Inject(method = "method_4192", at = @At("TAIL"))
     private void method_4192(LivingEntity livingEntity_1, ItemStack itemStack_1, ModelTransformation.Type modelTransformation$Type_1, Arm absoluteHand_1, CallbackInfo ci) {

@@ -22,13 +22,11 @@
 
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.EntityContext;
@@ -137,11 +135,13 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
             return false;
         }
 
+        if (world_1.isClient) return true;
+
         BlockPos basePos = ((BasicSolarPanelPartBlockEntity) partEntity).basePos;
 
         BlockState base = world_1.getBlockState(basePos);
-        BasicSolarPanelBlock baseBlock = (BasicSolarPanelBlock) base.getBlock();
-        return baseBlock.activate(base, world_1, basePos, playerEntity_1, hand_1, blockHitResult_1);
+        Block baseBlock = base.getBlock();
+        return ((BasicSolarPanelBlock)baseBlock).activate(base, world_1, basePos, playerEntity_1, hand_1, blockHitResult_1);
     }
 
 }

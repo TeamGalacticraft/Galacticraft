@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.util;
 
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.IWorld;
@@ -32,8 +32,6 @@ import net.minecraft.world.IWorld;
  */
 public interface WireConnectable {
 
-    default WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireConnectionType.NONE;
-    }
+    WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos);
 
 }

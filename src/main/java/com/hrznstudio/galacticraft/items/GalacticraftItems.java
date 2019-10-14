@@ -159,7 +159,7 @@ public class GalacticraftItems {
     public static final Item TITANIUM_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HOE), new HoeItem(GalacticraftToolMaterials.TITANIUM, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item STANDARD_WRENCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BATTERY = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), new BatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
-    public static final Item INFINITE_BATTERY = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.INFINITE_BATTERY), new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
+    public static final Item INFINITE_BATTERY = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.INFINITE_BATTERY), new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(Integer.MAX_VALUE)));
     //Fluid buckets
     public static final BucketItem CRUDE_OIL_BUCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CRUDE_OIL_BUCKET), new BucketItem(GalacticraftFluids.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).group(ITEMS_GROUP)));
     public static final BucketItem FUEL_BUCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FUEL_BUCKET), new BucketItem(GalacticraftFluids.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).group(ITEMS_GROUP)));

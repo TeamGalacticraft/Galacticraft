@@ -49,19 +49,19 @@ public class WireNetwork {
      *
      * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
      */
-    public static ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
+    public static final ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
 
-    protected static ConcurrentMap<BlockPos, WireNetwork> networkMap_TEMP = new ConcurrentHashMap<>();
+    static final ConcurrentMap<BlockPos, WireNetwork> networkMap_TEMP = new ConcurrentHashMap<>();
 
     /**
      * A set containing all the wires inside of a network.
      */
-    protected final ConcurrentSet<WireBlockEntity> wires = new ConcurrentSet<>();
+    final ConcurrentSet<WireBlockEntity> wires = new ConcurrentSet<>();
 
     /**
      * The id of this network.
      */
-    private UUID id;
+    private final UUID id = UUID.randomUUID();
 
     /**
      * Creates a new wire network.
@@ -69,7 +69,6 @@ public class WireNetwork {
      * @param source The (Wire)BlockEntity that created the network
      */
     public WireNetwork(WireBlockEntity source) {
-        id = UUID.randomUUID();
         networkMap_TEMP.put(source.getPos(), this);
         wires.add(source);
     }
@@ -125,11 +124,11 @@ public class WireNetwork {
      * Runs every tick.
      */
     public void update() {
-        ConcurrentSet<BlockEntity> consumerPowerRequirement = new ConcurrentSet<>();
-        ConcurrentSet<BlockEntity> producerPower = new ConcurrentSet<>();
+        ConcurrentSet<BlockEntity> consumers = new ConcurrentSet<>();
+        ConcurrentSet<BlockEntity> producers = new ConcurrentSet<>();
+        ConcurrentSet<BlockEntity> storage = new ConcurrentSet<>();
         int energyAvailable = 0;
         int energyNeeded = 0;
-        int energyLeft = 0;
 
         if (wires.isEmpty()) {
             networkMap.remove(this);
@@ -152,32 +151,36 @@ public class WireNetwork {
                 if (consumer != null) {
                     EnergyAttribute consumerEnergy = ((EnergyAttributeProvider) consumer).getEnergyAttribute();
                     if (consumerEnergy.getCurrentEnergy() < consumerEnergy.getMaxEnergy()) {
-                        consumerPowerRequirement.add(consumer); //Amount the machine needs
+                        consumers.add(consumer); //Amount the machine needs
                         energyNeeded += (consumerEnergy.getMaxEnergy() - consumerEnergy.getCurrentEnergy());
                     }
                 }
             }
-            energyLeft = energyNeeded;
 
             for (BlockEntity producer : WireUtils.getAdjacentProducers(wire.getPos(), wire.getWorld())) {
                 if (producer != null) {
-                    producerPower.add(producer);
-                    energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
+                    if (consumers.contains(producer)) {
+                        consumers.remove(producer);
+                        storage.add(producer);
+                    } else {
+                        producers.add(producer);
+                        energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
+                    }
                 }
             }
         }
 
-        if (energyLeft > 0) {
-            int amountPerConsumer = energyAvailable / consumerPowerRequirement.size();
-            for (BlockEntity consumer : consumerPowerRequirement) {
+        if (energyNeeded > 0) {
+            int amountPerConsumer = (consumers.size() > 0 && energyAvailable > 0) ? energyAvailable / consumers.size() : 0;
+            for (BlockEntity consumer : consumers) {
                 energyAvailable -= amountPerConsumer;
                 int amountExtracted = 0;
-                for (BlockEntity producer : producerPower) {
+                for (BlockEntity producer : producers) {
                     amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
 
                     if (amountExtracted <= amountPerConsumer) {
                         if (((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy() <= 0) {
-                            producerPower.remove(producer);
+                            producers.remove(producer);
                         }
                     }
 
@@ -186,7 +189,71 @@ public class WireNetwork {
                     }
                 }
                 energyAvailable += ((EnergyAttributeProvider) consumer).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
-                consumerPowerRequirement.remove(consumer);
+                if (((EnergyAttributeProvider) consumer).getEnergyAttribute().getCurrentEnergy() >= ((EnergyAttributeProvider) consumer).getEnergyAttribute().getMaxEnergy()) {
+                    consumers.remove(consumer);
+                }
+            }
+
+            if (!consumers.isEmpty() && producers.isEmpty()) {
+                energyAvailable = 0;
+                for (BlockEntity battery : storage) {
+                    if (battery != null) {
+                        energyAvailable += ((EnergyAttributeProvider) battery).getEnergyAttribute().getCurrentEnergy();
+                    }
+                }
+
+                amountPerConsumer = (consumers.size() > 0 && energyAvailable > 0) ? energyAvailable / consumers.size() : 0;
+                for (BlockEntity consumer : consumers) {
+                    energyAvailable -= amountPerConsumer;
+                    int amountExtracted = 0;
+                    for (BlockEntity battery : storage) {
+                        amountExtracted += ((EnergyAttributeProvider) battery).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
+
+                        if (amountExtracted <= amountPerConsumer) {
+                            if (((EnergyAttributeProvider) battery).getEnergyAttribute().getCurrentEnergy() <= 0) {
+                                storage.remove(battery);
+                            }
+                        }
+
+                        if (amountExtracted == amountPerConsumer) {
+                            break;
+                        }
+                    }
+                    energyAvailable += ((EnergyAttributeProvider) consumer).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
+                    if (((EnergyAttributeProvider) consumer).getEnergyAttribute().getCurrentEnergy() >= ((EnergyAttributeProvider) consumer).getEnergyAttribute().getMaxEnergy()) {
+                        consumers.remove(consumer);
+                    }
+                }
+            } else if (!producers.isEmpty() && consumers.isEmpty()) {
+                energyAvailable = 0;
+                for (BlockEntity producer : producers) {
+                    if (producer != null) {
+                        energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
+                    }
+                }
+
+                amountPerConsumer = (storage.size() > 0 && energyAvailable > 0) ? energyAvailable / storage.size() : 0;
+                for (BlockEntity battery : storage) {
+                    energyAvailable -= amountPerConsumer;
+                    int amountExtracted = 0;
+                    for (BlockEntity producer : producers) {
+                        amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
+
+                        if (amountExtracted <= amountPerConsumer) {
+                            if (((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy() <= 0) {
+                                producers.remove(producer);
+                            }
+                        }
+
+                        if (amountExtracted == amountPerConsumer) {
+                            break;
+                        }
+                    }
+                    energyAvailable += ((EnergyAttributeProvider) battery).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
+                    if (((EnergyAttributeProvider) battery).getEnergyAttribute().getCurrentEnergy() >= ((EnergyAttributeProvider) battery).getEnergyAttribute().getMaxEnergy()) {
+                        storage.remove(battery);
+                    }
+                }
             }
         }
     }
@@ -198,4 +265,28 @@ public class WireNetwork {
         return id;
     }
 
+
+    public enum WireConnectionType {
+
+        /**
+         * The wire is not connected to anything.
+         */
+        NONE,
+
+        /**
+         * The wire is connected to another wire.
+         */
+        WIRE,
+
+        /**
+         * The wire is connected to some sort of energy consuming block.
+         */
+        ENERGY_INPUT,
+
+        /**
+         * The wire is connected to some sort of energy generating block.
+         */
+        ENERGY_OUTPUT
+
+    }
 }

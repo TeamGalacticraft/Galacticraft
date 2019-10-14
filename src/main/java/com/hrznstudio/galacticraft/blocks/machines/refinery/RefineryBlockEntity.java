@@ -24,33 +24,29 @@ package com.hrznstudio.galacticraft.blocks.machines.refinery;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidProviderItem;
-import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Ref;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.fluids.FuelFluid;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.FishBucketItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
 
     private static final ItemFilter[] SLOT_FILTERS;
 
@@ -103,10 +99,14 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {
+            if (!enabled()) {
+                idleEnergyDecrement(true);
+            }
             return;
         }
 
         attemptChargeFromStack(0);
+        trySpreadEnergy();
 
         if (getInventory().getInvStack(1).getItem() instanceof FluidProviderItem) {
             Ref<ItemStack> ref = new Ref<>(getInventory().getInvStack(1));
@@ -127,10 +127,15 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         } else {
             this.status = RefineryStatus.IDLE;
         }
+        if (status == RefineryStatus.IDLE) {
+            idleEnergyDecrement(false);
+        }
 
         if (status == RefineryStatus.ACTIVE) {
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 2, Simulation.ACTION);
-            FluidVolume extracted = this.fluidInv.getTank(0).extract(10);
+            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION); //x2 an average machine
+
+
+            FluidVolume extracted = this.fluidInv.getTank(0).extract(1);
             this.fluidInv.getTank(1).insert(FluidVolume.create(GalacticraftFluids.FUEL, extracted.getAmount()));
         }
 
@@ -156,5 +161,30 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
         fluidInv.fromTag(tag.getCompound("FluidInventory"));
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return GalacticraftEnergy.Values.T2_MACHINE_ENERGY_USAGE;
     }
 }

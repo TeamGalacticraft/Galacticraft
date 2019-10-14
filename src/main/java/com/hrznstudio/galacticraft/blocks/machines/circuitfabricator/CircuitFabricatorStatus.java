@@ -39,9 +39,13 @@ public enum CircuitFabricatorStatus {
      */
     IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
+     * The fabricator has no energy.
+     */
+    NOT_ENOUGH_POWER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_power").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString()),
+    /**
      * The fabricator has been switched off.
      */
-    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
+    OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
 
 
     private String name;
@@ -56,8 +60,10 @@ public enum CircuitFabricatorStatus {
                 return PROCESSING;
             case 1:
                 return IDLE;
+            case 3:
+                return OFF;
             default:
-                return INACTIVE;
+                return NOT_ENOUGH_POWER;
         }
     }
 

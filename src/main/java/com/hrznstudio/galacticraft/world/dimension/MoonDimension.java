@@ -59,6 +59,15 @@ public class MoonDimension extends Dimension implements CelestialBody {
         return 0;
     }
 
+    @Override
+    public void update() {
+        super.update();
+        this.world.getLevelProperties().setThundering(false);
+        this.world.getLevelProperties().setRaining(false);
+        this.world.getLevelProperties().setClearWeatherTime(10000000);
+        this.world.getLevelProperties().setRainTime(0);
+        this.world.getLevelProperties().setThunderTime(0);
+    }
 
     @Override
     public boolean hasSkyLight() {

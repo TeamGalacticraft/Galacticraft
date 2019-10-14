@@ -40,7 +40,7 @@ public enum CompressorStatus {
      */
     IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
     /**
-     * The generator has no fuel.
+     * The generator has no energy.
      */
     INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
 
