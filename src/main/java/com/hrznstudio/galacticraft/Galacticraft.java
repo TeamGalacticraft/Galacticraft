@@ -128,8 +128,6 @@ public class Galacticraft implements ModInitializer {
                         } else {
                             return;
                         }
-                    } else {
-                        System.out.println("ohyes");
                     }
                     stack.getTag().putDouble("energy", amount);
                 }
