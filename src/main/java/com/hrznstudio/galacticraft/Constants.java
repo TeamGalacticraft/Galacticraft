@@ -199,9 +199,9 @@ public class Constants {
         public static final String ROCKET_FINS = "rocket_fins";
         public static final String ROCKET_THRUSTER_TIER_1 = "rocket_thruster_tier_1";
         public static final String ROCKET_THRUSTER_TIER_2 = "rocket_thruster_tier_2";
-        public static final String ROCKET_TOP_BASIC = "rocket_top_basic";
-        public static final String ROCKET_TOP_ADVANCED = "rocket_top_advanced";
-        public static final String ROCKET_TOP_SLOPED = "rocket_top_sloped";
+        public static final String ROCKET_CONE_BASIC = "rocket_cone_basic";
+        public static final String ROCKET_CONE_ADVANCED = "rocket_cone_advanced";
+        public static final String ROCKET_CONE_SLOPED = "rocket_cone_sloped";
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
@@ -443,7 +443,7 @@ public class Constants {
 
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
-        public static final String T1_ROCKET = "tier_1_rocket";
+        public static final String ROCKET = "rocket";
     }
 
     public static class TextureCoordinates {

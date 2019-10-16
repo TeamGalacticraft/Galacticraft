@@ -23,10 +23,12 @@
 package com.hrznstudio.galacticraft.network.packet;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.entity.rocket.tier1.Tier1RocketEntity;
+import com.hrznstudio.galacticraft.api.rocket.PartType;
+import com.hrznstudio.galacticraft.api.rocket.RocketPart;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.impl.network.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
@@ -39,9 +41,9 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
-
-import java.nio.ByteBuffer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -53,14 +55,10 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
-                    if (blockEntity == null) {
-                        System.out.println("Doesn't work");
-                    } else if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                         ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = buffer.readString();
                     }
                 });
-            } else {
-                System.out.println("NO.");
             }
         }));
 
@@ -69,9 +67,6 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
-                    if (blockEntity == null) {
-                        System.out.println("Noooo");
-                    } else {
                         boolean isParty = false;
                         boolean isPublic = false;
                         String owner = buffer.readString();
@@ -89,10 +84,8 @@ public class GalacticraftPackets {
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
                             ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
                         }
-                    }
+
                 });
-            } else {
-                System.out.println("NO");
             }
         }));
 
@@ -111,13 +104,11 @@ public class GalacticraftPackets {
                         }
                     }
                 });
-            } else {
-                System.out.println("Nope");
             }
         }));
 
-        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "t1_rocket_spawn"), ((context, byteBuf) -> {
-            EntityType<Tier1RocketEntity> type = (EntityType<Tier1RocketEntity>) Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
+        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((context, byteBuf) -> {
+            EntityType<RocketEntity> type = (EntityType<RocketEntity>) Registry.ENTITY_TYPE.get(byteBuf.readVarInt());
             int entityID = byteBuf.readVarInt();
             UUID entityUUID = byteBuf.readUuid();
             double x = byteBuf.readDouble();
@@ -125,8 +116,13 @@ public class GalacticraftPackets {
             double z = byteBuf.readDouble();
             float pitch = (byteBuf.readByte() * 360) / 256.0F;
             float yaw = (byteBuf.readByte() * 360) / 256.0F;
+            Map<PartType, RocketPart> parts = new HashMap<>();
+            for (PartType t : PartType.values()) {
+                parts.put(t, Galacticraft.ROCKET_PARTS.get(byteBuf.readInt()));
+            }
+            float[] color = {byteBuf.readFloat(), byteBuf.readFloat(), byteBuf.readFloat(), byteBuf.readFloat()};
             Runnable spawn = () -> {
-                Tier1RocketEntity entity = new Tier1RocketEntity(type, MinecraftClient.getInstance().world);
+                RocketEntity entity = new RocketEntity(type, MinecraftClient.getInstance().world);
                 entity.updateTrackedPosition(x, y, z);
                 entity.x = x;
                 entity.y = y;
@@ -135,6 +131,11 @@ public class GalacticraftPackets {
                 entity.yaw = yaw;
                 entity.setEntityId(entityID);
                 entity.setUuid(entityUUID);
+
+                entity.parts.clear();
+                entity.parts.putAll(parts);
+                entity.color = color;
+
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             };
             context.getTaskQueue().execute(spawn);

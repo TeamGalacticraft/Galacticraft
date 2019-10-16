@@ -22,7 +22,9 @@
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.api.space.RocketEntity;
+import com.hrznstudio.galacticraft.api.rocket.DefaultParts;
+import com.hrznstudio.galacticraft.api.rocket.RocketPart;
+import com.hrznstudio.galacticraft.api.space.Rocket;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
@@ -39,7 +41,7 @@ import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
-import com.hrznstudio.galacticraft.world.gen.WorldGenerator;
+import com.hrznstudio.galacticraft.world.gen.GalacticraftWorldGenerator;
 import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
 import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
@@ -50,6 +52,10 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.ActionResult;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.MutableRegistry;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.reborn.energy.*;
@@ -64,7 +70,13 @@ public class Galacticraft implements ModInitializer {
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
+    public static final MutableRegistry<RocketPart> ROCKET_PARTS = new SimpleRegistry<>();
+
     public static ConfigHandler configHandler = new ConfigHandler();
+
+    static {
+        Registry.register(Registry.REGISTRIES, new Identifier(Constants.MOD_ID, "rocket_parts"), ROCKET_PARTS);
+    }
 
     @Override
     public void onInitialize() {
@@ -75,6 +87,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
+        DefaultParts.register();
         GalacticraftEntityTypes.register();
         GalacticraftContainers.register();
         GalacticraftCommands.register();
@@ -86,19 +99,9 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBiomeSourceTypes.init();
         GalacticraftDimensions.init();
         GalacticraftSurfaceBuilders.init();
-        WorldGenerator.register();
+        GalacticraftWorldGenerator.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
-
-        UseEntityCallback.EVENT.register((player, world, hand, entity, hitResult) -> {
-            if (!player.isSpectator()) {
-                if (entity instanceof RocketEntity) {
-                    System.out.println("Interact Callback");
-                    return entity.interactAt(player, hitResult.getPos(), hand);
-                }
-            }
-            return ActionResult.PASS;
-        });
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
 
@@ -112,9 +115,7 @@ public class Galacticraft implements ModInitializer {
             }
         }
 
-
-
-        Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
+        Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make a more 'safe' implementation
             if(object instanceof ItemStack){
                 return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
             }
@@ -144,8 +145,6 @@ public class Galacticraft implements ModInitializer {
                         } else {
                             return;
                         }
-                    } else {
-                        System.out.println("ohyes");
                     }
                     stack.getTag().putDouble("energy", amount);
                 }

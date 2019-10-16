@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.screen;
 
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
-import com.hrznstudio.galacticraft.api.space.RocketEntity;
+import com.hrznstudio.galacticraft.api.space.Rocket;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
 import com.hrznstudio.galacticraft.misc.RocketTiers;
 import com.hrznstudio.galacticraft.util.registry.CelestialBodyRegistry;
@@ -44,13 +44,13 @@ public class GalaxyScreen extends Screen {
     private RocketTier currentRocketTier = RocketTiers.noRocket;
     private List<CelestialBody> bodiesToDraw = new ArrayList<>();
     private CelestialBody selectedBody = null;
-    private RocketEntity rocket = null;
+    private Rocket rocket = null;
 
     public GalaxyScreen(PlayerEntity playerEntity, Text component) {
         super(component);
-        if (playerEntity.getVehicle() instanceof RocketEntity) {
-            this.currentRocketTier = ((RocketEntity) playerEntity.getVehicle()).getRocketTier();
-            this.rocket = ((RocketEntity) playerEntity.getVehicle());
+        if (playerEntity.getVehicle() instanceof Rocket) {
+            this.currentRocketTier = ((Rocket) playerEntity.getVehicle()).getRocketTier();
+            this.rocket = ((Rocket) playerEntity.getVehicle());
         }
     }
 

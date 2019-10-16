@@ -97,7 +97,7 @@ public abstract class LivingEntityMixin {
         return double_1;
     }
 
-    @ModifyVariable(method = "jump", at = @At(value = "FIELD"), ordinal = 0, index = 8, name = "float_2")
+    @ModifyVariable(method = "jump", at = @At(value = "FIELD"), ordinal = 0, index = 3, name = "float_2")
     private float gravityJumpEffect(float float_2) {
         if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
             if (float_2 > 0) {

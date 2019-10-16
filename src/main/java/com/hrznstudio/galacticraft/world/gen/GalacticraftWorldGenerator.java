@@ -20,20 +20,30 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.api.space;
-
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+package com.hrznstudio.galacticraft.world.gen;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public interface RocketEntity {
-    RocketTier getRocketTier();
+public class GalacticraftWorldGenerator {
 
-    SimpleFixedFluidInv getFuel();
+    public static void register() {
+        registerOverworld();
+        registerMoon();
+        registerMars();
+    }
 
-    float[] getColor();
+    private static void registerOverworld() {
+        OreGenerator.registerOverworldOres();
+        OilPoolGenerator.registerOilLake();
+    }
 
-    void setColor(float[] rgba);
+    private static void registerMoon() {
+        OreGenerator.registerMoonOres();
+    }
+
+    private static void registerMars() {
+        OreGenerator.registerMarsOres();
+    }
 
 }
