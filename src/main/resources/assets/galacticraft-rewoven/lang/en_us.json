@@ -313,5 +313,7 @@
   "config.galacticraft-rewoven.gravity.moon": "Moon",
   "config.galacticraft-rewoven.gravity.mars": "Mars",
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
-  "config.galacticraft-rewoven.general": "General"
+  "config.galacticraft-rewoven.general": "General",
+
+  "chat.galacticraft-rewoven.rocket_warning_1": "TODO"
 }

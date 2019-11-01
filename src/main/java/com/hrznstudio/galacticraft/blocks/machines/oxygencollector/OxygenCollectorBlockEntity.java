@@ -101,7 +101,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         }
     }
 
-    long ticks = 0;
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {

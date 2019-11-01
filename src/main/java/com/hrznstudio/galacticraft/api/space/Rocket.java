@@ -32,6 +32,6 @@ public interface Rocket {
 
     SimpleFixedFluidInv getFuel();
 
-    float[] getColor();
+    Float[] getColor();
 
 }

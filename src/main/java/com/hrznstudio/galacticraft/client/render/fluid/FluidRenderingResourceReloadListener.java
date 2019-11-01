@@ -2,6 +2,8 @@ package com.hrznstudio.galacticraft.client.render.fluid;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
@@ -17,6 +19,7 @@ import net.minecraft.world.ExtendedBlockView;
 import java.util.Arrays;
 import java.util.Collection;
 
+@Environment(EnvType.CLIENT)
 public class FluidRenderingResourceReloadListener implements SimpleSynchronousResourceReloadListener {
 
     @Override

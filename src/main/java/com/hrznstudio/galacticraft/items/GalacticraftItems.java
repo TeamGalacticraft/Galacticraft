@@ -42,7 +42,7 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftItems {
-    public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 15714446, 9794134, (new Item.Settings()).group(ItemGroup.MISC)));
+    public static final Item ROCKET_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, "rocket_spawn_egg"), new SpawnEggItem(GalacticraftEntityTypes.ROCKET, 15714446, 9794134, (new Item.Settings()).group(ItemGroup.MISC)));
     public static final Item GLOWSTONE_TORCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP)));
     public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP))

@@ -39,7 +39,7 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftEntityTypes {
 
     public static final EntityType<EntityMoonVillager> MOON_VILLAGER = FabricEntityTypeBuilder.create(EntityCategory.CREATURE, EntityMoonVillager::new).build();
-    public static final EntityType<RocketEntity> T1_ROCKET = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.ROCKET), FabricEntityTypeBuilder.create(EntityCategory.MISC, RocketEntity::new).size(EntityDimensions.fixed(2.3F, 5.25F)).build());
+    public static final EntityType<RocketEntity> ROCKET = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.ROCKET), FabricEntityTypeBuilder.create(EntityCategory.MISC, RocketEntity::new).trackable(32, 2, false).size(EntityDimensions.fixed(2.3F, 5.25F)).build()); //PLAYER VALUES
 
     public static void register() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.Entities.MOON_VILLAGER), MOON_VILLAGER);

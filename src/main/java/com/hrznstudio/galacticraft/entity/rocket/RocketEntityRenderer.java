@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.entity.rocket;
 
+import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.PartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
@@ -29,8 +30,10 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.MinecartEntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,8 +48,29 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     public void render(RocketEntity entity, double x, double y, double z, float f, float partialTickTime) {
         super.render(entity, x, y, z, f, partialTickTime);
         GlStateManager.pushMatrix();
+
         MinecraftClient client = MinecraftClient.getInstance();
         GlStateManager.translated(x, y + 2.0D, z);
+
+        if (entity.getStage() == LaunchStage.IGNITED) {
+            GlStateManager.translated((entity.world.random.nextFloat() - 0.5F) * 0.12F, 0, (entity.world.random.nextFloat() - 0.5F) * 0.12F);
+        }
+
+        GlStateManager.rotatef((entity.yaw - 180.0F) * -1.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef(entity.pitch, 1.0F, 0.0F, 0.0F);
+
+        float float_7 = (float)entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - partialTickTime;
+        float float_8 = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - partialTickTime;
+
+        if (float_8 < 0.0F) {
+            float_8 = 0.0F;
+        }
+
+        if (float_7 > 0.0F) {
+            GlStateManager.rotatef(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float)entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE), 1.0F, 0.0F, 0.0F);
+        }
+
+
         client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
         entity.parts.get(PartType.BODY).preRender(entity);
         client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(PartType.BODY).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(PartType.BODY).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);

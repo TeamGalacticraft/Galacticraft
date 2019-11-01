@@ -27,6 +27,8 @@ import com.hrznstudio.galacticraft.api.space.Rocket;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
 import com.hrznstudio.galacticraft.misc.RocketTiers;
 import com.hrznstudio.galacticraft.util.registry.CelestialBodyRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -39,6 +41,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class GalaxyScreen extends Screen {
 
     private RocketTier currentRocketTier = RocketTiers.noRocket;
