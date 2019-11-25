@@ -30,7 +30,8 @@ import net.minecraft.util.Formatting;
 public enum CollectorStatus {
     INACTIVE(Formatting.RED.getColorValue()),
     NOT_ENOUGH_LEAVES(Formatting.RED.getColorValue()),
-    COLLECTING(Formatting.GREEN.getColorValue());
+    COLLECTING(Formatting.GREEN.getColorValue()),
+    FULL(Formatting.GOLD.getColorValue());
 
     private int textColor;
 

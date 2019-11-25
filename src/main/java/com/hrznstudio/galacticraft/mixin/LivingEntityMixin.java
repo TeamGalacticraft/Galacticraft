@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import com.hrznstudio.galacticraft.api.space.CelestialBody;
@@ -67,7 +67,7 @@ public abstract class LivingEntityMixin {
                         entity.setBreath(0);
                         air = 0;
                         try {
-                            SimpleFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
+                            FullFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
                             if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(6).getMaxDamage() - gearInventory.getInvStack(6).getDamage()) > 0)) {
                                 gearInventory.getInvStack(6).setDamage(gearInventory.getInvStack(6).getDamage() + 1);
                                 return;

@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -38,14 +39,15 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
+import team.reborn.energy.*;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BatteryItem extends Item implements EnergyHolderItem {
-    public static final int MAX_ENERGY = 10000;
+public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
+    public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
         super(settings);
@@ -53,7 +55,10 @@ public class BatteryItem extends Item implements EnergyHolderItem {
 
     @Override
     public int getMaxEnergy(ItemStack battery) {
-        return MAX_ENERGY;
+        if (battery.getItem() instanceof BatteryItem) {
+            return MAX_ENERGY;
+        }
+        throw new IllegalArgumentException(battery + "is not a GC battery!" + "(com.hrznstudio.galacticraft.items.BatteryItem)");
     }
 
     @Override
@@ -74,11 +79,11 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(charged, 0);
+            GalacticraftEnergy.setEnergy(charged, MAX_ENERGY);
             groupStacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(depleted, MAX_ENERGY);
+            GalacticraftEnergy.setEnergy(depleted, 0);
             groupStacks.add(depleted);
         }
     }
@@ -88,13 +93,10 @@ public class BatteryItem extends Item implements EnergyHolderItem {
         CompoundTag batteryTag = battery.getOrCreateTag();
         batteryTag.putInt("Energy", 0);
         batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
+        batteryTag.putBoolean("skipGC", false);
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
-    }
-
-    @Override
-    public ItemStack getStackForRender() {
-        return super.getStackForRender();
+        GalacticraftEnergy.setEnergy(battery, 0);
     }
 
     @Override
@@ -106,4 +108,15 @@ public class BatteryItem extends Item implements EnergyHolderItem {
     public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
         return false;
     }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(BatteryItem.MAX_ENERGY);
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.LOW;
+    }
+
 }

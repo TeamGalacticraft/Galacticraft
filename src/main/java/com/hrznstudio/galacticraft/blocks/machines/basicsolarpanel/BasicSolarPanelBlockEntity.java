@@ -28,11 +28,16 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.util.Tickable;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+
+    public int visiblePanels;
 
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
 
@@ -46,18 +51,36 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
+    public int getEnergyUsagePerTick() {
+        return 0;
+    }
+
+    @Override
     protected ItemFilter getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
+    private long tick = 0;
     @Override
     public void tick() {
+
+        double i = 0;
+        for (int z = -1; z < 2; z++) {
+            for (int y = -1; y < 2; y++) {
+                if (world.isSkyVisible(pos.add(z, 2, y))) {
+                    i++;
+                }
+            }
+        }
+        visiblePanels = (int) i;
+        i /= 9;
+
         if (world.isClient || !enabled()) {
             return;
         }
+        tick++;
         double time = world.getTimeOfDay() % 24000;
-
-        if (time > 0 && time < 12000) {
+        if (time > 1000.0D && time < 11300.0D) {
             if (getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy()) {
                 if (world.isRaining() || world.isThundering()) {
                     status = BasicSolarPanelStatus.RAINING;
@@ -71,21 +94,37 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
             status = BasicSolarPanelStatus.NIGHT;
         }
 
+        if (i == 0) status = BasicSolarPanelStatus.BLOCKED;
+
         if (status == BasicSolarPanelStatus.COLLECTING) {
             if (time > 6000) {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((6000D - (time - 6000D)) / 133.3333333333D), Simulation.ACTION);
+                if (((int) ((6000D - (time - 6000D)) / 705.882353D) * i) < 1) {
+                    if (tick % 2 == 0) {
+                        getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+                    }
+                } else {
+                    getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * i), Simulation.ACTION);
+                }
             } else {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 133.3333333333D)), Simulation.ACTION);
-            }
-        }
-        if (status == BasicSolarPanelStatus.RAINING) {
-            if (time > 6000) {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((6000D - (time - 6000D)) / 133.3333333333D) / 10D), Simulation.ACTION);
-            } else {
-                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((time / 133.3333333333D) / 10), Simulation.ACTION);
+                if (((time / 705.882353D) * i) < 1) {
+                    if (tick % 2 == 0) {
+                        getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+                    }
+                } else {
+                    getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((time / 705.882353D) + 0.5D) * i), Simulation.ACTION);
+                }
             }
         }
 
+        if (status == BasicSolarPanelStatus.RAINING) {
+            if (time > 6000) {
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (((((6000D - (time - 6000D)) + 0.5D) / 705.882353D) / 3.0D) * i), Simulation.ACTION);
+            } else {
+                getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) ((((time / 705.882353D) + 0.5D) / 3.0D) * i), Simulation.ACTION);
+            }
+        }
+
+        trySpreadEnergy();
         attemptDrainPowerToStack(0);
     }
 
@@ -93,4 +132,24 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     protected int getBatteryTransferRate() {
         return 10;
     }
+    @Override
+    public double getStored(EnergySide face) {
+        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
+    }
+
 }

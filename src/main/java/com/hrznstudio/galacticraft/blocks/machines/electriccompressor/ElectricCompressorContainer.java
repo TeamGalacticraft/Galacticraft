@@ -48,10 +48,7 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
     public static final ContainerFactory<Container> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorContainer::new);
     public final Property status = Property.create();
     public final Property progress = Property.create();
-    public final Property fuelTime = Property.create();
     protected Inventory inventory;
-    protected int outputSlotId = 0;
-    private ItemStack itemStack;
 
     public ElectricCompressorContainer(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
 
@@ -64,7 +61,6 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
         };
         addProperty(status);
         addProperty(progress);
-        addProperty(fuelTime);
 
         // 3x3 comprerssor input grid
         int slot = 0;
@@ -73,11 +69,6 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
                 this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 18));
                 slot++;
             }
-        }
-
-        // Fuel slot
-        if (!(blockEntity instanceof ElectricCompressorBlockEntity)) {
-            this.addSlot(new ItemSpecificSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
         }
 
         // Output slot
@@ -141,7 +132,6 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
         progress.set(blockEntity.getProgress());
-        fuelTime.set(blockEntity.fuelTime);
         super.sendContentUpdates();
     }
 
@@ -150,7 +140,6 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
         super.setProperties(index, value);
         blockEntity.status = CompressorStatus.get(status.get());
         blockEntity.progress = progress.get();
-        blockEntity.fuelTime = fuelTime.get();
     }
 
     protected int[] getOutputSlotPosO() {

@@ -92,7 +92,7 @@ public class WireUtils {
             }
 
             if (block instanceof WireConnectable) {
-                if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_INPUT) {
+                if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireNetwork.WireConnectionType.ENERGY_INPUT) {
                     if (world.getBlockEntity(adjacentBlockPos) instanceof ConfigurableElectricMachineBlockEntity) {
                         if (((ConfigurableElectricMachineBlockEntity) world.getBlockEntity(adjacentBlockPos)).enabled()) {
                             adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos)); //Don't send energy to blocks that are not enabled
@@ -135,7 +135,7 @@ public class WireUtils {
             }
 
             if (block instanceof WireConnectable) {
-                if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireConnectionType.ENERGY_OUTPUT) {
+                if (((WireConnectable) block).canWireConnect(world, direction.getOpposite(), pos, adjacentBlockPos) == WireNetwork.WireConnectionType.ENERGY_OUTPUT) {
                     adjacentConnections[direction.getId()] = world.getBlockEntity(getPosFromDirection(direction, pos));
                 } else {
                     if (world.getBlockEntity(adjacentBlockPos) != null) {

@@ -28,9 +28,14 @@ import alexiil.mc.lib.attributes.item.ItemInvSlotChangeListener.ItemInvSlotListe
 import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import alexiil.mc.lib.attributes.item.impl.SimpleFixedItemInv;
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.items.BatteryItem;
+import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -38,14 +43,15 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.math.Direction;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyAttributeProvider {
 
-    public static final int DEFAULT_MAX_ENERGY = 15000;
-    private final SimpleFixedItemInv inventory = new SimpleFixedItemInv(getInvSize()) {
+    public static final int DEFAULT_MAX_ENERGY = BatteryItem.MAX_ENERGY * 2;
+    private final FullFixedItemInv inventory = new FullFixedItemInv(getInvSize()) {
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack item) {
             return getFilterForSlot(slot).matches(item);
@@ -62,7 +68,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * The UUID of the player that viewed the GUI of this machine first
      */
     public String owner = "";
-    public String ownerUsername = "";
+    public String username = "";
     public boolean isParty = false;
     public boolean isPublic = true;
     /**
@@ -80,7 +86,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     public ConfigurableElectricMachineBlockEntity(BlockEntityType<?> blockEntityType) {
         super(blockEntityType);
-        this.energy.listen(this::markDirty);
+        this.getEnergyAttribute().listen(this::markDirty);
         this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
     }
 
@@ -121,7 +127,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)}
      */
     protected int getBatteryTransferRate() {
-        return 20;
+        return 50;
     }
 
     @Override
@@ -133,21 +139,15 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * Tries to charge this machine from the item in the given slot in this {@link #getInventory}.
      */
     protected void attemptChargeFromStack(int slot) {
-        if (energy.getCurrentEnergy() >= energy.getMaxEnergy()) {
+        if (getEnergyAttribute().getCurrentEnergy() >= getEnergyAttribute().getMaxEnergy()) {
             return;
         }
-        ItemStack stack = inventory.getInvStack(slot);
+        ItemStack stack = inventory.getInvStack(slot).copy();
+        int neededEnergy = Math.min(getBatteryTransferRate(), getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy());
         if (GalacticraftEnergy.isEnergyItem(stack)) {
-            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(stack);
-            EnergyHolderItem item = (EnergyHolderItem) stack.getItem();
-
-            if (itemEnergy > 0) {
-                stack = stack.copy();
-                int energyToRemove = 10;
-                int amountFailedToInsert = item.extract(stack, energyToRemove);
-                energy.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyToRemove - amountFailedToInsert, Simulation.ACTION);
-                inventory.forceSetInvStack(slot, stack);
-            }
+            int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy);
+            this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, Simulation.ACTION);
+            inventory.forceSetInvStack(slot, stack);
         }
     }
 
@@ -157,19 +157,15 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * @param slot The slot id of the item
      */
     protected void attemptDrainPowerToStack(int slot) {
-        int available = Math.min(getBatteryTransferRate(), energy.getCurrentEnergy());
+        int available = Math.min(getBatteryTransferRate(), getEnergyAttribute().getCurrentEnergy());
         if (available <= 0) {
             return;
         }
-        ItemStack stack = inventory.getInvStack(slot);
+        ItemStack stack = inventory.getInvStack(slot).copy();
         if (GalacticraftEnergy.isEnergyItem(stack)) {
-            int itemEnergy = GalacticraftEnergy.getBatteryEnergy(stack);
-            int itemMaxEnergy = GalacticraftEnergy.getMaxBatteryEnergy(stack);
-            EnergyHolderItem item = (EnergyHolderItem) stack.getItem();
-            if (itemEnergy < itemMaxEnergy) {
-                stack = stack.copy();
-                int leftover = item.insert(stack, available);
-                energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - leftover, Simulation.ACTION);
+            if (GalacticraftEnergy.getEnergy(stack) < GalacticraftEnergy.getMaxEnergy(stack)) {
+                int i = GalacticraftEnergy.insertEnergy(stack, available);
+                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, Simulation.ACTION);
                 inventory.forceSetInvStack(slot, stack);
             }
         }
@@ -177,7 +173,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     protected abstract int getInvSize();
 
-    public final SimpleFixedItemInv getInventory() {
+    public final FullFixedItemInv getInventory() {
         return inventory;
     }
 
@@ -202,7 +198,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
         tag.putString("Owner", owner);
-        tag.putString("OwnerUsername", ownerUsername);
+        tag.putString("OwnerUsername", username);
         tag.putBoolean("Party", isParty);
         tag.putBoolean("Public", isPublic);
         tag.putString("Redstone", redstoneOption);
@@ -215,7 +211,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
         owner = tag.getString("Owner");
-        ownerUsername = tag.getString("OwnerUsername");
+        username = tag.getString("OwnerUsername");
         isParty = tag.getBoolean("Party");
         isPublic = tag.getBoolean("Public");
         redstoneOption = tag.getString("Redstone");
@@ -230,4 +226,52 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public CompoundTag toClientTag(CompoundTag tag) {
         return this.toTag(tag);
     }
+
+    public void trySpreadEnergy() {
+        for (int i = 0; i < ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos)).length; i++) {
+            if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_OUTPUT) {
+                if (world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    if (((ConfigurableElectricMachineBlock) world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock()).canWireConnect(world, Direction.values()[i], pos, WireUtils.getPosFromDirection(Direction.values()[i], pos)) == WireNetwork.WireConnectionType.ENERGY_INPUT) {
+                        EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
+                        if (energyAttribute.canExtractEnergy()) {
+                            int failed = getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
+                            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+                        }
+                    }
+                } else {
+                    EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
+                    if (energyAttribute.canExtractEnergy()) {
+                        int failed = getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
+                        this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+                    }
+                }
+            } else if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_INPUT) {
+                if (world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    if (((ConfigurableElectricMachineBlock) world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock()).canWireConnect(world, Direction.values()[i], pos, WireUtils.getPosFromDirection(Direction.values()[i], pos)) == WireNetwork.WireConnectionType.ENERGY_OUTPUT) {
+                        EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
+                        if (energyAttribute.canExtractEnergy()) {
+                            int failed = getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
+                            this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+                        }
+                    }
+                } else {
+                    EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
+                    if (energyAttribute.canExtractEnergy()) {
+                        int failed = getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
+                        this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+                    }
+                }
+            }
+        }
+    }
+
+    public void idleEnergyDecrement(boolean off) {
+        if (getEnergyUsagePerTick() > 0) {
+            if (GalacticraftEnergy.Values.getTick() % ((75 * (getEnergyUsagePerTick() / 20)) * (off ? 2 : 1)) == 0) {
+                getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
+            }
+        }
+    }
+
+    public abstract int getEnergyUsagePerTick();
 }

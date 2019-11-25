@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
+import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -56,7 +57,7 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
         };
         addProperty(status);
 
-        this.addSlot(new ItemSpecificSlot(this.inventory, 0, 8, 53, GalacticraftItems.BATTERY));
+        this.addSlot(new ChargeSlot(this.inventory, 0, 8, 53));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

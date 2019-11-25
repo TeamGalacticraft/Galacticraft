@@ -115,7 +115,7 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
         oxygen.set(blockEntity.getOxygen().getCurrentEnergy());
-        lastCollectAmount.set(blockEntity.lastCollectAmount);
+        lastCollectAmount.set(blockEntity.collectionAmount);
         super.sendContentUpdates();
     }
 

@@ -214,4 +214,9 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
             this.fuelTime = tag.getInt("FuelTime");
         }
     }
+
+    @Override
+    public int getEnergyUsagePerTick() {
+        return 0;
+    }
 }

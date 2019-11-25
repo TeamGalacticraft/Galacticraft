@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,6 +42,7 @@ public abstract class ServerWorldMixin {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
+        GalacticraftEnergy.Values.incrementTick();
         if (!hasRunOnceForWorldReload) {
             hasRunOnceForWorldReload = true;
             WireNetwork.blockPlaced(); //Runs at the end of tick() - BE's should've ticked, meaning there are wires in the map... right?
