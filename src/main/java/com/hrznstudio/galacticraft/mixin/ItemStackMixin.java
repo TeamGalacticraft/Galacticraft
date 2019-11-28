@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -45,7 +46,7 @@ public abstract class ItemStackMixin {
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void getName(CallbackInfoReturnable<Text> returnable) {
         Identifier id = Registry.ITEM.getId(getItem());
-        if (false && id.getNamespace().equals("galacticraft-rewoven")) {
+        if (false && id.getNamespace().equals(Constants.MOD_ID)) {
             Text returnVal = returnable.getReturnValue();
             if (returnVal.getStyle().getColor() == null) {
                 returnable.setReturnValue(returnVal.setStyle(returnVal.getStyle().setColor(Formatting.BLUE)));

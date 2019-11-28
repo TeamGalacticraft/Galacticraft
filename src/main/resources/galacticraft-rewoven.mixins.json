@@ -14,7 +14,8 @@
     "JsonCapeMixin",
     "InGameHudMixin",
     "BipedEntityModelMixin",
-    "ClientPlayerEntityMixin"
+    "ClientPlayerEntityMixin",
+    "WorldRendererMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {
