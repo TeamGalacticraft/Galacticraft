@@ -1,5 +1,5 @@
 # <img src="https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/src/main/resources/assets/galacticraft-rewoven/icon.png" width="45" height="45" >Galacticraft: Rewoven
-[![](https://img.shields.io/discord/449966345665249290.svg?colorB=7289DA&label=Discord&style=flat-square)](https://discord.me/galacticraft) [![Build Status](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven.svg?branch=master)](https://travis-ci.com/StellarHorizons/Galacticraft-Rewoven)
+[![](https://img.shields.io/discord/422424112863117312.svg?colorB=7289DA&label=Discord&style=flat-square)](https://discord.gg/8eVjQrb) [![Build Status](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven.svg?branch=master)](https://travis-ci.com/StellarHorizons/Galacticraft-Rewoven)
 
 Galacticraft: Rewoven is a port of the popular space mod Galacticraft made for the [Fabric modloader](https://fabricmc.net/2018/12/10/announcement.html).
 
