@@ -29,10 +29,12 @@
   "requires": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
+    "minecraft": "1.14.4",
     "cotton": "*",
     "cotton-energy": "*",
     "libblockattributes_items": ">=0.4.5",
-    "silk": "*"
+    "silk": "*",
+    "galacticraft-api": "*"
   },
   "suggests": {
     "modmenu": "*"

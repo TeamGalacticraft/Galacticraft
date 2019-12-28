@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "galacticraft-api",
+  "version": "$version",
+
+  "name": "Galacticraft API",
+  "icon": "assets/galacticraft-rewoven/icon.png",
+  "description": "Addon API for the FabricMC port of Galacticraft",
+  "licence": "MIT",
+  "contact": {
+    "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven"
+  },
+  "authors": [
+    {
+      "name": "Horizon Studio",
+      "contact": {
+        "homepage": "https://hrznstudio.com"
+      }
+    }
+  ],
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.hrznstudio.galacticraft.api.internal.fabric.GalacticraftAPIMain"
+    ]
+  },
+  "mixins": [
+    "gc-api.mixins.json"
+  ],
+  "requires": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*",
+    "minecraft": "1.14.4"
+  },
+  "custom": {
+    "modmenu:api": true,
+    "modmenu:parent": "galacticraft-rewoven"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.hrznstudio.galacticraft.api.internal.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "RegistryAccessor"
+  ],
+  "minVersion": "0.1.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

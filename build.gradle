@@ -53,8 +53,8 @@ dependencies {
     }
 
     modCompile("teamreborn:energy:+")
-    modCompile("TechReborn:TechReborn-${project.minecraft_version}:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
-    modCompile("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
+    //modCompile("TechReborn:TechReborn-${project.minecraft_version}:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
+    //modCompile("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
@@ -70,6 +70,11 @@ dependencies {
     compile "com.google.code.findbugs:jsr305:3.0.1"
     //REI
     modApi "blue.endless:jankson:1.1.0"
+
+
+    // GC Addon API
+    implementation project(":Addon-API")
+    include project(":Addon-API")
 }
 
 processResources {
