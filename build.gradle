@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.5-SNAPSHOT'
+    id 'fabric-loom' version '0.2.6-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -27,17 +27,23 @@ allprojects {
         maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
         maven { url "https://maven.modmuss50.me" }
         maven { url "https://mod-buildcraft.com/maven" }
+        maven { url "https://cdn.hrzn.studio/maven" }
     }
 }
 
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
+    modImplementation("net.fabricmc.fabric-api:fabric-item-groups-v0:0.1.2+d2ac651a3c")
+    // addon api
+    modImplementation("com.hrznstudio:GalacticraftAPI:0.1.2-alpha+1.14.4:dev")
+    include "com.hrznstudio:GalacticraftAPI:0.1.2-alpha+1.14.4"
+
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
     modImplementation("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
@@ -53,8 +59,8 @@ dependencies {
     }
 
     modCompile("teamreborn:energy:+")
-    modCompile("TechReborn:TechReborn-${project.minecraft_version}:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
-    modCompile("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
+    //modRuntime("TechReborn:TechReborn-${project.minecraft_version}:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
+    //modRuntime("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
@@ -90,8 +96,13 @@ tasks.withType(JavaCompile) {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = "sources"
+    archiveClassifier = "sources"
     from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar) {
+    from javadoc
+    archiveClassifier = 'javadoc'
 }
 
 jar {
@@ -99,10 +110,10 @@ jar {
     manifest {
         attributes([
                 "Implementation-Title"    : project.archives_base_name,
-                "Implementation-Version"  : "${version}",
+                "Implementation-Version"  : "${project.version}",
                 "Implementation-Vendor"   : "Horizon Studio",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "Maven-Artifact"          : "${group}:${archivesBaseName}:${version}",
+                "Maven-Artifact"          : "${group}:${archivesBaseName}:${project.version}",
                 "ModSide"                 : "BOTH",
         ],)
     }
@@ -111,12 +122,17 @@ jar {
 publishing {
     publications {
         mavenJava(MavenPublication) {
+
+            groupId = 'com.hrznstudio'
+            artifactId = 'galacticraft'
+
             artifact(jar) {
                 builtBy remapJar
             }
             artifact(sourcesJar) {
                 builtBy remapSourcesJar
             }
+            artifact(javadocJar)
         }
     }
     repositories {

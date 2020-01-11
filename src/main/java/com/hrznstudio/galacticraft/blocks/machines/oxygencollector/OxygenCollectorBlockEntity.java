@@ -24,8 +24,9 @@ package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.space.CelestialBody;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.energy.api.EnergyAttribute;
@@ -39,6 +40,8 @@ import net.minecraft.util.math.BlockPos;
 import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyStorage;
 import team.reborn.energy.EnergyTier;
+
+import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -66,8 +69,10 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     private int collectOxygen(BlockPos center) {
-        if (world.dimension instanceof CelestialBody) {
-            if (!((CelestialBody) world.dimension).hasOxygen()) {
+        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.dimension.getType());
+
+        if(celestialBodyType.isPresent()) {
+            if (celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                 int minX = center.getX() - 5;
                 int minY = center.getY() - 5;
                 int minZ = center.getZ() - 5;
