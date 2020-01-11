@@ -10,7 +10,14 @@
   "contact": {
     "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven"
   },
-
+  "authors": [
+    {
+      "name": "Horizon Studio",
+      "contact": {
+        "homepage": "https://hrznstudio.com"
+      }
+    }
+  ],
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -21,6 +28,9 @@
     ],
     "rei_plugins": [
       "com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin"
+    ],
+    "gc_addons": [
+      "com.hrznstudio.galacticraft.hooks.GalacticraftAddon"
     ]
   },
   "mixins": [
