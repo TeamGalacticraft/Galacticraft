@@ -26,7 +26,7 @@ public class GalacticraftCelestialBodyTypes {
                     )
                     .atmosphere(
                             new AtmosphericInfo.Builder()
-                                    .temprature(-63f)
+                                    .temperature(-63f)
                                     .pressure(0.62f)
                                     .gas(AtmosphericGas.CARBON_DIOXIDE, 953500d)
                                     .gas(AtmosphericGas.NITROGEN, 27000d)
