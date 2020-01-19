@@ -29,12 +29,14 @@ import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import com.hrznstudio.galacticraft.util.GravityUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -88,24 +90,8 @@ public abstract class LivingEntityMixin {
         }
     }
 
-    /*@ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 1, index = 11, name = "double_1")
-    private double gravityEffect(double double_1) {
-        if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
-            if (double_1 < (-((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 2.5D)) {
-                double_1 += ((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity();
-            }
-        }
-        return double_1;
+    @ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 0, name = "d")
+    private double gravityEffect(double d) {
+        return GravityUtil.getGravityForEntity(((LivingEntity)(Object)this));
     }
-
-    @ModifyVariable(method = "jump", at = @At(value = "FIELD"), ordinal = 0, index = 8, name = "float_2")
-    private float gravityJumpEffect(float float_2) {
-        if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
-            if (float_2 > 0) {
-                float_2 = float_2 + (((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 7);
-            }
-        }
-        return float_2;
-    }*/
-
 }
