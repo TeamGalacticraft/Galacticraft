@@ -17,6 +17,7 @@ group = project.maven_group
 
 minecraft {
     extractJars = true
+	refmapName = 'galacticraft-rewoven.refmap.json'
 }
 
 allprojects {
@@ -40,8 +41,8 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:0.1.3-alpha+1.14.4:dev")
-    include "com.hrznstudio:GalacticraftAPI:0.1.3-alpha+1.14.4"
+    modImplementation("com.hrznstudio:GalacticraftAPI:0.1.4-alpha+1.14.4:dev")
+    include "com.hrznstudio:GalacticraftAPI:0.1.4-alpha+1.14.4:dev"
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
@@ -57,7 +58,7 @@ dependencies {
         //need fiber things embedded in REI
     }
 
-    modCompile("teamreborn:energy:+")
+    modImplementation("teamreborn:energy:+")
     //modRuntime("TechReborn:TechReborn-${project.minecraft_version}:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
     //modRuntime("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 

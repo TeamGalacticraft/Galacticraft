@@ -29,7 +29,6 @@ import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import com.hrznstudio.galacticraft.util.GravityUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -88,10 +87,5 @@ public abstract class LivingEntityMixin {
                 }
             }
         }
-    }
-
-    @ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 0, name = "d")
-    private double gravityEffect(double d) {
-        return GravityUtil.getGravityForEntity(((LivingEntity)(Object)this));
     }
 }
