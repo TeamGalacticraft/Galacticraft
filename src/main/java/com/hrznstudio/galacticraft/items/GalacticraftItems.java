@@ -191,11 +191,10 @@ public class GalacticraftItems {
     public static final Item THERMAL_PADDING_CHESTPIECE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_CHESTPIECE), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.CHEST));
     public static final Item THERMAL_PADDING_LEGGINGS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_LEGGINGS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.LEGS));
     public static final Item THERMAL_PADDING_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_BOOTS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.FEET));
-    public static final Item TIER_2_ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_2_ROCKET_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item CARGO_ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.CARGO_ROCKET_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item MOON_BUGGY_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_BUGGY_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TIER_3_ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_ROCKET_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ASTRO_MINER_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ASTRO_MINER_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item MOON_BUGGY_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_BUGGY_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item ASTRO_MINER_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ASTRO_MINER_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
 
-    public static void register() {}
+    public static void register() {
+    }
 }

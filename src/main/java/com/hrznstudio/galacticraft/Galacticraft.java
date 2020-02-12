@@ -22,10 +22,9 @@
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.api.rocket.DefaultParts;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
-import com.hrznstudio.galacticraft.api.space.Rocket;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.registry.RocketPartRegistry;
+import com.hrznstudio.galacticraft.api.rocket.DefaultParts;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -48,14 +47,10 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.ActionResult;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.reborn.energy.*;
@@ -70,7 +65,7 @@ public class Galacticraft implements ModInitializer {
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
-    public static final MutableRegistry<RocketPart> ROCKET_PARTS = new SimpleRegistry<>();
+    public static final RocketPartRegistry ROCKET_PARTS = new RocketPartRegistry();
 
     public static ConfigHandler configHandler = new ConfigHandler();
 

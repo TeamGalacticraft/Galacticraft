@@ -22,14 +22,15 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import com.hrznstudio.galacticraft.api.item.SchematicItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.Rarity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class SchematicItem extends Item implements com.hrznstudio.galacticraft.api.item.SchematicItem {
-
-    public SchematicItem(Settings item$Settings_1) {
-        super(item$Settings_1);
+public class RocketSchematicItem extends Item implements SchematicItem {
+    public RocketSchematicItem(Settings settings) {
+        super(settings.maxCount(1).rarity(Rarity.EPIC));
     }
 }

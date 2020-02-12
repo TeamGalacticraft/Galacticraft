@@ -31,19 +31,14 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
-import com.hrznstudio.galacticraft.api.rocket.PartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
-import com.hrznstudio.galacticraft.api.space.Rocket;
-import com.hrznstudio.galacticraft.api.space.RocketTier;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.misc.RocketTiers;
+import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -68,7 +63,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
@@ -76,12 +70,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntity extends Entity implements Rocket, FluidInsertable { //pitch+90
+public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
     private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
         @Override
@@ -171,16 +168,15 @@ public class RocketEntity extends Entity implements Rocket, FluidInsertable { //
         TrackedDataHandlerRegistry.register(FUEL_INV.getType());
     }
 
-    public final Map<PartType, RocketPart> parts = new HashMap<>();
+    public final Map<RocketPartType, RocketPart> parts = new HashMap<>();
     
     public RocketEntity(EntityType<RocketEntity> type, World world_1) {
         super(type, world_1);
-        for (PartType type1 : PartType.values()) {
+        for (RocketPartType type1 : RocketPartType.values()) {
             parts.put(type1, Galacticraft.ROCKET_PARTS.get(new Identifier(Constants.MOD_ID, "default_" + type1.asString())));
         }
     }
 
-    @Override
     public Float[] getColor() {
         return this.dataTracker.get(COLOR);
     }
@@ -259,8 +255,8 @@ public class RocketEntity extends Entity implements Rocket, FluidInsertable { //
         this.getFuel().fromTag(tag);
 
         CompoundTag parts = tag.getCompound("Parts");
-        HashMap<PartType, RocketPart> temp = new HashMap<>();
-        for (PartType type : PartType.values()) {
+        HashMap<RocketPartType, RocketPart> temp = new HashMap<>();
+        for (RocketPartType type : RocketPartType.values()) {
             if (Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString()))) == null) {
                 temp.put(type, Galacticraft.ROCKET_PARTS.get(new Identifier(Constants.MOD_ID, "default_" + type.asString())));
             } else {
@@ -291,7 +287,7 @@ public class RocketEntity extends Entity implements Rocket, FluidInsertable { //
         CompoundTag parts = new CompoundTag();
         CompoundTag color = new CompoundTag();
 
-        for (Map.Entry<PartType, RocketPart> entry : this.parts.entrySet()) {
+        for (Map.Entry<RocketPartType, RocketPart> entry : this.parts.entrySet()) {
             RocketPart rocketPart = entry.getValue();
             rocketPart.toTag(parts);
         }
@@ -313,7 +309,7 @@ public class RocketEntity extends Entity implements Rocket, FluidInsertable { //
         ByteBuf buf = new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()))
                 .writeVarInt(this.getEntityId()).writeUuid(this.uuid).writeDouble(x).writeDouble(y).writeDouble(z).writeByte((int) (pitch / 360F * 256F)))
                 .writeByte((int) (yaw / 360F * 256F));
-        for (PartType type : PartType.values()) { //in order
+        for (RocketPartType type : RocketPartType.values()) { //in order
             buf.writeInt(Galacticraft.ROCKET_PARTS.getRawId(parts.get(type)));
         }
         buf.writeFloat(this.getColor()[0]);
@@ -590,12 +586,6 @@ public class RocketEntity extends Entity implements Rocket, FluidInsertable { //
         super.removeAllPassengers();
     }
 
-    @Override
-    public RocketTier getRocketTier() {
-        return RocketTiers.tierOne;
-    }
-
-    @Override
     public SimpleFixedFluidInv getFuel() {
         return this.dataTracker.get(FUEL_INV);
     }

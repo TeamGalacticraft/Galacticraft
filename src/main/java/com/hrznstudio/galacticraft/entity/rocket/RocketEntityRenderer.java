@@ -23,14 +23,11 @@
 package com.hrznstudio.galacticraft.entity.rocket;
 
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
-import com.hrznstudio.galacticraft.api.rocket.PartType;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.render.entity.MinecartEntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -67,29 +64,29 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         }
 
         if (float_7 > 0.0F) {
-            GlStateManager.rotatef(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float)entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE), 1.0F, 0.0F, 0.0F);
+            GlStateManager.rotatef(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE), 1.0F, 0.0F, 0.0F);
         }
 
 
         client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-        entity.parts.get(PartType.BODY).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(PartType.BODY).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(PartType.BODY).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-        entity.parts.get(PartType.BODY).postRender(entity);
+        entity.parts.get(RocketPartType.BODY).preRender(entity);
+        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(RocketPartType.BODY).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(RocketPartType.BODY).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        entity.parts.get(RocketPartType.BODY).postRender(entity);
         GlStateManager.translated(0.0D, -0.5D + -0.5D, 0.0D);
-        entity.parts.get(PartType.BOOSTER).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(PartType.BOOSTER).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(PartType.BOOSTER).getBlockToRender().getDefaultState()), 1, 1, 1, 1);
-        entity.parts.get(PartType.BOOSTER).postRender(entity);
-        entity.parts.get(PartType.FINS).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(PartType.FINS).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(PartType.FINS).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-        entity.parts.get(PartType.BOOSTER).postRender(entity);
+        entity.parts.get(RocketPartType.BOOSTER).preRender(entity);
+        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(RocketPartType.BOOSTER).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(RocketPartType.BOOSTER).getBlockToRender().getDefaultState()), 1, 1, 1, 1);
+        entity.parts.get(RocketPartType.BOOSTER).postRender(entity);
+        entity.parts.get(RocketPartType.FIN).preRender(entity);
+        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(RocketPartType.FIN).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(RocketPartType.FIN).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        entity.parts.get(RocketPartType.BOOSTER).postRender(entity);
         GlStateManager.translated(0.0D, -1.0D + 0.5D, 0.0D);
-        entity.parts.get(PartType.BOTTOM).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(PartType.BOTTOM).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(PartType.BOTTOM).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-        entity.parts.get(PartType.BOTTOM).postRender(entity);
+        entity.parts.get(RocketPartType.BOTTOM).preRender(entity);
+        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(RocketPartType.BOTTOM).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(RocketPartType.BOTTOM).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        entity.parts.get(RocketPartType.BOTTOM).postRender(entity);
         GlStateManager.translated(0.0D, 1.5D + 1.75D, 0.0D);
-        entity.parts.get(PartType.CONE).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(PartType.CONE).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(PartType.CONE).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
-        entity.parts.get(PartType.CONE).postRender(entity);
+        entity.parts.get(RocketPartType.CONE).preRender(entity);
+        client.getBlockRenderManager().getModelRenderer().render(entity.parts.get(RocketPartType.CONE).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.parts.get(RocketPartType.CONE).getBlockToRender().getDefaultState()), entity.getColor()[0], entity.getColor()[1], entity.getColor()[2], entity.getColor()[3]);
+        entity.parts.get(RocketPartType.CONE).postRender(entity);
         GlStateManager.popMatrix();
     }
 

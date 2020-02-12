@@ -11,8 +11,8 @@ import net.minecraft.util.registry.Registry;
 public class DefaultParts {
     public static final RocketPart DEFAULT_CONE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.CONE;
+        public RocketPartType getType() {
+            return RocketPartType.CONE;
         }
 
         @Override
@@ -23,8 +23,8 @@ public class DefaultParts {
 
     public static final RocketPart DEFAULT_BODY = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_body"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.BODY;
+        public RocketPartType getType() {
+            return RocketPartType.BODY;
         }
 
         @Override
@@ -35,8 +35,8 @@ public class DefaultParts {
 
     public static final RocketPart DEFAULT_FINS = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_fins"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.FINS;
+        public RocketPartType getType() {
+            return RocketPartType.FIN;
         }
 
         @Override
@@ -47,8 +47,8 @@ public class DefaultParts {
 
     public static final RocketPart NO_BOOSTER = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_booster"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.BOOSTER;
+        public RocketPartType getType() {
+            return RocketPartType.BOOSTER;
         }
 
         @Override
@@ -59,8 +59,8 @@ public class DefaultParts {
 
     public static final RocketPart DEFAULT_BOTTOM = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_bottom"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.BOTTOM;
+        public RocketPartType getType() {
+            return RocketPartType.BOTTOM;
         }
 
         @Override
@@ -71,8 +71,8 @@ public class DefaultParts {
 
     public static final RocketPart ADVANCED_CONE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "advanced_cone"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.CONE;
+        public RocketPartType getType() {
+            return RocketPartType.CONE;
         }
 
         @Override
@@ -83,8 +83,8 @@ public class DefaultParts {
 
     public static final RocketPart SLOPED_CONE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "sloped_cone"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.CONE;
+        public RocketPartType getType() {
+            return RocketPartType.CONE;
         }
 
         @Override
@@ -95,8 +95,8 @@ public class DefaultParts {
 
     public static final RocketPart THRUSTER_TIER_1 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "thruster_tier_1"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.BOOSTER;
+        public RocketPartType getType() {
+            return RocketPartType.BOOSTER;
         }
 
         @Override
@@ -107,8 +107,8 @@ public class DefaultParts {
 
     public static final RocketPart THRUSTER_TIER_2 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "thruster_tier_2"), new RocketPart() {
         @Override
-        public PartType getType() {
-            return PartType.BOOSTER;
+        public RocketPartType getType() {
+            return RocketPartType.BOOSTER;
         }
 
         @Override
@@ -117,5 +117,23 @@ public class DefaultParts {
         }
     });
 
-    public static void register() {}
+    public static void register() {
+    }
+
+    public static RocketPart getPartForType(RocketPartType type) {
+        switch (type) {
+            case BODY:
+                return DEFAULT_BODY;
+            case CONE:
+                return DEFAULT_CONE;
+            case FIN:
+                return DEFAULT_FINS;
+            case BOTTOM:
+                return DEFAULT_BOTTOM;
+            case BOOSTER:
+                return THRUSTER_TIER_1; //uuhhhhh default is none but i need to render smth
+            default:
+                throw new IllegalArgumentException("invalid part type");
+        }
+    }
 }

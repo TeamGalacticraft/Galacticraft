@@ -30,6 +30,7 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
+import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -70,12 +71,12 @@ public class GalacticraftClient implements ClientModInitializer {
         capeLoader.load();
 
         ClientSpriteRegistryCallback.event(SpriteAtlasTexture.BLOCK_ATLAS_TEX).register((spriteAtlasTexture, registry) -> {
-//        ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> {
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_TABS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.ROCKET_DESIGNER_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MAP_SCREEN));
@@ -104,6 +105,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorScreen.ELECTRIC_FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ROCKET_DESIGNER_CONTAINER, RocketDesignerScreen.FACTORY);
 
         EntityRendererRegistry.INSTANCE.register(RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
         GalacticraftBlockEntityRenderers.register();

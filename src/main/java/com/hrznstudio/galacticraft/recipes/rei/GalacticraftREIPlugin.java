@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.recipes.rei;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
+import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
@@ -126,6 +127,13 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
                 l.add(new Rectangle(screenHooks.rei_getContainerLeft() + screenHooks.rei_getContainerWidth(), screenHooks.rei_getContainerTop(), 20, 20));
             }
 
+            return l;
+        });
+
+        displayHelper.getBaseBoundsHandler().registerExclusionZones(RocketDesignerScreen.class, isOnRightSide -> {
+            List<Rectangle> l = Lists.newArrayList();
+            ContainerScreenHooks screenHooks = ScreenHelper.getLastContainerScreenHooks();
+            l.add(new Rectangle(screenHooks.rei_getContainerLeft() - 120, screenHooks.rei_getContainerTop(), 323, 164));
             return l;
         });
     }

@@ -5,12 +5,10 @@ import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Identifier;
-import org.lwjgl.opengl.GL11;
 
 public abstract class RocketPart {
 
-    public abstract PartType getType();
+    public abstract RocketPartType getType();
 
     /**
      * @return The block that will be rendered

@@ -167,6 +167,7 @@ public class Constants {
         public static final String WATER_ELECTROLYZER = "water_electrolyzer";
         public static final String METHANE_SYNTHESIZIER = "methane_synthesizer";
         public static final String GAS_LIQUEFIER = "gas_liquefier";
+        public static final String ROCKET_DESIGNER = "rocket_designer";
 
         // Pad Blocks
         public static final String BUGGY_FUELING_PAD = "buggy_fueling";
@@ -309,7 +310,7 @@ public class Constants {
         public static final String HEAVY_NOSE_CONE = "heavy_nose_cone";
         public static final String ROCKET_ENGINE = "engine_t1";
         public static final String HEAVY_ROCKET_ENGINE = "engine_t2";
-        public static final String ROCKET_FIN = "rocket_fins";
+        public static final String ROCKET_FIN = "rocket_fins_item";
         public static final String HEAVY_ROCKET_FIN = "rocket_fins_t2";
         public static final String TIER_1_BOOSTER = "engine_t1booster";
         //BUGGY
@@ -381,11 +382,10 @@ public class Constants {
         public static final String ISOTHERMAL_PADDING_LEGGINGS = "isothermal_padding_leggings";
         public static final String ISOTHERMAL_PADDING_BOOTS = "isothermal_padding_boots";
 
-        public static final String TIER_2_ROCKET_SCHEMATIC = "tier_2_rocket_schematic";
-        public static final String TIER_3_ROCKET_SCHEMATIC = "tier_3_rocket_schematic";
-        public static final String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         public static final String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         public static final String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
+
+        public static final String ROCKET_SCHEMATIC = "rocket_schematic";
     }
 
     public static class Config {
@@ -413,6 +413,7 @@ public class Constants {
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
+        public static final String ROCKET_DESIGNER_SCREEN = "gui/rocket_designer_screen";
         public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
         public static final String OXYGEN_COLLECTOR_SCREEN = "gui/oxygen_collector_screen";
@@ -469,5 +470,6 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
         public static final String REFINERY_CONTAINER = "refinery_container";
         public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
+        public static final String ROCKET_DESIGNER_CONTAINER = "rocket_designer_container";
     }
 }

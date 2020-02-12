@@ -296,12 +296,16 @@
   "ui.galacticraft-rewoven.tabs.security_config.public_2": "Public",
   "ui.galacticraft-rewoven.tabs.security_config.not_your_machine": "This is not your machine!",
   "ui.galacticraft-rewoven.tabs.security_config.owner": "Owner: %s",
-
+  "ui.galacticraft-rewoven.part_type.cone": "Cone",
+  "ui.galacticraft-rewoven.part_type.body": "Body",
+  "ui.galacticraft-rewoven.part_type.fin": "Fin",
+  "ui.galacticraft-rewoven.part_type.booster": "Booster",
+  "ui.galacticraft-rewoven.part_type.bottom": "Bottom",
+  "ui.galacticraft-rewoven.rocket_designer.name": "Rocket Designer",
+  "block.galacticraft-rewoven.rocket_designer": "Rocket Designer",
   "category.rei.circuit_fabricator": "Circuit Fabricating",
   "category.rei.compressing": "Compressing",
-
   "galacticraft-rewoven:moon": "Moon",
-
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",

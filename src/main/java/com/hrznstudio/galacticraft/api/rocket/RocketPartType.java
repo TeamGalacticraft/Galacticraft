@@ -2,10 +2,10 @@ package com.hrznstudio.galacticraft.api.rocket;
 
 import net.minecraft.util.StringIdentifiable;
 
-public enum PartType implements StringIdentifiable {
+public enum RocketPartType implements StringIdentifiable {
     CONE,
     BODY,
-    FINS,
+    FIN,
     BOOSTER,
     BOTTOM;
 
