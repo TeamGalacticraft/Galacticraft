@@ -80,7 +80,8 @@ public class Galacticraft implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        logger.info("[Galacticraft] Initializing...");
+        long startInitTime = System.currentTimeMillis();
+        logger.info("[Galacticraft] Starting initialization.");
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();
@@ -166,5 +167,7 @@ public class Galacticraft implements ModInitializer {
                 }
             };
         });
+
+        logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis()-startInitTime);
     }
 }

@@ -62,6 +62,8 @@ public class GalacticraftClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        long startInitTime = System.currentTimeMillis();
+        Galacticraft.logger.info("[Galacticraft] Starting client initialization.");
         capeLoader = new CapeLoader();
         jsonCapes = new JsonCapes();
         capeLoader.register(jsonCapes);
@@ -116,5 +118,6 @@ public class GalacticraftClient implements ClientModInitializer {
                 Galacticraft.logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
             }
         }
+        Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis()-startInitTime);
     }
 }

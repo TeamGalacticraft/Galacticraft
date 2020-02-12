@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -34,6 +35,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -42,6 +44,7 @@ import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -57,6 +60,16 @@ public class GalacticraftCommands {
                                 .executes(GalacticraftCommands::teleport)
                                 .then(CommandManager.argument("entities", EntityArgumentType.entities())
                                         .executes((GalacticraftCommands::teleport))))));
+        // temp command
+        CommandRegistry.INSTANCE.register(false, source -> source.register(
+                LiteralArgumentBuilder.<ServerCommandSource>literal("gcr_listbodies")
+                .executes(context -> {
+                    StringBuilder builder = new StringBuilder();
+                    CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey() + "\n"));
+                    context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
+                    return 1;
+                })
+        ));
     }
 
     private static int teleport(CommandContext<ServerCommandSource> context) {

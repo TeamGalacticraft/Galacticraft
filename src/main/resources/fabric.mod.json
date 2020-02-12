@@ -10,7 +10,14 @@
   "contact": {
     "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven"
   },
-
+  "authors": [
+    {
+      "name": "Horizon Studio",
+      "contact": {
+        "homepage": "https://hrznstudio.com"
+      }
+    }
+  ],
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -21,6 +28,9 @@
     ],
     "rei_plugins": [
       "com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin"
+    ],
+    "gc_addons": [
+      "com.hrznstudio.galacticraft.hooks.GalacticraftAddon"
     ]
   },
   "mixins": [
@@ -29,10 +39,12 @@
   "requires": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
+    "minecraft": "1.14.4",
     "cotton": "*",
     "cotton-energy": "*",
     "libblockattributes_items": ">=0.4.5",
-    "silk": "*"
+    "silk": "*",
+    "galacticraft-api": "*"
   },
   "suggests": {
     "modmenu": "*"

@@ -1,24 +1,11 @@
-# <img src="https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/src/main/resources/assets/galacticraft-rewoven/icon.png" width="45" height="45" >Galacticraft: Rewoven
-[![](https://img.shields.io/discord/449966345665249290.svg?colorB=7289DA&label=Discord&style=flat-square)](https://discord.me/galacticraft) [![Build Status](https://travis-ci.com/teamgalacticraft/Galacticraft-Rewoven.svg?branch=master)](https://travis-ci.com/StellarHorizons/Galacticraft-Rewoven)
+[![](https://img.shields.io/github/workflow/status/StellarHorizons/Galacticraft-Rewoven/Java%20CI?style=flat-square)](https://github.com/StellarHorizons/Galacticraft-Rewoven/actions?query=workflow%3A%22Java+CI%22)
+[![](https://img.shields.io/discord/422424112863117312.svg?colorB=7289DA&label=discord&style=flat-square)](https://discord.gg/8eVjQrb/)
+[![](https://img.shields.io/github/issues/StellarHorizons/Galacticraft-Rewoven?style=flat-square)](https://github.com/StellarHorizons/Galacticraft-Rewoven/issues)
+[![](https://img.shields.io/twitch/status/hrznstudio.svg?style=flat-square)](https://twitch.tv/hrznstudio)
 
-Galacticraft: Rewoven is a port of the popular space mod Galacticraft made for the [Fabric modloader](https://fabricmc.net/2018/12/10/announcement.html).
+# Galacticraft: Rewoven
+The [FabricMC](https://fabricmc.net) rewrite of [Galacticraft](https://micdoodle8.com/mods/galacticraft). 
+GC:R has been rewritten from the ground up for the [FabricMC](https://fabricmc.net) modding framework.
 
 ## Addon Development
-If you are a mod developer and want to create an addon for Galacticraft: Rewoven we have documentation available [here](https://stellarhorizons.github.io/Galacticraft-Rewoven/). 
-
-## Contributing
-Depending on what IDE you use to write Java in, there will be different ways to setup your environment.
-If you are running Windows you need to remove the `./` that is in front of the command.
-
-### Intellij IDEA
-```
-./gradlew genSources idea
-```
-
-### Eclipse
-```
-./gradlew genSources eclipse
-```
-
-### Other IDEs
-* [VSCode](https://fabricmc.net/wiki/setup:vscode)
+Addon development guides and examples are all contained in a separate repository: [StellarHorizons/Addon-API](https://github.com/StellarHorizons/Addon-API).

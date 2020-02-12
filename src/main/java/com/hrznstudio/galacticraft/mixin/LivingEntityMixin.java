@@ -24,8 +24,9 @@ package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
-import com.hrznstudio.galacticraft.api.space.CelestialBody;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import net.minecraft.entity.Entity;
@@ -34,6 +35,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -60,8 +62,8 @@ public abstract class LivingEntityMixin {
     private void oxygenDamage(CallbackInfo ci) {
         Entity entity = (LivingEntity) (Object) this;
         if (entity.isAlive()) {
-            if (entity.world.dimension instanceof CelestialBody) {
-                if (!((CelestialBody) entity.world.dimension).hasOxygen()) {
+            if(CelestialBodyType.getByDimType(entity.world.dimension.getType()).isPresent()) {
+                if (!CelestialBodyType.getByDimType(entity.world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                     entity.setBreath(air - 1);
                     if (entity.getBreath() == -20) {
                         entity.setBreath(0);
@@ -86,25 +88,4 @@ public abstract class LivingEntityMixin {
             }
         }
     }
-
-    /*@ModifyVariable(method = "travel", at = @At(value = "FIELD"), ordinal = 1, index = 11, name = "double_1")
-    private double gravityEffect(double double_1) {
-        if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
-            if (double_1 < (-((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 2.5D)) {
-                double_1 += ((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity();
-            }
-        }
-        return double_1;
-    }
-
-    @ModifyVariable(method = "jump", at = @At(value = "FIELD"), ordinal = 0, index = 3, name = "float_2")
-    private float gravityJumpEffect(float float_2) {
-        if (((LivingEntity) (Object) this).world.getDimension() instanceof CelestialBody) {
-            if (float_2 > 0) {
-                float_2 = float_2 + (((CelestialBody) ((LivingEntity) (Object) this).world.getDimension()).getGravity() * 7);
-            }
-        }
-        return float_2;
-    }*/
-
 }
