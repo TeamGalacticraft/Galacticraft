@@ -49,7 +49,11 @@ dependencies {
     modImplementation("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
+    
+    modImplementation "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
+    modImplementation "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
+    modImplementation "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
+
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth', module: 'config-2'
         exclude group: 'me.shedaniel.cloth', module: 'config-events'
