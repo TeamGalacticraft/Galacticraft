@@ -44,7 +44,6 @@ import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
