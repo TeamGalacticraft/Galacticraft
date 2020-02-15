@@ -244,9 +244,12 @@
   "tooltip.galacticraft-rewoven.energy.g": "%sG GJ",
 
   "tooltip.galacticraft-rewoven.coal_generator": "Burns coal and charcoal for energy. The simplest but least efficient energy method.",
+  "tooltip.galacticraft-rewoven.compressor" : "Compressor will process ingots into their compressed equivalents.",
+  "tooltip.galacticraft-rewoven.electric_compressor" : "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.",
   "tooltip.galacticraft-rewoven.basic_solar_panel": "Basic Solar Panels will collect energy from the sun, storing it for further use. Collects most energy at mid-day (non-adjustable).",
   "tooltip.galacticraft-rewoven.oxygen_collector": "Oxygen Collector will store oxygen collected from leaves in the surrounding area.",
   "tooltip.galacticraft-rewoven.circuit_fabricator": "Circuit Fabricator will process basic materials into silicon wafers, used for advanced machines.",
+  "tooltip.galacticraft-rewoven.refinery" : "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.",
   "tooltip.galacticraft-rewoven.cheese_block": "Cheese Blocks are created from the cheeses of the Moon, place-able and edible.",
   "tooltip.galacticraft-rewoven.energy_storage_module": "Energy Storage Module is used to store large amounts of energy for later use.",
   "tooltip.galacticraft-rewoven.energy_storage_cluster": "Energy Storage Cluster is used to store large amounts of energy for later use. Stores and outputs more energy than its predecessor.",
