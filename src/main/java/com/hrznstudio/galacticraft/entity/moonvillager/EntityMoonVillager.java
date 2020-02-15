@@ -75,17 +75,6 @@ public class EntityMoonVillager extends VillagerEntity {
     }
 
     @Override
-    public void onAttacking(Entity entity) {
-        super.onAttacking(entity);
-    }
-
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-        this.applyDamage(source, amount);
-        return true;
-    }
-
-    @Override
     public Iterable<ItemStack> getArmorItems() {
         return null;
     }
