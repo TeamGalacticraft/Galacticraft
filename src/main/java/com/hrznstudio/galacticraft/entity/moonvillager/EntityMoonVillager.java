@@ -22,12 +22,17 @@
 
 package com.hrznstudio.galacticraft.entity.moonvillager;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ai.brain.Activity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
+import java.util.HashSet;
+
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -36,6 +41,33 @@ public class EntityMoonVillager extends VillagerEntity {
 
     public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
         super(entityType, world);
+        this.initGoals();
+        this.setCanPickUpLoot(true);
+        this.brain.setDefaultActivity(Activity.CORE);
+        HashSet<Activity> otherActivities = new HashSet<>();
+        otherActivities.add(Activity.WORK);
+        this.brain.setCoreActivities(otherActivities);
+    }
+
+    @Override
+    protected void onGrowUp() {
+        super.onGrowUp();
+    }
+
+    @Override
+    public boolean canImmediatelyDespawn(double distanceSquared) {
+        return false;
+    }
+
+    @Override
+    public void onAttacking(Entity entity) {
+        super.onAttacking(entity);
+    }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        this.applyDamage(source, amount);
+        return true;
     }
 
     @Override

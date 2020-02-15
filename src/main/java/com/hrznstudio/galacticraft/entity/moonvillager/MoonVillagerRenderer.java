@@ -11,7 +11,7 @@ import net.minecraft.util.Identifier;
 public class MoonVillagerRenderer extends MobEntityRenderer<EntityMoonVillager, VillagerResemblingModel<EntityMoonVillager>> {
 
     public MoonVillagerRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new VillagerResemblingModel<EntityMoonVillager>(1, 1, 1), 1);
+        super(entityRenderDispatcher_1, new VillagerResemblingModel<>(1, 64, 64), 1);
     }
 
     @Override
