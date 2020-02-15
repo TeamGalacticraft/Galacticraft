@@ -226,15 +226,25 @@
   "item.galacticraft-rewoven.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-rewoven.large_oxygen_tank": "Large Oxygen Tank",
 
+  "item.galacticraft-rewoven.shield_controller" : "Shield Controller",
+  "item.galacticraft-rewoven.frequency_module" : "Frequency Module",
+
   "item.galacticraft-rewoven.thermal_padding_helmet": "Thermal Padding Helm",
   "item.galacticraft-rewoven.thermal_padding_chestpiece": "Thermal Padding Chestpiece",
   "item.galacticraft-rewoven.thermal_padding_leggings": "Thermal Padding Leggings",
   "item.galacticraft-rewoven.thermal_padding_boots": "Thermal Padding Boot",
 
+  "item.galacticraft-rewoven.tier_2_rocket_schematic" : "Tier 2 Rocket Schematic",
+  "item.galacticraft-rewoven.cargo_rocket_schematic" : "Cargo Rocket Schematic",
+  "item.galacticraft-rewoven.moon_buggy_schematic" : "Moon Buggy Schematic",
+  "item.galacticraft-rewoven.tier_3_rocket_schematic" : "Tier 3 Rocket Schematic",
+  "item.galacticraft-rewoven.astro_miner_schematic" : "Astro Miner Schematic",
+
   "item.galacticraft-rewoven.battery": "Battery",
   "item.galacticraft-rewoven.infinite_battery": "Infinite Battery",
 
   "item.galacticraft-rewoven.crude_oil_bucket": "Oil Bucket",
+  "item.galacticraft-rewoven.fuel_bucket" : "Fuel Bucket",
 
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
 
