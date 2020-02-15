@@ -24,12 +24,12 @@ package com.hrznstudio.galacticraft.entity.moonvillager;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 
-public class EntityMoonVillager extends LivingEntity {
+public class EntityMoonVillager extends VillagerEntity {
 
     public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
         super(entityType, world);

@@ -246,6 +246,8 @@
   "item.galacticraft-rewoven.crude_oil_bucket": "Oil Bucket",
   "item.galacticraft-rewoven.fuel_bucket" : "Fuel Bucket",
 
+  "item.galacticraft-rewoven.rocket_spawn_egg" : "Rocket Spawn Egg (Tier 1)",
+
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
 
   "tooltip.galacticraft-rewoven.energy": "%s GJ",
