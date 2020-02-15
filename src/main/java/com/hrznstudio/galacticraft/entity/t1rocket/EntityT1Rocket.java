@@ -36,10 +36,10 @@ import net.minecraft.world.explosion.Explosion;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class T1RocketEntity extends Entity implements RocketEntity {
+public class EntityT1Rocket extends Entity implements RocketEntity {
     private int fuel;
 
-    public T1RocketEntity(EntityType<T1RocketEntity> type, World world_1) {
+    public EntityT1Rocket(EntityType<EntityT1Rocket> type, World world_1) {
         super(type, world_1);
     }
 
