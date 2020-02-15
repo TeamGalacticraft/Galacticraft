@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity;
+package com.hrznstudio.galacticraft.entity.t1rocket;
 
-import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
+import com.hrznstudio.galacticraft.entity.t1rocket.T1RocketEntity;
 import net.minecraft.client.render.entity.model.EntityModel;
 
 /**

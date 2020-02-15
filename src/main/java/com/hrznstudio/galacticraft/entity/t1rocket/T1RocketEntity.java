@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.moonvillager;
+package com.hrznstudio.galacticraft.entity.t1rocket;
 
 import com.hrznstudio.galacticraft.api.space.RocketEntity;
 import com.hrznstudio.galacticraft.api.space.RocketTier;

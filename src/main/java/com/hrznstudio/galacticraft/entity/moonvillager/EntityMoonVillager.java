@@ -29,6 +29,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class EntityMoonVillager extends VillagerEntity {
 
     public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
