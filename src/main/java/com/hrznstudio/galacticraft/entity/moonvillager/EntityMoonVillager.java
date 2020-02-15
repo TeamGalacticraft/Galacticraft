@@ -26,9 +26,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.brain.Activity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.VillagerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 import java.util.HashSet;
@@ -48,6 +51,17 @@ public class EntityMoonVillager extends VillagerEntity {
         HashSet<Activity> otherActivities = new HashSet<>();
         otherActivities.add(Activity.WORK);
         this.brain.setCoreActivities(otherActivities);
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.5d);
+    }
+
+    @Override
+    public boolean canGather(Item itemIn) {
+        return itemIn == Items.BREAD || itemIn == Items.POTATO || itemIn == Items.CARROT || itemIn == Items.WHEAT || itemIn == Items.WHEAT_SEEDS;
     }
 
     @Override
@@ -83,7 +97,6 @@ public class EntityMoonVillager extends VillagerEntity {
 
     @Override
     public void setEquippedStack(EquipmentSlot equipmentSlot, ItemStack itemStack) {
-
     }
 
     @Override
