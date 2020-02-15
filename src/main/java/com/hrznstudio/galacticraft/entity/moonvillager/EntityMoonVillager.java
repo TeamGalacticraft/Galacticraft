@@ -41,6 +41,7 @@ public class EntityMoonVillager extends VillagerEntity {
 
     public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
         super(entityType, world);
+        this.setHealth(20f);
         this.initGoals();
         this.setCanPickUpLoot(true);
         this.brain.setDefaultActivity(Activity.CORE);
