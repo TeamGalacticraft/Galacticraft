@@ -80,6 +80,11 @@ public class EntityMoonVillager extends VillagerEntity {
     }
 
     @Override
+    public void onDeath(DamageSource damageSource) {
+        super.onDeath(damageSource);
+    }
+
+    @Override
     public ItemStack getEquippedStack(EquipmentSlot equipmentSlot) {
         return ItemStack.EMPTY;
     }
