@@ -22,10 +22,6 @@
 
 package com.hrznstudio.galacticraft.entity.moonvillager;
 
-import com.hrznstudio.galacticraft.Constants;
-import javafx.event.EventType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.brain.Activity;
@@ -36,7 +32,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
-import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import java.util.HashSet;
 
