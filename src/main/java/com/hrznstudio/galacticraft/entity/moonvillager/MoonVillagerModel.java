@@ -29,7 +29,7 @@ import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
-public class MoonVillagerModel<MOONVILLAGER_ENTITY> extends VillagerResemblingModel<EntityMoonVillager> {
+public class MoonVillagerModel<MOONVILLAGER_ENTITY> extends VillagerResemblingModel<MoonVillagerEntity> {
 
 	private final Model baseModel;
 
@@ -70,7 +70,7 @@ public class MoonVillagerModel<MOONVILLAGER_ENTITY> extends VillagerResemblingMo
 	}
 
 	@Override
-	public void render(EntityMoonVillager entity, float f, float f1, float f2, float f3, float f4, float f5) {
+	public void render(MoonVillagerEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 	}
 }

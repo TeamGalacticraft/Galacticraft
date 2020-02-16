@@ -39,7 +39,7 @@ import java.util.HashSet;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EntityMoonVillager extends VillagerEntity {
+public class MoonVillagerEntity extends VillagerEntity {
 
     /**
      * TO DO:
@@ -51,7 +51,7 @@ public class EntityMoonVillager extends VillagerEntity {
      * - Villages
      */
 
-    public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
+    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
         super(entityType, world);
         this.setHealth(20);
         this.initGoals();
