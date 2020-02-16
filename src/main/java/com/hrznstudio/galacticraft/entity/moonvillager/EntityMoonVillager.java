@@ -53,7 +53,7 @@ public class EntityMoonVillager extends VillagerEntity {
 
     public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
         super(entityType, world);
-        this.setHealth(20f);
+        this.setHealth(20);
         this.initGoals();
         this.setCanPickUpLoot(true);
         this.brain.setDefaultActivity(Activity.CORE);
@@ -74,11 +74,6 @@ public class EntityMoonVillager extends VillagerEntity {
     }
 
     @Override
-    protected void onGrowUp() {
-        super.onGrowUp();
-    }
-
-    @Override
     public boolean canImmediatelyDespawn(double distanceSquared) {
         return false;
     }
@@ -90,13 +85,15 @@ public class EntityMoonVillager extends VillagerEntity {
 
     @Override
     public void onDeath(DamageSource damageSource) {
+        // might need this at some point
         super.onDeath(damageSource);
     }
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        this.remove();
-        return false;
+        return super.damage(source, amount);
+        //this.remove();
+        //return false;
     }
 
     @Override
