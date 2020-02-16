@@ -41,6 +41,16 @@ import java.util.HashSet;
  */
 public class EntityMoonVillager extends VillagerEntity {
 
+    /**
+     * TO DO:
+     * - Make model more similar to original (large cranium, smaller nose)
+     * - Figure out how to die / lose health without crashing
+     * - Set up activities
+     * - Trading (wait until 1.15)
+     * - Turn into Evolved Witch when hit by lightning
+     * - Villages
+     */
+
     public EntityMoonVillager(EntityType<? extends EntityMoonVillager> entityType, World world) {
         super(entityType, world);
         this.setHealth(20f);
