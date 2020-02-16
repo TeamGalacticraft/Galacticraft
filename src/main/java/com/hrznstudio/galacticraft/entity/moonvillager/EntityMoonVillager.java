@@ -89,6 +89,12 @@ public class EntityMoonVillager extends VillagerEntity {
     }
 
     @Override
+    public boolean damage(DamageSource source, float amount) {
+        this.remove();
+        return false;
+    }
+
+    @Override
     public ItemStack getEquippedStack(EquipmentSlot equipmentSlot) {
         return ItemStack.EMPTY;
     }
