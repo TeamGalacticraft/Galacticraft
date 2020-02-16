@@ -91,9 +91,9 @@ public class EntityMoonVillager extends VillagerEntity {
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        return super.damage(source, amount);
-        //this.remove();
-        //return false;
+        //return super.damage(source, amount);
+        this.remove();
+        return false;
     }
 
     @Override

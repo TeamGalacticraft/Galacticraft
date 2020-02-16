@@ -2,16 +2,15 @@ package com.hrznstudio.galacticraft.entity.moonvillager;
 
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerRenderer extends MobEntityRenderer<EntityMoonVillager, VillagerResemblingModel<EntityMoonVillager>> {
+public class MoonVillagerRenderer extends MobEntityRenderer<EntityMoonVillager, MoonVillagerModel<EntityMoonVillager>> {
 
     public MoonVillagerRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new VillagerResemblingModel<>(1, 64, 64), 1);
+        super(entityRenderDispatcher_1, new MoonVillagerModel<>(1, 64, 64), 1);
     }
 
     @Override
