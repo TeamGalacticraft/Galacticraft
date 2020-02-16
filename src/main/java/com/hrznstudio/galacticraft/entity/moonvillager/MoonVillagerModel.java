@@ -39,27 +39,34 @@ public class MoonVillagerModel<MOON_VILLAGER_ENTITY> extends VillagerResemblingM
 		this.hat.visible = false;
 
 		this.head.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.head.boxes.add(new Box(head, 0, 0, -4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F, false));
-		this.head.boxes.add(new Box(head, 0, 38, -5.0F, -16.0F, -5.0F, 10, 8, 10, 0.0F, false));
+		this.head.boxes.clear();
+		this.head.boxes.add(new Box(this.head, 0, 0, -4.0F, -10.0F, -4.0F, 8, 10, 8, 0.0F, false));
+		this.head.boxes.add(new Box(this.head, 0, 38, -5.0F, -16.0F, -5.0F, 10, 8, 10, 0.0F, false));
 
 		this.nose.setRotationPoint(0.0F, -2.0F, 0.0F);
-		this.head.addChild(nose);
-		this.nose.boxes.add(new Box(nose, 24, 0, -1.0F, -1.0F, -6.0F, 2, 4, 2, 0.0F, false));
+		this.nose.boxes.clear();
+		this.head.addChild(this.nose);
+		this.nose.boxes.add(new Box(this.nose, 24, 0, -1.0F, -1.0F, -6.0F, 2, 4, 2, 0.0F, false));
 
-		body.setRotationPoint(0.0F, 24.0F, 0.0F);
-		body.boxes.add(new Box(body, 16, 20, -4.0F, -24.0F, -3.0F, 8, 12, 6, 0.0F, false));
+		this.body.setRotationPoint(0.0F, 24.0F, 0.0F);
+		this.body.boxes.clear();
+		this.body.boxes.add(new Box(this.body, 16, 20, -4.0F, -24.0F, -3.0F, 8, 12, 6, 0.0F, false));
 
-		arms.setRotationPoint(0.0F, 2.0F, 0.0F);
-		arms.setRotationPoint(-0.7854F, 0.0F, 0.0F);
-		arms.boxes.add(new Box(arms, 40, 38, -4.0F, 2.0F, -2.0F, 8, 4, 4, 0.0F, false));
-		arms.boxes.add(new Box(arms, 44, 22, -8.0F, -2.0F, -2.0F, 4, 8, 4, 0.0F, false));
-		arms.boxes.add(new Box(arms, 44, 22, 4.0F, -2.0F, -2.0F, 4, 8, 4, 0.0F, false));
+		this.arms.setRotationPoint(-0.7854F, 0.0F, 0.0F);
+		this.arms.boxes.clear();
+		this.arms.boxes.add(new Box(this.arms, 40, 38, -4.0F, 2.0F, -2.0F, 8, 4, 4, 0.0F, false));
+		this.arms.boxes.add(new Box(this.arms, 44, 22, -8.0F, -2.0F, -2.0F, 4, 8, 4, 0.0F, false));
+		this.arms.boxes.add(new Box(this.arms, 44, 22, 4.0F, -2.0F, -2.0F, 4, 8, 4, 0.0F, false));
 
-		leftLeg.setRotationPoint(-2.0F, 12.0F, 0.0F);
-		leftLeg.boxes.add(new Box(leftLeg, 0, 22, -2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
+		this.leftLeg.setRotationPoint(-2.0F, 12.0F, 0.0F);
+		this.leftLeg.boxes.clear();
+		this.leftLeg.boxes.add(new Box(this.leftLeg, 0, 22, -2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
 
-		rightLeg.setRotationPoint(2.0F, 12.0F, 0.0F);
-		rightLeg.boxes.add(new Box(rightLeg, 0, 22, -2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
+		this.rightLeg.setRotationPoint(2.0F, 12.0F, 0.0F);
+		this.rightLeg.boxes.clear();
+		this.rightLeg.boxes.add(new Box(this.rightLeg, 0, 22, -2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
+
+		this.robe.boxes.clear();
 	}
 
 	@Override
