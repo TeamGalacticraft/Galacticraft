@@ -29,7 +29,7 @@ import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
-public class MoonVillagerModel<MOON_VILLAGER_ENTITY> extends VillagerResemblingModel<EntityMoonVillager> {
+public class MoonVillagerModel<MOONVILLAGER_ENTITY> extends VillagerResemblingModel<EntityMoonVillager> {
 
 	private final Model baseModel;
 
