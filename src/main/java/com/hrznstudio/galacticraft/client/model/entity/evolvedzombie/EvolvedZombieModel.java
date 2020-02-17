@@ -25,12 +25,12 @@ package com.hrznstudio.galacticraft.client.model.entity.evolvedzombie;
 import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
 import net.minecraft.client.model.Box;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.render.entity.model.ZombieEntityModel;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
-public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends ZombieEntityModel<EvolvedZombieEntity> {
+public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends BipedEntityModel<EvolvedZombieEntity> {
 
 	/**
 	 * Work in Progress. This model should work, but it refuses to show up :(
@@ -70,8 +70,8 @@ public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends ZombieEntityModel<
 
 		//this.leftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
 		this.leftArm.boxes.clear();
-		//this.body.addChild(this.leftArm);
-		//this.leftArm.boxes.add(new Box(this.leftArm, 40, 16, -1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F, true));
+		this.body.addChild(this.leftArm);
+		this.leftArm.boxes.add(new Box(this.leftArm, 40, 16, -1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F, true));
 
 		this.rightLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
 		this.rightLeg.boxes.clear();
@@ -87,5 +87,6 @@ public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends ZombieEntityModel<
 	@Override
 	public void render(EvolvedZombieEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
+		this.body.render(1F);
 	}
 }
