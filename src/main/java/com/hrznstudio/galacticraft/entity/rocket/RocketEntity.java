@@ -33,6 +33,7 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.netty.buffer.ByteBuf;
@@ -165,7 +166,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     public static final TrackedData<List<RocketPart>> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<List<RocketPart>>() {
         @Override
         public void write(PacketByteBuf var1, List<RocketPart> var2) {
-            for (byte i = 0; i < RocketPartType.values_noUpgrade().length; i++) {
+            for (byte i = 0; i < RocketPartType.values().length; i++) {
                 var1.writeIdentifier(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(var2.get(i))));
             }
         }
@@ -173,7 +174,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         @Override
         public List<RocketPart> read(PacketByteBuf var1) {
             List<RocketPart> list = new ArrayList<>();
-            for (int i = 0; i < RocketPartType.values_noUpgrade().length; i++) {
+            for (int i = 0; i < RocketPartType.values().length; i++) {
                 RocketPart part = Galacticraft.ROCKET_PARTS.get(var1.readIdentifier());
                 list.set(part.getType().ordinal(), part);
             }
@@ -279,9 +280,9 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
         CompoundTag parts = tag.getCompound("Parts");
         List<RocketPart> list = new ArrayList<>();
-        for (RocketPartType type : RocketPartType.values_noUpgrade()) {
+        for (RocketPartType type : RocketPartType.values()) {
             if (Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString()))) == null) {
-                list.add(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(new Identifier(Constants.MOD_ID, "default_" + type.asString()))));
+                list.add(RocketParts.getPartForType(type));
             } else {
                 list.add(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString())))));
             }
@@ -379,8 +380,8 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         dataTracker.startTracking(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
         List<RocketPart> parts = new ArrayList<>();
-        for (byte i = 0; i < RocketPartType.values_noUpgrade().length; i++) {
-            parts.add(Galacticraft.ROCKET_PARTS.get(new Identifier(Constants.MOD_ID, "default_" + RocketPartType.values_noUpgrade()[i].asString())));
+        for (RocketPartType type : RocketPartType.values()) {
+            parts.add(RocketParts.getPartForType(type));
         }
         dataTracker.startTracking(PARTS, parts);
     }

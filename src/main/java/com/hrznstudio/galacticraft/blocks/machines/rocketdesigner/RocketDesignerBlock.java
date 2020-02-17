@@ -104,12 +104,9 @@ public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock impl
             if (blockEntity instanceof RocketDesignerBlockEntity) {
                 RocketDesignerBlockEntity be = (RocketDesignerBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = be.getInventory().getInvStack(i);
-
-                    if (!itemStack.isEmpty()) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack.copy()));
-                    }
+                ItemStack itemStack = be.getInventory().getInvStack(0);
+                if (!itemStack.isEmpty()) {
+                    world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack.copy()));
                 }
             }
         }

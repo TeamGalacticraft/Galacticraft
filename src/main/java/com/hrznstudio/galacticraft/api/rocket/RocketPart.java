@@ -4,6 +4,8 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 
 public interface RocketPart {
@@ -30,6 +32,15 @@ public interface RocketPart {
      */
     default void postRender(RocketEntity entity) {
 
+    }
+
+    default Item getDesignerItem() {
+        Item item = this.getBlockToRender().asItem();
+        if (item != Items.AIR) {
+            return item;
+        } else {
+            return Items.BARRIER;
+        }
     }
 
     default CompoundTag toTag(CompoundTag tag) {

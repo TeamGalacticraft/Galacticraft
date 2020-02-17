@@ -23,11 +23,18 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.SchematicItem;
+import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.World;
 
@@ -51,6 +58,30 @@ public class RocketSchematicItem extends Item implements SchematicItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
 
-        CompoundTag tag = stack.getTag();
+        CompoundTag tag = stack.getOrCreateTag();
+        if (Screen.hasShiftDown()) {
+            if (tag.containsKey("red") && tag.containsKey("cone")) {
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.color"));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.red", tag.getInt("red")).setStyle(new Style().setColor(Formatting.DARK_RED)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.green", tag.getInt("green")).setStyle(new Style().setColor(Formatting.DARK_GREEN)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blue", tag.getInt("blue")).setStyle(new Style().setColor(Formatting.DARK_BLUE)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.alpha", tag.getInt("alpha")).setStyle(new Style().setColor(Formatting.WHITE)));
+                tooltip.add(new LiteralText("-----").setStyle(new Style().setColor(Formatting.AQUA)));
+                for (RocketPartType type : RocketPartType.values()) {
+                    String s = new Identifier(tag.getString(type.asString())).getPath();
+                    if (!(new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString()
+                            .equals("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name"))) {
+                        s = new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() +
+                                "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString();
+                    }
+                    tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.part_type." + type.asString(), s).setStyle(new Style().setColor(Formatting.GRAY)));
+                }
+            } else {
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blank").setStyle(new Style().setColor(Formatting.GRAY)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blank_2").setStyle(new Style().setColor(Formatting.GRAY)));
+            }
+        } else {
+            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
+        }
     }
 }

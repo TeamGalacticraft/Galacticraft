@@ -5,6 +5,7 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -118,6 +119,36 @@ public class RocketParts {
         }
     });
 
+    public static final RocketPart STORAGE_UPGRADE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "storage_upgrade"), new RocketPart() {
+        @Override
+        public RocketPartType getType() {
+            return RocketPartType.UPGRADE;
+        }
+
+        @Override
+        public Block getBlockToRender() {
+            return Blocks.AIR;
+        }
+
+        @Override
+        public Item getDesignerItem() {
+            return Blocks.CHEST.asItem();
+        }
+    });
+
+    public static final RocketPart NO_UPGRADE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_upgrade"), new RocketPart() {
+        @Override
+        public RocketPartType getType() {
+            return RocketPartType.UPGRADE;
+        }
+
+        @Override
+        public Block getBlockToRender() {
+            return Blocks.AIR;
+        }
+
+    });
+
     public static void register() {
     }
 
@@ -132,7 +163,28 @@ public class RocketParts {
             case BOTTOM:
                 return DEFAULT_BOTTOM;
             case BOOSTER:
-                return BOOSTER_TIER_1; //uuhhhhh default is none but i need to render smth
+                return NO_BOOSTER;
+            case UPGRADE:
+                return NO_UPGRADE;
+            default:
+                throw new IllegalArgumentException("invalid part type");
+        }
+    }
+
+    public static RocketPart getPartToRenderForType(RocketPartType type) {
+        switch (type) {
+            case BODY:
+                return DEFAULT_BODY;
+            case CONE:
+                return DEFAULT_CONE;
+            case FIN:
+                return DEFAULT_FIN;
+            case BOTTOM:
+                return DEFAULT_BOTTOM;
+            case BOOSTER:
+                return BOOSTER_TIER_1;
+            case UPGRADE:
+                return STORAGE_UPGRADE;
             default:
                 throw new IllegalArgumentException("invalid part type");
         }

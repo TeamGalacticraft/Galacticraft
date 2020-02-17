@@ -8,16 +8,11 @@ public enum RocketPartType implements StringIdentifiable {
     FIN,
     BOOSTER,
     BOTTOM,
-    MISC_UPGRADE;
+    UPGRADE;
 
 
     @Override
     public String asString() {
         return this.toString().toLowerCase();
-    }
-
-    //temporary workaround
-    public static RocketPartType[] values_noUpgrade() {
-        return new RocketPartType[]{CONE, BODY, FIN, BOOSTER, BOTTOM};
     }
 }

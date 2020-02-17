@@ -23,8 +23,10 @@
 package com.hrznstudio.galacticraft.network.packet;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.impl.network.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
@@ -39,6 +41,7 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -50,7 +53,7 @@ public class GalacticraftPackets {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
             BlockPos pos = buf.readBlockPos();
             ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
-                if (context.getPlayer().world.isBlockLoaded(pos)) {
+                if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(pos);
                     if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                         ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = buf.readString();
@@ -65,7 +68,7 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
                     BlockPos pos = buf.readBlockPos();
-                    if (context.getPlayer().world.isBlockLoaded(pos)) {
+                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                         BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
                         boolean isParty = false;
                         boolean isPublic = false;
@@ -94,7 +97,7 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
                     BlockPos pos = buf.readBlockPos();
-                    if (context.getPlayer().world.isBlockLoaded(pos)) {
+                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                         BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
                         if (blockEntity != null) {
                             if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
@@ -109,7 +112,96 @@ public class GalacticraftPackets {
             }
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_jump"), ((context, buf) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_red"), (packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            BlockPos pos = buf.readBlockPos();
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld().getServer().execute(() -> {
+                    if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
+                            RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+                            assert blockEntity != null;
+                            byte color = buf.readByte();
+                            blockEntity.setRed(color + 128);
+                            blockEntity.updateSchematic();
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_green"), (packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            BlockPos pos = buf.readBlockPos();
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld().getServer().execute(() -> {
+                    if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
+                            RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+                            assert blockEntity != null;
+                            byte color = buf.readByte();
+                            blockEntity.setGreen(color + 128);
+                            blockEntity.updateSchematic();
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_blue"), (packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            BlockPos pos = buf.readBlockPos();
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld().getServer().execute(() -> {
+                    if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
+                            RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+                            assert blockEntity != null;
+                            byte color = buf.readByte();
+                            blockEntity.setBlue(color + 128);
+                            blockEntity.updateSchematic();
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_alpha"), (packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            BlockPos pos = buf.readBlockPos();
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld().getServer().execute(() -> {
+                    if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
+                            RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+                            assert blockEntity != null;
+                            byte color = buf.readByte();
+                            blockEntity.setAlpha(color + 128);
+                            blockEntity.updateSchematic();
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_part"), (packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            BlockPos pos = buf.readBlockPos();
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld().getServer().execute(() -> {
+                    if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
+                            RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+                            assert blockEntity != null;
+                            blockEntity.setPart(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(buf.readIdentifier())));
+                            blockEntity.updateSchematic();
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_jump"), ((context, buff) -> {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
                     if (context.getPlayer().hasVehicle()) {
@@ -122,7 +214,6 @@ public class GalacticraftPackets {
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((context, buf) -> {
-
             EntityType<?> type = Registry.ENTITY_TYPE.get(buf.readVarInt());
 
             int entityID = buf.readVarInt();
@@ -184,9 +275,5 @@ public class GalacticraftPackets {
                 });
             }
         }));
-
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_designer_selection"), (packetContext, packetByteBuf) -> {
-            //TODO
-        });
     }
 }

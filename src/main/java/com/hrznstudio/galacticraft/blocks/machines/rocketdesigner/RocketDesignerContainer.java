@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.rocketdesigner;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.container.Container;
@@ -67,7 +68,7 @@ public class RocketDesignerContainer extends Container {
         this.addSlot(new Slot(this.inventory, RocketDesignerBlockEntity.SCHEMATIC_OUTPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, playerInvYOffset - 21) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return false;
+                return itemStack_1.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
             }
 
             @Override
