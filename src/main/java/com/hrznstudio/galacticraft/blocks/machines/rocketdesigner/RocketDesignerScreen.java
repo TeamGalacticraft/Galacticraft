@@ -27,14 +27,19 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
 import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
@@ -138,12 +143,15 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
     private int maxPage = 0;
     private RocketPartType OPEN_TAB = RocketPartType.CONE;
 
+    private final RocketEntity entity;
+
     private RocketDesignerScreen(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
         super(new RocketDesignerContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name"));
         this.containerWidth = 323;
         this.containerHeight = 164;
         this.world = playerEntity.world;
         this.be = blockEntity;
+        this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, world);
     }
 
     @Override
@@ -172,8 +180,8 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float v) {
-        super.render(mouseX, mouseY, v);
+    public void render(int mouseX, int mouseY, float delta) {
+        super.render(mouseX, mouseY, delta);
 
         GuiLighting.disable();
         GuiLighting.enableForItems();
@@ -219,9 +227,9 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BODY).getDesignerItem().asItem()), this.left + 156, this.top + 24);
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.FIN).getDesignerItem().asItem()), this.left + 156, this.top + 40);
 
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.UPGRADE).getDesignerItem().asItem()), this.left + 225, this.top + 24);
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOOSTER).getDesignerItem().asItem()), this.left + 225, this.top + 40);
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOTTOM).getDesignerItem().asItem()), this.left + 225, this.top + 56);
+        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.UPGRADE).getDesignerItem().asItem()), this.left + 225, this.top + 26);
+        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOOSTER).getDesignerItem().asItem()), this.left + 225, this.top + 44);
+        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOTTOM).getDesignerItem().asItem()), this.left + 225, this.top + 60);
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
 
@@ -256,6 +264,8 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
         }
 
         this.blit(this.left + 257, this.top + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
+
+        this.drawEntity(this.left + 172 + 24, this.top + 64);
 
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asFormattedString(), (this.width / 2), this.top + 6 - 15, Formatting.WHITE.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
@@ -423,5 +433,37 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
             }
         }
         return false;
+    }
+
+    public void drawEntity(int x, int y) {
+
+        for (RocketPartType type : RocketPartType.values()) {
+            this.entity.setPart(this.be.getPart(type));
+        }
+        this.entity.setColor(this.be.getRed(), this.be.getGreen(), this.be.getBlue(), this.be.getAlpha());
+
+        GlStateManager.enableColorMaterial();
+        GlStateManager.pushMatrix();
+        GlStateManager.translatef((float) x, (float) y, 50.0F);
+        GlStateManager.scalef((float) (-10), (float) -10, (float) 10);
+        GuiLighting.enable();
+        GlStateManager.rotatef(135.0F, 0.0F, 1.0F, 0.0F);
+        GuiLighting.enable();
+        GlStateManager.rotatef(-135.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotatef(-((float) Math.atan(this.top + 25 / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
+        entity.yaw = 225;
+        entity.pitch = 0;
+        GlStateManager.translatef(0.0F, 0.0F, 0.0F);
+        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderManager();
+        entityRenderDispatcher.method_3945(180.0F);
+        entityRenderDispatcher.setRenderShadows(false);
+        entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, false);
+        entityRenderDispatcher.setRenderShadows(true);
+        GlStateManager.popMatrix();
+        GuiLighting.disable();
+        GlStateManager.disableRescaleNormal();
+        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
+        GlStateManager.disableTexture();
+        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
     }
 }

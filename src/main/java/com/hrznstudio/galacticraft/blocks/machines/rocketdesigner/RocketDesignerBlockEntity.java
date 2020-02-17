@@ -52,10 +52,10 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     public static final int SCHEMATIC_OUTPUT_SLOT = 0;
 
-    private int red = 0;
-    private int green = 0;
-    private int blue = 0;
-    private int alpha = 0;
+    private int red = 255;
+    private int green = 255;
+    private int blue = 255;
+    private int alpha = 255;
 
     private RocketPart cone = RocketParts.DEFAULT_CONE;
     private RocketPart body = RocketParts.DEFAULT_BODY;
