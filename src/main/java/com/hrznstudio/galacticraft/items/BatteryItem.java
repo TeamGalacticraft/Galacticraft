@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -39,7 +38,8 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
-import team.reborn.energy.*;
+import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergyTier;
 
 import java.util.List;
 

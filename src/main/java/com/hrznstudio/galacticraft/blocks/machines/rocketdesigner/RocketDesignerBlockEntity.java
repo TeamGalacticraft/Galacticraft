@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.blocks.machines.rocketdesigner;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
@@ -42,6 +43,7 @@ import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -186,9 +188,13 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         }
 
         if (this.world != null && this.world.isClient) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_part"),
+            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_part"),
                     new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeIdentifier(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(part)))));
         }
+    }
+
+    public List<RocketPart> getParts() {
+        return Lists.newArrayList(cone, body, booster, fin, bottom, upgrade);
     }
 
     public int getRed() {
@@ -209,28 +215,28 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     public void setRed(int red) {
         if (this.world != null && this.world.isClient && this.red != red) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
+            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
         }
         this.red = red;
     }
 
     public void setGreen(int green) {
         if (this.world != null && this.world.isClient && this.green != green) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
+            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
         }
         this.green = green;
     }
 
     public void setBlue(int blue) {
         if (this.world != null && this.world.isClient && this.blue != blue) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
+            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
         }
         this.blue = blue;
     }
 
     public void setAlpha(int alpha) {
         if (this.world != null && this.world.isClient && this.alpha != alpha) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
+            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
         }
         this.alpha = alpha;
     }
@@ -251,6 +257,13 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 tag.putString("booster", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(booster)).toString());
                 tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(bottom)).toString());
                 tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(upgrade)).toString());
+
+                int tier = 0;
+                for (RocketPart part : getParts()) {
+                    tier = Math.max(part.getTier(getParts()), tier);
+                }
+
+                tag.putInt("tier", tier);
 
                 stack.setTag(tag);
 

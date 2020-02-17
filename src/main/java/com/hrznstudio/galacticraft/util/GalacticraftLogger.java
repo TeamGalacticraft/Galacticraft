@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.Marker;
 
 public class GalacticraftLogger {
     private static final Logger logger = LogManager.getLogger("Galacticraft");

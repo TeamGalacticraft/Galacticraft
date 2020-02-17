@@ -9,6 +9,8 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.List;
+
 public class RocketParts {
     public static final RocketPart DEFAULT_CONE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), new RocketPart() {
         @Override
@@ -105,6 +107,16 @@ public class RocketParts {
         public Block getBlockToRender() {
             return GalacticraftBlocks.ROCKET_THRUSTER_TIER_1_RENDER_BLOCK;
         }
+
+        @Override
+        public boolean affectsTier() {
+            return true;
+        }
+
+        @Override
+        public int getTier(List<RocketPart> parts) {
+            return 1;
+        }
     });
 
     public static final RocketPart BOOSTER_TIER_2 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_tier_2"), new RocketPart() {
@@ -116,6 +128,16 @@ public class RocketParts {
         @Override
         public Block getBlockToRender() {
             return GalacticraftBlocks.ROCKET_THRUSTER_TIER_2_RENDER_BLOCK;
+        }
+
+        @Override
+        public boolean affectsTier() {
+            return true;
+        }
+
+        @Override
+        public int getTier(List<RocketPart> parts) {
+            return 2;
         }
     });
 

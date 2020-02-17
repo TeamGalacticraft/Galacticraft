@@ -36,6 +36,7 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlock;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlock;
+import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerBlock;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
@@ -191,6 +192,7 @@ public class GalacticraftBlocks {
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
     public static final Block ROCKET_DESIGNER = registerMachine(new RocketDesignerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ROCKET_DESIGNER);
+    public static final Block ROCKET_ASSEMBLER = registerMachine(new RocketAssemblerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ROCKET_ASSEMBLER);
 
     public static void register() {
     }

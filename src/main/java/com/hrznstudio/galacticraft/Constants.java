@@ -168,6 +168,7 @@ public class Constants {
         public static final String METHANE_SYNTHESIZIER = "methane_synthesizer";
         public static final String GAS_LIQUEFIER = "gas_liquefier";
         public static final String ROCKET_DESIGNER = "rocket_designer";
+        public static final String ROCKET_ASSEMBLER = "rocket_assembler";
 
         // Pad Blocks
         public static final String BUGGY_FUELING_PAD = "buggy_fueling";
@@ -414,6 +415,7 @@ public class Constants {
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ROCKET_DESIGNER_SCREEN = "gui/rocket_designer_screen";
+        public static final String ROCKET_ASSEMBLER_SCREEN = "gui/rocket_assembler_screen";
         public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
         public static final String OXYGEN_COLLECTOR_SCREEN = "gui/oxygen_collector_screen";
@@ -471,5 +473,6 @@ public class Constants {
         public static final String REFINERY_CONTAINER = "refinery_container";
         public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
         public static final String ROCKET_DESIGNER_CONTAINER = "rocket_designer_container";
+        public static final String ROCKET_ASSEMBLER_CONTAINER = "rocket_assembler_container";
     }
 }

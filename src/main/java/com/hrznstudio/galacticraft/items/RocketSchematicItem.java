@@ -60,7 +60,8 @@ public class RocketSchematicItem extends Item implements SchematicItem {
 
         CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
-            if (tag.containsKey("red") && tag.containsKey("cone")) {
+            if (tag.containsKey("red") && tag.containsKey("cone") && tag.containsKey("tier")) {
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.tier", tag.getInt("tier")).setStyle(new Style().setColor(Formatting.DARK_GRAY)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.color"));
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.red", tag.getInt("red")).setStyle(new Style().setColor(Formatting.DARK_RED)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.green", tag.getInt("green")).setStyle(new Style().setColor(Formatting.DARK_GREEN)));

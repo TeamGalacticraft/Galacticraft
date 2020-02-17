@@ -2,7 +2,6 @@ package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.Cuboid;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;

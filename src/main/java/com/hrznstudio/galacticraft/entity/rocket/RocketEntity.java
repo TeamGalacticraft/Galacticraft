@@ -34,7 +34,6 @@ import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -256,10 +255,19 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         return ActionResult.SUCCESS;
     }
 
+    public int getTier() {
+        int tier = 0;
+        for (RocketPart part : this.getParts()) {
+            tier = Math.max(part.getTier(this.getParts()), tier);
+        }
+        return tier;
+    }
+
     @Override
     public void updatePassengerPosition(Entity entity_1) {
         if (this.hasPassenger(entity_1)) {
             entity_1.setPosition(this.x, this.y + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5, this.z);
+            entity_1.setVelocity(this.getVelocity());
         }
     }
 
@@ -296,11 +304,11 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         }
 
         if (tag.containsKey("Stage")) {
-            this.dataTracker.set(STAGE, LaunchStage.valueOf(tag.getString("Stage")));
+            this.setStage(LaunchStage.valueOf(tag.getString("Stage")));
         }
 
         if (tag.containsKey("Speed")) {
-            this.dataTracker.set(SPEED, tag.getDouble("Speed"));
+            setSpeed(tag.getDouble("Speed"));
         }
     }
 
@@ -321,7 +329,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         color.putFloat("alpha", this.getColor()[3]);
 
         tag.putString("Stage", getStage().name());
-        tag.putDouble("Speed", this.dataTracker.get(SPEED));
+        tag.putDouble("Speed", this.getSpeed());
 
         tag.put("Color", color);
         tag.put("Parts", parts);
@@ -421,7 +429,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         }
 
         if (getStage() == LaunchStage.IGNITED) {
-            this.getFuel().setInvFluid(0, FluidVolume.create(GalacticraftFluids.FUEL, 10000), Simulation.ACTION); //TODO REMOVE BEFORE COMMIT
+            //this.getFuel().setInvFluid(0, FluidVolume.create(GalacticraftFluids.FUEL, 10000), Simulation.ACTION); //for testing purposes only
 
             if (this.getFuel().getTank(0).get().getAmount() == 0) {
                 this.setStage(LaunchStage.IDLE);
@@ -431,26 +439,26 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
             this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().matches(GalacticraftFluidTags.FUEL), 1);
             if (timeAsState >= 400) {
                 this.setStage(LaunchStage.LAUNCHED);
-                this.dataTracker.set(SPEED, 0.0D);
+                this.setSpeed(0.0D);
             }
         } else if (getStage() == LaunchStage.LAUNCHED) {
             if (this.getFuel().getTank(0).get().getAmount() == 0 || !this.getFuel().getTank(0).get().getRawFluid().matches(GalacticraftFluidTags.FUEL)) {
                 this.setStage(LaunchStage.FAILED);
             } else {
                 this.getFuel().getTank(0).extract(1);
-                if (world instanceof ServerWorld) { //TODO decide how many particles are needed/wanted... This might be very taxing on performance
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles (ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                if (world instanceof ServerWorld) {
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                 }
 
 
-                this.dataTracker.set(SPEED, Math.min(0.5, this.dataTracker.get(SPEED) + 0.1D));
+                this.setSpeed(Math.min(0.5, this.getSpeed() + 0.1D));
 
                 // Pitch: -45.0
                 // Yaw: 0.0
@@ -462,18 +470,18 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                 //
                 // I hope this is right
 
-                double velX = -MathHelper.sin(yaw / 180.0F * (float)Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float)Math.PI) * (this.dataTracker.get(SPEED) * 0.632D) * 1.58227848;
-                double velY = MathHelper.sin((pitch + 90.0F) / 180.0F * (float)Math.PI) * this.dataTracker.get(SPEED);
-                double velZ = MathHelper.cos(yaw / 180.0F * (float)Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float)Math.PI) * (this.dataTracker.get(SPEED) * 0.632D) * 1.58227848;
+                double velX = -MathHelper.sin(yaw / 180.0F * (float) Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848;
+                double velY = MathHelper.sin((pitch + 90.0F) / 180.0F * (float) Math.PI) * this.getSpeed();
+                double velZ = MathHelper.cos(yaw / 180.0F * (float) Math.PI) * MathHelper.cos((pitch + 90.0F) / 180.0F * (float) Math.PI) * (this.getSpeed() * 0.632D) * 1.58227848;
 
                 this.setVelocity(velX, velY, velZ);
 
                 this.velocityDirty = true;
             }
         } else if (!onGround) {
-            this.dataTracker.set(SPEED, Math.min(-0.5, this.dataTracker.get(SPEED) - 0.1D));
+            this.setSpeed(Math.min(-0.5, this.getSpeed() - 0.1D));
 
-            this.setVelocity(0, this.dataTracker.get(SPEED), 0);
+            this.setVelocity(0, this.getSpeed(), 0);
             this.velocityDirty = true;
         }
 
@@ -492,14 +500,19 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
             if (this.onGround) {
                 world.createExplosion(this, this.getPos().x + (world.random.nextDouble() -0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() -0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
                 world.createExplosion(this, this.getPos().x + (world.random.nextDouble() -0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() -0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                world.createExplosion(this, this.getPos().x + (world.random.nextDouble() -0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() -0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
-                world.createExplosion(this, this.getPos().x + (world.random.nextDouble() -0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() -0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
+                world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
+                world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
                 this.remove();
             }
         }
 
         ticksSinceJump++;
 
+    }
+
+    @Override
+    public void setVelocity(double x, double y, double z) {
+        this.setVelocity(new Vec3d(x, y, z));
     }
 
     @Override
@@ -510,6 +523,14 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         if (this.world.isClient && vec3d_1 != getVelocity()) {
             MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_velocity_update"), new PacketByteBuf(Unpooled.buffer().writeDouble(getVelocity().x).writeDouble(getVelocity().y).writeDouble(getVelocity().z))));
         }
+    }
+
+    public double getSpeed() {
+        return dataTracker.get(SPEED);
+    }
+
+    public void setSpeed(double speed) {
+        this.dataTracker.set(SPEED, speed);
     }
 
     @Override

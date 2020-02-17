@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.mixin;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;

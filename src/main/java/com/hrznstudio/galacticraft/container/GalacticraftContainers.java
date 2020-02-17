@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleContainer;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryContainer;
+import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerContainer;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerContainer;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.util.Identifier;
@@ -50,6 +51,7 @@ public class GalacticraftContainers {
     public static final Identifier REFINERY_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.REFINERY_CONTAINER);
     public static final Identifier OXYGEN_COLLECTOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.OXYGEN_COLLECTOR_CONTAINER);
     public static final Identifier ROCKET_DESIGNER_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.ROCKET_DESIGNER_CONTAINER);
+    public static final Identifier ROCKET_ASSEMBLER_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.ROCKET_ASSEMBLER_CONTAINER);
 
     public static void register() {
         ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player));
@@ -63,5 +65,6 @@ public class GalacticraftContainers {
         ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(ROCKET_DESIGNER_CONTAINER, RocketDesignerContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(ROCKET_ASSEMBLER_CONTAINER, RocketAssemblerContainer.FACTORY);
     }
 }

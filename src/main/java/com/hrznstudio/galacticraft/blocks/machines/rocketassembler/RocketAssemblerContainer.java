@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.blocks.machines.rocketdesigner;
+package com.hrznstudio.galacticraft.blocks.machines.rocketassembler;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
@@ -36,39 +37,63 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketDesignerContainer extends Container {
+public class RocketAssemblerContainer extends Container {
 
     public static final ContainerFactory<Container> FACTORY = (syncId, id, player, buffer) -> {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
-        if (be instanceof RocketDesignerBlockEntity) {
-            return new RocketDesignerContainer(syncId, player, (RocketDesignerBlockEntity) be);
+        if (be instanceof RocketAssemblerBlockEntity) {
+            return new RocketAssemblerContainer(syncId, player, (RocketAssemblerBlockEntity) be);
         } else {
             return null;
         }
     };
 
     protected Inventory inventory;
-    protected RocketDesignerBlockEntity blockEntity;
+    protected RocketAssemblerBlockEntity blockEntity;
 
-    public RocketDesignerContainer(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
+    public RocketAssemblerContainer(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity blockEntity) {
         super(null, syncId);
         this.blockEntity = blockEntity;
         this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
             @Override
             public boolean canPlayerUseInv(PlayerEntity player) {
-                return RocketDesignerContainer.this.canUse(player);
+                return RocketAssemblerContainer.this.canUse(player);
             }
         };
 
-        int playerInvYOffset = 84;
+        int playerInvYOffset = 94;
         int playerInvXOffset = 148;
 
         // Output slot
-        this.addSlot(new Slot(this.inventory, RocketDesignerBlockEntity.SCHEMATIC_OUTPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
+            @Override
+            public boolean canInsert(ItemStack stack) {
+                return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
+            }
+
+            @Override
+            public boolean canTakeItems(PlayerEntity playerEntity) {
+                return true;
+            }
+        });
+
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ROCKET_OUTPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
+                return false;
+            }
+
+            @Override
+            public boolean canTakeItems(PlayerEntity playerEntity_1) {
+                return true;
+            }
+        });
+
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 32 + playerInvXOffset, playerInvYOffset - 20) {
+            @Override
+            public boolean canInsert(ItemStack itemStack_1) {
+                return GalacticraftEnergy.isEnergyItem(itemStack_1);
             }
 
             @Override
@@ -91,42 +116,7 @@ public class RocketDesignerContainer extends Container {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
-        ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.slotList.get(slotId);
-
-        if (slot != null && slot.hasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
-
-            if (itemStack.isEmpty()) {
-                return itemStack;
-            }
-
-            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
-
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
-                return ItemStack.EMPTY;
-            }
-            if (itemStack1.getCount() == 0) {
-                slot.setStack(ItemStack.EMPTY);
-            } else {
-                slot.markDirty();
-            }
-        }
-        return itemStack;
-    }
-
-    @Override
-    public boolean canUse(PlayerEntity playerEntity) {
+    public boolean canUse(PlayerEntity player) {
         return true;
-    }
-
-    @Override
-    public void setProperties(int index, int value) {
-        super.setProperties(index, value);
     }
 }

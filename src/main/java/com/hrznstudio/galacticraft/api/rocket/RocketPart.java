@@ -8,6 +8,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 
+import java.util.List;
+
 public interface RocketPart {
 
     RocketPartType getType();
@@ -46,5 +48,13 @@ public interface RocketPart {
     default CompoundTag toTag(CompoundTag tag) {
         tag.putString(this.getType().asString(), Galacticraft.ROCKET_PARTS.getId(this).toString());
         return tag;
+    }
+
+    default boolean affectsTier() {
+        return false;
+    }
+
+    default int getTier(List<RocketPart> parts) {
+        return 0;
     }
 }

@@ -72,27 +72,37 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         float blue = entity.getColor()[2] / 255F;
         float alpha = entity.getColor()[3] / 255F;
 
-        client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
+        GlStateManager.pushTextureAttributes();
 
+        client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
         GlStateManager.translated(0.0D, -1.5, 0.0D);
+
         entity.getPartForType(RocketPartType.BOTTOM).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender().getDefaultState()), alpha, green, blue, red);
+        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender().getDefaultState()), alpha, red, green, blue);
         entity.getPartForType(RocketPartType.BOTTOM).postRender(entity);
+
         GlStateManager.translated(0.0D, .5, 0.0D);
+
         entity.getPartForType(RocketPartType.BOOSTER).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender().getDefaultState()), 1, 1, 1, 1);
+        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender().getDefaultState()), alpha, red, green, blue);
         entity.getPartForType(RocketPartType.BOOSTER).postRender(entity);
+
         entity.getPartForType(RocketPartType.FIN).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.FIN).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender().getDefaultState()), alpha, green, blue, red);
+        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.FIN).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender().getDefaultState()), alpha, red, green, blue);
         entity.getPartForType(RocketPartType.FIN).postRender(entity);
+
         GlStateManager.translated(0.0D, 1.0D, 0.0D);
+
         entity.getPartForType(RocketPartType.BODY).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BODY).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender().getDefaultState()), alpha, green, blue, red);
+        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BODY).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender().getDefaultState()), alpha, red, green, blue);
         entity.getPartForType(RocketPartType.BODY).postRender(entity);
+
         GlStateManager.translated(0.0D, 1.75, 0.0D);
+
         entity.getPartForType(RocketPartType.CONE).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.CONE).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender().getDefaultState()), alpha, green, blue, red);
+        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.CONE).getBlockToRender().getDefaultState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender().getDefaultState()), alpha, red, green, blue);
         entity.getPartForType(RocketPartType.CONE).postRender(entity);
+
         GlStateManager.popMatrix();
     }
 

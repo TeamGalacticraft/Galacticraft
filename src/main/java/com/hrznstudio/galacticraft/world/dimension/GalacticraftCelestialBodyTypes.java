@@ -3,10 +3,10 @@ package com.hrznstudio.galacticraft.world.dimension;
 import com.hrznstudio.galacticraft.api.addon.AddonRegistry;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericInfo;
-import com.hrznstudio.galacticraft.api.celestialbodies.*;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import org.spongepowered.asm.mixin.injection.At;
 
 public class GalacticraftCelestialBodyTypes {
     public static final CelestialBodyType MARS = register(

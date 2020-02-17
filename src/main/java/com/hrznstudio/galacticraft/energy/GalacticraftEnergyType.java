@@ -26,9 +26,6 @@ import io.github.cottonmc.energy.api.ElectricalEnergyType;
 import io.github.cottonmc.energy.api.EnergyType;
 import net.minecraft.text.TranslatableText;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */

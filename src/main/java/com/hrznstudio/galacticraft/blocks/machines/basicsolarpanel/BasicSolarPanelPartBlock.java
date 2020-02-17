@@ -22,11 +22,13 @@
 
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.EntityContext;

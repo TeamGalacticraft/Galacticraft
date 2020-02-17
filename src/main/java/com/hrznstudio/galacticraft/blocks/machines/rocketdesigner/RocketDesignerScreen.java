@@ -276,6 +276,15 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
         this.drawEntity(this.left + 172 + 24, this.top + 64);
 
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asFormattedString(), (this.width / 2), this.top + 6 - 15, Formatting.WHITE.getColorValue());
+
+        DrawableUtils.drawString(this.minecraft.textRenderer, "R", this.left + 245 + 3, this.top + 8, Formatting.RED.getColorValue());
+        DrawableUtils.drawString(this.minecraft.textRenderer, "G", this.left + 245 + 3, this.top + 18, Formatting.GREEN.getColorValue());
+        DrawableUtils.drawString(this.minecraft.textRenderer, "B", this.left + 245 + 3, this.top + 28, Formatting.BLUE.getColorValue());
+        DrawableUtils.drawString(this.minecraft.textRenderer, "A", this.left + 245 + 3, this.top + 38, Formatting.WHITE.getColorValue());
+
+        DrawableUtils.drawString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.rocket_info").asFormattedString(), this.left + 245, this.top + 62 - 9, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.tier", this.entity.getTier()).asFormattedString(), this.left + 245, this.top + 62, Formatting.DARK_GRAY.getColorValue());
+
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
