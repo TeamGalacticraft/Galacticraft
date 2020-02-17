@@ -68,7 +68,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.5d);
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25d);
     }
 
     @Override

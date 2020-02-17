@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.entity.evolvedzombie;
 
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
@@ -47,7 +46,6 @@ public class EvolvedZombieEntity extends ZombieEntity implements EvolvedEntity {
         HashSet<Activity> otherActivities = new HashSet<>();
         otherActivities.add(Activity.IDLE);
         this.brain.setCoreActivities(otherActivities);
-        System.out.println("Spawned zombo!");
     }
 
     @Override
@@ -63,6 +61,6 @@ public class EvolvedZombieEntity extends ZombieEntity implements EvolvedEntity {
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(1.25d);
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.5d);
     }
 }

@@ -24,12 +24,12 @@ package com.hrznstudio.galacticraft.entity.evolvedzombie;
 
 import net.minecraft.client.model.Box;
 import net.minecraft.client.model.Model;
-import net.minecraft.client.render.entity.model.ZombieEntityModel;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
-public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends ZombieEntityModel<EvolvedZombieEntity> {
+public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends BipedEntityModel<EvolvedZombieEntity> {
 
 	private final Model baseModel;
 
@@ -42,12 +42,12 @@ public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends ZombieEntityModel<
 		this.body.boxes.add(new Box(this.body, 16, 16, -4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F, false));
 		this.body.boxes.add(new Box(this.body, 56, 20, -4.0F, 2.0F, 2.0F, 3, 7, 3, 0.0F, false));
 		this.body.boxes.add(new Box(this.body, 56, 20, 1.0F, 2.0F, 2.0F, 3, 7, 3, 0.0F, false));
-		this.body.boxes.add(new Box(this.body, 68, 24, -3.0F, 3.0F, 5.0F, 1, 2, 1, 0.0F, false));
-		this.body.boxes.add(new Box(this.body, 68, 24, 2.0F, 3.0F, 5.0F, 1, 2, 1, 0.0F, false));
-		this.body.boxes.add(new Box(this.body, 68, 24, 2.0F, -1.0F, 6.0F, 1, 5, 1, 0.0F, false));
-		this.body.boxes.add(new Box(this.body, 68, 24, -3.0F, -1.0F, 6.0F, 1, 5, 1, 0.0F, false));
-		this.body.boxes.add(new Box(this.body, 68, 24, -3.0F, -2.0F, 5.0F, 1, 2, 1, 0.0F, false));
-		this.body.boxes.add(new Box(this.body, 68, 24, 2.0F, -2.0F, 5.0F, 1, 2, 1, 0.0F, false));
+		//this.body.boxes.add(new Box(this.body, 68, 24, -3.0F, 3.0F, 5.0F, 1, 2, 1, 0.0F, false));
+		//this.body.boxes.add(new Box(this.body, 68, 24, 2.0F, 3.0F, 5.0F, 1, 2, 1, 0.0F, false));
+		//this.body.boxes.add(new Box(this.body, 68, 24, 2.0F, -1.0F, 6.0F, 1, 5, 1, 0.0F, false));
+		//this.body.boxes.add(new Box(this.body, 68, 24, -3.0F, -1.0F, 6.0F, 1, 5, 1, 0.0F, false));
+		//this.body.boxes.add(new Box(this.body, 68, 24, -3.0F, -2.0F, 5.0F, 1, 2, 1, 0.0F, false));
+		//this.body.boxes.add(new Box(this.body, 68, 24, 2.0F, -2.0F, 5.0F, 1, 2, 1, 0.0F, false));
 
 		this.head.setRotationPoint(0.0F, 0.0F, 0.0F);
 		this.head.boxes.clear();
