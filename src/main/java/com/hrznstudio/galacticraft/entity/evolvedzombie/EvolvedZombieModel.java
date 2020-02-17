@@ -67,10 +67,10 @@ public class EvolvedZombieModel<EVOLVEDZOMBIE_ENTITY> extends ZombieEntityModel<
 		//rightItem.setRotationPoint(-1.0F, 7.0F, 1.0F);
 		//rightArm.addChild(rightItem);
 
-		this.leftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
+		//this.leftArm.setRotationPoint(5.0F, 2.0F, 0.0F);
 		this.leftArm.boxes.clear();
-		this.body.addChild(this.leftArm);
-		this.leftArm.boxes.add(new Box(this.leftArm, 40, 16, -1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F, true));
+		//this.body.addChild(this.leftArm);
+		//this.leftArm.boxes.add(new Box(this.leftArm, 40, 16, -1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F, true));
 
 		this.rightLeg.setRotationPoint(-1.9F, 12.0F, 0.0F);
 		this.rightLeg.boxes.clear();
