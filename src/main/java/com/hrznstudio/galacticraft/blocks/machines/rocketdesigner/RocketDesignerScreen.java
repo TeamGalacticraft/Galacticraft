@@ -161,12 +161,13 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
         this.renderBackground();
 
         GuiLighting.disable();
-        GuiLighting.enableForItems();
         GlStateManager.disableDepthTest();
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
 
         blit(this.left, this.top, 0, 0, this.containerWidth, this.containerHeight);
+
+        GuiLighting.enableForItems();
 
         for (int i = 0; i < RocketPartType.values().length; i++) {
             this.minecraft.getTextureManager().bindTexture(TEXTURE);
@@ -177,6 +178,7 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
             }
             this.itemRenderer.renderGuiItem(new ItemStack(RocketParts.getPartToRenderForType(RocketPartType.values()[i]).getDesignerItem()), (this.left - 31) + 13, this.top + 3 + ((27) * i) + 4);
         }
+        GuiLighting.disable();
     }
 
     @Override
@@ -205,6 +207,8 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
             }
         }
 
+        GuiLighting.disable();
+
         if (Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size() > 25) {
             maxPage = (int) ((Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size() / 25.0F) - ((Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size() / 25.0F) % 1.0F)) - 1; //round down, index 0
         } else {
@@ -222,6 +226,7 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
             }
         }
 
+        GuiLighting.enableForItems();
 
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.CONE).getDesignerItem().asItem()), this.left + 156, this.top + 8);
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BODY).getDesignerItem().asItem()), this.left + 156, this.top + 24);
@@ -230,6 +235,8 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.UPGRADE).getDesignerItem().asItem()), this.left + 225, this.top + 26);
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOOSTER).getDesignerItem().asItem()), this.left + 225, this.top + 44);
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOTTOM).getDesignerItem().asItem()), this.left + 225, this.top + 60);
+
+        GuiLighting.disable();
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
 
@@ -265,6 +272,7 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
 
         this.blit(this.left + 257, this.top + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
 
+        GuiLighting.enable();
         this.drawEntity(this.left + 172 + 24, this.top + 64);
 
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asFormattedString(), (this.width / 2), this.top + 6 - 15, Formatting.WHITE.getColorValue());

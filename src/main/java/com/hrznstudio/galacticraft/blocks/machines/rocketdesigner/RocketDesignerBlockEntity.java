@@ -35,7 +35,6 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -81,11 +80,16 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     };
 
     public RocketDesignerBlockEntity() {
-        this(GalacticraftBlockEntities.ROCKET_DESIGNER_TYPE);
-    }
+        super(GalacticraftBlockEntities.ROCKET_DESIGNER_TYPE);
 
-    public RocketDesignerBlockEntity(BlockEntityType<?> rocketDesignerType) {
-        super(rocketDesignerType);
+        this.inventory.addListener((fixedItemInvView, i, itemStack, itemStack1) -> {
+            if (itemStack.isEmpty()) {
+                this.updateSchematic();
+            } else if (!itemStack.getOrCreateTag().equals(itemStack1.getTag())) {
+                this.updateSchematic();
+            }
+        }, () -> {
+        });
     }
 
     public FullFixedItemInv getInventory() {
