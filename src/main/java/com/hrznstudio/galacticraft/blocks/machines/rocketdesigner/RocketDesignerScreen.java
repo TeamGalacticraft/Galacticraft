@@ -24,9 +24,9 @@ package com.hrznstudio.galacticraft.blocks.machines.rocketdesigner;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.rocket.DefaultParts;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
@@ -106,6 +106,35 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
     private static final int BACK_HOVERED_ARROW_X = HOVERED_ARROW_X - ARROW_WIDTH;
     private static final int BACK_HOVERED_ARROW_Y = HOVERED_ARROW_Y - ARROW_HEIGHT;
 
+    private static final int RED_COLOUR_X = 62;
+    private static final int RED_COLOUR_Y = 182;
+
+    private static final int GREEN_COLOUR_X = 118;
+    private static final int GREEN_COLOUR_Y = 182;
+
+    private static final int BLUE_COLOUR_X = 62;
+    private static final int BLUE_COLOUR_Y = 187;
+
+    private static final int ALPHA_X = 118;
+    private static final int ALPHA_Y = 187;
+
+    private static final int COLOUR_PICKER_HEIGHT = 5;
+
+    private static final int RED_END_COLOUR_X = 116;
+    private static final int RED_END_COLOUR_Y = 182;
+
+    private static final int GREEN_END_COLOUR_X = 172;
+    private static final int GREEN_END_COLOUR_Y = 182;
+
+    private static final int BLUE_END_COLOUR_X = 116;
+    private static final int BLUE_END_COLOUR_Y = 187;
+
+    private static final int ALPHA_END_X = 172;
+    private static final int ALPHA_END_Y = 187;
+
+    private static final int COLOUR_PICKER_END_WIDTH = 2;
+    private static final int COLOUR_PICKER_END_HEIGHT = 5;
+
     private int page = 0;
     private int maxPage = 0;
     private RocketPartType OPEN_TAB = RocketPartType.CONE; //NULL IS SEARCH TAB
@@ -134,14 +163,14 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
 
-        for (int i = 0; i < RocketPartType.values().length; i++) {
+        for (int i = 0; i < RocketPartType.values_noUpgrade().length; i++) {
             this.minecraft.getTextureManager().bindTexture(TEXTURE);
-            if (RocketPartType.values()[i] != OPEN_TAB) {
+            if (RocketPartType.values_noUpgrade()[i] != OPEN_TAB) {
                 blit(this.left - 27, this.top + 3 + (27 * i), DEFAULT_TAB_X, DEFAULT_TAB_Y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
             } else {
                 blit(this.left - 31 + 2, this.top + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             }
-            this.itemRenderer.renderGuiItem(new ItemStack(DefaultParts.getPartForType(RocketPartType.values()[i]).getBlockToRender()), (this.left - 31) + 13, this.top + 3 + ((27) * i) + 4);
+            this.itemRenderer.renderGuiItem(new ItemStack(RocketParts.getPartForType(RocketPartType.values_noUpgrade()[i]).getBlockToRender()), (this.left - 31) + 13, this.top + 3 + ((27) * i) + 4);
         }
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
@@ -228,21 +257,55 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOOSTER).getBlockToRender().asItem() == Items.AIR ? Items.BARRIER : this.be.getPart(RocketPartType.BOOSTER).getBlockToRender().asItem()), this.left + 225, this.top + 44);
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOTTOM).getBlockToRender().asItem()), this.left + 225, this.top + 44 + 16);
 
+        this.minecraft.getTextureManager().bindTexture(TEXTURE);
+
+        int red = (int) (56.0F * (this.be.red / 255.0F));
+        if (red >= 3 && red != 255) {
+            this.blit(this.left + (257 + red - 2), this.top + 9, RED_END_COLOUR_X, RED_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            red -= 2;
+        }
+
+        this.blit(this.left + 257, this.top + 9, RED_COLOUR_X, RED_COLOUR_Y, red, COLOUR_PICKER_HEIGHT);
+
+        int green = (int) (56.0F * (this.be.green / 255.0F));
+        if (green >= 3 && green != 255) {
+            this.blit(this.left + (257 + green - 2), this.top + 19, GREEN_END_COLOUR_X, GREEN_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            green -= 2;
+        }
+
+        this.blit(this.left + 257, this.top + 19, GREEN_COLOUR_X, GREEN_COLOUR_Y, green, COLOUR_PICKER_HEIGHT);
+
+        int blue = (int) (56.0F * (this.be.blue / 255.0F));
+        if (blue >= 3 && blue != 255) {
+            this.blit(this.left + (257 + blue - 2), this.top + 29, BLUE_END_COLOUR_X, BLUE_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            blue -= 2;
+        }
+
+        this.blit(this.left + 257, this.top + 29, BLUE_COLOUR_X, BLUE_COLOUR_Y, blue, COLOUR_PICKER_HEIGHT);
+
+        int alpha = (int) (56.0F * (this.be.alpha / 255.0F));
+        if (alpha >= 3 && alpha != 255) {
+            this.blit(this.left + (257 + alpha - 2), this.top + 39, ALPHA_END_X, ALPHA_END_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            alpha -= 2;
+        }
+
+        this.blit(this.left + 257, this.top + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
+
         DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asFormattedString(), (this.width / 2), this.top + 6 - 15, Formatting.WHITE.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     @Override
     public void drawMouseoverTooltip(int mouseX, int mouseY) {
-        for (int i = 0; i < RocketPartType.values().length; i++) {
+        for (int i = 0; i < RocketPartType.values_noUpgrade().length; i++) {
             if (check(mouseX, mouseY, this.left - 27, this.top + 3 + ((27) * i), DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
-                this.renderTooltip(new TranslatableText("ui.galacticraft-rewoven.part_type." + RocketPartType.values()[i].asString()).asString(), mouseX, mouseY); // caps
+                this.renderTooltip(new TranslatableText("ui.galacticraft-rewoven.part_type." + RocketPartType.values_noUpgrade()[i].asString()).asString(), mouseX, mouseY); // caps
                 break;
             }
         }
 
         if (check(mouseX, mouseY, this.left - 27, this.top + 3 + 135, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
-            this.renderTooltip("Search", mouseX, mouseY);
+            this.renderTooltip(new TranslatableText("ui.galacticraft-rewoven.rocket_designer.misc").asString(), mouseX, mouseY);
         }
 
         super.drawMouseoverTooltip(mouseX, mouseY);
@@ -256,19 +319,78 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
     @Override
     public boolean mouseDragged(double startX, double startY, int button, double diffX, double diffY) {
         if (button == 0) {
-            if (this.left - startX < -256 && this.left - startX > -313 && this.top - startY < -9.0F && this.top - startY > -15.0F
-                    && this.left - (startX + diffX) < -256 && this.left - (startX + diffX) > -313 && this.top - (startY + diffY) < -9.0F && this.top - (startY + diffY) > -15.0F) {
-                return colourClick(startX + diffX, startY + diffY, button);
+            if (this.left - startX < -256 && this.left - startX > -313 && this.top - startY < -9.0F && this.top - startY > -15.0F) {
+                return colourClick(startX + diffX, startY + diffY, button, (byte) 0);
+            }
+
+            if (this.left - startX < -256 && this.left - startX > -313 && this.top - startY < -19.0F && this.top - startY > -25.0F) {
+                return colourClick(startX + diffX, startY + diffY, button, (byte) 1);
+            }
+
+            if (this.left - startX < -256 && this.left - startX > -313 && this.top - startY < -29.0F && this.top - startY > -35.0F) {
+                return colourClick(startX + diffX, startY + diffY, button, (byte) 2);
+            }
+
+            if (this.left - startX < -256 && this.left - startX > -313 && this.top - startY < -39.0F && this.top - startY > -45.0F) {
+                return colourClick(startX + diffX, startY + diffY, button, (byte) 3);
             }
 
         }
         return super.mouseDragged(startX, startY, button, diffX, diffY);
     }
 
-    public boolean colourClick(double mouseX, double mouseY, int button) { //56 colour spaces
+    public boolean colourClick(double mouseX, double mouseY, int button, byte b) { //56 colour spaces
         if (button == 0) {
-            if (this.left - mouseX < -256 && this.left - mouseX > -313 && this.top - mouseY < -9.0F && this.top - mouseY > -15.0F) {
+            if (b != -1) {
+                if (b == 0) {
+                    int r = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                    if (r > 255) {
+                        r = 255;
+                    } else if (r < 0) {
+                        r = 0;
+                    }
+                    this.be.red = r;
+                } else if (b == 1) {
+                    int g = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                    if (g > 255) {
+                        g = 255;
+                    } else if (g < 0) {
+                        g = 0;
+                    }
+                    this.be.green = g;
+                } else if (b == 2) {
+                    int blue = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                    if (blue > 255) {
+                        blue = 255;
+                    } else if (blue < 0) {
+                        blue = 0;
+                    }
+                    this.be.blue = blue;
+                } else {
+                    int a = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                    if (a > 255) {
+                        a = 255;
+                    } else if (a < 0) {
+                        a = 0;
+                    }
+                    this.be.alpha = a;
+                }
+            } else {
+                if (this.left - mouseX < -256.0F && this.left - mouseX > -313.0F && this.top - mouseY < -9.0F && this.top - mouseY > -15.0F) {
+                    this.be.red = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                }
 
+                if (this.left - mouseX < -256.0F && this.left - mouseX > -313.0F && this.top - mouseY < -19.0F && this.top - mouseY > -25.0F) {
+                    this.be.green = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                }
+
+                if (this.left - mouseX < -256.0F && this.left - mouseX > -313.0F && this.top - mouseY < -29.0F && this.top - mouseY > -35.0F) {
+                    this.be.blue = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                }
+
+                if (this.left - mouseX < -256.0F && this.left - mouseX > -313.0F && this.top - mouseY < -39.0F && this.top - mouseY > -45.0F) {
+                    this.be.alpha = (int) (((((this.left - mouseX) - -257F) * -1F) / 55.5F) * 255);
+                }
             }
         }
         return false;
@@ -283,15 +405,15 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         System.out.println("X: " + mouseX + " Y: " + mouseY);
         System.out.println("X (R): " + (this.left - mouseX) + " Y: " + (this.top - mouseY));
-        return super.mouseClicked(mouseX, mouseY, button) | tabClick(mouseX, mouseY, button) | contentClick(mouseX, mouseY, button) | colourClick(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button) | tabClick(mouseX, mouseY, button) | contentClick(mouseX, mouseY, button) | colourClick(mouseX, mouseY, button, (byte) -1);
     }
 
     public boolean tabClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            for (int i = 0; i < RocketPartType.values().length; i++) {
-                if (RocketPartType.values()[i] != OPEN_TAB) {
+            for (int i = 0; i < RocketPartType.values_noUpgrade().length; i++) {
+                if (RocketPartType.values_noUpgrade()[i] != OPEN_TAB) {
                     if (check(mouseX, mouseY, this.left - 27, this.top + 3 + ((27) * i), DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
-                        OPEN_TAB = RocketPartType.values()[i];
+                        OPEN_TAB = RocketPartType.values_noUpgrade()[i];
                         page = 0;
                         return true;
                     }

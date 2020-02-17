@@ -22,35 +22,20 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.api.item.SchematicItem;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.Text;
-import net.minecraft.util.Rarity;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketSchematicItem extends Item implements SchematicItem {
-    public RocketSchematicItem(Settings settings) {
-        super(settings.maxCount(1).rarity(Rarity.EPIC));
+public class RocketItem extends Item {
+
+    public RocketItem(Settings settings) {
+        super(settings);
     }
 
     @Override
-    public int getEnchantability() {
-        return 0;
-    }
-
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-
-        CompoundTag tag = stack.getTag();
+    public ItemStack getStackForRender() {
+        return super.getStackForRender();
     }
 }

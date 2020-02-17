@@ -25,9 +25,9 @@ package com.hrznstudio.galacticraft.blocks.machines.rocketdesigner;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.rocket.DefaultParts;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
@@ -43,16 +43,16 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     public static final int SCHEMATIC_OUTPUT_SLOT = 0;
 
-    protected int r = 0;
-    protected int g = 0;
-    protected int b = 0;
-    protected int a = 0;
+    protected int red = 0;
+    protected int green = 0;
+    protected int blue = 0;
+    protected int alpha = 0;
 
-    private RocketPart cone = DefaultParts.DEFAULT_CONE;
-    private RocketPart body = DefaultParts.DEFAULT_BODY;
-    private RocketPart fin = DefaultParts.DEFAULT_FINS;
-    private RocketPart booster = DefaultParts.NO_BOOSTER;
-    private RocketPart bottom = DefaultParts.DEFAULT_BOTTOM;
+    private RocketPart cone = RocketParts.DEFAULT_CONE;
+    private RocketPart body = RocketParts.DEFAULT_BODY;
+    private RocketPart fin = RocketParts.DEFAULT_FIN;
+    private RocketPart booster = RocketParts.NO_BOOSTER;
+    private RocketPart bottom = RocketParts.DEFAULT_BOTTOM;
 
     private final FullFixedItemInv inventory = new FullFixedItemInv(2) {
         @Override
@@ -82,10 +82,10 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
 
-        tag.putInt("r", r);
-        tag.putInt("g", g);
-        tag.putInt("b", b);
-        tag.putInt("a", a);
+        tag.putInt("r", red);
+        tag.putInt("g", green);
+        tag.putInt("b", blue);
+        tag.putInt("a", alpha);
 
         tag.putString("cone", Galacticraft.ROCKET_PARTS.getId(cone).toString());
         tag.putString("body", Galacticraft.ROCKET_PARTS.getId(body).toString());
@@ -101,10 +101,10 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         super.fromTag(tag);
 
         if (tag.containsKey("r") && tag.containsKey("cone")) {
-            r = tag.getInt("r");
-            g = tag.getInt("g");
-            b = tag.getInt("b");
-            a = tag.getInt("a");
+            red = tag.getInt("r");
+            green = tag.getInt("g");
+            blue = tag.getInt("b");
+            alpha = tag.getInt("a");
 
             cone = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("cone")));
             body = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("body")));

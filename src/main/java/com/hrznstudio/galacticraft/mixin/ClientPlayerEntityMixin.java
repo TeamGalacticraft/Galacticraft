@@ -25,11 +25,11 @@ public class ClientPlayerEntityMixin {
         if (((ClientPlayerEntity) (Object)this).hasVehicle()) {
             if (((ClientPlayerEntity) (Object)this).getVehicle() instanceof RocketEntity) {
                 if (this.input.jumping) {
-                    ((RocketEntity) ((ClientPlayerEntity) (Object)this).getVehicle()).jump();
+                    ((RocketEntity) ((ClientPlayerEntity) (Object) this).getVehicle()).onJump();
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_jump"), new PacketByteBuf(Unpooled.buffer())));
                 }
 
-                if (((RocketEntity) ((ClientPlayerEntity) (Object)this).getVehicle()).getStage().level >= LaunchStage.LAUNCHED.level) {
+                if (((RocketEntity) ((ClientPlayerEntity) (Object) this).getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
                     if (this.input.pressingForward) {
                         ((ClientPlayerEntity) (Object) this).getVehicle().pitch = (((ClientPlayerEntity) (Object) this).getVehicle().pitch - 2.0F) % 360.0F;
                         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_pitch_update"), new PacketByteBuf(Unpooled.buffer().writeByte((int) (((ClientPlayerEntity) (Object) this).getVehicle().pitch / 360F * 256F)))));

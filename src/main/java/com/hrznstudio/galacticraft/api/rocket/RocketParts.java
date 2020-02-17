@@ -8,7 +8,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-public class DefaultParts {
+public class RocketParts {
     public static final RocketPart DEFAULT_CONE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), new RocketPart() {
         @Override
         public RocketPartType getType() {
@@ -19,6 +19,7 @@ public class DefaultParts {
         public Block getBlockToRender() {
             return GalacticraftBlocks.ROCKET_CONE_BASIC_RENDER_BLOCK;
         }
+
     });
 
     public static final RocketPart DEFAULT_BODY = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_body"), new RocketPart() {
@@ -33,7 +34,7 @@ public class DefaultParts {
         }
     });
 
-    public static final RocketPart DEFAULT_FINS = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_fins"), new RocketPart() {
+    public static final RocketPart DEFAULT_FIN = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_fin"), new RocketPart() {
         @Override
         public RocketPartType getType() {
             return RocketPartType.FIN;
@@ -93,7 +94,7 @@ public class DefaultParts {
         }
     });
 
-    public static final RocketPart THRUSTER_TIER_1 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "thruster_tier_1"), new RocketPart() {
+    public static final RocketPart BOOSTER_TIER_1 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_tier_1"), new RocketPart() {
         @Override
         public RocketPartType getType() {
             return RocketPartType.BOOSTER;
@@ -105,7 +106,7 @@ public class DefaultParts {
         }
     });
 
-    public static final RocketPart THRUSTER_TIER_2 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "thruster_tier_2"), new RocketPart() {
+    public static final RocketPart BOOSTER_TIER_2 = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_tier_2"), new RocketPart() {
         @Override
         public RocketPartType getType() {
             return RocketPartType.BOOSTER;
@@ -127,11 +128,11 @@ public class DefaultParts {
             case CONE:
                 return DEFAULT_CONE;
             case FIN:
-                return DEFAULT_FINS;
+                return DEFAULT_FIN;
             case BOTTOM:
                 return DEFAULT_BOTTOM;
             case BOOSTER:
-                return THRUSTER_TIER_1; //uuhhhhh default is none but i need to render smth
+                return BOOSTER_TIER_1; //uuhhhhh default is none but i need to render smth
             default:
                 throw new IllegalArgumentException("invalid part type");
         }

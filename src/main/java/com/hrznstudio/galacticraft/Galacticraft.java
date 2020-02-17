@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.api.registry.RocketPartRegistry;
-import com.hrznstudio.galacticraft.api.rocket.DefaultParts;
+import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigHandler;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
@@ -83,7 +83,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
-        DefaultParts.register();
+        RocketParts.register();
         GalacticraftEntityTypes.register();
         GalacticraftContainers.register();
         GalacticraftCommands.register();

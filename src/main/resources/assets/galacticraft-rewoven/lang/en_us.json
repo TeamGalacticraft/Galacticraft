@@ -301,6 +301,7 @@
   "ui.galacticraft-rewoven.part_type.fin": "Fin",
   "ui.galacticraft-rewoven.part_type.booster": "Booster",
   "ui.galacticraft-rewoven.part_type.bottom": "Bottom",
+  "ui.galacticraft-rewoven.part_type.misc_upgrade": "Misc. Upgrade",
   "ui.galacticraft-rewoven.rocket_designer.name": "Rocket Designer",
   "block.galacticraft-rewoven.rocket_designer": "Rocket Designer",
   "category.rei.circuit_fabricator": "Circuit Fabricating",
@@ -309,15 +310,13 @@
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",
-
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
-
   "config.galacticraft-rewoven.gravity": "Gravity",
   "config.galacticraft-rewoven.gravity.moon": "Moon",
   "config.galacticraft-rewoven.gravity.mars": "Mars",
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
   "config.galacticraft-rewoven.general": "General",
-
-  "chat.galacticraft-rewoven.rocket_warning_1": "TODO"
+  "chat.galacticraft-rewoven.rocket.warning": "TODO",
+  "chat.galacticraft-rewoven.rocket.no_fuel": "No fuel! Cannot launch."
 }

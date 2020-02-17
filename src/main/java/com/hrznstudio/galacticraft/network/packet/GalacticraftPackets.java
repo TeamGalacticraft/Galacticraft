@@ -23,16 +23,14 @@
 package com.hrznstudio.galacticraft.network.packet;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
-import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.impl.network.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.network.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.EnumProperty;
@@ -41,8 +39,6 @@ import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -118,7 +114,7 @@ public class GalacticraftPackets {
                 ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
                     if (context.getPlayer().hasVehicle()) {
                         if (context.getPlayer().getVehicle() instanceof RocketEntity) {
-                            ((RocketEntity) context.getPlayer().getVehicle()).jump();
+                            ((RocketEntity) context.getPlayer().getVehicle()).onJump();
                         }
                     }
                 });
@@ -126,21 +122,22 @@ public class GalacticraftPackets {
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((context, buf) -> {
-            EntityType<RocketEntity> type = (EntityType<RocketEntity>) Registry.ENTITY_TYPE.get(buf.readVarInt());
+
+            EntityType<?> type = Registry.ENTITY_TYPE.get(buf.readVarInt());
+
             int entityID = buf.readVarInt();
             UUID entityUUID = buf.readUuid();
+
             double x = buf.readDouble();
             double y = buf.readDouble();
             double z = buf.readDouble();
+
             float pitch = (buf.readByte() * 360) / 256.0F;
             float yaw = (buf.readByte() * 360) / 256.0F;
-            Map<RocketPartType, RocketPart> parts = new HashMap<>();
-            for (RocketPartType t : RocketPartType.values()) {
-                parts.put(t, Galacticraft.ROCKET_PARTS.get(buf.readInt()));
-            }
-            Float[] color = {buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat()};
+
             Runnable spawn = () -> {
-                RocketEntity entity = new RocketEntity(type, MinecraftClient.getInstance().world);
+                Entity entity = type.create(MinecraftClient.getInstance().world);
+                assert entity != null;
                 entity.updateTrackedPosition(x, y, z);
                 entity.x = x;
                 entity.y = y;
@@ -149,10 +146,6 @@ public class GalacticraftPackets {
                 entity.yaw = yaw;
                 entity.setEntityId(entityID);
                 entity.setUuid(entityUUID);
-
-                entity.parts.clear();
-                entity.parts.putAll(parts);
-                entity.setColor(color[0], color[1], color[2], color[3]);
 
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             };
