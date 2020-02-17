@@ -32,7 +32,7 @@ import net.minecraft.util.Identifier;
 public class EvolvedZombieRenderer extends MobEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel<EvolvedZombieEntity>> {
 
     public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new EvolvedZombieModel<>(1, 64, 64), 1);
+        super(entityRenderDispatcher_1, new EvolvedZombieModel<>(1, 128, 128), 1);
     }
 
     @Override
