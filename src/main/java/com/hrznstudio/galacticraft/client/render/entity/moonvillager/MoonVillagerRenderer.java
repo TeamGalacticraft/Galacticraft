@@ -20,8 +20,10 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.evolvedzombie;
+package com.hrznstudio.galacticraft.client.render.entity.moonvillager;
 
+import com.hrznstudio.galacticraft.client.model.entity.moonvillager.MoonVillagerModel;
+import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
@@ -29,14 +31,14 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieRenderer extends MobEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel<EvolvedZombieEntity>> {
+public class MoonVillagerRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerModel<MoonVillagerEntity>> {
 
-    public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new EvolvedZombieModel<>(1, 64, 64), 1);
+    public MoonVillagerRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
+        super(entityRenderDispatcher_1, new MoonVillagerModel<>(1, 64, 64), 1);
     }
 
     @Override
-    protected Identifier getTexture(EvolvedZombieEntity evolvedZombieEntity) {
-        return new Identifier("galacticraft-rewoven:textures/entity/evolved_zombie/evolved_zombie.png");
+    protected Identifier getTexture(MoonVillagerEntity moonVillagerEntity) {
+        return new Identifier("galacticraft-rewoven:textures/entity/moon_villager/moon_villager.png");
     }
 }

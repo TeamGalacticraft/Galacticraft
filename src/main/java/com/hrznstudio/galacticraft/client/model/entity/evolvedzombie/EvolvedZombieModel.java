@@ -20,8 +20,9 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.evolvedzombie;
+package com.hrznstudio.galacticraft.client.model.entity.evolvedzombie;
 
+import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
 import net.minecraft.client.model.Box;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.render.entity.model.ZombieEntityModel;

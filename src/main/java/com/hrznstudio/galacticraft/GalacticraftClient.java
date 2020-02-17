@@ -36,7 +36,7 @@ import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
-import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
 import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
