@@ -20,23 +20,42 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.moonvillager;
+package com.hrznstudio.galacticraft.entity.evolvedzombie;
 
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.util.Identifier;
+import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.brain.Activity;
+import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.mob.ZombieEntity;
+import net.minecraft.util.Arm;
+import net.minecraft.world.World;
+
+import java.util.HashSet;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerModel<MoonVillagerEntity>> {
+public class EvolvedZombieEntity extends ZombieEntity implements EvolvedEntity {
 
-    public MoonVillagerRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new MoonVillagerModel<>(1, 64, 64), 1);
+    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {
+        super(entityType, world);
+        this.setHealth(20);
+        this.initGoals();
+        this.setCanPickUpLoot(true);
+        this.brain.setDefaultActivity(Activity.CORE);
+        HashSet<Activity> otherActivities = new HashSet<>();
+        otherActivities.add(Activity.IDLE);
+        this.brain.setCoreActivities(otherActivities);
     }
 
     @Override
-    protected Identifier getTexture(MoonVillagerEntity moonVillagerEntity) {
-        return new Identifier("galacticraft-rewoven:textures/entity/moon_villager/moon_villager.png");
+    public Arm getMainArm() {
+        return Arm.RIGHT;
+    }
+
+    @Override
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(1.25d);
     }
 }

@@ -52,7 +52,6 @@ import net.minecraft.client.model.Model;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
-
 public class {1}Model<{2}_ENTITY> extends {3}<{1}Entity> {{
 
     private final Model baseModel;
