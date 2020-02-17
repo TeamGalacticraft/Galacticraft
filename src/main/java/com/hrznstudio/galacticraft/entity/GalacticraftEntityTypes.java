@@ -38,7 +38,7 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftEntityTypes {
 
-    public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = FabricEntityTypeBuilder.create(EntityCategory.CREATURE, MoonVillagerEntity::new).size(EntityDimensions.fixed(1, 2)).build();
+    public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = FabricEntityTypeBuilder.create(EntityCategory.CREATURE, MoonVillagerEntity::new).size(EntityDimensions.fixed(0.6F, 2.4F)).build();
     public static final EntityType<EntityT1Rocket> T1_ROCKET = FabricEntityTypeBuilder.create(EntityCategory.MISC, EntityT1Rocket::new).size(EntityDimensions.fixed(2, 4)).build();
 
     public static void register() {
