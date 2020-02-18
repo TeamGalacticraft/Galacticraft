@@ -31,17 +31,17 @@ import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergySto
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
+import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
 import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
-import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
-import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
-import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -107,8 +107,9 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorScreen.FACTORY);
 
-        EntityRendererRegistry.INSTANCE.register(MoonVillagerEntity.class, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(EntityT1Rocket.class, (manager, context) -> new RocketEntityRenderer(manager));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.T1_ROCKET, (manager, context) -> new RocketEntityRenderer(manager));
         GalacticraftBlockEntityRenderers.register();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
 

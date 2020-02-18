@@ -30,14 +30,17 @@ import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -71,7 +74,7 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateFactory().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
     }
 
     @Override
@@ -175,19 +178,14 @@ public class AluminumWireBlock extends BlockWithEntity implements WireConnectabl
     }
 
     @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
-        super.appendProperties(stateFactory$Builder_1);
-        stateFactory$Builder_1.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> StateManager$Builder_1) {
+        super.appendProperties(StateManager$Builder_1);
+        StateManager$Builder_1.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
     @Environment(EnvType.CLIENT)

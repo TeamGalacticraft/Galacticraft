@@ -43,7 +43,6 @@ public class WorldGenerator {
     }
 
     private static void registerMars() {
-        OreGenerator.registerMarsOres();
     }
 
 }

@@ -287,7 +287,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
             }
         }
 
-        if (itemStack_1 != null && itemStack_1.getTag() != null && itemStack_1.getTag().containsKey("BlockEntityTag")) {
+        if (itemStack_1 != null && itemStack_1.getTag() != null && itemStack_1.getTag().contains("BlockEntityTag")) {
             list_1.add(new LiteralText(""));
             list_1.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", itemStack_1.getTag().getCompound("BlockEntityTag").getInt("Energy")).setStyle(new Style().setColor(Formatting.AQUA)));
             list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", itemStack_1.getTag().getCompound("BlockEntityTag").getString("OwnerUsername")).setStyle(new Style().setColor(Formatting.BLUE)));

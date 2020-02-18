@@ -34,11 +34,13 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -60,7 +62,7 @@ public class MoonBerryBushBlock extends PlantBlock {
 
     public MoonBerryBushBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateFactory.getDefaultState().with(AGE, 0));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(AGE, 0));
     }
 
     @Environment(EnvType.CLIENT)
@@ -77,8 +79,8 @@ public class MoonBerryBushBlock extends PlantBlock {
     }
 
     @Override
-    public void onScheduledTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
-        super.onScheduledTick(blockState, world, blockPos, random);
+    public void scheduledTick(BlockState blockState, ServerWorld world, BlockPos blockPos, Random random) {
+        super.scheduledTick(blockState, world, blockPos, random);
         int age = blockState.get(AGE);
         if (age < 3 && random.nextInt(20) == 0) {
             world.setBlockState(blockPos, blockState.with(AGE, age + 1), 2);
@@ -91,7 +93,7 @@ public class MoonBerryBushBlock extends PlantBlock {
     }
 
     @Override
-    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         int age = blockState.get(AGE);
         boolean mature = age == 3;
 
@@ -100,14 +102,14 @@ public class MoonBerryBushBlock extends PlantBlock {
             dropStack(world, blockPos, new ItemStack(GalacticraftItems.MOON_BERRIES, amount));
             world.playSound(null, blockPos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlockState(blockPos, blockState.with(AGE, 1), 2);
-            return true;
+            return ActionResult.SUCCESS;
         } else {
-            return super.activate(blockState, world, blockPos, playerEntity, hand, blockHitResult);
+            return super.onUse(blockState, world, blockPos, playerEntity, hand, blockHitResult);
         }
     }
 
     @Override
-    public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
+    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(AGE);
     }
 

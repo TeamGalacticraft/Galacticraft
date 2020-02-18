@@ -27,9 +27,9 @@ import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
@@ -43,7 +43,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollectorContainer> {
-    public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorScreen::new);
+    public static final ContainerFactory<ContainerScreen> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorScreen::new);
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
@@ -70,12 +70,12 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
 
     @Override
     protected void drawBackground(float v, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-        int leftPos = this.left;
-        int topPos = this.top;
+        int leftPos = this.x;
+        int topPos = this.y;
 
         energyDisplayX = leftPos + 11;
         energyDisplayY = topPos + 18;
@@ -90,16 +90,16 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_collector").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_collector").asFormattedString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
 //        DrawableUtils.drawCenteredString(this.minecraft.textRenderer,
 //                new TranslatableText("ui.galacticraft-rewoven.machine.status",
 //                        new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").applyFormat(Formatting.GREEN)
-//                ).asString(), this.left + 90, this.top + 28, Formatting.DARK_GRAY.getTextColor());
+//                ).asString(), this.x + 90, this.y + 28, Formatting.DARK_GRAY.getTextColor());
         String statusText = new TranslatableText("ui.galacticraft-rewoven.machine.status").asFormattedString();
 
 
-        int statusX = this.left + 38;
-        int statusY = this.top + 64;
+        int statusX = this.x + 38;
+        int statusY = this.y + 64;
 
         minecraft.textRenderer.draw(statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
@@ -151,7 +151,7 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
 
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
-        if (mouseX >= this.left - 22 && mouseX <= this.left && mouseY >= this.top + 21 && mouseY <= this.top + (22 + 21)) {
+        if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 21 && mouseY <= this.y + (22 + 21)) {
             this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asFormattedString(), mouseX, mouseY);
         }
     }

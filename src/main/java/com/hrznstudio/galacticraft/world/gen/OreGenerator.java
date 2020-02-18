@@ -36,9 +36,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.RangeDecoratorConfig;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.OreFeature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
 
 import java.util.BitSet;
@@ -56,24 +56,18 @@ public class OreGenerator {
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.ALUMINUM_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.COPPER_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.TIN_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.SILICON_ORE.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(3, 0, 0, 25)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>((OreFeature) Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.ALUMINUM_ORE.getDefaultState(), 8)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>((OreFeature) Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.COPPER_ORE.getDefaultState(), 8)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>((OreFeature) Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.TIN_ORE.getDefaultState(), 8)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>((OreFeature) Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.SILICON_ORE.getDefaultState(), 4)));
             }
         }
     }
 
     public static void registerMoonOres() {
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_TIN_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.CHEESE_ORE.getDefaultState(), 4), Decorator.COUNT_RANGE, new RangeDecoratorConfig(8, 0, 0, 45)));
-    }
-
-    public static void registerMarsOres() {
-        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE.getDefaultState(), GalacticraftBlocks.MARS_COPPER_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE.getDefaultState(), GalacticraftBlocks.MARS_TIN_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
-        GalacticraftBiomes.MARS.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Biome.configureFeature(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MARS_STONE.getDefaultState(), GalacticraftBlocks.DESH_ORE.getDefaultState(), 8), Decorator.COUNT_RANGE, new RangeDecoratorConfig(10, 0, 0, 45)));
+        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_TIN_ORE.getDefaultState(), 8)));
+        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8)));
+        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.CHEESE_ORE.getDefaultState(), 4)));
     }
 
     // This code is basically just copy-pasted
@@ -106,7 +100,7 @@ public class OreGenerator {
             for (int i = int_3; i <= int_3 + int_6; ++i) {
                 for (int j = int_5; j <= int_5 + int_6; ++j) {
 
-                    if (int_4 <= iWorld.getTop(Heightmap.Type.OCEAN_FLOOR_WG, i, j)) {
+                    if (int_4 <= iWorld.getTopY(Heightmap.Type.OCEAN_FLOOR_WG, i, j)) {
                         return this.generateVeinPart(iWorld, random, featureConfig, x1, x2, z1, z2, double_5, double_6, int_3, int_4, int_5, int_6, int_7);
                     }
                 }

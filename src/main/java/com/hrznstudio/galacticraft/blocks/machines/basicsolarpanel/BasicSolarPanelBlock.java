@@ -34,7 +34,10 @@ import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.MultiBlock;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.item.TooltipContext;
@@ -43,19 +46,20 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -84,12 +88,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.SOLID;
-    }
-
-    @Override
-    public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
+    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);
 
@@ -138,10 +137,10 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) return true;
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+        if (world.isClient) return ActionResult.SUCCESS;
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.BASIC_SOLAR_PANEL_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
-        return true;
+        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -224,13 +223,13 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public boolean canPlaceAt(BlockState blockState_1, ViewableWorld viewableWorld_1, BlockPos blockPos_1) {
+    public boolean canPlaceAt(BlockState blockState_1, WorldView WorldView_1, BlockPos blockPos_1) {
         for (BlockPos otherPart : getOtherParts(blockState_1, blockPos_1)) {
-            if (!viewableWorld_1.getBlockState(otherPart).getMaterial().isReplaceable()) {
+            if (!WorldView_1.getBlockState(otherPart).getMaterial().isReplaceable()) {
                 return false;
             }
         }
-        return super.canPlaceAt(blockState_1, viewableWorld_1, blockPos_1);
+        return super.canPlaceAt(blockState_1, WorldView_1, blockPos_1);
     }
 
     @Override

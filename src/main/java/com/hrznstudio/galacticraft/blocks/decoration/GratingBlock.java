@@ -29,7 +29,7 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -49,7 +49,7 @@ public class GratingBlock extends Block implements Waterloggable {
 
     public GratingBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateFactory.getDefaultState().with(WATERLOGGED, false).with(GRATING_STATE, GratingState.UPPER));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(GRATING_STATE, GratingState.UPPER));
     }
 
     @Override
@@ -79,9 +79,9 @@ public class GratingBlock extends Block implements Waterloggable {
     }
 
     @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
-        builder.add(WATERLOGGED);
-        builder.add(GRATING_STATE);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(WATERLOGGED).add(GRATING_STATE);
     }
 
     @Override

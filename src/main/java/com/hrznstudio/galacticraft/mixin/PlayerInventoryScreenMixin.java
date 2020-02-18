@@ -27,7 +27,7 @@ import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.container.PlayerContainer;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
@@ -54,8 +54,8 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 //        System.out.println("Y: " + mouseY);
 //        System.out.println("b: " + button);
 
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), left + 30, left + 59)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), top - 26, top)) {
+        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
+                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
             System.out.println("Clicked on GC tab!");
             minecraft.openScreen(new PlayerInventoryGCScreen(playerInventory.player));
         }
@@ -64,13 +64,14 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(float v, int i, int i1, CallbackInfo callbackInfo) {
         this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
-        this.blit(this.left, this.top - 28, 0, 0, 57, 32);
+        this.blit(this.x, this.y - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
     public void render(int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
-        GuiLighting.enableForItems();
-        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.left + 6, this.top - 20);
-        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.left + 35, this.top - 20);
+        DiffuseLighting.enable();
+        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
+        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
+        DiffuseLighting.disable();
     }
 }

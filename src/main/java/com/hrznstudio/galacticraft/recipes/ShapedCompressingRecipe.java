@@ -260,7 +260,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
                     }
                 }
 
-                if (!ingredient_1.method_8093(inv.getInvStack(int_3 + int_4 * invWidth))) {
+                if (!ingredient_1.test(inv.getInvStack(int_3 + int_4 * invWidth))) {
                     return false;
                 }
             }

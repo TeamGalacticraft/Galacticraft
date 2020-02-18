@@ -22,11 +22,11 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
 import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
-import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 /**
@@ -34,31 +34,35 @@ import net.minecraft.util.Identifier;
  */
 public class RocketEntityRenderer extends EntityRenderer<EntityT1Rocket> {
     private static final Identifier SKIN = new Identifier("textures/entity/cow/cow.png");
-    protected final BasicSolarPanelModel model = new BasicSolarPanelModel();
 
     public RocketEntityRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
         super(entityRenderDispatcher_1);
     }
 
-    @Override
-    public void render(EntityT1Rocket entity_1, double double_1, double double_2, double double_3, float float_1, float float_2) {
-        GlStateManager.pushMatrix();
-        this.bindEntityTexture(entity_1);
-        if (this.renderOutlines) {
-            GlStateManager.enableColorMaterial();
-            GlStateManager.setupSolidRenderingTextureCombine(this.getOutlineColor(entity_1));
-        }
-        if (this.renderOutlines) {
-            GlStateManager.tearDownSolidRenderingTextureCombine();
-            GlStateManager.disableColorMaterial();
-        }
+//    @Override
+//    public void render(EntityT1Rocket entity_1, double double_1, double double_2, double double_3, float float_1, float float_2) {
+//        RenderSystem.pushMatrix();
+//        this.bindEntityTexture(entity_1);
+//        if (this.renderOutlines) {
+//            RenderSystem.enableColorMaterial();
+//            RenderSystem.setupSolidRenderingTextureCombine(this.getOutlineColor(entity_1));
+//        }
+//        if (this.renderOutlines) {
+//            RenderSystem.tearDownSolidRenderingTextureCombine();
+//            RenderSystem.disableColorMaterial();
+//        }
+//
+//        RenderSystem.popMatrix();
+//        super.render(entity_1, double_1, double_2, double_3, float_1, float_2);
+//    }
 
-        GlStateManager.popMatrix();
-        super.render(entity_1, double_1, double_2, double_3, float_1, float_2);
+    @Override
+    public void render(EntityT1Rocket entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
     }
 
     @Override
-    protected Identifier getTexture(EntityT1Rocket var1) {
+    public Identifier getTexture(EntityT1Rocket var1) {
         return SKIN;
     }
 }

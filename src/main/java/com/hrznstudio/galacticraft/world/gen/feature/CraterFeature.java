@@ -30,6 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
+import net.minecraft.world.TestableWorld;
 import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
@@ -105,7 +106,7 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
                         for (i7 = 4; i7 < 8; ++i7) {
                             if (booleans[(i5 * 16 + i6) * 8 + i7]) {
                                 blockPos_3 = pos.add(i5, i7 - 1, i6);
-                                if (Block.isNaturalDirt(world.getBlockState(blockPos_3).getBlock()) && world.getLightLevel(LightType.SKY, pos.add(i5, i7, i6)) > 0) {
+                                if (isNaturalDirt(world, blockPos_3) && world.getLightLevel(LightType.SKY, pos.add(i5, i7, i6)) > 0) {
                                     world.setBlockState(blockPos_3, GalacticraftBlocks.MOON_TURF.getDefaultState(), 2);
                                 }
                             }
@@ -128,5 +129,12 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
                 return true;
             }
         }
+    }
+
+    private static boolean isNaturalDirt(TestableWorld world, BlockPos pos) {
+        return world.testBlockState(pos, (blockState) -> {
+            Block block = blockState.getBlock();
+            return isDirt(block) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
+        });
     }
 }

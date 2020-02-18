@@ -48,7 +48,7 @@ public class CrudeOilBlock extends FluidBlock {
                     return;
                 }
             }
-            ((LivingEntity) entity).addPotionEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 6 * 20));
+            ((LivingEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 6 * 20));
         }
     }
 

@@ -54,7 +54,7 @@ public abstract class LivingEntityMixin {
             }
         } catch (ClassCastException ignore) {
         }
-        air = ((LivingEntity) (Object) this).getBreath();
+        air = ((LivingEntity) (Object) this).getAir();
     }
 
     @Inject(method = "baseTick", at = @At("RETURN"))
@@ -63,9 +63,9 @@ public abstract class LivingEntityMixin {
         if (entity.isAlive()) {
             if(CelestialBodyType.getByDimType(entity.world.dimension.getType()).isPresent()) {
                 if (!CelestialBodyType.getByDimType(entity.world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-                    entity.setBreath(air - 1);
-                    if (entity.getBreath() == -20) {
-                        entity.setBreath(0);
+                    entity.setAir(air - 1);
+                    if (entity.getAir() == -20) {
+                        entity.setAir(0);
                         air = 0;
                         try {
                             FullFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();

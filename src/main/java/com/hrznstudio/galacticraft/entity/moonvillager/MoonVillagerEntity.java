@@ -105,17 +105,13 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     }
 
     @Override
-    public void setEquippedStack(EquipmentSlot equipmentSlot, ItemStack itemStack) {
-    }
-
-    @Override
     public Arm getMainArm() {
         return null;
     }
 
     @Nullable
     @Override
-    public PassiveEntity createChild(PassiveEntity mate) {
+    public MoonVillagerEntity createChild(PassiveEntity mate) {
         return null;
     }
 }

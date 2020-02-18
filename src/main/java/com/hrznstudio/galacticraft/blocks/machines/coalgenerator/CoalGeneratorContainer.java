@@ -78,7 +78,7 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
 
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.slotList.get(slotId);
+        Slot slot = this.slots.get(slotId);
 
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack1 = slot.getStack();
@@ -90,7 +90,7 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
 
             if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slotList.size(), true)) {
+                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
@@ -117,8 +117,8 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
     }
 
     @Override
-    public void setProperties(int index, int value) {
-        super.setProperties(index, value);
+    public void setProperty(int id, int value) {
+        super.setProperty(id, value);
         blockEntity.status = CoalGeneratorStatus.get(status.get());
     }
 }

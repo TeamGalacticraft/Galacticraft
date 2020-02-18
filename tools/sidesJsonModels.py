@@ -186,7 +186,7 @@ java_text = ''.join([
     "private final static EnumProperty DOWN = EnumProperty.of(\"down\", " + class_name + ".class);\n",
     "\n",
     "@Override\n",
-    "public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {\n",
+    "public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {\n",
     "    super.appendProperties(stateBuilder);\n",
     "    stateBuilder.add(FACING);\n",
     "    stateBuilder.add(NORTH);\n",

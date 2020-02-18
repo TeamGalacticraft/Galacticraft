@@ -68,17 +68,17 @@ public final class MoonBiome extends Biome {
     }
 
     @Override
-    public int getSkyColor(float f) {
+    public int getSkyColor() {
         return 0;
     }
 
     @Override
-    public int getFoliageColorAt(BlockPos blockPos_1) {
+    public int getFoliageColor() {
         return waterFogColor;
     }
 
     @Override
-    public int getGrassColorAt(BlockPos blockPos_1) {
+    public int getGrassColorAt(double x, double z) {
         return waterColor;
     }
 }
