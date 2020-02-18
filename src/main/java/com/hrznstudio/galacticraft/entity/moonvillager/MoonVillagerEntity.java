@@ -22,32 +22,35 @@
 
 package com.hrznstudio.galacticraft.entity.moonvillager;
 
+import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 import java.util.HashSet;
 
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerEntity extends VillagerEntity {
+public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity {
 
     /**
      * TO DO:
-     * - Make model more similar to original (large cranium, smaller nose)
+     * - Turn into Evolved Witch when hit by lightning
      * - Figure out how to die / lose health without crashing
      * - Set up activities
      * - Trading (wait until 1.15)
-     * - Turn into Evolved Witch when hit by lightning
      * - Villages
      */
 
@@ -65,7 +68,7 @@ public class MoonVillagerEntity extends VillagerEntity {
     @Override
     protected void initAttributes() {
         super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.5d);
+        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25d);
     }
 
     @Override
@@ -107,6 +110,12 @@ public class MoonVillagerEntity extends VillagerEntity {
 
     @Override
     public Arm getMainArm() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public PassiveEntity createChild(PassiveEntity mate) {
         return null;
     }
 }

@@ -20,8 +20,9 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.moonvillager;
+package com.hrznstudio.galacticraft.client.model.entity.moonvillager;
 
+import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
 import net.minecraft.client.model.Box;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.render.entity.model.VillagerResemblingModel;
