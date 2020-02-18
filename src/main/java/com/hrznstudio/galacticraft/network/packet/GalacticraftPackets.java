@@ -43,14 +43,10 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
-                    if (blockEntity == null) {
-                        System.out.println("Doesn't work");
-                    } else if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                         ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = buffer.readString();
                     }
                 });
-            } else {
-                System.out.println("NO.");
             }
         }));
 
@@ -59,9 +55,7 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
-                    if (blockEntity == null) {
-                        System.out.println("Noooo");
-                    } else {
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                         boolean isParty = false;
                         boolean isPublic = false;
                         String owner = buffer.readString();
@@ -73,16 +67,13 @@ public class GalacticraftPackets {
                             isParty = true;
                         }
                         String username = buffer.readString();
-                        if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).owner = owner;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).username = username;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
-                        }
+
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).owner = owner;
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).username = username;
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
                     }
                 });
-            } else {
-                System.out.println("NO");
             }
         }));
 
@@ -92,17 +83,14 @@ public class GalacticraftPackets {
                 context.getPlayer().getServer().execute(() -> {
                     BlockPos pos = buffer.readBlockPos();
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                    if (blockEntity != null) {
                         if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
                             String data = buffer.readString();
                             context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
                                     .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
                                             SideOption.valueOf(data.split(",")[1])));
                         }
-                    }
+
                 });
-            } else {
-                System.out.println("Nope");
             }
         }));
     }
