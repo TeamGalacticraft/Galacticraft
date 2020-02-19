@@ -24,16 +24,13 @@ package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.entity.moonvillager.EntityMoonVillager;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
-import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
 import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.api.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
