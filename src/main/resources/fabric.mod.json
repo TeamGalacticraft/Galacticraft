@@ -39,7 +39,7 @@
   "mixins": [
     "galacticraft-rewoven.mixins.json"
   ],
-  "requires": {
+  "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
     "minecraft": "1.14.4",
@@ -47,7 +47,7 @@
     "cotton-energy": "*",
     "libblockattributes_items": ">=0.4.5",
     "silk": "*",
-    "galacticraft-api": "*"
+    "galacticraft-api": ">=0.1.5+1.14.4"
   },
   "suggests": {
     "modmenu": "*"
