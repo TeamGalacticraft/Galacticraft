@@ -65,7 +65,7 @@ dependencies {
     //modRuntime("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
-    include "com.hrznstudio:GalacticraftAPI:${project.addon_version}:dev"
+    include "com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}"
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
     include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
