@@ -26,9 +26,6 @@ import com.hrznstudio.galacticraft.client.model.entity.evolvedzombie.EvolvedZomb
 import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.feature.ArmorBipedFeatureRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.util.Identifier;
 
 /**
