@@ -376,6 +376,10 @@ public class Constants {
         public static final String CARGO_ROCKET_SCHEMATIC = "cargo_rocket_schematic";
         public static final String MOON_BUGGY_SCHEMATIC = "moon_buggy_schematic";
         public static final String ASTRO_MINER_SCHEMATIC = "astro_miner_schematic";
+
+        public static final String ROCKET_SPAWN_EGG_T1 = "rocket_spawn_egg_t1";
+        public static final String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
+        public static final String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
     }
 
     public static class Config {
@@ -430,6 +434,7 @@ public class Constants {
 
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
+        public static final String EVOLVED_ZOMBIE = "evolved_zombie";
         public static final String T1_ROCKET = "t1_rocket";
     }
 

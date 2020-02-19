@@ -74,9 +74,11 @@ public class InfiniteBatteryItem extends Item implements EnergyHolderItem, Energ
 
     @Override
     public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> defaultedList_1) {
-        ItemStack stack = new ItemStack(this);
-        Energy.of(stack).set(Double.MAX_VALUE);
-        defaultedList_1.add(stack);
+        if (itemGroup_1 == GalacticraftItems.ITEMS_GROUP) {
+            ItemStack stack = new ItemStack(this);
+            Energy.of(stack).set(Double.MAX_VALUE);
+            defaultedList_1.add(stack);
+        }
     }
 
     @Override

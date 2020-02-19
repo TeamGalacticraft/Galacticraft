@@ -1,24 +1,24 @@
 {
-  "name": "oxygen_collector",
+  "name": "energy_storage_module",
   "mod-id": "galacticraft-rewoven",
   "sides": {
     "north": {
-      "texture": "block/oxygen_collector"
+      "texture": "block/energy_storage_module_0"
     },
     "south": {
-      "texture": "block/oxygen_collector"
+      "texture": "block/energy_storage_module_0"
     },
     "east": {
-      "texture": "block/oxygen_collector"
+      "texture": "block/machine_side"
     },
     "west": {
-      "texture": "block/oxygen_collector"
+      "texture": "block/machine_side"
     },
     "up": {
-      "texture": "block/oxygen_collector"
+      "texture": "block/machine"
     },
     "down": {
-        "texture": "block/oxygen_collector"
+      "texture": "block/machine"
     }
 },
   "options": [
@@ -26,9 +26,9 @@
       "option": "powerin",
       "texture": "block/machine_power_input"
     },
-	{
-      "option": "oxygenout",
-      "texture": "block/machine_oxygen_output"
+    {
+      "option": "powerout",
+      "texture": "block/machine_power_output"
     }
   ],
   "particle": "block/machine"

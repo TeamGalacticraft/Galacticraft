@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
-import com.hrznstudio.galacticraft.entity.moonvillager.T1RocketEntity;
+import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -32,7 +32,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntityRenderer extends EntityRenderer<T1RocketEntity> {
+public class RocketEntityRenderer extends EntityRenderer<EntityT1Rocket> {
     private static final Identifier SKIN = new Identifier("textures/entity/cow/cow.png");
     protected final BasicSolarPanelModel model = new BasicSolarPanelModel();
 
@@ -41,7 +41,7 @@ public class RocketEntityRenderer extends EntityRenderer<T1RocketEntity> {
     }
 
     @Override
-    public void render(T1RocketEntity entity_1, double double_1, double double_2, double double_3, float float_1, float float_2) {
+    public void render(EntityT1Rocket entity_1, double double_1, double double_2, double double_3, float float_1, float float_2) {
         GlStateManager.pushMatrix();
         this.bindEntityTexture(entity_1);
         if (this.renderOutlines) {
@@ -58,7 +58,7 @@ public class RocketEntityRenderer extends EntityRenderer<T1RocketEntity> {
     }
 
     @Override
-    protected Identifier getTexture(T1RocketEntity var1) {
+    protected Identifier getTexture(EntityT1Rocket var1) {
         return SKIN;
     }
 }
