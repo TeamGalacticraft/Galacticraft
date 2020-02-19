@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "north": "galacticraft-rewoven:block/energy_storage_module_5",
+    "south": "galacticraft-rewoven:block/machine_power_output",
+    "east": "galacticraft-rewoven:block/machine_power_output",
+    "west": "galacticraft-rewoven:block/machine_power_output",
+    "up": "galacticraft-rewoven:block/machine",
+    "down": "galacticraft-rewoven:block/machine_power_input",
+    "particle": "galacticraft-rewoven:block/machine"
+  }
+}
