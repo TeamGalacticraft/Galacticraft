@@ -309,9 +309,8 @@
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
 
-  "config.galacticraft-rewoven.gravity": "Gravity",
-  "config.galacticraft-rewoven.gravity.moon": "Moon",
-  "config.galacticraft-rewoven.gravity.mars": "Mars",
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
-  "config.galacticraft-rewoven.general": "General"
+  "config.galacticraft-rewoven.debug": "Debug",
+  "config.galacticraft-rewoven.debug.logging": "Debug Logging",
+  "config.galacticraft-rewoven.reset": "Reset"
 }

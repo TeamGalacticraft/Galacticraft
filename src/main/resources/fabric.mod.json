@@ -31,6 +31,9 @@
     ],
     "gc_addons": [
       "com.hrznstudio.galacticraft.hooks.GalacticraftAddon"
+    ],
+    "modmenu": [
+      "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl"
     ]
   },
   "mixins": [
