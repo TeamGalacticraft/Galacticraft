@@ -5,16 +5,19 @@
 
   "name": "Galacticraft: Rewoven",
   "icon": "assets/galacticraft-rewoven/icon.png",
-  "description": "FabricMC port of Galacticraft",
-  "licence": "Galacticraft License",
+  "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
+  "licence": "MIT",
   "contact": {
-    "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven"
+    "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven",
+    "homepage": "https://hrznstudio.com",
+    "issues": "https://github.com/StellarHorizons/Galacticraft-Rewoven/issues"
   },
   "authors": [
     {
       "name": "Horizon Studio",
       "contact": {
-        "homepage": "https://hrznstudio.com"
+        "homepage": "https://hrznstudio.com",
+        "discord": "https://discord.gg/8eVjQrb"
       }
     }
   ],
@@ -45,7 +48,6 @@
     "minecraft": "1.14.4",
     "cotton-energy": "*",
     "libblockattributes_items": ">=0.4.5",
-    "silk": "*",
     "galacticraft-api": ">=0.1.5-alpha+1.14.4"
   },
   "suggests": {

@@ -46,7 +46,6 @@ dependencies {
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
-    modImplementation("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
     
@@ -68,7 +67,6 @@ dependencies {
     include "com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}"
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
     include "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
     include "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
