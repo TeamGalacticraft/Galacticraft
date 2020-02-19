@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.6-SNAPSHOT'
+    id 'fabric-loom' version '0.2.7-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -43,9 +43,9 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
+
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:0.1.4-alpha+1.14.4:dev")
-    include "com.hrznstudio:GalacticraftAPI:0.1.4-alpha+1.14.4:dev"
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}:dev")
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
@@ -56,6 +56,11 @@ dependencies {
     modImplementation("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
     modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}")
     modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+
+    modImplementation "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
+    modImplementation "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
+    modImplementation "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
+
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth', module: 'config-2'
         exclude group: 'me.shedaniel.cloth', module: 'config-events'
@@ -65,6 +70,7 @@ dependencies {
     modImplementation("teamreborn:energy:+")
 
     //include everything mandatory inside the jar
+    include "com.hrznstudio:GalacticraftAPI:${project.addon_version}:dev"
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
     include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
@@ -72,15 +78,12 @@ dependencies {
 
     include "com.github.NerdHubMC:FOML:${foml_version}"
 
-    include "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
-    include "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
-    include "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
     include "teamreborn:energy:+"
 	
     // Needed for LBA in order for eclipse to work
-    compile "com.google.code.findbugs:jsr305:3.0.1"
+    compile "com.google.code.findbugs:jsr305:3.0.2"
     //REI
-    modApi "blue.endless:jankson:1.1.0"
+    modApi "blue.endless:jankson:1.2.0"
 }
 
 processResources {

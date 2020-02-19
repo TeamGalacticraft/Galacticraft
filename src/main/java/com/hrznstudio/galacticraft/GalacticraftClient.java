@@ -38,6 +38,10 @@ import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
+import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import net.fabricmc.api.ClientModInitializer;
@@ -111,6 +115,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ROCKET_ASSEMBLER_CONTAINER, RocketAssemblerScreen.FACTORY);
 
         EntityRendererRegistry.INSTANCE.register(RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
+        EntityRendererRegistry.INSTANCE.register(MoonVillagerEntity.class, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
+
         GalacticraftBlockEntityRenderers.register();
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());

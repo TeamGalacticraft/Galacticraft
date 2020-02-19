@@ -44,6 +44,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -71,6 +72,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
     private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final IntProperty POWER_LEVEL = IntProperty.of("power", 0, 8);
 
     public EnergyStorageModuleBlock(Settings settings) {
         super(settings);
@@ -131,6 +133,8 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
         stateBuilder.add(LEFT_SIDE_OPTION);
         stateBuilder.add(TOP_SIDE_OPTION);
         stateBuilder.add(BOTTOM_SIDE_OPTION);
+
+        stateBuilder.add(POWER_LEVEL);
     }
 
     @Override
@@ -161,7 +165,8 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
                 .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
                 .with(LEFT_SIDE_OPTION, SideOption.BLANK)
                 .with(TOP_SIDE_OPTION, SideOption.BLANK)
-                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK);
+                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK)
+                .with(POWER_LEVEL, 0);
     }
 
     @Override
