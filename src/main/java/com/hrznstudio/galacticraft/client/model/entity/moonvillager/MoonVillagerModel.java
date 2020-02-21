@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.client.model.entity.moonvillager;
 
 import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
 import net.minecraft.client.model.Box;
-import net.minecraft.client.model.Model;
 import net.minecraft.client.render.entity.model.VillagerResemblingModel;
 
 /**
@@ -32,11 +31,8 @@ import net.minecraft.client.render.entity.model.VillagerResemblingModel;
  */
 public class MoonVillagerModel<MOONVILLAGER_ENTITY> extends VillagerResemblingModel<MoonVillagerEntity> {
 
-	private final Model baseModel;
-
 	public MoonVillagerModel(int scale, int textureWidth, int textureHeight) {
 		super(scale, textureWidth, textureHeight);
-		this.baseModel = new Model();
 		this.hat.visible = false;
 
 		this.head.setRotationPoint(0.0F, 0.0F, 0.0F);
