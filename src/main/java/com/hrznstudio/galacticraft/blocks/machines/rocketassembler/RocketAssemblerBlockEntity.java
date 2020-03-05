@@ -22,11 +22,16 @@
 
 package com.hrznstudio.galacticraft.blocks.machines.rocketassembler;
 
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.ItemInvSlotChangeListener;
+import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
@@ -60,6 +65,12 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
     };
 
+    private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
+    private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
+
+    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(ConfigurableElectricMachineBlockEntity.DEFAULT_MAX_ENERGY, GalacticraftEnergy.GALACTICRAFT_JOULES);
+
+
     public RocketAssemblerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_ASSEMBLER_TYPE);
 
@@ -69,6 +80,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         }, () -> {
         });
+
+        inventory.setOwnerListener((ItemInvSlotChangeListener.ItemInvSlotListener) (inv, slot) -> markDirty());
     }
 
     public FullFixedItemInv getInventory() {
