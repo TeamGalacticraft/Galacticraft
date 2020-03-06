@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.world.gen;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.gen.feature.GCOreGenConfig;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.util.Identifier;
@@ -65,9 +64,9 @@ public class OreGenerator {
     }
 
     public static void registerMoonOres() {
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_TIN_ORE.getDefaultState(), 8)));
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8)));
-        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.CHEESE_ORE.getDefaultState(), 4)));
+//        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_TIN_ORE.getDefaultState(), 8)));
+//        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8)));
+//        GalacticraftBiomes.MOON.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>(GC_ORE, new GCOreGenConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.CHEESE_ORE.getDefaultState(), 4)));
     }
 
     // This code is basically just copy-pasted

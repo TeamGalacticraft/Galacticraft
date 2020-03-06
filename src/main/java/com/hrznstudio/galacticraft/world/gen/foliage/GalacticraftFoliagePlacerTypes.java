@@ -20,22 +20,33 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.world.gen.decorator;
+package com.hrznstudio.galacticraft.world.gen.foliage;
 
-import com.hrznstudio.galacticraft.world.gen.feature.CraterFeature;
-import com.hrznstudio.galacticraft.world.gen.feature.CraterFeatureConfig;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import com.mojang.datafixers.Dynamic;
+import net.minecraft.world.gen.foliage.FoliagePlacer;
+import net.minecraft.world.gen.foliage.FoliagePlacerType;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GalacticraftDecorators {
-    public static final Decorator<CraterDecoratorConfig> CRATER = Registry.register(Registry.DECORATOR, "oil_lake", new CraterDecorator(CraterDecoratorConfig::deserialize));
-    public static final ConfiguredFeature<CraterFeatureConfig, CraterFeature> CRATER_CONF = new ConfiguredFeature<>((CraterFeature) GalacticraftFeatures.CRATER_FEATURE, new CraterFeatureConfig());
+public class GalacticraftFoliagePlacerTypes {
 
-    public static void init() {
+    public static final FoliagePlacerType<CheeseFoliagePlacer> CHEESE_FOLIAGE_PLACER_TYPE = createFoliagePlacer(CheeseFoliagePlacer::new);
+
+    public static <P extends FoliagePlacer> FoliagePlacerType<P> createFoliagePlacer(Function<Dynamic<?>, P> deserializer) {
+        try {
+            Constructor<FoliagePlacerType> constructor = FoliagePlacerType.class.getDeclaredConstructor(Function.class);
+            constructor.setAccessible(true);
+            return (FoliagePlacerType<P>) constructor.newInstance(deserializer);
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void init() {
     }
 }

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraft-rewoven:block/moon_basalt_slab"
+    },
+    "type=top": {
+      "model": "galacticraft-rewoven:block/moon_basalt_slab_top"
+    },
+    "type=double": {
+      "model": "galacticraft-rewoven:block/moon_basalt"
+    }
+  }
+}

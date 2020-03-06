@@ -22,14 +22,11 @@
 
 package com.hrznstudio.galacticraft.client.render.block.entity;
 
-import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBlockEntityRenderers {
     public static void register() {
-        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
+//        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
     }
 }

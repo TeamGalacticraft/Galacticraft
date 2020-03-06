@@ -20,38 +20,47 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.world.biome;
+package com.hrznstudio.galacticraft.world.biome.moon.highlands;
 
-import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
-import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonPlainsBiome extends Biome {
+public final class MoonHighlandsPlainsBiome extends Biome implements SpaceBiome {
 
-    public MoonPlainsBiome() {
+    public static final TernarySurfaceConfig MOON_HIGHLANDS_BIOME_CONFIG = new TernarySurfaceConfig(GalacticraftBlocks.MOON_TURF.getDefaultState(), GalacticraftBlocks.MOON_DIRT.getDefaultState(), GalacticraftBlocks.MOON_TURF.getDefaultState());
+
+    public MoonHighlandsPlainsBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MOON_CONFIG)
+                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, MOON_HIGHLANDS_BIOME_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.03F)
                 .scale(0.03F)
-                .temperature(0.0F)
+                .temperature(-100F)
                 .downfall(0.005F)
                 .waterColor(9937330)
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
+    }
+
+    @Override
+    protected float computeTemperature(BlockPos blockPos) {
+        return -100F;
     }
 
     @Override
     public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_plains";
+        return "biome.galacticraft-rewoven.moon_highlands_plains";
     }
 
     @Override
@@ -67,5 +76,15 @@ public final class MoonPlainsBiome extends Biome {
     @Override
     public int getGrassColorAt(double x, double z) {
         return waterColor;
+    }
+
+    @Override
+    public TemperatureGroup getTemperatureGroup() {
+        return TemperatureGroup.COLD;
+    }
+
+    @Override
+    public Text getName() {
+        return new TranslatableText(this.getTranslationKey());
     }
 }

@@ -22,6 +22,8 @@
 
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
+import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Util;
@@ -33,43 +35,43 @@ import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnEntry;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.PhantomSpawner;
-import net.minecraft.world.gen.PillagerSpawner;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.level.LevelGeneratorType;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGeneratorConfig> {
-
-    private static final float[] BIOME_WEIGHT_TABLE = Util.make(new float[25], (floats) -> {
+    private static final float[] BIOME_WEIGHT_TABLE = Util.make(new float[25], (fs) -> {
         for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
                 float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
-                floats[i + 2 + (j + 2) * 5] = f;
+                fs[i + 2 + (j + 2) * 5] = f;
             }
         }
 
     });
     private final OctavePerlinNoiseSampler noiseSampler;
     private final boolean amplified;
-    private final PhantomSpawner phantomSpawner = new PhantomSpawner();
-    private final PillagerSpawner pillagerSpawner = new PillagerSpawner();
+//    private final PhantomSpawner phantomSpawner = new PhantomSpawner();
+//    private final PillagerSpawner pillagerSpawner = new PillagerSpawner();
+//    private final CatSpawner catSpawner = new CatSpawner();
+//    private final ZombieSiegeManager zombieSiegeManager = new ZombieSiegeManager();
 
-    public MoonChunkGenerator(IWorld iWorld, BiomeSource biomeSource, MoonChunkGeneratorConfig chunkGenConfig) {
-        super(iWorld, biomeSource, 4, 8, 256, chunkGenConfig, true);
+    public MoonChunkGenerator(IWorld world, BiomeSource biomeSource, MoonChunkGeneratorConfig config) {
+        super(world, biomeSource, 4, 8, 256, config, true);
         this.random.consume(2620);
         this.noiseSampler = new OctavePerlinNoiseSampler(this.random, 15, 0);
-        this.amplified = iWorld.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
+        this.amplified = world.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
-    @Override
     public void populateEntities(ChunkRegion region) {
         int i = region.getCenterChunkX();
         int j = region.getCenterChunkZ();
@@ -79,27 +81,19 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
     }
 
-    @Override
-    protected void sampleNoiseColumn(double[] doubles, int i, int i2) {
-        this.sampleNoiseColumn(doubles, i, i2, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
+    protected void sampleNoiseColumn(double[] buffer, int x, int z) {
+        this.sampleNoiseColumn(buffer, x, z, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
     }
 
-    @Override
-    protected double computeNoiseFalloff(double d, double double_2, int i) {
-        double d4 = ((double) i - (8.5D + d * 8.5D / 8.0D * 4.0D)) * 12.0D * 128.0D / 256.0D / double_2;
-        if (d4 < 0.0D) {
-            d4 *= 4.0D;
+    protected double computeNoiseFalloff(double depth, double scale, int y) {
+        double e = ((double) y - (8.5D + depth * 8.5D / 8.0D * 4.0D)) * 12.0D * 128.0D / 256.0D / scale;
+        if (e < 0.0D) {
+            e *= 4.0D;
         }
 
-        return d4;
+        return e;
     }
 
-    @Override
-    public MoonChunkGeneratorConfig getConfig() {
-        return this.config;
-    }
-
-    @Override
     protected double[] computeNoiseRange(int x, int z) {
         double[] ds = new double[2];
         float f = 0.0F;
@@ -158,34 +152,30 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return d;
     }
 
-    private double method_16414(int i, int i2) {
-        double d = this.noiseSampler.sample(i * 200, 10.0D, i2 * 200, 1.0D, 0.0D, true) / 8000.0D;
-        if (d < 0.0D) {
-            d = -d * 0.3D;
-        }
-
-        d = d * 3.0D - 2.0D;
-        if (d < 0.0D) {
-            d /= 28.0D;
-        } else {
-            if (d > 1.0D) {
-                d = 1.0D;
+    public List<Biome.SpawnEntry> getEntitySpawnList(EntityCategory category, BlockPos pos) {
+        if (Feature.SWAMP_HUT.method_14029(this.world, pos)) {
+            if (category == EntityCategory.MONSTER) {
+                return Feature.SWAMP_HUT.getMonsterSpawns();
             }
 
-            d /= 40.0D;
+            if (category == EntityCategory.CREATURE) {
+                return Feature.SWAMP_HUT.getCreatureSpawns();
+            }
+        } else if (category == EntityCategory.MONSTER) {
+            if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(this.world, pos)) {
+                return Feature.PILLAGER_OUTPOST.getMonsterSpawns();
+            }
+
+            if (Feature.OCEAN_MONUMENT.isApproximatelyInsideStructure(this.world, pos)) {
+                return Feature.OCEAN_MONUMENT.getMonsterSpawns();
+            }
         }
 
-        return d;
+        return super.getEntitySpawnList(category, pos);
     }
 
-    @Override
-    public List<SpawnEntry> getEntitySpawnList(EntityCategory entityCategory_1, BlockPos blockPos_1) {
-        return super.getEntitySpawnList(entityCategory_1, blockPos_1);
-    }
-
-    public void spawnEntities(ServerWorld world, boolean boolean_1, boolean boolean_2) {
-        this.phantomSpawner.spawn(world, boolean_1, boolean_2);
-        this.pillagerSpawner.spawn(world, boolean_1, boolean_2);
+    public void spawnEntities(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
+//        this.zombieSiegeManager.spawn(world, spawnMonsters, spawnAnimals);
     }
 
     public int getSpawnHeight() {
@@ -193,6 +183,94 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public int getSeaLevel() {
-        return super.getSeaLevel();
+        return 63;
+    }
+
+    @Override
+    public void generateFeatures(ChunkRegion region) {
+        super.generateFeatures(region);
+    }
+
+    @Override
+    public void buildSurface(ChunkRegion chunkRegion, Chunk chunk) {
+        super.buildSurface(chunkRegion, chunk);
+
+        createCraters(chunk, chunkRegion);
+    }
+
+    private void createCraters(Chunk chunk, ChunkRegion region) {
+        for (int cx = chunk.getPos().x - 2; cx <= chunk.getPos().x + 2; cx++) {
+            for (int cz = chunk.getPos().z - 2; cz <= chunk.getPos().z + 2; cz++) {
+                for (int x = 0; x < 16; x++) {
+                    for (int z = 0; z < 16; z++) {
+                        if (Math.abs(this.randFromPoint(cx << 4 + x, (cz << 4 + z) * 1000)) < this.sampleNoise(x << 4 + x, cz << 4 + z) / 300) {
+                            Random random = new Random((cx << 4) + x + ((cz << 4) + z) * 5000);
+
+                            int size;
+
+                            int i = random.nextInt(14 + 8 + 2 + 1);
+                            if (i < 1) {
+                                size = random.nextInt(30 - 26) + 26;
+                            } else if (i < 2) {
+                                size = random.nextInt(17 - 13) + 13;
+                            } else if (i < 8) {
+                                size = random.nextInt(25 - 18) + 18;
+                            } else {
+                                size = random.nextInt(12 - 8) + 8;
+                            }
+
+                            if (region.getBiome(new BlockPos(cx << 4, 65, cz << 4)) instanceof SpaceBiome) {
+                                if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).hasCraters()) {
+                                    if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).forceSmallCraters()) {
+                                        size = random.nextInt(12 - 8) + 8;
+                                    } else if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).forceMediumCraters()) {
+                                        size = random.nextInt(25 - 18) + 18;
+                                    } else if (((SpaceBiome) region.getBiome(new BlockPos(cx << 4, 65, cz << 4))).forceLargeCraters()) {
+                                        size = random.nextInt(17 - 13) + 13;
+                                    }
+                                } else {
+                                    break;
+                                }
+                            }
+
+                            this.makeCrater((cx << 4) + x, (cz << 4) + z, chunk.getPos().x << 4, chunk.getPos().z << 4, size, chunk);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private double randFromPoint(int x, int z) {
+        int n;
+        n = x + z * 57;
+        n = n << 13 ^ n;
+        return 1.0D - (n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff) / 1073741824.0;
+    }
+
+    private void makeCrater(int craterX, int craterZ, int chunkX, int chunkZ, int size, Chunk chunk) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                double xDev = craterX - (chunkX + x);
+                double zDev = craterZ - (chunkZ + z);
+                if (xDev * xDev + zDev * zDev < size * size) {
+                    xDev /= size;
+                    zDev /= size;
+                    final double sqrtY = xDev * xDev + zDev * zDev;
+                    double yDev = sqrtY * sqrtY * 6;
+                    yDev = 5 - yDev;
+                    int helper = 0;
+                    for (int y = 127; y > 0; y--) {
+                        if (!chunk.getBlockState(new BlockPos(x, y, z)).isAir() && helper <= yDev) {
+                            chunk.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState(), false);
+                            helper++;
+                        }
+                        if (helper > yDev) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

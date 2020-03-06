@@ -20,29 +20,33 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.world.gen.feature;
+package com.hrznstudio.galacticraft.api.world.chunk.gen;
 
-import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.DynamicOps;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.feature.FeatureConfig;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
+import net.minecraft.world.gen.chunk.ChunkGeneratorType;
+
+import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CraterFeatureConfig implements FeatureConfig {
+public class AlternativeChunkGeneratorType<C extends ChunkGeneratorConfig, T extends ChunkGenerator<C>> extends ChunkGeneratorType<C, T> {
+    private AlternativeFactory<C, T> alternativeFactory;
 
-    public static CraterFeatureConfig deserialize() {
-        return new CraterFeatureConfig();
+    public AlternativeChunkGeneratorType(AlternativeFactory<C, T> alternativeFactory, boolean b, Supplier<C> supplier) {
+        super(null, b, supplier);
+        this.alternativeFactory = alternativeFactory;
     }
 
-    public static CraterFeatureConfig deserialize(Dynamic<?> d) {
-        return new CraterFeatureConfig();
+    @Override
+    public T create(World world, BiomeSource biomeSource, C config) {
+        return alternativeFactory.create(world, biomeSource, config);
     }
 
-    public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {
-        return new Dynamic<>(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("state"), BlockState.serialize(dynamicOps_1, Blocks.AIR.getDefaultState()).getValue())));
+    public interface AlternativeFactory<C extends ChunkGeneratorConfig, T extends ChunkGenerator<C>> {
+        T create(World world, BiomeSource source, C config);
     }
 }

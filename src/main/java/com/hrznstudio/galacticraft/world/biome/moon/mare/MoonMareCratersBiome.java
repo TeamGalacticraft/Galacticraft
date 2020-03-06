@@ -20,51 +20,44 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.world.biome;
+package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
-import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
+import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonBiome extends Biome {
+public final class MoonMareCratersBiome extends Biome implements SpaceBiome {
 
-    public static final String ok = "ok Sarinsa";
-
-    public MoonBiome() {
-        super(new Settings()
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, GalacticraftSurfaceBuilders.MOON_CONFIG)
+    public MoonMareCratersBiome() {
+        super((new Settings())
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MULTI_BLOCK_SURFACE_BUILDER, MoonMarePlainsBiome.MOON_MARE_BIOME_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
-                .depth(0.075F)
-                .scale(0.075F)
-                .temperature(0.0F)
-                .downfall(0.003F)
+                .depth(0.03F)
+                .scale(0.03F)
+                .temperature(-100F)
+                .downfall(0.005F)
                 .waterColor(9937330)
                 .waterFogColor(11253183)
-                .parent(null));
+                .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_MARE_PLAINS));
         this.flowerFeatures.clear();
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
     }
 
     @Override
-    public Precipitation getPrecipitation() {
-        return Precipitation.NONE;
-    }
-
-    @Override
-    protected float computeTemperature(BlockPos blockPos_1) {
-        return 0;
+    protected float computeTemperature(BlockPos blockPos) {
+        return -100F;
     }
 
     @Override
     public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon";
+        return "biome.galacticraft-rewoven.moon_mare_craters";
     }
 
     @Override
@@ -80,5 +73,20 @@ public final class MoonBiome extends Biome {
     @Override
     public int getGrassColorAt(double x, double z) {
         return waterColor;
+    }
+
+    @Override
+    public boolean forceSmallCraters() {
+        return true;
+    }
+
+    @Override
+    public TemperatureGroup getTemperatureGroup() {
+        return TemperatureGroup.COLD;
+    }
+
+    @Override
+    public Text getName() {
+        return new TranslatableText(this.getTranslationKey());
     }
 }

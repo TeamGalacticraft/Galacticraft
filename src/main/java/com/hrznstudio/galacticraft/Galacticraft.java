@@ -40,7 +40,6 @@ import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTyp
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.WorldGenerator;
 import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
-import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.fabricmc.api.ModInitializer;
@@ -78,12 +77,11 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBlockEntities.init();
         GalacticraftChunkGeneratorTypes.init();
         GalacticraftFeatures.init();
-        GalacticraftDecorators.init();
         GalacticraftBiomes.init();
         GalacticraftBiomeSourceTypes.init();
         GalacticraftDimensions.init();
-        GalacticraftSurfaceBuilders.init();
         WorldGenerator.register();
+        GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
 

@@ -39,6 +39,7 @@ public class Constants {
         // Natural
         public static final String MOON_TURF = "moon_turf";
         public static final String MOON_ROCK = "moon_rock";
+        public static final String MOON_BASALT = "moon_basalt";
         public static final String MOON_DIRT = "moon_dirt";
         public static final String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
         public static final String MARS_SURFACE_ROCK = "mars_surface_rock";
@@ -109,7 +110,9 @@ public class Constants {
         public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
         public static final String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
         public static final String MOON_ROCK_SLAB = "moon_rock_slab";
+        public static final String MOON_BASALT_SLAB = "moon_basalt_slab";
         public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
+        public static final String MOON_BASALT_STAIRS = "moon_basalt_stairs";
         public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
         public static final String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
@@ -118,6 +121,9 @@ public class Constants {
         public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
         public static final String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
         public static final String MOON_ROCK_WALL = "moon_rock_wall";
+        public static final String MOON_BASALT_WALL = "moon_basalt_wall";
+        public static final String CHEESE_LEAVES = "cheese_leaves";
+        public static final String CHEESE_LOG = "cheese_log";
 
         public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
@@ -464,5 +470,17 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
         public static final String REFINERY_CONTAINER = "refinery_container";
         public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
+    }
+
+    public static class Biomes {
+        public static final String MOON_HIGHLANDS_PLAINS = "moon_highlands_plains";
+        public static final String MOON_HIGHLANDS_CRATERS = "moon_highlands_craters";
+        public static final String MOON_HIGHLANDS_ROCKS = "moon_highlands_rocks";
+
+        public static final String MOON_MARE_PLAINS = "moon_mare_plains";
+        public static final String MOON_MARE_CRATERS = "moon_mare_craters";
+        public static final String MOON_MARE_ROCKS = "moon_mare_rocks";
+
+        public static final String MOON_CHEESE_FOREST = "moon_cheese_forest";
     }
 }

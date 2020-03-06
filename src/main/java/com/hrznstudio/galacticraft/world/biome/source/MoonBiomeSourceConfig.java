@@ -24,32 +24,36 @@ package com.hrznstudio.galacticraft.world.biome.source;
 
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.minecraft.world.biome.source.BiomeSourceConfig;
+import net.minecraft.world.level.LevelGeneratorType;
 import net.minecraft.world.level.LevelProperties;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonBiomeSourceConfig implements BiomeSourceConfig {
+    private final long seed;
+    private final LevelGeneratorType generatorType;
+    private MoonChunkGeneratorConfig generatorSettings = new MoonChunkGeneratorConfig();
 
-    private LevelProperties levelProperties;
-    private MoonChunkGeneratorConfig generatorSettings;
-
-    public LevelProperties getLevelProperties() {
-        return this.levelProperties;
+    public MoonBiomeSourceConfig(LevelProperties levelProperties) {
+        this.seed = levelProperties.getSeed();
+        this.generatorType = levelProperties.getGeneratorType();
     }
 
-    public MoonBiomeSourceConfig setLevelProperties(LevelProperties levelProperties_1) {
-        this.levelProperties = levelProperties_1;
+    public MoonBiomeSourceConfig setGeneratorSettings(MoonChunkGeneratorConfig generatorSettings) {
+        this.generatorSettings = generatorSettings;
         return this;
+    }
+
+    public long getSeed() {
+        return this.seed;
+    }
+
+    public LevelGeneratorType getGeneratorType() {
+        return this.generatorType;
     }
 
     public MoonChunkGeneratorConfig getGeneratorSettings() {
         return this.generatorSettings;
     }
-
-    public MoonBiomeSourceConfig setGeneratorSettings(MoonChunkGeneratorConfig overworldChunkGeneratorConfig_1) {
-        this.generatorSettings = overworldChunkGeneratorConfig_1;
-        return this;
-    }
-
 }

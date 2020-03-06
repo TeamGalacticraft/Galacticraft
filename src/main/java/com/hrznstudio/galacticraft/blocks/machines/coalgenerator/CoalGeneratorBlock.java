@@ -204,7 +204,6 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
 
             Direction direction_1 = blockState_1.get(FACING);
             Direction.Axis direction$Axis_1 = direction_1.getAxis();
-            double double_4 = 0.52D;
             double double_5 = random_1.nextDouble() * 0.6D - 0.3D;
             double double_6 = direction$Axis_1 == Direction.Axis.X ? (double)direction_1.getOffsetX() * 0.52D : double_5;
             double double_7 = random_1.nextDouble() * 6.0D / 16.0D;

@@ -22,19 +22,18 @@
 
 package com.hrznstudio.galacticraft.client.render.entity.moonvillager;
 
-import com.hrznstudio.galacticraft.client.model.entity.moonvillager.MoonVillagerModel;
 import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerRenderer extends MobEntityRenderer<MoonVillagerEntity, MoonVillagerModel> {
+public class MoonVillagerRenderer extends EntityRenderer<MoonVillagerEntity> {
 
     public MoonVillagerRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new MoonVillagerModel(1, 64, 64), 1);
+        super(entityRenderDispatcher_1);
     }
 
     @Override

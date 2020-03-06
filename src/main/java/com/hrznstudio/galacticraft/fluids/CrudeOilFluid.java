@@ -79,7 +79,7 @@ public class CrudeOilFluid extends BaseFluid {
     }
 
     @Override
-    public boolean method_15777(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
+    public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
         return direction == Direction.DOWN && !fluid.matches(GalacticraftFluidTags.OIL);
     }
 
