@@ -91,13 +91,13 @@ public class StandardWrenchItem extends Item {
     private void method_7759(PlayerEntity player, BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
         if (block instanceof Rotatable) {
-            StateManager<Block, BlockState> StateManager = block.getStateManager();
-            Collection<Property<?>> collection = StateManager.getProperties();
+            StateManager<Block, BlockState> manager = block.getStateManager();
+            Collection<Property<?>> collection = manager.getProperties();
             String string_1 = Registry.BLOCK.getId(block).toString();
             if (!collection.isEmpty()) {
                 CompoundTag compoundTag_1 = stack.getOrCreateSubTag("wrenchProp");
                 String string_2 = compoundTag_1.getString(string_1);
-                Property<?> property = StateManager.getProperty(string_2);
+                Property<?> property = manager.getProperty(string_2);
                 if (property == null) {
                     property = collection.iterator().next();
                 }

@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.entity.moonvillager;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
@@ -33,7 +34,6 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -66,6 +66,11 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     }
 
     @Override
+    public void onStruckByLightning(LightningEntity lightning) {
+        super.onStruckByLightning(lightning);
+    }
+
+    @Override
     protected void initAttributes() {
         super.initAttributes();
         this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25d);
@@ -82,9 +87,14 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return null;
+    public boolean cannotDespawn() {
+        return true;
     }
+
+//    @Override
+//    public Iterable<ItemStack> getArmorItems() {
+//        return null; RETURNING NULL CAUSES DAMAGE TO FAIL
+//    }
 
     @Override
     public void onDeath(DamageSource damageSource) {
@@ -94,19 +104,14 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
 
     @Override
     public boolean damage(DamageSource source, float amount) {
-        //return super.damage(source, amount);
-        this.remove();
-        return false;
+        return super.damage(source, amount);
+        //this.remove();
+        //return false;
     }
 
     @Override
     public ItemStack getEquippedStack(EquipmentSlot equipmentSlot) {
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public Arm getMainArm() {
-        return null;
     }
 
     @Nullable

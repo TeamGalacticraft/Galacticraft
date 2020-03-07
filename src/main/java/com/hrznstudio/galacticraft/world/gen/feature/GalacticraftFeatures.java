@@ -23,15 +23,21 @@
 package com.hrznstudio.galacticraft.world.gen.feature;
 
 import com.hrznstudio.galacticraft.world.gen.feature.cheesetree.CheeseTreeFeature;
+import com.hrznstudio.galacticraft.world.gen.feature.moonvillage.MoonVillageFeature;
+import com.hrznstudio.galacticraft.world.gen.feature.moonvillage.MoonVillageFeatureConfig;
+import com.hrznstudio.galacticraft.world.gen.stateprovider.MoonFlowerBlockStateProvider;
 import net.minecraft.world.gen.feature.BranchedTreeFeatureConfig;
+import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
+import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.placer.SimpleBlockPlacer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftFeatures {
-
-
     public static final CheeseTreeFeature CHEESE_TREE_FEATURE = new CheeseTreeFeature(BranchedTreeFeatureConfig::deserialize);
+    public static final StructureFeature<MoonVillageFeatureConfig> MOON_VILLAGE = new MoonVillageFeature(MoonVillageFeatureConfig::deserialize);
+    public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = (new RandomPatchFeatureConfig.Builder(new MoonFlowerBlockStateProvider(), new SimpleBlockPlacer())).tries(64).build();
 
     public static void init() {
 
