@@ -16,9 +16,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.DefaultBiomeFeatures;
 import net.minecraft.world.gen.feature.Feature;
 
-@SuppressWarnings("unchecked")
 public class MoonVillageData {
-    public static void init() {
+    static {
         ImmutableList<StructureProcessor> immutableList = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.8F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState()),
                 new StructureProcessorRule(new TagMatchRuleTest(BlockTags.DOORS), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()),
                 new StructureProcessorRule(new BlockMatchRuleTest(Blocks.TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()),
@@ -42,7 +41,8 @@ public class MoonVillageData {
                 AlwaysTrueRuleTest.INSTANCE,
                 Blocks.MOSSY_COBBLESTONE.getDefaultState()))));
 
-        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/town_centers"), new Identifier("empty"), ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/town_centers/fountain_01", ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState())))), StructurePool.Projection.RIGID), 50),
+        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/town_centers"), new Identifier("empty"), ImmutableList.of(
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/town_centers/fountain_01", ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState())))), StructurePool.Projection.RIGID), 50),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/town_centers/meeting_point_1", ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState())))), StructurePool.Projection.RIGID), 50),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/town_centers/meeting_point_2", ImmutableList.of(), StructurePool.Projection.RIGID), 50),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/town_centers/meeting_point_3", ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.7F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState())))), StructurePool.Projection.RIGID), 50),
@@ -57,7 +57,8 @@ public class MoonVillageData {
                 new StructureProcessorRule(new BlockMatchRuleTest(Blocks.GRASS_BLOCK), new BlockMatchRuleTest(Blocks.WATER), Blocks.WATER.getDefaultState()),
                 new StructureProcessorRule(new BlockMatchRuleTest(Blocks.DIRT), new BlockMatchRuleTest(Blocks.WATER), Blocks.WATER.getDefaultState()))));
 
-        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/streets"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/corner_01", immutableList3, StructurePool.Projection.RIGID), 2),
+        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/streets"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/corner_01", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/corner_02", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/corner_03", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/straight_01", immutableList3, StructurePool.Projection.RIGID), 4),
@@ -74,7 +75,8 @@ public class MoonVillageData {
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/crossroad_06", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/turn_01", immutableList3, StructurePool.Projection.RIGID), 3)), StructurePool.Projection.TERRAIN_MATCHING));
 
-        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/dead/streets"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/streets/corner_01", immutableList3, StructurePool.Projection.RIGID), 2),
+        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/dead/streets"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/streets/corner_01", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/streets/corner_02", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/streets/corner_03", immutableList3, StructurePool.Projection.RIGID), 2),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/streets/straight_01", immutableList3, StructurePool.Projection.RIGID), 4),
@@ -96,122 +98,151 @@ public class MoonVillageData {
                 new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.POTATOES.getDefaultState()),
                 new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.BEETROOTS.getDefaultState()))));
 
-        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/houses"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_2", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_3", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_4", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_5", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_6", immutableList2, StructurePool.Projection.RIGID), 1),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_7", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_8", immutableList2, StructurePool.Projection.RIGID), 3),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/medium_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/medium_house_2", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/big_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/butcher_shop_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                new Pair[]{new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/butcher_shop_2", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tool_smith_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/fletcher_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/shepherds_house_1", ImmutableList.of(), StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/armorer_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/fisher_cottage_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tannery_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/cartographer_1", immutableList2, StructurePool.Projection.RIGID), 1),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_1", immutableList2, StructurePool.Projection.RIGID), 5),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_2", immutableList2, StructurePool.Projection.RIGID), 1),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/masons_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/weaponsmith_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_3", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_4", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/stable_1", immutableList2, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/stable_2", ImmutableList.of(), StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/large_farm_1", immutableList4, StructurePool.Projection.RIGID), 4),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_farm_1", immutableList4, StructurePool.Projection.RIGID), 4),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_3", ImmutableList.of(), StructurePool.Projection.RIGID), 5),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/accessory_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/meeting_point_4",
-                                ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(
-                                        new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.7F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState())))), StructurePool.Projection.RIGID), 3),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/meeting_point_5", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
-                        Pair.of(EmptyPoolElement.INSTANCE, 10)}),
+        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/houses"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_2", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_3", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_4", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_5", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_6", immutableList2, StructurePool.Projection.RIGID), 1),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_7", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_house_8", immutableList2, StructurePool.Projection.RIGID), 3),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/medium_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/medium_house_2", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/big_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/butcher_shop_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/butcher_shop_2", immutableList2, StructurePool.Projection.RIGID), 2),
+
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tool_smith_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/fletcher_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/shepherds_house_1", ImmutableList.of(), StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/armorer_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/fisher_cottage_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tannery_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/cartographer_1", immutableList2, StructurePool.Projection.RIGID), 1),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_1", immutableList2, StructurePool.Projection.RIGID), 5),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_2", immutableList2, StructurePool.Projection.RIGID), 1),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/masons_house_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/weaponsmith_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_3", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_4", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/stable_1", immutableList2, StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/stable_2", ImmutableList.of(), StructurePool.Projection.RIGID), 2),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/large_farm_1", immutableList4, StructurePool.Projection.RIGID), 4),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_farm_1", immutableList4, StructurePool.Projection.RIGID), 4),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_3", ImmutableList.of(), StructurePool.Projection.RIGID), 5),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/accessory_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/meeting_point_4",
+                        ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(
+                                new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.7F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState())))), StructurePool.Projection.RIGID), 3),
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/meeting_point_5", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                new Pair<>(EmptyPoolElement.INSTANCE, 10)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/dead/houses"), new Identifier(Constants.MOD_ID, "moon_village/terminators"),
-                ImmutableList.of(new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_2", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_3", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_4", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_5", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_6", immutableList, StructurePool.Projection.RIGID), 1),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_7", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_8", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/medium_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/medium_house_2", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/big_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/butcher_shop_1", immutableList, StructurePool.Projection.RIGID), 2),
-                        new Pair[]{new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/butcher_shop_2", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tool_smith_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/fletcher_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/shepherds_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/armorer_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/fisher_cottage_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tannery_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/cartographer_1", immutableList, StructurePool.Projection.RIGID), 1),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_1", immutableList, StructurePool.Projection.RIGID), 3),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_2", immutableList, StructurePool.Projection.RIGID), 1),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/masons_house_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/weaponsmith_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_3", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_4", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/stable_1", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/stable_2", immutableList, StructurePool.Projection.RIGID), 2),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/large_farm_1", immutableList, StructurePool.Projection.RIGID), 4),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_farm_1", immutableList, StructurePool.Projection.RIGID), 4),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_1", immutableList, StructurePool.Projection.RIGID), 1),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_2", immutableList, StructurePool.Projection.RIGID), 1),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/animal_pen_3", immutableList, StructurePool.Projection.RIGID), 5),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/meeting_point_4", immutableList, StructurePool.Projection.RIGID), 3),
-                                new Pair<StructurePoolElement, Integer>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/meeting_point_5", immutableList, StructurePool.Projection.RIGID), 1),
-                                Pair.of(EmptyPoolElement.INSTANCE, 10)}),
+                ImmutableList.of(
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_2", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_3", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_4", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_5", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_6", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_7", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/small_house_8", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/medium_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/medium_house_2", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/big_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/butcher_shop_1", immutableList, StructurePool.Projection.RIGID), 2),
+
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/butcher_shop_2", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tool_smith_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/fletcher_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/shepherds_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/armorer_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/fisher_cottage_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/tannery_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/cartographer_1", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_1", immutableList, StructurePool.Projection.RIGID), 3),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/library_2", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/masons_house_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/weaponsmith_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_3", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/temple_4", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/stable_1", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/stable_2", immutableList, StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/large_farm_1", immutableList, StructurePool.Projection.RIGID), 4),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/small_farm_1", immutableList, StructurePool.Projection.RIGID), 4),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_1", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/houses/animal_pen_2", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/animal_pen_3", immutableList, StructurePool.Projection.RIGID), 5),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/meeting_point_4", immutableList, StructurePool.Projection.RIGID), 3),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/houses/meeting_point_5", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(EmptyPoolElement.INSTANCE, 10)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/terminators"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_01", immutableList3, StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_02", immutableList3, StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_03", immutableList3, StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_04", immutableList3, StructurePool.Projection.RIGID), 1)),
+                ImmutableList.of(
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_01", immutableList3, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_02", immutableList3, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_03", immutableList3, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/terminators/terminator_04", immutableList3, StructurePool.Projection.RIGID), 1)),
                 StructurePool.Projection.TERRAIN_MATCHING));
 
-//        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/trees"),
-//                new Identifier("empty"),
-//                ImmutableList.of(new Pair<StructurePoolElement, Integer>(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG)), 1)),
-//                StructurePool.Projection.RIGID));
+        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/trees"),
+                new Identifier("empty"),
+                ImmutableList.of(new Pair<>(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1)),
+                StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/decor"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/lamp_1", ImmutableList.of(), StructurePool.Projection.RIGID), 2), new Pair<>(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1), new Pair<>(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG), StructurePool.Projection.RIGID), 1), new Pair<>(new FeaturePoolElement(Feature.BLOCK_PILE.configure(DefaultBiomeFeatures.HAY_PILE_CONFIG), StructurePool.Projection.RIGID), 1), Pair.of(EmptyPoolElement.INSTANCE, 2)),
+                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/lamp_1", ImmutableList.of(), StructurePool.Projection.RIGID), 2),
+                        new Pair<>(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new FeaturePoolElement(Feature.BLOCK_PILE.configure(DefaultBiomeFeatures.HAY_PILE_CONFIG), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(EmptyPoolElement.INSTANCE, 2)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/dead/decor"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/lamp_1", immutableList, StructurePool.Projection.RIGID), 1), new Pair<>(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1), new Pair<>(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG), StructurePool.Projection.RIGID), 1), new Pair<>(new FeaturePoolElement(Feature.BLOCK_PILE.configure(DefaultBiomeFeatures.HAY_PILE_CONFIG), StructurePool.Projection.RIGID), 1), Pair.of(EmptyPoolElement.INSTANCE, 2)),
+                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/lamp_1", immutableList, StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new FeaturePoolElement(Feature.BLOCK_PILE.configure(DefaultBiomeFeatures.HAY_PILE_CONFIG), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(EmptyPoolElement.INSTANCE, 2)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/villagers"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/villagers/nitwit", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/villagers/baby", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/villagers/unemployed", ImmutableList.of(), StructurePool.Projection.RIGID), 10)),
+                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/villagers/nitwit", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/villagers/baby", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/villagers/unemployed", ImmutableList.of(), StructurePool.Projection.RIGID), 10)),
                 StructurePool.Projection.RIGID));
 
-        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/dead/villagers"), new Identifier("empty"), ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/villagers/nitwit", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+        StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/dead/villagers"), new Identifier("empty"), ImmutableList.of(
+                new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/villagers/nitwit", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/dead/villagers/unemployed", ImmutableList.of(), StructurePool.Projection.RIGID), 10)), StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/animals"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cows_1", ImmutableList.of(), StructurePool.Projection.RIGID), 7), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/pigs_1", ImmutableList.of(), StructurePool.Projection.RIGID), 7), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_3", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_4", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_5", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1), Pair.of(EmptyPoolElement.INSTANCE, 5)),
+                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cows_1", ImmutableList.of(), StructurePool.Projection.RIGID), 7),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/pigs_1", ImmutableList.of(), StructurePool.Projection.RIGID), 7),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_3", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_4", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/horses_5", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(EmptyPoolElement.INSTANCE, 5)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/sheep"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1)),
+                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/cats"), new Identifier("empty"), ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cat_black", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
@@ -224,11 +255,14 @@ public class MoonVillageData {
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cat_tabby", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cat_white", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cat_jellie", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
-                Pair.of(EmptyPoolElement.INSTANCE, 3)), StructurePool.Projection.RIGID));
+                new Pair<>(EmptyPoolElement.INSTANCE, 3)), StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/butcher_animals"),
                 new Identifier("empty"),
-                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cows_1", ImmutableList.of(), StructurePool.Projection.RIGID), 3), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/pigs_1", ImmutableList.of(), StructurePool.Projection.RIGID), 3), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1), new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1)),
+                ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/cows_1", ImmutableList.of(), StructurePool.Projection.RIGID), 3),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/pigs_1", ImmutableList.of(), StructurePool.Projection.RIGID), 3),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_1", ImmutableList.of(), StructurePool.Projection.RIGID), 1),
+                        new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/animals/sheep_2", ImmutableList.of(), StructurePool.Projection.RIGID), 1)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/iron_golem"),
@@ -240,5 +274,9 @@ public class MoonVillageData {
                 new Identifier("empty"),
                 ImmutableList.of(new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/well_bottom", ImmutableList.of(), StructurePool.Projection.RIGID), 1)),
                 StructurePool.Projection.RIGID));
+    }
+
+    public static void init() {
+
     }
 }

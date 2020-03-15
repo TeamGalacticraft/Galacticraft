@@ -32,6 +32,7 @@ import net.minecraft.world.biome.layer.type.ParentedLayer;
 import net.minecraft.world.biome.layer.util.*;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.level.LevelGeneratorType;
 
 import java.util.Set;
@@ -47,6 +48,11 @@ public class MoonBiomeSource extends BiomeSource {
     public MoonBiomeSource(MoonBiomeSourceConfig config) {
         super(BIOMES);
         this.biomeSampler = build(config.getSeed(), config.getGeneratorType(), config.getGeneratorSettings());
+    }
+
+    @Override
+    public boolean hasStructureFeature(StructureFeature<?> feature) {
+        return this.structureFeatures.computeIfAbsent(feature, (structureFeature) -> this.biomes.stream().anyMatch((biome) -> biome.hasStructureFeature(structureFeature)));
     }
 
     public static BiomeLayerSampler build(long seed, LevelGeneratorType generatorType, MoonChunkGeneratorConfig settings) {

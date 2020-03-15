@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -65,9 +64,6 @@ public class MultiBlockSurfaceConfig implements SurfaceConfig {
         for (int a = 0; a < 5; a++) {
             for (BlockStateWithChance topMaterial : topMaterials) {
                 if (topMaterial.getChance() < random.nextInt(100)) {
-                    if (topMaterial.getState().getBlock() != GalacticraftBlocks.MOON_BASALT) {
-                        System.out.println("ok");
-                    }
                     return topMaterial.getState();
                 }
             }
@@ -82,9 +78,6 @@ public class MultiBlockSurfaceConfig implements SurfaceConfig {
         for (int a = 0; a < 5; a++) {
             for (BlockStateWithChance underMaterial : underMaterials) {
                 if (underMaterial.getChance() < random.nextInt(100)) {
-                    if (underMaterial.getState().getBlock() != GalacticraftBlocks.MOON_BASALT) {
-                        System.out.println("ok");
-                    }
                     return underMaterial.getState();
                 }
             }
@@ -98,9 +91,6 @@ public class MultiBlockSurfaceConfig implements SurfaceConfig {
         for (int a = 0; a < 5; a++) {
             for (BlockStateWithChance underwaterMaterial : underwaterMaterials) {
                 if (underwaterMaterial.getChance() < random.nextInt(100)) {
-                    if (underwaterMaterial.getState().getBlock() != GalacticraftBlocks.MOON_BASALT) {
-                        System.out.println("ok");
-                    }
                     return underwaterMaterial.getState();
                 }
             }

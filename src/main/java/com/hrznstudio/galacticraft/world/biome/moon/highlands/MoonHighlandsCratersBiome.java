@@ -24,10 +24,17 @@ package com.hrznstudio.galacticraft.world.biome.moon.highlands;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
+import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 /**
@@ -48,6 +55,13 @@ public final class MoonHighlandsCratersBiome extends Biome implements SpaceBiome
                 .waterFogColor(11253183)
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_PLAINS));
         this.flowerFeatures.clear();
+
+        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(FeatureConfig.DEFAULT));
+    }
+
+    @Override
+    public void generateFeatureStep(GenerationStep.Feature step, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator, IWorld world, long seed, ChunkRandom random, BlockPos pos) {
+        super.generateFeatureStep(step, chunkGenerator, world, seed, random, pos);
     }
 
     @Override

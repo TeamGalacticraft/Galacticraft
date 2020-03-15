@@ -24,10 +24,12 @@ package com.hrznstudio.galacticraft.world.biome.moon.highlands;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
@@ -51,6 +53,8 @@ public final class MoonHighlandsPlainsBiome extends Biome implements SpaceBiome 
                 .waterFogColor(11253183)
                 .parent(null));
         this.flowerFeatures.clear();
+
+        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(FeatureConfig.DEFAULT));
     }
 
     @Override

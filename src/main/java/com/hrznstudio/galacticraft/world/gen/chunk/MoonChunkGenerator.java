@@ -60,9 +60,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     });
     private final OctavePerlinNoiseSampler noiseSampler;
     private final boolean amplified;
-//    private final PhantomSpawner phantomSpawner = new PhantomSpawner();
-//    private final PillagerSpawner pillagerSpawner = new PillagerSpawner();
-//    private final CatSpawner catSpawner = new CatSpawner();
 //    private final ZombieSiegeManager zombieSiegeManager = new ZombieSiegeManager();
 
     public MoonChunkGenerator(IWorld world, BiomeSource biomeSource, MoonChunkGeneratorConfig config) {
@@ -153,21 +150,9 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public List<Biome.SpawnEntry> getEntitySpawnList(EntityCategory category, BlockPos pos) {
-        if (Feature.SWAMP_HUT.method_14029(this.world, pos)) {
-            if (category == EntityCategory.MONSTER) {
-                return Feature.SWAMP_HUT.getMonsterSpawns();
-            }
-
-            if (category == EntityCategory.CREATURE) {
-                return Feature.SWAMP_HUT.getCreatureSpawns();
-            }
-        } else if (category == EntityCategory.MONSTER) {
+        if (category == EntityCategory.MONSTER) {
             if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(this.world, pos)) {
                 return Feature.PILLAGER_OUTPOST.getMonsterSpawns();
-            }
-
-            if (Feature.OCEAN_MONUMENT.isApproximatelyInsideStructure(this.world, pos)) {
-                return Feature.OCEAN_MONUMENT.getMonsterSpawns();
             }
         }
 
@@ -175,7 +160,9 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public void spawnEntities(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
+        super.spawnEntities(world, spawnMonsters, spawnAnimals);
 //        this.zombieSiegeManager.spawn(world, spawnMonsters, spawnAnimals);
+
     }
 
     public int getSpawnHeight() {
@@ -184,11 +171,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
     public int getSeaLevel() {
         return 63;
-    }
-
-    @Override
-    public void generateFeatures(ChunkRegion region) {
-        super.generateFeatures(region);
     }
 
     @Override

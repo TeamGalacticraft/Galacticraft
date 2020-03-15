@@ -26,25 +26,25 @@ public class MoonBaseBiomesLayer implements IdentitySamplingLayer {
 
    @Override
    public int sample(LayerRandomnessSource context, int value) {
-      value = value & -3841;
-      if (value < 1 || value > 4) {
-         System.out.println(value);
-      }
-      if (!isOcean(value) && value != MOON_CHEESE_FOREST_ID) {
-         switch (value) {
-            case 1:
-            case 4:
-               return BIOMES[context.nextInt(BIOMES.length)];
-            case 2:
-               return HIGHLANDS_BIOMES[context.nextInt(HIGHLANDS_BIOMES.length)];
-            case 3:
-               return MARE_BIOMES[context.nextInt(MARE_BIOMES.length)];
-            default:
-               return MOON_CHEESE_FOREST_ID;
-         }
-      } else {
-         return value;
-      }
+//       if (true) {
+//           return HIGHLANDS_BIOMES[context.nextInt(HIGHLANDS_BIOMES.length)];
+//       }
+       value = value & -3841;
+       if (!isOcean(value) && value != MOON_CHEESE_FOREST_ID) {
+           switch (value) {
+               case 1:
+               case 4:
+                   return BIOMES[context.nextInt(BIOMES.length)];
+               case 2:
+                   return HIGHLANDS_BIOMES[context.nextInt(HIGHLANDS_BIOMES.length)];
+               case 3:
+                   return MARE_BIOMES[context.nextInt(MARE_BIOMES.length)];
+               default:
+                   return MOON_CHEESE_FOREST_ID;
+           }
+       } else {
+           return value;
+       }
    }
 
    private static final int WARM_OCEAN_ID = Registry.BIOME.getRawId(Biomes.WARM_OCEAN);

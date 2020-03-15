@@ -3,14 +3,12 @@ package com.hrznstudio.galacticraft.world.biome.moon.highlands;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.BoulderFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.ForestRockFeature;
+import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
@@ -31,6 +29,8 @@ public final class MoonHighlandsRocksBiome extends Biome implements SpaceBiome {
                 .waterFogColor(11253183)
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_CRATERS));
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, new ConfiguredFeature<>((ForestRockFeature) Feature.FOREST_ROCK, new BoulderFeatureConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), 10)));
+
+        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(FeatureConfig.DEFAULT));
     }
 
     @Override
