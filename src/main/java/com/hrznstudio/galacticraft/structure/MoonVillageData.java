@@ -2,6 +2,7 @@ package com.hrznstudio.galacticraft.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Blocks;
@@ -18,7 +19,8 @@ import net.minecraft.world.gen.feature.Feature;
 
 public class MoonVillageData {
     static {
-        ImmutableList<StructureProcessor> immutableList = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.8F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState()),
+        ImmutableList<StructureProcessor> immutableList = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(
+                new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.COBBLESTONE, 0.8F), AlwaysTrueRuleTest.INSTANCE, Blocks.MOSSY_COBBLESTONE.getDefaultState()),
                 new StructureProcessorRule(new TagMatchRuleTest(BlockTags.DOORS), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()),
                 new StructureProcessorRule(new BlockMatchRuleTest(Blocks.TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()),
                 new StructureProcessorRule(new BlockMatchRuleTest(Blocks.WALL_TORCH), AlwaysTrueRuleTest.INSTANCE, Blocks.AIR.getDefaultState()),
@@ -53,9 +55,9 @@ public class MoonVillageData {
 
         ImmutableList<StructureProcessor> immutableList3 = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(
                 new StructureProcessorRule(new BlockMatchRuleTest(Blocks.GRASS_PATH), new BlockMatchRuleTest(Blocks.WATER), Blocks.OAK_PLANKS.getDefaultState()),
-                new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.GRASS_PATH, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.GRASS_BLOCK.getDefaultState()),
-                new StructureProcessorRule(new BlockMatchRuleTest(Blocks.GRASS_BLOCK), new BlockMatchRuleTest(Blocks.WATER), Blocks.WATER.getDefaultState()),
-                new StructureProcessorRule(new BlockMatchRuleTest(Blocks.DIRT), new BlockMatchRuleTest(Blocks.WATER), Blocks.WATER.getDefaultState()))));
+                new StructureProcessorRule(new RandomBlockMatchRuleTest(Blocks.GRASS_PATH, 0.1F), AlwaysTrueRuleTest.INSTANCE, GalacticraftBlocks.MOON_TURF.getDefaultState()),
+                new StructureProcessorRule(new BlockMatchRuleTest(GalacticraftBlocks.MOON_TURF), new BlockMatchRuleTest(Blocks.WATER), Blocks.WATER.getDefaultState()),
+                new StructureProcessorRule(new BlockMatchRuleTest(GalacticraftBlocks.MOON_DIRT), new BlockMatchRuleTest(Blocks.WATER), Blocks.WATER.getDefaultState()))));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(new Identifier(Constants.MOD_ID, "moon_village/streets"), new Identifier(Constants.MOD_ID, "moon_village/terminators"), ImmutableList.of(
                 new Pair<>(new SinglePoolElement(Constants.MOD_ID + ":moon_village/streets/corner_01", immutableList3, StructurePool.Projection.RIGID), 2),

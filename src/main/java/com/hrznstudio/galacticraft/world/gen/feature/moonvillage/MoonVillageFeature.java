@@ -7,6 +7,7 @@ import net.minecraft.structure.VillageStructureStart;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.gen.ChunkRandom;
@@ -16,6 +17,8 @@ import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.Random;
 import java.util.function.Function;
+
+import static com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures.MOON_VILLAGE;
 
 public class MoonVillageFeature extends StructureFeature<DefaultFeatureConfig> {
     public MoonVillageFeature(Function<Dynamic<?>, ? extends DefaultFeatureConfig> configFactory) {
@@ -51,7 +54,7 @@ public class MoonVillageFeature extends StructureFeature<DefaultFeatureConfig> {
 
     @Override
     public String getName() {
-        return "Moon_Village";
+        return Registry.STRUCTURE_FEATURE.getId(MOON_VILLAGE).toString();
     }
 
     @Override

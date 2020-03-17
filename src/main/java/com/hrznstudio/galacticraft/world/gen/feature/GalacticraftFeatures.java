@@ -40,7 +40,7 @@ public class GalacticraftFeatures {
     public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = (new RandomPatchFeatureConfig.Builder(new MoonFlowerBlockStateProvider(), new SimpleBlockPlacer())).tries(64).build();
 
     public static void init() {
-        Feature.STRUCTURES.forcePut("moon_village", MOON_VILLAGE);
+        Feature.STRUCTURES.forcePut(Registry.STRUCTURE_FEATURE.getId(MOON_VILLAGE).toString(), MOON_VILLAGE);
         Feature.JIGSAW_STRUCTURES.add(MOON_VILLAGE);
     }
 }

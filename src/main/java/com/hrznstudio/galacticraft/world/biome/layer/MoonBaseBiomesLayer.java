@@ -29,8 +29,11 @@ public class MoonBaseBiomesLayer implements IdentitySamplingLayer {
 //       if (true) {
 //           return HIGHLANDS_BIOMES[context.nextInt(HIGHLANDS_BIOMES.length)];
 //       }
-       value = value & -3841;
-       if (!isOcean(value) && value != MOON_CHEESE_FOREST_ID) {
+       value &= -3841;
+       if (isOcean(value)) {
+           return BIOMES[context.nextInt(BIOMES.length)];
+       }
+       if (value != MOON_CHEESE_FOREST_ID) {
            switch (value) {
                case 1:
                case 4:
