@@ -26,6 +26,7 @@ import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructureManager;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -35,9 +36,11 @@ import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.level.LevelGeneratorType;
@@ -69,6 +72,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         this.amplified = world.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
+    @Override
     public void populateEntities(ChunkRegion region) {
         int i = region.getCenterChunkX();
         int j = region.getCenterChunkZ();
@@ -78,10 +82,12 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
     }
 
+    @Override
     protected void sampleNoiseColumn(double[] buffer, int x, int z) {
         this.sampleNoiseColumn(buffer, x, z, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
     }
 
+    @Override
     protected double computeNoiseFalloff(double depth, double scale, int y) {
         double e = ((double) y - (8.5D + depth * 8.5D / 8.0D * 4.0D)) * 12.0D * 128.0D / 256.0D / scale;
         if (e < 0.0D) {
@@ -91,6 +97,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return e;
     }
 
+    @Override
     protected double[] computeNoiseRange(int x, int z) {
         double[] ds = new double[2];
         float f = 0.0F;
@@ -149,6 +156,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return d;
     }
 
+    @Override
     public List<Biome.SpawnEntry> getEntitySpawnList(EntityCategory category, BlockPos pos) {
         if (category == EntityCategory.MONSTER) {
             if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(this.world, pos)) {
@@ -159,16 +167,19 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return super.getEntitySpawnList(category, pos);
     }
 
+    @Override
     public void spawnEntities(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals) {
         super.spawnEntities(world, spawnMonsters, spawnAnimals);
 //        this.zombieSiegeManager.spawn(world, spawnMonsters, spawnAnimals);
 
     }
 
+    @Override
     public int getSpawnHeight() {
         return this.world.getSeaLevel() + 1;
     }
 
+    @Override
     public int getSeaLevel() {
         return 63;
     }
@@ -178,6 +189,11 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         super.buildSurface(chunkRegion, chunk);
 
         createCraters(chunk, chunkRegion);
+    }
+
+    @Override
+    public void setStructureStarts(BiomeAccess biomeAccess, Chunk chunk, ChunkGenerator<?> chunkGenerator, StructureManager structureManager) {
+        super.setStructureStarts(biomeAccess, chunk, chunkGenerator, structureManager);
     }
 
     private void createCraters(Chunk chunk, ChunkRegion region) {

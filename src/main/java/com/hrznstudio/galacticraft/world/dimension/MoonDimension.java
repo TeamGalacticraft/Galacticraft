@@ -130,7 +130,7 @@ public class MoonDimension extends Dimension {
 
     public float getSkyAngle(long timeOfDay, float tickDelta) {
         double d = MathHelper.fractionalPart((double) timeOfDay / 24000.0D - 0.25D);
-        double e = 0.5D - Math.cos(d * 3.141592653589793D) / 2.0D;
+        double e = 0.5D - Math.cos(d * Math.PI) / 2.0D;
         return (float) (d * 2.0D + e) / 3.0F;
     }
 

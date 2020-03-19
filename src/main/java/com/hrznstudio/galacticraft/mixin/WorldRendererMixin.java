@@ -1,13 +1,17 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilderStorage;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.gl.VertexBuffer;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
-import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -15,7 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("PointlessArithmeticExpression")
+import java.util.Random;
+
 @Mixin(WorldRenderer.class)
 public abstract class WorldRendererMixin {
     private static final Identifier EARTH_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/earth.png");
@@ -25,249 +30,272 @@ public abstract class WorldRendererMixin {
     private MinecraftClient client;
     @Shadow
     private ClientWorld world;
-    private int starGLCallList = GL11.glGenLists(3);
-    private int glSkyList;
-    private int glSkyList2;
+    @Shadow
+    @Final
+    private VertexFormat skyVertexFormat;
+    private VertexBuffer starBufferMoon;
+    private VertexBuffer lightSkyBufferMoon;
+    private VertexBuffer darkSkyBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void initGalacticraft(MinecraftClient client, BufferBuilderStorage bufferBuilders, CallbackInfo ci) {
-//        RenderSystem.pushMatrix();
-//        GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
-//        this.renderStarsGalacticraft();
-//        GL11.glEndList();
-//        RenderSystem.popMatrix();
-//        final Tessellator tessellator = Tessellator.getInstance();
-//        this.glSkyList = this.starGLCallList + 1;
-//        GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
-//        final byte byte2 = 64;
-//        final int i = 256 / byte2 + 2;
-//        float f = 16F;
-//        BufferBuilder buffer = tessellator.getBuffer();
-//
-//        for (int j = -byte2 * i; j <= byte2 * i; j += byte2) {
-//            for (int l = -byte2 * i; l <= byte2 * i; l += byte2) {
-//                buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
-//                buffer.vertex(j + 0, f, l + 0).next();
-//                buffer.vertex(j + byte2, f, l + 0).next();
-//                buffer.vertex(j + byte2, f, l + byte2).next();
-//                buffer.vertex(j + 0, f, l + byte2).next();
-//                tessellator.draw();
-//            }
-//        }
-//
-//        GL11.glEndList();
-//        this.glSkyList2 = this.starGLCallList + 2;
-//        GL11.glNewList(this.glSkyList2, GL11.GL_COMPILE);
-//        f = -16F;
-//        buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
-//
-//        for (int k = -byte2 * i; k <= byte2 * i; k += byte2) {
-//            for (int i1 = -byte2 * i; i1 <= byte2 * i; i1 += byte2) {
-//                buffer.vertex(k + byte2, f, i1 + 0).next();
-//                buffer.vertex(k + 0, f, i1 + 0).next();
-//                buffer.vertex(k + 0, f, i1 + byte2).next();
-//                buffer.vertex(k + byte2, f, i1 + byte2).next();
-//            }
-//        }
-//
-//        tessellator.draw();
-//        GL11.glEndList();
+        starBufferMoon = new VertexBuffer(skyVertexFormat);
+        this.renderStarsGC();
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        this.lightSkyBufferMoon = new VertexBuffer(skyVertexFormat);
+
+        final byte byte2 = 64;
+        final int i = 256 / byte2 + 2;
+        float f = 16F;
+        BufferBuilder buffer = tessellator.getBuffer();
+
+        for (int j = -byte2 * i; j <= byte2 * i; j += byte2) {
+            for (int l = -byte2 * i; l <= byte2 * i; l += byte2) {
+                buffer.begin(7, VertexFormats.POSITION);
+                buffer.vertex(j, f, l).next();
+                buffer.vertex(j + byte2, f, l).next();
+                buffer.vertex(j + byte2, f, l + byte2).next();
+                buffer.vertex(j, f, l + byte2).next();
+                buffer.end();
+                lightSkyBufferMoon.upload(buffer);
+            }
+        }
+
+        this.darkSkyBufferMoon = new VertexBuffer(skyVertexFormat);
+
+        f = -16F;
+        buffer.begin(7, VertexFormats.POSITION);
+
+        for (int k = -byte2 * i; k <= byte2 * i; k += byte2) {
+            for (int i1 = -byte2 * i; i1 <= byte2 * i; i1 += byte2) {
+                buffer.vertex(k + byte2, f, i1).next();
+                buffer.vertex(k, f, i1).next();
+                buffer.vertex(k, f, i1 + byte2).next();
+                buffer.vertex(k + byte2, f, i1 + byte2).next();
+            }
+        }
+
+        buffer.end();
+        darkSkyBufferMoon.upload(buffer);
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
-    private void renderGalacticraft(MatrixStack matrixStack, float f, CallbackInfo ci) {
-//        if (this.world.dimension.getType() == GalacticraftDimensions.MOON) {
-//            GL11.glDisable(GL11.GL_TEXTURE_2D);
-//            RenderSystem.disableRescaleNormal();
-//            RenderSystem.color3f(1F, 1F, 1F);
-//            final Tessellator tessellator = Tessellator.getInstance();
-//            RenderSystem.depthMask(false);
-//            RenderSystem.enableFog();
-//            RenderSystem.color3f(0, 0, 0);
-//            GL11.glCallList(this.glSkyList);
-//            RenderSystem.disableFog();
-//            RenderSystem.disableAlphaTest();
-//            RenderSystem.enableBlend();
-//            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//            RenderSystem.disableLighting();
-//            float var10;
-//            float var11;
-//            float var12;
-//
-//            float var20 = 1.0F; //TESTING
-//
-//            matrixStack.push();
-//            RenderSystem.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-//            RenderSystem.rotatef(this.world.getSkyAngle(f) * 360.0F, 1.0F, 0.0F, 0.0F);
-//            RenderSystem.rotatef(-19.0F, 0, 1.0F, 0);
-//            RenderSystem.color4f(1.0F, 1.0F, 1.0F, var20);
-//            GL11.glCallList(this.starGLCallList);
-//            matrixStack.pop();
-//
-//            GL11.glEnable(GL11.GL_TEXTURE_2D);
-//            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-//            matrixStack.push();
-//
-//            matrixStack.pop();
-//
-//            matrixStack.push();
-//
-//            RenderSystem.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-//            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.0F); //TODO
-//            RenderSystem.rotatef(this.world.getSkyAngle(f) * 360.0F, 1.0F, 0.0F, 0.0F); //TODO
-//            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//            GL11.glDisable(GL11.GL_TEXTURE_2D);
-//            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.0F);
-//            var12 = 20.0F / 3.5F;
-//            BufferBuilder buffer = tessellator.getBuffer();
-//            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
-//            buffer.vertex(-var12, 99.9D, -var12).next();
-//            buffer.vertex(var12, 99.9D, -var12).next();
-//            buffer.vertex(var12, 99.9D, var12).next();
-//            buffer.vertex(-var12, 99.9D, var12).next();
-//            tessellator.draw();
-//            GL11.glEnable(GL11.GL_TEXTURE_2D);
-//            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-//            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//            var12 = 15.0F;
-//            client.getTextureManager().bindTexture(SUN_TEXTURE);
-//            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
-//            buffer.vertex(-var12, 100.0D, -var12).texture(0.0F, 0.0F).next();
-//            buffer.vertex(var12, 100.0D, -var12).texture(1.0F, 0.0F).next();
-//            buffer.vertex(var12, 100.0D, var12).texture(1.0F, 1.0F).next();
-//            buffer.vertex(-var12, 100.0D, var12).texture(0.0F, 1.0F).next();
-//            tessellator.draw();
-//
-//            matrixStack.pop();
-//
-//            matrixStack.push();
-//
-//            RenderSystem.disableBlend();
-//
-//            // EARTH:
-//            var12 = 10.0F;
-//            final float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getPos().z) * 0.01F;
-//            matrixStack.scale(0.6F, 0.6F, 0.6F);
-//            RenderSystem.rotatef(earthRotation, 1.0F, 0.0F, 0.0F);
-//            RenderSystem.rotatef(200F, 1.0F, 0.0F, 0.0F);
-//            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1F);
-//
-//            // Overworld texture is 48x48 in a 64x64 .png file
-//            client.getTextureManager().bindTexture(EARTH_TEXTURE);
-//
-//            this.world.getMoonPhase();
-//            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
-//            buffer.vertex(-var12, -100.0D, var12).texture(0F, 1.0F).next();
-//            buffer.vertex(var12, -100.0D, var12).texture(1.0F, 1.0F).next();
-//            buffer.vertex(var12, -100.0D, -var12).texture(1.0F, 0F).next();
-//            buffer.vertex(-var12, -100.0D, -var12).texture(0F, 0F).next();
-//            tessellator.draw();
-//
-//            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-//            RenderSystem.disableBlend();
-//            RenderSystem.enableAlphaTest();
-//            RenderSystem.enableFog();
-//            matrixStack.pop();
-//            GL11.glDisable(GL11.GL_TEXTURE_2D);
-//            RenderSystem.color3f(0.0F, 0.0F, 0.0F);
-//            final double var25 = client.player.getPos().getY() - this.world.getHeight();
-//
-//            if (var25 < 0.0D) {
-//                matrixStack.push();
-//                matrixStack.translate(0.0F, 12.0F, 0.0F);
-//                GL11.glCallList(this.glSkyList2);
-//                matrixStack.pop();
-//                var10 = 1.0F;
-//                var11 = -((float) (var25 + 65.0D));
-//                var12 = -var10;
-//                buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
-//                buffer.vertex(-var10, var11, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var11, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var12, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var12, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var12, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var12, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var11, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var11, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var12, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var12, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var11, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var11, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var11, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var11, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var12, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var12, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var12, -var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(-var10, var12, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var12, var10).color(0, 0, 0, 1.0F).next();
-//                buffer.vertex(var10, var12, -var10).color(0, 0, 0, 1.0F).next();
-//                tessellator.draw();
-//            }
-//
-//            RenderSystem.color3f(70F / 256F, 70F / 256F, 70F / 256F);
-//
-//            matrixStack.push();
-//            matrixStack.translate(0.0F, -((float) (var25 - 16.0D)), 0.0F);
-//            GL11.glCallList(this.glSkyList2);
-//            matrixStack.pop();
-//            RenderSystem.enableRescaleNormal();
-//            GL11.glEnable(GL11.GL_TEXTURE_2D);
-//            RenderSystem.depthMask(true);
-//            RenderSystem.enableColorMaterial();
-//            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-//            RenderSystem.disableBlend();
-//            ci.cancel();
-//            //noinspection UnnecessaryReturnStatement
-//            return;
-//        }
+    private void renderSkyGC(MatrixStack matrixStack, float f, CallbackInfo ci) {
+        if (this.world.dimension.getType() == GalacticraftDimensions.MOON) {
+            RenderSystem.disableTexture();
+            RenderSystem.disableRescaleNormal();
+            RenderSystem.color3f(1F, 1F, 1F);
+            final Tessellator tessellator = Tessellator.getInstance();
+            RenderSystem.depthMask(false);
+            RenderSystem.enableFog();
+            RenderSystem.color3f(0, 0, 0);
+            this.lightSkyBufferMoon.bind();
+            this.skyVertexFormat.startDrawing(0L);
+            this.lightSkyBufferMoon.draw(matrixStack.peek().getModel(), 7);
+            VertexBuffer.unbind();
+            this.skyVertexFormat.endDrawing();
+            RenderSystem.disableFog();
+            RenderSystem.disableAlphaTest();
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(770, 771);
+            RenderSystem.disableLighting();
+            float b;
+            float a;
+
+            float starBrightness = 1.0F;
+
+            matrixStack.push();
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(f) * 360.0F));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
+            RenderSystem.color4f(1.0F, 0.95F, 0.9F, starBrightness); //browner stars?
+            this.starBufferMoon.bind();
+            this.skyVertexFormat.startDrawing(0L);
+            this.starBufferMoon.draw(matrixStack.peek().getModel(), 7);
+            VertexBuffer.unbind();
+            this.skyVertexFormat.endDrawing();
+
+            matrixStack.pop();
+            GlStateManager.blendFunc(770, 1);
+
+            matrixStack.push();
+
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(f) * 360.0F));
+
+            RenderSystem.blendFunc(770, 771);
+            RenderSystem.disableTexture();
+
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.0F);
+            a = 5.714286F;
+
+            BufferBuilder buffer = tessellator.getBuffer();
+            buffer.begin(7, VertexFormats.POSITION);
+            buffer.vertex(-a, 99.9D, -a).next();
+            buffer.vertex(a, 99.9D, -a).next();
+            buffer.vertex(a, 99.9D, a).next();
+            buffer.vertex(-a, 99.9D, a).next();
+            buffer.end();
+            BufferRenderer.draw(buffer);
+            Matrix4f matrix4f2 = matrixStack.peek().getModel();
+            RenderSystem.enableTexture();
+            RenderSystem.blendFunc(770, 1);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            a = 15.0F;
+            client.getTextureManager().bindTexture(SUN_TEXTURE);
+            buffer.begin(7, VertexFormats.POSITION_TEXTURE);
+            buffer.vertex(matrix4f2, -a, 100.0F, -a).texture(0.0F, 0.0F).next();
+            buffer.vertex(matrix4f2, a, 100.0F, -a).texture(1.0F, 0.0F).next();
+            buffer.vertex(matrix4f2, a, 100.0F, a).texture(1.0F, 1.0F).next();
+            buffer.vertex(matrix4f2, -a, 100.0F, a).texture(0.0F, 1.0F).next();
+            buffer.end();
+            BufferRenderer.draw(buffer);
+
+            matrixStack.pop();
+            matrixStack.push();
+            matrix4f2 = matrixStack.peek().getModel();
+
+            RenderSystem.disableBlend();
+            RenderSystem.enableTexture();
+
+            a = 10.0F;
+            assert client.player != null;
+            float earthRotation = 0F;//(float) (this.world.getSpawnPos().getZ() - client.player.getZ()) * 0.01F;
+            matrixStack.scale(0.6F, 0.6F, 0.6F);
+            matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngle(f) * 360.0F) - 40.0F));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(earthRotation));
+            matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(10.0F));
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+            client.getTextureManager().bindTexture(EARTH_TEXTURE);
+
+            buffer.begin(7, VertexFormats.POSITION_TEXTURE);
+            buffer.vertex(matrix4f2, -a, -100.0F, a).texture(0.0F, 1.0F).next();
+            buffer.vertex(matrix4f2, a, -100.0F, a).texture(1.0F, 1.0F).next();
+            buffer.vertex(matrix4f2, a, -100.0F, -a).texture(1.0F, 0.0F).next();
+            buffer.vertex(matrix4f2, -a, -100.0F, -a).texture(0.0F, 0.0F).next();
+            buffer.end();
+            BufferRenderer.draw(buffer);
+
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+            RenderSystem.enableAlphaTest();
+            RenderSystem.enableFog();
+            matrixStack.pop();
+            RenderSystem.disableTexture();
+            RenderSystem.color3f(0.0F, 0.0F, 0.0F);
+            double var25 = client.player.getPos().getY() - this.world.getSkyDarknessHeight();
+
+            if (var25 < 0.0D) {
+                matrixStack.push();
+                matrixStack.translate(0.0F, 12.0F, 0.0F);
+
+                this.darkSkyBufferMoon.bind();
+                this.skyVertexFormat.startDrawing(0L);
+                this.darkSkyBufferMoon.draw(matrixStack.peek().getModel(), 7);
+                VertexBuffer.unbind();
+                this.skyVertexFormat.endDrawing();
+
+                matrixStack.pop();
+                a = -1.0F;
+                b = -((float) (var25 + 65.0D));
+                buffer.begin(7, VertexFormats.POSITION_COLOR);
+                buffer.vertex(-a, b, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, b, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, a, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, a, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, a, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, a, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, b, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, b, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, a, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, a, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, b, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, b, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, b, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, b, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, a, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, a, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, a, -a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(-a, a, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, a, a).color(0, 0, 0, 1.0F).next();
+                buffer.vertex(a, a, -a).color(0, 0, 0, 1.0F).next();
+                buffer.end();
+                BufferRenderer.draw(buffer);
+            }
+
+            RenderSystem.color3f(70F / 256F, 70F / 256F, 70F / 256F);
+
+            matrixStack.push();
+            matrixStack.translate(0.0F, -((float) (var25 - 16.0D)), 0.0F);
+
+            this.darkSkyBufferMoon.bind();
+            this.skyVertexFormat.startDrawing(0L);
+            this.darkSkyBufferMoon.draw(matrixStack.peek().getModel(), 7);
+            VertexBuffer.unbind();
+            this.skyVertexFormat.endDrawing();
+
+            matrixStack.pop();
+            RenderSystem.enableRescaleNormal();
+            RenderSystem.enableTexture();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableColorMaterial();
+            RenderSystem.blendFunc(770, 771);
+            RenderSystem.disableBlend();
+            ci.cancel();
+            //noinspection UnnecessaryReturnStatement
+            return;
+        }
     }
 
-    private void renderStarsGalacticraft() {
-//        Random random = new Random(10842L);
-//
-//        final Tessellator tessellator = Tessellator.getInstance();
-//        BufferBuilder bufferBuilder = tessellator.getBuffer();
-//        bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION);
-//        for (int var3 = 0; var3 < 6000; ++var3) {
-//            double var4 = random.nextFloat() * 2.0F - 1.0F;
-//            double var6 = random.nextFloat() * 2.0F - 1.0F;
-//            double var8 = random.nextFloat() * 2.0F - 1.0F;
-//            final double var10 = 0.15F + random.nextFloat() * 0.1F;
-//            double var12 = var4 * var4 + var6 * var6 + var8 * var8;
-//
-//            if (var12 < 1.0D && var12 > 0.01D) {
-//                var12 = 1.0D / Math.sqrt(var12);
-//                var4 *= var12;
-//                var6 *= var12;
-//                var8 *= var12;
-//                final double var14 = var4 * 100.0D;
-//                final double var16 = var6 * 100.0D;
-//                final double var18 = var8 * 100.0D;
-//                final double var20 = Math.atan2(var4, var8);
-//                final double var22 = Math.sin(var20);
-//                final double var24 = Math.cos(var20);
-//                final double var26 = Math.atan2(Math.sqrt(var4 * var4 + var8 * var8), var6);
-//                final double var28 = Math.sin(var26);
-//                final double var30 = Math.cos(var26);
-//                final double var32 = random.nextDouble() * Math.PI * 2.0D;
-//                final double var34 = Math.sin(var32);
-//                final double var36 = Math.cos(var32);
-//
-//                for (int var38 = 0; var38 < 4; ++var38) {
-//                    final double var39 = 0.0D;
-//                    final double var41 = ((var38 & 2) - 1) * var10;
-//                    final double var43 = ((var38 + 1 & 2) - 1) * var10;
-//                    final double var47 = var41 * var36 - var43 * var34;
-//                    final double var49 = var43 * var36 + var41 * var34;
-//                    final double var53 = var47 * var28 + var39 * var30;
-//                    final double var55 = var39 * var28 - var47 * var30;
-//                    final double var57 = var55 * var22 - var49 * var24;
-//                    final double var61 = var49 * var22 + var55 * var24;
-//                    bufferBuilder.vertex(var14 + var57, var16 + var53, var18 + var61).next();
-//                }
-//            }
-//        }
-//        tessellator.draw();
+    private void renderStarsGC() {
+        Random random = new Random(10842L);
+
+        final Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        bufferBuilder.begin(7, VertexFormats.POSITION);
+        for (int i = 0; i < 6000; ++i) {
+            double j = random.nextFloat() * 2.0F - 1.0F;
+            double k = random.nextFloat() * 2.0F - 1.0F;
+            double l = random.nextFloat() * 2.0F - 1.0F;
+            double m = 0.15F + random.nextFloat() * 0.1F;
+            double n = j * j + k * k + l * l;
+
+            if (n < 1.0D && n > 0.01D) {
+                n = 1.0D / Math.sqrt(n);
+                j *= n;
+                k *= n;
+                l *= n;
+                double o = j * 100.0D;
+                double p = k * 100.0D;
+                double q = l * 100.0D;
+                double r = Math.atan2(j, l);
+                double s = Math.sin(r);
+                double t = Math.cos(r);
+                double u = Math.atan2(Math.sqrt(j * j + l * l), k);
+                double v = Math.sin(u);
+                double w = Math.cos(u);
+                double x = random.nextDouble() * Math.PI * 2.0D;
+                double y = Math.sin(x);
+                double z = Math.cos(x);
+
+                for (int a = 0; a < 4; ++a) {
+                    double b = 0.0D;
+                    double c = ((a & 2) - 1) * m;
+                    double d = ((a + 1 & 2) - 1) * m;
+                    double e = c * z - d * y;
+                    double f = d * z + c * y;
+                    double g = e * v + b * w;
+                    double h = b * v - e * w;
+                    double aa = h * s - f * t;
+                    double ab = f * s + h * t;
+                    bufferBuilder.vertex(o + aa, p + g, q + ab).next();
+                }
+            }
+        }
+        bufferBuilder.end();
+        starBufferMoon.upload(bufferBuilder);
     }
 
 }
