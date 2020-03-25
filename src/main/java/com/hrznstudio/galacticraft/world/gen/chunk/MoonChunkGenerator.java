@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.structure.StructureManager;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -36,11 +35,9 @@ import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.level.LevelGeneratorType;
@@ -189,11 +186,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         super.buildSurface(chunkRegion, chunk);
 
         createCraters(chunk, chunkRegion);
-    }
-
-    @Override
-    public void setStructureStarts(BiomeAccess biomeAccess, Chunk chunk, ChunkGenerator<?> chunkGenerator, StructureManager structureManager) {
-        super.setStructureStarts(biomeAccess, chunk, chunkGenerator, structureManager);
     }
 
     private void createCraters(Chunk chunk, ChunkRegion region) {
