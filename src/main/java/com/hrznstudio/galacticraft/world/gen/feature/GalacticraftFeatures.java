@@ -36,11 +36,11 @@ import net.minecraft.world.gen.placer.SimpleBlockPlacer;
  */
 public class GalacticraftFeatures {
     public static final CheeseTreeFeature CHEESE_TREE_FEATURE = Registry.register(Registry.FEATURE, new Identifier(Constants.MOD_ID, "cheese_tree"), new CheeseTreeFeature(BranchedTreeFeatureConfig::deserialize));
-    public static final StructureFeature<DefaultFeatureConfig> MOON_VILLAGE = Registry.register(Registry.STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village_structure"), Registry.register(Registry.FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), new MoonVillageFeature(DefaultFeatureConfig::deserialize)));
+    public static final StructureFeature<DefaultFeatureConfig> MOON_VILLAGE = Registry.register(Registry.STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), Registry.register(Registry.FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), new MoonVillageFeature(DefaultFeatureConfig::deserialize)));
     public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = (new RandomPatchFeatureConfig.Builder(new MoonFlowerBlockStateProvider(), new SimpleBlockPlacer())).tries(64).build();
 
     public static void init() {
-        Feature.STRUCTURES.forcePut(Registry.STRUCTURE_FEATURE.getId(MOON_VILLAGE).toString(), MOON_VILLAGE);
+        Feature.STRUCTURES.forcePut("Moon_Village", MOON_VILLAGE);
         Feature.JIGSAW_STRUCTURES.add(MOON_VILLAGE);
     }
 }

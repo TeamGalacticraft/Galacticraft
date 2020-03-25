@@ -7,7 +7,6 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "ServerWorldMixin",
-    "CommandManagerMixin",
     "FeatureMixin"
   ],
   "client": [

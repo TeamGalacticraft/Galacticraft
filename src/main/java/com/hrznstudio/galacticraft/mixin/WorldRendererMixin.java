@@ -124,7 +124,7 @@ public abstract class WorldRendererMixin {
             matrixStack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
             matrixStack.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(f) * 360.0F));
 
-            RenderSystem.blendFunc(770, 771);
+            RenderSystem.disableBlend();
             RenderSystem.disableTexture();
 
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.0F);
@@ -156,7 +156,6 @@ public abstract class WorldRendererMixin {
             matrixStack.push();
             matrix4f2 = matrixStack.peek().getModel();
 
-            RenderSystem.disableBlend();
             RenderSystem.enableTexture();
 
             a = 10.0F;

@@ -1,10 +1,8 @@
 package com.hrznstudio.galacticraft.world.gen.feature.moonvillage;
 
 import com.hrznstudio.galacticraft.structure.MoonVillageStart;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.gen.ChunkRandom;
@@ -52,7 +50,7 @@ public class MoonVillageFeature extends StructureFeature<DefaultFeatureConfig> {
 
     @Override
     public String getName() {
-        return Registry.STRUCTURE_FEATURE.getId(GalacticraftFeatures.MOON_VILLAGE).toString();
+        return "Moon_Village";
     }
 
     @Override
