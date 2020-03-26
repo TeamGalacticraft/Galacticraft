@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class DefaultCompressingCategory implements RecipeCategory<DefaultCompressingDisplay> {
+public class DefaultCompressingCategory implements RecipeCategory<DefaultCompressingDisplay<?>> {
     private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
 
     public Identifier getIdentifier() {
@@ -63,7 +63,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         return I18n.translate("category.rei.compressing");
     }
 
-    public List<Widget> setupDisplay(Supplier<DefaultCompressingDisplay> recipeDisplaySupplier, Rectangle bounds) {
+    public List<Widget> setupDisplay(Supplier<DefaultCompressingDisplay<?>> recipeDisplaySupplier, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 68, bounds.getCenterY() - 37);
 
         class NamelessClass_1 extends RecipeBaseWidget {
@@ -85,7 +85,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
             }
         }
 
-        DefaultCompressingDisplay recipeDisplay = recipeDisplaySupplier.get();
+        DefaultCompressingDisplay<?> recipeDisplay = recipeDisplaySupplier.get();
         List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1(bounds)));
         List<List<EntryStack>> input = recipeDisplaySupplier.get().getInputEntries();
         List<EntryWidget> slots = Lists.newArrayList();
@@ -115,7 +115,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         return widgets;
     }
 
-    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
+    private int getSlotWithSize(DefaultCompressingDisplay<?> recipeDisplay, int num) {
         if (recipeDisplay.getWidth() == 1) {
             if (num == 1) {
                 return 3;
