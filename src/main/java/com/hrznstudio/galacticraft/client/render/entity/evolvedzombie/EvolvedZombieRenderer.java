@@ -24,17 +24,19 @@ package com.hrznstudio.galacticraft.client.render.entity.evolvedzombie;
 
 import com.hrznstudio.galacticraft.client.model.entity.evolvedzombie.EvolvedZombieModel;
 import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieRenderer extends MobEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel> {
+public class EvolvedZombieRenderer extends BipedEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel> {
 
     public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new EvolvedZombieModel(1, 64, 64), 1);
+        super(entityRenderDispatcher_1, new EvolvedZombieModel(1, 64, 64), 0.5F);
     }
 
     @Override

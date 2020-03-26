@@ -25,11 +25,11 @@ package com.hrznstudio.galacticraft.entity.t1rocket;
 import com.hrznstudio.galacticraft.api.space.RocketEntity;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
 import com.hrznstudio.galacticraft.misc.RocketTiers;
-import net.minecraft.client.network.packet.EntitySpawnS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
