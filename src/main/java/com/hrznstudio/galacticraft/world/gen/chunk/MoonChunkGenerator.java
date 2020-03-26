@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
@@ -184,8 +185,9 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     @Override
     public void buildSurface(ChunkRegion chunkRegion, Chunk chunk) {
         super.buildSurface(chunkRegion, chunk);
-
-        createCraters(chunk, chunkRegion);
+        if (!chunk.getStructureReferences().containsKey(GalacticraftFeatures.MOON_VILLAGE.getName())) {
+            createCraters(chunk, chunkRegion);
+        }
     }
 
     private void createCraters(Chunk chunk, ChunkRegion region) {

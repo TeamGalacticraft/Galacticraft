@@ -41,7 +41,7 @@ public class MoonVillagerRenderer extends MobEntityRenderer<MoonVillagerEntity, 
     private static final Identifier MOON_VILLAGER_SKIN = new Identifier(Constants.MOD_ID, "textures/entity/moon_villager/moon_villager.png");
 
     public MoonVillagerRenderer(EntityRenderDispatcher renderManager) {
-        super(renderManager, new MoonVillagerModel(0.0F, 64, 64), 0.5F);
+        super(renderManager, new MoonVillagerModel(0, 64, 64), 0.5F);
 
         this.addFeature(new HeadFeatureRenderer<>(this));
         //this.addFeature(new VillagerClothingFeatureRenderer<>(this, reloadableResourceManager, "villager"));
