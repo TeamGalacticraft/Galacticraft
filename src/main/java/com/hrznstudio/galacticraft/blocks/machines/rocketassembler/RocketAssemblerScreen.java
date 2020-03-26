@@ -23,7 +23,11 @@
 package com.hrznstudio.galacticraft.blocks.machines.rocketassembler;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.rocket.RocketData;
+import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -86,6 +90,11 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
     public static final int BACK_ARROW_OFFSET_X = ARROW_WIDTH;
     public static final int BACK_ARROW_OFFSET_Y = ARROW_HEIGHT;
 
+    public static final int TAB_RIGHT_X = 324;
+    public static final int TAB_RIGHT_Y = 128;
+    public static final int TAB_RIGHT_WIDTH = 28;
+    public static final int TAB_RIGHT_HEIGHT = 25;
+
     public static final ContainerFactory<AbstractContainerScreen> FACTORY = (syncId, id, player, buffer) -> {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
@@ -98,8 +107,10 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
 
     protected final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ROCKET_ASSEMBLER_SCREEN));
     private World world;
-    private BlockEntity blockEntity;
+    private RocketAssemblerBlockEntity blockEntity;
     private Tab tab = Tab.ROCKET;
+
+    private RocketData data = RocketData.EMPTY;
 
     private RocketAssemblerScreen(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity blockEntity) {
         super(new RocketAssemblerContainer(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name"));
@@ -107,6 +118,25 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
         this.containerHeight = 175;
         this.world = playerEntity.world;
         this.blockEntity = blockEntity;
+        this.blockEntity.getInventory().addListener((fixedItemInvView, i, itemStack, itemStack1) -> {
+            if (i == RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT) {
+                this.updateRecipe();
+            }
+        }, () -> {});
+        this.updateRecipe();
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        this.blockEntity.getInventory().invalidateListeners();
+    }
+
+    public void updateRecipe() {
+        ItemStack stack = this.blockEntity.getInventory().getInvStack(RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT);
+        if (!stack.isEmpty() && stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+            this.data = RocketData.fromSchematic(stack);
+        }
     }
 
     @Override
@@ -117,29 +147,38 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
         blit(this.left, this.top, 0, 0, containerWidth, containerHeight);
 
         if (tab == Tab.ROCKET) {
-            blit(this.left - 31, this.top + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            blit(this.left - 29, this.top + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             blit(this.left - 27, this.top + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 31, this.top + 3);
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 27, this.top + 30);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 8);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 35);
         } else if (tab == Tab.LANDER) {
-            blit(this.left - 32, this.top + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
-            blit(this.left - 27, this.top + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            blit(this.left - 27, this.top + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            blit(this.left - 29, this.top + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 31, this.top + 3);
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 27, this.top + 30);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 8);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 35);
         }
     }
+
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
         GuiLighting.disable();
 
+
         if (tab == Tab.ROCKET) {
+            for (int i = 0; i < RocketPartType.values().length; i++) {
+                blit(this.left + 9, this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * i), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+            }
+            blit(this.left + 9 + ((GREEN_BOX_WIDTH + 2) * 0), this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * 0), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
 
         } else if (tab == Tab.LANDER) {
-
+            GlStateManager.pushMatrix();
+            GlStateManager.scalef(4.0F, 4.0F, 4.0F);
+            drawCenteredString(minecraft.textRenderer, "WIP - TO BE DESIGNED", left / 2 - 128, top / 2 - 128, Integer.MAX_VALUE);
+            GlStateManager.popMatrix();
         }
     }
 
@@ -150,7 +189,8 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button) | tabClicked(mouseX, mouseY, button);
+        System.out.println((this.left - mouseX) + " " + (this.top - mouseY));
+        return super.mouseClicked(mouseX, mouseY, button) | tabClicked(mouseX, mouseY, button) | contentClicked(mouseX, mouseY, button);
     }
 
     private boolean contentClicked(double mouseX, double mouseY, int button) {
@@ -189,10 +229,7 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
 
     private enum Tab {
         ROCKET,
-        LANDER;
-
-        Tab() {
-
-        }
+        LANDER
     }
+
 }

@@ -174,7 +174,7 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
             if (RocketPartType.values()[i] != OPEN_TAB) {
                 blit(this.left - 27, this.top + 3 + (27 * i), DEFAULT_TAB_X, DEFAULT_TAB_Y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
             } else {
-                blit(this.left - 31 + 2, this.top + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+                blit(this.left - 29, this.top + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             }
             this.itemRenderer.renderGuiItem(new ItemStack(RocketParts.getPartToRenderForType(RocketPartType.values()[i]).getDesignerItem()), (this.left - 31) + 13, this.top + 3 + ((27) * i) + 4);
         }

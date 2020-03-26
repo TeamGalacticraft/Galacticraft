@@ -74,13 +74,6 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     public RocketAssemblerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_ASSEMBLER_TYPE);
 
-        this.inventory.addListener((fixedItemInvView, i, itemStack, itemStack1) -> {
-            if (i == SCHEMATIC_INPUT_SLOT) {
-
-            }
-        }, () -> {
-        });
-
         inventory.setOwnerListener((ItemInvSlotChangeListener.ItemInvSlotListener) (inv, slot) -> markDirty());
     }
 

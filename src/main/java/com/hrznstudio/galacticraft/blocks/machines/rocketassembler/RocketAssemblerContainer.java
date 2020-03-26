@@ -62,11 +62,11 @@ public class RocketAssemblerContainer extends Container {
             }
         };
 
-        int playerInvYOffset = 94;
-        int playerInvXOffset = 148;
+        final int playerInvYOffset = 94;
+        final int playerInvXOffset = 148;
 
         // Output slot
-        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 269, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
@@ -78,7 +78,7 @@ public class RocketAssemblerContainer extends Container {
             }
         });
 
-        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ROCKET_OUTPUT_SLOT, 8 + (8 * 18) + playerInvXOffset + 3 - 1, (playerInvYOffset - 21) - 6) {
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ROCKET_OUTPUT_SLOT, 299, 19) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
                 return false;
@@ -90,7 +90,7 @@ public class RocketAssemblerContainer extends Container {
             }
         });
 
-        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 32 + playerInvXOffset, playerInvYOffset - 20) {
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 156, 72) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
                 return GalacticraftEnergy.isEnergyItem(itemStack_1);
