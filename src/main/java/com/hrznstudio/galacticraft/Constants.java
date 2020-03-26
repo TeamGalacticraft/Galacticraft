@@ -394,10 +394,7 @@ public class Constants {
 
     public static class Config {
         public static final String TITLE = "config.galacticraft-rewoven.title";
-        public static final String GENERAL = "config.galacticraft-rewoven.general";
-        public static final String GRAVITY = "config.galacticraft-rewoven.gravity";
-        public static final String MOON_GRAVITY = "config.galacticraft-rewoven.gravity.moon";
-        public static final String MARS_GRAVITY = "config.galacticraft-rewoven.gravity.mars";
+        public static final String RESET = "config.galacticraft-rewoven.reset";
 
         public static final String DEBUG = "config.galacticraft-rewoven.debug";
         public static final String DEBUG_LOGGING = "config.galacticraft-rewoven.debug.logging";

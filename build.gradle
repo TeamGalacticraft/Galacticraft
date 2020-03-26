@@ -45,11 +45,10 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
 
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}:dev")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}")
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
-    modImplementation("io.github.prospector.silk:SilkAPI:${project.silk_version}") { transitive = false }
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
     modImplementation("com.github.NerdHubMC:FOML:${foml_version}") { transitive = true }
@@ -70,10 +69,9 @@ dependencies {
     modImplementation("teamreborn:energy:+")
 
     //include everything mandatory inside the jar
-    include "com.hrznstudio:GalacticraftAPI:${project.addon_version}:dev"
+    include "com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}"
     include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
     include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-    include "io.github.prospector.silk:SilkAPI:${project.silk_version}"
     include "io.github.cottonmc:cotton-energy:${project.energy_version}"
 
     include "com.github.NerdHubMC:FOML:${foml_version}"

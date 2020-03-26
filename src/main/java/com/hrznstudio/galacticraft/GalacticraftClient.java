@@ -34,9 +34,12 @@ import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssembl
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
 import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
@@ -47,13 +50,9 @@ import net.fabricmc.fabric.api.client.render.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -112,22 +111,14 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ROCKET_DESIGNER_CONTAINER, RocketDesignerScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ROCKET_ASSEMBLER_CONTAINER, RocketAssemblerScreen.FACTORY);
 
+        //EntityRendererRegistry.INSTANCE.register(MoonVillagerEntity.class, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
+        //EntityRendererRegistry.INSTANCE.register(EvolvedZombieEntity.class, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(RocketEntity.class, (manager, context) -> new RocketEntityRenderer(manager));
-        EntityRendererRegistry.INSTANCE.register(MoonVillagerEntity.class, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
 
-        if (FabricLoader.getInstance().isModLoaded("modmenu")) {
-            try {
-                Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
-                Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
-                method.invoke(null, Constants.MOD_ID, (Runnable) () -> Galacticraft.configHandler.openConfigScreen());
-            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-                Galacticraft.logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
-            }
-        }
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis()-startInitTime);
     }
 }

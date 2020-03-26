@@ -26,8 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import io.github.prospector.silk.item.SilkAxeItem;
-import io.github.prospector.silk.item.SilkPickaxeItem;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
@@ -134,13 +132,13 @@ public class GalacticraftItems {
         }
     });
     public static final Item HEAVY_DUTY_SHOVEL = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_SHOVEL), new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_PICKAXE), new SilkPickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_AXE), new SilkAxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item HEAVY_DUTY_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_PICKAXE), new com.hrznstudio.galacticraft.api.item.PickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item HEAVY_DUTY_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_AXE), new com.hrznstudio.galacticraft.api.item.AxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_HOE), new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_SWORD = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SWORD), new SwordItem(GalacticraftToolMaterials.DESH, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_SHOVEL = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SHOVEL), new ShovelItem(GalacticraftToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item DESH_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_PICKAXE), new SilkPickaxeItem(GalacticraftToolMaterials.DESH, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item DESH_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_AXE), new SilkAxeItem(GalacticraftToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item DESH_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_PICKAXE), new com.hrznstudio.galacticraft.api.item.PickaxeItem(GalacticraftToolMaterials.DESH, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item DESH_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_AXE), new com.hrznstudio.galacticraft.api.item.AxeItem(GalacticraftToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_HOE), new HoeItem(GalacticraftToolMaterials.DESH, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_SWORD = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SWORD), new SwordItem(GalacticraftToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
         @Override
@@ -153,8 +151,8 @@ public class GalacticraftItems {
         }
     });
     public static final Item TITANIUM_SHOVEL = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SHOVEL), new ShovelItem(GalacticraftToolMaterials.TITANIUM, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_PICKAXE), new SilkPickaxeItem(GalacticraftToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_AXE), new SilkAxeItem(GalacticraftToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item TITANIUM_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_PICKAXE), new com.hrznstudio.galacticraft.api.item.PickaxeItem(GalacticraftToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item TITANIUM_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_AXE), new com.hrznstudio.galacticraft.api.item.AxeItem(GalacticraftToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HOE), new HoeItem(GalacticraftToolMaterials.TITANIUM, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item STANDARD_WRENCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.STANDARD_WRENCH), new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BATTERY = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BATTERY), new BatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
@@ -192,10 +190,10 @@ public class GalacticraftItems {
     public static final Item THERMAL_PADDING_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_BOOTS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.FEET));
     public static final Item ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     // SPAWN EGGS
-    public static final Item MOON_VILLAGER_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_VILLAGER_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.EVOLVED_ZOMBIE_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
+//    public static final Item ROCKET_SPAWN_EGG_T1 = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SPAWN_EGG_T1), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 0xC9C9C9, 0x000000, new Item.Settings().group(ITEMS_GROUP)));
+//    public static final Item MOON_VILLAGER_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_VILLAGER_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
+//    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.EVOLVED_ZOMBIE_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
 
 
-    public static void register() {
-    }
+    public static void register() {}
 }

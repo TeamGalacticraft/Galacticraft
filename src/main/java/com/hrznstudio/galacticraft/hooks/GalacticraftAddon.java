@@ -13,10 +13,19 @@ public class GalacticraftAddon implements AddonInitializer {
         long startAddonInit = System.currentTimeMillis();
         Galacticraft.logger.info("[Galacticraft] Started loading addon core.");
 
-        GalacticraftGases.init();
         GalacticraftCelestialBodyTypes.init();
 
         Galacticraft.logger.info("[Galacticraft] Finished loading addon core. (Took {}ms)", System.currentTimeMillis() - startAddonInit);
+    }
+
+    @Override
+    public void onCompatInitialize() {
+        long startAddonInit = System.currentTimeMillis();
+        Galacticraft.logger.info("[Galacticraft] Started loading addon compat.");
+
+        GalacticraftGases.init();
+
+        Galacticraft.logger.info("[Galacticraft] Finished loading addon compat. (Took {}ms)", System.currentTimeMillis() - startAddonInit);
     }
 
     @Override

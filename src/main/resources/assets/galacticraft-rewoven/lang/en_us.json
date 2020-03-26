@@ -356,8 +356,12 @@
   "config.galacticraft-rewoven.gravity": "Gravity",
   "config.galacticraft-rewoven.gravity.moon": "Moon",
   "config.galacticraft-rewoven.gravity.mars": "Mars",
+
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
   "config.galacticraft-rewoven.general": "General",
   "chat.galacticraft-rewoven.rocket.warning": "TODO",
   "chat.galacticraft-rewoven.rocket.no_fuel": "No fuel! Cannot launch."
+  "config.galacticraft-rewoven.debug": "Debug",
+  "config.galacticraft-rewoven.debug.logging": "Debug Logging",
+  "config.galacticraft-rewoven.reset": "Reset"
 }
