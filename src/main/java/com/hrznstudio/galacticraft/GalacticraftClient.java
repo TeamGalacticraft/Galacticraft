@@ -45,13 +45,9 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -109,19 +105,10 @@ public class GalacticraftClient implements ClientModInitializer {
 
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.T1_ROCKET, (manager, context) -> new RocketEntityRenderer(manager));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET_T1, (manager, context) -> new RocketEntityRenderer(manager));
         GalacticraftBlockEntityRenderers.register();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
 
-        if (FabricLoader.getInstance().isModLoaded("modmenu")) {
-            try {
-                Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
-                Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
-                method.invoke(null, Constants.MOD_ID, (Runnable) () -> Galacticraft.configHandler.openConfigScreen());
-            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-                Galacticraft.logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
-            }
-        }
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis()-startInitTime);
     }
 }

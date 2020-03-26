@@ -22,74 +22,122 @@
 
 package com.hrznstudio.galacticraft.client.model.entity.evolvedzombie;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.entity.model.ZombieEntityModel;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
-public class EvolvedZombieModel extends ZombieEntityModel<EvolvedZombieEntity> {
+public class EvolvedZombieModel extends BipedEntityModel<EvolvedZombieEntity> {
+	private ModelPart oxygenTank0;
+	private ModelPart oxygenTank1;
+	private ModelPart oxygenTankWire0;
+	private ModelPart oxygenTankWire1;
+	private ModelPart oxygenTankWire2;
+	private ModelPart oxygenTankWire3;
+	private ModelPart oxygenTankWire4;
+	private ModelPart oxygenTankWire5;
+	private ModelPart oxygenMask;
 
-    /**
-     * Work in Progress. This model should work, but it refuses to show up :(
-     */
+	public EvolvedZombieModel(float scale, int textureWidth, int textureHeight) {
+		super(scale, scale, textureWidth, textureHeight);
 
-//	private final Model baseModel;
-    public EvolvedZombieModel(float scale, int textureWidth, int textureHeight) {
-        super(scale, scale, textureWidth, textureHeight);
-//		this.baseModel = new Model();
-//
-//		this.body.setPivot(0.0F, 0.0F, 0.0F);
-//		this.body.boxes.clear();
-//		this.body.boxes.add(new Box(this.body, 16, 16, -4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 32, 6, -4.0F, 2.0F, 2.0F, 3, 7, 3, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 32, 6, 1.0F, 2.0F, 2.0F, 3, 7, 3, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 44, 10, -3.0F, 3.0F, 5.0F, 1, 2, 1, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 44, 10, 2.0F, 3.0F, 5.0F, 1, 2, 1, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 44, 10, 2.0F, -1.0F, 6.0F, 1, 5, 1, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 44, 10, -3.0F, -1.0F, 6.0F, 1, 5, 1, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 44, 10, -3.0F, -2.0F, 5.0F, 1, 2, 1, 0.0F, false));
-//		this.body.boxes.add(new Box(this.body, 44, 10, 2.0F, -2.0F, 5.0F, 1, 2, 1, 0.0F, false));
-//
-//		this.head.setPivot(0.0F, 0.0F, 0.0F);
-//		this.head.boxes.clear();
-//		this.body.addChild(this.head);
-//		this.head.boxes.add(new Box(this.head, 0, 0, -4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F, false));
-//		this.head.boxes.add(new Box(this.head, 0, 32, -5.0F, -9.0F, -5.0F, 10, 10, 10, 0.0F, false));
-//
-//		this.rightArm.setPivot(-5.0F, 2.0F, 0.0F);
-//		this.rightArm.boxes.clear();
-//		this.body.addChild(this.rightArm);
-//		this.rightArm.boxes.add(new Box(this.rightArm, 40, 16, -3.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F, false));
-//
-//		//rightItem.setPivot(-1.0F, 7.0F, 1.0F);
-//		//rightArm.addChild(rightItem);
-//
-//		//this.xArm.setPivot(5.0F, 2.0F, 0.0F);
-//		this.xArm.boxes.clear();
-//		//this.body.addChild(this.xArm);
-//		//this.xArm.boxes.add(new Box(this.xArm, 40, 16, -1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F, true));
-//
-//		this.rightLeg.setPivot(-1.9F, 12.0F, 0.0F);
-//		this.rightLeg.boxes.clear();
-//		this.body.addChild(this.rightLeg);
-//		this.rightLeg.boxes.add(new Box(this.rightLeg, 0, 16, -2.1F, 0.0F, -2.0F, 4, 12, 4, 0.0F, false));
-//
-//		this.xLeg.setPivot(1.9F, 12.0F, 0.0F);
-//		this.xLeg.boxes.clear();
-//		this.body.addChild(this.xLeg);
-//		this.xLeg.boxes.add(new Box(this.xLeg, 0, 16, -1.9F, 0.0F, -2.0F, 4, 12, 4, 0.0F, true));
-    }
+		this.oxygenTankWire0 = new ModelPart(this, 44, 10);
+		this.oxygenTankWire1 = new ModelPart(this, 44, 10);
+		this.oxygenTankWire2 = new ModelPart(this, 44, 10);
+		this.oxygenTankWire3 = new ModelPart(this, 44, 10);
+		this.oxygenTankWire4 = new ModelPart(this, 44, 10);
+		this.oxygenTankWire5 = new ModelPart(this, 44, 10);
+		this.oxygenTank0 = new ModelPart(this, 32, 6);
+		this.oxygenTank1 = new ModelPart(this, 32, 6);
+		this.oxygenMask = new ModelPart(this, 0, 32);
 
-    @Override
-    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        super.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
+		this.oxygenTankWire0.addCuboid(2.0F, 3.0F, 5.0F, 1, 2, 1, scale, false);
+		this.oxygenTankWire1.addCuboid(2.0F, -1.0F, 6.0F, 1, 5, 1, scale, false);
+		this.oxygenTankWire2.addCuboid(2.0F, -2.0F, 5.0F, 1, 2, 1, scale, false);
+		this.oxygenTankWire3.addCuboid(-3.0F, -1.0F, 6.0F, 1, 5, 1, scale, false);
+		this.oxygenTankWire4.addCuboid(-3.0F, 3.0F, 5.0F, 1, 2, 1, scale, false);
+		this.oxygenTankWire5.addCuboid(2.0F, -2.0F, 5.0F, 1, 2, 1, scale, false);
 
-//	@Override
-//	public void render(EvolvedZombieEntity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-//		super.render(entity, f, f1, f2, f3, f4, f5);
-//	}
+		this.oxygenTank0.addCuboid(1.0F, 2.0F, 2.0F, 3, 7, 3, scale, false);
+		this.oxygenTank1.addCuboid(-4.0F, 2.0F, 2.0F, 3, 7, 3, scale, false);
+		this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, scale, false);
+
+		this.torso = new ModelPart(this, 16, 16);
+
+		this.torso.addChild(oxygenTankWire0);
+		this.torso.addChild(oxygenTankWire1);
+		this.torso.addChild(oxygenTankWire2);
+		this.torso.addChild(oxygenTankWire3);
+		this.torso.addChild(oxygenTankWire4);
+		this.torso.addChild(oxygenTankWire5);
+		this.torso.addChild(oxygenTank0);
+		this.torso.addChild(oxygenTank1);
+		this.torso.addChild(oxygenMask);
+		this.torso.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, scale, false);
+
+		this.head = new ModelPart(this, 0, 0);
+		this.head.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, scale, false);
+		this.torso.addChild(this.head);
+
+		this.rightArm = new ModelPart(this, 40, 16);
+		this.rightArm.setPivot(-5.0F, 2.0F, 0.0F);
+		this.rightArm.addCuboid(-3.0F, -2.0F, -2.0F, 4, 12, 4, scale, false);
+		this.torso.addChild(this.rightArm);
+
+		this.leftArm = new ModelPart(this, 40, 16);
+		this.leftArm.setPivot(5.0F, 2.0F, 0.0F);
+		this.leftArm.addCuboid(-1.0F, -2.0F, -2.0F, 4, 12, 4, scale, true);
+		this.torso.addChild(this.leftArm);
+
+		this.rightLeg = new ModelPart(this, 0, 16);
+		this.rightLeg.setPivot(-1.9F, 12.0F, 0.0F);
+		this.rightLeg.addCuboid(-2.1F, 0.0F, -2.0F, 4, 12, 4, scale, false);
+		this.torso.addChild(this.rightLeg);
+
+		this.leftLeg = new ModelPart(this, 0, 16);
+		this.leftLeg.setPivot(1.9F, 12.0F, 0.0F);
+		this.leftLeg.addCuboid(-1.9F, 0.0F, -2.0F, 4, 12, 4, scale, true);
+		this.torso.addChild(this.leftLeg);
+	}
+
+	@Override
+	public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+		if (!this.child) {
+			super.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+		} else {
+			float ratio = 2.0F;
+			matrices.push();
+			matrices.scale(1.5F / ratio, 1.5F / ratio, 1.5F / ratio);
+			matrices.translate(0.0F, 16.0F, 0.0F);
+			this.head.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.oxygenMask.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
+			matrices.pop();
+			matrices.push();
+			matrices.scale(1.0F / ratio, 1.0F / ratio, 1.0F / ratio);
+			matrices.translate(0.0F, 24.0F, 0.0F);
+			this.oxygenTank0.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.oxygenTank1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
+			this.torso.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.rightArm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.leftArm.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.rightLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.leftLeg.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			this.head.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+			matrices.pop();
+		}
+	}
+
+	@Override
+	protected Iterable<ModelPart> getBodyParts() {
+		return ImmutableList.of(this.torso, this.rightArm, this.leftArm, this.rightLeg, this.leftLeg, this.helmet, this.oxygenTankWire0, this.oxygenTankWire1,
+				this.oxygenTankWire2, this.oxygenTankWire3, this.oxygenTankWire4, this.oxygenTankWire5, this.oxygenMask, this.oxygenTank0, this.oxygenTank1
+		);
+	}
 }

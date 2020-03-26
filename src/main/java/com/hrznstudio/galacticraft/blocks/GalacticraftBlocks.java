@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.blocks;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.StairsBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.CheeseBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
 import com.hrznstudio.galacticraft.blocks.decoration.LightingPanelBlock;
@@ -44,7 +45,6 @@ import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import io.github.prospector.silk.block.SilkStairsBlock;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -85,12 +85,10 @@ public class GalacticraftBlocks {
     // Blocks
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).build()), Constants.Blocks.MOON_TURF);
     public static final Block MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F).build()), Constants.Blocks.MOON_ROCK);
-    public static final Block MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_ROCK_SLAB);
-    public static final Block MOON_ROCK_STAIRS = registerBlock(new SilkStairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_ROCK_STAIRS);
     public static final Block MOON_ROCK_WALL = registerBlock(new WallBlock(FabricBlockSettings.copy(MOON_ROCK).strength(2.0F, 2.0F).build()), Constants.Blocks.MOON_ROCK_WALL);
     public static final Block MOON_BASALT = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F).build()), Constants.Blocks.MOON_BASALT);
     public static final Block MOON_BASALT_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_BASALT_SLAB);
-    public static final Block MOON_BASALT_STAIRS = registerBlock(new SilkStairsBlock(MOON_BASALT.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_BASALT_STAIRS);
+    public static final Block MOON_BASALT_STAIRS = registerBlock(new StairsBlock(MOON_BASALT.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_BASALT_STAIRS);
     public static final Block MOON_BASALT_WALL = registerBlock(new WallBlock(FabricBlockSettings.copy(MOON_BASALT).strength(2.0F, 2.0F).build()), Constants.Blocks.MOON_BASALT_WALL);
     public static final Block CHEESE_LEAVES = registerBlock(new LeavesBlock(FabricBlockSettings.of(Material.LEAVES).strength(0.2F, 0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque().build()), Constants.Blocks.CHEESE_LEAVES);
     public static final Block CHEESE_LOG = registerBlock(new LogBlock(MaterialColor.YELLOW, FabricBlockSettings.of(Material.WOOD, MaterialColor.YELLOW).strength(2.0F, 2.0F).sounds(BlockSoundGroup.WOOL).build()), Constants.Blocks.CHEESE_LOG);
@@ -136,11 +134,13 @@ public class GalacticraftBlocks {
     public static final Block MARS_COBBLESTONE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.MARS_COBBLESTONE_SLAB);
     public static final Block MARS_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MARS_DUNGEON_BRICK_SLAB);
     public static final Block MOON_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_DUNGEON_BRICK_SLAB);
-    public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new SilkStairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS);
-    public static final Block TIN_DECORATION_STAIRS = registerBlock(new SilkStairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.TIN_DECORATION_STAIRS);
-    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new SilkStairsBlock(DETAILED_TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS);
-    public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new SilkStairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build()), Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS);
-    public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new SilkStairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build()), Constants.Blocks.MARS_COBBLESTONE_STAIRS);
+    public static final Block MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_ROCK_SLAB);
+    public static final Block MOON_ROCK_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_ROCK_STAIRS);
+    public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f).build()), Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS);
+    public static final Block TIN_DECORATION_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.TIN_DECORATION_STAIRS);
+    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(DETAILED_TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f).build()), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS);
+    public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f).build()), Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS);
+    public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f).build()), Constants.Blocks.MARS_COBBLESTONE_STAIRS);
     public static final Block TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.TIN_DECORATION_WALL);
     public static final Block DETAILED_TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F).build()), Constants.Blocks.DETAILED_TIN_DECORATION_WALL);
     public static final Block MOON_DUNGEON_BRICKS_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0F, 5.0F).build()), Constants.Blocks.MOON_DUNGEON_BRICK_WALL);

@@ -22,9 +22,10 @@
 
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.config.ConfigHandler;
+import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -45,14 +46,10 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.reborn.energy.*;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -61,7 +58,7 @@ public class Galacticraft implements ModInitializer {
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
-    public static ConfigHandler configHandler = new ConfigHandler();
+    public static ConfigManager configManager = new ConfigManagerImpl();
 
     @Override
     public void onInitialize() {
@@ -88,18 +85,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
-
-        if (FabricLoader.getInstance().isModLoaded("modmenu")) {
-            try {
-                Class<?> clazz = Class.forName("io.github.prospector.modmenu.api.ModMenuApi");
-                Method method = clazz.getMethod("addConfigOverride", String.class, Runnable.class);
-                method.invoke(null, Constants.MOD_ID, (Runnable) () -> configHandler.openConfigScreen());
-            } catch (NoSuchMethodException | ClassNotFoundException | IllegalAccessException | InvocationTargetException e) {
-                logger.error("[Galacticraft] Failed to add modmenu config override. {1}", e);
-            }
-        }
-
-
 
         Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
             if(object instanceof ItemStack){
