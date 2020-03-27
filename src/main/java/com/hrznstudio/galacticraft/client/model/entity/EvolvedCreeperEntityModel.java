@@ -188,13 +188,13 @@ public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity>
         if (this.child) {
             matrices.push();
             matrices.scale(0.75f, 0.75f, 0.75f);
-            //matrices.translate(0.0F, 16.0F /* * par7*/, 0.0F);
+            matrices.translate(0.0F, 1.140625F, 0.0F);
             this.head.render(matrices, vertexConsumer, light, overlay);
             this.oxygenMask.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
             matrices.pop();
             matrices.push();
             matrices.scale(0.5f, 0.5f, 0.5f);
-            //matrices.translate(0.0F, 24.0F /* * par7*/, 0.0F);
+            matrices.translate(0.0F, 1.52083F, 0.0F);
             this.leftOxygenTank.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
             this.rightOxygenTank.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
             this.tubeRight2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);

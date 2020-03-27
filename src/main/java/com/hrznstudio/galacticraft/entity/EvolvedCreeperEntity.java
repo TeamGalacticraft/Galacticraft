@@ -12,7 +12,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.Box;
+import net.minecraft.network.Packet;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity {
     private static final TrackedData<Boolean> BABY = DataTracker.registerData(EvolvedCreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
-    private static final EntityAttributeModifier BABY_SPEED_BONUS = new EntityAttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.75D, EntityAttributeModifier.Operation.MULTIPLY_BASE);
+    private static final EntityAttributeModifier BABY_SPEED_BONUS = new EntityAttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.5D, EntityAttributeModifier.Operation.MULTIPLY_BASE);
 
     public EvolvedCreeperEntity(EntityType<? extends CreeperEntity> entityType, World world) {
         super(entityType, world);
@@ -56,7 +56,17 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
             entityAttributeInstance.removeModifier(BABY_SPEED_BONUS);
             if (baby) {
                 entityAttributeInstance.addModifier(BABY_SPEED_BONUS);
+
             }
+        }
+    }
+
+    @Override
+    public EntityDimensions getDimensions(EntityPose pose) {
+        if (this.isBaby()) {
+            return this.getType().getDimensions().scaled(0.75F, 0.5F);
+        } else {
+            return this.getType().getDimensions();
         }
     }
 
@@ -70,13 +80,8 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
     }
 
     @Override
-    public void setBoundingBox(Box boundingBox) {
-        super.setBoundingBox(boundingBox);
-    }
-
-    @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return this.isBaby() ? 0.93F : 1.74F;
+        return this.isBaby() ? 0.84F : 1.6575F;
     }
 
     @Override
@@ -84,4 +89,8 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
         return this.isBaby() ? 0.0D : -0.45D;
     }
 
+    @Override
+    public Packet<?> createSpawnPacket() {
+        return super.createSpawnPacket();
+    }
 }
