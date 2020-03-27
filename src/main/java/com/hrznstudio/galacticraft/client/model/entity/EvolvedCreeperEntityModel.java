@@ -1,0 +1,263 @@
+package com.hrznstudio.galacticraft.client.model.entity;
+
+import com.hrznstudio.galacticraft.entity.EvolvedCreeperEntity;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.MathHelper;
+
+public class EvolvedCreeperEntityModel extends EntityModel<EvolvedCreeperEntity> {
+    private ModelPart leftOxygenTank;
+    private ModelPart rightOxygenTank;
+    private ModelPart tubeRight2;
+    private ModelPart tubeLeft1;
+    private ModelPart tubeRight3;
+    private ModelPart tubeRight4;
+    private ModelPart tubeRight5;
+    private ModelPart tubeLeft6;
+    private ModelPart tubeRight7;
+    private ModelPart tubeRight1;
+    private ModelPart tubeLeft2;
+    private ModelPart tubeLeft3;
+    private ModelPart tubeLeft4;
+    private ModelPart tubeLeft5;
+    private ModelPart tubeLeft7;
+    private ModelPart tubeRight6;
+    private ModelPart tubeLeft8;
+    private ModelPart oxygenMask;
+    public ModelPart head;
+    public ModelPart creeperArmor;
+    public ModelPart body;
+    public ModelPart leg1;
+    public ModelPart leg2;
+    public ModelPart leg3;
+    public ModelPart leg4;
+
+    public EvolvedCreeperEntityModel(float par1) {
+        this.textureWidth = 128;
+        this.textureHeight = 64;
+        this.leftOxygenTank = new ModelPart(this, 40, 20);
+        this.leftOxygenTank.addCuboid(-1.5F, 0F, -1.5F, 3, 7, 3, par1);
+        this.leftOxygenTank.setPivot(2F, 5F, 3.8F);
+        this.leftOxygenTank.setTextureSize(128, 64);
+        this.leftOxygenTank.mirror = true;
+        this.resetRotation(this.leftOxygenTank);
+        this.rightOxygenTank = new ModelPart(this, 40, 20);
+        this.rightOxygenTank.addCuboid(-1.5F, 0F, -1.5F, 3, 7, 3, par1);
+        this.rightOxygenTank.setPivot(-2F, 5F, 3.8F);
+        this.rightOxygenTank.setTextureSize(128, 64);
+        this.rightOxygenTank.mirror = true;
+        this.resetRotation(this.rightOxygenTank);
+        this.tubeRight2 = new ModelPart(this, 40, 30);
+        this.tubeRight2.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight2.setPivot(-2F, 5F, 6.8F);
+        this.tubeRight2.setTextureSize(128, 64);
+        this.tubeRight2.mirror = true;
+        this.resetRotation(this.tubeRight2);
+        this.tubeLeft1 = new ModelPart(this, 40, 30);
+        this.tubeLeft1.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft1.setPivot(2F, 6F, 5.8F);
+        this.tubeLeft1.setTextureSize(128, 64);
+        this.tubeLeft1.mirror = true;
+        this.resetRotation(this.tubeLeft1);
+        this.tubeRight3 = new ModelPart(this, 40, 30);
+        this.tubeRight3.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight3.setPivot(-2F, 4F, 6.8F);
+        this.tubeRight3.setTextureSize(128, 64);
+        this.tubeRight3.mirror = true;
+        this.resetRotation(this.tubeRight3);
+        this.tubeRight4 = new ModelPart(this, 40, 30);
+        this.tubeRight4.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight4.setPivot(-2F, 3F, 6.8F);
+        this.tubeRight4.setTextureSize(128, 64);
+        this.tubeRight4.mirror = true;
+        this.resetRotation(this.tubeRight4);
+        this.tubeRight5 = new ModelPart(this, 40, 30);
+        this.tubeRight5.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight5.setPivot(-2F, 2F, 6.8F);
+        this.tubeRight5.setTextureSize(128, 64);
+        this.tubeRight5.mirror = true;
+        this.resetRotation(this.tubeRight5);
+        this.tubeLeft6 = new ModelPart(this, 40, 30);
+        this.tubeLeft6.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft6.setPivot(2F, 1F, 5.8F);
+        this.tubeLeft6.setTextureSize(128, 64);
+        this.tubeLeft6.mirror = true;
+        this.resetRotation(this.tubeLeft6);
+        this.tubeRight7 = new ModelPart(this, 40, 30);
+        this.tubeRight7.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight7.setPivot(-2F, 0F, 4.8F);
+        this.tubeRight7.setTextureSize(128, 64);
+        this.tubeRight7.mirror = true;
+        this.resetRotation(this.tubeRight7);
+        this.tubeRight1 = new ModelPart(this, 40, 30);
+        this.tubeRight1.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight1.setPivot(-2F, 6F, 5.8F);
+        this.tubeRight1.setTextureSize(128, 64);
+        this.tubeRight1.mirror = true;
+        this.resetRotation(this.tubeRight1);
+        this.tubeLeft2 = new ModelPart(this, 40, 30);
+        this.tubeLeft2.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft2.setPivot(2F, 5F, 6.8F);
+        this.tubeLeft2.setTextureSize(128, 64);
+        this.tubeLeft2.mirror = true;
+        this.resetRotation(this.tubeLeft2);
+        this.tubeLeft3 = new ModelPart(this, 40, 30);
+        this.tubeLeft3.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft3.setPivot(2F, 4F, 6.8F);
+        this.tubeLeft3.setTextureSize(128, 64);
+        this.tubeLeft3.mirror = true;
+        this.resetRotation(this.tubeLeft3);
+        this.tubeLeft4 = new ModelPart(this, 40, 30);
+        this.tubeLeft4.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft4.setPivot(2F, 3F, 6.8F);
+        this.tubeLeft4.setTextureSize(128, 64);
+        this.tubeLeft4.mirror = true;
+        this.resetRotation(this.tubeLeft4);
+        this.tubeLeft5 = new ModelPart(this, 40, 30);
+        this.tubeLeft5.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft5.setPivot(2F, 2F, 6.8F);
+        this.tubeLeft5.setTextureSize(128, 64);
+        this.tubeLeft5.mirror = true;
+        this.resetRotation(this.tubeLeft5);
+        this.tubeLeft7 = new ModelPart(this, 40, 30);
+        this.tubeLeft7.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeLeft7.setPivot(2F, 0F, 4.8F);
+        this.tubeLeft7.setTextureSize(128, 64);
+        this.tubeLeft7.mirror = true;
+        this.resetRotation(this.tubeLeft7);
+        this.tubeRight6 = new ModelPart(this, 40, 30);
+        this.tubeRight6.addCuboid(-0.5F, -0.5F, -0.5F, 1, 1, 1, par1);
+        this.tubeRight6.setPivot(-2F, 1F, 5.8F);
+        this.tubeRight6.setTextureSize(128, 64);
+        this.tubeRight6.mirror = true;
+        this.resetRotation(this.tubeRight6);
+        this.tubeLeft8 = new ModelPart(this, 40, 30);
+        this.tubeLeft8.addCuboid(0F, 0F, 0F, 1, 1, 1, par1);
+        this.tubeLeft8.setPivot(0F, -2F, 0F);
+        this.tubeLeft8.setTextureSize(128, 64);
+        this.tubeLeft8.mirror = true;
+        this.resetRotation(this.tubeLeft8);
+        this.oxygenMask = new ModelPart(this, 40, 0);
+        this.oxygenMask.addCuboid(-5F, -9F, -5F, 10, 10, 10, par1);
+        this.oxygenMask.setPivot(0F, 4F, 0F);
+        this.oxygenMask.setTextureSize(128, 64);
+        this.oxygenMask.mirror = true;
+        this.resetRotation(this.oxygenMask);
+
+        final byte var2 = 4;
+        this.head = new ModelPart(this, 0, 0);
+        this.head.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, par1);
+        this.head.setPivot(0.0F, var2, 0.0F);
+        this.head.setTextureSize(128, 64);
+        this.creeperArmor = new ModelPart(this, 32, 0);
+        this.creeperArmor.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, par1 + 0.5F);
+        this.creeperArmor.setPivot(0.0F, var2, 0.0F);
+        this.creeperArmor.setTextureSize(128, 64);
+        this.body = new ModelPart(this, 16, 16);
+        this.body.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, par1);
+        this.body.setPivot(0.0F, var2, 0.0F);
+        this.body.setTextureSize(128, 64);
+        this.leg1 = new ModelPart(this, 0, 16);
+        this.leg1.addCuboid(-2.0F, 0.0F, -2.0F, 4, 6, 4, par1);
+        this.leg1.setPivot(-2.0F, 12 + var2, 4.0F);
+        this.leg1.setTextureSize(128, 64);
+        this.leg2 = new ModelPart(this, 0, 16);
+        this.leg2.addCuboid(-2.0F, 0.0F, -2.0F, 4, 6, 4, par1);
+        this.leg2.setPivot(2.0F, 12 + var2, 4.0F);
+        this.leg2.setTextureSize(128, 64);
+        this.leg3 = new ModelPart(this, 0, 16);
+        this.leg3.addCuboid(-2.0F, 0.0F, -2.0F, 4, 6, 4, par1);
+        this.leg3.setPivot(-2.0F, 12 + var2, -4.0F);
+        this.leg3.setTextureSize(128, 64);
+        this.leg4 = new ModelPart(this, 0, 16);
+        this.leg4.addCuboid(-2.0F, 0.0F, -2.0F, 4, 6, 4, par1);
+        this.leg4.setPivot(2.0F, 12 + var2, -4.0F);
+        this.leg4.setTextureSize(128, 64);
+    }
+
+    private void resetRotation(ModelPart model) {
+        model.yaw = 0.0F;
+        model.pitch = 0.0F;
+        model.roll = 0.0F;
+    }
+
+    @Override
+    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        if (this.child) {
+            matrices.push();
+            matrices.scale(0.75f, 0.75f, 0.75f);
+            //matrices.translate(0.0F, 16.0F /* * par7*/, 0.0F);
+            this.head.render(matrices, vertexConsumer, light, overlay);
+            this.oxygenMask.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            matrices.pop();
+            matrices.push();
+            matrices.scale(0.5f, 0.5f, 0.5f);
+            //matrices.translate(0.0F, 24.0F /* * par7*/, 0.0F);
+            this.leftOxygenTank.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.rightOxygenTank.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight3.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight4.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight5.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft6.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight7.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft3.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft4.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft5.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft7.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight6.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft8.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.body.render(matrices, vertexConsumer, light, overlay);
+            this.leg1.render(matrices, vertexConsumer, light, overlay);
+            this.leg2.render(matrices, vertexConsumer, light, overlay);
+            this.leg3.render(matrices, vertexConsumer, light, overlay);
+            this.leg4.render(matrices, vertexConsumer, light, overlay);
+            matrices.pop();
+        } else {
+            this.leftOxygenTank.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.rightOxygenTank.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight3.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight4.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight5.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft6.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight7.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft3.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft4.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft5.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft7.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeRight6.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.tubeLeft8.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.oxygenMask.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+            this.head.render(matrices, vertexConsumer, light, overlay);
+            this.body.render(matrices, vertexConsumer, light, overlay);
+            this.leg1.render(matrices, vertexConsumer, light, overlay);
+            this.leg2.render(matrices, vertexConsumer, light, overlay);
+            this.leg3.render(matrices, vertexConsumer, light, overlay);
+            this.leg4.render(matrices, vertexConsumer, light, overlay);
+        }
+    }
+
+    @Override
+    public void setAngles(EvolvedCreeperEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
+        this.oxygenMask.yaw = (float) (headYaw / (180.0F / Math.PI));
+        this.oxygenMask.pitch = (float) (headPitch / (180.0F / Math.PI));
+        this.head.yaw = (float) (headYaw / (180.0F / Math.PI));
+        this.head.pitch = (float) (headPitch / (180.0F / Math.PI));
+
+        this.leg1.pitch = MathHelper.cos(limbAngle * 0.6662F) * 1.4F * limbDistance;
+        this.leg2.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * 1.4F * limbDistance;
+        this.leg3.pitch = MathHelper.cos(limbAngle * 0.6662F + 3.1415927F) * 1.4F * limbDistance;
+        this.leg4.pitch = MathHelper.cos(limbAngle * 0.6662F) * 1.4F * limbDistance;
+
+    }
+}
+

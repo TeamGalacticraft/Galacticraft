@@ -31,11 +31,13 @@ import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergySto
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
+import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
 import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.entity.EvolvedCreeperEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
@@ -106,6 +108,8 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET_T1, (manager, context) -> new RocketEntityRenderer(manager));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
+
         GalacticraftBlockEntityRenderers.register();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
 

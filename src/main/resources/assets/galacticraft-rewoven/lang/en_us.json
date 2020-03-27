@@ -249,6 +249,7 @@
   "item.galacticraft-rewoven.rocket_spawn_egg_t1" : "Rocket Spawn Egg (Tier 1)",
   "item.galacticraft-rewoven.moon_villager_spawn_egg" : "Moon Villager Spawn Egg",
   "item.galacticraft-rewoven.evolved_zombie_spawn_egg" : "Evolved Zombie Spawn Egg",
+  "entity.galacticraft-rewoven.evolved_creeper": "Evolved Creeper",
 
   "tooltip.galacticraft-rewoven.press_shift": "Press LSHIFT for more info",
 

@@ -41,11 +41,13 @@ public class GalacticraftEntityTypes {
 
     public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = FabricEntityTypeBuilder.create(EntityCategory.CREATURE, MoonVillagerEntity::new).size(EntityDimensions.fixed(0.6F, 2.4F)).build();
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = FabricEntityTypeBuilder.create(EntityCategory.MONSTER, EvolvedZombieEntity::new).size(EntityDimensions.fixed(0.6F, 1.95F)).build();
-    public static final EntityType<EntityT1Rocket> ROCKET_T1 = FabricEntityTypeBuilder.create(EntityCategory.MISC, EntityT1Rocket::new).size(EntityDimensions.fixed(2, 4)).build();
+    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = FabricEntityTypeBuilder.create(EntityCategory.MONSTER, EvolvedCreeperEntity::new).size(EntityDimensions.fixed(0.6F, 1.95F)).build();
+    public static final EntityType<EntityT1Rocket> ROCKET_T1 = FabricEntityTypeBuilder.create(EntityCategory.MISC, EntityT1Rocket::new).size(EntityDimensions.changing(2, 4)).build();
 
     public static void register() {
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.Entities.MOON_VILLAGER), MOON_VILLAGER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.Entities.EVOLVED_ZOMBIE), EVOLVED_ZOMBIE);
+        Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_CREEPER), EVOLVED_CREEPER);
         Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.Entities.T1_ROCKET), ROCKET_T1);
         Galacticraft.logger.info("Registered entity types!");
     }
