@@ -33,7 +33,7 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlockEntity;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlockEntity;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.AluminumWireBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

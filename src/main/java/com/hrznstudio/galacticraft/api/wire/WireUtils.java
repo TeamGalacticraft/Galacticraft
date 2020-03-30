@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.wire;
 
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -33,16 +32,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  * @see WireNetwork
  */
 public class WireUtils {
-
-    private static WireNetwork network;
-
     public static BlockPos getPosFromDirection(Direction direction, BlockPos pos) {
         if (pos == null || direction == null) return null;
         switch (direction) {
@@ -59,20 +56,6 @@ public class WireUtils {
             default:
                 return pos.down();
         }
-    }
-
-    /**
-     * Attempts to find a WireNetwork with a certain ID.
-     *
-     * @param id The ID of the wanted WireNetwork
-     * @return The network with the specified ID.
-     */
-    public static WireNetwork getNetworkFromId(UUID id) {
-        network = null;
-        WireNetwork.networkMap.forEach((wireNetwork, blockPos) -> {
-            if (wireNetwork.getId() == id) network = wireNetwork;
-        });
-        return network;
     }
 
     /**
@@ -154,42 +137,20 @@ public class WireUtils {
     }
 
     /**
-     * @param pos   The source block's position.
-     * @param world The world the block is located in.
-     * @return An array of all the adjacent wires.
+     * @param source The source block's position.
+     * @param world  The world the block is located in.
+     * @return A list of all the adjacent wires.
      */
-    public static WireBlockEntity[] getAdjacentWires(BlockPos pos, World world) {
-        final WireBlockEntity[] adjacentConnections = new WireBlockEntity[6];
+    public static List<BlockPos> getAdjacentWires(BlockPos source, World world) {
+        final List<BlockPos> list = new ArrayList<>();
 
         for (Direction direction : Direction.values()) {
-            BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, pos));
+            BlockEntity blockEntity = world.getBlockEntity(getPosFromDirection(direction, source));
 
-            if (blockEntity instanceof WireBlockEntity) {
-                if (world.getBlockEntity(pos) instanceof WireBlockEntity) {
-                    WireBlockEntity base = (WireBlockEntity) world.getBlockEntity(pos);
-                    if (((WireBlockEntity) blockEntity).networkId != base.networkId) {
-                        Galacticraft.logger.debug("Converting a wire at {} from the network with the id: {} to {}", blockEntity.getPos(), ((WireBlockEntity) blockEntity).networkId, base.networkId);
-                        try {
-                            WireUtils.getNetworkFromId(((WireBlockEntity) blockEntity).networkId).wires.forEach(wireBlockEntity -> {
-                                wireBlockEntity.networkId = base.networkId;
-                                WireUtils.getNetworkFromId(base.networkId).wires.add(base);
-                            });
-                            WireNetwork.networkMap.remove(WireUtils.getNetworkFromId(((WireBlockEntity) blockEntity).networkId));
-                        } catch (NullPointerException ignore) {
-                            try {
-                                WireNetwork.networkMap_TEMP.remove(blockEntity.getPos());
-                                ((WireBlockEntity) blockEntity).networkId = base.networkId;
-                                WireUtils.getNetworkFromId(base.networkId).wires.add(((WireBlockEntity) blockEntity));
-                            } catch (Exception ignore2) {
-                            }
-                        }
-                        ((WireBlockEntity) blockEntity).networkId = base.networkId;
-
-                    }
-                }
-                adjacentConnections[direction.getId()] = (WireBlockEntity) blockEntity;
+            if (blockEntity instanceof WireBlockEntity && !blockEntity.isInvalid()) {
+                list.add(getPosFromDirection(direction, source));
             }
         }
-        return adjacentConnections;
+        return list;
     }
 }

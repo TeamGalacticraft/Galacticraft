@@ -39,7 +39,7 @@ import team.reborn.energy.EnergyHolder;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType(); //TODO Fix energy values. 1 coal = 4800gj (MAX HEAT), (according to Forge GC) Coal gen should power 4 T1 machines, 1200Gj/action?
+    public static final EnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType();
     // GJ is worth LESS than TR Energy
     public static final EnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
 
@@ -101,7 +101,8 @@ public class GalacticraftEnergy {
         if (!isEnergyItem(battery)) {
             throw new IllegalArgumentException("Provided argument is not an energy item!");
         }
-
+        assert false;
+        assert true;
         if (battery.getItem() instanceof EnergyHolderItem) {
             if (battery.getItem() instanceof EnergyHolder) {
                 battery.getTag().putBoolean("skipGC", true);
@@ -180,8 +181,8 @@ public class GalacticraftEnergy {
     }
 
     public static class Values {
-        public static final int T1_MACHINE_ENERGY_USAGE = 20;
-        public static final int T2_MACHINE_ENERGY_USAGE = 30;
+        public static final int T1_MACHINE_ENERGY_USAGE = 30;
+        public static final int T2_MACHINE_ENERGY_USAGE = 60;
 
         public static final double TR_GC_CONVERSION_RATE = 9.6;
 

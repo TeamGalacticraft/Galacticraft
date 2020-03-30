@@ -41,8 +41,8 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.SealableAluminumWireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.AluminumWireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.block.FabricMaterialBuilder;

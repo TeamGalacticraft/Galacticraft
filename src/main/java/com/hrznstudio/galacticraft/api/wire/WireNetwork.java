@@ -28,15 +28,14 @@ import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
-import io.netty.util.internal.ConcurrentSet;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -44,24 +43,16 @@ import java.util.concurrent.ConcurrentMap;
 public class WireNetwork {
 
     /**
-     * A map containing all the networks in the current world.
-     * Cleared on world close.
-     *
-     * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
-     */
-    public static final ConcurrentMap<WireNetwork, BlockPos> networkMap = new ConcurrentHashMap<>();
-
-    static final ConcurrentMap<BlockPos, WireNetwork> networkMap_TEMP = new ConcurrentHashMap<>();
-
-    /**
      * A set containing all the wires inside of a network.
      */
-    final ConcurrentSet<WireBlockEntity> wires = new ConcurrentSet<>();
+    public final LinkedList<BlockPos> wires = new LinkedList<>();
 
     /**
      * The id of this network.
      */
     private final UUID id = UUID.randomUUID();
+    private final World world;
+    private boolean resetQueued = false;
 
     /**
      * Creates a new wire network.
@@ -69,113 +60,133 @@ public class WireNetwork {
      * @param source The (Wire)BlockEntity that created the network
      */
     public WireNetwork(WireBlockEntity source) {
-        networkMap_TEMP.put(source.getPos(), this);
-        wires.add(source);
+        assert source != null && !source.isInvalid() && !source.getWorld().isClient;
+        this.world = source.getWorld();
+        NetworkManager.getManagerForDimension(source.getWorld().dimension.getType()).addNetwork(this);
+        wires.add(source.getPos());
+
     }
 
-    /**
-     * Called when a wire is placed.
-     */
-    public static void blockPlaced() {
-        //Every wire in every network
-        networkMap.forEach((key, value) -> key.wires.forEach(key::blockPlacedLogic));
-
-        if (!networkMap_TEMP.isEmpty()) {
-            networkMap_TEMP.forEach(((blockPos, network) -> networkMap.put(network, blockPos)));
-        }
-        networkMap_TEMP.clear();
-    }
-
-    private void blockPlacedLogic(WireBlockEntity source) {
-        List<WireBlockEntity> sourceWires = new ArrayList<>();
-        sourceWires.add(source);
-        do {
-            for (WireBlockEntity wire : WireUtils.getAdjacentWires(sourceWires.get(0).getPos(), sourceWires.get(0).getWorld())) {
-                if (wire != null) {
-                    if (wire.networkId != this.getId()) {
-                        this.wires.add(wire);
-                        try {
-                            if (WireUtils.getNetworkFromId(wire.networkId) != null) {
-                                WireNetwork network = WireUtils.getNetworkFromId(wire.networkId);
-                                networkMap.remove(WireUtils.getNetworkFromId(wire.networkId));
-                                for (WireBlockEntity blockEntity : network.wires) {
-                                    blockEntity.networkId = this.getId();
-                                }
-                            }
-                        } catch (NullPointerException ignore) {
-                        }
-
-                        if (networkMap_TEMP.get(wire.getPos()) != null) {
-                            networkMap_TEMP.remove(wire.getPos());
-                        }
-
-                        wire.networkId = this.getId();
-                        sourceWires.add(wire);
-                    }
+    public WireNetwork join(WireNetwork other) {
+        assert this.world.dimension.getType().getRawId() == other.world.dimension.getType().getRawId();
+        assert !other.getId().equals(this.getId());
+        if (this.wires.size() >= other.wires.size()) {
+            for (BlockPos pos : other.wires) {
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity instanceof WireBlockEntity && !entity.isInvalid()) {
+                    ((WireBlockEntity) world.getBlockEntity(pos)).networkId = this.getId();
+                    this.wires.add(pos);
                 }
             }
-            BlockEntity e = sourceWires.get(0);
-            sourceWires.remove(e);
-        } while (sourceWires.size() > 0);
+            other.wires.clear();
+            NetworkManager.getManagerForDimension(this.world.dimension.getType()).removeNetwork(other.id);
+            return this;
+        } else {
+            for (BlockPos pos : this.wires) {
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity instanceof WireBlockEntity && !entity.isInvalid()) {
+                    ((WireBlockEntity) world.getBlockEntity(pos)).networkId = other.getId();
+                    other.wires.add(pos);
+                }
+            }
+            this.wires.clear();
+            NetworkManager.getManagerForDimension(this.world.dimension.getType()).removeNetwork(this.id);
+            return other;
+        }
     }
 
     /**
      * Handles the energy transfer in a network.
      * Runs every tick.
      */
-    public void update() {
-        ConcurrentSet<BlockEntity> consumers = new ConcurrentSet<>();
-        ConcurrentSet<BlockEntity> producers = new ConcurrentSet<>();
-        ConcurrentSet<BlockEntity> storage = new ConcurrentSet<>();
+    public void tick() {
+        List<BlockEntity> consumers = new LinkedList<>();
+        List<BlockEntity> producers = new LinkedList<>();
+        List<BlockEntity> storage = new LinkedList<>();
         int energyAvailable = 0;
         int energyNeeded = 0;
 
         if (wires.isEmpty()) {
-            networkMap.remove(this);
+            NetworkManager.getManagerForDimension(this.world.dimension.getType()).removeNetwork(this.getId());
             return;
         }
 
-        for (WireBlockEntity wire : wires) {
-            if (!(wire.getWorld().getBlockEntity(wire.getPos()) instanceof WireBlockEntity)) {
-                wires.remove(wire);
-                Galacticraft.logger.debug("Removed wire at {}.", wire.getPos());
-                for (WireBlockEntity blockEntity1 : wires) {
-                    blockEntity1.onPlaced();
-                }
-                wires.clear();
-                return;
-            } else {
-                wire.networkId = getId();
-            }
-            for (BlockEntity consumer : WireUtils.getAdjacentConsumers(wire.getPos(), wire.getWorld())) {
-                if (consumer != null) {
-                    EnergyAttribute consumerEnergy = ((EnergyAttributeProvider) consumer).getEnergyAttribute();
-                    if (consumerEnergy.getCurrentEnergy() < consumerEnergy.getMaxEnergy()) {
-                        consumers.add(consumer); //Amount the machine needs
-                        energyNeeded += (consumerEnergy.getMaxEnergy() - consumerEnergy.getCurrentEnergy());
-                    }
+        if (resetQueued) {
+            resetQueued = false;
+            for (BlockPos pos : wires) {
+                BlockEntity be = world.getBlockEntity(pos);
+                if (be instanceof WireBlockEntity && !be.isInvalid()) {
+                    ((WireBlockEntity) be).resetNetworkId();
                 }
             }
 
-            for (BlockEntity producer : WireUtils.getAdjacentProducers(wire.getPos(), wire.getWorld())) {
-                if (producer != null) {
-                    if (consumers.contains(producer)) {
-                        consumers.remove(producer);
-                        storage.add(producer);
-                    } else {
-                        producers.add(producer);
-                        energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
+            while (!wires.isEmpty()) {
+                BlockEntity be = world.getBlockEntity(wires.pop());
+                if (be instanceof WireBlockEntity && !be.isInvalid()) {
+                    ((WireBlockEntity) be).onNetworkUpdate();
+                }
+            }
+
+            NetworkManager.getManagerForDimension(world.dimension.getType()).removeNetwork(this.getId());
+            return;
+        }
+
+        boolean resetAll = false;
+
+        for (BlockPos pos : wires) {
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof WireBlockEntity) {
+                if (entity.isInvalid()) {
+                    Galacticraft.logger.error("An invalid wire was found at {}. This shouldn't have happened!", pos);
+                    resetAll = true;
+                    continue;
+                } else if (!this.getId().equals(((WireBlockEntity) entity).getNetworkId()) && ((WireBlockEntity) entity).getNetworkId() != null) {
+                    Galacticraft.logger.warn("A wire with a different network id was found at {}. This shouldn't have happened!", pos);
+                    resetQueued = true;
+                    NetworkManager.getManagerForDimension(this.world.dimension.getType()).getNetwork(((WireBlockEntity) entity).networkId).resetQueued = true;
+                }
+                for (BlockEntity consumer : WireUtils.getAdjacentConsumers(pos, world)) {
+                    if (consumer != null) {
+                        EnergyAttribute consumerEnergy = ((EnergyAttributeProvider) consumer).getEnergyAttribute();
+                        if (consumerEnergy.getCurrentEnergy() < consumerEnergy.getMaxEnergy()) {
+                            consumers.add(consumer); //Amount the machine needs
+                            energyNeeded += (consumerEnergy.getMaxEnergy() - consumerEnergy.getCurrentEnergy());
+                        }
                     }
                 }
+
+                for (BlockEntity producer : WireUtils.getAdjacentProducers(pos, world)) {
+                    if (producer != null) {
+                        if (consumers.contains(producer)) {
+                            consumers.remove(producer);
+                            storage.add(producer);
+                        } else {
+                            producers.add(producer);
+                            energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
+                        }
+                    }
+                }
+            } else {
+                Galacticraft.logger.error("INVALID WIRE (NOT A WIRE OR NULL)! {}", pos);
+                resetAll = true;
             }
         }
 
+        if (resetAll) {
+            wireRemoved();
+            return;
+        }
+
+        List<BlockEntity> cons = new ArrayList<>(consumers);
+        List<BlockEntity> prod = new ArrayList<>(producers);
+        List<BlockEntity> sto = new ArrayList<>(storage);
+
         if (energyNeeded > 0) {
             int amountPerConsumer = (consumers.size() > 0 && energyAvailable > 0) ? energyAvailable / consumers.size() : 0;
-            for (BlockEntity consumer : consumers) {
+            for (BlockEntity consumer : cons) {
                 energyAvailable -= amountPerConsumer;
                 int amountExtracted = 0;
-                for (BlockEntity producer : producers) {
+                for (BlockEntity producer : prod) {
                     amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
 
                     if (amountExtracted <= amountPerConsumer) {
@@ -194,6 +205,8 @@ public class WireNetwork {
                 }
             }
 
+            cons = new ArrayList<>(consumers);
+
             if (!consumers.isEmpty() && producers.isEmpty()) {
                 energyAvailable = 0;
                 for (BlockEntity battery : storage) {
@@ -203,10 +216,10 @@ public class WireNetwork {
                 }
 
                 amountPerConsumer = (consumers.size() > 0 && energyAvailable > 0) ? energyAvailable / consumers.size() : 0;
-                for (BlockEntity consumer : consumers) {
+                for (BlockEntity consumer : cons) {
                     energyAvailable -= amountPerConsumer;
                     int amountExtracted = 0;
-                    for (BlockEntity battery : storage) {
+                    for (BlockEntity battery : sto) {
                         amountExtracted += ((EnergyAttributeProvider) battery).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
 
                         if (amountExtracted <= amountPerConsumer) {
@@ -231,12 +244,13 @@ public class WireNetwork {
                         energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
                     }
                 }
-
+                prod = new ArrayList<>(producers);
+                sto = new ArrayList<>(storage);
                 amountPerConsumer = (storage.size() > 0 && energyAvailable > 0) ? energyAvailable / storage.size() : 0;
-                for (BlockEntity battery : storage) {
+                for (BlockEntity battery : sto) {
                     energyAvailable -= amountPerConsumer;
                     int amountExtracted = 0;
-                    for (BlockEntity producer : producers) {
+                    for (BlockEntity producer : prod) {
                         amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
 
                         if (amountExtracted <= amountPerConsumer) {
@@ -263,6 +277,12 @@ public class WireNetwork {
      */
     public UUID getId() {
         return id;
+    }
+
+    public void wireRemoved() {
+        if (!world.isClient) {
+            resetQueued = true;
+        }
     }
 
 
