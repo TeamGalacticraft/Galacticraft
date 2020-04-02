@@ -25,15 +25,13 @@ package com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.util.WireConnectable;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -42,33 +40,22 @@ import javax.annotation.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class SealableAluminumWireBlock extends BlockWithEntity implements WireConnectable, WireBlock {
+public class SealableAluminumWireBlock extends Block implements WireConnectable, WireBlock {
 
     public SealableAluminumWireBlock(Settings settings) {
         super(settings);
     }
 
+    //todo
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
-        BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof AluminumWireBlockEntity) {
-            ((AluminumWireBlockEntity) be).onRemoved();
-        }
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        BlockEntity be = world.getBlockEntity(pos);
-        if (be instanceof AluminumWireBlockEntity) {
-            ((AluminumWireBlockEntity) be).onNetworkUpdate();
-        }
-    }
 
-    @Override
-    public BlockEntity createBlockEntity(BlockView blockView) {
-        return new AluminumWireBlockEntity();
     }
 
     @Override

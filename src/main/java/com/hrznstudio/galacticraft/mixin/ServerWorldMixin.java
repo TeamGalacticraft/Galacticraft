@@ -48,10 +48,10 @@ public abstract class ServerWorldMixin {
             hasRunOnceForWorldReload = true;
             NetworkManager.createManagerForWorld((ServerWorld) (Object) this);
         }
-        NetworkManager.getManagerForDimension(((ServerWorld) (Object) this).dimension.getType()).updateNetworks();
+        NetworkManager.getManagerForWorld((ServerWorld) (Object) this).updateNetworks();
     }
 
     public void close() throws IOException {
-        NetworkManager.getManagerForDimension(((ServerWorld) (Object) this).dimension.getType()).worldClose();
+        NetworkManager.getManagerForWorld((ServerWorld) (Object) this).worldClose();
     }
 }

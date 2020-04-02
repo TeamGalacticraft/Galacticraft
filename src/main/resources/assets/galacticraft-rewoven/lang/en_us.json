@@ -326,16 +326,15 @@
   "category.rei.compressing": "Compressing",
 
   "galacticraft-rewoven:moon": "Moon",
-
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",
-
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
-
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
   "config.galacticraft-rewoven.debug": "Debug",
   "config.galacticraft-rewoven.debug.logging": "Debug Logging",
-  "config.galacticraft-rewoven.reset": "Reset"
+  "config.galacticraft-rewoven.energy": "Energy",
+  "config.galacticraft-rewoven.energy.wire_transfer_limit": "Wire Transfer Limit / tick",
+  "config.galacticraft-rewoven.energy.heavy_wire_transfer_limit": "Heavy Wire Transfer Limit / tick"
 }

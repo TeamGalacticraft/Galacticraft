@@ -1,13 +1,12 @@
 package com.hrznstudio.galacticraft.api.wire;
 
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IWorld;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class NetworkManager {
 
@@ -18,45 +17,56 @@ public class NetworkManager {
      *
      * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
      */
-    public final ConcurrentMap<UUID, WireNetwork> networks = new ConcurrentHashMap<>();
+    private final Map<BlockPos, WireNetwork> networks = new ConcurrentHashMap<>();
+    private final Map<WireNetwork, Integer> networkList = new HashMap<>();
 
-    private final int id;
-
-    private NetworkManager(int id) {
-        this.id = id;
+    private NetworkManager() {
     }
 
     public static void createManagerForWorld(ServerWorld world) {
-        managers.put(world.dimension.getType().getRawId(), new NetworkManager(world.dimension.getType().getRawId()));
+        managers.put(world.dimension.getType().getRawId(), new NetworkManager());
     }
 
-    public static NetworkManager getManagerForDimension(DimensionType type) {
-        return managers.get(type.getRawId());
+    public static NetworkManager getManagerForWorld(IWorld world) {
+        return managers.get(world.getDimension().getType().getRawId());
     }
 
-    public WireNetwork getNetwork(UUID uuid) {
-        return networks.get(uuid);
+    public void remove(BlockPos pos) {
+        WireNetwork network = this.networks.remove(pos);
+        networkList.replace(network, networkList.getOrDefault(network, 1) - 1);
+        if (networkList.get(network) == 0) {
+            networkList.remove(network);
+        }
     }
 
-    public void addNetwork(WireNetwork network) {
-        networks.put(network.getId(), network);
+    public void add(BlockPos pos, WireNetwork value) {
+        this.networks.put(pos, value);
+        networkList.putIfAbsent(value, 0);
+        networkList.replace(value, networkList.getOrDefault(value, 0) + 1);
     }
 
-    public void removeNetwork(UUID id) {
-        networks.remove(id);
+    public void replace(BlockPos pos, WireNetwork newValue) {
+        this.remove(pos);
+        this.add(pos, newValue);
     }
+
+    public WireNetwork getNetwork(BlockPos pos) {
+        return networks.get(pos);
+    }
+
+//    public void removeNetwork(BlockPos pos) {
+//        Iterator<BlockPos> iterator = networks.remove(pos).wires.iterator();
+//        while (iterator.hasNext()) {
+//            networks.remove(iterator.next());
+//            iterator.remove();
+//        }
+//    }
 
     public void updateNetworks() {
-        for (WireNetwork network : this.networks.values()) {
-            network.tick();
-        }
+        networkList.keySet().forEach(WireNetwork::tick);
     }
 
     public void worldClose() {
-        for (WireNetwork network : networks.values()) {
-            network.wires.clear();
-        }
-        networks.clear();
-        managers.remove(id);
+        this.networks.clear();
     }
 }

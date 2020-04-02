@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.energystoragemodule;
 
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -35,7 +36,6 @@ import team.reborn.energy.EnergyTier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
-    public static int MAX_ENERGY = 60000;
     public static int CHARGE_BATTERY_SLOT = 0;
     public static int DRAIN_BATTERY_SLOT = 1;
 
@@ -47,7 +47,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
 
     @Override
     public int getMaxEnergy() {
-        return MAX_ENERGY;
+        return Galacticraft.configManager.get().energyStorageModuleStorageSize();
     }
 
     @Override

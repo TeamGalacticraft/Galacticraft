@@ -23,19 +23,20 @@
 package com.hrznstudio.galacticraft.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.api.block.WireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.energy.api.EnergyAttribute;
+import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
+import io.netty.util.internal.ConcurrentSet;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,26 +46,23 @@ public class WireNetwork {
     /**
      * A set containing all the wires inside of a network.
      */
-    public final LinkedList<BlockPos> wires = new LinkedList<>();
+    protected final ConcurrentSet<BlockPos> wires = new ConcurrentSet<>();
+
+    private final List<BlockPos> producers = new ArrayList<>();
+    private final List<BlockPos> consumers = new ArrayList<>();
+    private final List<BlockPos> query = new ArrayList<>();
 
     /**
      * The id of this network.
      */
     private final UUID id = UUID.randomUUID();
     private final World world;
-    private boolean resetQueued = false;
 
     /**
      * Creates a new wire network.
-     *
-     * @param source The (Wire)BlockEntity that created the network
      */
-    public WireNetwork(WireBlockEntity source) {
-        assert source != null && !source.isInvalid() && !source.getWorld().isClient;
-        this.world = source.getWorld();
-        NetworkManager.getManagerForDimension(source.getWorld().dimension.getType()).addNetwork(this);
-        wires.add(source.getPos());
-
+    public WireNetwork(World world) {
+        this.world = world;
     }
 
     public WireNetwork join(WireNetwork other) {
@@ -72,27 +70,56 @@ public class WireNetwork {
         assert !other.getId().equals(this.getId());
         if (this.wires.size() >= other.wires.size()) {
             for (BlockPos pos : other.wires) {
-                BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof WireBlockEntity && !entity.isInvalid()) {
-                    ((WireBlockEntity) world.getBlockEntity(pos)).networkId = this.getId();
+                if (world.getBlockState(pos).getBlock() instanceof AluminumWireBlock) {
+                    NetworkManager.getManagerForWorld(world).replace(pos, this);
                     this.wires.add(pos);
                 }
             }
+            this.consumers.addAll(other.consumers);
+            this.producers.addAll(other.producers);
+            this.query.addAll(other.query);
             other.wires.clear();
-            NetworkManager.getManagerForDimension(this.world.dimension.getType()).removeNetwork(other.id);
+            other.consumers.clear();
+            other.producers.clear();
+            other.query.clear();
             return this;
         } else {
             for (BlockPos pos : this.wires) {
-                BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof WireBlockEntity && !entity.isInvalid()) {
-                    ((WireBlockEntity) world.getBlockEntity(pos)).networkId = other.getId();
+                if (world.getBlockState(pos).getBlock() instanceof AluminumWireBlock) {
+                    NetworkManager.getManagerForWorld(world).replace(pos, other);
                     other.wires.add(pos);
                 }
             }
+            other.consumers.addAll(this.consumers);
+            other.producers.addAll(this.producers);
+            other.query.addAll(this.query);
             this.wires.clear();
-            NetworkManager.getManagerForDimension(this.world.dimension.getType()).removeNetwork(this.id);
+            this.consumers.clear();
+            this.producers.clear();
+            this.query.clear();
             return other;
         }
+    }
+
+    public void addProducer(BlockPos pos) {
+        this.producers.add(pos);
+    }
+
+    public void addConsumer(BlockPos pos) {
+        this.consumers.add(pos);
+    }
+
+    public boolean removeProducer(BlockPos pos) {
+        return this.producers.remove(pos);
+    }
+
+    public boolean removeConsumer(BlockPos pos) {
+        return this.consumers.remove(pos);
+    }
+
+    public void addWire(BlockPos pos) {
+        this.wires.add(pos);
+        NetworkManager.getManagerForWorld(world).add(pos, this);
     }
 
     /**
@@ -100,175 +127,66 @@ public class WireNetwork {
      * Runs every tick.
      */
     public void tick() {
-        List<BlockEntity> consumers = new LinkedList<>();
-        List<BlockEntity> producers = new LinkedList<>();
-        List<BlockEntity> storage = new LinkedList<>();
+        for (BlockPos pos : query) {
+            BlockState state = world.getBlockState(pos);
+            if (state.getBlock() instanceof WireConnectable) {
+                for (Direction dir : Direction.values()) {
+                    BlockPos off = pos.offset(dir);
+                    if (NetworkManager.getManagerForWorld(world).getNetwork(off).equals(this)) {
+                        Block block = world.getBlockState(off).getBlock();
+                        if (block instanceof WireBlock && block instanceof WireConnectable) {
+                            WireConnectionType type = ((WireConnectable) state.getBlock()).canWireConnect(world, dir, off, pos);
+                            if (type != WireConnectionType.NONE) {
+                                if (type == WireConnectionType.ENERGY_INPUT) {
+                                    this.consumers.add(pos);
+                                } else if (type == WireConnectionType.ENERGY_OUTPUT) {
+                                    this.producers.add(pos);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        query.clear();
+
+        if (consumers.size() == 0 || producers.size() == 0) return;
         int energyAvailable = 0;
-        int energyNeeded = 0;
-
-        if (wires.isEmpty()) {
-            NetworkManager.getManagerForDimension(this.world.dimension.getType()).removeNetwork(this.getId());
-            return;
-        }
-
-        if (resetQueued) {
-            resetQueued = false;
-            for (BlockPos pos : wires) {
-                BlockEntity be = world.getBlockEntity(pos);
-                if (be instanceof WireBlockEntity && !be.isInvalid()) {
-                    ((WireBlockEntity) be).resetNetworkId();
-                }
-            }
-
-            while (!wires.isEmpty()) {
-                BlockEntity be = world.getBlockEntity(wires.pop());
-                if (be instanceof WireBlockEntity && !be.isInvalid()) {
-                    ((WireBlockEntity) be).onNetworkUpdate();
-                }
-            }
-
-            NetworkManager.getManagerForDimension(world.dimension.getType()).removeNetwork(this.getId());
-            return;
-        }
-
-        boolean resetAll = false;
-
-        for (BlockPos pos : wires) {
+        Iterator<BlockPos> iterator = producers.iterator();
+        while (iterator.hasNext()) {
+            BlockPos pos = iterator.next();
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof WireBlockEntity) {
-                if (entity.isInvalid()) {
-                    Galacticraft.logger.error("An invalid wire was found at {}. This shouldn't have happened!", pos);
-                    resetAll = true;
-                    continue;
-                } else if (!this.getId().equals(((WireBlockEntity) entity).getNetworkId()) && ((WireBlockEntity) entity).getNetworkId() != null) {
-                    Galacticraft.logger.warn("A wire with a different network id was found at {}. This shouldn't have happened!", pos);
-                    resetQueued = true;
-                    NetworkManager.getManagerForDimension(this.world.dimension.getType()).getNetwork(((WireBlockEntity) entity).networkId).resetQueued = true;
-                }
-                for (BlockEntity consumer : WireUtils.getAdjacentConsumers(pos, world)) {
-                    if (consumer != null) {
-                        EnergyAttribute consumerEnergy = ((EnergyAttributeProvider) consumer).getEnergyAttribute();
-                        if (consumerEnergy.getCurrentEnergy() < consumerEnergy.getMaxEnergy()) {
-                            consumers.add(consumer); //Amount the machine needs
-                            energyNeeded += (consumerEnergy.getMaxEnergy() - consumerEnergy.getCurrentEnergy());
-                        }
-                    }
-                }
-
-                for (BlockEntity producer : WireUtils.getAdjacentProducers(pos, world)) {
-                    if (producer != null) {
-                        if (consumers.contains(producer)) {
-                            consumers.remove(producer);
-                            storage.add(producer);
-                        } else {
-                            producers.add(producer);
-                            energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
-                        }
-                    }
+            if (entity instanceof EnergyAttributeProvider) {
+                if (((EnergyAttributeProvider) entity).getEnergyAttribute().canExtractEnergy()) {
+                    energyAvailable += ((EnergyAttributeProvider) entity).getEnergyAttribute().getCurrentEnergy();
+                } else {
+                    iterator.remove();
+                    if (consumers.size() == 0 || producers.size() == 0) return;
                 }
             } else {
-                Galacticraft.logger.error("INVALID WIRE (NOT A WIRE OR NULL)! {}", pos);
-                resetAll = true;
+                iterator.remove();
+                if (consumers.size() == 0 || producers.size() == 0) return;
             }
         }
 
-        if (resetAll) {
-            wireRemoved();
-            return;
-        }
+        int energyPerMachine = energyAvailable / consumers.size();
 
-        List<BlockEntity> cons = new ArrayList<>(consumers);
-        List<BlockEntity> prod = new ArrayList<>(producers);
-        List<BlockEntity> sto = new ArrayList<>(storage);
-
-        if (energyNeeded > 0) {
-            int amountPerConsumer = (consumers.size() > 0 && energyAvailable > 0) ? energyAvailable / consumers.size() : 0;
-            for (BlockEntity consumer : cons) {
-                energyAvailable -= amountPerConsumer;
-                int amountExtracted = 0;
-                for (BlockEntity producer : prod) {
-                    amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
-
-                    if (amountExtracted <= amountPerConsumer) {
-                        if (((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy() <= 0) {
-                            producers.remove(producer);
-                        }
-                    }
-
-                    if (amountExtracted == amountPerConsumer) {
-                        break;
-                    }
+        iterator = consumers.iterator();
+        while (iterator.hasNext()) {
+            BlockPos pos = iterator.next();
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof EnergyAttributeProvider) {
+                if (((EnergyAttributeProvider) entity).getEnergyAttribute().canInsertEnergy()) {
+                    energyAvailable -= (energyPerMachine - ((EnergyAttributeProvider) entity).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, energyPerMachine, Simulation.ACTION));
+                } else {
+                    iterator.remove();
+                    if (consumers.size() == 0 || producers.size() == 0) return;
                 }
-                energyAvailable += ((EnergyAttributeProvider) consumer).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
-                if (((EnergyAttributeProvider) consumer).getEnergyAttribute().getCurrentEnergy() >= ((EnergyAttributeProvider) consumer).getEnergyAttribute().getMaxEnergy()) {
-                    consumers.remove(consumer);
-                }
+            } else {
+                iterator.remove();
+                if (consumers.size() == 0 || producers.size() == 0) return;
             }
-
-            cons = new ArrayList<>(consumers);
-
-            if (!consumers.isEmpty() && producers.isEmpty()) {
-                energyAvailable = 0;
-                for (BlockEntity battery : storage) {
-                    if (battery != null) {
-                        energyAvailable += ((EnergyAttributeProvider) battery).getEnergyAttribute().getCurrentEnergy();
-                    }
-                }
-
-                amountPerConsumer = (consumers.size() > 0 && energyAvailable > 0) ? energyAvailable / consumers.size() : 0;
-                for (BlockEntity consumer : cons) {
-                    energyAvailable -= amountPerConsumer;
-                    int amountExtracted = 0;
-                    for (BlockEntity battery : sto) {
-                        amountExtracted += ((EnergyAttributeProvider) battery).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
-
-                        if (amountExtracted <= amountPerConsumer) {
-                            if (((EnergyAttributeProvider) battery).getEnergyAttribute().getCurrentEnergy() <= 0) {
-                                storage.remove(battery);
-                            }
-                        }
-
-                        if (amountExtracted == amountPerConsumer) {
-                            break;
-                        }
-                    }
-                    energyAvailable += ((EnergyAttributeProvider) consumer).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
-                    if (((EnergyAttributeProvider) consumer).getEnergyAttribute().getCurrentEnergy() >= ((EnergyAttributeProvider) consumer).getEnergyAttribute().getMaxEnergy()) {
-                        consumers.remove(consumer);
-                    }
-                }
-            } else if (!producers.isEmpty() && consumers.isEmpty()) {
-                energyAvailable = 0;
-                for (BlockEntity producer : producers) {
-                    if (producer != null) {
-                        energyAvailable += ((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy();
-                    }
-                }
-                prod = new ArrayList<>(producers);
-                sto = new ArrayList<>(storage);
-                amountPerConsumer = (storage.size() > 0 && energyAvailable > 0) ? energyAvailable / storage.size() : 0;
-                for (BlockEntity battery : sto) {
-                    energyAvailable -= amountPerConsumer;
-                    int amountExtracted = 0;
-                    for (BlockEntity producer : prod) {
-                        amountExtracted += ((EnergyAttributeProvider) producer).getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer - amountExtracted, Simulation.ACTION);
-
-                        if (amountExtracted <= amountPerConsumer) {
-                            if (((EnergyAttributeProvider) producer).getEnergyAttribute().getCurrentEnergy() <= 0) {
-                                producers.remove(producer);
-                            }
-                        }
-
-                        if (amountExtracted == amountPerConsumer) {
-                            break;
-                        }
-                    }
-                    energyAvailable += ((EnergyAttributeProvider) battery).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerConsumer, Simulation.ACTION);
-                    if (((EnergyAttributeProvider) battery).getEnergyAttribute().getCurrentEnergy() >= ((EnergyAttributeProvider) battery).getEnergyAttribute().getMaxEnergy()) {
-                        storage.remove(battery);
-                    }
-                }
-            }
+            energyPerMachine = energyAvailable / consumers.size();
         }
     }
 
@@ -279,12 +197,26 @@ public class WireNetwork {
         return id;
     }
 
-    public void wireRemoved() {
-        if (!world.isClient) {
-            resetQueued = true;
-        }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WireNetwork network = (WireNetwork) o;
+        return id.equals(network.id);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    public void query(BlockPos pos) {
+        this.query.add(pos);
+    }
+
+    public void removeWire(BlockPos pos) {
+        wires.remove(pos);
+    }
 
     public enum WireConnectionType {
 
