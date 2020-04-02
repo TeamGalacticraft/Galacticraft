@@ -24,7 +24,8 @@ package com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1;
 
 import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireGraph;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.fabricmc.api.EnvType;
@@ -111,7 +112,7 @@ public class AluminumWireBlock extends Block implements WireConnectable, WireBlo
         for (Direction direction : Direction.values()) {
             Block block = context.getWorld().getBlockState(context.getBlockPos().offset(direction)).getBlock();
             if (block instanceof WireConnectable) {
-                if (((WireConnectable) block).canWireConnect(context.getWorld(), direction.getOpposite(), context.getBlockPos(), context.getBlockPos().offset(direction)) != WireNetwork.WireConnectionType.NONE) {
+                if (((WireConnectable) block).canWireConnect(context.getWorld(), direction.getOpposite(), context.getBlockPos(), context.getBlockPos().offset(direction)) != WireConnectionType.NONE) {
                     state = state.with(propFromDirection(direction), true);
                 }
             } else if (block instanceof EnergyAttributeProvider) {
@@ -125,22 +126,22 @@ public class AluminumWireBlock extends Block implements WireConnectable, WireBlo
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (!world.isClient) {
-            WireNetwork network = new WireNetwork(world);
+            WireGraph network = new WireGraph(pos, world.dimension.getType().getRawId());
             network.addWire(pos);
             for (Direction d : Direction.values()) {
                 if (state.get(getPropForDirection(d))) {
-                    WireNetwork.WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
-                    if (type == WireNetwork.WireConnectionType.WIRE) {
-                        WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(pos.offset(d));
+                    WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
+                    if (type == WireConnectionType.WIRE) {
+                        WireGraph network1 = NetworkManager.getManagerForWorld(world).getNetwork(pos.offset(d));
                         if (network1 != null) {
-                            network = network1.join(network); // prefer other network rather than this one
+                            network = network1.merge(network); // prefer other network rather than this one
                         } else {
                             network.addWire(pos.offset(d));
                         }
-                    } else if (type != WireNetwork.WireConnectionType.NONE) {
-                        if (type == WireNetwork.WireConnectionType.ENERGY_INPUT) {
+                    } else if (type != WireConnectionType.NONE) {
+                        if (type == WireConnectionType.ENERGY_INPUT) {
                             network.addConsumer(pos);
-                        } else {
+                        } else {//todo
                             network.addProducer(pos);
                         }
                     }
@@ -151,27 +152,27 @@ public class AluminumWireBlock extends Block implements WireConnectable, WireBlo
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState otherState, IWorld world, BlockPos pos, BlockPos updated) {
-        WireNetwork.WireConnectionType type = WireNetwork.WireConnectionType.NONE;
+        WireConnectionType type = WireConnectionType.NONE;
         if (otherState.getBlock() instanceof WireConnectable) {
             type = ((WireConnectable) otherState.getBlock()).canWireConnect(world, dir.getOpposite(), pos, updated);
         }
         assert type != null;
-        boolean c = !(otherState).isAir() && type != WireNetwork.WireConnectionType.NONE;
+        boolean c = !(otherState).isAir() && type != WireConnectionType.NONE;
 
         if (!world.isClient()) {
             if (c != state.get(getPropForDirection(dir))) {
-                WireNetwork myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-                if (type == WireNetwork.WireConnectionType.WIRE) {
-                    WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(updated);
+                WireGraph myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+                if (type == WireConnectionType.WIRE) {
+                    WireGraph network1 = NetworkManager.getManagerForWorld(world).getNetwork(updated);
                     if (!myNet.equals(network1)) {
                         if (network1 != null) {
-                            network1.join(myNet); // prefer other network rather than this one
+                            network1.merge(myNet); // prefer other network rather than this one
                         } else {
                             myNet.addWire(updated);
                         }
                     }
-                } else if (type != WireNetwork.WireConnectionType.NONE) {
-                    if (type == WireNetwork.WireConnectionType.ENERGY_INPUT) {
+                } else if (type != WireConnectionType.NONE) {
+                    if (type == WireConnectionType.ENERGY_INPUT) {
                         myNet.addConsumer(updated);
                     } else {
                         myNet.addProducer(updated);
@@ -209,26 +210,9 @@ public class AluminumWireBlock extends Block implements WireConnectable, WireBlo
     public void onBroken(IWorld world, BlockPos pos, BlockState state) {
         super.onBroken(world, pos, state);
         if (!world.isClient()) {
-            WireNetwork myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            NetworkManager.getManagerForWorld(world).remove(pos);
+            WireGraph myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+            NetworkManager.getManagerForWorld(world).removeWire(pos);
             myNet.removeWire(pos);
-            for (Direction dir : Direction.values()) {
-                if (state.get(getPropForDirection(dir))) {
-                    BlockState other = world.getBlockState(pos.offset(dir));
-                    if (other.getBlock() instanceof WireConnectable) {
-                        WireNetwork.WireConnectionType type = ((WireConnectable) other.getBlock()).canWireConnect(world, dir.getOpposite(), pos, pos.offset(dir));
-                        if (type != WireNetwork.WireConnectionType.NONE) {
-                            if (type == WireNetwork.WireConnectionType.ENERGY_INPUT) {
-                                myNet.removeConsumer(pos);
-                                myNet.query(pos);
-                            } else if (type == WireNetwork.WireConnectionType.ENERGY_OUTPUT) {
-                                myNet.removeProducer(pos);
-                                myNet.query(pos);
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -294,7 +278,7 @@ public class AluminumWireBlock extends Block implements WireConnectable, WireBlo
     }
 
     @Override
-    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireNetwork.WireConnectionType.WIRE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.WIRE;
     }
 }

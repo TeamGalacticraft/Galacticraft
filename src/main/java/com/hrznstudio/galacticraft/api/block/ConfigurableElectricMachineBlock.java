@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -90,7 +90,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     }
 
     @Override
-    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         List<SideOption> values = SideOption.getApplicableValuesForMachine(world.getBlockState(connectionTargetPos).getBlock());
 
         EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, values);
@@ -104,161 +104,161 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
         if (opposite == Direction.UP) { //Always the same, no matter what 'facing' is
             if (blockState.get(TOP_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                return WireConnectionType.ENERGY_INPUT;
             } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                return WireConnectionType.ENERGY_OUTPUT;
             } else {
-                return WireNetwork.WireConnectionType.NONE;
+                return WireConnectionType.NONE;
             }
         } else if (opposite == Direction.DOWN) {
             if (blockState.get(BOTTOM_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                return WireConnectionType.ENERGY_INPUT;
             } else if (blockState.get(BOTTOM_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                return WireConnectionType.ENERGY_OUTPUT;
             } else {
-                return WireNetwork.WireConnectionType.NONE;
+                return WireConnectionType.NONE;
             }
         }
 
         if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.NORTH) { //Only N, S, E, W
             if (opposite == Direction.NORTH) {
                 if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.SOUTH) {
                 if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.EAST) {
                 if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.WEST) {
                 if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             }
 
         } else if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.SOUTH) {
             if (opposite == Direction.NORTH) {
                 if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.SOUTH) {
                 if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.EAST) {
                 if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.WEST) {
                 if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             }
         } else if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.EAST) {
             if (opposite == Direction.NORTH) {
                 if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.SOUTH) {
                 if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.EAST) {
                 if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.WEST) {
                 if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             }
         } else if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.WEST) {
             if (opposite == Direction.NORTH) {
                 if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.SOUTH) {
                 if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.EAST) {
                 if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             } else if (opposite == Direction.WEST) {
                 if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_INPUT;
+                    return WireConnectionType.ENERGY_INPUT;
                 } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireNetwork.WireConnectionType.ENERGY_OUTPUT;
+                    return WireConnectionType.ENERGY_OUTPUT;
                 } else {
-                    return WireNetwork.WireConnectionType.NONE;
+                    return WireConnectionType.NONE;
                 }
             }
         }
-        return WireNetwork.WireConnectionType.NONE;
+        return WireConnectionType.NONE;
     }
 
     @Override

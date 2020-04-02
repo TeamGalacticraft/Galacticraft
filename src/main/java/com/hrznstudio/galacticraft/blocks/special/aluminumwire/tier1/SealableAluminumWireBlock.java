@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1;
 
 import com.hrznstudio.galacticraft.api.block.WireBlock;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -59,7 +59,7 @@ public class SealableAluminumWireBlock extends Block implements WireConnectable,
     }
 
     @Override
-    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireNetwork.WireConnectionType.WIRE;
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.WIRE;
     }
 }

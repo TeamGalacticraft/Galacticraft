@@ -17,8 +17,8 @@ public class NetworkManager {
      *
      * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
      */
-    private final Map<BlockPos, WireNetwork> networks = new ConcurrentHashMap<>();
-    private final Map<WireNetwork, Integer> networkList = new HashMap<>();
+    private final Map<BlockPos, WireGraph> networks = new ConcurrentHashMap<>();
+    private final Map<WireGraph, Integer> networkList = new HashMap<>();
 
     private NetworkManager() {
     }
@@ -27,43 +27,38 @@ public class NetworkManager {
         managers.put(world.dimension.getType().getRawId(), new NetworkManager());
     }
 
-    public static NetworkManager getManagerForWorld(IWorld world) {
-        return managers.get(world.getDimension().getType().getRawId());
+    public static NetworkManager getManagerForDimension(int id) {
+        return managers.get(id);
     }
 
-    public void remove(BlockPos pos) {
-        WireNetwork network = this.networks.remove(pos);
+    public static NetworkManager getManagerForWorld(IWorld world) {
+        return getManagerForDimension(world.getDimension().getType().getRawId());
+    }
+
+    public void removeWire(BlockPos pos) {
+        WireGraph network = this.networks.remove(pos);
         networkList.replace(network, networkList.getOrDefault(network, 1) - 1);
         if (networkList.get(network) == 0) {
             networkList.remove(network);
         }
     }
 
-    public void add(BlockPos pos, WireNetwork value) {
+    public void addWire(BlockPos pos, WireGraph value) {
         this.networks.put(pos, value);
         networkList.putIfAbsent(value, 0);
         networkList.replace(value, networkList.getOrDefault(value, 0) + 1);
     }
 
-    public void replace(BlockPos pos, WireNetwork newValue) {
-        this.remove(pos);
-        this.add(pos, newValue);
+    public void transferWire(BlockPos pos, WireGraph newValue) {
+        this.removeWire(pos);
+        this.addWire(pos, newValue);
     }
 
-    public WireNetwork getNetwork(BlockPos pos) {
+    public WireGraph getNetwork(BlockPos pos) {
         return networks.get(pos);
     }
 
-//    public void removeNetwork(BlockPos pos) {
-//        Iterator<BlockPos> iterator = networks.remove(pos).wires.iterator();
-//        while (iterator.hasNext()) {
-//            networks.remove(iterator.next());
-//            iterator.remove();
-//        }
-//    }
-
     public void updateNetworks() {
-        networkList.keySet().forEach(WireNetwork::tick);
     }
 
     public void worldClose() {
