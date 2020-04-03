@@ -1,11 +1,36 @@
+/*
+ * Copyright (c) 2019 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.api.wire;
 
+import alexiil.mc.lib.attributes.Simulation;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.energy.api.EnergyAttributeProvider;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NetworkManager {
@@ -18,7 +43,7 @@ public class NetworkManager {
      * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
      */
     private final Map<BlockPos, WireGraph> networks = new ConcurrentHashMap<>();
-    private final Map<WireGraph, Integer> networkList = new HashMap<>();
+    private final Map<WireGraph, Integer> networkRefs = new HashMap<>();
 
     private NetworkManager() {
     }
@@ -37,16 +62,22 @@ public class NetworkManager {
 
     public void removeWire(BlockPos pos) {
         WireGraph network = this.networks.remove(pos);
-        networkList.replace(network, networkList.getOrDefault(network, 1) - 1);
-        if (networkList.get(network) == 0) {
-            networkList.remove(network);
+        networkRefs.put(network, networkRefs.getOrDefault(network, 1) - 1);
+        assert network != null && networkRefs.get(network) != null;
+
+        if (networkRefs.get(network) == 0) {
+            networkRefs.remove(network);
         }
     }
 
     public void addWire(BlockPos pos, WireGraph value) {
-        this.networks.put(pos, value);
-        networkList.putIfAbsent(value, 0);
-        networkList.replace(value, networkList.getOrDefault(value, 0) + 1);
+        if (!this.networks.containsKey(pos)) {
+            networkRefs.putIfAbsent(value, 0);
+            networkRefs.put(value, networkRefs.getOrDefault(value, 0) + 1);
+            this.networks.put(pos, value);
+        } else {
+            throw new IllegalArgumentException("already added wire");
+        }
     }
 
     public void transferWire(BlockPos pos, WireGraph newValue) {
@@ -58,7 +89,35 @@ public class NetworkManager {
         return networks.get(pos);
     }
 
-    public void updateNetworks() {
+    public void updateNetworks(ServerWorld world) {
+        Set<WireGraph> set = new HashSet<>(networkRefs.keySet());
+        for (WireGraph graph : set) {
+            List<BlockPos> consumers = graph.getConsumers();
+            List<BlockPos> producers = graph.getProducers();
+            if (consumers.size() == 0 || producers.size() == 0) continue;
+
+            int available = 0;
+            for (BlockPos pos : producers) {
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity instanceof EnergyAttributeProvider) {
+                    if (((EnergyAttributeProvider) entity).getEnergyAttribute().canExtractEnergy()) {
+                        available += ((EnergyAttributeProvider) entity).getEnergyAttribute().getCurrentEnergy();
+                    }
+                }
+            }
+            int i = consumers.size();
+            int amountPerMachine = available / Math.max(1, i--);
+            for (BlockPos pos : consumers) {
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity instanceof EnergyAttributeProvider) {
+                    if (((EnergyAttributeProvider) entity).getEnergyAttribute().canInsertEnergy()) {
+                        available -= (amountPerMachine - ((EnergyAttributeProvider) entity).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerMachine, Simulation.ACTION));
+                    }
+                }
+
+                amountPerMachine = available / Math.max(1, i--);
+            }
+        }
     }
 
     public void worldClose() {
