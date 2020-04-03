@@ -78,9 +78,9 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        SubCategoryBuilder energy = ConfigEntryBuilder.create().startSubCategory(Constants.Config.ENERGY);
+        SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(Constants.Config.WIRES);
 
-        energy.add(new IntSliderBuilder(
+        wires.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.WIRE_ENERGY_TRANSFER_LIMIT,
                 this.config.wireTransferLimit(),
@@ -90,7 +90,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        wires.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT,
                 this.config.heavyWireTransferLimit(),
@@ -100,7 +100,9 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(Constants.Config.MACHINES);
+
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE,
                 this.config.coalGeneratorEnergyProductionRate(),
@@ -110,7 +112,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE,
                 this.config.solarPanelEnergyProductionRate(),
@@ -120,7 +122,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE,
                 this.config.circuitFabricatorEnergyConsumptionRate(),
@@ -130,7 +132,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE,
                 this.config.electricCompressorEnergyConsumptionRate(),
@@ -140,7 +142,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE,
                 this.config.oxygenCollectorEnergyConsumptionRate(),
@@ -150,7 +152,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.REFINERY_ENERGY_PRODUCTION_RATE,
                 this.config.refineryEnergyConsumptionRate(),
@@ -160,7 +162,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
                 Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE,
                 this.config.energyStorageModuleStorageSize(),
@@ -170,9 +172,9 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        energy.add(new IntSliderBuilder(
+        machines.add(new IntSliderBuilder(
                 Constants.Config.RESET,
-                Constants.Config.MACHINE_ENERGY_STORAGE_SIZE,
+                Constants.Config.ENERGY_STORAGE_SIZE,
                 this.config.machineEnergyStorageSize(),
                 1, Integer.MAX_VALUE)
                 .setSaveConsumer(this.config::setMachineEnergyStorageSize)
@@ -181,7 +183,7 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         b.getOrCreateCategory(Constants.Config.DEBUG).addEntry(dB.build());
-        b.getOrCreateCategory(Constants.Config.ENERGY).addEntry(energy.build());
+        b.getOrCreateCategory(Constants.Config.ENERGY).addEntry(wires.build()).addEntry(machines.build());
 
         return b.build();
     }

@@ -42,8 +42,8 @@ public class NetworkManager {
      *
      * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
      */
-    private final Map<BlockPos, WireGraph> networks = new ConcurrentHashMap<>();
-    private final Map<WireGraph, Integer> networkRefs = new HashMap<>();
+    private final Map<BlockPos, WireNetwork> networks = new ConcurrentHashMap<>();
+    private final Map<WireNetwork, Integer> networkRefs = new HashMap<>();
 
     private NetworkManager() {
     }
@@ -61,7 +61,7 @@ public class NetworkManager {
     }
 
     public void removeWire(BlockPos pos) {
-        WireGraph network = this.networks.remove(pos);
+        WireNetwork network = this.networks.remove(pos);
         networkRefs.put(network, networkRefs.getOrDefault(network, 1) - 1);
         assert network != null && networkRefs.get(network) != null;
 
@@ -70,7 +70,7 @@ public class NetworkManager {
         }
     }
 
-    public void addWire(BlockPos pos, WireGraph value) {
+    public void addWire(BlockPos pos, WireNetwork value) {
         if (!this.networks.containsKey(pos)) {
             networkRefs.putIfAbsent(value, 0);
             networkRefs.put(value, networkRefs.getOrDefault(value, 0) + 1);
@@ -80,20 +80,26 @@ public class NetworkManager {
         }
     }
 
-    public void transferWire(BlockPos pos, WireGraph newValue) {
+    public void transferWire(BlockPos pos, WireNetwork newValue) {
         this.removeWire(pos);
         this.addWire(pos, newValue);
     }
 
-    public WireGraph getNetwork(BlockPos pos) {
+    public WireNetwork getNetwork(BlockPos pos) {
         return networks.get(pos);
     }
 
     public void updateNetworks(ServerWorld world) {
-        Set<WireGraph> set = new HashSet<>(networkRefs.keySet());
-        for (WireGraph graph : set) {
-            List<BlockPos> consumers = graph.getConsumers();
-            List<BlockPos> producers = graph.getProducers();
+        Set<WireNetwork> set = new HashSet<>(networkRefs.keySet());
+        for (WireNetwork network : set) {
+            for (BlockPos pos : network.getQuery()) {
+                if (world.getBlockEntity(pos) instanceof EnergyAttributeProvider) {
+                    world.getBlockState(pos).updateNeighborStates(world, pos, 10);
+                }
+            }
+            network.clearQuery();
+            List<BlockPos> consumers = network.getConsumers();
+            List<BlockPos> producers = network.getProducers();
             if (consumers.size() == 0 || producers.size() == 0) continue;
 
             int available = 0;

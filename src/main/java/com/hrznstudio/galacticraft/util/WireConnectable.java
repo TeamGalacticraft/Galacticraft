@@ -33,5 +33,4 @@ import net.minecraft.world.IWorld;
 public interface WireConnectable {
 
     WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos);
-
 }

@@ -324,7 +324,6 @@
 
   "category.rei.circuit_fabricator": "Circuit Fabricating",
   "category.rei.compressing": "Compressing",
-
   "galacticraft-rewoven:moon": "Moon",
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
@@ -332,9 +331,20 @@
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
+  "config.galacticraft-rewoven.reset": "Reset",
   "config.galacticraft-rewoven.debug": "Debug",
   "config.galacticraft-rewoven.debug.logging": "Debug Logging",
   "config.galacticraft-rewoven.energy": "Energy",
-  "config.galacticraft-rewoven.energy.wire_transfer_limit": "Wire Transfer Limit / tick",
-  "config.galacticraft-rewoven.energy.heavy_wire_transfer_limit": "Heavy Wire Transfer Limit / tick"
+  "config.galacticraft-rewoven.energy.wires": "Wires",
+  "config.galacticraft-rewoven.energy.wires.transfer_limit": "Wire Transfer Limit/t",
+  "config.galacticraft-rewoven.energy.wires.heavy_transfer_limit": "Heavy Wire Transfer Limit/t",
+  "config.galacticraft-rewoven.energy.machines": "Machines",
+  "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate": "Coal Generator Energy Production Rate/t",
+  "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate": "Solar Panel Energy Production Rate/t",
+  "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate": "Circuit Fabricator Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate": "Electric Compressor Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate": "Oxygen Collector Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate": "Refinery Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
+  "config.galacticraft-rewoven.energy.machines.energy_storage_size": "Default Machine Energy Storage Size"
 }
