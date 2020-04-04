@@ -35,7 +35,6 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -53,7 +52,6 @@ public class GalacticraftBlockEntities {
     public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE), BlockEntityType.Builder.create(EnergyStorageModuleBlockEntity::new, GalacticraftBlocks.ENERGY_STORAGE_MODULE).build(null));
     public static final BlockEntityType<RefineryBlockEntity> REFINERY_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.REFINERY), BlockEntityType.Builder.create(RefineryBlockEntity::new, GalacticraftBlocks.REFINERY).build(null));
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR), BlockEntityType.Builder.create(OxygenCollectorBlockEntity::new, GalacticraftBlocks.OXYGEN_COLLECTOR).build(null));
-    public static final BlockEntityType<AluminumWireBlockEntity> ALUMINUM_WIRE_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE), BlockEntityType.Builder.create(AluminumWireBlockEntity::new, GalacticraftBlocks.ALUMINUM_WIRE, GalacticraftBlocks.SEALABLE_ALUMINUM_WIRE).build(null));
     public static final BlockEntityType<RocketDesignerBlockEntity> ROCKET_DESIGNER_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_DESIGNER), BlockEntityType.Builder.create(RocketDesignerBlockEntity::new, GalacticraftBlocks.ROCKET_DESIGNER).build(null));
     public static final BlockEntityType<RocketAssemblerBlockEntity> ROCKET_ASSEMBLER_TYPE = Registry.register(Registry.BLOCK_ENTITY, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_ASSEMBLER), BlockEntityType.Builder.create(RocketAssemblerBlockEntity::new, GalacticraftBlocks.ROCKET_ASSEMBLER).build(null));
 

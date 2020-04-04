@@ -40,8 +40,8 @@ import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssembl
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlock;
 import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.AluminumWireBlock;
-import com.hrznstudio.galacticraft.blocks.special.aluminumwire.SealableAluminumWireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.AluminumWireBlock;
+import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.block.FabricMaterialBuilder;

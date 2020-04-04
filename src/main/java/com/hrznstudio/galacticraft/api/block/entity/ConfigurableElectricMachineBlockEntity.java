@@ -29,12 +29,11 @@ import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.api.wire.WireUtils;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.items.BatteryItem;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
@@ -50,7 +49,6 @@ import net.minecraft.util.math.Direction;
  */
 public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyAttributeProvider {
 
-    public static final int DEFAULT_MAX_ENERGY = BatteryItem.MAX_ENERGY * 2;
     private final FullFixedItemInv inventory = new FullFixedItemInv(getInvSize()) {
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack item) {
@@ -112,7 +110,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * @return Energy capacity of this machine.
      */
     public int getMaxEnergy() {
-        return DEFAULT_MAX_ENERGY;
+        return Galacticraft.configManager.get().machineEnergyStorageSize();
     }
 
     /**
@@ -230,8 +228,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public void trySpreadEnergy() {
         for (int i = 0; i < ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos)).length; i++) {
             if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_OUTPUT) {
-                if (world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    if (((ConfigurableElectricMachineBlock) world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock()).canWireConnect(world, Direction.values()[i], pos, WireUtils.getPosFromDirection(Direction.values()[i], pos)) == WireNetwork.WireConnectionType.ENERGY_INPUT) {
+                if (world.getBlockState(pos.offset(Direction.values()[i])).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    if (((ConfigurableElectricMachineBlock) world.getBlockState(pos.offset(Direction.values()[i])).getBlock()).canWireConnect(world, Direction.values()[i], pos, pos.offset(Direction.values()[i])) == WireConnectionType.ENERGY_INPUT) {
                         EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
                         if (energyAttribute.canExtractEnergy()) {
                             int failed = getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
@@ -246,8 +244,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
                     }
                 }
             } else if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_INPUT) {
-                if (world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    if (((ConfigurableElectricMachineBlock) world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock()).canWireConnect(world, Direction.values()[i], pos, WireUtils.getPosFromDirection(Direction.values()[i], pos)) == WireNetwork.WireConnectionType.ENERGY_OUTPUT) {
+                if (world.getBlockState(pos.offset(Direction.values()[i])).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    if (((ConfigurableElectricMachineBlock) world.getBlockState(pos.offset(Direction.values()[i])).getBlock()).canWireConnect(world, Direction.values()[i], pos, pos.offset(Direction.values()[i])) == WireConnectionType.ENERGY_OUTPUT) {
                         EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
                         if (energyAttribute.canExtractEnergy()) {
                             int failed = getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);

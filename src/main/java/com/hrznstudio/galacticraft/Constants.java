@@ -398,6 +398,22 @@ public class Constants {
 
         public static final String DEBUG = "config.galacticraft-rewoven.debug";
         public static final String DEBUG_LOGGING = "config.galacticraft-rewoven.debug.logging";
+
+        public static final String ENERGY = "config.galacticraft-rewoven.energy";
+
+        public static final String WIRES = "config.galacticraft-rewoven.energy.wires";
+        public static final String WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft-rewoven.energy.wires.transfer_limit";
+        public static final String HEAVY_WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft-rewoven.energy.wires.heavy_transfer_limit";
+
+        public static final String MACHINES = "config.galacticraft-rewoven.energy.machines";
+        public static final String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate";
+        public static final String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate";
+        public static final String CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
+        public static final String ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
+        public static final String OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
+        public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
+        public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
     }
 
     public static class Energy {

@@ -20,33 +20,26 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.blocks.special.aluminumwire;
+package com.hrznstudio.galacticraft.api.wire;
 
-import com.hrznstudio.galacticraft.api.entity.WireBlockEntity;
-import com.hrznstudio.galacticraft.api.wire.WireUtils;
-import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.minecraft.util.Tickable;
+public enum WireConnectionType {
+    /**
+     * The wire is not connected to anything.
+     */
+    NONE,
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public class AluminumWireBlockEntity extends WireBlockEntity implements Tickable {
+    /**
+     * The wire is connected to another wire.
+     */
+    WIRE,
 
-    public AluminumWireBlockEntity() {
-        super(GalacticraftBlockEntities.ALUMINUM_WIRE_TYPE);
-    }
+    /**
+     * The wire is connected to some sort of energy consuming block.
+     */
+    ENERGY_INPUT,
 
-    @Override
-    public void tick() {
-        if (!tickedOnce) {
-            onPlaced();
-        }
-        if (WireUtils.getNetworkFromId(networkId) == null) {
-            onPlaced();
-        }
-    }
-
-    public void init() {
-        onPlaced();
-    }
+    /**
+     * The wire is connected to some sort of energy generating block.
+     */
+    ENERGY_OUTPUT
 }
