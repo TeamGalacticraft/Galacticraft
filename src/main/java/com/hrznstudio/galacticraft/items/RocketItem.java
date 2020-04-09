@@ -67,9 +67,9 @@ public class RocketItem extends Item {
             if (tag.containsKey("red") && tag.containsKey("cone") && tag.containsKey("tier")) {
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.tier", tag.getInt("tier")).setStyle(new Style().setColor(Formatting.DARK_GRAY)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.color"));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.red", tag.getInt("red")).setStyle(new Style().setColor(Formatting.DARK_RED)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.green", tag.getInt("green")).setStyle(new Style().setColor(Formatting.DARK_GREEN)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blue", tag.getInt("blue")).setStyle(new Style().setColor(Formatting.DARK_BLUE)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.red", tag.getInt("red")).setStyle(new Style().setColor(Formatting.RED)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.green", tag.getInt("green")).setStyle(new Style().setColor(Formatting.GREEN)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blue", tag.getInt("blue")).setStyle(new Style().setColor(Formatting.BLUE)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.alpha", tag.getInt("alpha")).setStyle(new Style().setColor(Formatting.WHITE)));
                 tooltip.add(new LiteralText("-----").setStyle(new Style().setColor(Formatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
@@ -81,9 +81,6 @@ public class RocketItem extends Item {
                     }
                     tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.part_type." + type.asString(), s).setStyle(new Style().setColor(Formatting.GRAY)));
                 }
-            } else {
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blank").setStyle(new Style().setColor(Formatting.GRAY)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blank_2").setStyle(new Style().setColor(Formatting.GRAY)));
             }
         } else {
             tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));

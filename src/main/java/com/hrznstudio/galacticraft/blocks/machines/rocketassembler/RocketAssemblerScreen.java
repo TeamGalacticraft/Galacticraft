@@ -187,12 +187,7 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
                 blit(this.left + 176, this.top + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) (PROGRESS_ARROW_HEIGHT + (4F * ((pro - 570F) / 30F))));
             }
         }
-    }
 
-
-    @Override
-    public void render(int mouseX, int mouseY, float delta) {
-        super.render(mouseX, mouseY, delta);
         if (tab == Tab.ROCKET) {
             int offsetY = 0;
             int offsetX = 0;
@@ -261,11 +256,45 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
         }
     }
 
+
+    @Override
+    public void render(int mouseX, int mouseY, float delta) {
+        super.render(mouseX, mouseY, delta);
+
+        if (blockEntity.data != null && blockEntity.data != RocketData.EMPTY) {
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.rocket_info").asString(), this.left + 234, this.top + 41, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.tier", blockEntity.data.getTier()).asString(), this.left + 234, this.top + 41 + 11, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.left + 234, this.top + 41 + 22, 11184810);
+            drawString(minecraft.textRenderer, getStatus(), this.left + 234, this.top + 41 + 33, 11184810);
+        } else {
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic").asString(), this.left + 234, this.top + 41, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic_2").asString(), this.left + 234, this.top + 41 + 11, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.left + 234, this.top + 41 + 22, 11184810);
+            drawString(minecraft.textRenderer, getStatus(), this.left + 234, this.top + 41 + 33, 11184810);
+        }
+    }
+
+    private String getStatus() {
+        if (blockEntity.building()) {
+            return new TranslatableText("tooltip.galacticraft-rewoven.building").asString();
+        } else if (blockEntity.ready()) {
+            if (blockEntity.getEnergyAttribute().getCurrentEnergy() > 20) {
+                return new TranslatableText("tooltip.galacticraft-rewoven.ready").asString();
+            } else {
+                return new TranslatableText("tooltip.galacticraft-rewoven.no_energy").asString();
+            }
+        } else if (this.blockEntity.data == null || this.blockEntity.data.isEmpty()) {
+            return new TranslatableText("tooltip.galacticraft-rewoven.no_schematic").asString();
+        } else {
+            return new TranslatableText("tooltip.galacticraft-rewoven.missing_resources").asString();
+        }
+    }
+
     public void drawEntity(int x, int y) {
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translatef((float) x, (float) y, 5.0F);
-        GlStateManager.scalef(-10.0F, -10.0F, 1.0F);
+        GlStateManager.translatef((float) x, (float) y, 3.0F);
+        GlStateManager.scalef(-10.0F, -10.0F, -10.0F);
         GuiLighting.enable();
         GlStateManager.rotatef(135.0F, 0.0F, 1.0F, 0.0F);
         GuiLighting.enable();

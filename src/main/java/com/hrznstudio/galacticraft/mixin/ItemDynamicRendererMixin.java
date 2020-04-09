@@ -30,9 +30,7 @@ public class ItemDynamicRendererMixin {
                     entity.setPart(RocketParts.getPartForType(type));
                 }
             }
-            entity.pitch = 45;
-            entity.yaw = 30;
-            MinecraftClient.getInstance().getEntityRenderManager().render(entity, 0, 0, 0, entity.yaw, 1.0F, true);
+            MinecraftClient.getInstance().getEntityRenderManager().render(entity, 0, 0, 0, 0, 1.0F, true);
             ci.cancel();
             //noinspection UnnecessaryReturnStatement
             return;

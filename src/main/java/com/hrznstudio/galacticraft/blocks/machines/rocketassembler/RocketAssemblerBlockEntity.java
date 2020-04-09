@@ -98,6 +98,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(Galacticraft.configManager.get().machineEnergyStorageSize(), GalacticraftEnergy.GALACTICRAFT_JOULES);
     private boolean ready = false;
     private boolean building = false;
+    private boolean queuedUpdate = false;
 
     public RocketAssemblerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_ASSEMBLER_TYPE);
@@ -112,11 +113,16 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     }
 
     private void schematicUpdate(ItemStack prev, ItemStack current) {
-        recipes.clear();
-        for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllForTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
-            if (recipe instanceof RocketAssemblerRecipe) {
-                recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
+        try {
+            recipes.clear();
+            for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllForTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+                if (recipe instanceof RocketAssemblerRecipe) {
+                    recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
+                }
             }
+        } catch (NullPointerException ex) {
+            queuedUpdate = true;
+            return;
         }
 
         if (prev.isEmpty() && current.isEmpty()) {
@@ -366,6 +372,10 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
     @Override
     public void tick() {
+        if (queuedUpdate) {
+            queuedUpdate = false;
+            this.schematicUpdateFromTag();
+        }
         if (getEnergyAttribute().getCurrentEnergy() >= getEnergyAttribute().getMaxEnergy()) {
             return;
         }
