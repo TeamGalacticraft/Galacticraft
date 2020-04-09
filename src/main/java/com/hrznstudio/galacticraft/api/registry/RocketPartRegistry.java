@@ -48,7 +48,7 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
 
     @Override
     public <V extends RocketPart> V set(int i, Identifier identifier, V object) {
-        Validate.notNull(object.getBlockToRender().asItem(), "Rocket render block must not be null! ID: " + identifier);
+        Validate.notNull(object.getBlockToRender().getBlock().asItem(), "Rocket render block must not be null! ID: " + identifier);
         Validate.notNull(identifier);
         Validate.notNull(object);
         parts.get(object.getType()).add(object);

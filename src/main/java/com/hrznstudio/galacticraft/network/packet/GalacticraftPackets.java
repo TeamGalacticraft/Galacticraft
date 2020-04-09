@@ -22,10 +22,12 @@
 
 package com.hrznstudio.galacticraft.network.packet;
 
+import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
@@ -34,8 +36,11 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
@@ -271,6 +276,78 @@ public class GalacticraftPackets {
                 ((ServerPlayerEntity) packetContext.getPlayer()).server.execute(() -> {
                     if (packetContext.getPlayer().getVehicle() instanceof RocketEntity) {
                         packetContext.getPlayer().getVehicle().setVelocity(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                    }
+                });
+            }
+        }));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "assembler_wc"), ((packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).server.execute(() -> {
+                    int slot = buf.readInt();
+                    BlockPos pos = buf.readBlockPos();
+                    boolean success = false;
+                    ServerWorld world = ((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld();
+                    if (((ServerPlayerEntity) packetContext.getPlayer()).getServerWorld().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketAssemblerBlockEntity) {
+                            if (slot < ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getSlotCount()) {
+                                if (packetContext.getPlayer().inventory.getCursorStack().isEmpty()) {
+                                    success = true;
+                                    packetContext.getPlayer().inventory.setCursorStack(((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getInvStack(slot));
+                                    ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
+                                } else {
+                                    if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().isItemValidForSlot(slot, packetContext.getPlayer().inventory.getCursorStack().copy())) {
+                                        if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getInvStack(slot).isEmpty()) {
+                                            if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack()) >= packetContext.getPlayer().inventory.getCursorStack().getCount()) {
+                                                ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, packetContext.getPlayer().inventory.getCursorStack().copy(), Simulation.ACTION);
+                                                packetContext.getPlayer().inventory.setCursorStack(ItemStack.EMPTY);
+                                            } else {
+                                                ItemStack stack = packetContext.getPlayer().inventory.getCursorStack().copy();
+                                                ItemStack stack1 = packetContext.getPlayer().inventory.getCursorStack().copy();
+                                                stack.setCount(((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack()));
+                                                stack1.setCount(stack1.getCount() - ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack()));
+                                                ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, stack, Simulation.ACTION);
+                                                packetContext.getPlayer().inventory.setCursorStack(stack1);
+                                            }
+                                        } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
+                                            // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
+                                            ItemStack stack = packetContext.getPlayer().inventory.getCursorStack().copy();
+                                            int max = ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack());
+                                            stack.setCount(stack.getCount() + ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getInvStack(slot).getCount());
+                                            if (stack.getCount() <= max) {
+                                                packetContext.getPlayer().inventory.setCursorStack(ItemStack.EMPTY);
+                                            } else {
+                                                ItemStack stack1 = stack.copy();
+                                                stack.setCount(max);
+                                                stack1.setCount(stack1.getCount() - max);
+                                                packetContext.getPlayer().inventory.setCursorStack(stack1);
+                                            }
+                                            ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, stack, Simulation.ACTION);
+                                        }
+                                        success = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (!success) {
+                        ((ServerPlayerEntity) packetContext.getPlayer()).networkHandler.disconnect(new LiteralText("Bad rocket assembler packet!"));
+                    }
+                });
+            }
+        }));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "assembler_build"), ((packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity) packetContext.getPlayer()).server.execute(() -> {
+                    BlockPos pos = buf.readBlockPos();
+                    if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketAssemblerBlockEntity) {
+                            ((RocketAssemblerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos)).startBuilding();
+                        }
                     }
                 });
             }

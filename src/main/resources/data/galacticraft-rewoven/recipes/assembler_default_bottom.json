@@ -1,0 +1,19 @@
+{
+  "type": "galacticraft-rewoven:rocket_assembler",
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:heavy_plating",
+      "count": 4
+    },
+    {
+      "item": "galacticraft-rewoven:oxygen_vent"
+    },
+    {
+      "item": "galacticraft-rewoven:tin_canister"
+    },
+    {
+      "item": "minecraft:flint_and_steel"
+    }
+  ],
+  "result": "galacticraft-rewoven:default_bottom"
+}

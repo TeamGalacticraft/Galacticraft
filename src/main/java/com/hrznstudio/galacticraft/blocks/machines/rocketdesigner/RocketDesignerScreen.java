@@ -461,7 +461,7 @@ public class RocketDesignerScreen extends AbstractContainerScreen<RocketDesigner
 
         GlStateManager.enableColorMaterial();
         GlStateManager.pushMatrix();
-        GlStateManager.translatef((float) x, (float) y, 50.0F);
+        GlStateManager.translatef((float) x, (float) y, 5.0F);
         GlStateManager.scalef((float) (-10), (float) -10, (float) 10);
         GuiLighting.enable();
         GlStateManager.rotatef(135.0F, 0.0F, 1.0F, 0.0F);

@@ -3,9 +3,10 @@ package com.hrznstudio.galacticraft.api.rocket;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -19,8 +20,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_CONE_BASIC_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_CONE_BASIC_RENDER_BLOCK.getDefaultState();
         }
 
     });
@@ -32,8 +33,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_BODY_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_BODY_RENDER_BLOCK.getDefaultState();
         }
     });
 
@@ -44,8 +45,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_FINS_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_FINS_RENDER_BLOCK.getDefaultState();
         }
     });
 
@@ -56,8 +57,18 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return Blocks.AIR;
+        public BlockState getBlockToRender() {
+            return Blocks.AIR.getDefaultState();
+        }
+
+        @Override
+        public Item getDesignerItem() {
+            return Items.BARRIER;
+        }
+
+        @Override
+        public boolean hasRecipe() {
+            return false;
         }
     });
 
@@ -68,8 +79,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_BOTTOM_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_BOTTOM_RENDER_BLOCK.getDefaultState();
         }
     });
 
@@ -80,8 +91,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_CONE_ADVANCED_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_CONE_ADVANCED_RENDER_BLOCK.getDefaultState();
         }
     });
 
@@ -92,8 +103,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_CONE_SLOPED_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_CONE_SLOPED_RENDER_BLOCK.getDefaultState();
         }
     });
 
@@ -104,8 +115,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_THRUSTER_TIER_1_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_THRUSTER_TIER_1_RENDER_BLOCK.getDefaultState();
         }
 
         @Override
@@ -126,8 +137,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return GalacticraftBlocks.ROCKET_THRUSTER_TIER_2_RENDER_BLOCK;
+        public BlockState getBlockToRender() {
+            return GalacticraftBlocks.ROCKET_THRUSTER_TIER_2_RENDER_BLOCK.getDefaultState();
         }
 
         @Override
@@ -148,8 +159,8 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return Blocks.AIR;
+        public BlockState getBlockToRender() {
+            return Blocks.AIR.getDefaultState();
         }
 
         @Override
@@ -165,10 +176,19 @@ public class RocketParts {
         }
 
         @Override
-        public Block getBlockToRender() {
-            return Blocks.AIR;
+        public BlockState getBlockToRender() {
+            return Blocks.AIR.getDefaultState();
         }
 
+        @Override
+        public Item getDesignerItem() {
+            return Items.BARRIER.asItem();
+        }
+
+        @Override
+        public boolean hasRecipe() {
+            return false;
+        }
     });
 
     public static void register() {

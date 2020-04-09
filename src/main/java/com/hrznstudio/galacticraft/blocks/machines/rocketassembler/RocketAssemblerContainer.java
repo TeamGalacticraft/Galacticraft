@@ -66,7 +66,7 @@ public class RocketAssemblerContainer extends Container {
         final int playerInvXOffset = 148;
 
         // Output slot
-        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 269, 19) {
+        this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
@@ -81,7 +81,7 @@ public class RocketAssemblerContainer extends Container {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ROCKET_OUTPUT_SLOT, 299, 19) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return false;
+                return itemStack_1.getItem() == GalacticraftItems.ROCKET;
             }
 
             @Override

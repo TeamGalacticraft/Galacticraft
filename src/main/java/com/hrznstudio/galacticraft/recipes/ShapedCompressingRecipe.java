@@ -42,7 +42,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -169,19 +168,17 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
 
     static Map<String, Ingredient> getComponents(JsonObject jsonObject_1) {
         Map<String, Ingredient> map_1 = Maps.newHashMap();
-        Iterator var2 = jsonObject_1.entrySet().iterator();
 
-        while (var2.hasNext()) {
-            Map.Entry<String, JsonElement> map$Entry_1 = (Map.Entry) var2.next();
-            if (map$Entry_1.getKey().length() != 1) {
-                throw new JsonSyntaxException("Invalid key entry: '" + map$Entry_1.getKey() + "' is an invalid symbol (must be 1 character only).");
+        for (Map.Entry<String, JsonElement> entry : jsonObject_1.entrySet()) {
+            if (entry.getKey().length() != 1) {
+                throw new JsonSyntaxException("Invalid key entry: '" + entry.getKey() + "' is an invalid symbol (must be 1 character only).");
             }
 
-            if (" ".equals(map$Entry_1.getKey())) {
+            if (" ".equals(entry.getKey())) {
                 throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
             }
 
-            map_1.put(map$Entry_1.getKey(), Ingredient.fromJson(map$Entry_1.getValue()));
+            map_1.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
         }
 
         map_1.put(" ", Ingredient.EMPTY);

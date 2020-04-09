@@ -1,0 +1,14 @@
+{
+  "type": "galacticraft-rewoven:rocket_assembler",
+  "ingredients": [
+    {
+      "item": "galacticraft-rewoven:heavy_plating",
+      "count": 16
+    },
+    {
+      "item": "galacticraft-rewoven:compressed_steel",
+      "count": 8
+    }
+  ],
+  "result": "galacticraft-rewoven:default_fin"
+}

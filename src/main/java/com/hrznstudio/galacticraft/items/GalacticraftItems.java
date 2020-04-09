@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.BlockState;
@@ -189,6 +188,7 @@ public class GalacticraftItems {
     public static final Item THERMAL_PADDING_LEGGINGS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_LEGGINGS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.LEGS));
     public static final Item THERMAL_PADDING_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_BOOTS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.FEET));
     public static final Item ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item ROCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET), new RocketItem(new Item.Settings().group(ITEMS_GROUP)));
     // SPAWN EGGS
 //    public static final Item ROCKET_SPAWN_EGG_T1 = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SPAWN_EGG_T1), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 0xC9C9C9, 0x000000, new Item.Settings().group(ITEMS_GROUP)));
 //    public static final Item MOON_VILLAGER_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_VILLAGER_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));

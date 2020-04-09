@@ -6,7 +6,8 @@
     "PlayerEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "ServerWorldMixin"
+    "ServerWorldMixin",
+    "RecipeManagerMixin"
   ],
   "client": [
     "PlayerInventoryScreenMixin",
@@ -15,7 +16,8 @@
     "InGameHudMixin",
     "BipedEntityModelMixin",
     "ClientPlayerEntityMixin",
-    "WorldRendererMixin"
+    "WorldRendererMixin",
+    "ItemDynamicRendererMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {
