@@ -167,10 +167,10 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
 
         if (blockEntity != null) {
             if (blockEntity instanceof RefineryBlockEntity) {
-                RefineryBlockEntity RefineryBlockEntity = (RefineryBlockEntity) blockEntity;
+                RefineryBlockEntity refineryBlockEntity = (RefineryBlockEntity) blockEntity;
 
-                for (int i = 0; i < RefineryBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = RefineryBlockEntity.getInventory().getInvStack(i);
+                for (int i = 0; i < refineryBlockEntity.getInventory().getSlotCount(); i++) {
+                    ItemStack itemStack = refineryBlockEntity.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

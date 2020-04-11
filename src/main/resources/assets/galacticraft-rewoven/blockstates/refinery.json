@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "galacticraft-rewoven:block/refinery" },
+    "facing=east":  { "model": "galacticraft-rewoven:block/refinery", "y": 90 },
+    "facing=west":  { "model": "galacticraft-rewoven:block/refinery", "y": 270 },
+    "facing=south": { "model": "galacticraft-rewoven:block/refinery", "y": 180 }
+  }
+}
