@@ -40,6 +40,6 @@ public class UnlitTorchBlock extends TorchBlock {
 
     @Override
     public void randomDisplayTick(BlockState blockState_1, World world_1, BlockPos blockPos_1, Random random_1) {
-        // stop partials from spawning
+        // stop particles from spawning
     }
 }
