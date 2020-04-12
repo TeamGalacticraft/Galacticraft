@@ -27,6 +27,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
+import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.world.World;
 
@@ -37,10 +38,9 @@ import net.minecraft.world.World;
 public class DrippingFuelParticle extends SpriteBillboardParticle {
 
     public DrippingFuelParticle(ParticleEffect effect, World world, double x, double y, double z, double velX, double velY, double velZ) {
-        super(world, x, y, z, velX, velY, velZ);
-        this.sprite.init(16,16,0,0);
+        super(world, x, y, z, 0, 0, -0.1);
+        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Items.CLAY.asItem()));
         this.collidesWithWorld = false;
-        this.scale *= 0.25f;
         this.colorRed = 146f/255f;
         this.colorGreen = 140f/255f;
         this.colorBlue = 74f/255f;
