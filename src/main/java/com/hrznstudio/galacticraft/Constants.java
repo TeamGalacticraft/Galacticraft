@@ -46,7 +46,7 @@ public class Constants {
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
         public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
-        public static final String DENSE_ICE = "dense_ice";
+        //public static final String DENSE_ICE = "dense_ice"; // Dense Ice has been replaced by Blue Ice
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
