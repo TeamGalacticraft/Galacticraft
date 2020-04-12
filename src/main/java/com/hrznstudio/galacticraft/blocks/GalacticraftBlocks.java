@@ -62,9 +62,10 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftBlocks {
 
     // Special Blocks
-    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
     public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(15).sounds(BlockSoundGroup.WOOD).build()), Constants.Blocks.GLOWSTONE_TORCH);
     public static final Block GLOWSTONE_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH).build()), Constants.Blocks.GLOWSTONE_WALL_TORCH);
+    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel(0).build()), Constants.Blocks.UNLIT_TORCH);
+    public static final Block UNLIT_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(UNLIT_TORCH).dropsLike(UNLIT_TORCH).build()), Constants.Blocks.UNLIT_WALL_TORCH);
     public static final Block BASIC_SOLAR_PANEL_PART = registerBlockWithoutItem(new BasicSolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.BASIC_SOLAR_PANEL_PART);
 
     // Liquids

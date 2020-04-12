@@ -124,9 +124,10 @@ public class Constants {
         public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
-        public static final String UNLIT_TORCH = "unlit_torch";
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
         public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
+        public static final String UNLIT_TORCH = "unlit_torch";
+        public static final String UNLIT_WALL_TORCH = "unlit_wall_torch";
         public static final String CAVERNOUS_VINE = "cavernous_vine";
         public static final String POISONOUS_CAVERNOUS_VINE = "poisonous_cavernous_vine";
         public static final String MOON_BERRY_BUSH = "moon_berry_bush";
