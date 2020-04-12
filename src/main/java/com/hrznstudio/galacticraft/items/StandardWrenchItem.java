@@ -113,9 +113,9 @@ public class StandardWrenchItem extends Item {
     @Override
     public void appendTooltip(ItemStack itemStack_1, World world_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText("tooltip.galacticraft-fabric.standard_wrench").setStyle(new Style().setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.standard_wrench").setStyle(new Style().setColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-fabric.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
         }
     }
 }

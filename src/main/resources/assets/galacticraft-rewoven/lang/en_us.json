@@ -269,6 +269,7 @@
   "tooltip.galacticraft-rewoven.energy_storage_module": "Energy Storage Module is used to store large amounts of energy for later use.",
   "tooltip.galacticraft-rewoven.energy_storage_cluster": "Energy Storage Cluster is used to store large amounts of energy for later use. Stores and outputs more energy than its predecessor.",
   "tooltip.galacticraft-rewoven.glowstone_torch": "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.",
+  "tooltip.galacticraft-rewoven.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
 
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
   "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
