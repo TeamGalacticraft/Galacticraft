@@ -46,8 +46,8 @@ dependencies {
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
-    modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}")
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { transitive = false }
+    modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
     
     modImplementation "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
     modImplementation "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
@@ -55,11 +55,15 @@ dependencies {
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth', module: 'config-2'
-        exclude group: 'me.shedaniel.cloth', module: 'config-events'
+        exclude group: 'me.shedaniel.cloth', module: 'cloth-events'
+        exclude group: 'net.fabricmc', module: 'fabric-loader'
+        exclude group: 'net.fabricmc.fabric-api', module: 'fabric-api'
+        exclude group: 'net.fabricmc.fabric-api', module: 'fabric-api'
+        exclude group: 'blue.endless', module: 'jankson'
         //need fiber things embedded in REI
     }
 
-    modImplementation("teamreborn:energy:+")
+    modImplementation("teamreborn:energy:+") { transitive = false }
     //modRuntime("TechReborn:TechReborn-${project.minecraft_version}:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
     //modRuntime("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 
