@@ -22,20 +22,39 @@
 
 package com.hrznstudio.galacticraft.particle.fluid;
 
+import com.hrznstudio.galacticraft.Constants;
+import javafx.animation.Animation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
+import net.minecraft.client.particle.SpriteProvider;
+import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
+import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.PngFile;
 import net.minecraft.particle.ParticleEffect;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
 
     public DrippingCrudeOilParticle(ParticleEffect effect, World world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
-        //setSprite();
+        this.sprite.init(16,16,0,0);
+        this.collidesWithWorld = false;
+        this.scale *= 0.25f;
+        this.colorRed = 42f/255f;
+        this.colorGreen = 42f/255f;
+        this.colorBlue = 42f/255f;
+        this.colorAlpha = 229f/255f;
     }
 
     @Override
