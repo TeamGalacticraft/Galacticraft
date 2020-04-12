@@ -93,7 +93,7 @@ public class CrudeOilFluid extends BaseFluid {
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(new DustParticleEffect(0.0f, 0.0f, 0.0f, 0.5f),
+            world.addParticle(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -155,9 +155,7 @@ public class CrudeOilFluid extends BaseFluid {
 
     public static class Flowing extends CrudeOilFluid {
 
-        public Flowing() {
-
-        }
+        public Flowing() {}
 
         @Override
         protected void appendProperties(StateFactory.Builder<Fluid, FluidState> stateBuilder) {
@@ -178,8 +176,7 @@ public class CrudeOilFluid extends BaseFluid {
 
     public static class Still extends CrudeOilFluid {
 
-        public Still() {
-        }
+        public Still() {}
 
         @Override
         public int getLevel(FluidState fluidState) {

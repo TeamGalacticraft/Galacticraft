@@ -92,7 +92,7 @@ public class FuelFluid extends BaseFluid {
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(new DustParticleEffect(0.0f, 0.0f, 0.0f, 0.5f),
+            world.addParticle(GalacticraftParticles.DRIPPING_FUEL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
