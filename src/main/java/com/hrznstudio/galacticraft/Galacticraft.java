@@ -33,6 +33,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.network.packet.GalacticraftPackets;
+import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
@@ -66,6 +67,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();
+        GalacticraftParticles.register();
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();

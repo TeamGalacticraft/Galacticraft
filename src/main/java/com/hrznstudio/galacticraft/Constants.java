@@ -383,6 +383,11 @@ public class Constants {
         public static final String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
     }
 
+    public static class Particles {
+        public static final String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
+        public static final String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+    }
+
     public static class Config {
         public static final String TITLE = "config.galacticraft-rewoven.title";
         public static final String RESET = "config.galacticraft-rewoven.reset";
