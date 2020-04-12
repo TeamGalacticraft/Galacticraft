@@ -56,6 +56,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,6 +125,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
         return new ElectricCompressorBlockEntity();
     }
 
+    @Nonnull
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return WireConnectionType.NONE;

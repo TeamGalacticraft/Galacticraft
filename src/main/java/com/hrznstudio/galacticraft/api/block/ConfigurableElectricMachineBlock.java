@@ -49,6 +49,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import team.reborn.energy.EnergySide;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +90,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         return true;
     }
 
+    @Nonnull
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         List<SideOption> values = SideOption.getApplicableValuesForMachine(world.getBlockState(connectionTargetPos).getBlock());
