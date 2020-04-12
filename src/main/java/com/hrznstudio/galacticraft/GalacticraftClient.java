@@ -31,14 +31,10 @@ import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergySto
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
-import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
-import com.hrznstudio.galacticraft.entity.RocketEntityRenderer;
-import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
-import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
-import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.t1rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;

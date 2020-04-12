@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity;
+package com.hrznstudio.galacticraft.client.render.entity.t1rocket;
 
 import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
 import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;

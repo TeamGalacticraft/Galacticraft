@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity;
+package com.hrznstudio.galacticraft.client.model.entity.t1rocket;
 
 import com.hrznstudio.galacticraft.entity.t1rocket.EntityT1Rocket;
 import net.minecraft.client.render.entity.model.EntityModel;
