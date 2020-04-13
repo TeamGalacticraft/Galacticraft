@@ -94,10 +94,10 @@ public class CrudeOilFluid extends BaseFluid {
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
             world.addParticle(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE,
-                    (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
-                    (double) blockPos.getY() + 1.1F,
-                    (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
-                    0.0D, 0.0D, 0.0D);
+                    0.0D,
+                    0.0D,
+                    -0.1D,
+                    (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(), (double) blockPos.getY() + 1.1F, 0.0D);
         }
     }
 
