@@ -42,7 +42,7 @@ public class DrippingFuelParticle extends SpriteBillboardParticle {
         setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Blocks.ACACIA_LOG.asItem()));
         this.scale *= 0.25f;
         this.velocityX = 0.0f;
-        this.velocityY = -0.98f;
+        this.velocityY = -0.6f;
         this.velocityZ = 0.0f;
         this.colorRed = 42f/255f;
         this.colorGreen = 42f/255f;
