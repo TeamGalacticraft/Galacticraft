@@ -48,6 +48,7 @@ public class DrippingFuelParticle extends SpriteBillboardParticle {
         this.colorGreen = 42f/255f;
         this.colorBlue = 42f/255f;
         this.colorAlpha = 229f/255f;
+        this.maxAge = 1000;
     }
 
     @Override
