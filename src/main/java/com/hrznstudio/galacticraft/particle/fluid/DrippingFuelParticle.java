@@ -43,12 +43,12 @@ public class DrippingFuelParticle extends SpriteBillboardParticle {
         this.scale *= 0.25f;
         this.velocityX = 0.0f;
         this.velocityY = 0.0f;
-        this.velocityZ = -0.001f;
+        this.velocityZ = -0.01f;
         this.colorRed = 42f/255f;
         this.colorGreen = 42f/255f;
         this.colorBlue = 42f/255f;
         this.colorAlpha = 229f/255f;
-        this.maxAge = 1000;
+        this.maxAge = 500;
     }
 
     @Override
