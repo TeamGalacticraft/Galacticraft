@@ -40,7 +40,8 @@ public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
     public DrippingCrudeOilParticle(ParticleEffect effect, World world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
         setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Blocks.ACACIA_LOG.asItem()));
-        this.scale *= 0.75f;
+        this.scale *= 0.25f;
+        this.velocityZ *= -0.001f;
         this.colorRed = 146f/255f;
         this.colorGreen = 140f/255f;
         this.colorBlue = 74f/255f;
