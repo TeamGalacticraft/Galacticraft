@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.particle.fluid;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
@@ -39,7 +40,7 @@ public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
 
     public DrippingCrudeOilParticle(ParticleEffect effect, World world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
-        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Items.GHAST_TEAR.asItem()));
+        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Blocks.ACACIA_LOG.asItem()));
         this.scale *= 0.5f;
         this.collidesWithWorld = false;
         this.colorRed = 42f/255f;
