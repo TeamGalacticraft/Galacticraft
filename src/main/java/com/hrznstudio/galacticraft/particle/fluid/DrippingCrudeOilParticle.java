@@ -38,8 +38,9 @@ import net.minecraft.world.World;
 public class DrippingCrudeOilParticle extends SpriteBillboardParticle {
 
     public DrippingCrudeOilParticle(ParticleEffect effect, World world, double x, double y, double z, double velX, double velY, double velZ) {
-        super(world, x, y, z, 0, 0, -0.1);
-        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Items.CLAY.asItem()));
+        super(world, x, y, z, velX, velY, velZ);
+        setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Items.GHAST_TEAR.asItem()));
+        this.scale *= 0.5f;
         this.collidesWithWorld = false;
         this.colorRed = 42f/255f;
         this.colorGreen = 42f/255f;
