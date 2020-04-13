@@ -20,7 +20,7 @@ import java.util.UUID;
 public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity {
     private static final TrackedData<Boolean> BABY = DataTracker.registerData(EvolvedCreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
-    private static final EntityAttributeModifier BABY_SPEED_BONUS = new EntityAttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.5D, EntityAttributeModifier.Operation.MULTIPLY_BASE);
+    private static final EntityAttributeModifier BABY_SPEED_BONUS = new EntityAttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.8D, EntityAttributeModifier.Operation.MULTIPLY_BASE);
 
     public EvolvedCreeperEntity(EntityType<? extends CreeperEntity> entityType, World world) {
         super(entityType, world);
@@ -34,14 +34,16 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
 
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
-        super.readCustomDataFromTag(tag);
         this.setBaby(tag.getBoolean("baby"));
+        tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 3)); //overwrite
+        super.readCustomDataFromTag(tag);
     }
 
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
         tag.putBoolean("baby", isBaby());
+        tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 3));
     }
 
     @Override
@@ -81,7 +83,7 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
 
     @Override
     protected float getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions) {
-        return this.isBaby() ? 0.84F : 1.6575F;
+        return this.isBaby() ? 0.75F : 1.4F;
     }
 
     @Override
