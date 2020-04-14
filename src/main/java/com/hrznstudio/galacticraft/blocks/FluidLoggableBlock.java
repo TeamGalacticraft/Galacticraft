@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.blocks;
 
-import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
@@ -32,7 +31,6 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.AbstractProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
@@ -107,4 +105,6 @@ public interface FluidLoggableBlock extends Waterloggable {
         }
         return Fluids.EMPTY;
     }
+
+    BlockState getPlacementState(ItemPlacementContext context);
 }
