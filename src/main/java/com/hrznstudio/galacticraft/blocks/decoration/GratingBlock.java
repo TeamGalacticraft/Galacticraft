@@ -25,13 +25,10 @@ package com.hrznstudio.galacticraft.blocks.decoration;
 import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidDrainable;
-import net.minecraft.block.FluidFillable;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.state.property.AbstractProperty;
@@ -54,38 +51,6 @@ import java.util.Optional;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GratingBlock extends Block implements FluidLoggableBlock {
-
-    private static final String DOT_REP = "___56_1___";
-    private static final String DASH_REP = "__89_00___"; //yes this is bad.... but who's gonna name a mod/fluid named smth like that
-    private static final String COLON_REP = "__2_211_23";
-
-    public static final AbstractProperty<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
-        private final List<Identifier> VALUES = new ArrayList<>();
-
-        @Override
-        public Collection<Identifier> getValues() {
-            if (VALUES.isEmpty()) {
-                for (Fluid f : Registry.FLUID) {
-                    VALUES.add(Registry.FLUID.getId(f));
-                }
-                VALUES.add(new Identifier("empty"));
-            }
-
-            return VALUES;
-        }
-
-        @Override
-        public Optional<Identifier> getValue(String name) {
-            return Optional.of(new Identifier(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
-        }
-
-        @Override
-        public String getName(Identifier value) {
-            if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
-                throw new RuntimeException("Bad fluid!" + value);
-            return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);
-        }
-    };
 
     protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
 
