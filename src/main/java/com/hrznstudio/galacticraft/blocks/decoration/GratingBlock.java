@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.blocks.decoration;
 
+import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
@@ -52,7 +53,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GratingBlock extends Block {
+public class GratingBlock extends Block implements FluidLoggableBlock {
 
     private static final String DOT_REP = "___56_1___";
     private static final String DASH_REP = "__89_00___"; //yes this is bad.... but who's gonna name a mod/fluid named smth like that
@@ -86,40 +87,28 @@ public class GratingBlock extends Block {
         }
     };
 
+    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
+
+    public enum GratingState implements StringIdentifiable {
+        UPPER("upper"),
+        LOWER("lower");
+
+        private String name;
+
+        GratingState(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
+    }
+
     public GratingBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateFactory.getDefaultState().with(FLUID, new Identifier("empty"))
                 .with(BaseFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
-    }
-
-    public boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
-        return state.get(FLUID).equals(new Identifier("empty"));
-    }
-
-    public boolean tryFillWithFluid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (state.get(FLUID).equals(new Identifier("empty"))) {
-            if (!world.isClient()) {
-                world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                        .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
-                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
-
-    public Fluid tryDrainFluid(IWorld world, BlockPos pos, BlockState state) {
-        if (!state.get(FLUID).equals(new Identifier("empty"))) {
-            world.setBlockState(pos, state.with(FLUID, new Identifier("empty")), 3);
-            if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
-                return Registry.FLUID.get(state.get(FLUID));
-            }
-        }
-        return Fluids.EMPTY;
     }
 
     @Override
@@ -151,11 +140,6 @@ public class GratingBlock extends Block {
     }
 
     @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
-        builder.add(FLUID, BaseFluid.LEVEL, GRATING_STATE);
-    }
-
-    @Override
     public FluidState getFluidState(BlockState state) {
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
         if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
@@ -164,19 +148,8 @@ public class GratingBlock extends Block {
         return state1;
     }
 
-    public enum GratingState implements StringIdentifiable {
-        UPPER("upper"),
-        LOWER("lower");
-
-        private String name;
-
-        GratingState(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
+    @Override
+    protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
+        builder.add(FLUID, BaseFluid.LEVEL, GRATING_STATE);
     }
 }

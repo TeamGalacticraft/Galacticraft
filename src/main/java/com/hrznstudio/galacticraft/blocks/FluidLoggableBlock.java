@@ -107,14 +107,4 @@ public interface FluidLoggableBlock extends Waterloggable {
         }
         return Fluids.EMPTY;
     }
-
-    BlockState getPlacementState(ItemPlacementContext context);
-
-    default FluidState getFluidState(BlockState state) {
-        FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
-        if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
-            state1 = state1.with(BaseFluid.LEVEL, state.get(BaseFluid.LEVEL));
-        }
-        return state1;
-    }
 }

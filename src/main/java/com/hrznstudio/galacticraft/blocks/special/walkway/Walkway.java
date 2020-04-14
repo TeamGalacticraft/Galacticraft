@@ -77,17 +77,17 @@ public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBl
         return BlockRenderLayer.CUTOUT;
     }
 
-    @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        return this.getDefaultState()
-                .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
+    public FluidState getFluidState(BlockState state) {
+        FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
+        if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
+            state1 = state1.with(BaseFluid.LEVEL, state.get(BaseFluid.LEVEL));
+        }
+        return state1;
     }
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, FLUID, BaseFluid.LEVEL);
+        stateBuilder.add(NORTH, EAST, WEST, SOUTH, FLUID, BaseFluid.LEVEL);
     }
 }
