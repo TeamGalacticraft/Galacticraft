@@ -52,7 +52,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GratingBlock extends Block implements FluidDrainable, FluidFillable {
+public class GratingBlock extends Block {
 
     private static final String DOT_REP = "___56_1___";
     private static final String DASH_REP = "__89_00___"; //yes this is bad.... but who's gonna name a mod/fluid named smth like that

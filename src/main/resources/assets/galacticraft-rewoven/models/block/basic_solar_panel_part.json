@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "layer0": "galacticraft-rewoven:block/helper_invisible"
+    "all": "galacticraft-rewoven:block/helper_invisible"
   }
 }

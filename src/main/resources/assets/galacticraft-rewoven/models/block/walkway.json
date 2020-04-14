@@ -2,7 +2,8 @@
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "galacticraft-rewoven:block/walkway",
-		"particle": "galacticraft-rewoven:block/walkway"
+		"particle": "galacticraft-rewoven:block/walkway",
+		"missing": "galacticraft-rewoven:block/helper_invisible"
 	},
 	"elements": [
 		{

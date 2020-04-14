@@ -22,17 +22,17 @@
 
 package com.hrznstudio.galacticraft.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FluidDrainable;
-import net.minecraft.block.FluidFillable;
-import net.minecraft.block.Waterloggable;
+import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
+import net.minecraft.block.*;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.AbstractProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
@@ -45,7 +45,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public interface FluidLoggableBlock extends Waterloggable, FluidDrainable, FluidFillable {
+public interface FluidLoggableBlock extends Waterloggable {
 
     String DOT_REP = "___56_1___";
     String DASH_REP = "__89_00___"; // yes this is bad.... but who's gonna name a mod/fluid something like that
@@ -107,6 +107,8 @@ public interface FluidLoggableBlock extends Waterloggable, FluidDrainable, Fluid
         }
         return Fluids.EMPTY;
     }
+
+    BlockState getPlacementState(ItemPlacementContext context);
 
     default FluidState getFluidState(BlockState state) {
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();

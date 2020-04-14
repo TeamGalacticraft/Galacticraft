@@ -23,14 +23,20 @@
 package com.hrznstudio.galacticraft.blocks.special.walkway;
 
 import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
+import com.hrznstudio.galacticraft.blocks.decoration.GratingBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
+
+import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -69,6 +75,15 @@ public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBl
     public BlockRenderLayer getRenderLayer() {
         // For 1.15, in client init, do BlockRenderLayerMap.putBlock(Walkway, RenderLayer.getCutout()); or something
         return BlockRenderLayer.CUTOUT;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
+        return this.getDefaultState()
+                .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
+                .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
     @Override
