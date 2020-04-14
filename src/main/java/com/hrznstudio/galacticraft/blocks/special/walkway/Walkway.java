@@ -25,13 +25,11 @@ package com.hrznstudio.galacticraft.blocks.special.walkway;
 import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.BaseFluid;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.StateFactory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
 
 /**
