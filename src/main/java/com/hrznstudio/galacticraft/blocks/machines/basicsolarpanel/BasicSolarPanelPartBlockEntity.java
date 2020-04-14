@@ -35,6 +35,9 @@ public class BasicSolarPanelPartBlockEntity extends BlockEntity {
 
     public BasicSolarPanelPartBlockEntity() {
         super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_PART_TYPE);
+
+        // The following fixes crash when this block is lonely by itself
+        this.basePos = new BlockPos(0,0,0);
     }
 
     @Override
@@ -56,8 +59,13 @@ public class BasicSolarPanelPartBlockEntity extends BlockEntity {
         this.basePos = new BlockPos(base.getInt("X"), base.getInt("Y"), base.getInt("Z"));
     }
 
-    public void setBasePos(BlockPos basePos) {
-        this.basePos = basePos;
-        this.markDirty();
+    public boolean setBasePos(BlockPos basePos) {
+        if (this.world.getBlockState(basePos).getBlock() instanceof BasicSolarPanelBlock) {
+            this.basePos = basePos;
+            this.markDirty();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
