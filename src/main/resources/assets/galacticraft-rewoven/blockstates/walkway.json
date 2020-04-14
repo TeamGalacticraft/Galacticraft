@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "block/walkway"
+        "model": "galacticraft-rewoven:block/walkway"
       }
     },
     {
@@ -10,7 +10,7 @@
         "north": "true"
       },
       "apply": {
-        "model": "block/walkway_side",
+        "model": "galacticraft-rewoven:block/walkway_side",
         "uvlock": true
       }
     },
@@ -19,7 +19,7 @@
         "east": "true"
       },
       "apply": {
-        "model": "block/walkway_side",
+        "model": "galacticraft-rewoven:block/walkway_side",
         "y": 90,
         "uvlock": true
       }
@@ -29,7 +29,7 @@
         "south": "true"
       },
       "apply": {
-        "model": "block/walkway_side",
+        "model": "galacticraft-rewoven:block/walkway_side",
         "y": 180,
         "uvlock": true
       }
@@ -39,7 +39,7 @@
         "west": "true"
       },
       "apply": {
-        "model": "block/walkway_side",
+        "model": "galacticraft-rewoven:block/walkway_side",
         "y": 270,
         "uvlock": true
       }
