@@ -15,9 +15,6 @@ public abstract class BaseFluidMixin {
     @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean onScheduledTickGC(World world, BlockPos pos, BlockState state, int flags) {
         if (world.getBlockState(pos).getBlock() instanceof FluidDrainable && world.getBlockState(pos).getBlock() instanceof FluidFillable) {
-            System.out.println("Ok");
-            System.out.println(state.getBlock());
-            System.out.println("?//?");
             if (state.isAir()) {
                 ((FluidDrainable) world.getBlockState(pos).getBlock()).tryDrainFluid(world, pos, world.getBlockState(pos));
                 return true;
