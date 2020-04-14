@@ -92,7 +92,8 @@ public class GalacticraftBlocks {
     public static final Block MARS_STONE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(3.0F).build()), Constants.Blocks.MARS_STONE);
     public static final Block MARS_COBBLESTONE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8F).build()), Constants.Blocks.MARS_COBBLESTONE);
     public static final Block MARS_DUNGEON_BRICKS = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(4.0F, 40.0F).build()), Constants.Blocks.MARS_DUNGEON_BRICK);
-    public static final Block DENSE_ICE = registerBlock(new Block(FabricBlockSettings.of(Material.ICE, MaterialColor.ICE).hardness(1.0F).slipperiness(0.90F).sounds(BlockSoundGroup.GLASS).build()), Constants.Blocks.DENSE_ICE);
+    // Dense Ice has been replaced by Blue Ice
+    //public static final Block DENSE_ICE = registerBlock(new Block(FabricBlockSettings.of(Material.ICE, MaterialColor.ICE).hardness(1.0F).slipperiness(0.90F).sounds(BlockSoundGroup.GLASS).build()), Constants.Blocks.DENSE_ICE);
     public static final Block ASTEROID_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build()), Constants.Blocks.ASTEROID_ROCK);
     public static final Block ASTEROID_ROCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build()), Constants.Blocks.ASTEROID_ROCK_1);
     public static final Block ASTEROID_ROCK_2 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F).build()), Constants.Blocks.ASTEROID_ROCK_2);

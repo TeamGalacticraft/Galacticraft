@@ -46,7 +46,7 @@ public class Constants {
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
         public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
-        public static final String DENSE_ICE = "dense_ice";
+        //public static final String DENSE_ICE = "dense_ice"; // Dense Ice has been replaced by Blue Ice
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -381,6 +381,11 @@ public class Constants {
         public static final String ROCKET_SPAWN_EGG_T1 = "rocket_spawn_egg_t1";
         public static final String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         public static final String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
+    }
+
+    public static class Particles {
+        public static final String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
+        public static final String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
     }
 
     public static class Config {
