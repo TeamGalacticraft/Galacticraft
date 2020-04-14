@@ -3,6 +3,7 @@
   "package": "com.hrznstudio.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "BaseFluidMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
