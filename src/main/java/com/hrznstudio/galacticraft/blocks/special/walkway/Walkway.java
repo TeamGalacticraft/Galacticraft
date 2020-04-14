@@ -88,6 +88,6 @@ public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBl
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, FLUID, BaseFluid.LEVEL);
+        stateBuilder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, FLUID, BaseFluid.LEVEL);
     }
 }
