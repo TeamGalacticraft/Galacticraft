@@ -22,18 +22,22 @@
 
 package com.hrznstudio.galacticraft.blocks.special.walkway;
 
+import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
 import net.minecraft.block.*;
+import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.state.StateFactory;
-import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Walkway extends HorizontalConnectedBlock {
+public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBlock {
 
     public Walkway(Settings settings) {
         super(8,8,16,16,16f, settings);
@@ -42,7 +46,9 @@ public class Walkway extends HorizontalConnectedBlock {
                 .with(EAST, false)
                 .with(SOUTH, false)
                 .with(WEST, false)
-                .with(WATERLOGGED, false));
+                .with(WATERLOGGED, false)
+                .with(FLUID, new Identifier("empty"))
+                .with(BaseFluid.LEVEL, 8));
     }
 
     public boolean canConnect(BlockState state) {
@@ -50,7 +56,7 @@ public class Walkway extends HorizontalConnectedBlock {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
+        if (!state.get(FLUID).equals(new Identifier("empty"))) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return facing.getAxis().getType() == Direction.Type.HORIZONTAL ? state.with(FACING_PROPERTIES.get(facing), this.canConnect(neighborState)) : super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
@@ -69,6 +75,6 @@ public class Walkway extends HorizontalConnectedBlock {
 
     @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED);
+        stateBuilder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, FLUID, BaseFluid.LEVEL);
     }
 }
