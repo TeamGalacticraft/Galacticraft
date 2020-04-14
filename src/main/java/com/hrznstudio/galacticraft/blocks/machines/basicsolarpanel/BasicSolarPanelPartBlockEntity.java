@@ -35,9 +35,6 @@ public class BasicSolarPanelPartBlockEntity extends BlockEntity {
 
     public BasicSolarPanelPartBlockEntity() {
         super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_PART_TYPE);
-
-        // The following fixes crash when this block is lonely by itself
-        this.basePos = new BlockPos(0,0,0);
     }
 
     @Override
