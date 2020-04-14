@@ -22,14 +22,18 @@
 
 package com.hrznstudio.galacticraft.blocks.decoration;
 
-import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.FluidDrainable;
+import net.minecraft.block.FluidFillable;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateFactory;
+import net.minecraft.state.property.AbstractProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -40,17 +44,82 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GratingBlock extends Block implements FluidLoggableBlock {
+public class GratingBlock extends Block implements FluidDrainable, FluidFillable {
 
-    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
+    private static final String DOT_REP = "___56_1___";
+    private static final String DASH_REP = "__89_00___"; //yes this is bad.... but who's gonna name a mod/fluid named smth like that
+    private static final String COLON_REP = "__2_211_23";
+
+    public static final AbstractProperty<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
+        private final List<Identifier> VALUES = new ArrayList<>();
+
+        @Override
+        public Collection<Identifier> getValues() {
+            if (VALUES.isEmpty()) {
+                for (Fluid f : Registry.FLUID) {
+                    VALUES.add(Registry.FLUID.getId(f));
+                }
+                VALUES.add(new Identifier("empty"));
+            }
+
+            return VALUES;
+        }
+
+        @Override
+        public Optional<Identifier> getValue(String name) {
+            return Optional.of(new Identifier(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
+        }
+
+        @Override
+        public String getName(Identifier value) {
+            if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
+                throw new RuntimeException("Bad fluid!" + value);
+            return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);
+        }
+    };
 
     public GratingBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.stateFactory.getDefaultState().with(FLUID, new Identifier("empty"))
                 .with(BaseFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
+    }
+
+    public boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
+        return state.get(FLUID).equals(new Identifier("empty"));
+    }
+
+    public boolean tryFillWithFluid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
+        if (state.get(FLUID).equals(new Identifier("empty"))) {
+            if (!world.isClient()) {
+                world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
+                        .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
+                world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
+            }
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
+
+    public Fluid tryDrainFluid(IWorld world, BlockPos pos, BlockState state) {
+        if (!state.get(FLUID).equals(new Identifier("empty"))) {
+            world.setBlockState(pos, state.with(FLUID, new Identifier("empty")), 3);
+            if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
+                return Registry.FLUID.get(state.get(FLUID));
+            }
+        }
+        return Fluids.EMPTY;
     }
 
     @Override
@@ -84,6 +153,15 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     @Override
     protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
         builder.add(FLUID, BaseFluid.LEVEL, GRATING_STATE);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
+        if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
+            state1 = state1.with(BaseFluid.LEVEL, state.get(BaseFluid.LEVEL));
+        }
+        return state1;
     }
 
     public enum GratingState implements StringIdentifiable {
