@@ -31,8 +31,6 @@ import net.minecraft.block.BlockWithEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.property.DirectionProperty;
@@ -46,7 +44,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 import team.reborn.energy.EnergySide;
 
 import javax.annotation.Nonnull;
@@ -75,15 +72,19 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         return new SideOption[]{SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK};
     }
 
-    abstract public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);
+    public abstract ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);
 
-    abstract public boolean consumesOxygen();
+    public abstract boolean consumesFluids();
 
-    abstract public boolean generatesOxygen();
+    public abstract boolean generatesFluids();
 
-    abstract public boolean consumesPower();
+    public abstract boolean consumesOxygen();
 
-    abstract public boolean generatesPower();
+    public abstract boolean generatesOxygen();
+
+    public abstract boolean consumesPower();
+
+    public abstract boolean generatesPower();
 
     @Override
     public boolean hasBlockEntity() {
@@ -261,15 +262,6 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
             }
         }
         return WireConnectionType.NONE;
-    }
-
-    @Override
-    public void onPlaced(World world_1, BlockPos blockPos_1, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
-        super.onPlaced(world_1, blockPos_1, blockState_1, livingEntity_1, itemStack_1);
-        if (world_1.getBlockEntity(blockPos_1) instanceof ConfigurableElectricMachineBlockEntity && livingEntity_1 instanceof PlayerEntity) {
-            ((ConfigurableElectricMachineBlockEntity) world_1.getBlockEntity(blockPos_1)).username = livingEntity_1.getName().asString();
-            ((ConfigurableElectricMachineBlockEntity) world_1.getBlockEntity(blockPos_1)).owner = livingEntity_1.getUuidAsString();
-        }
     }
 
     @Override

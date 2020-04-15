@@ -175,6 +175,16 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
+    @Override
     public void randomDisplayTick(BlockState blockState_1, World world, BlockPos pos, Random random_1) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof OxygenCollectorBlockEntity)) {

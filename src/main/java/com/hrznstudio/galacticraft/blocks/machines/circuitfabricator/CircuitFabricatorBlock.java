@@ -92,6 +92,16 @@ public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock imp
     }
 
     @Override
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
+    @Override
     public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
         stateBuilder.add(FACING);

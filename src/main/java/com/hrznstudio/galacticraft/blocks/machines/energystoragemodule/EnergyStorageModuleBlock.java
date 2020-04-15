@@ -175,6 +175,16 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
         return new EnergyStorageModuleBlockEntity();
     }
 
+    @Override
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
     @Nonnull
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {

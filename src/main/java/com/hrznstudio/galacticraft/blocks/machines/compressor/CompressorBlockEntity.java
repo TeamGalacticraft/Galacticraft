@@ -33,7 +33,6 @@ import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -57,11 +56,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     int progress;
 
     public CompressorBlockEntity() {
-        this(GalacticraftBlockEntities.COMPRESSOR_TYPE);
-    }
-
-    public CompressorBlockEntity(BlockEntityType<?> electricCompressorType) {
-        super(electricCompressorType);
+        super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
     }
 
     @Override

@@ -136,6 +136,16 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
+    @Override
     public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) return true;
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.BASIC_SOLAR_PANEL_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));

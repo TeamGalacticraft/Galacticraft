@@ -125,6 +125,16 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
         return new ElectricCompressorBlockEntity();
     }
 
+    @Override
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
     @Nonnull
     @Override
     public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
