@@ -100,8 +100,8 @@ public class Constants {
         public static final String TIN_VACUUM_GLASS = "vacuum_glass_tin";
         public static final String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         public static final String WALKWAY = "walkway";
-        public static final String WIRE_WALKWAY = "walkway_block_wire";
-        public static final String PIPE_WALKWAY = "walkway_block_pipe";
+        public static final String WIRE_WALKWAY = "wire_walkway";
+        public static final String PIPE_WALKWAY = "pipe_walkway";
         public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
         public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";

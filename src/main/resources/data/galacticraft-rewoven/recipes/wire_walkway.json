@@ -2,19 +2,19 @@
   "type": "crafting_shaped",
   "pattern": [
     "TTT",
-    "PTP",
-    "PPP"
+    "WTW",
+    "WWW"
   ],
   "key": {
     "T": {
       "item": "galacticraft-rewoven:compressed_titanium"
     },
-    "P": {
-      "item": "galacticraft-rewoven:oxygen_pipe"
+    "W": {
+      "item": "galacticraft-rewoven:heavy_aluminum_wire"
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:walkway_block_pipe",
+    "item": "galacticraft-rewoven:wire_walkway",
     "count": 5
   }
 }
