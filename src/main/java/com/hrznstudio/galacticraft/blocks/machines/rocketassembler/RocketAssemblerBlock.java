@@ -36,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -70,13 +71,13 @@ public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock imp
     }
 
     @Override
-    public final boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
-            return true;
+            return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.ROCKET_ASSEMBLER_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
-        return true;
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.ROCKET_ASSEMBLER_CONTAINER, player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
+        return ActionResult.SUCCESS;
     }
 
     @Override

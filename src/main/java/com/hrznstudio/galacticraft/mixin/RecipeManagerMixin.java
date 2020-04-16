@@ -14,10 +14,10 @@ import java.util.Map;
 @Mixin(RecipeManager.class)
 public abstract class RecipeManagerMixin implements GCRecipeAccessor {
     @Shadow
-    protected abstract <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> getAllForType(RecipeType<T> recipeType);
+    protected abstract <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> getAllOfType(RecipeType<T> type);
 
     @Override
-    public <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> getAllForTypeGC(RecipeType<T> type) {
-        return getAllForType(type);
+    public <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> getAllOfTypeGC(RecipeType<T> type) {
+        return getAllOfType(type);
     }
 }

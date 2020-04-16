@@ -24,14 +24,10 @@ package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
-import com.mojang.blaze3d.platform.GlStateManager;
-import me.shedaniel.math.compat.RenderHelper;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.util.GlAllocationUtils;
+import net.minecraft.client.render.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
 import org.lwjgl.opengl.GL11;
@@ -54,24 +50,24 @@ public abstract class WorldRendererMixin {
     private MinecraftClient client;
     @Shadow
     private ClientWorld world;
-    private int starGLCallList = GlAllocationUtils.genLists(3);
+    private int starGLCallList = GL11.glGenLists(3);
     private int glSkyList;
     private int glSkyList2;
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void initGalacticraft(MinecraftClient minecraftClient_1, CallbackInfo ci) {
-        GlStateManager.pushMatrix();
+    private void initGalacticraft(MinecraftClient client, BufferBuilderStorage bufferBuilders, CallbackInfo ci) {
+        RenderSystem.pushMatrix();
         GL11.glNewList(this.starGLCallList, GL11.GL_COMPILE);
         this.renderStarsGalacticraft();
         GL11.glEndList();
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
         final Tessellator tessellator = Tessellator.getInstance();
         this.glSkyList = this.starGLCallList + 1;
         GL11.glNewList(this.glSkyList, GL11.GL_COMPILE);
         final byte byte2 = 64;
         final int i = 256 / byte2 + 2;
         float f = 16F;
-        BufferBuilder buffer = tessellator.getBufferBuilder();
+        BufferBuilder buffer = tessellator.getBuffer();
 
         for (int j = -byte2 * i; j <= byte2 * i; j += byte2) {
             for (int l = -byte2 * i; l <= byte2 * i; l += byte2) {
@@ -104,53 +100,51 @@ public abstract class WorldRendererMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
-    private void renderGalacticraft(float partialTicks, CallbackInfo callbackInfo) {
+    private void renderGalacticraft(MatrixStack matrixStack, float f, CallbackInfo ci) {
         if (this.world.dimension.getType() == GalacticraftDimensions.MOON) {
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GlStateManager.disableRescaleNormal();
-            GlStateManager.color3f(1F, 1F, 1F);
+            RenderSystem.disableRescaleNormal();
+            RenderSystem.color3f(1F, 1F, 1F);
             final Tessellator tessellator = Tessellator.getInstance();
-            GlStateManager.depthMask(false);
-            GlStateManager.enableFog();
-            GlStateManager.color3f(0, 0, 0);
-            GlStateManager.callList(this.glSkyList);
-            GlStateManager.disableFog();
-            GlStateManager.disableAlphaTest();
-            GlStateManager.enableBlend();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            RenderHelper.disableLighting();
+            RenderSystem.depthMask(false);
+            RenderSystem.enableFog();
+            RenderSystem.color3f(0, 0, 0);
+            GL11.glCallList(this.glSkyList);
+            RenderSystem.disableFog();
+            RenderSystem.disableAlphaTest();
+            RenderSystem.enableBlend();
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            RenderSystem.disableLighting();
             float var10;
             float var11;
             float var12;
 
             float var20 = 1.0F; //TESTING
 
-            if (var20 > 0.0F) {
-                GlStateManager.pushMatrix();
-                GlStateManager.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-                GlStateManager.rotatef(this.world.getSkyAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-                GlStateManager.rotatef(-19.0F, 0, 1.0F, 0);
-                GlStateManager.color4f(1.0F, 1.0F, 1.0F, var20);
-                GlStateManager.callList(this.starGLCallList);
-                GlStateManager.popMatrix();
-            }
+            matrixStack.push();
+            RenderSystem.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+            RenderSystem.rotatef(this.world.getSkyAngle(f) * 360.0F, 1.0F, 0.0F, 0.0F);
+            RenderSystem.rotatef(-19.0F, 0, 1.0F, 0);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, var20);
+            GL11.glCallList(this.starGLCallList);
+            matrixStack.pop();
 
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-            GlStateManager.pushMatrix();
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+            matrixStack.push();
 
-            GlStateManager.popMatrix();
+            matrixStack.pop();
 
-            GlStateManager.pushMatrix();
+            matrixStack.push();
 
-            GlStateManager.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 0.0F); //TODO
-            GlStateManager.rotatef(this.world.getSkyAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F); //TODO
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            RenderSystem.rotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.0F); //TODO
+            RenderSystem.rotatef(this.world.getSkyAngle(f) * 360.0F, 1.0F, 0.0F, 0.0F); //TODO
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 0.0F);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.0F);
             var12 = 20.0F / 3.5F;
-            BufferBuilder buffer = tessellator.getBufferBuilder();
+            BufferBuilder buffer = tessellator.getBuffer();
             buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
             buffer.vertex(-var12, 99.9D, -var12).next();
             buffer.vertex(var12, 99.9D, -var12).next();
@@ -158,56 +152,56 @@ public abstract class WorldRendererMixin {
             buffer.vertex(-var12, 99.9D, var12).next();
             tessellator.draw();
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             var12 = 15.0F;
             client.getTextureManager().bindTexture(SUN_TEXTURE);
-            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
-            buffer.vertex(-var12, 100.0D, -var12).texture(0.0D, 0.0D).next();
-            buffer.vertex(var12, 100.0D, -var12).texture(1.0D, 0.0D).next();
-            buffer.vertex(var12, 100.0D, var12).texture(1.0D, 1.0D).next();
-            buffer.vertex(-var12, 100.0D, var12).texture(0.0D, 1.0D).next();
+            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
+            buffer.vertex(-var12, 100.0D, -var12).texture(0.0F, 0.0F).next();
+            buffer.vertex(var12, 100.0D, -var12).texture(1.0F, 0.0F).next();
+            buffer.vertex(var12, 100.0D, var12).texture(1.0F, 1.0F).next();
+            buffer.vertex(-var12, 100.0D, var12).texture(0.0F, 1.0F).next();
             tessellator.draw();
 
-            GlStateManager.popMatrix();
+            matrixStack.pop();
 
-            GlStateManager.pushMatrix();
+            matrixStack.push();
 
-            GlStateManager.disableBlend();
+            RenderSystem.disableBlend();
 
             // EARTH:
             var12 = 10.0F;
-            final float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.z) * 0.01F;
-            GlStateManager.scalef(0.6F, 0.6F, 0.6F);
-            GlStateManager.rotatef(earthRotation, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotatef(200F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1F);
+            final float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getPos().z) * 0.01F;
+            matrixStack.scale(0.6F, 0.6F, 0.6F);
+            RenderSystem.rotatef(earthRotation, 1.0F, 0.0F, 0.0F);
+            RenderSystem.rotatef(200F, 1.0F, 0.0F, 0.0F);
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1F);
 
             // Overworld texture is 48x48 in a 64x64 .png file
             client.getTextureManager().bindTexture(EARTH_TEXTURE);
 
             this.world.getMoonPhase();
-            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_UV);
-            buffer.vertex(-var12, -100.0D, var12).texture(0D, 1.0D).next();
-            buffer.vertex(var12, -100.0D, var12).texture(1.0D, 1.0D).next();
-            buffer.vertex(var12, -100.0D, -var12).texture(1.0D, 0D).next();
-            buffer.vertex(-var12, -100.0D, -var12).texture(0D, 0D).next();
+            buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_TEXTURE);
+            buffer.vertex(-var12, -100.0D, var12).texture(0F, 1.0F).next();
+            buffer.vertex(var12, -100.0D, var12).texture(1.0F, 1.0F).next();
+            buffer.vertex(var12, -100.0D, -var12).texture(1.0F, 0F).next();
+            buffer.vertex(-var12, -100.0D, -var12).texture(0F, 0F).next();
             tessellator.draw();
 
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GlStateManager.disableBlend();
-            GlStateManager.enableAlphaTest();
-            GlStateManager.enableFog();
-            GlStateManager.popMatrix();
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.disableBlend();
+            RenderSystem.enableAlphaTest();
+            RenderSystem.enableFog();
+            matrixStack.pop();
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            GlStateManager.color3f(0.0F, 0.0F, 0.0F);
-            final double var25 = client.player.getPos().getY() - this.world.getHorizonHeight();
+            RenderSystem.color3f(0.0F, 0.0F, 0.0F);
+            final double var25 = client.player.getPos().getY() - this.world.getHeight();
 
             if (var25 < 0.0D) {
-                GlStateManager.pushMatrix();
-                GlStateManager.translatef(0.0F, 12.0F, 0.0F);
-                GlStateManager.callList(this.glSkyList2);
-                GlStateManager.popMatrix();
+                matrixStack.push();
+                matrixStack.translate(0.0F, 12.0F, 0.0F);
+                GL11.glCallList(this.glSkyList2);
+                matrixStack.pop();
                 var10 = 1.0F;
                 var11 = -((float) (var25 + 65.0D));
                 var12 = -var10;
@@ -235,19 +229,20 @@ public abstract class WorldRendererMixin {
                 tessellator.draw();
             }
 
-            GlStateManager.color3f(70F / 256F, 70F / 256F, 70F / 256F);
+            RenderSystem.color3f(70F / 256F, 70F / 256F, 70F / 256F);
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translatef(0.0F, -((float) (var25 - 16.0D)), 0.0F);
-            GlStateManager.callList(this.glSkyList2);
-            GlStateManager.popMatrix();
-            GlStateManager.enableRescaleNormal();
+            matrixStack.push();
+            matrixStack.translate(0.0F, -((float) (var25 - 16.0D)), 0.0F);
+            GL11.glCallList(this.glSkyList2);
+            matrixStack.pop();
+            RenderSystem.enableRescaleNormal();
             GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GlStateManager.depthMask(true);
-            GlStateManager.enableColorMaterial();
-            GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GlStateManager.disableBlend();
-            callbackInfo.cancel();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableColorMaterial();
+            RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            RenderSystem.disableBlend();
+            ci.cancel();
+            //noinspection UnnecessaryReturnStatement
             return;
         }
     }
@@ -256,7 +251,7 @@ public abstract class WorldRendererMixin {
         Random random = new Random(10842L);
 
         final Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBufferBuilder();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
         bufferBuilder.begin(GL11.GL_QUADS, VertexFormats.POSITION);
         for (int var3 = 0; var3 < 6000; ++var3) {
             double var4 = random.nextFloat() * 2.0F - 1.0F;

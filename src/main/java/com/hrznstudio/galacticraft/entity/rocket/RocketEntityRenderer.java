@@ -24,11 +24,14 @@ package com.hrznstudio.galacticraft.entity.rocket;
 
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -42,29 +45,29 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     }
 
     @Override
-    public void render(RocketEntity entity, double x, double y, double z, float f, float partialTickTime) {
-        super.render(entity, x, y, z, f, partialTickTime);
-        GlStateManager.pushMatrix();
-
+    public void render(RocketEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
+        super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
+        RenderSystem.pushMatrix();
+        matrices.push();
         MinecraftClient client = MinecraftClient.getInstance();
-        GlStateManager.translated(x, y + 2.0D, z);
+        matrices.translate(entity.getX(), entity.getY() + 2.0D, entity.getZ());
 
         if (entity.getStage() == LaunchStage.IGNITED) {
-            GlStateManager.translated((entity.world.random.nextFloat() - 0.5F) * 0.12F, 0, (entity.world.random.nextFloat() - 0.5F) * 0.12F);
+            matrices.translate((entity.world.random.nextFloat() - 0.5F) * 0.12F, 0, (entity.world.random.nextFloat() - 0.5F) * 0.12F);
         }
 
-        GlStateManager.rotatef((entity.yaw - 180.0F) * -1.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotatef(entity.pitch, 1.0F, 0.0F, 0.0F);
+        RenderSystem.rotatef((entity.yaw - 180.0F) * -1.0F, 0.0F, 1.0F, 0.0F);
+        RenderSystem.rotatef(entity.pitch, 1.0F, 0.0F, 0.0F);
 
-        float float_7 = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - partialTickTime;
-        float float_8 = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - partialTickTime;
+        float float_7 = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
+        float float_8 = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
 
         if (float_8 < 0.0F) {
             float_8 = 0.0F;
         }
 
         if (float_7 > 0.0F) {
-            GlStateManager.rotatef(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE), 1.0F, 0.0F, 0.0F);
+            RenderSystem.rotatef(MathHelper.sin(float_7) * float_7 * float_8 / 10.0F * (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_SIDE), 1.0F, 0.0F, 0.0F);
         }
 
         float red = entity.getColor()[0] / 255F;
@@ -72,52 +75,59 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         float blue = entity.getColor()[2] / 255F;
         float alpha = entity.getColor()[3] / 255F;
 
-        GlStateManager.pushTextureAttributes();
+//        RenderSystem.color4f(red, green, blue, alpha);
+
+        RenderSystem.pushTextureAttributes();
 
         client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-        GlStateManager.translated(0.0D, -1.5, 0.0D);
+        matrices.translate(0.0D, -1.5, 0.0D);
 
-        GlStateManager.pushMatrix();
+        matrices.push();
         entity.getPartForType(RocketPartType.BOTTOM).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender()), alpha, red, green, blue);
+//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender()), entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEX)), entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender()), red * alpha, green * alpha, blue * alpha, 15, 15);
         entity.getPartForType(RocketPartType.BOTTOM).postRender(entity);
-        GlStateManager.popMatrix();
+        matrices.pop();
 
-        GlStateManager.translated(0.0D, .5, 0.0D);
+        matrices.translate(0.0D, .5, 0.0D);
 
-        GlStateManager.pushMatrix();
+        matrices.push();
         entity.getPartForType(RocketPartType.BOOSTER).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender()), alpha, red, green, blue);
+//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender()), entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEX)), entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender()), red * alpha, green * alpha, blue * alpha, 15, 15);
         entity.getPartForType(RocketPartType.BOOSTER).postRender(entity);
-        GlStateManager.popMatrix();
+        matrices.pop();
 
-        GlStateManager.pushMatrix();
+        matrices.push();
         entity.getPartForType(RocketPartType.FIN).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.FIN).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender()), alpha, red, green, blue);
+//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender()), entity.getPartForType(RocketPartType.FIN).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEX)), entity.getPartForType(RocketPartType.FIN).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender()), red * alpha, green * alpha, blue * alpha, 15, 15);
         entity.getPartForType(RocketPartType.FIN).postRender(entity);
-        GlStateManager.popMatrix();
 
-        GlStateManager.translated(0.0D, 1.0D, 0.0D);
+        matrices.pop();
 
-        GlStateManager.pushMatrix();
+        matrices.translate(0.0D, 1.0D, 0.0D);
+
+        matrices.push();
         entity.getPartForType(RocketPartType.BODY).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.BODY).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender()), alpha, red, green, blue);
+//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender()), entity.getPartForType(RocketPartType.BODY).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEX)), entity.getPartForType(RocketPartType.BODY).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender()), red * alpha, green * alpha, blue * alpha, 15, 15);
         entity.getPartForType(RocketPartType.BODY).postRender(entity);
-        GlStateManager.popMatrix();
+        matrices.pop();
 
-        GlStateManager.translated(0.0D, 1.75, 0.0D);
+        matrices.translate(0.0D, 1.75, 0.0D);
 
-        GlStateManager.pushMatrix();
         entity.getPartForType(RocketPartType.CONE).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(entity.getPartForType(RocketPartType.CONE).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender()), alpha, red, green, blue);
+//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender()), entity.getPartForType(RocketPartType.CONE).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(RenderLayer.getEntityCutout(SpriteAtlasTexture.BLOCK_ATLAS_TEX)), entity.getPartForType(RocketPartType.CONE).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender()), red * alpha, green * alpha, blue * alpha, 15, 15);
         entity.getPartForType(RocketPartType.CONE).postRender(entity);
-        GlStateManager.popMatrix();
 
-        GlStateManager.popMatrix();
+        matrices.pop();
+        RenderSystem.popMatrix();
     }
 
     @Override
-    protected Identifier getTexture(RocketEntity var1) {
+    public Identifier getTexture(RocketEntity var1) {
         return SpriteAtlasTexture.BLOCK_ATLAS_TEX;
     }
 }

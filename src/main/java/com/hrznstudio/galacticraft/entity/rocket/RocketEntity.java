@@ -27,7 +27,6 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -40,7 +39,6 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.packet.CustomPayloadS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -54,9 +52,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.MessageType;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -266,7 +265,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     @Override
     public void updatePassengerPosition(Entity entity_1) {
         if (this.hasPassenger(entity_1)) {
-            entity_1.setPosition(this.x, this.y + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5, this.z);
+            entity_1.setPos(this.getX(), this.getY() + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5, this.getZ());
             entity_1.setVelocity(this.getVelocity());
         }
     }
@@ -298,16 +297,16 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
         setParts(list);
 
-        if (tag.containsKey("Color")) {
+        if (tag.contains("Color")) {
             CompoundTag color = tag.getCompound("Color");
             this.setColor(color.getFloat("red"), color.getFloat("green"), color.getFloat("blue"), color.getFloat("alpha"));
         }
 
-        if (tag.containsKey("Stage")) {
+        if (tag.contains("Stage")) {
             this.setStage(LaunchStage.valueOf(tag.getString("Stage")));
         }
 
-        if (tag.containsKey("Speed")) {
+        if (tag.contains("Speed")) {
             setSpeed(tag.getDouble("Speed"));
         }
     }
@@ -338,7 +337,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     @Override
     public Packet<?> createSpawnPacket() {
         ByteBuf buf = new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeVarInt(Registry.ENTITY_TYPE.getRawId(this.getType()))
-                .writeVarInt(this.getEntityId()).writeUuid(this.uuid).writeDouble(x).writeDouble(y).writeDouble(z).writeByte((int) (pitch / 360F * 256F)))
+                .writeVarInt(this.getEntityId()).writeUuid(this.uuid).writeDouble(getX()).writeDouble(getY()).writeDouble(getZ()).writeByte((int) (pitch / 360F * 256F)))
                 .writeByte((int) (yaw / 360F * 256F));
         return new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "rocket_spawn"),
                 new PacketByteBuf(buf));
@@ -433,7 +432,9 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
             if (this.getFuel().getTank(0).get().getAmount() == 0) {
                 this.setStage(LaunchStage.IDLE);
-                ((ServerPlayerEntity) this.getPassengerList().get(0)).sendChatMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), MessageType.SYSTEM);
+                if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
+                    ((ServerPlayerEntity) this.getPassengerList().get(0)).sendChatMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), MessageType.SYSTEM);
+                }
                 return;
             }
             this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().matches(GalacticraftFluidTags.FUEL), 1);
@@ -447,14 +448,14 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
             } else {
                 this.getFuel().getTank(0).extract(1);
                 if (world instanceof ServerWorld) {
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, x + (world.random.nextDouble() - 0.5), y, z + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                    ((ServerWorld) world).spawnParticles(ParticleTypes.CLOUD, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                 }
 
 
@@ -491,10 +492,10 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
             setRotation((yaw + world.random.nextFloat() - 0.5F * 8.0F) % 360.0F, (pitch + world.random.nextFloat() - 0.5F * 8.0F) % 360.0F);
 
             if (world instanceof ServerWorld) {
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5) * 0.12F, y + 2, z + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5) * 0.12F, y + 2, z + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5) * 0.12F, y + 2, z + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
-                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, x + (world.random.nextDouble() - 0.5) * 0.12F, y + 2, z + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
+                ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5) * 0.12F, this.getY() + 2, this.getZ() + (world.random.nextDouble() - 0.5), 0, world.random.nextDouble() - 0.5, 1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
             }
 
             if (this.onGround) {
@@ -544,28 +545,24 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     }
 
     @Override
-    public void setPositionAndAngles(double x, double y, double z, float yaw, float pitch) {
-        setPositionAnglesAndUpdate(x, y, z, yaw, pitch);
+    public void refreshPositionAndAngles(double x, double y, double z, float yaw, float pitch) {
+        super.refreshPositionAndAngles(x, y, z, yaw, pitch);
     }
 
     @Override
-    public void setPositionAnglesAndUpdate(double x, double y, double z, float yaw, float pitch) {
-        super.setPositionAnglesAndUpdate(x, y, z, yaw, pitch);
-        this.updateTrackedPosition(x, y, z);
+    protected void refreshPosition() {
+        super.refreshPosition();
         this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 
     @Override
-    public void handleFallDamage(float float_1, float float_2) {
-        int int_1 = MathHelper.ceil(float_1 - 1.0F);
-        if (int_1 > 0) {
-            List<Entity> list_1 = Lists.newArrayList(this.world.getEntities(this, this.getBoundingBox()));
-            DamageSource damageSource_1 = DamageSource.FALLING_BLOCK; //TODO
-
-            for (Entity entity_1 : list_1) {
-                entity_1.damage(damageSource_1, Math.min(MathHelper.floor((float) int_1 * 9.0F), 19.0F));
+    public boolean handleFallDamage(float float_1, float float_2) {
+        if (this.hasPassengers()) {
+            for (Entity entity : this.getPassengerList()) {
+                entity.handleFallDamage(fallDistance, float_2);
             }
         }
+        return true;
     }
 
     @Override
@@ -607,8 +604,8 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     }
 
     @Override
-    public void setPosition(double double_1, double double_2, double double_3) {
-        super.setPosition(double_1, double_2, double_3);
+    public void setPos(double x, double y, double z) {
+        super.setPos(x, y, z);
         this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 

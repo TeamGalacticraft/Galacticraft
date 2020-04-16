@@ -30,6 +30,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -53,12 +54,12 @@ public class CavernousVineBlockPoisonous extends CavernousVineBlock {
     }
 
     @Override
-    public boolean activate(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         if (playerEntity.getStackInHand(hand).getItem() instanceof ShearsItem) {
             world.setBlockState(blockPos, GalacticraftBlocks.CAVERNOUS_VINE.getDefaultState().with(VINES, blockState.get(VINES)));
             world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundEvents.BLOCK_GRASS_BREAK, SoundCategory.BLOCKS, 1f, 1f, true);
-            return true;
+            return ActionResult.SUCCESS;
         }
-        return false;
+        return ActionResult.SUCCESS;
     }
 }

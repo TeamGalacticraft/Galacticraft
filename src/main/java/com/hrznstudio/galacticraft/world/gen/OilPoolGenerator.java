@@ -26,10 +26,10 @@ import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.LakeDecoratorConfig;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.LakeFeatureConfig;
+import net.minecraft.world.gen.feature.LakeFeature;
+import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -40,11 +40,7 @@ public class OilPoolGenerator {
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
-                if (biome.getCategory() == Biome.Category.DESERT) {
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(2)));
-                } else {
-                    biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, Biome.configureFeature(Feature.LAKE, new LakeFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState()), Decorator.WATER_LAKE, new LakeDecoratorConfig(1)));
-                }
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, new ConfiguredFeature<>((LakeFeature) Feature.LAKE, new SingleStateFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState())));
             }
         }
     }

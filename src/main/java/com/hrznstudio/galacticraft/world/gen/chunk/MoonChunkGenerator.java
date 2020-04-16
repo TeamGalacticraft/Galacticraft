@@ -24,8 +24,9 @@ package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.ChunkRegion;
@@ -47,7 +48,7 @@ import java.util.List;
  */
 public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGeneratorConfig> {
 
-    private static final float[] BIOME_WEIGHT_TABLE = SystemUtil.consume(new float[25], (floats) -> {
+    private static final float[] BIOME_WEIGHT_TABLE = Util.make(new float[25], (floats) -> {
         for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
                 float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
@@ -64,18 +65,18 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     public MoonChunkGenerator(IWorld iWorld, BiomeSource biomeSource, MoonChunkGeneratorConfig chunkGenConfig) {
         super(iWorld, biomeSource, 4, 8, 256, chunkGenConfig, true);
         this.random.consume(2620);
-        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, 16);
+        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, 15, 0);
         this.amplified = iWorld.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
     @Override
-    public void populateEntities(ChunkRegion chunkRegion) {
-        int chunkX = chunkRegion.getCenterChunkX();
-        int chunkZ = chunkRegion.getCenterChunkZ();
-        Biome biome = chunkRegion.getChunk(chunkX, chunkZ).getBiomeArray()[0];
+    public void populateEntities(ChunkRegion region) {
+        int i = region.getCenterChunkX();
+        int j = region.getCenterChunkZ();
+        Biome biome = region.getBiome((new ChunkPos(i, j)).getCenterBlockPos());
         ChunkRandom chunkRandom = new ChunkRandom();
-        chunkRandom.setSeed(chunkRegion.getSeed(), chunkX << 4, chunkZ << 4);
-        SpawnHelper.populateEntities(chunkRegion, biome, chunkX, chunkZ, chunkRandom);
+        chunkRandom.setSeed(region.getSeed(), i << 4, j << 4);
+        SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
     }
 
     @Override
@@ -99,41 +100,62 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Override
-    protected double[] computeNoiseRange(int i, int i2) {
-        double[] doubles = new double[2];
-        float f1 = 0.0F;
-        float f2 = 0.0F;
-        float f3 = 0.0F;
-        float f4 = this.biomeSource.getBiomeForNoiseGen(i, i2).getDepth();
+    protected double[] computeNoiseRange(int x, int z) {
+        double[] ds = new double[2];
+        float f = 0.0F;
+        float g = 0.0F;
+        float h = 0.0F;
+        int j = this.getSeaLevel();
+        float k = this.biomeSource.getBiomeForNoiseGen(x, j, z).getDepth();
 
-        for (int i4 = -2; i4 <= 2; ++i4) {
-            for (int i5 = -2; i5 <= 2; ++i5) {
-                Biome biome = this.biomeSource.getBiomeForNoiseGen(i + i4, i2 + i5);
-                float f5 = biome.getDepth();
-                float f6 = biome.getScale();
-                if (this.amplified && f5 > 0.0F) {
-                    f5 = 1.0F + f5 * 2.0F;
-                    f6 = 1.0F + f6 * 4.0F;
+        for (int l = -2; l <= 2; ++l) {
+            for (int m = -2; m <= 2; ++m) {
+                Biome biome = this.biomeSource.getBiomeForNoiseGen(x + l, j, z + m);
+                float n = biome.getDepth();
+                float o = biome.getScale();
+                if (this.amplified && n > 0.0F) {
+                    n = 1.0F + n * 2.0F;
+                    o = 1.0F + o * 4.0F;
                 }
 
-                float float_7 = BIOME_WEIGHT_TABLE[i4 + 2 + (i5 + 2) * 5] / (f5 + 2.0F);
-                if (biome.getDepth() > f4) {
-                    float_7 /= 2.0F;
+                float p = BIOME_WEIGHT_TABLE[l + 2 + (m + 2) * 5] / (n + 2.0F);
+                if (biome.getDepth() > k) {
+                    p /= 2.0F;
                 }
 
-                f1 += f6 * float_7;
-                f2 += f5 * float_7;
-                f3 += float_7;
+                f += o * p;
+                g += n * p;
+                h += p;
             }
         }
 
-        f1 /= f3;
-        f2 /= f3;
-        f1 = f1 * 0.9F + 0.1F;
-        f2 = (f2 * 4.0F - 1.0F) / 8.0F;
-        doubles[0] = (double) f2 + this.method_16414(i, i2);
-        doubles[1] = f1;
-        return doubles;
+        f /= h;
+        g /= h;
+        f = f * 0.9F + 0.1F;
+        g = (g * 4.0F - 1.0F) / 8.0F;
+        ds[0] = (double) g + this.sampleNoise(x, z);
+        ds[1] = f;
+        return ds;
+    }
+
+    private double sampleNoise(int x, int y) {
+        double d = this.noiseSampler.sample(x * 200, 10.0D, y * 200, 1.0D, 0.0D, true) * 65535.0D / 8000.0D;
+        if (d < 0.0D) {
+            d = -d * 0.3D;
+        }
+
+        d = d * 3.0D - 2.0D;
+        if (d < 0.0D) {
+            d /= 28.0D;
+        } else {
+            if (d > 1.0D) {
+                d = 1.0D;
+            }
+
+            d /= 40.0D;
+        }
+
+        return d;
     }
 
     private double method_16414(int i, int i2) {

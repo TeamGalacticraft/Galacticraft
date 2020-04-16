@@ -3,21 +3,22 @@
   "package": "com.hrznstudio.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "PlayerEntityMixin",
+    "BaseFluidMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "PlayerEntityMixin",
+    "RecipeManagerMixin",
     "ServerWorldMixin",
-    "RecipeManagerMixin"
+    "TorchBlockMixin"
   ],
   "client": [
-    "PlayerInventoryScreenMixin",
-    "PauseMenuScreenMixin",
-    "JsonCapeMixin",
-    "InGameHudMixin",
     "BipedEntityModelMixin",
     "ClientPlayerEntityMixin",
-    "WorldRendererMixin",
-    "ItemDynamicRendererMixin"
+    "InGameHudMixin",
+    "JsonCapeMixin",
+    "PauseMenuScreenMixin",
+    "PlayerInventoryScreenMixin",
+    "WorldRendererMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {

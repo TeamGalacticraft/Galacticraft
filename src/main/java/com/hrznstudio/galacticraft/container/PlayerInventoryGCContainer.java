@@ -27,7 +27,9 @@ import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.items.ThermalArmorItem;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.container.Container;
+import net.minecraft.container.PlayerContainer;
 import net.minecraft.container.Slot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,6 +38,9 @@ import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+
+import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -77,21 +82,21 @@ public class PlayerInventoryGCContainer extends Container {
                 }
 
                 @Override
-                public String getBackgroundSprite() {
-                    return EMPTY_ARMOR_SLOT_IDS[finalSlotY];
+                public Pair<Identifier, Identifier> getBackgroundSprite() {
+                    return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, EMPTY_ARMOR_SLOT_IDS[slot.getEntitySlotId()]));
                 }
             });
         }
-        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8 + 0 * 18, GalacticraftItems.OXYGEN_MASK) {
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
             @Override
-            public String getBackgroundSprite() {
-                return Constants.MOD_ID + ":" + Constants.SlotSprites.OXYGEN_MASK;
+            public Pair<Identifier, Identifier> getBackgroundSprite() {
+                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
             }
         });
-        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 1 * 18, GalacticraftItems.OXYGEN_GEAR) {
+        this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR) {
             @Override
-            public String getBackgroundSprite() {
-                return Constants.MOD_ID + ":" + Constants.SlotSprites.OXYGEN_GEAR;
+            public Pair<Identifier, Identifier> getBackgroundSprite() {
+                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
             }
         });
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
@@ -161,7 +166,7 @@ public class PlayerInventoryGCContainer extends Container {
         }
     }
 
-    private class OxygenTankSlot extends Slot {
+    private static class OxygenTankSlot extends Slot {
         public OxygenTankSlot(Inventory gearInventory, int slotId, int x, int y) {
             super(gearInventory, slotId, x, y);
         }
@@ -176,9 +181,10 @@ public class PlayerInventoryGCContainer extends Container {
             return 1;
         }
 
+        @Nullable
         @Override
-        public String getBackgroundSprite() {
-            return Constants.MOD_ID + ":" + Constants.SlotSprites.OXYGEN_TANK;
+        public Pair<Identifier, Identifier> getBackgroundSprite() {
+            return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
         }
     }
 }

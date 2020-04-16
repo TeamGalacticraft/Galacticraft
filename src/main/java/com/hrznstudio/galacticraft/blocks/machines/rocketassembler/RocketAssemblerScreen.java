@@ -29,22 +29,23 @@ import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.recipes.RocketAssemblerRecipe;
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
@@ -56,7 +57,7 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssemblerContainer> {
+public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContainer> {
 
     public static final int SELECTED_TAB_X = 324;
     public static final int SELECTED_TAB_Y = 4;
@@ -119,7 +120,7 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
     public static final int PROGRESS_ARROW_X = 364;
     public static final int PROGRESS_ARROW_Y = 8;
 
-    public static final ContainerFactory<AbstractContainerScreen> FACTORY = (syncId, id, player, buffer) -> {
+    public static final ContainerFactory<ContainerScreen> FACTORY = (syncId, id, player, buffer) -> {
         BlockPos pos = buffer.readBlockPos();
         BlockEntity be = player.world.getBlockEntity(pos);
         if (be instanceof RocketAssemblerBlockEntity) {
@@ -150,41 +151,41 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
     @Override
     protected void drawBackground(float delta, int mouseX, int mouseY) {
         this.renderBackground();
-        GuiLighting.disable();
+        RenderSystem.disableLighting();
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
-        blit(this.left, this.top, 0, 0, containerWidth, containerHeight);
+        blit(this.x, this.y, 0, 0, containerWidth, containerHeight);
 
-        blit(this.left + ENERGY_OVERLAY_RENDER_X, this.top + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getCurrentEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxEnergy()))));
+        blit(this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getCurrentEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxEnergy()))));
 
         if (blockEntity.ready() && !blockEntity.building()) {
-            blit(this.left + 257, this.top + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
+            blit(this.x + 257, this.y + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
         }
 
         if (tab == Tab.ROCKET) {
-            blit(this.left - 29, this.top + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
-            blit(this.left - 27, this.top + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            blit(this.x - 29, this.y + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            blit(this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 8);
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 35);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 8);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 35);
 
             if (!this.blockEntity.data.isEmpty()) {
-                drawEntity(this.left + 186 + 17, this.top + 73);
+                drawEntity(this.x + 186 + 17, this.y + 73);
             }
         } else if (tab == Tab.LANDER) {
-            blit(this.left - 27, this.top + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
-            blit(this.left - 29, this.top + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            blit(this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            blit(this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 8);
-            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.left - 20, this.top + 35);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 8);
+            itemRenderer.renderGuiItem(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 35);
         }
 
         if (blockEntity.building()) {
             float pro = blockEntity.getProgress();
             this.minecraft.getTextureManager().bindTexture(TEXTURE);//OUT OF 600
             if (pro <= 570.0F) {
-                blit(this.left + 176, this.top + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (pro / 570.0F)), PROGRESS_ARROW_HEIGHT);
+                blit(this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (pro / 570.0F)), PROGRESS_ARROW_HEIGHT);
             } else {
-                blit(this.left + 176, this.top + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) (PROGRESS_ARROW_HEIGHT + (4F * ((pro - 570F) / 30F))));
+                blit(this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) (PROGRESS_ARROW_HEIGHT + (4F * ((pro - 570F) / 30F))));
             }
         }
 
@@ -200,8 +201,8 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
                             offsetX = 0;
                         }
                         this.minecraft.getTextureManager().bindTexture(TEXTURE);
-                        GuiLighting.enable();
-                        GuiLighting.enableForItems();
+                        RenderSystem.enableLighting();
+
                         final int baOY = offsetY;
                         boolean aG = true;
                         offsetX++;
@@ -209,29 +210,29 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
                         RocketAssemblerRecipe recipe = blockEntity.recipes.get(Galacticraft.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         for (ItemStack stack : recipe.getInput()) {
                             this.minecraft.getTextureManager().bindTexture(TEXTURE);
-                            GuiLighting.enable();
-                            GuiLighting.enableForItems();
+                            RenderSystem.enableLighting();
+
                             if (this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() == stack.getCount()) {
-                                blit(this.left + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+                                blit(this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                             } else {
-                                blit(this.left + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.top + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
+                                blit(this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                                 aG = false;
                             }
-                            GuiLighting.enable();
-                            GuiLighting.enableForItems();
-                            itemRenderer.renderGuiItem(stack, this.left + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.top + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
-                            itemRenderer.renderGuiItemOverlay(minecraft.textRenderer, stack, this.left + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.top + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() + "/" + stack.getCount());
+                            RenderSystem.enableLighting();
 
-                            if (check(mouseX, mouseY, (this.left + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
-                                GlStateManager.disableLighting();
-                                GlStateManager.disableDepthTest();
-                                int n = (this.left + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2;
-                                int r = (this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2;
-                                GlStateManager.colorMask(true, true, true, false);
+                            itemRenderer.renderGuiItem(stack, this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
+                            itemRenderer.renderGuiItemOverlay(minecraft.textRenderer, stack, this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() + "/" + stack.getCount());
+
+                            if (check(mouseX, mouseY, (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
+                                RenderSystem.disableLighting();
+                                RenderSystem.disableDepthTest();
+                                int n = (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2;
+                                int r = (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2;
+                                RenderSystem.colorMask(true, true, true, false);
                                 this.fillGradient(n, r, n + GREEN_BOX_WIDTH - 4, r + GREEN_BOX_HEIGHT - 4, -2130706433, -2130706433);
-                                GlStateManager.colorMask(true, true, true, true);
-                                GlStateManager.enableLighting();
-                                GlStateManager.enableDepthTest();
+                                RenderSystem.colorMask(true, true, true, true);
+                                RenderSystem.enableLighting();
+                                RenderSystem.enableDepthTest();
                             }
                             if (++offsetX == 5) {
                                 offsetX = 0;
@@ -242,17 +243,17 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
 
                         this.minecraft.getTextureManager().bindTexture(TEXTURE);
                         if (aG) {
-                            blit(this.left + 9, this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+                            blit(this.x + 9, this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                         } else {
-                            blit(this.left + 9, this.top + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
+                            blit(this.x + 9, this.y + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                         }
-                        itemRenderer.renderGuiItem(new ItemStack(blockEntity.data.getPartForType(RocketPartType.values()[i]).getDesignerItem()), this.left + 13, this.top + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY));
+                        itemRenderer.renderGuiItem(new ItemStack(blockEntity.data.getPartForType(RocketPartType.values()[i]).getDesignerItem()), this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY));
 
                     }
                 }
             }
         } else if (tab == Tab.LANDER) {
-            drawCenteredString(minecraft.textRenderer, "WIP - TO BE DESIGNED", left / 2, top + (containerHeight) / 2, Integer.MAX_VALUE);
+            drawCenteredString(minecraft.textRenderer, "WIP - TO BE DESIGNED", this.x / 2, this.y + (containerHeight) / 2, Integer.MAX_VALUE);
         }
     }
 
@@ -262,15 +263,15 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
         super.render(mouseX, mouseY, delta);
 
         if (blockEntity.data != null && blockEntity.data != RocketData.EMPTY) {
-            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.rocket_info").asString(), this.left + 234, this.top + 41, 11184810);
-            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.tier", blockEntity.data.getTier()).asString(), this.left + 234, this.top + 41 + 11, 11184810);
-            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.left + 234, this.top + 41 + 22, 11184810);
-            drawString(minecraft.textRenderer, getStatus(), this.left + 234, this.top + 41 + 33, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
+            drawString(minecraft.textRenderer, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
         } else {
-            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic").asString(), this.left + 234, this.top + 41, 11184810);
-            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic_2").asString(), this.left + 234, this.top + 41 + 11, 11184810);
-            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.left + 234, this.top + 41 + 22, 11184810);
-            drawString(minecraft.textRenderer, getStatus(), this.left + 234, this.top + 41 + 33, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic").asString(), this.x + 234, this.y + 41, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic_2").asString(), this.x + 234, this.y + 41 + 11, 11184810);
+            drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
+            drawString(minecraft.textRenderer, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
         }
     }
 
@@ -291,28 +292,33 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
     }
 
     public void drawEntity(int x, int y) {
-        GlStateManager.enableColorMaterial();
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef((float) x, (float) y, 3.0F);
-        GlStateManager.scalef(-10.0F, -10.0F, -10.0F);
-        GuiLighting.enable();
-        GlStateManager.rotatef(135.0F, 0.0F, 1.0F, 0.0F);
-        GuiLighting.enable();
-        GlStateManager.rotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-        GlStateManager.rotatef(-((float) Math.atan(this.top + 25 / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
+        MatrixStack stack = new MatrixStack();
+        VertexConsumerProvider consumerProvider = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
+        RenderSystem.pushMatrix();
+        RenderSystem.enableColorMaterial();
+        stack.push();
+        stack.translate((float) x, (float) y, 3.0F);
+        stack.scale(-10.0F, -10.0F, -10.0F);
+        RenderSystem.enableLighting();
+        RenderSystem.rotatef(135.0F, 0.0F, 1.0F, 0.0F);
+        RenderSystem.enableLighting();
+        RenderSystem.rotatef(-135.0F, 0.0F, 1.0F, 0.0F);
+        RenderSystem.rotatef(-((float) Math.atan(this.y + 25 / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
         blockEntity.fakeEntity.yaw = 225;
         blockEntity.fakeEntity.pitch = 0;
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderManager();
-        entityRenderDispatcher.method_3945(180.0F);
+//        entityRenderDispatcher.method_3945(180.0F);
         entityRenderDispatcher.setRenderShadows(false);
-        entityRenderDispatcher.render(blockEntity.fakeEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, true);
+        entityRenderDispatcher.render(blockEntity.fakeEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack, consumerProvider, 15);
         entityRenderDispatcher.setRenderShadows(true);
-        GlStateManager.popMatrix();
-        GuiLighting.disable();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE1);
-        GlStateManager.disableTexture();
-        GlStateManager.activeTexture(GLX.GL_TEXTURE0);
+        Tessellator.getInstance().getBuffer().end();
+        stack.pop();
+        RenderSystem.popMatrix();
+        RenderSystem.disableLighting();
+        RenderSystem.disableRescaleNormal();
+//        RenderSystem.activeTexture(GLX.GL_TEXTURE1);
+        RenderSystem.disableTexture();
+//        RenderSystem.activeTexture(GLX.GL_TEXTURE0);
     }
 
     @Override
@@ -340,7 +346,7 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
                         RocketAssemblerRecipe recipe = blockEntity.recipes.get(Galacticraft.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         DefaultedList<ItemStack> input = recipe.getInput();
                         for (int i1 = 0; i1 < input.size(); i1++) {
-                            if (check(mouseX, mouseY, this.left + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.top + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
+                            if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {
                                 boolean success = false;
                                 if (slot < blockEntity.getExtendedInventory().getSlotCount()) {
                                     if (playerInventory.getCursorStack().isEmpty()) {
@@ -400,7 +406,7 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
         }
 
         if (button == 0) {
-            if (check(mouseX, mouseY, this.left + 257, this.top + 18, BUILD_WIDTH, BUILD_HEIGHT)) {
+            if (check(mouseX, mouseY, this.x + 257, this.y + 18, BUILD_WIDTH, BUILD_HEIGHT)) {
                 blockEntity.startBuilding();
                 minecraft.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "assembler_build"), new PacketByteBuf(Unpooled.buffer()).writeBlockPos(blockEntity.getPos())));
             }
@@ -413,7 +419,7 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
             if (this.minecraft.options.keyPickItem.matchesMouse(button)) {
                 return SlotActionType.CLONE;
             } else {
-                boolean ok = slot != -999 && (InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), 340) || InputUtil.isKeyPressed(MinecraftClient.getInstance().window.getHandle(), 344));
+                boolean ok = slot != -999 && (InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), 340) || InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), 344));
                 if (ok) {
                     return SlotActionType.QUICK_MOVE;
                 } else if (slot == -999) {
@@ -430,17 +436,17 @@ public class RocketAssemblerScreen extends AbstractContainerScreen<RocketAssembl
     private boolean tabClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (tab == Tab.ROCKET) {
-                if (check(mouseX, mouseY, this.left - 27, this.top + 30, TAB_WIDTH, TAB_HEIGHT)) {
+                if (check(mouseX, mouseY, this.x - 27, this.y + 30, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.LANDER;
                 }
             } else if (tab == Tab.LANDER) {
-                if (check(mouseX, mouseY, this.left - 27, this.top + 3, TAB_WIDTH, TAB_HEIGHT)) {
+                if (check(mouseX, mouseY, this.x - 27, this.y + 3, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.ROCKET;
                 }
             } else {
-                if (check(mouseX, mouseY, this.left - 27, this.top + 30, TAB_WIDTH, TAB_HEIGHT)) {
+                if (check(mouseX, mouseY, this.x - 27, this.y + 30, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.LANDER;
-                } else if (check(mouseX, mouseY, this.left - 27, this.top + 3, TAB_WIDTH, TAB_HEIGHT)) {
+                } else if (check(mouseX, mouseY, this.x - 27, this.y + 3, TAB_WIDTH, TAB_HEIGHT)) {
                     tab = Tab.ROCKET;
                 }
             }

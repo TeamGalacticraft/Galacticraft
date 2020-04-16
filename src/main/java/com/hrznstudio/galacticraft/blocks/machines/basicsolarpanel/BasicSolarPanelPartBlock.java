@@ -35,6 +35,7 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -77,13 +78,18 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     public void onBreak(World world_1, BlockPos partPos, BlockState partState, PlayerEntity playerEntity_1) {
         BlockEntity partBE = world_1.getBlockEntity(partPos);
         BasicSolarPanelPartBlockEntity be = (BasicSolarPanelPartBlockEntity) partBE;
+
         if (be == null) {
             // Probably already been destroyed by the code in the base.
             return;
         }
-
+        if (be.basePos == null) {
+            // There is no base! Probably created using /setblock
+            return;
+        }
         BlockPos basePos = new BlockPos(be.basePos);
         BlockState baseState = world_1.getBlockState(basePos);
+
         if (baseState.isAir()) {
             // The base has been destroyed already.
             return;
@@ -131,19 +137,19 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     }
 
     @Override
-    public boolean activate(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, Hand hand_1, BlockHitResult blockHitResult_1) {
+    public ActionResult onUse(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, Hand hand_1, BlockHitResult blockHitResult_1) {
         BlockEntity partEntity = world_1.getBlockEntity(blockPos_1);
         if (world_1.isAir(blockPos_1) || !(partEntity instanceof BasicSolarPanelPartBlockEntity)) {
-            return false;
+            return ActionResult.SUCCESS;
         }
 
-        if (world_1.isClient) return true;
+        if (world_1.isClient) return ActionResult.SUCCESS;
 
         BlockPos basePos = ((BasicSolarPanelPartBlockEntity) partEntity).basePos;
 
         BlockState base = world_1.getBlockState(basePos);
         Block baseBlock = base.getBlock();
-        return ((BasicSolarPanelBlock)baseBlock).activate(base, world_1, basePos, playerEntity_1, hand_1, blockHitResult_1);
+        return ((BasicSolarPanelBlock) baseBlock).onUse(base, world_1, basePos, playerEntity_1, hand_1, blockHitResult_1);
     }
 
 }

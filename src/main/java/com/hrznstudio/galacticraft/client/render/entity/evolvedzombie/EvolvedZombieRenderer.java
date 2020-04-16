@@ -31,14 +31,14 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieRenderer extends BipedEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel<EvolvedZombieEntity>> {
+public class EvolvedZombieRenderer extends BipedEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel> {
 
     public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new EvolvedZombieModel<>(1, 64, 64), 0.5F);
+        super(entityRenderDispatcher_1, new EvolvedZombieModel(1, 64, 64), 0.5F);
     }
 
     @Override
-    protected Identifier getTexture(EvolvedZombieEntity evolvedZombieEntity) {
+    public Identifier getTexture(EvolvedZombieEntity evolvedZombieEntity) {
         return new Identifier("galacticraft-rewoven:textures/entity/evolved_zombie/evolved_zombie.png");
     }
 }

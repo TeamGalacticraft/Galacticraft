@@ -61,36 +61,26 @@ public class GalacticraftPackets {
                 if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(pos);
                     if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = buf.readString();
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).setRedstoneState(buf.readEnumConstant(ConfigurableElectricMachineBlockEntity.RedstoneState.class));
                     }
                 }
             });
-
         }));
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buff) -> {
-            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            PacketByteBuf buffer = new PacketByteBuf(buff.copy());
             if (context.getPlayer() instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
-                    BlockPos pos = buf.readBlockPos();
-                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                        BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                        boolean isParty = false;
-                        boolean isPublic = false;
-                        String owner = buf.readString();
-                        if (owner.contains("_Public")) {
-                            owner = owner.replace("_Public", "");
-                            isPublic = true;
-                        } else if (owner.contains("_Party")) {
-                            owner = owner.replace("_Party", "");
-                            isParty = true;
-                        }
-                        String username = buf.readString();
-                        if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).owner = owner;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).username = username;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
+                context.getPlayer().getServer().execute(() -> {
+                    BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                        if (!((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
+                                ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().getOwner().equals(context.getPlayer().getUuid())) {
+                            ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.class);
+
+                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setOwner(context.getPlayer());
+                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setPublicity(publicity);
+                        } else {
+                            Galacticraft.logger.error("Received invaild security packet from: " + context.getPlayer().getEntityName());
                         }
                     }
                 });
@@ -235,9 +225,7 @@ public class GalacticraftPackets {
                 Entity entity = type.create(MinecraftClient.getInstance().world);
                 assert entity != null;
                 entity.updateTrackedPosition(x, y, z);
-                entity.x = x;
-                entity.y = y;
-                entity.z = z;
+                entity.setPos(x, y, z);
                 entity.pitch = pitch;
                 entity.yaw = yaw;
                 entity.setEntityId(entityID);

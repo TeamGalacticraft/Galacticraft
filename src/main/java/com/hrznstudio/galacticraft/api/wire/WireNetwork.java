@@ -90,25 +90,25 @@ public class WireNetwork {
     private void addVertex(BlockPos value) {
         adjacentVertices.putIfAbsent(value, new ArrayList<>());
     }
-
-    private void removeVertex(BlockPos value) {
-        boolean b = adjacentVertices.remove(value) != null;
-        Iterator<Map.Entry<BlockPos, List<BlockPos>>> iterator = adjacentVertices.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<BlockPos, List<BlockPos>> entry = iterator.next();
-            BlockPos info = entry.getKey();
-            List<BlockPos> connections = entry.getValue();
-            connections.remove(value);
-            if (adjacentVertices.get(info) != null) {
-                if (adjacentVertices.size() == 0) {
-                    NetworkManager.getManagerForDimension(dimId).removeWire(info);
-                    new WireNetwork(info, dimId);
-                    iterator.remove();
-                    removeVertex(info);
-                }
-            }
-        }
-    }
+//
+//    private void removeVertex(BlockPos value) {
+//        boolean b = adjacentVertices.remove(value) != null;
+//        Iterator<Map.Entry<BlockPos, List<BlockPos>>> iterator = adjacentVertices.entrySet().iterator();
+//        while (iterator.hasNext()) {
+//            Map.Entry<BlockPos, List<BlockPos>> entry = iterator.next();
+//            BlockPos info = entry.getKey();
+//            List<BlockPos> connections = entry.getValue();
+//            connections.remove(value);
+//            if (adjacentVertices.get(info) != null) {
+//                if (adjacentVertices.size() == 0) {
+//                    NetworkManager.getManagerForDimension(dimId).removeWire(info);
+//                    new WireNetwork(info, dimId);
+//                    iterator.remove();
+//                    removeVertex(info);
+//                }
+//            }
+//        }
+//    }
 
     private boolean removeVertexNC(BlockPos value) {
         boolean b = adjacentVertices.remove(value) != null;
@@ -143,20 +143,30 @@ public class WireNetwork {
 
     public WireNetwork merge(WireNetwork network) {
         if (this.adjacentVertices.size() < network.adjacentVertices.size()) {
-            for (Map.Entry<BlockPos, List<BlockPos>> entry : this.adjacentVertices.entrySet()) {
-                BlockPos info = entry.getKey();
-                List<BlockPos> BlockPoss = entry.getValue();
-                network.adjacentVertices.put(info, BlockPoss);
-                NetworkManager.getManagerForDimension(dimId).transferWire(info, network);
+            for (BlockPos pos : this.adjacentVertices.keySet()) {
+                NetworkManager.getManagerForDimension(dimId).removeWire(pos);
+                network.addWire(pos);
             }
+            network.producers.addAll(this.producers);
+            network.consumers.addAll(this.consumers);
+            network.query.addAll(this.query);
+            this.adjacentVertices.clear();
+            this.producers.clear();
+            this.consumers.clear();
+            this.query.clear();
             return network;
         } else {
-            for (Map.Entry<BlockPos, List<BlockPos>> entry : network.adjacentVertices.entrySet()) {
-                BlockPos info = entry.getKey();
-                List<BlockPos> BlockPoss = entry.getValue();
-                this.adjacentVertices.put(info, BlockPoss);
-                NetworkManager.getManagerForDimension(dimId).transferWire(info, this);
+            for (BlockPos pos : network.adjacentVertices.keySet()) {
+                NetworkManager.getManagerForDimension(dimId).removeWire(pos);
+                this.addWire(pos);
             }
+            this.producers.addAll(network.producers);
+            this.consumers.addAll(network.consumers);
+            this.query.addAll(network.query);
+            network.adjacentVertices.clear();
+            network.producers.clear();
+            network.consumers.clear();
+            network.query.clear();
             return this;
         }
     }

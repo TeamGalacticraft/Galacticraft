@@ -105,7 +105,7 @@ public class GalacticraftCommands {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             player.stopRiding();
             if (player.isSleeping()) {
-                player.wakeUp(true, true, false);
+                player.wakeUp(true, true);
             }
 
             if (world == entity.world) {
@@ -115,7 +115,7 @@ public class GalacticraftCommands {
             }
         } else {
             if (world == entity.world) {
-                entity.setPosition(x, y, z);
+                entity.setPos(x, y, z);
             } else {
                 entity.detach();
                 entity.dimension = world.dimension.getType();
@@ -126,8 +126,8 @@ public class GalacticraftCommands {
                 }
 
                 entity.copyFrom(entity_2);
-                entity.setPosition(x, y, z);
-                world.method_18769(entity);
+                entity.setPos(x, y, z);
+                world.onDimensionChanged(entity);
                 entity_2.removed = true;
             }
         }

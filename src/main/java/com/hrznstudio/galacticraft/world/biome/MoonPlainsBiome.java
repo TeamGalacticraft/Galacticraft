@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
@@ -56,17 +55,17 @@ public final class MoonPlainsBiome extends Biome {
     }
 
     @Override
-    public int getSkyColor(float float_1) {
+    public int getSkyColor() {
         return 0;
     }
 
     @Override
-    public int getFoliageColorAt(BlockPos blockPos_1) {
+    public int getFoliageColor() {
         return waterFogColor;
     }
 
     @Override
-    public int getGrassColorAt(BlockPos blockPos_1) {
+    public int getGrassColorAt(double x, double z) {
         return waterColor;
     }
 }

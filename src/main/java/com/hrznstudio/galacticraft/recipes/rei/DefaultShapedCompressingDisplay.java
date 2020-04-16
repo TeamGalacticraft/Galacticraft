@@ -22,12 +22,13 @@
 
 package com.hrznstudio.galacticraft.recipes.rei;
 
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
+import me.shedaniel.rei.api.EntryStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,16 +36,20 @@ import java.util.List;
  */
 public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
     private ShapedCompressingRecipe display;
-    private List<List<ItemStack>> input;
-    private List<ItemStack> output;
+    private List<List<EntryStack>> input;
+    private List<EntryStack> output;
 
     public DefaultShapedCompressingDisplay(ShapedCompressingRecipe recipe) {
         this.display = recipe;
-        this.input = Lists.newArrayList();
+        this.input = new ArrayList<>();
         recipe.getPreviewInputs().forEach((ingredient) -> {
-            this.input.add(Arrays.asList(ingredient.getStackArray()));
+            List<EntryStack> stacks = new ArrayList<>();
+            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
+                stacks.add(EntryStack.create(stack));
+            }
+            input.add(stacks);
         });
-        this.output = Arrays.asList(recipe.getOutput());
+        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
     }
 
     //@Override
@@ -52,19 +57,20 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
     //    return Optional.ofNullable(this.display);
     //}
 
+
     @Override
-    public List<List<ItemStack>> getInput() {
-        return this.input;
+    public List<List<EntryStack>> getRequiredEntries() {
+        return input;
     }
 
     @Override
-    public List<ItemStack> getOutput() {
-        return this.output;
+    public List<List<EntryStack>> getInputEntries() {
+        return input;
     }
 
     @Override
-    public List<List<ItemStack>> getRequiredItems() {
-        return this.input;
+    public List<EntryStack> getOutputEntries() {
+        return output;
     }
 
     @Override

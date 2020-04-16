@@ -24,12 +24,17 @@ package com.hrznstudio.galacticraft.client.render.block.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlockEntity;
-import com.hrznstudio.galacticraft.client.model.block.BasicSolarPanelModel;
-import com.mojang.blaze3d.platform.GLX;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 /**
@@ -39,35 +44,124 @@ import net.minecraft.util.Identifier;
 public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<BasicSolarPanelBlockEntity> {
 
     private static Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
-    public BasicSolarPanelModel model = new BasicSolarPanelModel();
+
+    private ModelPart panelMain;
+    private ModelPart sideHorizontal0;
+    private ModelPart sideVertical0;
+    private ModelPart sideVertical2;
+    private ModelPart sideVertical1;
+    private ModelPart sideHorizontal1;
+    private ModelPart sideHorizontal3;
+    private ModelPart sideHorizontal2;
+    private ModelPart pole;
+
+    public BasicSolarPanelBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
+        super(dispatcher);
+
+        this.panelMain = new ModelPart(256, 128, 0, 0);
+        this.panelMain.addCuboid(-23F, -0.5F, -23F, 46, 1, 46);
+        this.panelMain.setPivot(0F, 0F, 0F);
+        this.panelMain.setTextureSize(256, 128);
+        this.panelMain.mirror = true;
+        this.setRotation(this.panelMain);
+        this.sideHorizontal0 = new ModelPart(256, 128, 0, 48);
+        this.sideHorizontal0.addCuboid(-24F, -1.111F, -23F, 1, 1, 46);
+        this.sideHorizontal0.setPivot(0F, 0F, 0F);
+        this.sideHorizontal0.setTextureSize(256, 128);
+        this.sideHorizontal0.mirror = true;
+        this.setRotation(this.sideHorizontal0);
+        this.sideVertical0 = new ModelPart(256, 128, 94, 48);
+        this.sideVertical0.addCuboid(-24F, -1.1F, 23F, 48, 1, 1);
+        this.sideVertical0.setPivot(0F, 0F, 0F);
+        this.sideVertical0.setTextureSize(256, 128);
+        this.sideVertical0.mirror = true;
+        this.setRotation(this.sideVertical0);
+        this.sideVertical2 = new ModelPart(256, 128, 94, 48);
+        this.sideVertical2.addCuboid(-24F, -1.1F, -24F, 48, 1, 1);
+        this.sideVertical2.setPivot(0F, 0F, 0F);
+        this.sideVertical2.setTextureSize(256, 128);
+        this.sideVertical2.mirror = true;
+        this.setRotation(this.sideVertical2);
+        this.sideVertical1 = new ModelPart(256, 128, 94, 48);
+        this.sideVertical1.addCuboid(-24F, -1.1F, -0.5F, 48, 1, 1);
+        this.sideVertical1.setPivot(0F, 0F, 0F);
+        this.sideVertical1.setTextureSize(256, 128);
+        this.sideVertical1.mirror = true;
+        this.setRotation(this.sideVertical1);
+        this.sideHorizontal1 = new ModelPart(256, 128, 0, 48);
+        this.sideHorizontal1.addCuboid(-9F, -1.111F, -23F, 1, 1, 46);
+        this.sideHorizontal1.setPivot(0F, 0F, 0F);
+        this.sideHorizontal1.setTextureSize(256, 128);
+        this.sideHorizontal1.mirror = true;
+        this.setRotation(this.sideHorizontal1);
+        this.sideHorizontal3 = new ModelPart(256, 128, 0, 48);
+        this.sideHorizontal3.addCuboid(23F, -1.111F, -23F, 1, 1, 46);
+        this.sideHorizontal3.setPivot(0F, 0F, 0F);
+        this.sideHorizontal3.setTextureSize(256, 128);
+        this.sideHorizontal3.mirror = true;
+        this.setRotation(this.sideHorizontal3);
+        this.sideHorizontal2 = new ModelPart(256, 128, 0, 48);
+        this.sideHorizontal2.addCuboid(8F, -1.111F, -23F, 1, 1, 46);
+        this.sideHorizontal2.setPivot(0F, 0F, 0F);
+        this.sideHorizontal2.setTextureSize(256, 128);
+        this.sideHorizontal2.mirror = true;
+        this.setRotation(this.sideHorizontal2);
+        this.pole = new ModelPart(256, 128, 94, 50);
+        this.pole.addCuboid(-1.5F, 0.0F, -1.5F, 3, 24, 3);
+        this.pole.setPivot(0F, 0F, 0F);
+        this.pole.setTextureSize(256, 128);
+        this.pole.mirror = true;
+        this.setRotation(this.pole);
+    }
 
     @Override
-    public void render(BasicSolarPanelBlockEntity entity, double x, double y, double z, float f, int i) {
-        this.bindTexture(BasicSolarPanelBlockEntityRenderer.solarPanelTexture);
-        int lightmapIndex = this.getWorld().getLightmapIndex(entity.getPos().up(), 0);
-        GLX.glMultiTexCoord2f(GLX.GL_TEXTURE1, (lightmapIndex % 65536), (float) (lightmapIndex / 65536));
+    public void render(BasicSolarPanelBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        MinecraftClient.getInstance().getTextureManager().bindTexture(BasicSolarPanelBlockEntityRenderer.solarPanelTexture);
+        // int lightmapIndex = Objects.requireNonNull(blockEntity.getWorld()).getLightLevel(blockEntity.getPos().up(), 0);
+        // RenderSystem.glMultiTexCoord2f(33986 /*i hope this is right*/, (lightmapIndex % 65536), (float) (lightmapIndex / 65536));
 
-        GlStateManager.pushMatrix();
-        GlStateManager.enableRescaleNormal();
-        GlStateManager.disableColorMaterial();
-        GlStateManager.disableColorLogicOp();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        GlStateManager.translatef((float) x, (float) y, (float) z);
+        matrices.push();
+        RenderSystem.enableRescaleNormal();
+        RenderSystem.disableColorMaterial();
+        RenderSystem.disableColorLogicOp();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        GlStateManager.translatef(0.5F, 1.0F, 0.5F);
-        this.model.renderPole();
-        GlStateManager.disableColorMaterial();
-        GlStateManager.disableColorLogicOp();
-        GlStateManager.translatef(0.0F, 1.5F, 0.0F);
+        //matrices.translate(blockEntity.getPos().getX(), blockEntity.getPos().getY(), blockEntity.getPos().getZ());
 
-        GlStateManager.rotatef(180.0F, 0, 0, 1);
-        GlStateManager.rotatef(-90.0F, 0, 1, 0);
+        matrices.translate(0.5F, 1.0F, 0.5F);
+        this.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(solarPanelTexture)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrices.pop();
+    }
 
-        this.model.renderPanel();
-        GlStateManager.disableColorMaterial();
-        GlStateManager.disableColorLogicOp();
-        GlStateManager.disableRescaleNormal();
-        GlStateManager.popMatrix();
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    public void renderPanel(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        this.panelMain.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideHorizontal0.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideVertical0.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideVertical2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideVertical1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideHorizontal1.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideHorizontal3.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        this.sideHorizontal2.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    private void setRotation(ModelPart model) {
+        model.setPivot((float) 0.0, (float) 0.0, (float) 0.0);
+    }
+
+    public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        this.pole.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+
+        RenderSystem.disableColorMaterial();
+        RenderSystem.disableColorLogicOp();
+        matrices.translate(0.0F, 1.5F, 0.0F);
+
+        RenderSystem.rotatef(180.0F, 0, 0, 1);
+        RenderSystem.rotatef(-90.0F, 0, 1, 0);
+
+        this.renderPanel(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
+        RenderSystem.disableColorMaterial();
+        RenderSystem.disableColorLogicOp();
+        RenderSystem.disableRescaleNormal();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 }

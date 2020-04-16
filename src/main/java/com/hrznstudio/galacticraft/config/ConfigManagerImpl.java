@@ -31,7 +31,7 @@ import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
-import me.shedaniel.clothconfig2.impl.builders.IntSliderBuilder;
+import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
@@ -102,21 +102,19 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(Constants.Config.WIRES);
 
-        wires.add(new IntSliderBuilder(
+        wires.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.WIRE_ENERGY_TRANSFER_LIMIT,
-                this.config.wireTransferLimit(),
-                1, Integer.MAX_VALUE)
+                this.config.wireTransferLimit())
                 .setSaveConsumer(this.config::setWireTransferLimit)
                 .setDefaultValue(480)
                 .build()
         );
 
-        wires.add(new IntSliderBuilder(
+        wires.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT,
-                this.config.heavyWireTransferLimit(),
-                1, Integer.MAX_VALUE)
+                this.config.heavyWireTransferLimit())
                 .setSaveConsumer(this.config::setHeavyWireTransferLimit)
                 .setDefaultValue(1440)
                 .build()
@@ -124,83 +122,76 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(Constants.Config.MACHINES);
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE,
-                this.config.coalGeneratorEnergyProductionRate(),
-                1, Integer.MAX_VALUE)
+                this.config.coalGeneratorEnergyProductionRate())
                 .setSaveConsumer(this.config::setCoalGeneratorEnergyProductionRate)
                 .setDefaultValue(120)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE,
-                this.config.solarPanelEnergyProductionRate(),
-                1, Integer.MAX_VALUE)
+                this.config.solarPanelEnergyProductionRate())
                 .setSaveConsumer(this.config::setSolarPanelEnergyProductionRate)
                 .setDefaultValue(44)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE,
-                this.config.circuitFabricatorEnergyConsumptionRate(),
-                1, Integer.MAX_VALUE)
+                this.config.circuitFabricatorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setCircuitFabricatorEnergyConsumptionRate)
                 .setDefaultValue(20)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE,
-                this.config.electricCompressorEnergyConsumptionRate(),
-                1, Integer.MAX_VALUE)
+                this.config.electricCompressorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setElectricCompressorEnergyConsumptionRate)
                 .setDefaultValue(75)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE,
-                this.config.oxygenCollectorEnergyConsumptionRate(),
-                1, Integer.MAX_VALUE)
+                this.config.oxygenCollectorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setOxygenCollectorEnergyConsumptionRate)
                 .setDefaultValue(10)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.REFINERY_ENERGY_PRODUCTION_RATE,
-                this.config.refineryEnergyConsumptionRate(),
-                1, Integer.MAX_VALUE)
+                this.config.refineryEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setRefineryEnergyConsumptionRate)
                 .setDefaultValue(60)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE,
-                this.config.energyStorageModuleStorageSize(),
-                1, Integer.MAX_VALUE)
+                this.config.energyStorageModuleStorageSize())
                 .setSaveConsumer(this.config::setEnergyStorageModuleStorageSize)
                 .setDefaultValue(500_000)
                 .build()
         );
 
-        machines.add(new IntSliderBuilder(
+        machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
                 Constants.Config.ENERGY_STORAGE_SIZE,
-                this.config.machineEnergyStorageSize(),
-                1, Integer.MAX_VALUE)
+                this.config.machineEnergyStorageSize())
                 .setSaveConsumer(this.config::setMachineEnergyStorageSize)
                 .setDefaultValue(30_000)
+                .requireRestart()
                 .build()
         );
 

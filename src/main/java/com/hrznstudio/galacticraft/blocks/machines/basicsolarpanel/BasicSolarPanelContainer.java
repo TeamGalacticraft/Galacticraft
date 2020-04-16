@@ -71,7 +71,7 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = this.slotList.get(slotId);
+        Slot slot = this.slots.get(slotId);
 
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack1 = slot.getStack();
@@ -82,7 +82,7 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
             }
 
             if (slotId < this.solarPanel.getInventory().getSlotCount()) {
-                if (!this.insertItem(itemStack1, this.solarPanel.getInventory().getSlotCount(), this.slotList.size(), true)) {
+                if (!this.insertItem(itemStack1, this.solarPanel.getInventory().getSlotCount(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (!this.insertItem(itemStack1, 0, this.solarPanel.getInventory().getSlotCount(), false)) {
@@ -110,8 +110,8 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
     }
 
     @Override
-    public void setProperties(int index, int value) {
-        super.setProperties(index, value);
+    public void setProperty(int id, int value) {
+        super.setProperty(id, value);
         blockEntity.status = BasicSolarPanelStatus.get(status.get());
     }
 }

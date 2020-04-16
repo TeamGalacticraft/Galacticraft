@@ -26,11 +26,11 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
@@ -46,7 +46,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class RefineryScreen extends MachineContainerScreen<RefineryContainer> {
 
-    public static final ContainerFactory<AbstractContainerScreen> FACTORY = createFactory(RefineryBlockEntity.class, RefineryScreen::new);
+    public static final ContainerFactory<ContainerScreen> FACTORY = createFactory(RefineryBlockEntity.class, RefineryScreen::new);
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
@@ -70,12 +70,12 @@ public class RefineryScreen extends MachineContainerScreen<RefineryContainer> {
 
     @Override
     protected void drawBackground(float v, int mouseX, int mouseY) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-        int leftPos = this.left;
-        int topPos = this.top;
+        int leftPos = this.x;
+        int topPos = this.y;
 
         energyDisplayX = leftPos + 10;
         energyDisplayY = topPos + 35;
@@ -89,7 +89,7 @@ public class RefineryScreen extends MachineContainerScreen<RefineryContainer> {
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.refinery").asFormattedString(), (this.width / 2), this.top + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.refinery").asFormattedString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 

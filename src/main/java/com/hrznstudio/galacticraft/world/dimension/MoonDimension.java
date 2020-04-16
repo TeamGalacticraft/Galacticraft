@@ -42,9 +42,8 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorType;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonDimension extends Dimension {
-
-    public MoonDimension(World worldIn, DimensionType typeIn) {
-        super(worldIn, typeIn);
+    public MoonDimension(World world, DimensionType type) {
+        super(world, type, 0.0F);
     }
 
     @Override
@@ -84,7 +83,7 @@ public class MoonDimension extends Dimension {
 
     public ChunkGenerator<?> createChunkGenerator() {
         MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createSettings();
-        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig().setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
+        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
     }
 
     @Override
@@ -119,6 +118,11 @@ public class MoonDimension extends Dimension {
     }
 
     public boolean canPlayersSleep() {
+        return false;
+    }
+
+    @Override
+    public boolean isFogThick(int x, int z) {
         return false;
     }
 

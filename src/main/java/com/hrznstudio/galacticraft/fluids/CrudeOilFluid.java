@@ -24,11 +24,11 @@ package com.hrznstudio.galacticraft.fluids;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntity;
@@ -36,16 +36,14 @@ import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.ViewableWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 
 import java.util.Random;
 
@@ -70,22 +68,17 @@ public class CrudeOilFluid extends BaseFluid {
     }
 
     @Override
-    protected BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.SOLID;
-    }
-
-    @Override
     public Item getBucketItem() {
         return GalacticraftItems.CRUDE_OIL_BUCKET;
     }
 
     @Environment(EnvType.CLIENT)
     public ParticleEffect getParticle() {
-        return ParticleTypes.DRIPPING_WATER;
+        return GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE;
     }
 
     @Override
-    public boolean method_15777(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
+    public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
         return direction == Direction.DOWN && !fluid.matches(GalacticraftFluidTags.OIL);
     }
 
@@ -93,7 +86,7 @@ public class CrudeOilFluid extends BaseFluid {
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(new DustParticleEffect(0.0f, 0.0f, 0.0f, 0.5f),
+            world.addParticle(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -103,7 +96,7 @@ public class CrudeOilFluid extends BaseFluid {
 
 
     @Override
-    public int getTickRate(ViewableWorld viewableWorld) {
+    public int getTickRate(WorldView WorldView) {
         return 7;
     }
 
@@ -119,12 +112,12 @@ public class CrudeOilFluid extends BaseFluid {
     }
 
     @Override
-    public int method_15733(ViewableWorld viewableWorld) {
+    public int method_15733(WorldView WorldView) {
         return 4;
     }
 
     @Override
-    public int getLevelDecreasePerBlock(ViewableWorld viewableWorld) {
+    public int getLevelDecreasePerBlock(WorldView WorldView) {
         return 1;
     }
 
@@ -156,11 +149,10 @@ public class CrudeOilFluid extends BaseFluid {
     public static class Flowing extends CrudeOilFluid {
 
         public Flowing() {
-
         }
 
         @Override
-        protected void appendProperties(StateFactory.Builder<Fluid, FluidState> stateBuilder) {
+        protected void appendProperties(StateManager.Builder<Fluid, FluidState> stateBuilder) {
             super.appendProperties(stateBuilder);
             stateBuilder.add(LEVEL);
         }
@@ -179,7 +171,6 @@ public class CrudeOilFluid extends BaseFluid {
     public static class Still extends CrudeOilFluid {
 
         public Still() {
-
         }
 
         @Override

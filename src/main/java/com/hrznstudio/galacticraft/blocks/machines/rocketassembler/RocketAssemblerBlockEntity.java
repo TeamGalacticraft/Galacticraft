@@ -115,7 +115,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     private void schematicUpdate(ItemStack prev, ItemStack current) {
         try {
             recipes.clear();
-            for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllForTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+            for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllOfTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
                 if (recipe instanceof RocketAssemblerRecipe) {
                     recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
                 }
@@ -235,7 +235,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
     private void schematicUpdateFromTag() {
         recipes.clear();
-        for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllForTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
+        for (Recipe<Inventory> recipe : ((GCRecipeAccessor) world.getRecipeManager()).getAllOfTypeGC(GalacticraftRecipes.ROCKET_ASSEMBLER_TYPE).values()) {
             if (recipe instanceof RocketAssemblerRecipe) {
                 recipes.put(((RocketAssemblerRecipe) recipe).getPartOutput(), ((RocketAssemblerRecipe) recipe));
             }

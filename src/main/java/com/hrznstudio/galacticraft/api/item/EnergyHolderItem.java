@@ -57,7 +57,7 @@ public interface EnergyHolderItem {
             return 0;
         }
 
-        if (battery.getTag() != null && battery.getTag().containsKey("Energy")) {
+        if (battery.getTag() != null && battery.getTag().contains("Energy")) {
             int stored = battery.getTag().getInt("Energy");
             if (stored >= energyToRemove) {
                 GalacticraftEnergy.setEnergy(battery, stored - energyToRemove);
@@ -84,7 +84,7 @@ public interface EnergyHolderItem {
             return energyToAdd;
         }
 
-        if (battery.getTag() != null && battery.getTag().containsKey("Energy")) {
+        if (battery.getTag() != null && battery.getTag().contains("Energy")) {
             int stored = battery.getTag().getInt("Energy");
             if (stored + energyToAdd <= getMaxEnergy(battery)) {
                 GalacticraftEnergy.setEnergy(battery, stored + energyToAdd);
@@ -102,7 +102,7 @@ public interface EnergyHolderItem {
     }
 
     default int getEnergy(ItemStack battery) {
-        if (battery.getTag() != null && battery.getTag().containsKey("Energy")) {
+        if (battery.getTag() != null && battery.getTag().contains("Energy")) {
             return battery.getTag().getInt("Energy");
         } else {
             return 0;

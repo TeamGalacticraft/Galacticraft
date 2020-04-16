@@ -52,6 +52,7 @@ public class GlowstoneTorchBlock extends TorchBlock {
     @Override
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
+        // stop particles from spawning
     }
 
     @Override

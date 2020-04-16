@@ -8,5 +8,5 @@ import net.minecraft.util.Identifier;
 import java.util.Map;
 
 public interface GCRecipeAccessor {
-    <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> getAllForTypeGC(RecipeType<T> type);
+    <C extends Inventory, T extends Recipe<C>> Map<Identifier, Recipe<C>> getAllOfTypeGC(RecipeType<T> type);
 }

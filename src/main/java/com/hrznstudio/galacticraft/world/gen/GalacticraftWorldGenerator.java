@@ -43,7 +43,6 @@ public class GalacticraftWorldGenerator {
     }
 
     private static void registerMars() {
-        OreGenerator.registerMarsOres();
     }
 
 }

@@ -37,7 +37,7 @@ import me.shedaniel.rei.impl.ScreenHelper;
 import me.shedaniel.rei.listeners.ContainerScreenHooks;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.util.version.VersionParsingException;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
@@ -115,9 +115,10 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
     @Override
     public void registerBounds(DisplayHelper displayHelper) {
+        //noinspection UnstableApiUsage
         displayHelper.getBaseBoundsHandler().registerExclusionZones(MachineContainerScreen.class, isOnRightSide -> {
             ContainerScreenHooks screenHooks = ScreenHelper.getLastContainerScreenHooks();
-            AbstractContainerScreen screen = ScreenHelper.getLastContainerScreen();
+            ContainerScreen screen = ScreenHelper.getLastContainerScreen();
             MachineContainerScreen machineScreen = (MachineContainerScreen) screen;
             List<Rectangle> l = Lists.newArrayList();
 

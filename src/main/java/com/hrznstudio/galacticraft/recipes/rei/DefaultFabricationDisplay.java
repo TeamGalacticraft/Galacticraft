@@ -24,11 +24,13 @@ package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
+import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeDisplay;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -36,30 +38,34 @@ import java.util.List;
  */
 public class DefaultFabricationDisplay implements RecipeDisplay {
     private FabricationRecipe display;
-    private List<List<ItemStack>> input;
-    private List<ItemStack> output;
+    private List<List<EntryStack>> input;
+    private List<EntryStack> output;
 
     public DefaultFabricationDisplay(FabricationRecipe recipe) {
         this.display = recipe;
         this.input = Lists.newArrayList();
         recipe.getPreviewInputs().forEach((ingredient) -> {
-            this.input.add(Arrays.asList(ingredient.getStackArray()));
+            List<EntryStack> stacks = new ArrayList<>();
+            for (ItemStack stack : ingredient.getMatchingStacksClient()) {
+                stacks.add(EntryStack.create(stack));
+            }
+            this.input.add(stacks);
         });
-        this.output = Arrays.asList(recipe.getOutput());
+
+        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
     }
 
     @Override
-    public List<List<ItemStack>> getInput() {
+    public List<List<EntryStack>> getInputEntries() {
         return this.input;
     }
 
     @Override
-    public List<ItemStack> getOutput() {
+    public List<EntryStack> getOutputEntries() {
         return this.output;
     }
 
-    @Override
-    public List<List<ItemStack>> getRequiredItems() {
+    public List<List<EntryStack>> getInput() {
         return this.input;
     }
 

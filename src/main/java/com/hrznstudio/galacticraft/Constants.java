@@ -46,7 +46,7 @@ public class Constants {
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
         public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
-        public static final String DENSE_ICE = "dense_ice";
+        //public static final String DENSE_ICE = "dense_ice"; // Dense Ice has been replaced by Blue Ice
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -100,8 +100,8 @@ public class Constants {
         public static final String TIN_VACUUM_GLASS = "vacuum_glass_tin";
         public static final String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         public static final String WALKWAY = "walkway";
-        public static final String WIRE_WALKWAY = "walkway_block_wire";
-        public static final String PIPE_WALKWAY = "walkway_block_pipe";
+        public static final String WIRE_WALKWAY = "wire_walkway";
+        public static final String PIPE_WALKWAY = "pipe_walkway";
         public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
         public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
@@ -124,9 +124,10 @@ public class Constants {
         public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
-        public static final String UNLIT_TORCH = "unlit_torch";
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
         public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
+        public static final String UNLIT_TORCH = "unlit_torch";
+        public static final String UNLIT_WALL_TORCH = "unlit_wall_torch";
         public static final String CAVERNOUS_VINE = "cavernous_vine";
         public static final String POISONOUS_CAVERNOUS_VINE = "poisonous_cavernous_vine";
         public static final String MOON_BERRY_BUSH = "moon_berry_bush";
@@ -393,6 +394,11 @@ public class Constants {
         public static final String ROCKET = "rocket";
     }
 
+    public static class Particles {
+        public static final String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
+        public static final String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+    }
+
     public static class Config {
         public static final String TITLE = "config.galacticraft-rewoven.title";
         public static final String RESET = "config.galacticraft-rewoven.reset";
@@ -464,6 +470,7 @@ public class Constants {
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
         public static final String EVOLVED_ZOMBIE = "evolved_zombie";
+        public static final String EVOLVED_CREEPER = "evolved_creeper";
         public static final String ROCKET = "rocket";
     }
 

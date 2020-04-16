@@ -34,7 +34,6 @@ import net.minecraft.world.dimension.DimensionType;
  */
 public class GalacticraftDimensions {
     public static final DimensionType MOON = FabricDimensionType.builder().skyLight(true).desiredRawId(30).factory(MoonDimension::new).defaultPlacer((entity, serverWorld, direction, v, v1) -> new BlockPattern.TeleportTarget(new Vec3d(0, 100, 0), new Vec3d(0,0,0), 0)).buildAndRegister(new Identifier(Constants.MOD_ID, "moon"));
-    public static final DimensionType MARS = FabricDimensionType.builder().skyLight(true).desiredRawId(31).factory(MarsDimension::new).defaultPlacer((entity, serverWorld, direction, v, v1) -> new BlockPattern.TeleportTarget(new Vec3d(0, 100, 0), new Vec3d(0,0,0), 0)).buildAndRegister(new Identifier(Constants.MOD_ID, "mars"));
 
     public static void init() {}
 }

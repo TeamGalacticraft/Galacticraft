@@ -40,6 +40,7 @@ import net.minecraft.world.World;
  */
 public class GalacticraftItems {
     public static final Item GLOWSTONE_TORCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP)));
+    public static final Item UNLIT_TORCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), new WallStandingBlockItem(GalacticraftBlocks.UNLIT_TORCH, GalacticraftBlocks.UNLIT_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP)));
     public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP))
             .icon(() -> new ItemStack(GalacticraftItems.CANVAS))

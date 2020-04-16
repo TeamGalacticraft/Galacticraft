@@ -39,7 +39,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.packet.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 
@@ -121,7 +121,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     public void fromTag(CompoundTag tag) {
         super.fromTag(tag);
 
-        if (tag.containsKey("red") && tag.containsKey("cone")) {
+        if (tag.contains("red") && tag.contains("cone")) {
             red = tag.getInt("red");
             green = tag.getInt("green");
             blue = tag.getInt("blue");

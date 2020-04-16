@@ -44,15 +44,15 @@ public class RocketData {
     }
 
     public static RocketData fromTag(CompoundTag tag) {
-        if (tag.containsKey("tier")
-                && tag.containsKey("red")
-                && tag.containsKey("green") && tag.containsKey("blue")
-                && tag.containsKey("alpha")
-                && tag.containsKey("cone")
-                && tag.containsKey("body") && tag.containsKey("fin")
-                && tag.containsKey("booster") && tag.containsKey("bottom")
-                && tag.containsKey("upgrade")) {
-            return new RocketData(tag.getInt("tier"), tag.getInt("red"), tag.getInt("green"), tag.getInt("blue"), tag.containsKey("alpha") ? tag.getInt("alpha") : 1,
+        if (tag.contains("tier")
+                && tag.contains("red")
+                && tag.contains("green") && tag.contains("blue")
+                && tag.contains("alpha")
+                && tag.contains("cone")
+                && tag.contains("body") && tag.contains("fin")
+                && tag.contains("booster") && tag.contains("bottom")
+                && tag.contains("upgrade")) {
+            return new RocketData(tag.getInt("tier"), tag.getInt("red"), tag.getInt("green"), tag.getInt("blue"), tag.contains("alpha") ? tag.getInt("alpha") : 1,
                     Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("cone"))), Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("body"))),
                     Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("fin"))), Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("booster"))),
                     Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("bottom"))), Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("upgrade"))));

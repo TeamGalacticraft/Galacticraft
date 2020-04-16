@@ -22,10 +22,11 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.items.RocketItem;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -40,21 +41,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(HeldItemFeatureRenderer.class)
 public abstract class HeldItemFeatureRendererMixin {
 
-    @Inject(method = "method_4192", at = @At("TAIL"))
-    private void method_4192(LivingEntity entity, ItemStack stack, ModelTransformation.Type type, Arm arm, CallbackInfo ci) {
-        if (!stack.isEmpty() && stack.getItem() instanceof RocketItem) {
-            GlStateManager.pushMatrix();
-            if (entity.isInSneakingPose()) {
-                GlStateManager.translatef(0.0F, 0.2F, 0.0F);
+    @Inject(method = "renderItem", at = @At("TAIL"))
+    private void method_4192(LivingEntity livingEntity, ItemStack itemStack, ModelTransformation.Mode mode, Arm arm, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
+        if (!itemStack.isEmpty()) { //&& GalacticraftItems.isRocketItem(itemStack_1.getItem())
+            System.out.println("nice that thing rendered");
+            RenderSystem.pushMatrix();
+            if (livingEntity.isInSneakingPose()) {
+                RenderSystem.translatef(0.0F, 0.2F, 0.0F);
             }
 
-            GlStateManager.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
-            GlStateManager.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
+            RenderSystem.rotatef(-90.0F, 1.0F, 0.0F, 0.0F);
+            RenderSystem.rotatef(180.0F, 0.0F, 1.0F, 0.0F);
             boolean boolean_1 = arm == Arm.LEFT;
-            GlStateManager.translatef((float) (boolean_1 ? -1 : 1) / 16.0F, 50F, -0.625F);
-            GlStateManager.popMatrix();
-            //noinspection UnnecessaryReturnStatement
-            return;
+            RenderSystem.translatef((float) (boolean_1 ? -1 : 1) / 16.0F, 50F, -0.625F);
+            //MinecraftClient.getInstance().getFirstPersonRenderer().renderItemFromSide(livingEntity_1, itemStack_1, modelTransformation$Type_1, boolean_1);
+            RenderSystem.popMatrix();
+            return; // leave this, it stops normal item rendering if its a rocket.
         }
     }
 }
