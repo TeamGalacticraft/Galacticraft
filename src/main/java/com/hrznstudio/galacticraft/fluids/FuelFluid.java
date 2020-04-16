@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.fluids;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,9 +36,7 @@ import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -74,7 +73,7 @@ public class FuelFluid extends BaseFluid {
 
     @Environment(EnvType.CLIENT)
     public ParticleEffect getParticle() {
-        return ParticleTypes.DRIPPING_WATER;
+        return GalacticraftParticles.DRIPPING_FUEL_PARTICLE;
     }
 
     @Override
@@ -86,7 +85,7 @@ public class FuelFluid extends BaseFluid {
     @Environment(EnvType.CLIENT)
     public void randomDisplayTick(World world, BlockPos blockPos, FluidState fluidState, Random random) {
         if (random.nextInt(10) == 0) {
-            world.addParticle(new DustParticleEffect(0.0f, 0.0f, 0.0f, 0.5f),
+            world.addParticle(GalacticraftParticles.DRIPPING_FUEL_PARTICLE,
                     (double) blockPos.getX() + 0.5D - random.nextGaussian() + random.nextGaussian(),
                     (double) blockPos.getY() + 1.1F,
                     (double) blockPos.getZ() + 0.5D - random.nextGaussian() + random.nextGaussian(),
@@ -172,7 +171,6 @@ public class FuelFluid extends BaseFluid {
     public static class Still extends FuelFluid {
 
         public Still() {
-
         }
 
         @Override

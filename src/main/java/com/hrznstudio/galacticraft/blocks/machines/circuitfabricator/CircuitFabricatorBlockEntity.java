@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -92,6 +93,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         if (world.isClient) {
             return;
         }
+
         if (!enabled()) {
             this.status = CircuitFabricatorStatus.OFF;
             idleEnergyDecrement(true);
@@ -208,7 +210,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     @Override
     public int getEnergyUsagePerTick() {
-        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
+        return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
     }
 
     @Override

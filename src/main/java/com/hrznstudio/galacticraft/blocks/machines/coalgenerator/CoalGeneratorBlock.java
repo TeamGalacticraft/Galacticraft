@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -61,6 +61,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -138,6 +139,16 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
+    @Override
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) return ActionResult.SUCCESS;
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COAL_GENERATOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
@@ -181,8 +192,9 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
         }
     }
 
+    @Nonnull
     @Override
-    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 

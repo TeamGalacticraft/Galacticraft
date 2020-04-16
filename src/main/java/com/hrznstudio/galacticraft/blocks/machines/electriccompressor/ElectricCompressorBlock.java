@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -56,6 +56,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,8 +126,19 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public WireNetwork.WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireNetwork.WireConnectionType.NONE;
+    public boolean consumesFluids() {
+        return false;
+    }
+
+    @Override
+    public boolean generatesFluids() {
+        return false;
+    }
+
+    @Nonnull
+    @Override
+    public WireConnectionType canWireConnect(IWorld world, Direction dir, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.NONE;
     }
 
     @Override
