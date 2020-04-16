@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -80,11 +81,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         } else {
             return super.getFilterForSlot(slot);
         }
-    }
-
-    @Override
-    public int getMaxEnergy() {
-        return ConfigurableElectricMachineBlockEntity.DEFAULT_MAX_ENERGY;
     }
 
     public void tick() {
@@ -246,6 +242,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
     @Override
     public int getEnergyUsagePerTick() {
-        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
+        return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
     }
 }

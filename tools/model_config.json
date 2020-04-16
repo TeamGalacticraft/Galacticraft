@@ -1,12 +1,12 @@
 {
-  "name": "energy_storage_module",
+  "name": "refinery",
   "mod-id": "galacticraft-rewoven",
   "sides": {
     "north": {
-      "texture": "block/energy_storage_module_0"
+      "texture": "block/refinery_front"
     },
     "south": {
-      "texture": "block/energy_storage_module_0"
+      "texture": "block/refinery_side"
     },
     "east": {
       "texture": "block/machine_side"
@@ -27,8 +27,12 @@
       "texture": "block/machine_power_input"
     },
     {
-      "option": "powerout",
-      "texture": "block/machine_power_output"
+      "option": "fluidout",
+      "texture": "block/machine_fluid_output"
+    },
+    {
+      "option": "fluidin",
+      "texture": "block/machine_fluid_input"
     }
   ],
   "particle": "block/machine"

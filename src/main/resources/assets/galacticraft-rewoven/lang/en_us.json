@@ -70,7 +70,7 @@
   "block.galacticraft-rewoven.detailed_tin_decoration": "Detailed Tin Decoration Block",
   "block.galacticraft-rewoven.detailed_tin_decoration_wall": "Detailed Tin Decoration Block Wall",
   "block.galacticraft-rewoven.detailed_tin_decoration_stairs": "Detailed Tin Decoration Block Stairs",
-  "block.galacticraft-rewoven.detailed_tin_decoration_slab" : "Detailed Tin Decoration Block Slab",
+  "block.galacticraft-rewoven.detailed_tin_decoration_slab": "Detailed Tin Decoration Block Slab",
   "block.galacticraft-rewoven.tin_decoration_slab_1": "Plain Tin Decoration Block Slab",
   "block.galacticraft-rewoven.dark_decoration": "Dark Decoration Block",
   "block.galacticraft-rewoven.dark_decoration_slab": "Dark Decoration Block Slab",
@@ -79,12 +79,11 @@
   "block.galacticraft-rewoven.walkway_block_wire": "Walkway (Wire)",
   "block.galacticraft-rewoven.walkway_block_pipe": "Walkway (Pipe)",
   "block.galacticraft-rewoven.glowstone_torch": "Glowstone Torch",
-
+  "block.galacticraft-rewoven.unlit_torch": "Unlit Torch",
   "block.galacticraft-rewoven.vacuum_glass": "Vacuum Glass",
   "block.galacticraft-rewoven.vacuum_glass_clear": "Vacuum Glass (Clear)",
-  "block.galacticraft-rewoven.vacuum_glass_tin" : "Vacuum Glass (Tin)",
+  "block.galacticraft-rewoven.vacuum_glass_tin": "Vacuum Glass (Tin)",
   "block.galacticraft-rewoven.vacuum_glass_strong": "Vacuum Glass (Strong)",
-
   "block.galacticraft-rewoven.coal_generator": "Coal Generator",
   "block.galacticraft-rewoven.compressor": "Compressor",
   "block.galacticraft-rewoven.electric_compressor": "Electric Compressor",
@@ -259,20 +258,19 @@
   "tooltip.galacticraft-rewoven.energy.g": "%sG GJ",
 
   "tooltip.galacticraft-rewoven.coal_generator": "Burns coal and charcoal for energy. The simplest but least efficient energy method.",
-  "tooltip.galacticraft-rewoven.compressor" : "Compressor will process ingots into their compressed equivalents.",
-  "tooltip.galacticraft-rewoven.electric_compressor" : "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.",
+  "tooltip.galacticraft-rewoven.compressor": "Compressor will process ingots into their compressed equivalents.",
+  "tooltip.galacticraft-rewoven.electric_compressor": "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.",
   "tooltip.galacticraft-rewoven.basic_solar_panel": "Basic Solar Panels will collect energy from the sun, storing it for further use. Collects most energy at mid-day (non-adjustable).",
   "tooltip.galacticraft-rewoven.oxygen_collector": "Oxygen Collector will store oxygen collected from leaves in the surrounding area.",
   "tooltip.galacticraft-rewoven.circuit_fabricator": "Circuit Fabricator will process basic materials into silicon wafers, used for advanced machines.",
-  "tooltip.galacticraft-rewoven.refinery" : "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.",
+  "tooltip.galacticraft-rewoven.refinery": "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.",
   "tooltip.galacticraft-rewoven.cheese_block": "Cheese Blocks are created from the cheeses of the Moon, place-able and edible.",
   "tooltip.galacticraft-rewoven.energy_storage_module": "Energy Storage Module is used to store large amounts of energy for later use.",
   "tooltip.galacticraft-rewoven.energy_storage_cluster": "Energy Storage Cluster is used to store large amounts of energy for later use. Stores and outputs more energy than its predecessor.",
   "tooltip.galacticraft-rewoven.glowstone_torch": "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.",
-
+  "tooltip.galacticraft-rewoven.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
   "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
-
   "ui.galacticraft-rewoven.machine.status": "Status: %s",
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: %s",
@@ -322,21 +320,29 @@
   "ui.galacticraft-rewoven.tabs.security_config.public_2": "Public",
   "ui.galacticraft-rewoven.tabs.security_config.not_your_machine": "This is not your machine!",
   "ui.galacticraft-rewoven.tabs.security_config.owner": "Owner: %s",
-
   "category.rei.circuit_fabricator": "Circuit Fabricating",
   "category.rei.compressing": "Compressing",
-
   "galacticraft-rewoven:moon": "Moon",
-
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",
-
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
-
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
+  "config.galacticraft-rewoven.reset": "Reset",
   "config.galacticraft-rewoven.debug": "Debug",
   "config.galacticraft-rewoven.debug.logging": "Debug Logging",
-  "config.galacticraft-rewoven.reset": "Reset"
+  "config.galacticraft-rewoven.energy": "Energy",
+  "config.galacticraft-rewoven.energy.wires": "Wires",
+  "config.galacticraft-rewoven.energy.wires.transfer_limit": "Wire Transfer Limit/t",
+  "config.galacticraft-rewoven.energy.wires.heavy_transfer_limit": "Heavy Wire Transfer Limit/t",
+  "config.galacticraft-rewoven.energy.machines": "Machines",
+  "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate": "Coal Generator Energy Production Rate/t",
+  "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate": "Solar Panel Energy Production Rate/t",
+  "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate": "Circuit Fabricator Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate": "Electric Compressor Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate": "Oxygen Collector Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate": "Refinery Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
+  "config.galacticraft-rewoven.energy.machines.energy_storage_size": "Default Machine Energy Storage Size"
 }

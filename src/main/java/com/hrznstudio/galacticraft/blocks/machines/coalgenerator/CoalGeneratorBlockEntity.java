@@ -27,6 +27,7 @@ import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.Maps;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -60,6 +61,12 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     public int fuelEnergyPerTick;
     private float heat = 0.0f;
 
+    /*
+     * Energy stats:
+     * T1 machine: uses 30gj/t
+     * Coal Generator: generates 120gj/t
+     */
+
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
         //automatically mark dirty whenever the energy attribute is changed
@@ -90,13 +97,13 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
     @Override
     public void tick() {
-        if (world.isClient || !enabled()) {
+        if (this.world.isClient || !enabled()) {
             return;
         }
 
         if (status == CoalGeneratorStatus.IDLE || status == CoalGeneratorStatus.INACTIVE) {
             if (heat >= 1.0F) {
-                heat--;
+                heat -= 0.05F;
             } else {
                 heat = 0;
             }
@@ -111,7 +118,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
             ItemStack stack = getInventory().getInvStack(0).copy();
             stack.decrement(1);
-            getInventory().forceSetInvStack(0, stack);
+            getInventory().setInvStack(0, stack, Simulation.ACTION);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {
@@ -123,7 +130,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         if (status == CoalGeneratorStatus.ACTIVE || this.status == CoalGeneratorStatus.WARMING) {
             fuelTimeCurrent++;
-            getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (fuelEnergyPerTick * heat), Simulation.ACTION);
+            getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat), Simulation.ACTION);
 
             if (fuelTimeCurrent >= fuelTimeMax) {
                 this.status = CoalGeneratorStatus.INACTIVE;
