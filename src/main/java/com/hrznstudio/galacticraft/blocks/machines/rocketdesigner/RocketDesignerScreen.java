@@ -37,16 +37,18 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
 /**
@@ -161,8 +163,7 @@ public class RocketDesignerScreen extends ContainerScreen<RocketDesignerContaine
 
         this.renderBackground();
 
-        RenderSystem.enableLighting();
-        RenderSystem.disableDepthTest();
+        DiffuseLighting.enableGuiDepthLighting();
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
 
@@ -177,14 +178,13 @@ public class RocketDesignerScreen extends ContainerScreen<RocketDesignerContaine
             }
             this.itemRenderer.renderGuiItem(new ItemStack(RocketParts.getPartToRenderForType(RocketPartType.values()[i]).getDesignerItem()), (this.x - 31) + 13, this.y + 3 + ((27) * i) + 4);
         }
-        RenderSystem.disableLighting();
     }
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
 
-        RenderSystem.enableLighting();
+        DiffuseLighting.enableGuiDepthLighting();
         RenderSystem.disableDepthTest();
 
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
@@ -205,8 +205,6 @@ public class RocketDesignerScreen extends ContainerScreen<RocketDesignerContaine
             }
         }
 
-        RenderSystem.disableLighting();
-
         if (Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size() > 25) {
             maxPage = (int) ((Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size() / 25.0F) - ((Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size() / 25.0F) % 1.0F)) - 1; //round down, index 0
         } else {
@@ -223,8 +221,6 @@ public class RocketDesignerScreen extends ContainerScreen<RocketDesignerContaine
                 blit(this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_X, BACK_ARROW_Y, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
             }
         }
-
-        RenderSystem.enableLighting();
 
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.CONE).getDesignerItem().asItem()), this.x + 156, this.y + 8);
         this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BODY).getDesignerItem().asItem()), this.x + 156, this.y + 24);
@@ -452,28 +448,25 @@ public class RocketDesignerScreen extends ContainerScreen<RocketDesignerContaine
             this.entity.setPart(this.be.getPart(type));
         }
         this.entity.setColor(this.be.getRed(), this.be.getGreen(), this.be.getBlue(), this.be.getAlpha());
-        MatrixStack stack = new MatrixStack();
-        VertexConsumerProvider consumerProvider = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-        RenderSystem.enableTexture();
-        RenderSystem.enableColorMaterial();
-        RenderSystem.pushMatrix();
-        stack.push();
-        stack.translate((float) x, (float) y, 5.0F);
-        stack.scale((float) (-10), (float) -10, (float) 10);
-        RenderSystem.enableLighting();
-        RenderSystem.rotatef(135.0F, 0.0F, 1.0F, 0.0F);
-        RenderSystem.rotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-        RenderSystem.rotatef(-((float) Math.atan(this.y + 25 / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
-        entity.yaw = 225;
-        entity.pitch = 0;
+
+        DiffuseLighting.disableGuiDepthLighting();
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.translate(x, y, 36.0D);
+        matrixStack.scale(-10.0F, 10.0F, -10.0F);
+        Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+        Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(0.0F);
+        quaternion.hamiltonProduct(quaternion2);
+        matrixStack.multiply(quaternion);
+        entity.yaw = 180.0F;
+        entity.pitch = 0.0F;
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderManager();
+        quaternion2.conjugate();
+        entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
-        entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack, consumerProvider, 15);
+        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880);
+        immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
-        Tessellator.getInstance().getBuffer().end();
-        stack.pop();
-        RenderSystem.popMatrix();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.disableTexture();
+        DiffuseLighting.enableGuiDepthLighting();
     }
 }

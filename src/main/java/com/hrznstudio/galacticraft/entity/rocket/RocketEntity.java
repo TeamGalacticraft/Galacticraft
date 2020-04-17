@@ -378,7 +378,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     @Override
     protected void initDataTracker() {
         dataTracker.startTracking(STAGE, LaunchStage.IDLE);
-        dataTracker.startTracking(COLOR, new Float[]{1.0F, 1.0F, 1.0F, 0.0F});
+        dataTracker.startTracking(COLOR, new Float[]{255.0F, 255.0F, 255.0F, 255.0F});
         dataTracker.startTracking(SPEED, 0.0D);
         dataTracker.startTracking(FUEL_INV, new SimpleFixedFluidInv(1, 10000));
 
@@ -625,6 +625,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                 this.setStage(LaunchStage.IDLE);
             }
         }
+//        entity_1.setPos(this.getX(), this.getY(), this.getZ());
         super.removePassenger(entity_1);
     }
 

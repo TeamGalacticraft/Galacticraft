@@ -37,11 +37,12 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.ContainerScreen;
-import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -51,6 +52,7 @@ import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
 /**
@@ -151,7 +153,7 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
     @Override
     protected void drawBackground(float delta, int mouseX, int mouseY) {
         this.renderBackground();
-        RenderSystem.disableLighting();
+        DiffuseLighting.enableGuiDepthLighting();
         this.minecraft.getTextureManager().bindTexture(TEXTURE);
         blit(this.x, this.y, 0, 0, containerWidth, containerHeight);
 
@@ -201,8 +203,6 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
                             offsetX = 0;
                         }
                         this.minecraft.getTextureManager().bindTexture(TEXTURE);
-                        RenderSystem.enableLighting();
-
                         final int baOY = offsetY;
                         boolean aG = true;
                         offsetX++;
@@ -210,7 +210,6 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
                         RocketAssemblerRecipe recipe = blockEntity.recipes.get(Galacticraft.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         for (ItemStack stack : recipe.getInput()) {
                             this.minecraft.getTextureManager().bindTexture(TEXTURE);
-                            RenderSystem.enableLighting();
 
                             if (this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() == stack.getCount()) {
                                 blit(this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
@@ -218,20 +217,17 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
                                 blit(this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                                 aG = false;
                             }
-                            RenderSystem.enableLighting();
 
                             itemRenderer.renderGuiItem(stack, this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
                             itemRenderer.renderGuiItemOverlay(minecraft.textRenderer, stack, this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() + "/" + stack.getCount());
 
                             if (check(mouseX, mouseY, (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
-                                RenderSystem.disableLighting();
                                 RenderSystem.disableDepthTest();
                                 int n = (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2;
                                 int r = (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2;
                                 RenderSystem.colorMask(true, true, true, false);
                                 this.fillGradient(n, r, n + GREEN_BOX_WIDTH - 4, r + GREEN_BOX_HEIGHT - 4, -2130706433, -2130706433);
                                 RenderSystem.colorMask(true, true, true, true);
-                                RenderSystem.enableLighting();
                                 RenderSystem.enableDepthTest();
                             }
                             if (++offsetX == 5) {
@@ -261,6 +257,7 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
+        DiffuseLighting.enableGuiDepthLighting();
 
         if (blockEntity.data != null && blockEntity.data != RocketData.EMPTY) {
             drawString(minecraft.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
@@ -292,33 +289,25 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
     }
 
     public void drawEntity(int x, int y) {
-        MatrixStack stack = new MatrixStack();
-        VertexConsumerProvider consumerProvider = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-        RenderSystem.pushMatrix();
-        RenderSystem.enableColorMaterial();
-        stack.push();
-        stack.translate((float) x, (float) y, 3.0F);
-        stack.scale(-10.0F, -10.0F, -10.0F);
-        RenderSystem.enableLighting();
-        RenderSystem.rotatef(135.0F, 0.0F, 1.0F, 0.0F);
-        RenderSystem.enableLighting();
-        RenderSystem.rotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-        RenderSystem.rotatef(-((float) Math.atan(this.y + 25 / 40.0F)) * 20.0F, 1.0F, 0.0F, 0.0F);
-        blockEntity.fakeEntity.yaw = 225;
-        blockEntity.fakeEntity.pitch = 0;
+        DiffuseLighting.disableGuiDepthLighting();
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.translate(x, y, 36.0D);
+        matrixStack.scale(-10.0F, 10.0F, -10.0F);
+        Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+        Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(0.0F);
+        quaternion.hamiltonProduct(quaternion2);
+        matrixStack.multiply(quaternion);
+        blockEntity.fakeEntity.yaw = 180.0F;
+        blockEntity.fakeEntity.pitch = 0.0F;
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderManager();
-//        entityRenderDispatcher.method_3945(180.0F);
+        quaternion2.conjugate();
+        entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
-        entityRenderDispatcher.render(blockEntity.fakeEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack, consumerProvider, 15);
+        VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
+        entityRenderDispatcher.render(blockEntity.fakeEntity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880);
+        immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
-        Tessellator.getInstance().getBuffer().end();
-        stack.pop();
-        RenderSystem.popMatrix();
-        RenderSystem.disableLighting();
-        RenderSystem.disableRescaleNormal();
-//        RenderSystem.activeTexture(GLX.GL_TEXTURE1);
-        RenderSystem.disableTexture();
-//        RenderSystem.activeTexture(GLX.GL_TEXTURE0);
+        DiffuseLighting.enableGuiDepthLighting();
     }
 
     @Override
