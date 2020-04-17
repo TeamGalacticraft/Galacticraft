@@ -421,6 +421,11 @@ public class Constants {
         public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
         public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
         public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
+        public static final String ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.rocket_assembler_energy_consumption_rate";
+
+        public static final String MISC = "config.galacticraft-rewoven.misc";
+        public static final String MISC_MACHINES = "config.galacticraft-rewoven.misc.machines";
+        public static final String ROCKET_ASSEMBLER_PROCESS_TIME = "config.galacticraft-rewoven.misc.machines.rocket_assembler_process_time";
     }
 
     public static class Energy {

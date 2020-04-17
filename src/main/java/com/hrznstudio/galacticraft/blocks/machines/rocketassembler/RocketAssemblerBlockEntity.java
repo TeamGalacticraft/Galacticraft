@@ -389,12 +389,12 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
         if (this.building) { //out of 600 ticks
             if (this.energy.getCurrentEnergy() >= 20) {
-                this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 20, Simulation.ACTION);
+                this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().rocketAssemblerEnergyConsumptionRate(), Simulation.ACTION);
             } else {
                 this.building = false;
             }
 
-            if (progress++ >= 600) {
+            if (progress++ >= Galacticraft.configManager.get().rocketAssemblerProcessTime()) {
                 this.building = false;
                 this.progress = 0;
                 for (int i = 0; i < extendedInventory.getSlotCount(); i++) {

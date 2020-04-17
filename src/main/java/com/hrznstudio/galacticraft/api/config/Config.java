@@ -64,6 +64,10 @@ public interface Config {
 
     void setRefineryEnergyConsumptionRate(int amount);
 
+    int rocketAssemblerEnergyConsumptionRate();
+
+    void setRocketAssemblerEnergyConsumptionRate(int amount);
+
     int energyStorageModuleStorageSize();
 
     void setEnergyStorageModuleStorageSize(int amount);
@@ -71,4 +75,8 @@ public interface Config {
     int machineEnergyStorageSize();
 
     void setMachineEnergyStorageSize(int amount);
+
+    int rocketAssemblerProcessTime();
+
+    void setRocketAssemblerProcessTime(int amount);
 }

@@ -178,6 +178,15 @@ public class ConfigManagerImpl implements ConfigManager {
 
         machines.add(new IntFieldBuilder(
                 Constants.Config.RESET,
+                Constants.Config.ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE,
+                this.config.rocketAssemblerEnergyConsumptionRate())
+                .setSaveConsumer(this.config::setRocketAssemblerEnergyConsumptionRate)
+                .setDefaultValue(20)
+                .build()
+        );
+
+        machines.add(new IntFieldBuilder(
+                Constants.Config.RESET,
                 Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE,
                 this.config.energyStorageModuleStorageSize())
                 .setSaveConsumer(this.config::setEnergyStorageModuleStorageSize)
@@ -195,8 +204,20 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
+        SubCategoryBuilder misc_machines = ConfigEntryBuilder.create().startSubCategory(Constants.Config.MISC_MACHINES);
+
+        misc_machines.add(new IntFieldBuilder(
+                Constants.Config.RESET,
+                Constants.Config.ROCKET_ASSEMBLER_PROCESS_TIME,
+                this.config.rocketAssemblerProcessTime())
+                .setSaveConsumer(this.config::setRocketAssemblerProcessTime)
+                .setDefaultValue(24000)
+                .build()
+        );
+
         b.getOrCreateCategory(Constants.Config.DEBUG).addEntry(dB.build());
         b.getOrCreateCategory(Constants.Config.ENERGY).addEntry(wires.build()).addEntry(machines.build());
+        b.getOrCreateCategory(Constants.Config.MISC).addEntry(misc_machines.build());
 
         return b.build();
     }

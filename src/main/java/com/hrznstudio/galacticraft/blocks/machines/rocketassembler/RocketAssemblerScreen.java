@@ -182,12 +182,13 @@ public class RocketAssemblerScreen extends ContainerScreen<RocketAssemblerContai
         }
 
         if (blockEntity.building()) {
-            float pro = blockEntity.getProgress();
-            this.minecraft.getTextureManager().bindTexture(TEXTURE);//OUT OF 600
-            if (pro <= 570.0F) {
-                blit(this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (pro / 570.0F)), PROGRESS_ARROW_HEIGHT);
+            float progress = blockEntity.getProgress();
+            this.minecraft.getTextureManager().bindTexture(TEXTURE);//OUT OF 600 //133 / 140
+            final float maxProgress = Galacticraft.configManager.get().rocketAssemblerProcessTime();
+            if (progress < ((maxProgress / 140F) * 133F)) {
+                blit(this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
             } else {
-                blit(this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) (PROGRESS_ARROW_HEIGHT + (4F * ((pro - 570F) / 30F))));
+                blit(this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) ((PROGRESS_ARROW_HEIGHT) + (7 * ((progress - ((maxProgress / 140F) * 133F)) / (maxProgress - ((maxProgress / 140F) * 133F))))));
             }
         }
 

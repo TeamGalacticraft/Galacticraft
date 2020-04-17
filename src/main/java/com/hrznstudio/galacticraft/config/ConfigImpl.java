@@ -46,9 +46,13 @@ public class ConfigImpl implements Config {
     @Expose
     private int refineryEnergyConsumptionRate = 60;
     @Expose
+    private int rocketAssemblerEnergyConsumptionRate = 60;
+    @Expose
     private int energyStorageModuleStorageSize = 500_000;
     @Expose
     private int machineEnergyStorageSize = 30_000;
+    @Expose
+    private int rocketAssemblerProcessTime = 30_000;
 
     @Override
     public boolean isDebugLogEnabled() {
@@ -141,6 +145,16 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public int rocketAssemblerEnergyConsumptionRate() {
+        return rocketAssemblerEnergyConsumptionRate;
+    }
+
+    @Override
+    public void setRocketAssemblerEnergyConsumptionRate(int amount) {
+        this.rocketAssemblerEnergyConsumptionRate = amount;
+    }
+
+    @Override
     public int energyStorageModuleStorageSize() {
         return energyStorageModuleStorageSize;
     }
@@ -158,5 +172,15 @@ public class ConfigImpl implements Config {
     @Override
     public void setMachineEnergyStorageSize(int amount) {
         this.machineEnergyStorageSize = amount;
+    }
+
+    @Override
+    public int rocketAssemblerProcessTime() {
+        return rocketAssemblerProcessTime;
+    }
+
+    @Override
+    public void setRocketAssemblerProcessTime(int amount) {
+        this.rocketAssemblerProcessTime = amount;
     }
 }
