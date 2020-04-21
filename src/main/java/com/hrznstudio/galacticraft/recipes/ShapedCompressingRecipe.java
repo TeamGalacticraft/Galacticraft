@@ -54,7 +54,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
     private final DefaultedList<Ingredient> ingredients;
     private final ItemStack output;
     private final Identifier id;
-    private final String group;
+    final String group;
 
     public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
         this.id = id;

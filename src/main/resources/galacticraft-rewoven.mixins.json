@@ -16,6 +16,7 @@
     "ClientPlayerEntityMixin",
     "InGameHudMixin",
     "JsonCapeMixin",
+    "MusicTrackerMixin",
     "PauseMenuScreenMixin",
     "PlayerInventoryScreenMixin",
     "WorldRendererMixin"
