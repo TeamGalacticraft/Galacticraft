@@ -53,7 +53,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
     public CollectorStatus status = CollectorStatus.INACTIVE;
     public int collectionAmount = 0;
-    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
+    private final SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -83,7 +83,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
                 float leafBlocks = 0;
 
-                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
+                for (BlockPos pos : BlockPos.iterate(minX, maxX, minY, maxY, minZ, maxZ)) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.isAir()) {
                         continue;
@@ -107,7 +107,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         }
     }
 
-    long ticks = 0;
     @Override
     public void tick() {
         if (world.isClient || !enabled()) {

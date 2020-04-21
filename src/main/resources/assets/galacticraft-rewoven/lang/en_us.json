@@ -100,13 +100,12 @@
   "block.galacticraft-rewoven.lighting_panel_block_linear": "Lighting Panel (Linear)",
   "block.galacticraft-rewoven.lighting_panel_block_dark": "Lighting Panel (Dark)",
   "block.galacticraft-rewoven.lighting_panel_block_dark_angle": "Lighting Panel (Dark)",
-
+  "block.galacticraft-rewoven.oxygen_bubble_distributor": "Oxygen Bubble Distributor",
   "item.galacticraft-rewoven.heavy_duty_sword": "Heavy Duty Sword",
   "item.galacticraft-rewoven.heavy_duty_shovel": "Heavy Duty Shovel",
   "item.galacticraft-rewoven.heavy_duty_pickaxe": "Heavy Duty Pickaxe",
   "item.galacticraft-rewoven.heavy_duty_axe": "Heavy Duty Axe",
   "item.galacticraft-rewoven.heavy_duty_hoe": "Heavy Duty Hoe",
-
   "item.galacticraft-rewoven.desh_sword": "Desh Sword",
   "item.galacticraft-rewoven.desh_shovel": "Desh Shovel",
   "item.galacticraft-rewoven.desh_pickaxe": "Desh Pickaxe",
@@ -292,7 +291,8 @@
   "ui.galacticraft-rewoven.machinestatus.night": "Night",
   "ui.galacticraft-rewoven.machinestatus.full": "Full",
   "ui.galacticraft-rewoven.machinestatus.blocked": "Blocked",
-
+  "ui.galacticraft-rewoven.machinestatus.distributing": "Distributing Oxygen",
+  "ui.galacticraft-rewoven.machinestatus.not_enough_oxygen": "Not Enough Oxygen",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config": "Redstone",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config_2": "Redstone Activation: ",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore": "Ignore Redstone",

@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.container;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelContainer;
+import com.hrznstudio.galacticraft.blocks.machines.bubbledistributor.BubbleDistributorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorContainer;
@@ -48,6 +49,7 @@ public class GalacticraftContainers {
     public static final Identifier ENERGY_STORAGE_MODULE_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.ENERGY_STORAGE_MODULE_CONTAINER);
     public static final Identifier REFINERY_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.REFINERY_CONTAINER);
     public static final Identifier OXYGEN_COLLECTOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.OXYGEN_COLLECTOR_CONTAINER);
+    public static final Identifier BUBBLE_DISTRIBUTOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.BUBBLE_DISTRIBUTOR_CONTAINER);
 
     public static void register() {
         ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player));
@@ -60,5 +62,6 @@ public class GalacticraftContainers {
         ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorContainer.ELECTRIC_FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(BUBBLE_DISTRIBUTOR_CONTAINER, BubbleDistributorContainer.FACTORY);
     }
 }

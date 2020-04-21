@@ -31,5 +31,6 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 public class GalacticraftBlockEntityRenderers {
     public static void register() {
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE, BubbleDistributorBlockEntityRenderer::new);
     }
 }

@@ -26,8 +26,11 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.blocks.machines.bubbledistributor.BubbleDistributorBlockEntity;
+import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
@@ -77,15 +80,59 @@ public class GalacticraftPackets {
                 context.getPlayer().getServer().execute(() -> {
                     BlockPos pos = buffer.readBlockPos();
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                        if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                            String data = buffer.readString();
-                            context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                                    .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
-                                            SideOption.valueOf(data.split(",")[1])));
-                        }
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                        String data = buffer.readString();
+                        context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
+                                .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
+                                        SideOption.valueOf(data.split(",")[1])));
+                    }
 
                 });
             }
         }));
+
+        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_size"), (packetContext, packetByteBuf) -> {
+            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
+            MinecraftClient.getInstance().execute(() -> {
+                BlockPos pos = buf.readBlockPos();
+                if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                    if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
+                        ((BubbleDistributorBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos)).setSize(buf.readByte());
+                    }
+                }
+            });
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_max"), (context, packetByteBuf) -> {
+            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    byte max = buf.readByte();
+                    BlockPos pos = buf.readBlockPos();
+                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (context.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
+                            if (max > 0) {
+                                ((BubbleDistributorBlockEntity) context.getPlayer().world.getBlockEntity(pos)).setMaxSize(max);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_visible"), (context, packetByteBuf) -> {
+            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    boolean visible = buf.readBoolean();
+                    BlockPos pos = buf.readBlockPos();
+                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (context.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
+                            ((BubbleDistributorBlockEntity) context.getPlayer().world.getBlockEntity(pos)).bubbleVisible = visible;
+                        }
+                    }
+                });
+            }
+        });
     }
 }

@@ -210,6 +210,7 @@ public class Constants {
         public static final String BEAM_REFLECTOR = "beam_reflector";
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
+        public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
     }
 
     // Fluids
@@ -438,6 +439,7 @@ public class Constants {
 
         public static final String MAP_SCREEN = "gui/map";
         public static final String PLANET_ICONS = "gui/planet_icons";
+        public static final String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -484,5 +486,6 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
         public static final String REFINERY_CONTAINER = "refinery_container";
         public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
+        public static final String BUBBLE_DISTRIBUTOR_CONTAINER = "bubble_distributor_container";
     }
 }

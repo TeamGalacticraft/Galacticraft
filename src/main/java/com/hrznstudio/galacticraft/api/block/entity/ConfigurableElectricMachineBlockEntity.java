@@ -69,7 +69,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
     private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    private final SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     private final SecurityInfo security = new SecurityInfo();
     private RedstoneState redstoneState = RedstoneState.DISABLED;
@@ -267,7 +267,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     public void idleEnergyDecrement(boolean off) {
         if (getEnergyUsagePerTick() > 0) {
-            if (GalacticraftEnergy.Values.getTick() % ((75 * (getEnergyUsagePerTick() / 20)) * (off ? 2 : 1)) == 0) {
+            if (GalacticraftEnergy.Values.getTick() % (int) ((75F * (getEnergyUsagePerTick() / 20F)) * (off ? 2 : 1)) == 0) {
                 getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, Simulation.ACTION);
             }
         }

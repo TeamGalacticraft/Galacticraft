@@ -32,6 +32,7 @@ import com.hrznstudio.galacticraft.blocks.fluid.CrudeOilBlock;
 import com.hrznstudio.galacticraft.blocks.fluid.FuelBlock;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelBlock;
 import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelPartBlock;
+import com.hrznstudio.galacticraft.blocks.machines.bubbledistributor.BubbleDistributorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorBlock;
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlock;
@@ -167,6 +168,7 @@ public class GalacticraftBlocks {
     public static final Block DESH_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.DESH_BLOCK);
     public static final Block TITANIUM_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.TITANIUM_BLOCK);
     public static final Block LEAD_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.LEAD_BLOCK);
+    public static final Block OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.AIR).strength(10000.0F, 10000.0F).sounds(BlockSoundGroup.SNOW).build()), Constants.Blocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK);
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.CAVERNOUS_VINE);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly().build()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly().build()), Constants.Blocks.MOON_BERRY_BUSH);
@@ -185,6 +187,7 @@ public class GalacticraftBlocks {
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_COLLECTOR);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.REFINERY);
+    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new BubbleDistributorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL).build()), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR);
 
     public static void register() {
     }

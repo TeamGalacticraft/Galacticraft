@@ -528,6 +528,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         super.render(int_1, int_2, float_1);
     }
 
+
     protected void drawTabTooltips(int mouseX, int mouseY) {
         if (!IS_REDSTONE_OPEN) {
             if (mouseX >= this.x - REDSTONE_TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
@@ -664,6 +665,10 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
             default:
                 return 0;
         }
+    }
+
+    protected boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
 
     @Override

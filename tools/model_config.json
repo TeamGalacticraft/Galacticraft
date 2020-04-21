@@ -1,24 +1,24 @@
 {
-  "name": "refinery",
+  "name": "oxygen_bubble_distributor",
   "mod-id": "galacticraft-rewoven",
   "sides": {
     "north": {
-      "texture": "block/refinery_front"
+      "texture": "block/oxygen_bubble_distributor"
     },
     "south": {
-      "texture": "block/refinery_side"
+      "texture": "block/oxygen_bubble_distributor"
     },
     "east": {
-      "texture": "block/machine_side"
+      "texture": "block/oxygen_bubble_distributor"
     },
     "west": {
-      "texture": "block/machine_side"
+      "texture": "block/oxygen_bubble_distributor"
     },
     "up": {
-      "texture": "block/machine"
+      "texture": "block/oxygen_bubble_distributor"
     },
     "down": {
-      "texture": "block/machine"
+      "texture": "block/oxygen_bubble_distributor"
     }
 },
   "options": [
@@ -27,13 +27,9 @@
       "texture": "block/machine_power_input"
     },
     {
-      "option": "fluidout",
-      "texture": "block/machine_fluid_output"
-    },
-    {
-      "option": "fluidin",
-      "texture": "block/machine_fluid_input"
+      "option": "oxygenin",
+      "texture": "block/machine_oxygen_input"
     }
   ],
-  "particle": "block/machine"
+  "particle": "block/oxygen_bubble_distributor"
 }
