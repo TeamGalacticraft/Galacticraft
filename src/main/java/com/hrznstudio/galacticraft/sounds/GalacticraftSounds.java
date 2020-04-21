@@ -32,7 +32,10 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftSounds {
 
-    public static final SoundEvent MUSIC_MUSIC_SPACE = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_space"));
+    public static final SoundEvent MUSIC_MOON = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_moon"));
+    public static final SoundEvent MUSIC_CREDITS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_credits"));
+    public static final SoundEvent MUSIC_ORBIT = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_orbit"));
+    public static final SoundEvent MUSIC_MARS = new SoundEvent(new Identifier(Constants.MOD_ID, "music.music_mars"));
     public static final SoundEvent PLAYER_UNLOCKCHEST = new SoundEvent(new Identifier(Constants.MOD_ID, "player.unlockchest"));
     public static final SoundEvent PLAYER_PARACHUTE = new SoundEvent(new Identifier(Constants.MOD_ID, "player.parachute"));
     public static final SoundEvent PLAYER_OPENAIRLOCK = new SoundEvent(new Identifier(Constants.MOD_ID, "player.openairlock"));
@@ -48,7 +51,10 @@ public class GalacticraftSounds {
     public static final SoundEvent SHUTTLE_SHUTTLE = new SoundEvent(new Identifier(Constants.MOD_ID, "shuttle.shuttle"));
 
     public static void register() {
-        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_space"), MUSIC_MUSIC_SPACE);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_moon"), MUSIC_MOON);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_credits"), MUSIC_CREDITS);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_orbit"), MUSIC_ORBIT);
+        Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "music.music_mars"), MUSIC_MARS);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "player.unlockchest"), PLAYER_UNLOCKCHEST);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "player.parachute"), PLAYER_PARACHUTE);
         Registry.register(Registry.SOUND_EVENT, new Identifier(Constants.MOD_ID, "player.openairlock"), PLAYER_OPENAIRLOCK);
