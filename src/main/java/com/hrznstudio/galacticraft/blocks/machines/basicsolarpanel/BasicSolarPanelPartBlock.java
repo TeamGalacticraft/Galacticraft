@@ -78,13 +78,18 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     public void onBreak(World world_1, BlockPos partPos, BlockState partState, PlayerEntity playerEntity_1) {
         BlockEntity partBE = world_1.getBlockEntity(partPos);
         BasicSolarPanelPartBlockEntity be = (BasicSolarPanelPartBlockEntity) partBE;
+
         if (be == null) {
             // Probably already been destroyed by the code in the base.
             return;
         }
-
+        if (be.basePos == null) {
+            // There is no base! Probably created using /setblock
+            return;
+        }
         BlockPos basePos = new BlockPos(be.basePos);
         BlockState baseState = world_1.getBlockState(basePos);
+
         if (baseState.isAir()) {
             // The base has been destroyed already.
             return;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,25 +33,25 @@ import net.minecraft.client.util.math.MatrixStack;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a> and made with the help of <a href="https://blockbench.net/https://blockbench.net/">Blockbench</a>
  */
 public class EvolvedZombieModel extends BipedEntityModel<EvolvedZombieEntity> {
-	private ModelPart oxygenTank0;
-	private ModelPart oxygenTank1;
-	private ModelPart oxygenTankWire0;
-	private ModelPart oxygenTankWire1;
-	private ModelPart oxygenTankWire2;
-	private ModelPart oxygenTankWire3;
-	private ModelPart oxygenTankWire4;
-	private ModelPart oxygenTankWire5;
-	private ModelPart oxygenMask;
+    private final ModelPart oxygenTank0;
+    private final ModelPart oxygenTank1;
+    private final ModelPart oxygenTankWire0;
+    private final ModelPart oxygenTankWire1;
+    private final ModelPart oxygenTankWire2;
+    private final ModelPart oxygenTankWire3;
+    private final ModelPart oxygenTankWire4;
+    private final ModelPart oxygenTankWire5;
+    private final ModelPart oxygenMask;
 
-	public EvolvedZombieModel(float scale, int textureWidth, int textureHeight) {
-		super(scale, scale, textureWidth, textureHeight);
+    public EvolvedZombieModel(float scale, int textureWidth, int textureHeight) {
+        super(scale, scale, textureWidth, textureHeight);
 
-		this.oxygenTankWire0 = new ModelPart(this, 44, 10);
-		this.oxygenTankWire1 = new ModelPart(this, 44, 10);
-		this.oxygenTankWire2 = new ModelPart(this, 44, 10);
-		this.oxygenTankWire3 = new ModelPart(this, 44, 10);
-		this.oxygenTankWire4 = new ModelPart(this, 44, 10);
-		this.oxygenTankWire5 = new ModelPart(this, 44, 10);
+        this.oxygenTankWire0 = new ModelPart(this, 44, 10);
+        this.oxygenTankWire1 = new ModelPart(this, 44, 10);
+        this.oxygenTankWire2 = new ModelPart(this, 44, 10);
+        this.oxygenTankWire3 = new ModelPart(this, 44, 10);
+        this.oxygenTankWire4 = new ModelPart(this, 44, 10);
+        this.oxygenTankWire5 = new ModelPart(this, 44, 10);
 		this.oxygenTank0 = new ModelPart(this, 32, 6);
 		this.oxygenTank1 = new ModelPart(this, 32, 6);
 		this.oxygenMask = new ModelPart(this, 0, 32);

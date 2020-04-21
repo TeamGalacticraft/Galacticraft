@@ -47,7 +47,7 @@ public class Constants {
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
         public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
-        public static final String DENSE_ICE = "dense_ice";
+        //public static final String DENSE_ICE = "dense_ice"; // Dense Ice has been replaced by Blue Ice
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -101,8 +101,8 @@ public class Constants {
         public static final String TIN_VACUUM_GLASS = "vacuum_glass_tin";
         public static final String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         public static final String WALKWAY = "walkway";
-        public static final String WIRE_WALKWAY = "walkway_block_wire";
-        public static final String PIPE_WALKWAY = "walkway_block_pipe";
+        public static final String WIRE_WALKWAY = "wire_walkway";
+        public static final String PIPE_WALKWAY = "pipe_walkway";
         public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
         public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
@@ -130,9 +130,10 @@ public class Constants {
         public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
-        public static final String UNLIT_TORCH = "unlit_torch";
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
         public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
+        public static final String UNLIT_TORCH = "unlit_torch";
+        public static final String UNLIT_WALL_TORCH = "unlit_wall_torch";
         public static final String CAVERNOUS_VINE = "cavernous_vine";
         public static final String POISONOUS_CAVERNOUS_VINE = "poisonous_cavernous_vine";
         public static final String MOON_BERRY_BUSH = "moon_berry_bush";
@@ -388,12 +389,33 @@ public class Constants {
         public static final String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
     }
 
+    public static class Particles {
+        public static final String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
+        public static final String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
+    }
+
     public static class Config {
         public static final String TITLE = "config.galacticraft-rewoven.title";
         public static final String RESET = "config.galacticraft-rewoven.reset";
 
         public static final String DEBUG = "config.galacticraft-rewoven.debug";
         public static final String DEBUG_LOGGING = "config.galacticraft-rewoven.debug.logging";
+
+        public static final String ENERGY = "config.galacticraft-rewoven.energy";
+
+        public static final String WIRES = "config.galacticraft-rewoven.energy.wires";
+        public static final String WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft-rewoven.energy.wires.transfer_limit";
+        public static final String HEAVY_WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft-rewoven.energy.wires.heavy_transfer_limit";
+
+        public static final String MACHINES = "config.galacticraft-rewoven.energy.machines";
+        public static final String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate";
+        public static final String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate";
+        public static final String CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
+        public static final String ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
+        public static final String OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
+        public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
+        public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
     }
 
     public static class Energy {
@@ -441,6 +463,7 @@ public class Constants {
     public static class Entities {
         public static final String MOON_VILLAGER = "moon_villager";
         public static final String EVOLVED_ZOMBIE = "evolved_zombie";
+        public static final String EVOLVED_CREEPER = "evolved_creeper";
         public static final String T1_ROCKET = "t1_rocket";
     }
 

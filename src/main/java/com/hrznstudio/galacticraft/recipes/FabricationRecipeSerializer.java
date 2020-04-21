@@ -43,14 +43,14 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
 
     @Override
     public void write(PacketByteBuf packetByteBuf, T recipe) {
-        packetByteBuf.writeString(recipe.getGroup());
+        packetByteBuf.writeString(recipe.group);
         recipe.getInput().write(packetByteBuf);
         packetByteBuf.writeItemStack(recipe.getOutput());
     }
 
     @Override
     public T read(Identifier id, PacketByteBuf packet) {
-        String string_1 = packet.readString(32767);
+        String string_1 = packet.readString();
         Ingredient ingredient_1 = Ingredient.fromPacket(packet);
         ItemStack itemStack_1 = packet.readItemStack();
         return this.recipeFactory.create(id, string_1, ingredient_1, itemStack_1);

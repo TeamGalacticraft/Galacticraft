@@ -38,9 +38,11 @@ public enum SideOption implements StringIdentifiable {
     POWER_INPUT("powerin"),
     POWER_OUTPUT("powerout"),
     OXYGEN_INPUT("oxygenin"),
-    OXYGEN_OUTPUT("oxygenout");
+    OXYGEN_OUTPUT("oxygenout"),
+    FLUID_INPUT("fluidin"),
+    FLUID_OUTPUT("fluidout");
 
-    private String name;
+    private final String name;
 
     SideOption(String name) {
         this.name = name;
@@ -49,18 +51,24 @@ public enum SideOption implements StringIdentifiable {
     public static List<SideOption> getApplicableValuesForMachine(Block block) {
         if (block instanceof ConfigurableElectricMachineBlock) {
             List<SideOption> options = new ArrayList<>();
-            options.add(SideOption.BLANK);
+            options.add(BLANK);
             if (((ConfigurableElectricMachineBlock) block).consumesOxygen()) {
-                options.add(SideOption.OXYGEN_INPUT);
+                options.add(OXYGEN_INPUT);
             }
             if (((ConfigurableElectricMachineBlock) block).generatesOxygen()) {
-                options.add(SideOption.OXYGEN_OUTPUT);
+                options.add(OXYGEN_OUTPUT);
             }
             if (((ConfigurableElectricMachineBlock) block).consumesPower()) {
-                options.add(SideOption.POWER_INPUT);
+                options.add(POWER_INPUT);
             }
             if (((ConfigurableElectricMachineBlock) block).generatesPower()) {
-                options.add(SideOption.POWER_OUTPUT);
+                options.add(POWER_OUTPUT);
+            }
+            if (((ConfigurableElectricMachineBlock) block).consumesFluids()) {
+                options.add(FLUID_INPUT);
+            }
+            if (((ConfigurableElectricMachineBlock) block).generatesFluids()) {
+                options.add(FLUID_OUTPUT);
             }
             return options;
         }
@@ -73,33 +81,31 @@ public enum SideOption implements StringIdentifiable {
     }
 
     public SideOption nextValidOption(Block block) {
-        try {
-            if (getApplicableValuesForMachine(block).contains(SideOption.values()[this.ordinal() + 1])) {
-                return SideOption.values()[this.ordinal() + 1];
-            } else {
-                return SideOption.values()[this.ordinal() + 1].nextValidOption(block);
-            }
-        } catch (ArrayIndexOutOfBoundsException ignore) {
-            if (getApplicableValuesForMachine(block).contains(SideOption.values()[0])) {
-                return SideOption.values()[0];
-            } else {
-                return SideOption.values()[0].nextValidOption(block);
-            }
+        List<SideOption> values = new ArrayList<>(getApplicableValuesForMachine(block));
+        int i = values.indexOf(this);
+        if (i + 1 >= values.size()) {
+            return values.get(0);
+        } else {
+            return values.get(i + 1);
         }
     }
 
-    public String[] getFormattedName() {
+    public String getFormattedName() {
         if (this == SideOption.BLANK) {
-            return new String[]{"\u00a78Blank"};
+            return "\u00a78Blank";
         } else if (this == SideOption.OXYGEN_INPUT) {
-            return new String[]{"\u00a7bOxygen \u00a7ain"};
+            return "\u00a7bOxygen \u00a7ain";
         } else if (this == SideOption.OXYGEN_OUTPUT) {
-            return new String[]{"\u00a78Oxygen \u00a74out"};
+            return "\u00a78Oxygen \u00a74out";
         } else if (this == SideOption.POWER_INPUT) {
-            return new String[]{"\u00a7dPower \u00a7ain"};
+            return "\u00a7dPower \u00a7ain";
         } else if (this == SideOption.POWER_OUTPUT) {
-            return new String[]{"\u00a7dPower \u00a74out"};
+            return "\u00a7dPower \u00a74out";
+        } else if (this == FLUID_INPUT) {
+            return "\u00a7aFluid \u00a74in";
+        } else if (this == FLUID_OUTPUT) {
+            return "\u00a7aFluid \u00a74out";
         }
-        return new String[]{""};
+        return "";
     }
 }

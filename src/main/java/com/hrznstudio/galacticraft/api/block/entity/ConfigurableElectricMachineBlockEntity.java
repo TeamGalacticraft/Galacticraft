@@ -29,28 +29,32 @@ import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.api.wire.WireUtils;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.items.BatteryItem;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
+
+import javax.annotation.Nonnull;
+import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyAttributeProvider {
 
-    public static final int DEFAULT_MAX_ENERGY = BatteryItem.MAX_ENERGY * 2;
     private final FullFixedItemInv inventory = new FullFixedItemInv(getInvSize()) {
         @Override
         public boolean isItemValidForSlot(int slot, ItemStack item) {
@@ -62,32 +66,29 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             return ConfigurableElectricMachineBlockEntity.this.getFilterForSlot(slot);
         }
     };
+
     private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
     private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
-    /**
-     * The UUID of the player that viewed the GUI of this machine first
-     */
-    public String owner = "";
-    public String username = "";
-    public boolean isParty = false;
-    public boolean isPublic = true;
-    /**
-     * The selected redstone control option.
-     * Can may *only* take any of the below values:
-     * DISABLED: Ignores all redstone signals
-     * OFF: When powered, the machine turns off
-     * ON: The machine will only work when powered
-     * <p>
-     * TODO: Enum constant
-     */
-    public String redstoneOption = "DISABLED";
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    private final SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
 
+    private final SecurityInfo security = new SecurityInfo();
+    private RedstoneState redstoneState = RedstoneState.DISABLED;
 
-    public ConfigurableElectricMachineBlockEntity(BlockEntityType<?> blockEntityType) {
+    public ConfigurableElectricMachineBlockEntity(BlockEntityType<? extends ConfigurableElectricMachineBlockEntity> blockEntityType) {
         super(blockEntityType);
         this.getEnergyAttribute().listen(this::markDirty);
         this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
+    }
+
+    public RedstoneState getRedstoneState() {
+        assert redstoneState != null;
+        return redstoneState;
+    }
+
+    public void setRedstoneState(RedstoneState redstoneState) {
+        if (redstoneState != null) {
+            this.redstoneState = redstoneState;
+        }
     }
 
     /**
@@ -96,13 +97,13 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * @return The state of the machine
      */
     public boolean enabled() {
-        switch (this.redstoneOption) {
+        switch (this.redstoneState) {
+            case OFF:
+                return !this.getWorld().isReceivingRedstonePower(pos);
+            case ON:
+                return this.getWorld().isReceivingRedstonePower(pos);
             default:
                 return true;
-            case "OFF":
-                return !this.getWorld().isReceivingRedstonePower(pos);
-            case "ON":
-                return this.getWorld().isReceivingRedstonePower(pos);
         }
     }
 
@@ -112,7 +113,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * @return Energy capacity of this machine.
      */
     public int getMaxEnergy() {
-        return DEFAULT_MAX_ENERGY;
+        return Galacticraft.configManager.get().machineEnergyStorageSize();
     }
 
     /**
@@ -192,16 +193,18 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         return exposedInventory;
     }
 
+    @Nonnull
+    public SecurityInfo getSecurity() {
+        return security;
+    }
+
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
-        tag.putString("Owner", owner);
-        tag.putString("OwnerUsername", username);
-        tag.putBoolean("Party", isParty);
-        tag.putBoolean("Public", isPublic);
-        tag.putString("Redstone", redstoneOption);
+        this.security.fromTag(tag);
+        tag.putString("Redstone", redstoneState.asString());
         return tag;
     }
 
@@ -210,11 +213,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         super.fromTag(tag);
         getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
-        owner = tag.getString("Owner");
-        username = tag.getString("OwnerUsername");
-        isParty = tag.getBoolean("Party");
-        isPublic = tag.getBoolean("Public");
-        redstoneOption = tag.getString("Redstone");
+        this.security.fromTag(tag);
+        redstoneState = RedstoneState.fromString(tag.getString("Redstone"));
     }
 
     @Override
@@ -230,8 +230,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public void trySpreadEnergy() {
         for (int i = 0; i < ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos)).length; i++) {
             if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_OUTPUT) {
-                if (world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    if (((ConfigurableElectricMachineBlock) world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock()).canWireConnect(world, Direction.values()[i], pos, WireUtils.getPosFromDirection(Direction.values()[i], pos)) == WireNetwork.WireConnectionType.ENERGY_INPUT) {
+                if (world.getBlockState(pos.offset(Direction.values()[i])).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    if (((ConfigurableElectricMachineBlock) world.getBlockState(pos.offset(Direction.values()[i])).getBlock()).canWireConnect(world, Direction.values()[i], pos, pos.offset(Direction.values()[i])) == WireConnectionType.ENERGY_INPUT) {
                         EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
                         if (energyAttribute.canExtractEnergy()) {
                             int failed = getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
@@ -246,8 +246,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
                     }
                 }
             } else if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_INPUT) {
-                if (world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    if (((ConfigurableElectricMachineBlock) world.getBlockState(WireUtils.getPosFromDirection(Direction.values()[i], pos)).getBlock()).canWireConnect(world, Direction.values()[i], pos, WireUtils.getPosFromDirection(Direction.values()[i], pos)) == WireNetwork.WireConnectionType.ENERGY_OUTPUT) {
+                if (world.getBlockState(pos.offset(Direction.values()[i])).getBlock() instanceof ConfigurableElectricMachineBlock) {
+                    if (((ConfigurableElectricMachineBlock) world.getBlockState(pos.offset(Direction.values()[i])).getBlock()).canWireConnect(world, Direction.values()[i], pos, pos.offset(Direction.values()[i])) == WireConnectionType.ENERGY_OUTPUT) {
                         EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
                         if (energyAttribute.canExtractEnergy()) {
                             int failed = getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
@@ -274,4 +274,136 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     public abstract int getEnergyUsagePerTick();
+
+    public enum RedstoneState implements StringIdentifiable {
+        /**
+         * Ignores redstone entirely.
+         */
+        DISABLED,
+
+        /**
+         * When powered with redstone, the machine turns off.
+         */
+        OFF,
+
+        /**
+         * When powered with redstone, the machine turns on.
+         */
+        ON;
+
+        public static RedstoneState fromString(String string) {
+            switch (string.toUpperCase()) {
+                case "OFF":
+                    return OFF;
+                case "ON":
+                    return ON;
+                default:
+                    return DISABLED;
+            }
+        }
+
+        @Override
+        public String asString() {
+            return this.name().toLowerCase();
+        }
+    }
+
+    public static class SecurityInfo {
+        private UUID owner;
+        private String username;
+        private Identifier team;
+        private Publicity publicity;
+
+        protected SecurityInfo() {
+            this.owner = null;
+            this.publicity = Publicity.PUBLIC;
+            this.team = null;
+            this.username = "";
+        }
+
+        public Publicity getPublicity() {
+            return publicity;
+        }
+
+        public void setPublicity(Publicity publicity) {
+            this.publicity = publicity;
+        }
+
+        public boolean hasOwner() {
+            return this.owner != null;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public UUID getOwner() {
+            return this.owner;
+        }
+
+        public void setOwner(PlayerEntity owner) {
+            if (!this.hasOwner()) {
+                this.owner = owner.getUuid();
+            }
+            this.username = owner.getEntityName();
+        }
+
+        public Identifier getTeam() {
+            return team;
+        }
+
+        public boolean hasTeam() {
+            return team != null;
+        }
+
+        public CompoundTag toTag(CompoundTag tag) {
+            CompoundTag compoundTag = new CompoundTag();
+            if (this.hasOwner()) {
+                compoundTag.putUuid("owner", this.owner);
+            }
+            compoundTag.putString("username", this.username);
+            compoundTag.putString("publicity", this.publicity.asString());
+            if (this.hasTeam()) {
+                compoundTag.putString("team", team.toString());
+            }
+            tag.put("security", compoundTag);
+            return tag;
+        }
+
+        public void fromTag(CompoundTag tag) {
+            CompoundTag compoundTag = tag.getCompound("security");
+            if (compoundTag.contains("owner")) {
+                if (!this.hasOwner()) {
+                    this.owner = compoundTag.getUuid("owner");
+                }
+            }
+            if (compoundTag.contains("team")) {
+                if (!this.hasTeam()) {
+                    this.team = new Identifier(compoundTag.getString("team"));
+                }
+            }
+
+            this.username = compoundTag.getString("username");
+
+            if (compoundTag.contains("publicity")) {
+                this.publicity = Publicity.valueOf(compoundTag.getString("publicity"));
+            }
+        }
+
+
+        public enum Publicity implements StringIdentifiable {
+            PUBLIC,
+            SPACE_RACE,
+            PRIVATE;
+
+            @Override
+            public String asString() {
+                return this.toString();
+            }
+        }
+    }
 }

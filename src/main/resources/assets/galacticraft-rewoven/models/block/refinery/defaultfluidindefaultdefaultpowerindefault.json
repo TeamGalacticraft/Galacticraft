@@ -1,0 +1,12 @@
+{
+  "textures": {
+    "north": "galacticraft-rewoven:block/refinery_front",
+    "particle": "galacticraft-rewoven:block/machine",
+    "west": "galacticraft-rewoven:block/machine_side",
+    "up": "galacticraft-rewoven:block/machine_power_input",
+    "down": "galacticraft-rewoven:block/machine",
+    "east": "galacticraft-rewoven:block/machine_side",
+    "south": "galacticraft-rewoven:block/machine_fluid_input"
+  },
+  "parent": "block/cube"
+}

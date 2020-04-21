@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,10 +24,8 @@ package com.hrznstudio.galacticraft.client.render.entity.evolvedzombie;
 
 import com.hrznstudio.galacticraft.client.model.entity.evolvedzombie.EvolvedZombieModel;
 import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 /**

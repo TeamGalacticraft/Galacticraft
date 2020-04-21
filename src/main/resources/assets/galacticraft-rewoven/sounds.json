@@ -1,20 +1,64 @@
 {
-  "music.music_space": {
+  "music.music_moon": {
     "sounds": [
       {
-        "name": "galacticraft-rewoven:music/mars_jc",
+        "name": "galacticraft-rewoven:music/cheese",
         "stream": true
-      }, {
-        "name": "galacticraft-rewoven:music/mimas_jc",
+      },
+      {
+        "name": "galacticraft-rewoven:music/farlands",
         "stream": true
-      }, {
-        "name": "galacticraft-rewoven:music/orbit_jc",
-        "stream": true
-      }, {
+      },
+      {
         "name": "galacticraft-rewoven:music/scary_ambience",
         "stream": true
-      }, {
-        "name": "galacticraft-rewoven:music/spacerace_jc",
+      },
+      {
+        "name": "galacticraft-rewoven:music/spacerace",
+        "stream": true
+      }
+    ]
+  },
+  "music.music_credits": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/credits",
+        "stream": true
+      }
+    ]
+  },
+  "music.music_orbit": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/orbit",
+        "stream": true
+      },
+      {
+        "name": "galacticraft-rewoven:music/farlands",
+        "stream": true
+      },
+      {
+        "name": "galacticraft-rewoven:music/spacerace",
+        "stream": true
+      }
+    ]
+  },
+  "music.music_mars": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/mars",
+        "stream": true
+      },
+      {
+        "name": "galacticraft-rewoven:music/gravity",
+        "stream": true
+      },
+      {
+        "name": "galacticraft-rewoven:music/spacerace",
+        "stream": true
+      },
+      {
+        "name": "galacticraft-rewoven:music/scary_ambience",
         "stream": true
       }
     ]

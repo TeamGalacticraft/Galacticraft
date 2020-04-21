@@ -32,7 +32,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.PacketByteBuf;
 
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -76,11 +75,9 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
     public void write(PacketByteBuf packet, T recipe) {
         packet.writeVarInt(recipe.getWidth());
         packet.writeVarInt(recipe.getHeight());
-        packet.writeString(recipe.getGroup());
-        Iterator var3 = recipe.getIngredients().iterator();
+        packet.writeString(recipe.group);
 
-        while (var3.hasNext()) {
-            Ingredient ingredient_1 = (Ingredient) var3.next();
+        for (Ingredient ingredient_1 : recipe.getIngredients()) {
             ingredient_1.write(packet);
         }
 

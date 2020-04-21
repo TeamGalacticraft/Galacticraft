@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.network.packet;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
@@ -44,7 +45,7 @@ public class GalacticraftPackets {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
                     if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).redstoneOption = buffer.readString();
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).setRedstoneState(buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.RedstoneState.class));
                     }
                 });
             }
@@ -56,22 +57,15 @@ public class GalacticraftPackets {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
                     if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                        boolean isParty = false;
-                        boolean isPublic = false;
-                        String owner = buffer.readString();
-                        if (owner.contains("_Public")) {
-                            owner = owner.replace("_Public", "");
-                            isPublic = true;
-                        } else if (owner.contains("_Party")) {
-                            owner = owner.replace("_Party", "");
-                            isParty = true;
-                        }
-                        String username = buffer.readString();
+                        if (!((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
+                                ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().getOwner().equals(context.getPlayer().getUuid())) {
+                            ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.class);
 
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).owner = owner;
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).username = username;
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).isPublic = isPublic;
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).isParty = isParty;
+                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setOwner(context.getPlayer());
+                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setPublicity(publicity);
+                        } else {
+                            Galacticraft.logger.error("Received invaild security packet from: " + context.getPlayer().getEntityName());
+                        }
                     }
                 });
             }

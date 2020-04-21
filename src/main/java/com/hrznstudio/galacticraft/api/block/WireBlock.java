@@ -22,8 +22,138 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public interface WireBlock {
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.api.wire.NetworkManager;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.util.WireConnectable;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public class WireBlock extends BlockWithEntity implements WireConnectable {
+    public WireBlock(Settings settings) {
+        super(settings);
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled()) {
+            Galacticraft.logger.info(NetworkManager.getManagerForWorld(world).getNetwork(pos));
+        }
+        return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
+        super.onBlockAdded(state, world, pos, oldState, moved);
+        if (!world.isClient) {
+            WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+            if (network == null) network = new WireNetwork(pos, world.dimension.getType().getRawId());
+            for (Direction d : Direction.values()) {
+                if (world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
+                    WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
+                    if (type == WireConnectionType.WIRE) {
+                        WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(pos.offset(d));
+                        if (network1 != network) {
+                            if (network1 != null) {
+                                network = network1.merge(network); // prefer other network rather than this one
+                            } else {
+                                network.addWire(pos.offset(d));
+                            }
+                            this.updateNeighborStates(state, world, pos, 3);
+                        }
+                    } else if (type != WireConnectionType.NONE) {
+                        if (type == WireConnectionType.ENERGY_INPUT) {
+                            network.addConsumer(pos.offset(d));
+                        } else {
+                            network.addProducer(pos.offset(d));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState otherState, IWorld world, BlockPos pos, BlockPos updated) {
+        WireConnectionType type = WireConnectionType.NONE;
+        if (otherState.getBlock() instanceof WireConnectable) {
+            type = ((WireConnectable) otherState.getBlock()).canWireConnect(world, dir.getOpposite(), pos, updated);
+        }
+
+        if (!world.isClient() && type != WireConnectionType.NONE) {
+            if (world.getBlockState(updated).getBlock() instanceof WireConnectable) {
+                WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+                if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
+                if (type == WireConnectionType.WIRE) {
+                    WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(updated);
+                    if (network1 != network) {
+                        if (network1 != null) {
+                            network1.merge(network); // prefer other network rather than this one
+                        } else {
+                            network.addWire(updated);
+                        }
+                        this.updateNeighborStates(state, world, pos, 3);
+                    }
+                } else if (type == WireConnectionType.ENERGY_INPUT) {
+                    network.addConsumer(updated);
+                } else {
+                    network.addProducer(updated);
+                }
+
+            }
+        }
+        return state;
+    }
+
+    @Override
+    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onBlockRemoved(state, world, pos, newState, moved);
+        if (!world.isClient()) {
+            WireNetwork myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+            NetworkManager.getManagerForWorld(world).removeWire(pos);
+            myNet.removeWire(pos);
+            WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+            if (network == null) return;
+            for (Direction d : Direction.values()) {
+                if (world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
+                    WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
+                    if (type != WireConnectionType.WIRE && type != WireConnectionType.NONE) {
+                        if (type == WireConnectionType.ENERGY_INPUT) {
+                            network.removeConsumer(pos.offset(d));
+                        } else {
+                            network.removeProducer(pos.offset(d));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    @Nonnull
+    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+        return WireConnectionType.WIRE;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockView view) {
+        return new WireBlockEntity();
+    }
 }

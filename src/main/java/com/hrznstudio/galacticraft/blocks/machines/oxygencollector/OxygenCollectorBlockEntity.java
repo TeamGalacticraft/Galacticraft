@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
@@ -52,7 +53,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
     public CollectorStatus status = CollectorStatus.INACTIVE;
     public int collectionAmount = 0;
-    private SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
+    private final SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -200,6 +201,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
     @Override
     public int getEnergyUsagePerTick() {
-        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
+        return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
     }
 }

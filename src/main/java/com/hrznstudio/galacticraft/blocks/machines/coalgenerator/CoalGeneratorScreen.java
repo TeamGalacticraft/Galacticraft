@@ -114,6 +114,5 @@ public class CoalGeneratorScreen extends MachineContainerScreen<CoalGeneratorCon
             toolTipLines.add("\u00A7c" + new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(container.getMaxEnergy())).asFormattedString() + "\u00A7r");
             this.renderTooltip(toolTipLines, mouseX, mouseY);
         }
-        this.drawTabTooltips(mouseX, mouseY);
     }
 }

@@ -37,7 +37,7 @@ import net.minecraft.world.World;
  */
 public class FabricationRecipe implements Recipe<Inventory> {
     private final Identifier id;
-    private final String group;
+    final String group;
     private final Ingredient input;
     private final ItemStack output;
 
