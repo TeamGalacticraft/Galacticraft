@@ -40,6 +40,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Collection;
@@ -96,7 +97,10 @@ public class GalacticraftCommands {
     }
 
     private static void teleport(Entity entity, ServerWorld world) {
-        BlockPos spawnPos = world.getSpawnPos();
+        BlockPos spawnPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, new BlockPos(world.getLevelProperties().getSpawnX(), world.getLevelProperties().getSpawnY(), world.getLevelProperties().getSpawnZ()));
+        if (!world.getWorldBorder().contains(spawnPos)) {
+            spawnPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, new BlockPos(world.getWorldBorder().getCenterX(), 0.0D, world.getWorldBorder().getCenterZ()));
+        }
         double x = spawnPos.getX();
         double y = spawnPos.getY();
         double z = spawnPos.getZ();
