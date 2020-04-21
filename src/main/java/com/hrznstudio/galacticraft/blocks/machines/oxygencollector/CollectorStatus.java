@@ -22,18 +22,16 @@
 
 package com.hrznstudio.galacticraft.blocks.machines.oxygencollector;
 
-import net.minecraft.util.Formatting;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum CollectorStatus {
-    INACTIVE(Formatting.RED.getColorValue()),
-    NOT_ENOUGH_LEAVES(Formatting.RED.getColorValue()),
-    COLLECTING(Formatting.GREEN.getColorValue()),
-    FULL(Formatting.GOLD.getColorValue());
+    INACTIVE(16733525), //red
+    NOT_ENOUGH_LEAVES(16733525), //red
+    COLLECTING(5635925), //green
+    FULL(16755200); //gold
 
-    private int textColor;
+    private final int textColor;
 
     CollectorStatus(int textColor) {
         this.textColor = textColor;
