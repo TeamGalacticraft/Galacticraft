@@ -40,6 +40,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Heightmap;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Collection;
@@ -96,7 +97,10 @@ public class GalacticraftCommands {
     }
 
     private static void teleport(Entity entity, ServerWorld world) {
-        BlockPos spawnPos = world.getSpawnPos();
+        BlockPos spawnPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, new BlockPos(world.getLevelProperties().getSpawnX(), world.getLevelProperties().getSpawnY(), world.getLevelProperties().getSpawnZ()));
+        if (!world.getWorldBorder().contains(spawnPos)) {
+            spawnPos = world.getTopPosition(Heightmap.Type.MOTION_BLOCKING, new BlockPos(world.getWorldBorder().getCenterX(), 0.0D, world.getWorldBorder().getCenterZ()));
+        }
         double x = spawnPos.getX();
         double y = spawnPos.getY();
         double z = spawnPos.getZ();
@@ -105,7 +109,7 @@ public class GalacticraftCommands {
             ServerPlayerEntity player = (ServerPlayerEntity) entity;
             player.stopRiding();
             if (player.isSleeping()) {
-                player.wakeUp(true, true, false);
+                player.wakeUp(true, true);
             }
 
             if (world == entity.world) {
@@ -115,7 +119,7 @@ public class GalacticraftCommands {
             }
         } else {
             if (world == entity.world) {
-                entity.setPosition(x, y, z);
+                entity.setPos(x, y, z);
             } else {
                 entity.detach();
                 entity.dimension = world.dimension.getType();
@@ -126,8 +130,8 @@ public class GalacticraftCommands {
                 }
 
                 entity.copyFrom(entity_2);
-                entity.setPosition(x, y, z);
-                world.method_18769(entity);
+                entity.setPos(x, y, z);
+                world.onDimensionChanged(entity);
                 entity_2.removed = true;
             }
         }

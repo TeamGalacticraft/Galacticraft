@@ -24,16 +24,16 @@ package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.math.api.Point;
 import me.shedaniel.math.api.Rectangle;
+import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.api.Renderer;
+import me.shedaniel.rei.gui.widget.EntryWidget;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
-import me.shedaniel.rei.gui.widget.SlotWidget;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -44,7 +44,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -57,8 +56,8 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     }
 
     @Override
-    public Renderer getIcon() {
-        return Renderer.fromItemStack(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
+    public EntryStack getLogo() {
+        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
     }
 
     public String getCategoryName() {
@@ -77,8 +76,8 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
 
             public void render(int mouseX, int mouseY, float delta) {
                 super.render(mouseX, mouseY, delta);
-                GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GuiLighting.disable();
+                RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                DiffuseLighting.disable();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
                 this.blit(startPoint.x, startPoint.y, 0, 0, 162, 82);
 
@@ -98,14 +97,14 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         // Redstone
         // User input
         // Output
-        widgets.add(new SlotWidget(startPoint.x + (18 * 0) + 1, startPoint.y + 1, Collections.singletonList(Renderer.fromItemStack(new ItemStack(Items.DIAMOND))), false, true, true));
-        widgets.add(new SlotWidget(startPoint.x + (18 * 7) + 1, startPoint.y + 1, recipeDisplay.getInput().get(0).stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));
+        widgets.add(EntryWidget.create(startPoint.x + (18 * 0) + 1, startPoint.y + 1).entry(EntryStack.create(new ItemStack(Items.DIAMOND))));
+        widgets.add(EntryWidget.create(startPoint.x + (18 * 7) + 1, startPoint.y + 1).entries(recipeDisplay.getInput().get(0)));
 
-        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47, Collections.singletonList(Renderer.fromItemStack(new ItemStack(GalacticraftItems.RAW_SILICON))), false, true, true));
-        widgets.add(new SlotWidget(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18, Collections.singletonList(Renderer.fromItemStack(new ItemStack(GalacticraftItems.RAW_SILICON))), false, true, true));
-        widgets.add(new SlotWidget(startPoint.x + (18 * 6) + 1, startPoint.y + 47, Collections.singletonList(Renderer.fromItemStack(new ItemStack(Items.REDSTONE))), false, true, true));
+        widgets.add(EntryWidget.create(startPoint.x + (18 * 3) + 1, startPoint.y + 47).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
+        widgets.add(EntryWidget.create(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
+        widgets.add(EntryWidget.create(startPoint.x + (18 * 6) + 1, startPoint.y + 47).entry(EntryStack.create(new ItemStack(Items.REDSTONE))));
 
-        widgets.add(new SlotWidget(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18, recipeDisplay.getOutput().stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));
+        widgets.add(EntryWidget.create(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18).entries(recipeDisplay.getOutputEntries()));
         return widgets;
     }
 

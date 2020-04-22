@@ -25,11 +25,11 @@ package com.hrznstudio.galacticraft.entity.t1rocket;
 import com.hrznstudio.galacticraft.api.space.RocketEntity;
 import com.hrznstudio.galacticraft.api.space.RocketTier;
 import com.hrznstudio.galacticraft.misc.RocketTiers;
-import net.minecraft.client.network.packet.EntitySpawnS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 
@@ -64,8 +64,8 @@ public class EntityT1Rocket extends Entity implements RocketEntity {
     }
 
     @Override
-    public void handleFallDamage(float float_1, float float_2) {
-        super.handleFallDamage(float_1, float_2);
+    public boolean handleFallDamage(float float_1, float float_2) {
+        return super.handleFallDamage(float_1, float_2);
     }
 
     @Override
@@ -76,10 +76,10 @@ public class EntityT1Rocket extends Entity implements RocketEntity {
 //        this.setVelocity(this.getVelocity().x, velY, this.getVelocity().z);
 //        this.velocityModified = true;
 //        this.velocityDirty = true;
-        this.setPosition(this.x, this.y + 1, this.z);
+        this.setPos(this.getX(), this.getY() + 1, this.getZ());
 
-        if (this.y >= 15) {
-            this.world.createExplosion(this, this.x, this.y + (double) (this.getHeight() / 16.0F), this.z, 2.0F, Explosion.DestructionType.BREAK);
+        if (this.getY() >= 15) {
+            this.world.createExplosion(this, this.getX(), this.getY() + (double) (this.getHeight() / 16.0F), this.getZ(), 2.0F, Explosion.DestructionType.BREAK);
             this.remove();
         }
         super.tick();

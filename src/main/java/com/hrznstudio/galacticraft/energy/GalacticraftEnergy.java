@@ -60,7 +60,7 @@ public class GalacticraftEnergy {
         }
 
         if (battery.getItem() instanceof EnergyHolderItem) {
-            return battery.hasTag() && battery.getTag().containsKey("Energy") ? battery.getTag().getInt("Energy") : Integer.MAX_VALUE;
+            return battery.hasTag() && battery.getTag().contains("Energy") ? battery.getTag().getInt("Energy") : Integer.MAX_VALUE;
         } else if (battery.getItem() instanceof EnergyHolder) {
             return GalacticraftEnergy.convertFromTR(Energy.of(battery).getEnergy());
         }
@@ -161,7 +161,7 @@ public class GalacticraftEnergy {
         }
 
         CompoundTag tag = itemStack.getTag() == null ? new CompoundTag() : itemStack.getTag();
-        return tag.containsKey(OxygenTankItem.OXYGEN_NBT_KEY) && tag.containsKey(OxygenTankItem.MAX_OXYGEN_NBT_KEY);
+        return tag.contains(OxygenTankItem.OXYGEN_NBT_KEY) && tag.contains(OxygenTankItem.MAX_OXYGEN_NBT_KEY);
     }
 
     public static int convertFromTR(double amount) {

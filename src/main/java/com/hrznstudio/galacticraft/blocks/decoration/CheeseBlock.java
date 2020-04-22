@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.blocks.decoration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CakeBlock;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
@@ -40,11 +40,12 @@ public class CheeseBlock extends CakeBlock {
 
     public CheeseBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateFactory.getDefaultState().with(WATERLOGGED, false).with(BITES, 0));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(BITES, 0));
     }
 
     @Override
-    public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(WATERLOGGED).add(BITES);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(WATERLOGGED);
     }
 }

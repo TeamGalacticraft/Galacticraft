@@ -195,7 +195,7 @@ public class GalacticraftItems {
     public static final Item TIER_3_ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_ROCKET_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ASTRO_MINER_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ASTRO_MINER_SCHEMATIC), new SchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     // SPAWN EGGS
-    public static final Item ROCKET_SPAWN_EGG_T1 = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SPAWN_EGG_T1), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 0xC9C9C9, 0x000000, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item ROCKET_SPAWN_EGG_T1 = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SPAWN_EGG_T1), new SpawnEggItem(GalacticraftEntityTypes.ROCKET_T1, 0xC9C9C9, 0x000000, new Item.Settings().group(ITEMS_GROUP)));
     //public static final Item MOON_VILLAGER_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_VILLAGER_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
     //public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.EVOLVED_ZOMBIE_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
 

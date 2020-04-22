@@ -23,12 +23,15 @@
 package com.hrznstudio.galacticraft.blocks.special.walkway;
 
 import com.hrznstudio.galacticraft.blocks.FluidLoggableBlock;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalConnectingBlock;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -38,12 +41,12 @@ import net.minecraft.world.IWorld;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBlock {
+public class Walkway extends HorizontalConnectingBlock implements FluidLoggableBlock {
 
     public Walkway(Settings settings) {
-        super(8,8,16,16,16f,settings);
+        super(8, 8, 16, 16, 16f, settings);
 
-        this.setDefaultState(this.stateFactory.getDefaultState()
+        this.setDefaultState(this.getStateManager().getDefaultState()
                 .with(NORTH, false)
                 .with(EAST, false)
                 .with(SOUTH, false)
@@ -78,12 +81,6 @@ public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBl
     }
 
     @Override
-    public BlockRenderLayer getRenderLayer() {
-        // For 1.15, in client init, do BlockRenderLayerMap.putBlock(Walkway, RenderLayer.getCutout()); or something
-        return BlockRenderLayer.CUTOUT;
-    }
-
-    @Override
     public FluidState getFluidState(BlockState state) {
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
         if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
@@ -93,7 +90,7 @@ public class Walkway extends HorizontalConnectedBlock implements FluidLoggableBl
     }
 
     @Override
-    public void appendProperties(StateFactory.Builder<Block, BlockState> stateBuilder) {
+    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
         stateBuilder.add(NORTH, EAST, WEST, SOUTH, WATERLOGGED, FLUID, BaseFluid.LEVEL);
     }
 }

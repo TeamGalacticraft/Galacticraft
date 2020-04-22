@@ -31,13 +31,12 @@ import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderLayer;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -72,7 +71,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateFactory().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
     }
 
     @Override
@@ -148,14 +147,8 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
                 state = state.with(propFromDirection(direction), true);
             }
         }
-        return state;
-    }
 
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState otherState, IWorld world, BlockPos pos, BlockPos updated) {
-        super.getStateForNeighborUpdate(state, dir, otherState, world, pos, updated);
-        return state.with(getPropForDirection(dir), !(otherState).isAir() && otherState.getBlock() instanceof WireConnectable && ((WireConnectable) otherState.getBlock())
-                .canWireConnect(world, dir.getOpposite(), pos, updated) != WireConnectionType.NONE);
+        return state;
     }
 
     private BooleanProperty propFromDirection(Direction direction) {
@@ -173,7 +166,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
             case DOWN:
                 return ATTACHED_DOWN;
             default:
-                throw new NullPointerException();
+                return null;
         }
     }
 
@@ -192,24 +185,29 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
             case DOWN:
                 return ATTACHED_DOWN;
             default:
-                throw new NullPointerException();
+                throw new IllegalArgumentException("cannot be null");
         }
     }
 
     @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> stateFactory$Builder_1) {
-        super.appendProperties(stateFactory$Builder_1);
-        stateFactory$Builder_1.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction_1, BlockState blockState_2, IWorld world, BlockPos thisWire, BlockPos otherConnectable) {
+        return state.with(getPropForDirection(direction_1), (
+                !(blockState_2).isAir()
+                        && blockState_2.getBlock() instanceof WireConnectable
+                        // get opposite of direction so the WireConnectable can check from its perspective.
+                        && (((WireConnectable) blockState_2.getBlock()).canWireConnect(world, direction_1.getOpposite(), thisWire, otherConnectable) != WireConnectionType.NONE)
+        ));
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> StateManager$Builder_1) {
+        super.appendProperties(StateManager$Builder_1);
+        StateManager$Builder_1.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT_MIPPED;
     }
 
     @Environment(EnvType.CLIENT)

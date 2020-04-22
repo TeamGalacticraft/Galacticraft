@@ -29,7 +29,7 @@ import net.minecraft.entity.EntityContext;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -47,33 +47,10 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
 
     protected static final EnumProperty<GratingState> GRATING_STATE = EnumProperty.of("grating_state", GratingState.class);
 
-    public enum GratingState implements StringIdentifiable {
-        UPPER("upper"),
-        LOWER("lower");
-
-        private String name;
-
-        GratingState(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String asString() {
-            return this.name;
-        }
-    }
-
     public GratingBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.stateFactory.getDefaultState().with(FLUID, new Identifier("empty"))
+        this.setDefaultState(this.getStateManager().getDefaultState().with(FLUID, new Identifier("empty"))
                 .with(BaseFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
-    }
-
-    @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityContext EntityContext) {
-        return blockState.get(GRATING_STATE) == GratingState.UPPER ?
-                Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D) :
-                Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
     }
 
     @Override
@@ -89,12 +66,25 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborBlockState, IWorld world, BlockPos blockPos, BlockPos neighborBlockPos) {
-        if (!state.get(FLUID).equals(new Identifier("empty"))) {
-            world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityContext EntityContext) {
+        return blockState.get(GRATING_STATE) == GratingState.UPPER ?
+                Block.createCuboidShape(0.0D, 14.0D, 0.0D, 16.0D, 16.0D, 16.0D) :
+                Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState neighborBlockState, IWorld world, BlockPos blockPos, BlockPos neighborBlockPos) {
+        if (!blockState.get(FLUID).equals(new Identifier("empty"))) {
+            world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(blockState.get(FLUID)), Registry.FLUID.get(blockState.get(FLUID)).getTickRate(world));
         }
 
-        return super.getStateForNeighborUpdate(state, direction, neighborBlockState, world, blockPos, neighborBlockPos);
+        return super.getStateForNeighborUpdate(blockState, direction, neighborBlockState, world, blockPos, neighborBlockPos);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(FLUID).add(GRATING_STATE).add(BaseFluid.LEVEL);
     }
 
     @Override
@@ -106,8 +96,19 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
         return state1;
     }
 
-    @Override
-    protected void appendProperties(StateFactory.Builder<Block, BlockState> builder) {
-        builder.add(FLUID, BaseFluid.LEVEL, GRATING_STATE);
+    public enum GratingState implements StringIdentifiable {
+        UPPER("upper"),
+        LOWER("lower");
+
+        private String name;
+
+        GratingState(String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String asString() {
+            return this.name;
+        }
     }
 }

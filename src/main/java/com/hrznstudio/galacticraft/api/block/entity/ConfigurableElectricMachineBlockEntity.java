@@ -376,12 +376,12 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
         public void fromTag(CompoundTag tag) {
             CompoundTag compoundTag = tag.getCompound("security");
-            if (compoundTag.containsKey("owner")) {
+            if (compoundTag.contains("owner")) {
                 if (!this.hasOwner()) {
                     this.owner = compoundTag.getUuid("owner");
                 }
             }
-            if (compoundTag.containsKey("team")) {
+            if (compoundTag.contains("team")) {
                 if (!this.hasTeam()) {
                     this.team = new Identifier(compoundTag.getString("team"));
                 }
@@ -389,7 +389,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
             this.username = compoundTag.getString("username");
 
-            if (compoundTag.containsKey("publicity")) {
+            if (compoundTag.contains("publicity")) {
                 this.publicity = Publicity.valueOf(compoundTag.getString("publicity"));
             }
         }

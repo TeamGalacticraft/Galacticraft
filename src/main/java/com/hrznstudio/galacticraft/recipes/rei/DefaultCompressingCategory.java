@@ -24,47 +24,46 @@ package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.shedaniel.math.api.Point;
 import me.shedaniel.math.api.Rectangle;
+import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.api.Renderer;
+import me.shedaniel.rei.gui.widget.EntryWidget;
 import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
-import me.shedaniel.rei.gui.widget.SlotWidget;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.GuiLighting;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class DefaultCompressingCategory implements RecipeCategory<DefaultCompressingDisplay> {
+public class DefaultCompressingCategory implements RecipeCategory<DefaultCompressingDisplay<?>> {
     private static final Identifier DISPLAY_TEXTURE = new Identifier("galacticraft-rewoven", "textures/gui/rei_display.png");
 
     public Identifier getIdentifier() {
         return GalacticraftREIPlugin.COMPRESSING;
     }
 
-    public Renderer getIcon() {
-        return Renderer.fromItemStack(new ItemStack(GalacticraftBlocks.COMPRESSOR));
+    @Override
+    public EntryStack getLogo() {
+        return EntryStack.create(new ItemStack(GalacticraftBlocks.COMPRESSOR));
     }
 
     public String getCategoryName() {
         return I18n.translate("category.rei.compressing");
     }
 
-    public List<Widget> setupDisplay(Supplier<DefaultCompressingDisplay> recipeDisplaySupplier, Rectangle bounds) {
+    public List<Widget> setupDisplay(Supplier<DefaultCompressingDisplay<?>> recipeDisplaySupplier, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 68, bounds.getCenterY() - 37);
 
         class NamelessClass_1 extends RecipeBaseWidget {
@@ -74,8 +73,8 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
 
             public void render(int mouseX, int mouseY, float delta) {
                 super.render(mouseX, mouseY, delta);
-                GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                GuiLighting.disable();
+                RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+                DiffuseLighting.disable();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultCompressingCategory.DISPLAY_TEXTURE);
                 this.blit(startPoint.x, startPoint.y, 0, 83, 137, 157);
 
@@ -86,47 +85,37 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
             }
         }
 
-        DefaultCompressingDisplay recipeDisplay = recipeDisplaySupplier.get();
+        DefaultCompressingDisplay<?> recipeDisplay = recipeDisplaySupplier.get();
         List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1(bounds)));
-        List<List<ItemStack>> input = recipeDisplaySupplier.get().getInput();
-        List<SlotWidget> slots = Lists.newArrayList();
+        List<List<EntryStack>> input = recipeDisplaySupplier.get().getInputEntries();
+        List<EntryWidget> slots = Lists.newArrayList();
 
         // 3x3 grid
         // Output
         int i;
         for (i = 0; i < 3; ++i) {
             for (int x = 0; x < 3; ++x) {
-                slots.add(new SlotWidget(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1, Lists.newArrayList(), false, true, true));
+                slots.add(EntryWidget.create(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1));
             }
         }
         for (i = 0; i < input.size(); ++i) {
             if (recipeDisplay != null) {
                 if (!input.get(i).isEmpty()) {
-                    slots.get(this.getSlotWithSize(recipeDisplay, i)).setItemList(input.get(i));
+                    slots.get(this.getSlotWithSize(recipeDisplay, i)).entries(input.get(i));
                 }
             } else if (!input.get(i).isEmpty()) {
-                slots.get(i).setItemList(input.get(i));
+                slots.get(i).entries(input.get(i));
             }
         }
 
         widgets.addAll(slots);
-        widgets.add(new SlotWidget(startPoint.x + 120, startPoint.y + (18 * 1) + 3, recipeDisplay.getOutput().stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));/* {
+        widgets.add(EntryWidget.create(startPoint.x + 120, startPoint.y + (18) + 3).entries(new ArrayList<>(Objects.requireNonNull(recipeDisplay).getOutputEntries())));
 
-            protected String getItemCountOverlay(ItemStack currentStack) {
-                if (currentStack.getCount() == 1)
-                    return "";
-                if (currentStack.getCount() < 1)
-                    return "§c" + currentStack.getCount();
-                return currentStack.getCount() + "";
-            }
-        });*/
-        widgets.add(new SlotWidget(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4,
-                AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(ItemStack::new)
-                        .collect(Collectors.toList()).stream().map(Renderer::fromItemStack).collect(Collectors.toList()), false, true, true));
+        widgets.add(EntryWidget.create(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4).entries(AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(EntryStack::create).collect(Collectors.toList())));
         return widgets;
     }
 
-    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
+    private int getSlotWithSize(DefaultCompressingDisplay<?> recipeDisplay, int num) {
         if (recipeDisplay.getWidth() == 1) {
             if (num == 1) {
                 return 3;

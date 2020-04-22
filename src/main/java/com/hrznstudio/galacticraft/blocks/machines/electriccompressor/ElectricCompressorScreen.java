@@ -25,9 +25,9 @@ package com.hrznstudio.galacticraft.blocks.machines.electriccompressor;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.AbstractContainerScreen;
+import net.minecraft.client.gui.screen.ingame.ContainerScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -41,7 +41,7 @@ import net.minecraft.world.World;
  */
 public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCompressorContainer> {
 
-    public static final ContainerFactory<AbstractContainerScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
+    public static final ContainerFactory<ContainerScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -63,10 +63,10 @@ public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCom
     }
 
     protected void updateProgressDisplay() {
-        progressDisplayX = left + 77;
-        progressDisplayY = top + 28;
+        progressDisplayX = this.x + 77;
+        progressDisplayY = this.y + 28;
 //        progressDisplayX = left + 105;
-        progressDisplayY = top + 29;
+        progressDisplayY = this.y + 29;
     }
 
     protected String getBackgroundLocation() {
@@ -79,14 +79,14 @@ public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCom
 
     @Override
     protected void drawBackground(float var1, int var2, int var3) {
-        GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.renderBackground();
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
         updateProgressDisplay();
 
         //this.drawTexturedRect(...)
-        this.blit(this.left, this.top, 0, 0, this.containerWidth, this.containerHeight);
+        this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
 
         this.drawCraftProgressBar();
         this.drawConfigTabs();
@@ -95,7 +95,7 @@ public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCom
     @Override
     public void render(int mouseX, int mouseY, float v) {
         super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.top + 6, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 

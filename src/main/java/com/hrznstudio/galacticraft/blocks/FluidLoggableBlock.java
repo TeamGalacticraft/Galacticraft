@@ -22,7 +22,8 @@
 
 package com.hrznstudio.galacticraft.blocks;
 
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.fluid.BaseFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -64,12 +65,12 @@ public interface FluidLoggableBlock extends Waterloggable {
         }
 
         @Override
-        public Optional<Identifier> getValue(String name) {
+        public Optional<Identifier> parse(String name) {
             return Optional.of(new Identifier(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
         }
 
         @Override
-        public String getName(Identifier value) {
+        public String name(Identifier value) {
             if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
                 throw new RuntimeException("Bad fluid!" + value);
             return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);

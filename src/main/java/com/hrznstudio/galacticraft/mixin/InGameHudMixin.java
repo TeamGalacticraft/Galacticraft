@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -62,7 +62,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
         if(CelestialBodyType.getByDimType(client.player.world.dimension.getType()).isPresent() && CelestialBodyType.getByDimType(client.player.world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             this.client.getProfiler().push("jumpBar"); //Totally the jump bar
-            GlStateManager.pushMatrix();
+            RenderSystem.pushMatrix();
             client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
             this.blit(this.scaledWidth - 17, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
             this.blit(this.scaledWidth - 34, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
@@ -83,7 +83,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
             //this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 1000D) / 3000D))));
             //this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 2500D) / 3000D))));
 
-            GlStateManager.popMatrix();
+            RenderSystem.popMatrix();
             this.client.getProfiler().pop();
         }
     }

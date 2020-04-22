@@ -55,7 +55,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
     private final DefaultedList<Ingredient> ingredients;
     private final ItemStack output;
     private final Identifier id;
-    private final String group;
+    final String group;
 
     public ShapedCompressingRecipe(Identifier id, String group, int width, int height, DefaultedList<Ingredient> ingredients, ItemStack output) {
         this.id = id;
@@ -260,7 +260,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
                     }
                 }
 
-                if (!ingredient_1.method_8093(inv.getInvStack(int_3 + int_4 * invWidth))) {
+                if (!ingredient_1.test(inv.getInvStack(int_3 + int_4 * invWidth))) {
                     return false;
                 }
             }

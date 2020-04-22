@@ -30,11 +30,12 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ExtendedBlockView;
+import net.minecraft.world.BlockRenderView;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -55,24 +56,24 @@ public class FluidRenderingResourceReloadListener implements SimpleSynchronousRe
     public void apply(ResourceManager var1) {
         FluidRenderHandler oilRenderHandler = new FluidRenderHandler() {
             @Override
-            public Sprite[] getFluidSprites(ExtendedBlockView view, BlockPos pos, FluidState state) {
-                return new Sprite[]{ MinecraftClient.getInstance().getSpriteAtlas().getSprite(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), MinecraftClient.getInstance().getSpriteAtlas().getSprite(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing")) };
+            public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
+                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
             }
 
             @Override
-            public int getFluidColor(ExtendedBlockView view, BlockPos pos, FluidState state) {
+            public int getFluidColor(BlockRenderView view, BlockPos pos, FluidState state) {
                 return -1;
             }
         };
 
         FluidRenderHandler fuelRenderHandler = new FluidRenderHandler() {
             @Override
-            public Sprite[] getFluidSprites(ExtendedBlockView view, BlockPos pos, FluidState state) {
-                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas().getSprite(new Identifier(Constants.MOD_ID, "block/fuel_still")), MinecraftClient.getInstance().getSpriteAtlas().getSprite(new Identifier(Constants.MOD_ID, "block/fuel_flowing")) };
+            public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
+                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), MinecraftClient.getInstance().getSpriteAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEX).apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
             }
 
             @Override
-            public int getFluidColor(ExtendedBlockView view, BlockPos pos, FluidState state) {
+            public int getFluidColor(BlockRenderView view, BlockPos pos, FluidState state) {
                 return -1;
             }
         };

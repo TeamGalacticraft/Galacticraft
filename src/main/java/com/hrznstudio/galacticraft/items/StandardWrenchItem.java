@@ -33,7 +33,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.state.StateFactory;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -41,7 +41,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
-import net.minecraft.util.SystemUtil;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
@@ -65,7 +65,7 @@ public class StandardWrenchItem extends Item {
     }
 
     private static <T> T method_7760(Iterable<T> iterable_1, T object_1, boolean sneaking) {
-        return sneaking ? SystemUtil.previous(iterable_1, object_1) : SystemUtil.next(iterable_1, object_1);
+        return sneaking ? Util.previous(iterable_1, object_1) : Util.next(iterable_1, object_1);
     }
 
     public boolean beforeBlockBreak(BlockState state, World world_1, BlockPos pos, PlayerEntity player) {
@@ -91,13 +91,13 @@ public class StandardWrenchItem extends Item {
     private void method_7759(PlayerEntity player, BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
         if (block instanceof Rotatable) {
-            StateFactory<Block, BlockState> stateFactory = block.getStateFactory();
-            Collection<Property<?>> collection = stateFactory.getProperties();
+            StateManager<Block, BlockState> StateManager = block.getStateManager();
+            Collection<Property<?>> collection = StateManager.getProperties();
             String string_1 = Registry.BLOCK.getId(block).toString();
             if (!collection.isEmpty()) {
                 CompoundTag compoundTag_1 = stack.getOrCreateSubTag("wrenchProp");
                 String string_2 = compoundTag_1.getString(string_1);
-                Property<?> property = stateFactory.getProperty(string_2);
+                Property<?> property = StateManager.getProperty(string_2);
                 if (property == null) {
                     property = collection.iterator().next();
                 }

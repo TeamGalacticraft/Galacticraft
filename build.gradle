@@ -34,9 +34,9 @@ allprojects {
 
 dependencies {
     //to change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    mappings("net.fabricmc:yarn:${project.yarn_mappings}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
@@ -45,22 +45,18 @@ dependencies {
     modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}")
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
-    modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = false }
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { transitive = false }
+    modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
     
-    modImplementation "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
-    modImplementation "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
-    modImplementation "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
+    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
+    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}") { transitive = false }
+    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}") { transitive = false }
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth', module: 'config-2'
-        exclude group: 'me.shedaniel.cloth', module: 'cloth-events'
-        exclude group: 'net.fabricmc', module: 'fabric-loader'
-        exclude group: 'net.fabricmc.fabric-api', module: 'fabric-api'
-        exclude group: 'net.fabricmc.fabric-api', module: 'fabric-api'
-        exclude group: 'blue.endless', module: 'jankson'
-        //need fiber things embedded in REI
+        exclude group: 'me.shedaniel.cloth', module: 'config-events'
+        //need autoconfig and nothing else
     }
 
     modImplementation("teamreborn:energy:+") { transitive = false }
@@ -68,14 +64,14 @@ dependencies {
     //modRuntime("RebornCore:RebornCore-${project.minecraft_version}:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
-    include "com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}"
-    include "me.shedaniel.cloth:cloth-events:${project.cloth_version}"
-    include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
-    include "io.github.cottonmc:cotton-energy:${project.energy_version}"
-    include "alexiil.mc.lib:libblockattributes-core:${project.attributes_version}"
-    include "alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}"
-    include "alexiil.mc.lib:libblockattributes-items:${project.attributes_version}"
-    include "teamreborn:energy:+"
+    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}")
+    include("me.shedaniel.cloth:cloth-events:${project.cloth_version}")
+    include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
+    include("io.github.cottonmc:cotton-energy:${project.energy_version}")
+    include("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
+    include("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}")
+    include("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+    include("teamreborn:energy:+")
 	
     // Needed for LBA in order for eclipse to work
     compile "com.google.code.findbugs:jsr305:3.0.2"

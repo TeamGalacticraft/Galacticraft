@@ -44,11 +44,11 @@ public class DrippingFuelParticle extends SpriteBillboardParticle {
         this.velocityX = 0.0f;
         this.velocityY = -0.6f;
         this.velocityZ = 0.0f;
-        this.colorRed = 146f/255f;
-        this.colorGreen = 140f/255f;
-        this.colorBlue = 74f/255f;
-        this.colorAlpha = 213f/255f;
-        this.maxAge = (int)(64.0D / (Math.random() * 0.8D + 0.2D));
+        this.colorRed = 146f / 255f;
+        this.colorGreen = 140f / 255f;
+        this.colorBlue = 74f / 255f;
+        this.colorAlpha = 213f / 255f;
+        this.maxAge = (int) (64.0D / (Math.random() * 0.8D + 0.2D));
     }
 
     @Override
