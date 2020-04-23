@@ -37,20 +37,22 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -58,7 +60,7 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineContainerScreen<C extends MachineContainer<?>> extends ContainerScreen<C> {
+public abstract class MachineContainerScreen<C extends MachineContainer<?>> extends HandledScreen<C> {
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
 
@@ -157,7 +159,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         }
     }
 
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<ContainerScreen> createFactory(
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<HandledScreen> createFactory(
             Class<T> machineClass, MachineContainerConstructor<? extends MachineContainerScreen<?>, T> constructor) {
         return (syncId, id, player, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
@@ -190,7 +192,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
         ));
     }
 
-    public void drawConfigTabs() {
+    public void drawConfigTabs(MatrixStack stack) {
         if (this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
             ConfigurableElectricMachineBlockEntity entity = (ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos);
             assert entity != null;
@@ -198,98 +200,98 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
 
             if (IS_REDSTONE_OPEN) {
-                this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.blit(this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
-                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
-                this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
+                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
+                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
+                this.drawString(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
 
-                this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
 
                 switch (entity.getRedstoneState()) {
                     case DISABLED:
-                        this.blit(this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                        this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                         break;
                     case OFF:
-                        this.blit(this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                        this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                         break;
                     case ON:
-                        this.blit(this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                        this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                         break;
                 }
 
-                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26);
-                this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 23, REDSTONE_TORCH_OFF_X, REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE_TORCH), this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 25 - 2);
+                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26);
+                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 23, REDSTONE_TORCH_OFF_X, REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
+                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE_TORCH), this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 25 - 2);
             } else {
-                this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
-                this.blit(this.x - REDSTONE_TAB_WIDTH, this.y + 3, REDSTONE_TAB_X, REDSTONE_TAB_Y, REDSTONE_TAB_WIDTH, REDSTONE_TAB_HEIGHT);
-                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_TAB_WIDTH + 4, this.y + 6);
+                this.client.getTextureManager().bindTexture(TABS_TEXTURE);
+                this.drawTexture(stack, this.x - REDSTONE_TAB_WIDTH, this.y + 3, REDSTONE_TAB_X, REDSTONE_TAB_Y, REDSTONE_TAB_WIDTH, REDSTONE_TAB_HEIGHT);
+                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_TAB_WIDTH + 4, this.y + 6);
             }
             if (IS_CONFIG_OPEN) {
-                this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.blit(this.x - CONFIG_PANEL_WIDTH, this.y + 26, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
+                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
+                this.drawTexture(stack, this.x - CONFIG_PANEL_WIDTH, this.y + 26, CONFIG_PANEL_X, CONFIG_PANEL_Y, CONFIG_PANEL_WIDTH, CONFIG_PANEL_HEIGHT);
 
                 //Front, Back, Right, Left, top, bottom
 
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 3, getXForOption(sideOptions[4]), getYForOption(sideOptions[4]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //TOP - Top
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 3, getXForOption(sideOptions[4]), getYForOption(sideOptions[4]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //TOP - Top
 
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 21 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[2]), getYForOption(sideOptions[2]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT - right
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[0]), getYForOption(sideOptions[0]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT-CENTER - Front
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 65 - 6 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[3]), getYForOption(sideOptions[3]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE RIGHT-CENTER - left
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 87 - 9 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[1]), getYForOption(sideOptions[1]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //RIGHT - Back
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[2]), getYForOption(sideOptions[2]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT - right
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[0]), getYForOption(sideOptions[0]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT-CENTER - Front
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 65 - 6 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[3]), getYForOption(sideOptions[3]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE RIGHT-CENTER - left
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 87 - 9 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[1]), getYForOption(sideOptions[1]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //RIGHT - Back
 
-                this.blit(this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions[5]), getYForOption(sideOptions[5]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions[5]), getYForOption(sideOptions[5]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
 
-                this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
-                this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
+                this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
+                this.drawString(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
             } else {
-                this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
+                this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 if (!IS_REDSTONE_OPEN) {
-                    this.blit(this.x - CONFIG_TAB_WIDTH, this.y + 26, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-                    this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 26 + 3);
+                    this.drawTexture(stack, this.x - CONFIG_TAB_WIDTH, this.y + 26, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+                    this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 26 + 3);
                 } else {
-                    this.blit(this.x - CONFIG_TAB_WIDTH, this.y + 96, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-                    this.minecraft.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 96 + 3);
+                    this.drawTexture(stack, this.x - CONFIG_TAB_WIDTH, this.y + 96, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
+                    this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 96 + 3);
                 }
             }
             if (IS_SECURITY_OPEN) {
-                this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.blit(this.x + 176, this.y + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
-                this.blit(this.x + 176 + 4, this.y + 6, LOCK_PARTY_X, LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawString(this.minecraft.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
+                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
+                this.drawTexture(stack, this.x + 176, this.y + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
+                this.drawTexture(stack, this.x + 176 + 4, this.y + 6, LOCK_PARTY_X, LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
+                this.drawString(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
 
-                this.minecraft.getTextureManager().bindTexture(PANELS_TEXTURE);
-                this.blit(this.x + 174 + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-                this.blit(this.x + 174 + 43, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-                this.blit(this.x + 174 + 65, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
+                this.drawTexture(stack, this.x + 174 + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x + 174 + 43, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x + 174 + 65, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
 
                 switch (security.getPublicity()) {
                     case PRIVATE:
-                        this.blit(this.x + 174 + 21, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                        this.drawTexture(stack, this.x + 174 + 21, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                         break;
                     case SPACE_RACE:
-                        this.blit(this.x + 174 + 43, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                        this.drawTexture(stack, this.x + 174 + 43, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                         break;
                     case PUBLIC:
-                        this.blit(this.x + 174 + 65, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                        this.drawTexture(stack, this.x + 174 + 65, this.y + 26, BUTTON_ON_X, BUTTON_ON_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
                         break;
                 }
 
-                this.blit(this.x + 174 + 21, this.y + 27, LOCK_OWNER_X, LOCK_OWNER_Y + 2, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-                this.blit(this.x + 174 + 43, this.y + 27, LOCK_PARTY_X, LOCK_PARTY_Y + 2, BUTTONS_WIDTH, BUTTONS_HEIGHT);
-                this.blit(this.x + 174 + 65, this.y + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x + 174 + 21, this.y + 27, LOCK_OWNER_X, LOCK_OWNER_Y + 2, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x + 174 + 43, this.y + 27, LOCK_PARTY_X, LOCK_PARTY_Y + 2, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                this.drawTexture(stack, this.x + 174 + 65, this.y + 27 - 2, LOCK_PUBLIC_X, LOCK_PUBLIC_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
             } else {
-                this.minecraft.getTextureManager().bindTexture(TABS_TEXTURE);
-                this.blit(this.x + 176, this.y + 5, SECURITY_TAB_X, SECURITY_TAB_Y, SECURITY_TAB_WIDTH, SECURITY_TAB_HEIGHT);
+                this.client.getTextureManager().bindTexture(TABS_TEXTURE);
+                this.drawTexture(stack, this.x + 176, this.y + 5, SECURITY_TAB_X, SECURITY_TAB_Y, SECURITY_TAB_WIDTH, SECURITY_TAB_HEIGHT);
             }
         }
     }
 
-    public boolean checkTabsClick(double mouseX, double mouseY, int button) {
+    public boolean checkTabsClick(MatrixStack stack, double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
                 ConfigurableElectricMachineBlockEntity entity = (ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos);
@@ -467,7 +469,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
                         return true;
                     }
 
-                    this.blit(this.x + 174 + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
+                    this.drawTexture(stack, this.x + 174 + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
 
                     //273 = r -> s
 
@@ -505,18 +507,18 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
     }
 
     @Override
-    public void render(int int_1, int int_2, float float_1) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         if (this.world.getBlockEntity(pos) != null && this.world.getBlockEntity(pos) instanceof ConfigurableElectricMachineBlockEntity) {
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = ((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity();
             switch (security.getPublicity()) {
                 case PRIVATE:
                     if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.not_your_machine").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
+                        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, "\u00A7l" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.not_your_machine").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
                         return;
                     }
                 case SPACE_RACE:
                     if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, "\u00A7l" + new TranslatableText("Team stuff pending...").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
+                        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, "\u00A7l" + new TranslatableText("Team stuff pending...").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
                         return;
                     }
                 default:
@@ -524,74 +526,74 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
             }
         }
 
-        this.drawConfigTabs();
-        super.render(int_1, int_2, float_1);
+        this.drawConfigTabs(stack);
+        super.render(stack, mouseX, mouseY, delta);
     }
 
-    protected void drawTabTooltips(int mouseX, int mouseY) {
+    protected void drawTabTooltips(MatrixStack stack, int mouseX, int mouseY) {
         if (!IS_REDSTONE_OPEN) {
             if (mouseX >= this.x - REDSTONE_TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-                this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config").setStyle(Style.field_24360.setColor(Formatting.GRAY)), mouseX, mouseY);
             }
         } else {
             if (mouseX >= (this.x - 78) && mouseX <= (this.x - 78) + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 22 && mouseX <= (this.x - 78) + 41 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 44 && mouseX <= (this.x - 78) + 63 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
             }
         }
         if (!IS_CONFIG_OPEN) {
             if (IS_REDSTONE_OPEN) {
                 if (mouseX >= this.x - REDSTONE_TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 96 && mouseY <= this.y + (REDSTONE_TAB_HEIGHT + 96)) {
-                    this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asString(), mouseX, mouseY);
+                    this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
                 }
             } else {
                 if (mouseX >= this.x - REDSTONE_TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 26 && mouseY <= this.y + (REDSTONE_TAB_HEIGHT + 26)) {
-                    this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asString(), mouseX, mouseY);
+                    this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
                 }
             }
         } else {
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.north"), new String[]{this.sideOptions[0].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.field_24360.setColor(Formatting.GRAY)), new Text[]{this.sideOptions[0].getFormattedName()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.south"), new String[]{this.sideOptions[1].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.field_24360.setColor(Formatting.GRAY)), new Text[]{this.sideOptions[1].getFormattedName()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.east"), new String[]{this.sideOptions[2].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.field_24360.setColor(Formatting.GRAY)), new Text[]{this.sideOptions[2].getFormattedName()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.west"), new String[]{this.sideOptions[3].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.field_24360.setColor(Formatting.GRAY)), new Text[]{this.sideOptions[3].getFormattedName()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.up"), new String[]{this.sideOptions[4].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.field_24360.setColor(Formatting.GRAY)), new Text[]{this.sideOptions[4].getFormattedName()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                this.renderTooltip(Lists.asList("\u00a77" + I18n.translate("ui.galacticraft-rewoven.tabs.side_config.down"), new String[]{this.sideOptions[5].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.field_24360.setColor(Formatting.GRAY)), new Text[]{this.sideOptions[5].getFormattedName()}), mouseX, mouseY);
             }
         }
         if (!IS_SECURITY_OPEN) {
             if (mouseX >= this.x - SECURITY_TAB_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + (SECURITY_TAB_HEIGHT + 3)) {
-                this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.security_config").setStyle(Style.field_24360.setColor(Formatting.GRAY)), mouseX, mouseY);
             }
         } else {
             if (mouseX >= (this.x - 78) + 273 && mouseX <= (this.x - 78) + 19 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 22 + 273 && mouseX <= (this.x - 78) + 41 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip(this.minecraft.textRenderer.wrapStringToWidthAsList("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race", "[TEAM NAME]\u00a7r").asString(), 150), mouseX, mouseY);
+                this.renderTooltip(stack, this.client.textRenderer.wrapStringToWidthAsList(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race", "[TEAM NAME]\u00a7r").setStyle(Style.field_24360.setColor(Formatting.WHITE)), 150), mouseX, mouseY);
             }
             if (mouseX >= (this.x - 78) + 44 + 273 && mouseX <= (this.x - 78) + 63 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                this.renderTooltip("\u00A7f" + new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public").asString(), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public").setStyle(Style.field_24360.setColor(Formatting.WHITE)), mouseX, mouseY);
             }
         }
     }
@@ -618,7 +620,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
     @Override
     public boolean mouseClicked(double double_1, double double_2, int int_1) {
         if (isAllowed()) {
-            return this.checkTabsClick(double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
+            return this.checkTabsClick(new MatrixStack(), double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
         } else {
             return false;
         }
@@ -667,15 +669,14 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
     }
 
     @Override
-    protected void drawMouseoverTooltip(int int_1, int int_2) {
+    protected void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if (isAllowed()) {
-            super.drawMouseoverTooltip(int_1, int_2);
-
-            drawTabTooltips(int_1, int_2);
+            super.drawMouseoverTooltip(stack, mouseX, mouseY);
+            drawTabTooltips(stack, mouseX, mouseY);
         }
     }
     
     private void playButtonSound() {
-        this.minecraft.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+        this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 }

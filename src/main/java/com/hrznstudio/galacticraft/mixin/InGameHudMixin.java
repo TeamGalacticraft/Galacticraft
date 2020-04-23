@@ -32,6 +32,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -58,30 +59,30 @@ public abstract class InGameHudMixin extends DrawableHelper {
     private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
-    private void draw(float float_1, CallbackInfo ci) {
+    private void draw(MatrixStack stack, float float_1, CallbackInfo ci) {
 
         if(CelestialBodyType.getByDimType(client.player.world.dimension.getType()).isPresent() && CelestialBodyType.getByDimType(client.player.world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             this.client.getProfiler().push("jumpBar"); //Totally the jump bar
             RenderSystem.pushMatrix();
             client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
-            this.blit(this.scaledWidth - 17, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
-            this.blit(this.scaledWidth - 34, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+            this.drawTexture(stack, this.scaledWidth - 17, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
+            this.drawTexture(stack, this.scaledWidth - 34, this.scaledHeight - 235, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
 
             FullFixedItemInv gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
             if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem) {
-                this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(6).getMaxDamage() - (double) gearInventory.getInvStack(6).getDamage()) / (double) gearInventory.getInvStack(6).getMaxDamage()))));
+                this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(6).getMaxDamage() - (double) gearInventory.getInvStack(6).getDamage()) / (double) gearInventory.getInvStack(6).getMaxDamage()))));
             } else if (client.player.isCreative()) {
-                this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
+                this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
             }
             if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem) {
-                this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(7).getMaxDamage() - (double) gearInventory.getInvStack(7).getDamage()) / (double) gearInventory.getInvStack(7).getMaxDamage()))));
+                this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(7).getMaxDamage() - (double) gearInventory.getInvStack(7).getDamage()) / (double) gearInventory.getInvStack(7).getMaxDamage()))));
             } else if (client.player.isCreative()) {
-                this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
+                this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
             }
 
 
-            //this.blit(this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 1000D) / 3000D))));
-            //this.blit(this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 2500D) / 3000D))));
+            //this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 1000D) / 3000D))));
+            //this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, this.scaledHeight - 235 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double)OXYGEN_HEIGHT - ((double)OXYGEN_HEIGHT * ((3000D - 2500D) / 3000D))));
 
             RenderSystem.popMatrix();
             this.client.getProfiler().pop();

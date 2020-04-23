@@ -32,10 +32,12 @@ public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreep
     }
 
     @Override
-    protected float getWhiteOverlayProgress(EvolvedCreeperEntity entity, float tickDelta) {
+    protected float getAnimationCounter(EvolvedCreeperEntity entity, float tickDelta) {
         float g = entity.getClientFuseTime(tickDelta);
         return (int)(g * 10.0F) % 2 == 0 ? 0.0F : MathHelper.clamp(g, 0.5F, 1.0F);
     }
+
+
 
     @Override
     public void render(EvolvedCreeperEntity mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {

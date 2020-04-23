@@ -27,7 +27,8 @@ import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -41,7 +42,7 @@ import net.minecraft.world.World;
  */
 public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCompressorContainer> {
 
-    public static final ContainerFactory<ContainerScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
+    public static final ContainerFactory<HandledScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -55,7 +56,7 @@ public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCom
     private int progressDisplayY;
     public ElectricCompressorScreen(int syncId, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity) {
         this(new ElectricCompressorContainer(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("ui.galacticraft-rewoven.electric_compressor.name"));
-        this.containerHeight = 199;
+        this.backgroundHeight = 199;
     }
     private ElectricCompressorScreen(ElectricCompressorContainer electricCompressorContainer, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity, Text textComponents) {
         super(electricCompressorContainer, playerEntity.inventory, playerEntity.world, blockEntity.getPos(), textComponents);
@@ -74,43 +75,43 @@ public class ElectricCompressorScreen extends MachineContainerScreen<ElectricCom
     }
 
     private String getContainerDisplayName() {
-        return new TranslatableText("block.galacticraft-rewoven.electric_compressor").asFormattedString();
+        return new TranslatableText("block.galacticraft-rewoven.electric_compressor").getString();
     }
 
     @Override
-    protected void drawBackground(float var1, int var2, int var3) {
+    protected void drawBackground(MatrixStack stack, float var1, int var2, int var3) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.renderBackground();
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.renderBackground(stack);
+        this.client.getTextureManager().bindTexture(BACKGROUND);
 
         updateProgressDisplay();
 
         //this.drawTexturedRect(...)
-        this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
+        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        this.drawCraftProgressBar();
-        this.drawConfigTabs();
+        this.drawCraftProgressBar(stack);
+        this.drawConfigTabs(stack);
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float v) {
-        super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(mouseX, mouseY);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
+        super.render(stack, mouseX, mouseY, v);
+        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
-    protected void drawCraftProgressBar() {
-        float progress = container.blockEntity.getProgress();
-        float maxProgress = container.blockEntity.getMaxProgress();
+    protected void drawCraftProgressBar(MatrixStack stack) {
+        float progress = this.handler.blockEntity.getProgress();
+        float maxProgress = this.handler.blockEntity.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        this.blit(progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.drawTexture(stack, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
     @Override
-    public void drawMouseoverTooltip(int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(mouseX, mouseY);
+    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 }

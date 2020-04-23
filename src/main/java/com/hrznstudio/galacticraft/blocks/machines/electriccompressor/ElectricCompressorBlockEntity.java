@@ -33,6 +33,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -93,7 +94,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
         InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity var1) {
+            public boolean canPlayerUse(PlayerEntity var1) {
                 return true;
             }
         };
@@ -173,14 +174,14 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
     }
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        this.fromTag(tag);
+        this.fromTag(this.getCachedState(), tag);
     }
 
     @Override

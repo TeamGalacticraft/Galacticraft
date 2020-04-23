@@ -49,7 +49,7 @@ public abstract class ItemStackMixin {
         if (false && id.getNamespace().equals(Constants.MOD_ID)) {
             Text returnVal = returnable.getReturnValue();
             if (returnVal.getStyle().getColor() == null) {
-                returnable.setReturnValue(returnVal.setStyle(returnVal.getStyle().setColor(Formatting.BLUE)));
+                //returnable.setReturnValue(returnVal.setStyle(returnVal.getStyle().setColor(Formatting.BLUE)));
             }
         }
     }

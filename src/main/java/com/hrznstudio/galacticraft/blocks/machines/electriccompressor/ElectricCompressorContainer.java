@@ -28,21 +28,21 @@ import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorBlockEnt
 import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorStatus;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.container.Container;
-import net.minecraft.container.FurnaceOutputSlot;
-import net.minecraft.container.Property;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.Property;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.FurnaceOutputSlot;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ElectricCompressorContainer extends MachineContainer<ElectricCompressorBlockEntity> {
 
-    public static final ContainerFactory<Container> FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorContainer::new);
-    public static final ContainerFactory<Container> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorContainer::new);
+    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorContainer::new);
+    public static final ContainerFactory<ScreenHandler> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorContainer::new);
     public final Property status = Property.create();
     public final Property progress = Property.create();
     protected Inventory inventory;
@@ -52,7 +52,7 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
         super(syncId, player, blockEntity);
         this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity player) {
+            public boolean canPlayerUse(PlayerEntity player) {
                 return ElectricCompressorContainer.this.canUse(player);
             }
         };
@@ -105,10 +105,10 @@ public class ElectricCompressorContainer extends MachineContainer<ElectricCompre
 
             if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slots.size(), true)) {
+                if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getCount() == 0) {

@@ -26,18 +26,18 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.container.Container;
-import net.minecraft.container.Property;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.Property;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBlockEntity> {
-    public static final ContainerFactory<Container> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorContainer::new);
+    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorContainer::new);
     public final Property status = Property.create();
     public final Property oxygen = Property.create();
     public final Property lastCollectAmount = Property.create();
@@ -48,7 +48,7 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
         super(syncId, playerEntity, blockEntity);
         this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity player) {
+            public boolean canPlayerUse(PlayerEntity player) {
                 return OxygenCollectorContainer.this.canUse(player);
             }
         };
@@ -91,10 +91,10 @@ public class OxygenCollectorContainer extends MachineContainer<OxygenCollectorBl
 
             if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slots.size(), true)) {
+                if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getCount() == 0) {

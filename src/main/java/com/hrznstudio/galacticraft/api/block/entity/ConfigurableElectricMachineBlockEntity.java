@@ -38,6 +38,7 @@ import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -209,8 +210,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
         inventory.fromTag(tag.getCompound("Inventory"));
         this.security.fromTag(tag);
@@ -219,7 +220,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        this.fromTag(tag);
+        this.fromTag(this.getCachedState(), tag);
     }
 
     @Override
@@ -363,7 +364,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         public CompoundTag toTag(CompoundTag tag) {
             CompoundTag compoundTag = new CompoundTag();
             if (this.hasOwner()) {
-                compoundTag.putUuid("owner", this.owner);
+                compoundTag.putUuidNew("owner", this.owner);
             }
             compoundTag.putString("username", this.username);
             compoundTag.putString("publicity", this.publicity.asString());
@@ -378,7 +379,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             CompoundTag compoundTag = tag.getCompound("security");
             if (compoundTag.contains("owner")) {
                 if (!this.hasOwner()) {
-                    this.owner = compoundTag.getUuid("owner");
+                    this.owner = compoundTag.getUuidNew("owner");
                 }
             }
             if (compoundTag.contains("team")) {

@@ -33,7 +33,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityContext;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -91,7 +91,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
                             } else {
                                 network.addWire(pos.offset(d));
                             }
-                            this.updateNeighborStates(state, world, pos, 3);
+                            //this.updateNeighborStates(state, world, pos, 3);
                         }
                     } else if (type != WireConnectionType.NONE) {
                         if (type == WireConnectionType.ENERGY_INPUT) {
@@ -106,7 +106,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, EntityContext EntityContext) {
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
         ArrayList<VoxelShape> shapes = new ArrayList<>();
 
         if (blockState.get(ATTACHED_NORTH)) {
@@ -219,21 +219,6 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
     @Override
     public boolean isTranslucent(BlockState state, BlockView blockView_1, BlockPos pos) {
         return true;
-    }
-
-    @Override
-    public boolean canSuffocate(BlockState state, BlockView blockView_1, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public boolean isSimpleFullBlock(BlockState state, BlockView blockView_1, BlockPos pos) {
-        return false;
-    }
-
-    @Override
-    public boolean allowsSpawning(BlockState state, BlockView blockView_1, BlockPos pos, EntityType<?> entityType_1) {
-        return false;
     }
 
     @Override

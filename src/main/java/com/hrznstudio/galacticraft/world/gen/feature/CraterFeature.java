@@ -32,6 +32,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.TestableWorld;
 import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.feature.Feature;
@@ -47,7 +48,7 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
         super(function);
     }
 
-    public boolean generate(IWorld world, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGen, Random rand, BlockPos pos, CraterFeatureConfig craterConfig) {
+    public boolean generate(IWorld world, StructureAccessor accessor, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random rand, BlockPos pos, CraterFeatureConfig config) {
         while (pos.getY() > 5 && world.isAir(pos)) {
             pos = pos.down();
         }

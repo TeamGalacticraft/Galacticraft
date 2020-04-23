@@ -94,7 +94,7 @@ public class NetworkManager {
         for (WireNetwork network : set) {
             for (BlockPos pos : network.getQuery()) {
                 if (world.getBlockEntity(pos) instanceof EnergyAttributeProvider) {
-                    world.getBlockState(pos).updateNeighborStates(world, pos, 10);
+                    world.getBlockState(pos).updateNeighbors(world, pos, 10);
                 }
             }
             network.clearQuery();

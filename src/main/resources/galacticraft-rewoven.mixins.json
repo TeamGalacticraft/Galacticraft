@@ -1,25 +1,28 @@
 {
-  "required": true,
-  "package": "com.hrznstudio.galacticraft.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "BaseFluidMixin",
-    "ItemStackMixin",
-    "LivingEntityMixin",
-    "PlayerEntityMixin",
-    "ServerWorldMixin",
-    "TorchBlockMixin"
-  ],
-  "client": [
-    "InGameHudMixin",
-    "JsonCapeMixin",
-    "MusicTrackerMixin",
-    "PauseMenuScreenMixin",
-    "PlayerInventoryScreenMixin",
-    "WorldRendererMixin"
-  ],
-  "minVersion": "0.1.0",
-  "injectors": {
-    "defaultRequire": 1
+    "required": true,
+    "package": "com.hrznstudio.galacticraft.mixin",
+    "compatibilityLevel": "JAVA_8",
+    "mixins": [
+        "BaseFluidMixin",
+        "EntityAttributeInstanceAccessor",
+        "FireBlockAccessor",
+        "ItemStackMixin",
+        "LivingEntityMixin",
+        "PlayerEntityMixin",
+        "ServerWorldMixin",
+        "TorchBlockMixin"
+    ],
+    "client": [
+        "HandledScreenHooks",
+        "InGameHudMixin",
+        "JsonCapeMixin",
+        "MusicTrackerMixin",
+        "PauseMenuScreenMixin",
+        "PlayerInventoryScreenMixin",
+        "WorldRendererMixin"
+    ],
+    "minVersion": "0.1.0",
+    "injectors": {
+        "defaultRequire": 1
   }
 }

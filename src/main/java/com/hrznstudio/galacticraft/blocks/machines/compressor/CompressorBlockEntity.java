@@ -32,6 +32,7 @@ import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -90,7 +91,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
         }
         InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity var1) {
+            public boolean canPlayerUse(PlayerEntity var1) {
                 return true;
             }
         };
@@ -200,8 +201,8 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
 
         this.progress = tag.getInt("Progress");
 

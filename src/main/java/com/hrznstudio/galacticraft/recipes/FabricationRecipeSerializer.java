@@ -23,12 +23,13 @@
 package com.hrznstudio.galacticraft.recipes;
 
 import com.google.gson.JsonObject;
+import com.hrznstudio.galacticraft.recipes.FabricationRecipeSerializer.RecipeFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.registry.Registry;
 
 /**
@@ -50,7 +51,7 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
 
     @Override
     public T read(Identifier id, PacketByteBuf packet) {
-        String string_1 = packet.readString();
+        String string_1 = packet.readString(32767);
         Ingredient ingredient_1 = Ingredient.fromPacket(packet);
         ItemStack itemStack_1 = packet.readItemStack();
         return this.recipeFactory.create(id, string_1, ingredient_1, itemStack_1);

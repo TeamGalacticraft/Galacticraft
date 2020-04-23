@@ -91,7 +91,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
 
     @Override
     public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(new Style().setColor(Formatting.GRAY));
+        return new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(Style.field_24360.setColor(Formatting.GRAY));
     }
 
     @Override

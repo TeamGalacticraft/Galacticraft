@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
+import com.hrznstudio.galacticraft.mixin.EntityAttributeInstanceAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -54,11 +55,10 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
     public void setBaby(boolean baby) {
         this.getDataTracker().set(BABY, baby);
         if (this.world != null && !this.world.isClient) {
-            EntityAttributeInstance entityAttributeInstance = this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED);
+            EntityAttributeInstance entityAttributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             entityAttributeInstance.removeModifier(BABY_SPEED_BONUS);
             if (baby) {
-                entityAttributeInstance.addModifier(BABY_SPEED_BONUS);
-
+                ((EntityAttributeInstanceAccessor)entityAttributeInstance).callAddModifier(BABY_SPEED_BONUS);
             }
         }
     }

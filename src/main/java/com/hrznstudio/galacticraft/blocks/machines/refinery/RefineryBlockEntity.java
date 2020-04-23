@@ -37,6 +37,7 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
@@ -62,9 +63,9 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         @Override
         public FluidFilter getFilterForTank(int tank) {
             if (tank == 0) {
-                return fluidKey -> fluidKey.withAmount(FluidVolume.BUCKET).getRawFluid().matches(GalacticraftFluidTags.OIL);
+                return fluidKey -> fluidKey.withAmount(FluidVolume.BUCKET).getRawFluid().matchesType(GalacticraftFluids.CRUDE_OIL);
             } else if (tank == 1) {
-                return fluidKey -> fluidKey.withAmount(FluidVolume.BUCKET).getRawFluid().matches(GalacticraftFluidTags.FUEL);
+                return fluidKey -> fluidKey.withAmount(FluidVolume.BUCKET).getRawFluid().matchesType(GalacticraftFluids.CRUDE_OIL);
             } else {
                 return fluidKey -> false;
             }
@@ -73,9 +74,9 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         @Override
         public boolean isFluidValidForTank(int tank, FluidKey fluid) {
             if (tank == 0) {
-                return fluid.withAmount(FluidVolume.BUCKET).getRawFluid().matches(GalacticraftFluidTags.OIL);
+                return fluid.withAmount(FluidVolume.BUCKET).getRawFluid().matchesType(GalacticraftFluids.CRUDE_OIL);
             } else if (tank == 1) {
-                return fluid.withAmount(FluidVolume.BUCKET).getRawFluid().matches(GalacticraftFluidTags.FUEL);
+                return fluid.withAmount(FluidVolume.BUCKET).getRawFluid().matchesType(GalacticraftFluids.CRUDE_OIL);
             } else {
                 return false;
             }
@@ -112,7 +113,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         if (getInventory().getInvStack(1).getItem() instanceof FluidProviderItem) {
             Ref<ItemStack> ref = new Ref<>(getInventory().getInvStack(1));
             FluidVolume output = ((FluidProviderItem) getInventory().getInvStack(1).getItem()).drain(ref);
-            if (output.getRawFluid().matches(GalacticraftFluidTags.OIL)) {
+            if (output.getRawFluid().matchesType(GalacticraftFluids.CRUDE_OIL)) {
                 this.fluidInv.getTank(0).insert(output);
                 getInventory().setInvStack(1, ref.obj, Simulation.ACTION);
             }
@@ -159,8 +160,8 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         fluidInv.fromTag(tag.getCompound("FluidInventory"));
     }
 

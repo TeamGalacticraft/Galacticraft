@@ -74,7 +74,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
                             } else {
                                 network.addWire(pos.offset(d));
                             }
-                            this.updateNeighborStates(state, world, pos, 3);
+                            state.updateNeighbors(world, pos, 3);
                         }
                     } else if (type != WireConnectionType.NONE) {
                         if (type == WireConnectionType.ENERGY_INPUT) {
@@ -108,7 +108,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
                         } else {
                             network.addWire(updated);
                         }
-                        this.updateNeighborStates(state, world, pos, 3);
+                        state.updateNeighbors(world, pos, 3);
                     }
                 } else if (type == WireConnectionType.ENERGY_INPUT) {
                     network.addConsumer(updated);

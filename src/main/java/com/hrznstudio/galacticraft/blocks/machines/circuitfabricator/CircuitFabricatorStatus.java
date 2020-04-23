@@ -33,19 +33,19 @@ public enum CircuitFabricatorStatus {
     /**
      * Fabricator is active and is processing.
      */
-    PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
+    PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing").setStyle(Style.field_24360.setColor(Formatting.GREEN)).getString()),
     /**
      * Fabricator is not processing.
      */
-    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.field_24360.setColor(Formatting.GOLD)).getString()),
     /**
      * The fabricator has no energy.
      */
-    NOT_ENOUGH_POWER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_power").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString()),
+    NOT_ENOUGH_POWER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_power").setStyle(Style.field_24360.setColor(Formatting.GRAY)).getString()),
     /**
      * The fabricator has been switched off.
      */
-    OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
+    OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off").setStyle(Style.field_24360.setColor(Formatting.GRAY)).getString());
 
 
     private String name;

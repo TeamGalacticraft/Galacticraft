@@ -26,6 +26,7 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.TranslatableText;
 
 /**
@@ -63,7 +64,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void renderBackground() {
+    public void renderBackground(MatrixStack stack) {
         // 5% of width
         int maxWidth = this.width - getXMargins() * 2;
         if (widthSize < maxWidth) {
@@ -81,12 +82,12 @@ public class SpaceRaceScreen extends Screen {
         int x = midX - widthSize / 2;
         int y = midY - heightSize / 2;
 
-        fill(x, y, x + widthSize, y + heightSize, 0x80000000);
+        this.fill(stack, x, y, x + widthSize, y + heightSize, 0x80000000);
     }
 
-    private void renderForeground() {
-        TextRenderer font = minecraft.textRenderer;
-        DrawableUtils.drawCenteredString(font, "Space Race Manager", this.width / 2, getTop() + 2, 0xFFFFFF);
+    private void renderForeground(MatrixStack stack) {
+        TextRenderer font = this.client.textRenderer;
+        DrawableUtils.drawCenteredString(stack, font, "Space Race Manager", this.width / 2, getTop() + 2, 0xFFFFFF);
     }
 
     private int getYMargins() {
@@ -118,14 +119,14 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void render(int x, int y, float lastFrameDuration) {
-        this.renderBackground();
+    public void render(MatrixStack stack, int x, int y, float lastFrameDuration) {
+        this.renderBackground(stack);
 
         if (this.isAnimationComplete()) {
-            this.renderForeground();
+            this.renderForeground(stack);
         }
 
-        super.render(x, y, lastFrameDuration);
+        super.render(stack, x, y, lastFrameDuration);
 //        this.drawMouseoverTooltip(x, y);
 
 //        this.mouseX = (float) x;

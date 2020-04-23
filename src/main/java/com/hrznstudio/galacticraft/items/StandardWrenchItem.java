@@ -23,6 +23,8 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.util.Rotatable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
@@ -111,11 +113,12 @@ public class StandardWrenchItem extends Item {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack itemStack_1, World world_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.standard_wrench").setStyle(new Style().setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.standard_wrench").setStyle(Style.field_24360.setColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.field_24360.setColor(Formatting.GRAY)));
         }
     }
 }

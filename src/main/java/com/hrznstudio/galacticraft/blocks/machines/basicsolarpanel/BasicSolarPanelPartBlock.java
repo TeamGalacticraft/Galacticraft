@@ -25,13 +25,9 @@ package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.entity.EntityContext;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -64,7 +60,7 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos pos, EntityContext EntityContext_1) {
+    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos pos, ShapeContext context) {
         Block down = blockView_1.getBlockState(pos.down()).getBlock();
         if (down == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
             return POLE_SHAPE;
@@ -126,13 +122,9 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
         return true;
     }
 
-    @Override
-    public boolean isSimpleFullBlock(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
-        return false;
-    }
 
     @Override
-    public boolean allowsSpawning(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1, EntityType<?> entityType_1) {
+    public boolean canMobSpawnInside() {
         return false;
     }
 

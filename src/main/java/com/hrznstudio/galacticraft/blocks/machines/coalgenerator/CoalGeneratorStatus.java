@@ -33,19 +33,19 @@ public enum CoalGeneratorStatus {
     /**
      * Generator is active and is generating energy.
      */
-    ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
+    ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(Style.field_24360.setColor(Formatting.GREEN)).getString()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.field_24360.setColor(Formatting.GOLD)).getString()),
     /**
      * The generator has no fuel.
      */
-    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString()),
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.field_24360.setColor(Formatting.GRAY)).getString()),
     /**
      * The generator is warming up.
      */
-    WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString());
+    WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming").setStyle(Style.field_24360.setColor(Formatting.GREEN)).getString());
 
     private String name;
 

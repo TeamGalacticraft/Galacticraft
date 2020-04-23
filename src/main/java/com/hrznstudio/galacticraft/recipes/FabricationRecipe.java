@@ -28,7 +28,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
@@ -67,7 +67,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
 
     @Override
     public boolean matches(Inventory inventory, World world_1) {
-        return this.input.test(inventory.getInvStack(0));
+        return this.input.test(inventory.getStack(0));
     }
 
     @Override

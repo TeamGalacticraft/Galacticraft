@@ -27,14 +27,14 @@ import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.container.Container;
-import net.minecraft.container.Property;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.screen.Property;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -42,7 +42,7 @@ import net.minecraft.item.Items;
 public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockEntity> {
 
     private static Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
-    public static final ContainerFactory<Container> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorContainer::new);
+    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorContainer::new);
     public final Property status = Property.create();
     private ItemStack itemStack;
     private Inventory inventory;
@@ -51,7 +51,7 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
         super(syncId, playerEntity, generator);
         this.inventory = new InventoryFixedWrapper(generator.getInventory()) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity player) {
+            public boolean canPlayerUse(PlayerEntity player) {
                 return CoalGeneratorContainer.this.canUse(player);
             }
         };
@@ -90,10 +90,10 @@ public class CoalGeneratorContainer extends MachineContainer<CoalGeneratorBlockE
 
             if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slots.size(), true)) {
+                if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getCount() == 0) {

@@ -27,6 +27,7 @@ import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTyp
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.class_5217;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -72,18 +73,17 @@ public class MoonDimension extends Dimension {
     }
 
     @Override
-    public Vec3d getFogColor(float v, float v1) {
+    public Vec3d modifyFogColor(Vec3d vec3d, float tickDelta) {
         return new Vec3d(0.0D, 0.0D, 0.0D);
     }
-
     @Override
     public BlockPos getForcedSpawnPoint() {
         return new BlockPos(0, 100, 0);
     }
 
     public ChunkGenerator<?> createChunkGenerator() {
-        MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createSettings();
-        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
+        MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createConfig();
+        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties().getSeed()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
     }
 
     @Override

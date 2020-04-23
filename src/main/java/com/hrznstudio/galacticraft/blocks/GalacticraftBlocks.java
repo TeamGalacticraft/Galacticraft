@@ -45,6 +45,7 @@ import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.AluminumWir
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.blocks.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.mixin.FireBlockAccessor;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.block.FabricMaterialBuilder;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -195,7 +196,7 @@ public class GalacticraftBlocks {
 
     private static FluidBlock registerFlammableFluidBlock(FluidBlock block, String id) {
         FluidBlock registered =  Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
-        ((FireBlock) Blocks.FIRE).registerFlammableBlock(registered, 80, 80);
+        ((FireBlockAccessor)Blocks.FIRE).callRegisterFlammableBlock(registered, 80, 80);
         return registered;
     }
 

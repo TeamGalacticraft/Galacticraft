@@ -28,9 +28,10 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.container.PlayerContainer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Items;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -43,8 +44,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(InventoryScreen.class)
-public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerContainer> {
-    public PlayerInventoryScreenMixin(PlayerContainer container, PlayerInventory playerInventory, Text textComponent) {
+public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> {
+    public PlayerInventoryScreenMixin(PlayerScreenHandler container, PlayerInventory playerInventory, Text textComponent) {
         super(container, playerInventory, textComponent);
     }
 
@@ -57,18 +58,18 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
         if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
                 && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
             System.out.println("Clicked on GC tab!");
-            minecraft.openScreen(new PlayerInventoryGCScreen(playerInventory.player));
+            this.client.openScreen(new PlayerInventoryGCScreen(playerInventory.player));
         }
     }
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
-    public void drawBackground(float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
-        this.blit(this.x, this.y - 28, 0, 0, 57, 32);
+    public void drawBackground(MatrixStack stack, float v, int i, int i1, CallbackInfo callbackInfo) {
+        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
+        this.drawTexture(stack, this.x, this.y - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         DiffuseLighting.enable();
         this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
         this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);

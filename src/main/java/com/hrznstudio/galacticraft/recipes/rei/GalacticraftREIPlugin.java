@@ -24,19 +24,20 @@ package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.mixin.HandledScreenHooks;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapelessCompressingRecipe;
-import me.shedaniel.math.api.Rectangle;
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.BaseBoundsHandler;
 import me.shedaniel.rei.api.DisplayHelper;
+import me.shedaniel.rei.api.REIHelper;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
-import me.shedaniel.rei.impl.ScreenHelper;
-import me.shedaniel.rei.listeners.ContainerScreenHooks;
-import net.fabricmc.loader.api.SemanticVersion;
-import net.fabricmc.loader.util.version.VersionParsingException;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
@@ -50,11 +51,6 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
 
-
-    @Override
-    public SemanticVersion getMinimumVersion() throws VersionParsingException {
-        return SemanticVersion.parse("3.0-pre");
-    }
 
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
@@ -103,28 +99,29 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     public void registerRecipeDisplays(RecipeHelper recipeHelper) {
         for (Recipe<?> value : recipeHelper.getRecipeManager().values()) {
             if (value instanceof FabricationRecipe) {
-                recipeHelper.registerDisplay(CIRCUIT_FABRICATION, new DefaultFabricationDisplay((FabricationRecipe) value));
+                recipeHelper.registerDisplay(new DefaultFabricationDisplay((FabricationRecipe) value));
             } else if (value instanceof ShapelessCompressingRecipe) {
-                recipeHelper.registerDisplay(COMPRESSING, new DefaultShapelessCompressingDisplay((ShapelessCompressingRecipe) value));
+                recipeHelper.registerDisplay(new DefaultShapelessCompressingDisplay((ShapelessCompressingRecipe) value));
             } else if (value instanceof ShapedCompressingRecipe) {
-                recipeHelper.registerDisplay(COMPRESSING, new DefaultShapedCompressingDisplay((ShapedCompressingRecipe) value));
+                recipeHelper.registerDisplay(new DefaultShapedCompressingDisplay((ShapedCompressingRecipe) value));
             }
         }
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public void registerBounds(DisplayHelper displayHelper) {
         //noinspection UnstableApiUsage
-        displayHelper.getBaseBoundsHandler().registerExclusionZones(MachineContainerScreen.class, isOnRightSide -> {
-            ContainerScreenHooks screenHooks = ScreenHelper.getLastContainerScreenHooks();
-            ContainerScreen screen = ScreenHelper.getLastContainerScreen();
+        BaseBoundsHandler.getInstance().registerExclusionZones(MachineContainerScreen.class, () -> {
+            HandledScreen screen = REIHelper.getInstance().getPreviousHandledScreen();
             MachineContainerScreen machineScreen = (MachineContainerScreen) screen;
+            HandledScreenHooks screenHooks = (HandledScreenHooks)machineScreen;
             List<Rectangle> l = Lists.newArrayList();
 
             if (machineScreen.IS_SECURITY_OPEN) {
-                l.add(new Rectangle(screenHooks.rei_getContainerLeft() + screenHooks.rei_getContainerWidth(), screenHooks.rei_getContainerTop(), MachineContainerScreen.SECURITY_PANEL_WIDTH, MachineContainerScreen.SECURITY_PANEL_HEIGHT));
+                l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineContainerScreen.SECURITY_PANEL_WIDTH, MachineContainerScreen.SECURITY_PANEL_HEIGHT));
             } else {
-                l.add(new Rectangle(screenHooks.rei_getContainerLeft() + screenHooks.rei_getContainerWidth(), screenHooks.rei_getContainerTop(), 20, 20));
+                l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), 20, 20));
             }
 
             return l;

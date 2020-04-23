@@ -28,15 +28,15 @@ import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.container.Container;
-import net.minecraft.container.FurnaceOutputSlot;
-import net.minecraft.container.Property;
-import net.minecraft.container.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.screen.Property;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.FurnaceOutputSlot;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,7 +45,7 @@ public class CircuitFabricatorContainer extends MachineContainer<CircuitFabricat
 
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
-    public static final ContainerFactory<Container> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorContainer::new);
+    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorContainer::new);
     public final Property progress = Property.create();
     private final Property status = Property.create();
     private Inventory inventory;
@@ -56,7 +56,7 @@ public class CircuitFabricatorContainer extends MachineContainer<CircuitFabricat
         addProperty(status);
         this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity player) {
+            public boolean canPlayerUse(PlayerEntity player) {
                 return CircuitFabricatorContainer.this.canUse(player);
             }
         };
@@ -100,10 +100,10 @@ public class CircuitFabricatorContainer extends MachineContainer<CircuitFabricat
 
             if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
-                if (!this.insertItem(itemStack1, this.inventory.getInvSize(), this.slots.size(), true)) {
+                if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.inventory.getInvSize(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.inventory.size(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getCount() == 0) {

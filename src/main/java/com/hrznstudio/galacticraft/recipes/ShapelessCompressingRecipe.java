@@ -31,9 +31,9 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
@@ -95,8 +95,8 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
         RecipeFinder recipeFinder_1 = new RecipeFinder();
         int int_1 = 0;
 
-        for (int int_2 = 0; int_2 < inv.getInvSize(); ++int_2) {
-            ItemStack itemStack_1 = inv.getInvStack(int_2);
+        for (int int_2 = 0; int_2 < inv.size(); ++int_2) {
+            ItemStack itemStack_1 = inv.getStack(int_2);
             if (!itemStack_1.isEmpty()) {
                 ++int_1;
                 recipeFinder_1.addItem(itemStack_1);

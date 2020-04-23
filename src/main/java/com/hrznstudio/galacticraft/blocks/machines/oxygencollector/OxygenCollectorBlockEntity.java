@@ -159,15 +159,15 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
 
         this.oxygen.setCurrentEnergy(tag.getInt("Oxygen"));
     }
 
     @Override
     public void fromClientTag(CompoundTag tag) {
-        this.fromTag(tag);
+        this.fromTag(this.getCachedState(), tag);
     }
 
     @Override

@@ -26,9 +26,9 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.blocks.machines.MachineContainer;
 import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.container.Container;
-import net.minecraft.container.Property;
-import net.minecraft.container.Slot;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.Property;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ import net.minecraft.item.ItemStack;
  */
 public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBlockEntity> {
 
-    public static final ContainerFactory<Container> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelContainer::new);
+    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelContainer::new);
 
     private final Inventory inventory;
     private final Property status = Property.create();
@@ -49,7 +49,7 @@ public class BasicSolarPanelContainer extends MachineContainer<BasicSolarPanelBl
         this.solarPanel = blockEntity;
         this.inventory = new InventoryFixedWrapper(solarPanel.getInventory()) {
             @Override
-            public boolean canPlayerUseInv(PlayerEntity player) {
+            public boolean canPlayerUse(PlayerEntity player) {
                 return BasicSolarPanelContainer.this.canUse(player);
             }
         };

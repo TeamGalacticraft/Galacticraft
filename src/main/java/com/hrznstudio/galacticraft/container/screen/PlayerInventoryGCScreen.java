@@ -26,19 +26,21 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCContainer> {
+public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCContainer> {
     public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
 
     private float mouseX;
@@ -56,31 +58,31 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
     }
 
     @Override
-    protected void drawMouseoverTooltip(int x, int y) {
+    protected void drawMouseoverTooltip(MatrixStack stack, int x, int y) {
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, x + 138, x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, y + 8, y + 8 + 40)) {
-            ItemStack invStack = container.gearInventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
+            ItemStack invStack = this.handler.gearInventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
-            this.renderTooltip("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy, x, y);
+            this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, x + 156, x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, y + 8, y + 8 + 40)) {
-            ItemStack invStack = container.gearInventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
+            ItemStack invStack = this.handler.gearInventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
-            this.renderTooltip("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy, x, y);
+            this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         }
-        super.drawMouseoverTooltip(x, y);
+        super.drawMouseoverTooltip(stack, x, y);
     }
 
     @Override
-    public void render(int x, int y, float lastFrameDuration) {
-        this.renderBackground();
-        super.render(x, y, lastFrameDuration);
-        this.drawMouseoverTooltip(x, y);
+    public void render(MatrixStack stack, int x, int y, float lastFrameDuration) {
+        this.renderBackground(stack);
+        super.render(stack, x, y, lastFrameDuration);
+        this.drawMouseoverTooltip(stack, x, y);
 
         this.mouseX = (float) x;
-        this.mouseY = (float)/*y*/ minecraft.getWindow().getScaledHeight() / 2;
+        this.mouseY = (float)/*y*/ this.client.getWindow().getScaledHeight() / 2;
 
         DiffuseLighting.enable();
         this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
@@ -99,29 +101,29 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
         if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x, x + 29)
                 && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
             System.out.println("Clicked on vanilla tab!");
-            minecraft.openScreen(new InventoryScreen(playerInventory.player));
+            this.client.openScreen(new InventoryScreen(playerInventory.player));
         }
 
         return b;
     }
 
     @Override
-    public void drawBackground(float v, int mouseX, int mouseY) {
+    public void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
 //        this.drawTexturedReact(...)
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
+        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         int int_3 = this.x;
         int int_4 = this.y;
-        InventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
+        InventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.client.player);
 
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(BACKGROUND);
 
         //X,Y,blitOffset,u,v,width,height
-        blit(this.x + 138, this.y + 8, 244, 0, 12, 40);
-        blit(this.x + 156, this.y + 8, 244, 0, 12, 40);
+        this.drawTexture(stack, this.x + 138, this.y + 8, 244, 0, 12, 40);
+        this.drawTexture(stack, this.x + 156, this.y + 8, 244, 0, 12, 40);
 
-        this.minecraft.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
-        this.blit(this.x, this.y - 28, 0, 32, 57, 62);
+        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
+        this.drawTexture(stack, this.x, this.y - 28, 0, 32, 57, 62);
     }
 }

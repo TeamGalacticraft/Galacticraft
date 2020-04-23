@@ -37,9 +37,9 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.Iterator;
@@ -260,7 +260,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
                     }
                 }
 
-                if (!ingredient_1.test(inv.getInvStack(int_3 + int_4 * invWidth))) {
+                if (!ingredient_1.test(inv.getStack(int_3 + int_4 * invWidth))) {
                     return false;
                 }
             }

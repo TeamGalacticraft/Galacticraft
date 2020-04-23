@@ -78,7 +78,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.matches(GalacticraftFluidTags.FUEL);
+        return direction == Direction.DOWN && !fluid.matchesType(GalacticraftFluids.FUEL);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class FuelFluid extends BaseFluid {
     }
 
     @Override
-    public int method_15733(WorldView WorldView) {
+    public int getFlowSpeed(WorldView WorldView) {
         return 4;
     }
 

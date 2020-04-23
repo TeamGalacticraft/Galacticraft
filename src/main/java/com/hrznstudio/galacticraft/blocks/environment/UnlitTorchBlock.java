@@ -42,7 +42,7 @@ import java.util.Random;
 public class UnlitTorchBlock extends TorchBlock {
 
     public UnlitTorchBlock(Settings settings) {
-        super(settings);
+        super(settings, null);
     }
 
     @Override

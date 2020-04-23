@@ -27,6 +27,8 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -37,14 +39,14 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     private int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, "", (button) -> minecraft.openScreen(new SpaceRaceScreen()));
+        super(x, y, buttonWidth, buttonHeight, new LiteralText(""), (button) -> minecraft.openScreen(new SpaceRaceScreen()));
         this.font = minecraft.textRenderer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }
 
     @Override
-    public void renderButton(int int_1, int int_2, float float_1) {
+    public void renderButton(MatrixStack stack, int int_1, int int_2, float float_1) {
         int screenWidth = this.screenWidth;
         int screenHeight = this.screenHeight;
         int buttonWidth = 100;
@@ -56,11 +58,11 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         int lineHeight = font.fontHeight;
         int textYOffset = 9;
 
-        fillGradient(x, y, x + buttonWidth, y + buttonHeight, 0xF0151515, 0xF00C0C0C);
-        hLine(x, screenWidth, y, 0xFF000000);
-        vLine(x, screenHeight, y, 0xFF000000);
+        this.fillGradient(stack, x, y, x + buttonWidth, y + buttonHeight, 0xF0151515, 0xF00C0C0C);
+        this.drawHorizontalLine(stack, x, screenWidth, y, 0xFF000000);
+        this.drawVerticalLine(stack, x, screenHeight, y, 0xFF000000);
 
-        DrawableUtils.drawCenteredString(font, "Space Race", x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        DrawableUtils.drawCenteredString(font, "Manager", x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(stack, font, "Space Race", x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(stack, font, "Manager", x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

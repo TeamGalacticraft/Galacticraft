@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel;
 
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
@@ -50,8 +51,8 @@ public class BasicSolarPanelPartBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void fromTag(CompoundTag tag) {
-        super.fromTag(tag);
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
         CompoundTag base = tag.getCompound("Base");
         this.basePos = new BlockPos(base.getInt("X"), base.getInt("Y"), base.getInt("Z"));
     }

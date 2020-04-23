@@ -35,7 +35,9 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeature;
@@ -54,7 +56,7 @@ public class OreGenerator {
 
     public static void registerOverworldOres() {
         for (Biome biome : Biome.BIOMES) {
-            if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
+            if (!biome.getCategory().equals(Biomes.NETHER_WASTES.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>((OreFeature) Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.ALUMINUM_ORE.getDefaultState(), 8)));
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, new ConfiguredFeature<>((OreFeature) Feature.ORE, new OreFeatureConfig(OreFeatureConfig.Target.NATURAL_STONE, GalacticraftBlocks.COPPER_ORE.getDefaultState(), 8)));
@@ -79,7 +81,7 @@ public class OreGenerator {
         }
 
         @Override
-        public boolean generate(IWorld iWorld, ChunkGenerator chunkGenerator, Random random, BlockPos blockPos, GCOreGenConfig featureConfig) {
+        public boolean generate(IWorld iWorld, StructureAccessor accessor, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, BlockPos blockPos, GCOreGenConfig featureConfig) {
             float float_1 = random.nextFloat() * 3.1415927F;
             float float_2 = (float) featureConfig.size / 8.0F;
             int size = MathHelper.ceil(((float) featureConfig.size / 16.0F * 2.0F + 1.0F) / 2.0F);

@@ -38,9 +38,12 @@ import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.PhantomSpawner;
 import net.minecraft.world.gen.PillagerSpawner;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.level.LevelGeneratorType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,7 +68,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     public MoonChunkGenerator(IWorld iWorld, BiomeSource biomeSource, MoonChunkGeneratorConfig chunkGenConfig) {
         super(iWorld, biomeSource, 4, 8, 256, chunkGenConfig, true);
         this.random.consume(2620);
-        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, 15, 0);
+        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, Arrays.asList(15, 0));
         this.amplified = iWorld.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
@@ -75,7 +78,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         int j = region.getCenterChunkZ();
         Biome biome = region.getBiome((new ChunkPos(i, j)).getCenterBlockPos());
         ChunkRandom chunkRandom = new ChunkRandom();
-        chunkRandom.setSeed(region.getSeed(), i << 4, j << 4);
+        chunkRandom.setSeed(region.getSeed());
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
     }
 
@@ -179,8 +182,8 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Override
-    public List<SpawnEntry> getEntitySpawnList(EntityCategory entityCategory_1, BlockPos blockPos_1) {
-        return super.getEntitySpawnList(entityCategory_1, blockPos_1);
+    public List<SpawnEntry> getEntitySpawnList(StructureAccessor accessor, EntityCategory entityCategory_1, BlockPos blockPos_1) {
+        return super.getEntitySpawnList(accessor, entityCategory_1, blockPos_1);
     }
 
     public void spawnEntities(ServerWorld world, boolean boolean_1, boolean boolean_2) {

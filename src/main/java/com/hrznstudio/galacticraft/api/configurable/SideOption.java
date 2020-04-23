@@ -24,6 +24,10 @@ package com.hrznstudio.galacticraft.api.configurable;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import net.minecraft.block.Block;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.StringIdentifiable;
 
 import java.util.ArrayList;
@@ -90,22 +94,22 @@ public enum SideOption implements StringIdentifiable {
         }
     }
 
-    public String getFormattedName() {
+    public Text getFormattedName() {
         if (this == SideOption.BLANK) {
-            return "\u00a78Blank";
+            return new LiteralText("Blank").setStyle(Style.field_24360.setColor(Formatting.DARK_GRAY));
         } else if (this == SideOption.OXYGEN_INPUT) {
-            return "\u00a7bOxygen \u00a7ain";
+            return new LiteralText("Oxygen").setStyle(Style.field_24360.setColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.GREEN)));
         } else if (this == SideOption.OXYGEN_OUTPUT) {
-            return "\u00a78Oxygen \u00a74out";
+            return new LiteralText("Oxygen").setStyle(Style.field_24360.setColor(Formatting.DARK_GRAY)).append(new LiteralText(" out").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
         } else if (this == SideOption.POWER_INPUT) {
-            return "\u00a7dPower \u00a7ain";
+            return new LiteralText("Power").setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.GREEN)));
         } else if (this == SideOption.POWER_OUTPUT) {
-            return "\u00a7dPower \u00a74out";
+            return new LiteralText("Power").setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
         } else if (this == FLUID_INPUT) {
-            return "\u00a7aFluid \u00a74in";
+            return new LiteralText("Fluid").setStyle(Style.field_24360.setColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
         } else if (this == FLUID_OUTPUT) {
-            return "\u00a7aFluid \u00a74out";
+            return new LiteralText("Fluid").setStyle(Style.field_24360.setColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
         }
-        return "";
+        return new LiteralText("");
     }
 }

@@ -29,8 +29,10 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.gui.screen.ingame.ContainerScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -41,9 +43,9 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorScreen extends ContainerScreen<CompressorContainer> {
+public class CompressorScreen extends HandledScreen<CompressorContainer> {
 
-    public static final ContainerFactory<ContainerScreen> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreen::new);
+    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreen::new);
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -56,7 +58,7 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
 
     public CompressorScreen(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
         this(new CompressorContainer(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("ui.galacticraft-rewoven.compressor.name"));
-        this.containerHeight = 192;
+        this.backgroundHeight = 192;
     }
 
     public CompressorScreen(CompressorContainer electricCompressorContainer, PlayerEntity playerEntity, CompressorBlockEntity blockEntity, Text textComponents) {
@@ -64,8 +66,8 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
         this.world = playerEntity.world;
     }
 
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<ContainerScreen> createFactory(
-            Class<T> machineClass, MachineContainer.MachineContainerConstructor<? extends ContainerScreen<?>, T> constructor) {
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<HandledScreen> createFactory(
+            Class<T> machineClass, MachineContainer.MachineContainerConstructor<? extends HandledScreen<?>, T> constructor) {
         return (syncId, id, player, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
             BlockEntity be = player.world.getBlockEntity(pos);
@@ -87,69 +89,68 @@ public class CompressorScreen extends ContainerScreen<CompressorContainer> {
     }
 
     @Override
-    protected void drawBackground(float var1, int var2, int var3) {
+    protected void drawBackground(MatrixStack stack, float var1, int var2, int var3) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.renderBackground();
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
+        this.renderBackground(stack);
+        this.client.getTextureManager().bindTexture(BACKGROUND);
 
         updateProgressDisplay();
 
         //this.drawTexturedRect(...)
-        this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
+        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        this.drawFuelProgressBar();
-        this.drawCraftProgressBar();
+        this.drawFuelProgressBar(stack);
+        this.drawCraftProgressBar(stack);
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float v) {
-        super.render(mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(mouseX, mouseY);
+    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
+        super.render(stack, mouseX, mouseY, v);
+        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
     protected String getContainerDisplayName() {
-        return new TranslatableText("block.galacticraft-rewoven.compressor").asFormattedString();
+        return new TranslatableText("block.galacticraft-rewoven.compressor").getString();
     }
 
-    protected void drawFuelProgressBar() {
+    protected void drawFuelProgressBar(MatrixStack stack) {
         //this.drawTexturedReact(...)
-        this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
+        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int fuelUsageScale;
-        CompressorStatus status = container.blockEntity.status;
+        CompressorStatus status = this.handler.blockEntity.status;
 
         if (status != CompressorStatus.INACTIVE) {
             fuelUsageScale = getFuelProgress();
-            this.blit(this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
+            this.drawTexture(stack, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
     }
 
-    protected void drawCraftProgressBar() {
-        float progress = container.blockEntity.getProgress();
-        float maxProgress = container.blockEntity.getMaxProgress();
+    protected void drawCraftProgressBar(MatrixStack stack) {
+        float progress = this.handler.blockEntity.getProgress();
+        float maxProgress = this.handler.blockEntity.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 
-        this.minecraft.getTextureManager().bindTexture(BACKGROUND);
-        this.blit(progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.drawTexture(stack, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
     private int getFuelProgress() {
-        int maxFuelTime = container.blockEntity.maxFuelTime;
+        int maxFuelTime = this.handler.blockEntity.maxFuelTime;
         if (maxFuelTime == 0) {
             maxFuelTime = 200;
         }
 
         // 0 = CompressorBlockEntity#fuelTime
-        return container.fuelTime.get() * 13 / maxFuelTime;
+        return this.handler.fuelTime.get() * 13 / maxFuelTime;
     }
 
     @Override
-    public void drawMouseoverTooltip(int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(mouseX, mouseY);
+    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(stack, mouseX, mouseY);
         if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-            this.renderTooltip("\u00A77" + new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").asFormattedString(), mouseX, mouseY);
+            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.field_24360.setColor(Formatting.GRAY)), mouseX, mouseY);
         }
     }
-
 }

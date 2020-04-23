@@ -28,9 +28,9 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.items.ThermalArmorItem;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.container.Container;
-import net.minecraft.container.PlayerContainer;
-import net.minecraft.container.Slot;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -45,7 +45,7 @@ import javax.annotation.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class PlayerInventoryGCContainer extends Container {
+public class PlayerInventoryGCContainer extends ScreenHandler {
     private static final String[] EMPTY_ARMOR_SLOT_IDS = new String[]{
             Constants.MOD_ID + ":" + Constants.SlotSprites.THERMAL_HEAD,
             Constants.MOD_ID + ":" + Constants.SlotSprites.THERMAL_CHEST,
@@ -83,20 +83,20 @@ public class PlayerInventoryGCContainer extends Container {
 
                 @Override
                 public Pair<Identifier, Identifier> getBackgroundSprite() {
-                    return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, EMPTY_ARMOR_SLOT_IDS[slot.getEntitySlotId()]));
+                    return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, EMPTY_ARMOR_SLOT_IDS[slot.getEntitySlotId()]));
                 }
             });
         }
         this.addSlot(new ItemSpecificSlot(this.gearInventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
+                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
             }
         });
         this.addSlot(new ItemSpecificSlot(this.gearInventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
+                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
             }
         });
         this.addSlot(new OxygenTankSlot(this.gearInventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
@@ -135,13 +135,13 @@ public class PlayerInventoryGCContainer extends Container {
     public ItemStack getThermalPiece(EquipmentSlot slot) {
         switch (slot) {
             case HEAD:
-                return gearInventory.getInvStack(0);
+                return gearInventory.getStack(0);
             case CHEST:
-                return gearInventory.getInvStack(1);
+                return gearInventory.getStack(1);
             case LEGS:
-                return gearInventory.getInvStack(2);
+                return gearInventory.getStack(2);
             case FEET:
-                return gearInventory.getInvStack(3);
+                return gearInventory.getStack(3);
             default:
                 return ItemStack.EMPTY;
         }
@@ -150,16 +150,16 @@ public class PlayerInventoryGCContainer extends Container {
     public void setThermalPiece(EquipmentSlot slot, ItemStack thermalPiece) {
         switch (slot) {
             case HEAD:
-                gearInventory.setInvStack(0, thermalPiece);
+                gearInventory.setStack(0, thermalPiece);
                 return;
             case CHEST:
-                gearInventory.setInvStack(1, thermalPiece);
+                gearInventory.setStack(1, thermalPiece);
                 return;
             case LEGS:
-                gearInventory.setInvStack(2, thermalPiece);
+                gearInventory.setStack(2, thermalPiece);
                 return;
             case FEET:
-                gearInventory.setInvStack(3, thermalPiece);
+                gearInventory.setStack(3, thermalPiece);
                 return;
             default:
                 throw new IllegalArgumentException("Invalid EquipmentSlot " + slot + "!");
@@ -184,7 +184,7 @@ public class PlayerInventoryGCContainer extends Container {
         @Nullable
         @Override
         public Pair<Identifier, Identifier> getBackgroundSprite() {
-            return Pair.of(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
+            return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
         }
     }
 }

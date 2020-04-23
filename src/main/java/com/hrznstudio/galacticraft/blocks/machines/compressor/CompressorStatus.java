@@ -34,15 +34,15 @@ public enum CompressorStatus {
     /**
      * Generator is active and is generating energy.
      */
-    PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(new Style().setColor(Formatting.GREEN)).asFormattedString()),
+    PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(Style.field_24360.setColor(Formatting.GREEN)).getString()),
     /**
      * Generator has fuel but buffer is full.
      */
-    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(new Style().setColor(Formatting.GOLD)).asFormattedString()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.field_24360.setColor(Formatting.GOLD)).getString()),
     /**
      * The generator has no energy.
      */
-    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(new Style().setColor(Formatting.GRAY)).asFormattedString());
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.field_24360.setColor(Formatting.GRAY)).getString());
 
     private String name;
 

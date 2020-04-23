@@ -25,6 +25,8 @@ package com.hrznstudio.galacticraft.blocks.machines.compressor;
 import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.util.Rotatable;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockRenderType;
@@ -62,11 +64,12 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText(getTooltipKey()).setStyle(new Style().setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText(getTooltipKey()).setStyle(Style.field_24360.setColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.field_24360.setColor(Formatting.GRAY)));
         }
     }
 

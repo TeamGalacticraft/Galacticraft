@@ -25,15 +25,15 @@ package com.hrznstudio.galacticraft.blocks.machines;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.container.Container;
-import net.minecraft.container.Property;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.Property;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineContainer<T extends ConfigurableElectricMachineBlockEntity> extends Container {
+public abstract class MachineContainer<T extends ConfigurableElectricMachineBlockEntity> extends ScreenHandler {
 
     public final PlayerEntity playerEntity;
     public final T blockEntity;
@@ -46,8 +46,8 @@ public abstract class MachineContainer<T extends ConfigurableElectricMachineBloc
         addProperty(energy);
     }
 
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<Container> createFactory(
-            Class<T> machineClass, MachineContainerConstructor<? extends Container, T> constructor) {
+    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<ScreenHandler> createFactory(
+            Class<T> machineClass, MachineContainerConstructor<? extends ScreenHandler, T> constructor) {
         return (syncId, id, player, buffer) -> {
             BlockPos pos = buffer.readBlockPos();
             BlockEntity be = player.world.getBlockEntity(pos);
