@@ -29,12 +29,13 @@ import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeCategory;
+import me.shedaniel.rei.api.widgets.Widgets;
 import me.shedaniel.rei.gui.widget.EntryWidget;
-import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
@@ -75,15 +76,11 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         final Point startPoint = new Point(bounds.getCenterX() - 81, bounds.getCenterY() - 41);
 //        final Point startPoint = new Point((int) bounds.getCenterX() - 41, (int) bounds.getCenterY() - 27);
 
-        class NamelessClass_1 extends RecipeBaseWidget {
-            private NamelessClass_1(Rectangle bounds) {
-                super(bounds);
-            }
+        class NamelessClass_1 extends Widget {
+            private NamelessClass_1() {}
 
-            public void render(int mouseX, int mouseY, float delta) {
+            public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
                 //super.render(mouseX, mouseY, delta);
-
-                MatrixStack stack = new MatrixStack(); //TODO: change when updating REI
 
                 RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                 DiffuseLighting.disable();
@@ -95,10 +92,15 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
                 int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
                 this.drawTexture(stack, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
+
+            @Override
+            public List<? extends Element> children() {
+                return Collections.EMPTY_LIST;
+            }
         }
 
         DefaultFabricationDisplay recipeDisplay = recipeDisplaySupplier.get();
-        List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1(bounds)));
+        List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1()));
 
         // Diamond input
         // Silicon
@@ -106,14 +108,14 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
         // Redstone
         // User input
         // Output
-        widgets.add(EntryWidget.create(startPoint.x + (18 * 0) + 1, startPoint.y + 1).entry(EntryStack.create(new ItemStack(Items.DIAMOND))));
-        widgets.add(EntryWidget.create(startPoint.x + (18 * 7) + 1, startPoint.y + 1).entries(recipeDisplay.getInput().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 0) + 1, startPoint.y + 1)).entry(EntryStack.create(new ItemStack(Items.DIAMOND))));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 7) + 1, startPoint.y + 1)).entries(recipeDisplay.getInput().get(0)));
 
-        widgets.add(EntryWidget.create(startPoint.x + (18 * 3) + 1, startPoint.y + 47).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
-        widgets.add(EntryWidget.create(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
-        widgets.add(EntryWidget.create(startPoint.x + (18 * 6) + 1, startPoint.y + 47).entry(EntryStack.create(new ItemStack(Items.REDSTONE))));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47)).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 3) + 1, startPoint.y + 47 + 18)).entry(EntryStack.create(new ItemStack(GalacticraftItems.RAW_SILICON))));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 6) + 1, startPoint.y + 47)).entry(EntryStack.create(new ItemStack(Items.REDSTONE))));
 
-        widgets.add(EntryWidget.create(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18).entries(recipeDisplay.getOutputEntries()));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (18 * 8) + 1, startPoint.y + 47 + 18)).entries(recipeDisplay.getOutputEntries()));
         return widgets;
     }
 

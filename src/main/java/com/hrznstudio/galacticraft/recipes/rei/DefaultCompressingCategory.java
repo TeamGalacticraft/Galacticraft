@@ -29,13 +29,14 @@ import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeCategory;
-import me.shedaniel.rei.gui.widget.EntryWidget;
-import me.shedaniel.rei.gui.widget.RecipeBaseWidget;
+import me.shedaniel.rei.api.widgets.Slot;
+import me.shedaniel.rei.api.widgets.Widgets;
 import me.shedaniel.rei.gui.widget.Widget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
@@ -71,14 +72,11 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
     public List<Widget> setupDisplay(Supplier<DefaultCompressingDisplay<?>> recipeDisplaySupplier, Rectangle bounds) {
         final Point startPoint = new Point(bounds.getCenterX() - 68, bounds.getCenterY() - 37);
 
-        class NamelessClass_1 extends RecipeBaseWidget {
-            NamelessClass_1(Rectangle bounds) {
-                super(bounds);
-            }
+        class NamelessClass_1 extends Widget {
+            NamelessClass_1() {}
 
-            public void render(int mouseX, int mouseY, float delta) {
-                //super.render(mouseX, mouseY, delta);
-                MatrixStack stack = new MatrixStack(); //TODO: change when updating REI
+            public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
+                //super.render(stack, mouseX, mouseY, delta);
                 RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
                 DiffuseLighting.disable();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultCompressingCategory.DISPLAY_TEXTURE);
@@ -89,19 +87,24 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
                 int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
                 this.drawTexture(stack, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
+
+            @Override
+            public List<? extends Element> children() {
+                return Collections.EMPTY_LIST;
+            }
         }
 
         DefaultCompressingDisplay<?> recipeDisplay = recipeDisplaySupplier.get();
-        List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1(bounds)));
+        List<Widget> widgets = new LinkedList<>(Collections.singletonList(new NamelessClass_1()));
         List<List<EntryStack>> input = recipeDisplaySupplier.get().getInputEntries();
-        List<EntryWidget> slots = Lists.newArrayList();
+        List<Slot> slots = Lists.newArrayList();
 
         // 3x3 grid
         // Output
         int i;
         for (i = 0; i < 3; ++i) {
             for (int x = 0; x < 3; ++x) {
-                slots.add(EntryWidget.create(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1));
+                slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1)));
             }
         }
         for (i = 0; i < input.size(); ++i) {
@@ -115,9 +118,9 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
         }
 
         widgets.addAll(slots);
-        widgets.add(EntryWidget.create(startPoint.x + 120, startPoint.y + (18) + 3).entries(new ArrayList<>(Objects.requireNonNull(recipeDisplay).getOutputEntries())));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 120, startPoint.y + (18) + 3)).entries(new ArrayList<>(Objects.requireNonNull(recipeDisplay).getOutputEntries())));
 
-        widgets.add(EntryWidget.create(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4).entries(AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(EntryStack::create).collect(Collectors.toList())));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + (2 * 18) + 1, startPoint.y + (18 * 3) + 4)).entries(AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().stream().map(EntryStack::create).collect(Collectors.toList())));
         return widgets;
     }
 
