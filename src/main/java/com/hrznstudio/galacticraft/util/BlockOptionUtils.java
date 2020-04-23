@@ -36,7 +36,7 @@ public class BlockOptionUtils {
     public static Map<Direction, SideOption> getDefaultSideOptions() {
         Map<Direction, SideOption> map = new HashMap<>();
         for (Direction direction : Direction.values()) {
-            map.put(direction, SideOption.BLANK);
+            map.put(direction, SideOption.DEFAULT);
         }
         return map;
     }

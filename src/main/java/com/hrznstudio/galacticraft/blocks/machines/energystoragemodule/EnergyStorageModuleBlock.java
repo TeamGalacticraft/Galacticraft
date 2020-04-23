@@ -43,7 +43,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -66,14 +65,13 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
-    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
-    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
-    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
-    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
-    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
-    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.BLANK, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
+    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final IntProperty POWER_LEVEL = IntProperty.of("power", 0, 8);
 
     public EnergyStorageModuleBlock(Settings settings) {
         super(settings);
@@ -129,8 +127,6 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
         stateBuilder.add(LEFT_SIDE_OPTION);
         stateBuilder.add(TOP_SIDE_OPTION);
         stateBuilder.add(BOTTOM_SIDE_OPTION);
-
-        stateBuilder.add(POWER_LEVEL);
     }
 
     @Override
@@ -156,13 +152,12 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
-                .with(FRONT_SIDE_OPTION, SideOption.BLANK)
-                .with(BACK_SIDE_OPTION, SideOption.BLANK)
-                .with(RIGHT_SIDE_OPTION, SideOption.BLANK)
-                .with(LEFT_SIDE_OPTION, SideOption.BLANK)
-                .with(TOP_SIDE_OPTION, SideOption.BLANK)
-                .with(BOTTOM_SIDE_OPTION, SideOption.BLANK)
-                .with(POWER_LEVEL, 0);
+                .with(FRONT_SIDE_OPTION, SideOption.DEFAULT)
+                .with(BACK_SIDE_OPTION, SideOption.DEFAULT)
+                .with(RIGHT_SIDE_OPTION, SideOption.DEFAULT)
+                .with(LEFT_SIDE_OPTION, SideOption.DEFAULT)
+                .with(TOP_SIDE_OPTION, SideOption.DEFAULT)
+                .with(BOTTOM_SIDE_OPTION, SideOption.DEFAULT);
     }
 
     @Override
