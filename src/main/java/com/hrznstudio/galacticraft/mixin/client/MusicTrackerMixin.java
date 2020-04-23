@@ -1,7 +1,9 @@
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.MusicTracker;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -18,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(MusicTracker.class)
+@Environment(EnvType.CLIENT)
 public abstract class MusicTrackerMixin {
     @Shadow
     private SoundInstance current;

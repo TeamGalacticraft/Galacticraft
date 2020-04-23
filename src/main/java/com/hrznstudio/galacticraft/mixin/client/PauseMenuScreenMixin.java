@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.container.button.SpaceRaceButtonWidget;
 import net.minecraft.client.gui.screen.GameMenuScreen;

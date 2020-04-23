@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.recipes.rei;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.mixin.HandledScreenHooks;
+import com.hrznstudio.galacticraft.mixin.client.HandledScreenHooks;
 import com.hrznstudio.galacticraft.api.screen.MachineContainerScreen;
 import com.hrznstudio.galacticraft.recipes.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipes.ShapedCompressingRecipe;
@@ -46,7 +46,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-
+@Environment(EnvType.CLIENT)
 public class GalacticraftREIPlugin implements REIPluginV0 {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");

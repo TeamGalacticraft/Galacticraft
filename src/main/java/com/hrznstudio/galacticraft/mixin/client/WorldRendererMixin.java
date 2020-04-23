@@ -20,11 +20,13 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -42,6 +44,7 @@ import java.util.Random;
 
 @SuppressWarnings("PointlessArithmeticExpression")
 @Mixin(WorldRenderer.class)
+@Environment(EnvType.CLIENT)
 public abstract class WorldRendererMixin {
     private static final Identifier EARTH_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final Identifier SUN_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/sun.png");

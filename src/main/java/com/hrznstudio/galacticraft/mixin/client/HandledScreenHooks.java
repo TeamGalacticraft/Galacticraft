@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import org.spongepowered.asm.mixin.Mixin;

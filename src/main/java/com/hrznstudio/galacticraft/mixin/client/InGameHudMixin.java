@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;

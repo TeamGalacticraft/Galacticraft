@@ -65,7 +65,6 @@ public class GalacticraftClient implements ClientModInitializer {
     public static JsonCapes jsonCapes;
     public static CapeLoader capeLoader;
 
-
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;

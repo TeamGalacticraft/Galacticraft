@@ -13,13 +13,13 @@
         "TorchBlockMixin"
     ],
     "client": [
-        "HandledScreenHooks",
-        "InGameHudMixin",
-        "JsonCapeMixin",
-        "MusicTrackerMixin",
-        "PauseMenuScreenMixin",
-        "PlayerInventoryScreenMixin",
-        "WorldRendererMixin"
+        "client.HandledScreenHooks",
+        "client.InGameHudMixin",
+        "client.MusicTrackerMixin",
+        "client.PauseMenuScreenMixin",
+        "client.PlayerInventoryScreenMixin",
+        "client.WorldRendererMixin",
+        "client.AbstractClientPlayerEntityMixin"
     ],
     "minVersion": "0.1.0",
     "injectors": {
