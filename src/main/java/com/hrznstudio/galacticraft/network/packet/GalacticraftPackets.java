@@ -78,7 +78,7 @@ public class GalacticraftPackets {
                     BlockPos pos = buffer.readBlockPos();
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
                         if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                            String data = buffer.readString();
+                            String data = buffer.readString(32767);
                             context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
                                     .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
                                             SideOption.valueOf(data.split(",")[1])));
