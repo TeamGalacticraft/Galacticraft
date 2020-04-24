@@ -30,7 +30,7 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.container.PlayerContainer;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -57,7 +57,7 @@ public class FluidRenderingResourceReloadListener implements SimpleSynchronousRe
         FluidRenderHandler oilRenderHandler = new FluidRenderHandler() {
             @Override
             public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
-                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), MinecraftClient.getInstance().getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
+                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
             }
 
             @Override
@@ -69,7 +69,7 @@ public class FluidRenderingResourceReloadListener implements SimpleSynchronousRe
         FluidRenderHandler fuelRenderHandler = new FluidRenderHandler() {
             @Override
             public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
-                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), MinecraftClient.getInstance().getSpriteAtlas(PlayerContainer.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
+                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
             }
 
             @Override

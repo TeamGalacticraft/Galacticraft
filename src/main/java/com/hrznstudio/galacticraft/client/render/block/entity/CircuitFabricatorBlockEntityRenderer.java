@@ -6,7 +6,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.container.PlayerContainer;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
@@ -27,7 +27,7 @@ public class CircuitFabricatorBlockEntityRenderer extends ConfigurableElectricMa
     @Override
     public SpriteIdentifier getDefaultSpriteId(@Nonnull CircuitFabricatorBlockEntity entity, @Nullable Direction direction) {
         if (direction == Direction.NORTH) {
-            return new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/circuit_fabricator"));
+            return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/circuit_fabricator"));
         }
         return super.getDefaultSpriteId(entity, direction);
     }
