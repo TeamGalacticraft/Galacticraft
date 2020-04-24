@@ -82,7 +82,9 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tickStatusEffects()V", shift = At.Shift.BEFORE))
     private void doOxygenChecks(CallbackInfo ci) {
-        if (this.isAlive()) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        //noinspection ConstantConditions
+        if (this.isAlive() && !(entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.invulnerable)) {
             if (CelestialBodyType.getByDimType(world.dimension.getType()).isPresent() && !CelestialBodyType.getByDimType(world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                 updateAir(this);
             } else {
