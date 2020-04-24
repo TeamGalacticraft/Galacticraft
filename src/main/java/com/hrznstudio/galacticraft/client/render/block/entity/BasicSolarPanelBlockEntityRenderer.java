@@ -29,35 +29,39 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.container.PlayerContainer;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<BasicSolarPanelBlockEntity> {
+public class BasicSolarPanelBlockEntityRenderer extends ConfigurableElectricMachineBlockEntityRenderer<BasicSolarPanelBlockEntity> {
 
-    private static Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
+    private static final Identifier solarPanelTexture = new Identifier(Constants.MOD_ID, "textures/model/solar_panel_basic.png");
 
-    private ModelPart panelMain;
-    private ModelPart sideHorizontal0;
-    private ModelPart sideVertical0;
-    private ModelPart sideVertical2;
-    private ModelPart sideVertical1;
-    private ModelPart sideHorizontal1;
-    private ModelPart sideHorizontal3;
-    private ModelPart sideHorizontal2;
-    private ModelPart pole;
+    private final ModelPart panelMain;
+    private final ModelPart sideHorizontal0;
+    private final ModelPart sideVertical0;
+    private final ModelPart sideVertical2;
+    private final ModelPart sideVertical1;
+    private final ModelPart sideHorizontal1;
+    private final ModelPart sideHorizontal3;
+    private final ModelPart sideHorizontal2;
+    private final ModelPart pole;
 
     public BasicSolarPanelBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
-
         this.panelMain = new ModelPart(256, 128, 0, 0);
         this.panelMain.addCuboid(-23F, -0.5F, -23F, 46, 1, 46);
         this.panelMain.setPivot(0F, 0F, 0F);
@@ -116,17 +120,27 @@ public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<Basi
 
     @Override
     public void render(BasicSolarPanelBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        int[] lights = new int[Direction.values().length];
+        for (Direction direction : Direction.values()) {
+            lights[getId(direction)] = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(direction, (direction == Direction.UP ? 3 : 1)));
+        }
+        matrices.push();
+        Direction direction = blockEntity.getWorld().getBlockState(blockEntity.getPos()).get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
+        matrices.translate(0.5F, 0.0F, 0.5F);
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(getDegrees(direction)));
+        matrices.translate(-0.5F, 0.0F, -0.5F);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+        render(matrices.peek(), vertexConsumers.getBuffer(RenderLayers.getEntityBlockLayer(blockEntity.getWorld().getBlockState(blockEntity.getPos()))), null, this.getModelForState(blockEntity, blockEntity.getWorld().getBlockState(blockEntity.getPos())), 1.0F, 1.0F, 1.0F, lights, overlay);
+        matrices.pop();
+
+        light = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(Direction.UP, 3));
+        super.render(blockEntity, tickDelta, matrices, vertexConsumers, light, overlay);
+
         MinecraftClient.getInstance().getTextureManager().bindTexture(BasicSolarPanelBlockEntityRenderer.solarPanelTexture);
-        // int lightmapIndex = Objects.requireNonNull(blockEntity.getWorld()).getLightLevel(blockEntity.getPos().up(), 0);
-        // RenderSystem.glMultiTexCoord2f(33986 /*i hope this is right*/, (lightmapIndex % 65536), (float) (lightmapIndex / 65536));
 
         matrices.push();
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.disableColorMaterial();
-        RenderSystem.disableColorLogicOp();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-        //matrices.translate(blockEntity.getPos().getX(), blockEntity.getPos().getY(), blockEntity.getPos().getZ());
 
         matrices.translate(0.5F, 1.0F, 0.5F);
         this.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(solarPanelTexture)), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
@@ -150,18 +164,34 @@ public class BasicSolarPanelBlockEntityRenderer extends BlockEntityRenderer<Basi
 
     public void render(MatrixStack matrices, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         this.pole.render(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-
-        RenderSystem.disableColorMaterial();
-        RenderSystem.disableColorLogicOp();
         matrices.translate(0.0F, 1.5F, 0.0F);
 
-        RenderSystem.rotatef(180.0F, 0, 0, 1);
-        RenderSystem.rotatef(-90.0F, 0, 1, 0);
+        matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
 
         this.renderPanel(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
-        RenderSystem.disableColorMaterial();
-        RenderSystem.disableColorLogicOp();
-        RenderSystem.disableRescaleNormal();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    @Override
+    @Nonnull
+    public SpriteIdentifier getDefaultSpriteId(@Nonnull BasicSolarPanelBlockEntity entity, @Nullable Direction direction) {
+        if (direction == null)
+            return new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")); // particle
+        switch (direction) {
+            case NORTH:
+                return new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/basic_solar_panel"));
+            case SOUTH:
+                new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side"));
+            case EAST:
+                new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side"));
+            case WEST:
+                new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side"));
+            case UP:
+                new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/solar_panel"));
+            case DOWN:
+                new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine"));
+        }
+        return new SpriteIdentifier(PlayerContainer.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine"));
     }
 }

@@ -63,15 +63,16 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
     public static SideOption[] optionsToArray(BlockState state) {
         if (state.getBlock() instanceof ConfigurableElectricMachineBlock) {
-            return new SideOption[]{state.get(EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
-                    state.get(EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
-                    state.get(EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
-                    state.get(EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
-                    state.get(EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()))),
-                    state.get(EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock())))
+            List<SideOption> applicable = SideOption.getApplicableValuesForMachine(state.getBlock());
+            return new SideOption[]{state.get(EnumProperty.of("north", SideOption.class, applicable)),
+                    state.get(EnumProperty.of("south", SideOption.class, applicable)),
+                    state.get(EnumProperty.of("east", SideOption.class, applicable)),
+                    state.get(EnumProperty.of("west", SideOption.class, applicable)),
+                    state.get(EnumProperty.of("up", SideOption.class, applicable)),
+                    state.get(EnumProperty.of("down", SideOption.class, applicable))
             };
         }
-        return new SideOption[]{SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK, SideOption.BLANK};
+        return new SideOption[]{SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT};
     }
 
     public abstract ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);

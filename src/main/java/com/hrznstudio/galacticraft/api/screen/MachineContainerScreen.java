@@ -628,7 +628,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
 
     private int getXForOption(SideOption option) {
         switch (option) {
-            case BLANK:
+            case DEFAULT:
                 return 224; //240
             case POWER_INPUT:
                 return 206; //0
@@ -649,7 +649,7 @@ public abstract class MachineContainerScreen<C extends MachineContainer<?>> exte
 
     private int getYForOption(SideOption option) {
         switch (option) {
-            case BLANK:
+            case DEFAULT:
                 return 240; //224
             case POWER_INPUT:
                 return 0; //206

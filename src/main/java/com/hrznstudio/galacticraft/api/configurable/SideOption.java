@@ -38,15 +38,15 @@ import java.util.List;
  */
 public enum SideOption implements StringIdentifiable {
 
-    BLANK("default"),
-    POWER_INPUT("powerin"),
-    POWER_OUTPUT("powerout"),
-    OXYGEN_INPUT("oxygenin"),
-    OXYGEN_OUTPUT("oxygenout"),
-    FLUID_INPUT("fluidin"),
-    FLUID_OUTPUT("fluidout");
+    DEFAULT("d"),
+    POWER_INPUT("pi"),
+    POWER_OUTPUT("po"),
+    OXYGEN_INPUT("oi"),
+    OXYGEN_OUTPUT("oo"),
+    FLUID_INPUT("fi"),
+    FLUID_OUTPUT("fo");
 
-    private String name;
+    private final String name;
 
     SideOption(String name) {
         this.name = name;
@@ -55,7 +55,7 @@ public enum SideOption implements StringIdentifiable {
     public static List<SideOption> getApplicableValuesForMachine(Block block) {
         if (block instanceof ConfigurableElectricMachineBlock) {
             List<SideOption> options = new ArrayList<>();
-            options.add(BLANK);
+            options.add(DEFAULT);
             if (((ConfigurableElectricMachineBlock) block).consumesOxygen()) {
                 options.add(OXYGEN_INPUT);
             }
@@ -95,7 +95,7 @@ public enum SideOption implements StringIdentifiable {
     }
 
     public Text getFormattedName() {
-        if (this == SideOption.BLANK) {
+        if (this == SideOption.DEFAULT) {
             return new LiteralText("Blank").setStyle(Style.field_24360.setColor(Formatting.DARK_GRAY));
         } else if (this == SideOption.OXYGEN_INPUT) {
             return new LiteralText("Oxygen").setStyle(Style.field_24360.setColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.GREEN)));
