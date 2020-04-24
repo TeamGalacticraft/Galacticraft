@@ -26,6 +26,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,13 +79,22 @@ public class GalacticraftPackets {
                 context.getPlayer().getServer().execute(() -> {
                     BlockPos pos = buffer.readBlockPos();
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                        if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                            String data = buffer.readString(32767);
-                            context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                                    .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
-                                            SideOption.valueOf(data.split(",")[1])));
-                        }
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                        String data = buffer.readString(32767);
+                        context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
+                                .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
+                                        SideOption.valueOf(data.split(",")[1])));
+                    }
 
+                });
+            }
+        }));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> {
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, context.getPlayer(), packetByteBuf -> {
+                    });
                 });
             }
         }));
