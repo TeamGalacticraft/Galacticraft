@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -48,16 +47,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     @Final
     public PlayerInventory inventory;
 
-    private PlayerInventoryGCContainer gcContainer;
     private FullFixedItemInv gearInventory;
 
     public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
-    }
-
-    @Override
-    public PlayerInventoryGCContainer getGCContainer() {
-        return gcContainer;
     }
 
     @Override
@@ -67,7 +60,6 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(World world_1, GameProfile gameProfile_1, CallbackInfo info) {
-        this.gcContainer = new PlayerInventoryGCContainer(this.inventory, !world.isClient, (PlayerEntity) (Object) this);
         this.gearInventory = new FullFixedItemInv(12);
     }
 }

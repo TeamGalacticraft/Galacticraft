@@ -41,8 +41,6 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
-
-        this.getEnergyAttribute().listen(() -> this.world.setBlockState(pos, this.world.getBlockState(pos).with(EnergyStorageModuleBlock.POWER_LEVEL, (int) (((float) this.getEnergyAttribute().getCurrentEnergy() / (float) getMaxEnergy()) * 8F))));
     }
 
     @Override

@@ -52,7 +52,7 @@ public class GalacticraftContainers {
     public static final Identifier BUBBLE_DISTRIBUTOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.BUBBLE_DISTRIBUTOR_CONTAINER);
 
     public static void register() {
-        ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player));
+        ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCContainer(player.inventory, player));
 
         ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, CoalGeneratorContainer.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorContainer.FACTORY);
