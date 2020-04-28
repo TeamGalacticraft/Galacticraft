@@ -34,6 +34,6 @@ import net.minecraft.text.Text;
 @Environment(EnvType.CLIENT)
 public class DrawableUtils {
     public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, String text, int x, int y, int color) {
-        textRenderer.draw(stack, text, (float) (x - textRenderer.getStringWidth(text) / 2), (float) y, color);
+        textRenderer.draw(stack, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 }

@@ -88,7 +88,7 @@ public class GalacticraftCommands {
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", dimension.toString()), true);
                 return 1;
             } catch (CommandSyntaxException ignore) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.field_24360.setColor(Formatting.RED)));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                 return -1;
             }
         } catch (Exception ignore) {

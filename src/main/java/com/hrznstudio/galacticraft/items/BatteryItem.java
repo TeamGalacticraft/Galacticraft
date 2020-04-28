@@ -66,11 +66,11 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         int charge = stack.getOrCreateTag().getInt("Energy");
         if (stack.getMaxDamage() - stack.getDamage() < 3334) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (stack.getMaxDamage() - stack.getDamage() < 6667) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.field_24360.setColor(Formatting.GOLD)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.field_24360.setColor(Formatting.GREEN)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         }
         super.appendTooltip(stack, world, lines, context);
     }

@@ -49,7 +49,7 @@ public class OxygenTankItem extends Item {
     public static String MAX_OXYGEN_NBT_KEY = "MaxOxygen";
     public static String OXYGEN_NBT_KEY = "Oxygen";
 
-    private int maxOxygen;
+    private final int maxOxygen;
 
     public OxygenTankItem(Settings settings) {
         super(settings);
@@ -93,19 +93,16 @@ public class OxygenTankItem extends Item {
         super.appendTooltip(stack, world, lines, context);
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+    @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
         if (((GCPlayerAccessor) player).getGearInventory().getInvStack(6).isEmpty()) {
-            ItemStack stack = player.getStackInHand(hand);
-            player.setStackInHand(hand, ItemStack.EMPTY);
-            ((GCPlayerAccessor) player).getGearInventory().setInvStack(6, stack, Simulation.ACTION);
-            new TypedActionResult<>(ActionResult.SUCCESS, stack);
+            ((GCPlayerAccessor) player).getGearInventory().setInvStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
+            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         } else if (((GCPlayerAccessor) player).getGearInventory().getInvStack(7).isEmpty()) {
-            ItemStack stack = player.getStackInHand(hand);
-            player.setStackInHand(hand, ItemStack.EMPTY);
-            ((GCPlayerAccessor) player).getGearInventory().setInvStack(7, stack, Simulation.ACTION);
-            new TypedActionResult<>(ActionResult.SUCCESS, stack);
+            ((GCPlayerAccessor) player).getGearInventory().setInvStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
+            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
-        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand)); //TODO Put in GC Slot
+        return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
     }
 
 }

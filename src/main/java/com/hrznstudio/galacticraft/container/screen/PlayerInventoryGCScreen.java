@@ -48,7 +48,7 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCCont
 
     public PlayerInventoryGCScreen(PlayerEntity player) {
 //        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
+        super(new PlayerInventoryGCContainer(player.inventory, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -59,15 +59,15 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCCont
 
     @Override
     protected void drawMouseoverTooltip(MatrixStack stack, int x, int y) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween(x, x + 138, x + 138 + 12)
-                && PlayerInventoryGCScreen.isCoordinateBetween(y, y + 8, y + 8 + 40)) {
-            ItemStack invStack = this.handler.gearInventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
+        if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
+                && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
+            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
             this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
-        } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, x + 156, x + 156 + 12)
-                && PlayerInventoryGCScreen.isCoordinateBetween(y, y + 8, y + 8 + 40)) {
-            ItemStack invStack = this.handler.gearInventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
+        } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
+                && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
+            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
             this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
@@ -84,11 +84,9 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCCont
         this.mouseX = (float) x;
         this.mouseY = (float)/*y*/ this.client.getWindow().getScaledHeight() / 2;
 
-        DiffuseLighting.enable();
+        DiffuseLighting.enableGuiDepthLighting();
         this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
         this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
-        DiffuseLighting.disable();
-
     }
 
     @Override
@@ -98,8 +96,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCCont
 //        System.out.println("b: " + button);
         boolean b = super.mouseClicked(mouseX, mouseY, button);
 
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x, x + 29)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
+        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
+                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
             System.out.println("Clicked on vanilla tab!");
             this.client.openScreen(new InventoryScreen(playerInventory.player));
         }

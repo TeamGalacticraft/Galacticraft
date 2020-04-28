@@ -107,9 +107,9 @@ public class RefineryScreen extends MachineContainerScreen<RefineryContainer> {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", this.handler.blockEntity.status.toString()).setStyle(Style.field_24360.setColor(Formatting.GRAY)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.field_24360.setColor(Formatting.BLUE))).setStyle(Style.field_24360.setColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.field_24360.setColor(Formatting.RED)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", this.handler.blockEntity.status.toString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));
 
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }

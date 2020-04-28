@@ -108,7 +108,7 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
         String status = this.handler.blockEntity.status == CollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
                 : this.handler.blockEntity.status == CollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
                 : this.handler.blockEntity.status == CollectorStatus.FULL ? "ui.galacticraft-rewoven.machinestatus.full" : "ui.galacticraft-rewoven.machinestatus.inactive";
-        this.client.textRenderer.draw(stack, new TranslatableText(status).getString(), statusX + this.client.textRenderer.getStringWidth(statusText), statusY, this.handler.blockEntity.status.getTextColor());
+        this.client.textRenderer.draw(stack, new TranslatableText(status).getString(), statusX + this.client.textRenderer.getWidth(statusText), statusY, this.handler.blockEntity.status.getTextColor());
 
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.lastCollectAmount.get()).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
@@ -139,18 +139,18 @@ public class OxygenCollectorScreen extends MachineContainerScreen<OxygenCollecto
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + OVERLAY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + OVERLAY_HEIGHT) {
             List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.field_24360.setColor(Formatting.BLUE))).setStyle(Style.field_24360.setColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.field_24360.setColor(Formatting.RED)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
             List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.field_24360.setColor(Formatting.BLUE))).setStyle(Style.field_24360.setColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.field_24360.setColor(Formatting.RED)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 21 && mouseY <= this.y + (22 + 21)) {
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.field_24360.setColor(Formatting.GRAY)), mouseX, mouseY);
+            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
         }
     }
 }

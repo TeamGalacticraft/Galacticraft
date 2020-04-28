@@ -33,23 +33,23 @@ public enum BasicSolarPanelStatus {
     /**
      * Solar panel is active and is generating energy.
      */
-    COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting").setStyle(Style.field_24360.setColor(Formatting.GREEN)).getString()),
+    COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
     /**
      * Solar Panel is generating energy, but the buffer is full.
      */
-    FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full").setStyle(Style.field_24360.setColor(Formatting.GOLD)).getString()),
+    FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
     /**
      * Solar Panel is generating energy, but less efficiently.
      */
-    RAINING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.raining").setStyle(Style.field_24360.setColor(Formatting.DARK_AQUA)).getString()),
+    RAINING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.raining").setStyle(Style.EMPTY.withColor(Formatting.DARK_AQUA)).getString()),
     /**
      * Solar Panel is not generating energy.
      */
-    NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night").setStyle(Style.field_24360.setColor(Formatting.BLUE)).getString()),
+    NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night").setStyle(Style.EMPTY.withColor(Formatting.BLUE)).getString()),
     /**
      * The sun is not visible.
      */
-    BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked").setStyle(Style.field_24360.setColor(Formatting.DARK_GRAY)).getString());
+    BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)).getString());
     private String name;
 
     BasicSolarPanelStatus(String name) {

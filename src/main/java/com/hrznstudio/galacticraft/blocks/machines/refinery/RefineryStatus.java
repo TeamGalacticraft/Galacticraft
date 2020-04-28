@@ -34,19 +34,19 @@ public enum RefineryStatus {
     /**
      * Refinery is active and is converting oil into fuel.
      */
-    ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining").setStyle(Style.field_24360.setColor(Formatting.GREEN)).getString()),
+    ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
     /**
      * Refinery has oil but the fuel tank is full.
      */
-    FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.field_24360.setColor(Formatting.GOLD)).getString()),
+    FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
     /**
      * The refinery has no oil.
      */
-    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.field_24360.setColor(Formatting.BLACK)).getString()),
+    IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.BLACK)).getString()),
     /**
      * The refinery has no energy.
      */
-    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.field_24360.setColor(Formatting.GRAY)).getString());
+    INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString());
 
     private String name;
 

@@ -96,19 +96,19 @@ public enum SideOption implements StringIdentifiable {
 
     public Text getFormattedName() {
         if (this == SideOption.DEFAULT) {
-            return new LiteralText("Blank").setStyle(Style.field_24360.setColor(Formatting.DARK_GRAY));
+            return new LiteralText("Blank").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
         } else if (this == SideOption.OXYGEN_INPUT) {
-            return new LiteralText("Oxygen").setStyle(Style.field_24360.setColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.GREEN)));
+            return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         } else if (this == SideOption.OXYGEN_OUTPUT) {
-            return new LiteralText("Oxygen").setStyle(Style.field_24360.setColor(Formatting.DARK_GRAY)).append(new LiteralText(" out").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
+            return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (this == SideOption.POWER_INPUT) {
-            return new LiteralText("Power").setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.GREEN)));
+            return new LiteralText("Power").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         } else if (this == SideOption.POWER_OUTPUT) {
-            return new LiteralText("Power").setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
+            return new LiteralText("Power").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (this == FLUID_INPUT) {
-            return new LiteralText("Fluid").setStyle(Style.field_24360.setColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
+            return new LiteralText("Fluid").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (this == FLUID_OUTPUT) {
-            return new LiteralText("Fluid").setStyle(Style.field_24360.setColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.field_24360.setColor(Formatting.DARK_RED)));
+            return new LiteralText("Fluid").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         }
         return new LiteralText("");
     }

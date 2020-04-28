@@ -150,7 +150,7 @@ public class CompressorScreen extends HandledScreen<CompressorContainer> {
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.field_24360.setColor(Formatting.GRAY)), mouseX, mouseY);
+            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
         }
     }
 }

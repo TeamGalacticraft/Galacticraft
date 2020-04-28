@@ -111,30 +111,30 @@ public class BasicSolarPanelScreen extends MachineContainerScreen<BasicSolarPane
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         if (mouseX >= energyDisplayX && mouseX <= energyDisplayX + ENERGY_WIDTH && mouseY >= energyDisplayY && mouseY <= energyDisplayY + ENERGY_HEIGHT) {
             List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", this.handler.blockEntity.status.toString()).setStyle(Style.field_24360.setColor(Formatting.GRAY)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", this.handler.blockEntity.status.toString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
             if (this.handler.blockEntity.status == BasicSolarPanelStatus.COLLECTING) {
                 long time = world.getTimeOfDay() % 24000;
                 if (time > 6000) {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)));
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
                 } else {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)));
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
                 }
             } else if (this.handler.blockEntity.status == BasicSolarPanelStatus.RAINING) {
                 long time = world.getTimeOfDay() % 24000;
                 if (time > 6000) {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((((6000D - (time - 6000D)) / 705.882353D) / 3.0D) + 0.5D)* (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)));
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((((6000D - (time - 6000D)) / 705.882353D) / 3.0D) + 0.5D)* (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
                 } else {
-                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((time / 705.882353D) / 3.0D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.field_24360.setColor(Formatting.LIGHT_PURPLE)));
+                    toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((time / 705.882353D) / 3.0D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
                 }
             }
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.field_24360.setColor(Formatting.BLUE))).setStyle(Style.field_24360.setColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.field_24360.setColor(Formatting.RED)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.blocked_panels", this.handler.blockEntity.visiblePanels).setStyle(Style.field_24360.setColor(Formatting.YELLOW)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.blocked_panels", this.handler.blockEntity.visiblePanels).setStyle(Style.EMPTY.withColor(Formatting.YELLOW)));
 
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
         if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.field_24360.setColor(Formatting.GRAY)), mouseX, mouseY);
+            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
         }
     }
 

@@ -67,9 +67,9 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
     @Environment(EnvType.CLIENT)
     public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText(getTooltipKey()).setStyle(Style.field_24360.setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText(getTooltipKey()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.field_24360.setColor(Formatting.GRAY)));
+            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
     }
 
