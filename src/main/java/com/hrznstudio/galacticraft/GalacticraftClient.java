@@ -32,7 +32,9 @@ import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCo
 import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
 import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
+import com.hrznstudio.galacticraft.client.network.packet.GalacticraftClientPackets;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
+import com.hrznstudio.galacticraft.client.render.entity.BubbleEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
@@ -46,6 +48,8 @@ import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
@@ -59,6 +63,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
     public static JsonCapes jsonCapes;
@@ -153,9 +158,11 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET_T1, (manager, context) -> new RocketEntityRenderer(manager));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();
         GalacticraftParticles.registerClient();
+        GalacticraftClientPackets.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
@@ -168,6 +175,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
+
 
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

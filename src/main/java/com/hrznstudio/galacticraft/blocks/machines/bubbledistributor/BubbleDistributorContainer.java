@@ -58,7 +58,7 @@ public class BubbleDistributorContainer extends MachineContainer<BubbleDistribut
         // Charging Slot
         this.addSlot(new ChargeSlot(this.inventory, 0, 8, 56));
 
-        this.addSlot(new OxygenTankSlot(this.inventory, 0, 31, 56));
+        this.addSlot(new OxygenTankSlot(this.inventory, 1, 31, 56));
 
         // Player inventory slots
         int playerInvYOffset = 84;

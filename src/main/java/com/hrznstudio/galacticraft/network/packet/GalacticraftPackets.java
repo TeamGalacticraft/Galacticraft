@@ -27,12 +27,10 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.blocks.machines.bubbledistributor.BubbleDistributorBlockEntity;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.util.Identifier;
@@ -101,18 +99,6 @@ public class GalacticraftPackets {
                 });
             }
         }));
-
-        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_size"), (packetContext, packetByteBuf) -> {
-            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
-            MinecraftClient.getInstance().execute(() -> {
-                BlockPos pos = buf.readBlockPos();
-                if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
-                        ((BubbleDistributorBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos)).setSize(buf.readByte());
-                    }
-                }
-            });
-        });
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_max"), (context, packetByteBuf) -> {
             PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());

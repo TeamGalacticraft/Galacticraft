@@ -81,6 +81,14 @@ public class BubbleDistributorScreen extends MachineContainerScreen<BubbleDistri
                 textField.setText("" + container.blockEntity.getMaxSize());
             }
         }));
+
+        textField.setTextPredicate((s -> {
+            try {
+                return Byte.parseByte(s) >= 1;
+            } catch (NumberFormatException ignore) {
+                return false;
+            }
+        }));
     }
 
     @Override
@@ -90,6 +98,27 @@ public class BubbleDistributorScreen extends MachineContainerScreen<BubbleDistri
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
         this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
+
+        this.minecraft.getTextureManager().bindTexture(OVERLAY);
+
+        if (!container.blockEntity.bubbleVisible) {
+            if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
+                this.blit(this.x + 156, this.y + 16, 0, 182, 13, 13);
+            } else {
+                this.blit(this.x + 156, this.y + 16, 0, 169, 13, 13);
+            }
+            drawRightAlignedString(minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.not_visible").asFormattedString(), this.x + 152, this.y + 18, Formatting.RED.getColorValue());
+        } else {
+            if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
+                this.blit(this.x + 156, this.y + 16, 13, 182, 13, 13);
+            } else {
+                this.blit(this.x + 156, this.y + 16, 13, 169, 13, 13);
+            }
+            drawRightAlignedString(minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.visible").asFormattedString(), this.x + 152, this.y + 18, Formatting.GREEN.getColorValue());
+        }
+
+        drawRightAlignedString(minecraft.textRenderer, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.size").asFormattedString(), this.x + 129, this.y + 58, Formatting.GRAY.getColorValue());
+
         this.drawEnergyBufferBar();
         this.drawConfigTabs();
     }
@@ -97,10 +126,10 @@ public class BubbleDistributorScreen extends MachineContainerScreen<BubbleDistri
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
+        textField.setText("" + container.blockEntity.getMaxSize());
+        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asFormattedString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
-        DrawableUtils.drawCenteredString(this.minecraft.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asFormattedString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-
-        minecraft.textRenderer.draw(new TranslatableText("ui.galacticraft-rewoven.machine.status").asFormattedString(), this.x + 65, this.y + 31, Formatting.DARK_GRAY.getColorValue());
+        minecraft.textRenderer.draw(new TranslatableText("ui.galacticraft-rewoven.machine.status").asFormattedString(), this.x + 58, this.y + 32, Formatting.DARK_GRAY.getColorValue());
 
         this.textField.render(mouseX, mouseY, delta);
 
@@ -110,17 +139,21 @@ public class BubbleDistributorScreen extends MachineContainerScreen<BubbleDistri
 
         this.textField.x = this.x + 132;
         this.textField.y = this.y + 53;
-        this.minecraft.textRenderer.draw(new TranslatableText(status).asFormattedString(), this.x + 65 + minecraft.textRenderer.getStringWidth(new TranslatableText("ui.galacticraft-rewoven.machine.status").asFormattedString()), this.y + 31, container.blockEntity.status.getTextColor());
+        this.minecraft.textRenderer.draw(new TranslatableText(status).asFormattedString(), this.x + 58 + minecraft.textRenderer.getStringWidth(new TranslatableText("ui.galacticraft-rewoven.machine.status").asFormattedString() + " "), this.y + 32, container.blockEntity.status.getTextColor());
+
+        if (container.blockEntity.status == BubbleDistributorStatus.DISTRIBUTING) {
+            this.minecraft.textRenderer.draw(new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size").setStyle(new Style().setColor(Formatting.GRAY)).append(String.valueOf((int) Math.floor(container.blockEntity.getSize()))).asFormattedString(), this.x + 58, this.y + 44, container.blockEntity.status.getTextColor());
+        }
         this.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     private void drawEnergyBufferBar() {
         this.minecraft.getTextureManager().bindTexture(OVERLAY);
         this.blit(this.x + 10, this.y + 9, ENERGY_DIMMED_X, ENERGY_DIMMED_Y, OVERLAY_WIDTH, OVERLAY_HEIGHT);
-        this.blit(this.x + 21, this.y + 48, ENERGY_X, ENERGY_Y, OVERLAY_WIDTH, (int) -(OVERLAY_HEIGHT * ((float) container.energy.get() / (float) container.getMaxEnergy())));
+        this.blit(this.x + 21, this.y + 48, ENERGY_X, ENERGY_Y, OVERLAY_WIDTH, (int) -((float) OVERLAY_HEIGHT * ((float) container.energy.get() / (float) container.getMaxEnergy())));
 
         this.blit(this.x + 33, this.y + 9, OXYGEN_DIMMED_X, OXYGEN_DIMMED_Y, OVERLAY_WIDTH, OVERLAY_HEIGHT);
-        this.blit(this.x + 44, this.y + 48, OXYGEN_X, OXYGEN_Y, OVERLAY_WIDTH, (int) -(OVERLAY_HEIGHT * ((float) container.oxygen.get() / (float) BubbleDistributorBlockEntity.MAX_OXYGEN)));
+        this.blit(this.x + 44, this.y + 48, OXYGEN_X, OXYGEN_Y, OVERLAY_WIDTH, (int) -((float) OVERLAY_HEIGHT * ((float) container.oxygen.get() / (float) BubbleDistributorBlockEntity.MAX_OXYGEN)));
     }
 
     @Override
