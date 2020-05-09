@@ -37,6 +37,7 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
+import com.hrznstudio.galacticraft.blocks.special.launchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -65,6 +66,7 @@ public class GalacticraftBlockEntities {
             return obj instanceof WireBlock; //bad stuff
         }
     }).build(null));
+    public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_LAUNCH_PAD), BlockEntityType.Builder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlocks.ROCKET_LAUNCH_PAD).build(null));
 
     public static void init() {
     }
