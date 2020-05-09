@@ -31,9 +31,9 @@ import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.container.PlayerContainer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -51,12 +51,12 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.push();
         MinecraftClient client = MinecraftClient.getInstance();
-        matrices.translate(0.0F, 2.0F, 0.0F);
+        matrices.translate(0.0D, 2.1875, 0.0D);
         if (entity.getStage() == LaunchStage.IGNITED) {
-            matrices.translate((entity.world.random.nextFloat() - 0.5F) * 0.12F, 0, (entity.world.random.nextFloat() - 0.5F) * 0.12F);
+            matrices.translate((entity.world.random.nextDouble() - 0.5D) * 0.1D, 0, (entity.world.random.nextDouble() - 0.5D) * 0.1D);
         }
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((entity.yaw - 180.0F) * -1.0F));
-        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(entity.pitch));
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion((MathHelper.lerpAngleDegrees(tickDelta, entity.prevYaw - 180.0F, entity.yaw - 180.0F)) * -1.0F));
+        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(MathHelper.lerpAngleDegrees(tickDelta, entity.prevPitch, entity.pitch)));
 
         float float_7 = (float) entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_TICKS) - tickDelta;
         float float_8 = entity.getDataTracker().get(RocketEntity.DAMAGE_WOBBLE_STRENGTH) - tickDelta;
@@ -78,28 +78,25 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
 //        RenderSystem.pushTextureAttributes();
 
-        client.getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
-        matrices.translate(0.0D, -1.75, 0.0D);
+        client.getTextureManager().bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+        matrices.translate(0.0D, -1.75D, 0.0D);
 
         matrices.push();
         entity.getPartForType(RocketPartType.BOTTOM).preRender(entity);
-//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender()), entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
         client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
         entity.getPartForType(RocketPartType.BOTTOM).postRender(entity);
         matrices.pop();
 
-        matrices.translate(0.0D, .5, 0.0D);
+        matrices.translate(0.0D, 0.5, 0.0D);
 
         matrices.push();
         entity.getPartForType(RocketPartType.BOOSTER).preRender(entity);
-//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender()), entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
         client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
         entity.getPartForType(RocketPartType.BOOSTER).postRender(entity);
         matrices.pop();
 
         matrices.push();
         entity.getPartForType(RocketPartType.FIN).preRender(entity);
-//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender()), entity.getPartForType(RocketPartType.FIN).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
         client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.FIN).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
         entity.getPartForType(RocketPartType.FIN).postRender(entity);
 
@@ -109,7 +106,6 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
         matrices.push();
         entity.getPartForType(RocketPartType.BODY).preRender(entity);
-//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender()), entity.getPartForType(RocketPartType.BODY).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
         client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BODY).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
         entity.getPartForType(RocketPartType.BODY).postRender(entity);
         matrices.pop();
@@ -117,7 +113,6 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         matrices.translate(0.0D, 1.75, 0.0D);
 
         entity.getPartForType(RocketPartType.CONE).preRender(entity);
-//        client.getBlockRenderManager().getModelRenderer().render(entity.getEntityWorld(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender()), entity.getPartForType(RocketPartType.CONE).getBlockToRender(), new BlockPos(0, 0, 0), matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutout(this.getTexture(entity))), false, new Random(), 1234567890L, 15);
         client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.CONE).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
         entity.getPartForType(RocketPartType.CONE).postRender(entity);
 
@@ -126,11 +121,11 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
     @Override
     public boolean shouldRender(RocketEntity entity, Frustum visibleRegion, double cameraX, double cameraY, double cameraZ) {
-        return true; //maybe upgrade this later
+        return true; //maybe fix this later
     }
 
     @Override
     public Identifier getTexture(RocketEntity var1) {
-        return SpriteAtlasTexture.BLOCK_ATLAS_TEX;
+        return PlayerContainer.BLOCK_ATLAS_TEXTURE;
     }
 }

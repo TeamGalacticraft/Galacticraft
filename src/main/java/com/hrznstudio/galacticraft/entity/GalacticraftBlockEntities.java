@@ -37,7 +37,7 @@ import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollect
 import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
-import com.hrznstudio.galacticraft.blocks.special.launchpad.RocketLaunchPadBlockEntity;
+import com.hrznstudio.galacticraft.blocks.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;

@@ -27,16 +27,17 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
+import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -208,7 +209,7 @@ public class GalacticraftPackets {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
                     if (context.getPlayer().hasVehicle()) {
-                        if (context.getPlayer().getVehicle() instanceof RocketEntity) {
+                        if (context.getPlayer().getVehicle() instanceof RocketEntity && ((RocketEntity) context.getPlayer().getVehicle()).getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                             ((RocketEntity) context.getPlayer().getVehicle()).onJump();
                         }
                     }
@@ -217,7 +218,7 @@ public class GalacticraftPackets {
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((context, buf) -> {
-            EntityType<?> type = Registry.ENTITY_TYPE.get(buf.readVarInt());
+            EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.get(buf.readVarInt());
 
             int entityID = buf.readVarInt();
             UUID entityUUID = buf.readUuid();
@@ -229,8 +230,10 @@ public class GalacticraftPackets {
             float pitch = (buf.readByte() * 360) / 256.0F;
             float yaw = (buf.readByte() * 360) / 256.0F;
 
+            RocketData data = RocketData.fromTag(buf.readCompoundTag());
+
             Runnable spawn = () -> {
-                Entity entity = type.create(MinecraftClient.getInstance().world);
+                RocketEntity entity = type.create(context.getPlayer().world);
                 assert entity != null;
                 entity.updateTrackedPosition(x, y, z);
                 entity.setPos(x, y, z);
@@ -239,39 +242,35 @@ public class GalacticraftPackets {
                 entity.setEntityId(entityID);
                 entity.setUuid(entityUUID);
 
+                entity.setColor(data.getRed(), data.getGreen(), data.getBlue(), data.getAlpha());
+                entity.setParts(data.getParts());
+
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             };
             context.getTaskQueue().execute(spawn);
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_yaw_update"), ((packetContext, buff) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_yaw_press"), ((packetContext, buff) -> {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
             if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) packetContext.getPlayer()).server.execute(() -> {
-                    if (packetContext.getPlayer().getVehicle() instanceof RocketEntity) {
-                        packetContext.getPlayer().getVehicle().yaw = (buf.readByte() * 360) / 256.0F;
+                    if (packetContext.getPlayer().getVehicle() instanceof RocketEntity && ((RocketEntity) packetContext.getPlayer().getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                        packetContext.getPlayer().getVehicle().prevYaw = packetContext.getPlayer().getVehicle().yaw;
+                        packetContext.getPlayer().getVehicle().yaw += buf.readBoolean() ? 2.0F : -2.0F;
+                        packetContext.getPlayer().getVehicle().yaw %= 360.0F;
                     }
                 });
             }
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_pitch_update"), ((packetContext, buff) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_pitch_press"), ((packetContext, buff) -> {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
             if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity) packetContext.getPlayer()).server.execute(() -> {
-                    if (packetContext.getPlayer().getVehicle() instanceof RocketEntity) {
-                        packetContext.getPlayer().getVehicle().pitch = (buf.readByte() * 360) / 256.0F;
-                    }
-                });
-            }
-        }));
-
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_velocity_update"), ((packetContext, buff) -> {
-            PacketByteBuf buf = new PacketByteBuf(buff.copy());
-            if (packetContext.getPlayer() instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity) packetContext.getPlayer()).server.execute(() -> {
-                    if (packetContext.getPlayer().getVehicle() instanceof RocketEntity) {
-                        packetContext.getPlayer().getVehicle().setVelocity(buf.readDouble(), buf.readDouble(), buf.readDouble());
+                    if (packetContext.getPlayer().getVehicle() instanceof RocketEntity && ((RocketEntity) packetContext.getPlayer().getVehicle()).getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
+                        packetContext.getPlayer().getVehicle().prevPitch = packetContext.getPlayer().getVehicle().pitch;
+                        packetContext.getPlayer().getVehicle().pitch += buf.readBoolean() ? 2.0F : -2.0F;
+                        packetContext.getPlayer().getVehicle().pitch %= 360.0F;
                     }
                 });
             }

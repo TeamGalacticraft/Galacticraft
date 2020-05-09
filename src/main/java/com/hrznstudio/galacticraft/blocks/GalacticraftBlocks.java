@@ -42,7 +42,7 @@ import com.hrznstudio.galacticraft.blocks.natural.ScorchedRockBlock;
 import com.hrznstudio.galacticraft.blocks.natural.VaporSpoutBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.blocks.special.aluminumwire.tier1.SealableAluminumWireBlock;
-import com.hrznstudio.galacticraft.blocks.special.launchpad.RocketLaunchPadBlock;
+import com.hrznstudio.galacticraft.blocks.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.blocks.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
