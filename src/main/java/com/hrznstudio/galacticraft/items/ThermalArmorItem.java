@@ -22,12 +22,14 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
@@ -36,10 +38,10 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ThermalArmorItem extends Item {
-    private EquipmentSlot slotType;
+    private final EquipmentSlot slotType;
 
-    public ThermalArmorItem(Settings item$Settings_1, EquipmentSlot slotType) {
-        super(item$Settings_1);
+    public ThermalArmorItem(Settings settings, EquipmentSlot slotType) {
+        super(settings);
         this.slotType = slotType;
     }
 
@@ -47,13 +49,29 @@ public class ThermalArmorItem extends Item {
         return slotType;
     }
 
-    @Override
+    @Override //should sync with server
     public TypedActionResult<ItemStack> use(World world_1, PlayerEntity playerEntity_1, Hand hand_1) {
-        PlayerInventoryGCContainer gcContainer = ((GCPlayerAccessor) playerEntity_1).getGCContainer();
-        ItemStack thermalPiece = gcContainer.getThermalPiece(getSlotType());
-        if (!thermalPiece.isEmpty()) {
-            gcContainer.setThermalPiece(getSlotType(), playerEntity_1.getStackInHand(hand_1));
+        FullFixedItemInv inv = ((GCPlayerAccessor) playerEntity_1).getGearInventory();
+        ItemStack thermalPiece = inv.getInvStack(getSlotIdForType(getSlotType()));
+        if (thermalPiece.isEmpty()) {
+            inv.setInvStack(getSlotIdForType(getSlotType()), playerEntity_1.getStackInHand(hand_1), Simulation.ACTION);
+            return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world_1, playerEntity_1, hand_1);
+    }
+
+
+    public int getSlotIdForType(EquipmentSlot slotType) {
+        switch (slotType) {
+            case HEAD:
+                return 0;
+            case CHEST:
+                return 1;
+            case LEGS:
+                return 2;
+            case FEET:
+                return 3;
+        }
+        return -128; //oh no
     }
 }

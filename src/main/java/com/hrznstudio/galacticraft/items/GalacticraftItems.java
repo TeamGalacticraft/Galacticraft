@@ -177,8 +177,8 @@ public class GalacticraftItems {
     public static final Item GREEN_PARACHUTE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.GREEN_PARACHUTE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item RED_PARACHUTE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RED_PARACHUTE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BLACK_PARACHUTE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BLACK_PARACHUTE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item OXYGEN_MASK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_MASK), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item OXYGEN_GEAR = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_GEAR), new Item(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item OXYGEN_MASK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_MASK), new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item OXYGEN_GEAR = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.OXYGEN_GEAR), new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SHIELD_CONTROLLER = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SHIELD_CONTROLLER), new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item FREQUENCY_MODULE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FREQUENCY_MODULE), new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SMALL_OXYGEN_TANK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SMALL_OXYGEN_TANK), new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(900)));

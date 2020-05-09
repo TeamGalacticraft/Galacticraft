@@ -31,6 +31,8 @@ import com.hrznstudio.galacticraft.blocks.machines.rocketassembler.RocketAssembl
 import com.hrznstudio.galacticraft.blocks.machines.rocketdesigner.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
+import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -87,21 +89,17 @@ public class GalacticraftPackets {
             }
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buff) -> {
-            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (context.getPlayer() instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
-                    BlockPos pos = buf.readBlockPos();
-                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                        BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                        if (blockEntity != null) {
-                            if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                                String data = buf.readString();
-                                context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                                        .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
-                                                SideOption.valueOf(data.split(",")[1])));
-                            }
-                        }
+                context.getPlayer().getServer().execute(() -> {
+                    BlockPos pos = buffer.readBlockPos();
+                    BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
+                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+                        String data = buffer.readString(32767);
+                        context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
+                                .with(EnumProperty.of(data.split(",")[0], SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock())),
+                                        SideOption.valueOf(data.split(",")[1])));
                     }
                 });
             }
@@ -124,6 +122,16 @@ public class GalacticraftPackets {
                 });
             }
         });
+
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> {
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, context.getPlayer(), packetByteBuf -> {
+                    });
+                });
+            }
+        }));
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_green"), (packetContext, buff) -> {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());

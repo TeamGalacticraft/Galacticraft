@@ -34,5 +34,10 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegi
 public class GalacticraftBlockEntityRenderers {
     public static void register() {
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.COAL_GENERATOR_TYPE, CoalGeneratorBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE, CircuitFabricatorBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE, OxygenCollectorBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.REFINERY_TYPE, RefineryBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE, EnergyStorageModuleBlockEntityRenderer::new);
     }
 }
