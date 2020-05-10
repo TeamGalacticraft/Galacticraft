@@ -42,6 +42,7 @@ import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
@@ -112,14 +113,14 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
         @Override
         public SimpleFixedFluidInv read(PacketByteBuf var1) {
-            SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(1, 10000);
+            SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
             fluidInv.fromTag(var1.readCompoundTag());
             return fluidInv;
         }
 
         @Override
         public SimpleFixedFluidInv copy(SimpleFixedFluidInv var1) {
-            SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(1, 10000);
+            SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
             fluidInv.fromTag(var1.toTag());
             return fluidInv;
         }
@@ -192,7 +193,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
             return new ArrayList<>(var1);
         }
     });
-    private final boolean debugMode = true && FabricLoader.getInstance().isDevelopmentEnvironment();
+    private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
     static {
         TrackedDataHandlerRegistry.register(STAGE.getType());
@@ -296,11 +297,11 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     @Override
     public void updatePassengerPosition(Entity entity_1) {
         if (this.hasPassenger(entity_1)) {
-            entity_1.prevX = entity_1.getX();
-            entity_1.prevY = entity_1.getY();
-            entity_1.prevZ = entity_1.getZ();
             entity_1.updatePosition(this.getX(), this.getY() + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5, this.getZ());
-//            entity_1.setVelocity(this.getVelocity());
+            entity_1.prevX = this.prevX;
+            entity_1.prevY = this.prevY + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5;
+            entity_1.prevZ = this.prevZ;
+            entity_1.setVelocity(Vec3d.ZERO);
         }
     }
 
@@ -419,7 +420,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                 .writeUuid(this.uuid).writeDouble(getX()).writeDouble(getY()).writeDouble(getZ()).writeByte((int) (pitch / 360F * 256F)).writeByte((int) (yaw / 360F * 256F));
 
         CompoundTag tag = new CompoundTag();
-        tag.putFloat("tier", 1); //todo
+        tag.putFloat("tier", getTier());
         tag.putFloat("red", getColor()[0]);
         tag.putFloat("green", getColor()[1]);
         tag.putFloat("blue", getColor()[2]);
@@ -530,6 +531,29 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
                     this.setVelocity(velX, velY, velZ);
                 }
+
+                if (this.getPos().getY() >= 1200.0F) {
+                    for (Entity entity : getPassengerList()) {
+                        if (entity instanceof ServerPlayerEntity) {
+                            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(Constants.MOD_ID, "map"), ((ServerPlayerEntity) entity), (buf) -> {
+                                CompoundTag tag = new CompoundTag();
+                                tag.putFloat("tier", getTier());
+                                tag.putFloat("red", getColor()[0]);
+                                tag.putFloat("green", getColor()[1]);
+                                tag.putFloat("blue", getColor()[2]);
+                                tag.putFloat("alpha", getColor()[3]);
+                                tag.putString("cone", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.CONE))).toString());
+                                tag.putString("body", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BODY))).toString());
+                                tag.putString("fin", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.FIN))).toString());
+                                tag.putString("booster", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOOSTER))).toString());
+                                tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOTTOM))).toString());
+                                tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.UPGRADE))).toString());
+
+                                buf.writeCompoundTag(tag);
+                            });
+                        }
+                    }
+                }
             } else if (!onGround) {
                 this.setSpeed(Math.max(-1.5F, this.getSpeed() - 0.05D));
 
@@ -574,10 +598,6 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     public void setVelocity(Vec3d vec3d_1) {
         super.setVelocity(vec3d_1);
         this.velocityDirty = true;
-
-//        if (this.world.isClient && vec3d_1 != getVelocity()) {
-//            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_velocity_update"), new PacketByteBuf(Unpooled.buffer().writeDouble(getVelocity().x).writeDouble(getVelocity().y).writeDouble(getVelocity().z))));
-//        }
     }
 
     @Override
@@ -603,10 +623,6 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     @Override
     protected void setRotation(float float_1, float float_2) {
         super.setRotation(float_1, float_2);
-//        if (world.isClient) {
-//            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_pitch_update"), new PacketByteBuf(Unpooled.buffer().writeByte((int) (pitch / 360F * 256F)))));
-//            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "rocket_yaw_update"), new PacketByteBuf(Unpooled.buffer().writeByte((int) (yaw / 360F * 256F)))));
-//        }
         this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 
@@ -680,8 +696,6 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     public void move(MovementType movementType_1, Vec3d vec3d_1) {
         if (onGround) vec3d_1.multiply(1.0D, 0.0D, 1.0D);
         super.move(movementType_1, vec3d_1);
-//        this.setVelocity(this.getVelocity().multiply(0.75D));
-//        this.updateTrackedPosition(this.getPos().x, this.getPos().y, this.getPos().z);
         this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 
@@ -694,7 +708,6 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                 this.setStage(LaunchStage.IDLE);
             }
         }
-//        entity_1.setPos(this.getX(), this.getY(), this.getZ());
         super.removePassenger(entity_1);
     }
 
@@ -767,7 +780,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         this.dataTracker.set(COLOR, new Float[] {red, green, blue, alpha});
     }
 
-    public void dropItems (DamageSource source, boolean exploded) {
+    public void dropItems(DamageSource source, boolean exploded) {
 
     }
 }
