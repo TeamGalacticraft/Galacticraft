@@ -34,13 +34,13 @@ import java.util.List;
  */
 public enum SideOption implements StringIdentifiable {
 
-    BLANK("default"),
-    POWER_INPUT("powerin"),
-    POWER_OUTPUT("powerout"),
-    OXYGEN_INPUT("oxygenin"),
-    OXYGEN_OUTPUT("oxygenout"),
-    FLUID_INPUT("fluidin"),
-    FLUID_OUTPUT("fluidout");
+    DEFAULT("d"),
+    POWER_INPUT("pi"),
+    POWER_OUTPUT("po"),
+    OXYGEN_INPUT("oi"),
+    OXYGEN_OUTPUT("oo"),
+    FLUID_INPUT("fi"),
+    FLUID_OUTPUT("fo");
 
     private final String name;
 
@@ -51,7 +51,7 @@ public enum SideOption implements StringIdentifiable {
     public static List<SideOption> getApplicableValuesForMachine(Block block) {
         if (block instanceof ConfigurableElectricMachineBlock) {
             List<SideOption> options = new ArrayList<>();
-            options.add(BLANK);
+            options.add(DEFAULT);
             if (((ConfigurableElectricMachineBlock) block).consumesOxygen()) {
                 options.add(OXYGEN_INPUT);
             }
@@ -91,7 +91,7 @@ public enum SideOption implements StringIdentifiable {
     }
 
     public String getFormattedName() {
-        if (this == SideOption.BLANK) {
+        if (this == SideOption.DEFAULT) {
             return "\u00a78Blank";
         } else if (this == SideOption.OXYGEN_INPUT) {
             return "\u00a7bOxygen \u00a7ain";

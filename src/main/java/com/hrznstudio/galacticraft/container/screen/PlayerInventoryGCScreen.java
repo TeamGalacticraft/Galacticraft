@@ -41,12 +41,8 @@ import net.minecraft.util.Identifier;
 public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCContainer> {
     public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
 
-    private float mouseX;
-    private float mouseY;
-
     public PlayerInventoryGCScreen(PlayerEntity player) {
-//        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCContainer(player.inventory, !player.world.isClient, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
+        super(new PlayerInventoryGCContainer(player.inventory, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -56,31 +52,31 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
     }
 
     @Override
-    protected void drawMouseoverTooltip(int x, int y) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween(x, x + 138, x + 138 + 12)
-                && PlayerInventoryGCScreen.isCoordinateBetween(y, y + 8, y + 8 + 40)) {
-            ItemStack invStack = container.gearInventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
+    protected void drawMouseoverTooltip(int mouseX, int mouseY) {
+        if (PlayerInventoryGCScreen.isCoordinateBetween(mouseX, this.x + 138, this.x + 138 + 12)
+                && PlayerInventoryGCScreen.isCoordinateBetween(mouseX, this.y + 8, this.y + 8 + 40)) {
+            ItemStack invStack = container.inventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
-            this.renderTooltip("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy, x, y);
-        } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, x + 156, x + 156 + 12)
-                && PlayerInventoryGCScreen.isCoordinateBetween(y, y + 8, y + 8 + 40)) {
-            ItemStack invStack = container.gearInventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
+            this.renderTooltip("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy, mouseX, mouseY);
+        } else if (PlayerInventoryGCScreen.isCoordinateBetween(mouseX, x + 156, x + 156 + 12)
+                && PlayerInventoryGCScreen.isCoordinateBetween(mouseY, y + 8, y + 8 + 40)) {
+            ItemStack invStack = container.inventory.getInvStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
-            this.renderTooltip("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy, x, y);
+            this.renderTooltip("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy, mouseX, mouseY);
         }
-        super.drawMouseoverTooltip(x, y);
+        super.drawMouseoverTooltip(mouseX, mouseY);
     }
 
     @Override
-    public void render(int x, int y, float lastFrameDuration) {
+    public void render(int mouseX, int mouseY, float lastFrameDuration) {
         this.renderBackground();
-        super.render(x, y, lastFrameDuration);
-        this.drawMouseoverTooltip(x, y);
+        super.render(mouseX, mouseY, lastFrameDuration);
+        this.drawMouseoverTooltip(mouseX, mouseY);
 
-        this.mouseX = (float) x;
-        this.mouseY = (float)/*y*/ minecraft.getWindow().getScaledHeight() / 2;
+//        this.mouseX = (float) x;
+//        this.mouseY = (float) minecraft.getWindow().getScaledHeight() / 2;
 
         DiffuseLighting.enable();
         this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
@@ -91,14 +87,11 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-//        System.out.println("X: " + mouseX);
-//        System.out.println("Y: " + mouseY);
-//        System.out.println("b: " + button);
         boolean b = super.mouseClicked(mouseX, mouseY, button);
 
         if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x, x + 29)
                 && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
-            System.out.println("Clicked on vanilla tab!");
+
             minecraft.openScreen(new InventoryScreen(playerInventory.player));
         }
 
@@ -107,17 +100,13 @@ public class PlayerInventoryGCScreen extends ContainerScreen<PlayerInventoryGCCo
 
     @Override
     public void drawBackground(float v, int mouseX, int mouseY) {
-//        this.drawTexturedReact(...)
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
         this.blit(this.x, this.y, 0, 0, this.containerWidth, this.containerHeight);
 
-        int int_3 = this.x;
-        int int_4 = this.y;
-        InventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.minecraft.player);
+        InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.minecraft.player);
 
         this.minecraft.getTextureManager().bindTexture(BACKGROUND);
 
-        //X,Y,blitOffset,u,v,width,height
         blit(this.x + 138, this.y + 8, 244, 0, 12, 40);
         blit(this.x + 156, this.y + 8, 244, 0, 12, 40);
 
