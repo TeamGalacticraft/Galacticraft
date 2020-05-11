@@ -31,12 +31,14 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.configurable.SideOption;
+import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -70,7 +72,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
     private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
-    private SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+    private final SimpleEnergyAttribute energy = new SimpleEnergyAttribute(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
 
     private final SecurityInfo security = new SecurityInfo();
     private RedstoneState redstoneState = RedstoneState.DISABLED;
@@ -92,21 +94,27 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
     }
 
+    @Environment(EnvType.CLIENT)
+    public Enum<?> getStatusForTooltip() {
+        return null;
+    }
+
     /**
      * Whether the current machine is enabled
      *
      * @return The state of the machine
      */
-    public boolean enabled() {
+    public boolean disabled() {
         switch (this.redstoneState) {
             case OFF:
-                return !this.getWorld().isReceivingRedstonePower(pos);
-            case ON:
                 return this.getWorld().isReceivingRedstonePower(pos);
+            case ON:
+                return !this.getWorld().isReceivingRedstonePower(pos);
             default:
-                return true;
+                return false;
         }
     }
+
 
     /**
      * The max energy that this machine can hold. Override for machines that should hold more.
@@ -150,6 +158,20 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy);
             this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, Simulation.ACTION);
             inventory.forceSetInvStack(slot, stack);
+        }
+    }
+
+    public final boolean canUse(PlayerEntity player) {
+        ConfigurableElectricMachineBlockEntity.SecurityInfo security = this.getSecurity();
+        switch (security.getPublicity()) {
+            case PUBLIC:
+                return true;
+            case SPACE_RACE:
+                return player.getUuid().equals(this.getSecurity().getOwner()); //todo space race
+            case PRIVATE:
+                return player.getUuid().equals(this.getSecurity().getOwner());
+            default:
+                return false;
         }
     }
 

@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -46,6 +46,13 @@ import java.util.function.Function;
 public class CraterFeature extends Feature<CraterFeatureConfig> {
     public CraterFeature(Function<Dynamic<?>, ? extends CraterFeatureConfig> function) {
         super(function);
+    }
+
+    private static boolean isNaturalDirt(TestableWorld world, BlockPos pos) {
+        return world.testBlockState(pos, (blockState) -> {
+            Block block = blockState.getBlock();
+            return isDirt(block) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
+        });
     }
 
     public boolean generate(IWorld world, StructureAccessor accessor, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random rand, BlockPos pos, CraterFeatureConfig config) {
@@ -130,12 +137,5 @@ public class CraterFeature extends Feature<CraterFeatureConfig> {
                 return true;
             }
         }
-    }
-
-    private static boolean isNaturalDirt(TestableWorld world, BlockPos pos) {
-        return world.testBlockState(pos, (blockState) -> {
-            Block block = blockState.getBlock();
-            return isDirt(block) && block != Blocks.GRASS_BLOCK && block != Blocks.MYCELIUM;
-        });
     }
 }

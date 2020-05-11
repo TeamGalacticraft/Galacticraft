@@ -28,7 +28,6 @@ import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -42,6 +41,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin extends DrawableHelper {
 
@@ -59,7 +61,6 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(MatrixStack stack, float float_1, CallbackInfo ci) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
         if (CelestialBodyType.getByDimType(client.player.world.dimension.getType()).isPresent() && !CelestialBodyType.getByDimType(client.player.world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             DiffuseLighting.enableGuiDepthLighting();
             client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));

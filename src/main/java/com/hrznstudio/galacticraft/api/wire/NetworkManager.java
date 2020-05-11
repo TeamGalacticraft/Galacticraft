@@ -34,9 +34,12 @@ import net.minecraft.world.IWorld;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class NetworkManager {
 
-    private static Map<Integer, NetworkManager> managers = new HashMap<>();
+    private static final Map<Integer, NetworkManager> managers = new HashMap<>();
     /**
      * A map containing all the networks in the current world.
      * Cleared on world close.

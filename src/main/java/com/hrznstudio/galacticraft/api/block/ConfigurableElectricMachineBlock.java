@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.configurable.SideOption;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;
@@ -73,6 +72,24 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
             };
         }
         return new SideOption[]{SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT};
+    }
+
+    public static Direction energySideToDirection(EnergySide side) {
+        switch (side) {
+            case NORTH:
+                return Direction.NORTH;
+            case SOUTH:
+                return Direction.SOUTH;
+            case EAST:
+                return Direction.EAST;
+            case DOWN:
+                return Direction.DOWN;
+            case UP:
+                return Direction.UP;
+            case WEST:
+                return Direction.WEST;
+        }
+        return Direction.NORTH;
     }
 
     public abstract ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);
@@ -328,23 +345,5 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     public abstract Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1);
 
     public abstract List<Direction> disabledSides();
-
-    public static Direction energySideToDirection(EnergySide side) {
-        switch (side) {
-            case NORTH:
-                return Direction.NORTH;
-            case SOUTH:
-                return Direction.SOUTH;
-            case EAST:
-                return Direction.EAST;
-            case DOWN:
-                return Direction.DOWN;
-            case UP:
-                return Direction.UP;
-            case WEST:
-                return Direction.WEST;
-        }
-        return Direction.NORTH;
-    }
 
 }

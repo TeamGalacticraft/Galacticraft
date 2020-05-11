@@ -56,6 +56,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @Shadow
     public abstract boolean canBreatheInWater();
 

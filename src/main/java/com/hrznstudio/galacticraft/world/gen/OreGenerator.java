@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.gen.feature.GCOreGenConfig;
 import com.mojang.datafixers.Dynamic;

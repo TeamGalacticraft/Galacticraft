@@ -63,12 +63,12 @@ public class GalacticraftCommands {
         // temp command
         CommandRegistry.INSTANCE.register(false, source -> source.register(
                 LiteralArgumentBuilder.<ServerCommandSource>literal("gcr_listbodies")
-                .executes(context -> {
-                    StringBuilder builder = new StringBuilder();
-                    CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey() + "\n"));
-                    context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
-                    return 1;
-                })
+                        .executes(context -> {
+                            StringBuilder builder = new StringBuilder();
+                            CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
+                            context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
+                            return 1;
+                        })
         ));
     }
 

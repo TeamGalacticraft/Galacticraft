@@ -42,6 +42,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @SuppressWarnings("PointlessArithmeticExpression")
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)
@@ -53,7 +56,7 @@ public abstract class WorldRendererMixin {
     private MinecraftClient client;
     @Shadow
     private ClientWorld world;
-    private int starGLCallList = GL11.glGenLists(3);
+    private final int starGLCallList = GL11.glGenLists(3);
     private int glSkyList;
     private int glSkyList2;
 

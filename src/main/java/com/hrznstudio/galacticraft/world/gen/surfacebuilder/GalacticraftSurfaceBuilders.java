@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 

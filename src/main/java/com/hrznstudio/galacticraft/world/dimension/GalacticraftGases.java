@@ -27,6 +27,9 @@ import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftGases {
 
     public static final AtmosphericGas NITROGEN_OXIDE = register(
@@ -48,5 +51,6 @@ public class GalacticraftGases {
         return Registry.register(AddonRegistry.ATMOSPHERIC_GASES, gas.getId(), gas);
     }
 
-    public static void init() {}
+    public static void init() {
+    }
 }

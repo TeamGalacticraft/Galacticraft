@@ -43,13 +43,15 @@ public abstract class ItemStackMixin {
     @Shadow
     public abstract Item getItem();
 
+    @SuppressWarnings("RedundantSuppression")
     @Inject(method = "getName", at = @At("RETURN"), cancellable = true)
     private void getName(CallbackInfoReturnable<Text> returnable) {
         Identifier id = Registry.ITEM.getId(getItem());
+        //noinspection ConstantConditions,PointlessBooleanExpression
         if (false && id.getNamespace().equals(Constants.MOD_ID)) {
             Text returnVal = returnable.getReturnValue();
             if (returnVal.getStyle().getColor() == null) {
-                //returnable.setReturnValue(returnVal.setStyle(returnVal.getStyle().setColor(Formatting.BLUE)));
+                returnable.setReturnValue(returnVal.shallowCopy().setStyle(returnVal.getStyle().withColor(Formatting.BLUE)));
             }
         }
     }

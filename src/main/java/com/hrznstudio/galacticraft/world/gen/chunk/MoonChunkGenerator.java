@@ -42,7 +42,6 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.level.LevelGeneratorType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -195,7 +194,4 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         return this.world.getSeaLevel() + 1;
     }
 
-    public int getSeaLevel() {
-        return super.getSeaLevel();
-    }
 }

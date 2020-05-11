@@ -23,9 +23,9 @@
 package com.hrznstudio.galacticraft.container.slot;
 
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import net.minecraft.screen.slot.Slot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

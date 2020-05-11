@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.container.screen;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.container.PlayerInventoryGCContainer;
+import com.hrznstudio.galacticraft.container.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -40,7 +40,7 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCContainer> {
+public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScreenHandler> {
     public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
 
     private float mouseX;
@@ -48,7 +48,7 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCCont
 
     public PlayerInventoryGCScreen(PlayerEntity player) {
 //        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCContainer(player.inventory, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
+        super(new PlayerInventoryGCScreenHandler(player.inventory, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -61,13 +61,13 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCCont
     protected void drawMouseoverTooltip(MatrixStack stack, int x, int y) {
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
-            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_1_SLOT);
+            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
             this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
-            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCContainer.OXYGEN_TANK_2_SLOT);
+            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT);
             int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
             int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
             this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy), x, y);

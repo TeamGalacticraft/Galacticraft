@@ -27,7 +27,6 @@ import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTyp
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGeneratorConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5217;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -76,6 +75,7 @@ public class MoonDimension extends Dimension {
     public Vec3d modifyFogColor(Vec3d vec3d, float tickDelta) {
         return new Vec3d(0.0D, 0.0D, 0.0D);
     }
+
     @Override
     public BlockPos getForcedSpawnPoint() {
         return new BlockPos(0, 100, 0);
@@ -97,9 +97,9 @@ public class MoonDimension extends Dimension {
     }
 
     public float getSkyAngle(long long_1, float float_1) {
-        double double_1 = MathHelper.fractionalPart((double)long_1 / 24000.0D - 0.25D);
+        double double_1 = MathHelper.fractionalPart((double) long_1 / 24000.0D - 0.25D);
         double double_2 = 0.5D - Math.cos(double_1 * 3.141592653589793D) / 2.0D;
-        return (float)(double_1 * 2.0D + double_2) / 3.0F;
+        return (float) (double_1 * 2.0D + double_2) / 3.0F;
     }
 
     public boolean hasVisibleSky() {
@@ -123,10 +123,6 @@ public class MoonDimension extends Dimension {
 
     @Override
     public boolean isFogThick(int x, int z) {
-        return false;
-    }
-
-    public boolean shouldRenderFog(int l1, int f2) {
         return false;
     }
 

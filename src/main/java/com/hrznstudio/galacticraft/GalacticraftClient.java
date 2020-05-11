@@ -22,20 +22,14 @@
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelScreen;
-import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
-import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
+import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
-import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
+import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
@@ -51,8 +45,8 @@ import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
 /**
@@ -153,6 +147,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         GalacticraftBlockEntityRenderers.register();
         GalacticraftParticles.registerClient();
+        GalacticraftClientPackets.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());

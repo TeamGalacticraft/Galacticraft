@@ -35,8 +35,8 @@ import net.minecraft.text.LiteralText;
  */
 public class SpaceRaceButtonWidget extends ButtonWidget {
     private final TextRenderer font;
-    private int screenWidth;
-    private int screenHeight;
+    private final int screenWidth;
+    private final int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
         super(x, y, buttonWidth, buttonHeight, new LiteralText(""), (button) -> minecraft.openScreen(new SpaceRaceScreen()));

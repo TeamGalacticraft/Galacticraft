@@ -44,12 +44,16 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class WireBlock extends BlockWithEntity implements WireConnectable {
     public WireBlock(Settings settings) {
         super(settings);
     }
 
     @Override
+    @Deprecated
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled()) {
             Galacticraft.logger.info(NetworkManager.getManagerForWorld(world).getNetwork(pos));
@@ -58,6 +62,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     }
 
     @Override
+    @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
@@ -122,6 +127,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     }
 
     @Override
+    @Deprecated
     public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         super.onBlockRemoved(state, world, pos, newState, moved);
         if (!world.isClient()) {

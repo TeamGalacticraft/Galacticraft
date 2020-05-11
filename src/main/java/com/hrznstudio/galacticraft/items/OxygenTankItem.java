@@ -35,9 +35,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -46,8 +46,8 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenTankItem extends Item {
-    public static String MAX_OXYGEN_NBT_KEY = "MaxOxygen";
-    public static String OXYGEN_NBT_KEY = "Oxygen";
+    public static final String MAX_OXYGEN_NBT_KEY = "MaxOxygen";
+    public static final String OXYGEN_NBT_KEY = "Oxygen";
 
     private final int maxOxygen;
 

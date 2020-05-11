@@ -30,7 +30,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
@@ -68,7 +67,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
 
     @Override
     public boolean canGather(ItemStack itemIn) {
-        return itemIn.getItem() == Items.BREAD || itemIn.getItem()  == Items.POTATO || itemIn.getItem()  == Items.CARROT || itemIn.getItem()  == Items.WHEAT || itemIn.getItem()  == Items.WHEAT_SEEDS;
+        return itemIn.getItem() == Items.BREAD || itemIn.getItem() == Items.POTATO || itemIn.getItem() == Items.CARROT || itemIn.getItem() == Items.WHEAT || itemIn.getItem() == Items.WHEAT_SEEDS;
     }
 
     @Override

@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -32,9 +32,10 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.network.packet.GalacticraftPackets;
+import com.hrznstudio.galacticraft.network.GalacticraftPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
-import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
@@ -58,7 +59,7 @@ public class Galacticraft implements ModInitializer {
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
-    public static ConfigManager configManager = new ConfigManagerImpl();
+    public static final ConfigManager configManager = new ConfigManagerImpl();
 
     @Override
     public void onInitialize() {
@@ -73,6 +74,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftEnergy.register();
         GalacticraftEntityTypes.register();
         GalacticraftContainers.register();
+        GalacticraftScreenHandlerTypes.register();
         GalacticraftCommands.register();
         GalacticraftBlockEntities.init();
         GalacticraftChunkGeneratorTypes.init();
@@ -87,7 +89,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluidTags.register();
 
         Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
-            if(object instanceof ItemStack){
+            if (object instanceof ItemStack) {
                 return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
             }
             return false;
@@ -138,6 +140,6 @@ public class Galacticraft implements ModInitializer {
             };
         });
 
-        logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis()-startInitTime);
+        logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

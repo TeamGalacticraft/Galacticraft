@@ -37,7 +37,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.TranslatableText;
 
 import java.io.File;
@@ -46,12 +45,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Environment(EnvType.CLIENT)
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ConfigManagerImpl implements ConfigManager {
 
+    private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private final File file = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/config.json");
     private Config config = new ConfigImpl();
-    private Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private File file = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/config.json");
 
     public ConfigManagerImpl() {
         this.load();
@@ -70,7 +71,7 @@ public class ConfigManagerImpl implements ConfigManager {
     public void load() {
         try {
             this.file.getParentFile().mkdirs();
-            if(!this.file.exists()) {
+            if (!this.file.exists()) {
                 Galacticraft.logger.info("[Galacticraft] Failed to find config file, creating one.");
                 this.save();
             } else {

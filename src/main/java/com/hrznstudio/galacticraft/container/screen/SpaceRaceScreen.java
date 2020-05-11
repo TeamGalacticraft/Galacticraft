@@ -82,7 +82,7 @@ public class SpaceRaceScreen extends Screen {
         int x = midX - widthSize / 2;
         int y = midY - heightSize / 2;
 
-        this.fill(stack, x, y, x + widthSize, y + heightSize, 0x80000000);
+        fill(stack, x, y, x + widthSize, y + heightSize, 0x80000000);
     }
 
     private void renderForeground(MatrixStack stack) {
