@@ -2,7 +2,7 @@ package com.hrznstudio.galacticraft.structure;
 
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PaneBlock;
@@ -223,22 +223,22 @@ public class MoonVillageStart extends VillageStructureStart {
                 StructurePool.Projection.TERRAIN_MATCHING));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(TREES, EMPTY,
-                ImmutableList.of(of(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1)),
+                ImmutableList.of(of(new FeaturePoolElement(Feature.TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG)), 1)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(DECOR, EMPTY,
                 ImmutableList.of(of(new SinglePoolElement(BASE_ID + "lamp_1", ImmutableList.of(), StructurePool.Projection.RIGID), 2),
-                        of(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1),
-                        of(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG), StructurePool.Projection.RIGID), 1),
-                        of(new FeaturePoolElement(Feature.BLOCK_PILE.configure(DefaultBiomeFeatures.HAY_PILE_CONFIG), StructurePool.Projection.RIGID), 1),
+                        of(new FeaturePoolElement(Feature.TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG)), 1), //// I cant use the non-deprecated version as its private >:(
+                        of(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG)), 1),
+                        of(new FeaturePoolElement(Feature.BLOCK_PILE.configure(GalacticraftFeatures.CHEESE_LOG_PILE_CONFIG)), 1),
                         of(EmptyPoolElement.INSTANCE, 2)),
                 StructurePool.Projection.RIGID));
 
         StructurePoolBasedGenerator.REGISTRY.add(new StructurePool(DEAD_DECOR, EMPTY,
                 ImmutableList.of(of(new SinglePoolElement(BASE_ID + "lamp_1", immutableList, StructurePool.Projection.RIGID), 1),
-                        of(new FeaturePoolElement(Feature.NORMAL_TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG), StructurePool.Projection.RIGID), 1),
-                        of(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG), StructurePool.Projection.RIGID), 1),
-                        of(new FeaturePoolElement(Feature.BLOCK_PILE.configure(DefaultBiomeFeatures.HAY_PILE_CONFIG), StructurePool.Projection.RIGID), 1),
+                        of(new FeaturePoolElement(Feature.TREE.configure(DefaultBiomeFeatures.OAK_TREE_CONFIG)), 1),
+                        of(new FeaturePoolElement(Feature.FLOWER.configure(GalacticraftFeatures.MOON_FLOWER_CONFIG)), 1),
+                        of(new FeaturePoolElement(Feature.BLOCK_PILE.configure(GalacticraftFeatures.CHEESE_LOG_PILE_CONFIG)), 1),
                         of(EmptyPoolElement.INSTANCE, 2)),
                 StructurePool.Projection.RIGID));
 
@@ -304,8 +304,8 @@ public class MoonVillageStart extends VillageStructureStart {
     }
 
     @Override
-    public void initialize(ChunkGenerator<?> chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
-        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random);
+    public void init(ChunkGenerator<?> chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
+        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
         this.setBoundingBoxFromChildren();
     }
 }

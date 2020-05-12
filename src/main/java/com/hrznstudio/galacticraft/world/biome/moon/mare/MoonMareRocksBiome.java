@@ -2,10 +2,13 @@ package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.BoulderFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
@@ -27,8 +30,9 @@ public final class MoonMareRocksBiome extends Biome implements SpaceBiome {
                 .scale(0.0065F)
                 .temperature(-100.0F)
                 .downfall(0.00002F)
-                .waterColor(9937330)
-                .waterFogColor(11253183)
+                .effects(new BiomeEffects.Builder()
+                        .waterColor(9937330)
+                        .waterFogColor(11243183).build())
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_ROCKS));
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, new ConfiguredFeature<>((ForestRockFeature) Feature.FOREST_ROCK, new BoulderFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), 10)));
     }
@@ -44,13 +48,15 @@ public final class MoonMareRocksBiome extends Biome implements SpaceBiome {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getFoliageColor() {
-        return waterFogColor;
+        return getWaterFogColor();
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getGrassColorAt(double x, double z) {
-        return waterColor;
+        return getWaterColor();
     }
 
     @Override

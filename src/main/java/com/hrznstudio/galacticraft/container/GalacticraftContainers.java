@@ -23,14 +23,7 @@
 package com.hrznstudio.galacticraft.container;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelContainer;
-import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorContainer;
-import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorContainer;
-import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorContainer;
-import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorContainer;
-import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleContainer;
-import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorContainer;
-import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryContainer;
+import com.hrznstudio.galacticraft.screen.*;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.util.Identifier;
 
@@ -50,15 +43,15 @@ public class GalacticraftContainers {
     public static final Identifier OXYGEN_COLLECTOR_CONTAINER = new Identifier(Constants.MOD_ID, Constants.Container.OXYGEN_COLLECTOR_CONTAINER);
 
     public static void register() {
-        ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCContainer(player.inventory, player));
+        ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_CONTAINER, (syncId, id, player, buf) -> new PlayerInventoryGCScreenHandler(player.inventory, player));
 
-        ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, CoalGeneratorContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(REFINERY_CONTAINER, RefineryContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, CompressorContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorContainer.ELECTRIC_FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleContainer.FACTORY);
-        ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorContainer.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(COAL_GENERATOR_CONTAINER, CoalGeneratorScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(REFINERY_CONTAINER, RefineryScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(COMPRESSOR_CONTAINER, CompressorScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorScreenHandler.FACTORY);
     }
 }

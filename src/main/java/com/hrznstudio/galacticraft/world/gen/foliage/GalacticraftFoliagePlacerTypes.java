@@ -35,7 +35,6 @@ import java.util.function.Function;
  */
 public class GalacticraftFoliagePlacerTypes {
 
-    public static final FoliagePlacerType<CheeseFoliagePlacer> CHEESE_FOLIAGE_PLACER_TYPE = createFoliagePlacer(CheeseFoliagePlacer::new);
 
     public static <P extends FoliagePlacer> FoliagePlacerType<P> createFoliagePlacer(Function<Dynamic<?>, P> deserializer) {
         try {

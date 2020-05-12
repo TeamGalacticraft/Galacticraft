@@ -22,10 +22,10 @@
 
 package com.hrznstudio.galacticraft.container.slot;
 
-import net.minecraft.container.Slot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
  */
 public class ItemSpecificSlot extends Slot {
 
-    private List<Item> items;
+    private final List<Item> items;
 
     public ItemSpecificSlot(Inventory inventory, int slotId, int x, int y, Item... items) {
         super(inventory, slotId, x, y);

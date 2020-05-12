@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.world.chunk.gen;
 
-import net.minecraft.world.World;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
@@ -34,7 +34,7 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class AlternativeChunkGeneratorType<C extends ChunkGeneratorConfig, T extends ChunkGenerator<C>> extends ChunkGeneratorType<C, T> {
-    private AlternativeFactory<C, T> alternativeFactory;
+    private final AlternativeFactory<C, T> alternativeFactory;
 
     public AlternativeChunkGeneratorType(AlternativeFactory<C, T> alternativeFactory, boolean b, Supplier<C> supplier) {
         super(null, b, supplier);
@@ -42,11 +42,12 @@ public class AlternativeChunkGeneratorType<C extends ChunkGeneratorConfig, T ext
     }
 
     @Override
-    public T create(World world, BiomeSource biomeSource, C config) {
-        return alternativeFactory.create(world, biomeSource, config);
+    public T create(IWorld iWorld, BiomeSource biomeSource, C chunkGeneratorConfig) {
+        return alternativeFactory.create(iWorld, biomeSource, chunkGeneratorConfig);
     }
 
+
     public interface AlternativeFactory<C extends ChunkGeneratorConfig, T extends ChunkGenerator<C>> {
-        T create(World world, BiomeSource source, C config);
+        T create(IWorld world, BiomeSource source, C config);
     }
 }

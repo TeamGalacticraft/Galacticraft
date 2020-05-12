@@ -69,7 +69,7 @@ public class GalacticraftEnergy {
 
     /**
      * @param battery The battery/energy item to extract energy from
-     * @param amount The amount of energy to extract from the battery
+     * @param amount  The amount of energy to extract from the battery
      * @return The amount of energy that could not be extracted
      */
     public static int extractEnergy(ItemStack battery, int amount) {
@@ -92,9 +92,10 @@ public class GalacticraftEnergy {
             return amount;
         }
     }
+
     /**
      * @param battery The battery/energy item to insert energy into
-     * @param amount The amount of energy to inset into the battery
+     * @param amount  The amount of energy to inset into the battery
      * @return The amount of energy that could not be inserted
      */
     public static int insertEnergy(ItemStack battery, int amount) {

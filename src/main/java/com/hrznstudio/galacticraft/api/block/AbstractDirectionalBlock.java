@@ -33,7 +33,7 @@ import net.minecraft.state.property.Properties;
  */
 public class AbstractDirectionalBlock extends Block {
 
-    public static DirectionProperty FACING = Properties.FACING;
+    public static final DirectionProperty FACING = Properties.FACING;
 
     public AbstractDirectionalBlock(Settings settings) {
         super(settings);
@@ -42,5 +42,6 @@ public class AbstractDirectionalBlock extends Block {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
+        builder.add(FACING);
     }
 }

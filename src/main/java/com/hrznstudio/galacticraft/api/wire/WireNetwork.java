@@ -28,6 +28,9 @@ import net.minecraft.util.math.Direction;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class WireNetwork {
     private final Map<BlockPos, List<BlockPos>> adjacentVertices = new ConcurrentHashMap<>();
     private final List<BlockPos> consumers = new ArrayList<>();

@@ -39,8 +39,8 @@ import java.util.List;
  */
 public class CapeLoader {
 
-    private List<CapeListener> listeners;
-    private Gson gson = new GsonBuilder().create();
+    private final List<CapeListener> listeners;
+    private final Gson gson = new GsonBuilder().create();
 
     public CapeLoader() {
         this.listeners = new ArrayList<>();
@@ -65,7 +65,7 @@ public class CapeLoader {
             }
 
             while (!Thread.currentThread().isInterrupted()) {
-                if (capesModel != null && this.listeners != null) {
+                if (capesModel != null) {
                     CapesModel finalCapesModel = capesModel;
                     this.listeners.forEach(l -> l.loadCapes(finalCapesModel));
                     Thread.currentThread().interrupt();

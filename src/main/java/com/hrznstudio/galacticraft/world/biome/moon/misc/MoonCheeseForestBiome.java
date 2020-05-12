@@ -23,16 +23,16 @@
 package com.hrznstudio.galacticraft.world.biome.moon.misc;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import com.hrznstudio.galacticraft.world.gen.foliage.CheeseFoliagePlacer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.BranchedTreeFeatureConfig;
-import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
@@ -50,11 +50,12 @@ public final class MoonCheeseForestBiome extends Biome implements SpaceBiome {
                 .scale(0.03F)
                 .temperature(-100F)
                 .downfall(0.005F)
-                .waterColor(9937330)
-                .waterFogColor(11253183)
+                .effects(new BiomeEffects.Builder()
+                        .waterColor(9937330)
+                        .waterFogColor(11243183).build())
                 .parent(null));
         this.flowerFeatures.clear();
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftFeatures.CHEESE_TREE_FEATURE.configure(new BranchedTreeFeatureConfig.Builder(new SimpleBlockStateProvider(GalacticraftBlocks.CHEESE_LOG.getDefaultState()), new SimpleBlockStateProvider(GalacticraftBlocks.CHEESE_LEAVES.getDefaultState()), new CheeseFoliagePlacer(2, 0)).baseHeight(5).heightRandA(2).heightRandB(2).trunkHeight(0).noVines().build()));
+        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftFeatures.CHEESE_TREE_FEATURE);
     }
 
     @Override
@@ -73,13 +74,15 @@ public final class MoonCheeseForestBiome extends Biome implements SpaceBiome {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getFoliageColor() {
-        return waterFogColor;
+        return getWaterFogColor();
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getGrassColorAt(double x, double z) {
-        return waterColor;
+        return getWaterColor();
     }
 
     @Override

@@ -56,6 +56,7 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @Shadow
     public abstract boolean canBreatheInWater();
 
@@ -88,7 +89,7 @@ public abstract class LivingEntityMixin extends Entity {
             if (CelestialBodyType.getByDimType(world.dimension.getType()).isPresent() && !CelestialBodyType.getByDimType(world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                 updateAir(this);
             } else {
-                if (this.isInFluid(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {
+                if (this.isSubmergedIn(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {
                     if (!this.canBreatheInWater() && !StatusEffectUtil.hasWaterBreathing((LivingEntity) (Object) this) && !isInvulnerableTo(DamageSource.DROWN)) {
                         this.setAir(this.getNextAirUnderwater(this.getAir()));
                     }
@@ -98,7 +99,7 @@ public abstract class LivingEntityMixin extends Entity {
             if (this.getAir() == -20) {
                 this.setAir(0);
 
-                if (this.isInFluid(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {
+                if (this.isSubmergedIn(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {
                     if (!this.canBreatheInWater() && !StatusEffectUtil.hasWaterBreathing((LivingEntity) (Object) this) && !isInvulnerableTo(DamageSource.DROWN)) {
                         Vec3d vec3d = this.getVelocity();
 

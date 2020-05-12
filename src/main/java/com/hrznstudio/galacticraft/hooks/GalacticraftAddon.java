@@ -28,6 +28,9 @@ import com.hrznstudio.galacticraft.api.addon.AddonInitializer;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftAddon implements AddonInitializer {
 
     @Override

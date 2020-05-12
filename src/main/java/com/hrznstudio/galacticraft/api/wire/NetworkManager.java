@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.mixin.ServerWorldMixin;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -33,6 +34,9 @@ import net.minecraft.world.IWorld;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class NetworkManager {
 
     private static final Map<Integer, NetworkManager> managers = new HashMap<>();
@@ -40,7 +44,7 @@ public class NetworkManager {
      * A map containing all the networks in the current world.
      * Cleared on world close.
      *
-     * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
+     * @see ServerWorldMixin
      */
     private final Map<BlockPos, WireNetwork> networks = new ConcurrentHashMap<>();
     private final Map<WireNetwork, Integer> networkRefs = new HashMap<>();
@@ -94,7 +98,7 @@ public class NetworkManager {
         for (WireNetwork network : set) {
             for (BlockPos pos : network.getQuery()) {
                 if (world.getBlockEntity(pos) instanceof EnergyAttributeProvider) {
-                    world.getBlockState(pos).updateNeighborStates(world, pos, 10);
+                    world.getBlockState(pos).updateNeighbors(world, pos, 10);
                 }
             }
             network.clearQuery();

@@ -40,7 +40,7 @@ import java.util.UUID;
 public class JsonCapes implements CapeListener {
 
     private static final Logger LOGGER = Galacticraft.logger;
-    private Map<UUID, CapePlayer> capePlayers = new HashMap<>();
+    private final Map<UUID, CapePlayer> capePlayers = new HashMap<>();
 
     private boolean capesLoaded = false;
 
@@ -76,7 +76,7 @@ public class JsonCapes implements CapeListener {
         DEVELOPER("developer"),
         ;
 
-        String key;
+        final String key;
 
         Cape(String key) {
             this.key = key;

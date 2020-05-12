@@ -4,7 +4,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "EntityAttributeInstanceAccessor",
     "FeatureMixin",
+    "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
@@ -12,12 +14,13 @@
     "TorchBlockMixin"
   ],
   "client": [
-    "InGameHudMixin",
-    "JsonCapeMixin",
-    "MusicTrackerMixin",
-    "PauseMenuScreenMixin",
-    "PlayerInventoryScreenMixin",
-    "WorldRendererMixin"
+    "client.AbstractClientPlayerEntityMixin",
+    "client.HandledScreenHooks",
+    "client.InGameHudMixin",
+    "client.MusicTrackerMixin",
+    "client.PauseMenuScreenMixin",
+    "client.PlayerInventoryScreenMixin",
+    "client.WorldRendererMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {

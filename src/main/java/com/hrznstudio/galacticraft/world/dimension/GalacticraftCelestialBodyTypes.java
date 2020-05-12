@@ -28,6 +28,9 @@ import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftCelestialBodyTypes {
 public static final CelestialBodyType THE_MOON = register(
         new CelestialBodyType.Builder(new Identifier("galacticraft-rewoven", "the_moon"))

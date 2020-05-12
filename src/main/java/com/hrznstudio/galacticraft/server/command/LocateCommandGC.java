@@ -17,7 +17,7 @@ public class LocateCommandGC {
     private static final SimpleCommandExceptionType FAILED_EXCEPTION = new SimpleCommandExceptionType(new TranslatableText("commands.locate.failed"));
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
-        LiteralArgumentBuilder<ServerCommandSource> builder = CommandManager.literal("locate");
+        LiteralArgumentBuilder<ServerCommandSource> builder = CommandManager.literal("locate").requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2));
         for (StructureFeature<?> feature : Registry.STRUCTURE_FEATURE) {
             builder.then(CommandManager.literal(feature.getName()).executes((commandContext) -> execute(commandContext.getSource(), feature.getName())));
         }
@@ -31,13 +31,15 @@ public class LocateCommandGC {
         if (blockPos2 == null) {
             throw FAILED_EXCEPTION.create();
         } else {
-            int i = MathHelper.floor(getDistance(blockPos.getX(), blockPos.getZ(), blockPos2.getX(), blockPos2.getZ()));
-            Text text = Texts.bracketed(new TranslatableText("chat.coordinates", blockPos2.getX(), "~", blockPos2.getZ())).styled((style) -> {
-                style.setColor(Formatting.GREEN).setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + blockPos2.getX() + " ~ " + blockPos2.getZ())).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip")));
-            });
-            source.sendFeedback(new TranslatableText("commands.locate.success", structure, text, i), false);
-            return i;
+            return sendCoordinates(source, structure, blockPos, blockPos2, "commands.locate.success");
         }
+    }
+
+    public static int sendCoordinates(ServerCommandSource serverCommandSource, String string, BlockPos blockPos, BlockPos blockPos2, String successMessage) {
+        int i = MathHelper.floor(getDistance(blockPos.getX(), blockPos.getZ(), blockPos2.getX(), blockPos2.getZ()));
+        Text text = Texts.bracketed(new TranslatableText("chat.coordinates", blockPos2.getX(), "~", blockPos2.getZ())).styled((style) -> style.withColor(Formatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + blockPos2.getX() + " ~ " + blockPos2.getZ())).setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TranslatableText("chat.coordinates.tooltip"))));
+        serverCommandSource.sendFeedback(new TranslatableText(successMessage, string, text, i), false);
+        return i;
     }
 
     private static float getDistance(int x1, int y1, int x2, int y2) {

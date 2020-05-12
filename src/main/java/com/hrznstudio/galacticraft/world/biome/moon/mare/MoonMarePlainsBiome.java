@@ -23,14 +23,17 @@
 package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.BlockStateWithChance;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.MultiBlockSurfaceConfig;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEffects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -58,8 +61,9 @@ public final class MoonMarePlainsBiome extends Biome implements SpaceBiome {
                 .scale(0.03F)
                 .temperature(-100F)
                 .downfall(0.005F)
-                .waterColor(9937330)
-                .waterFogColor(11253183)
+                .effects(new BiomeEffects.Builder()
+                        .waterColor(9937330)
+                        .waterFogColor(11243183).build())
                 .parent(null));
         this.flowerFeatures.clear();
     }
@@ -80,13 +84,15 @@ public final class MoonMarePlainsBiome extends Biome implements SpaceBiome {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getFoliageColor() {
-        return waterFogColor;
+        return getWaterFogColor();
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getGrassColorAt(double x, double z) {
-        return waterColor;
+        return getWaterColor();
     }
 
     @Override

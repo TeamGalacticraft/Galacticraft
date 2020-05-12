@@ -64,6 +64,16 @@ public class MoonDimension extends Dimension {
     }
 
     @Override
+    public void update() {
+        super.update();
+        this.world.getLevelProperties().setThundering(false);
+        this.world.getLevelProperties().setRaining(false);
+        this.world.getLevelProperties().setClearWeatherTime(10000000);
+        this.world.getLevelProperties().setRainTime(0);
+        this.world.getLevelProperties().setThunderTime(0);
+    }
+
+    @Override
     public boolean hasSkyLight() {
         return true;
     }
@@ -74,9 +84,14 @@ public class MoonDimension extends Dimension {
     }
 
     @Override
+    public Vec3d modifyFogColor(Vec3d vec3d, float tickDelta) {
+        return new Vec3d(0.0D, 0.0D, 0.0D);
+    }
+
+    @Override
     public ChunkGenerator<? extends ChunkGeneratorConfig> createChunkGenerator() {
-        MoonChunkGeneratorConfig config = GalacticraftChunkGeneratorTypes.MOON.createSettings();
-        MoonBiomeSourceConfig moonBiomeSourceConfig = GalacticraftBiomeSourceTypes.MOON.getConfig(world.getLevelProperties()).setGeneratorSettings(config);
+        MoonChunkGeneratorConfig config = GalacticraftChunkGeneratorTypes.MOON.createConfig();
+        MoonBiomeSourceConfig moonBiomeSourceConfig = GalacticraftBiomeSourceTypes.MOON.getConfig(world.getLevelProperties().getSeed()).setGeneratorSettings(config);
         return GalacticraftChunkGeneratorTypes.MOON.create(this.world, GalacticraftBiomeSourceTypes.MOON.applyConfig(moonBiomeSourceConfig), config);
     }
 
@@ -91,7 +106,6 @@ public class MoonDimension extends Dimension {
                 }
             }
         }
-
         return null;
     }
 
@@ -101,7 +115,7 @@ public class MoonDimension extends Dimension {
         BlockPos.Mutable mutable = new BlockPos.Mutable(x, 0, z);
         Biome biome = this.world.getBiome(mutable);
         BlockState blockState = biome.getSurfaceConfig().getTopMaterial();
-        if (checkMobSpawnValidity && !blockState.getBlock().matches(BlockTags.VALID_SPAWN)) {
+        if (checkMobSpawnValidity && !blockState.getBlock().isIn(BlockTags.VALID_SPAWN)) {
             return null;
         } else {
             WorldChunk worldChunk = this.world.getChunk(x >> 4, z >> 4);
@@ -140,9 +154,8 @@ public class MoonDimension extends Dimension {
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public Vec3d getFogColor(float skyAngle, float tickDelta) {
-        return new Vec3d(0, 0, 0);
+    public float getBrightness(int lightLevel) {
+        return super.getBrightness(lightLevel);
     }
 
     @Override
@@ -158,7 +171,8 @@ public class MoonDimension extends Dimension {
 
     @Nullable
     @Override
+    @Environment(EnvType.CLIENT)
     public float[] getBackgroundColor(float skyAngle, float tickDelta) {
-        return super.getBackgroundColor(skyAngle, tickDelta);
+        return new float[]{0.05882353f, 0.0627451f, 0.06666667f};
     }
 }

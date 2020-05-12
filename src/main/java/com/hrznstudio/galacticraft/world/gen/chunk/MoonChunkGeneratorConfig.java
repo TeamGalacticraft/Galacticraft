@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 
@@ -30,10 +30,6 @@ import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonChunkGeneratorConfig extends ChunkGeneratorConfig {
-    @Override
-    public int getMinY() {
-        return 0;
-    }
 
     @Override
     public BlockState getDefaultBlock() {

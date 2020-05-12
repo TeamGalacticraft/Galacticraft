@@ -33,9 +33,11 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.resource.language.I18n;
+import net.minecraft.text.TranslatableText;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,11 +45,14 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ConfigManagerImpl implements ConfigManager {
 
-    private Config config = new ConfigImpl();
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final File file = new File(FabricLoader.getInstance().getConfigDirectory(), "galacticraft/config.json");
+    private Config config = new ConfigImpl();
 
     public ConfigManagerImpl() {
         this.load();
@@ -66,7 +71,7 @@ public class ConfigManagerImpl implements ConfigManager {
     public void load() {
         try {
             this.file.getParentFile().mkdirs();
-            if(!this.file.exists()) {
+            if (!this.file.exists()) {
                 Galacticraft.logger.info("[Galacticraft] Failed to find config file, creating one.");
                 this.save();
             } else {
@@ -84,27 +89,28 @@ public class ConfigManagerImpl implements ConfigManager {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public Screen getScreen(Screen parent) {
         ConfigBuilder b = ConfigBuilder.create()
                 .setParentScreen(parent)
-                .setTitle(I18n.translate(Constants.Config.TITLE))
+                .setTitle(new TranslatableText(Constants.Config.TITLE))
                 .setSavingRunnable(this::save);
 
-        SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(Constants.Config.DEBUG);
+        SubCategoryBuilder dB = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constants.Config.DEBUG));
         dB.add(new BooleanToggleBuilder(
-                Constants.Config.RESET,
-                Constants.Config.DEBUG_LOGGING,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.DEBUG_LOGGING),
                 this.config.isDebugLogEnabled())
                 .setSaveConsumer(flag -> this.config.setDebugLog(flag))
                 .setDefaultValue(false)
                 .build()
         );
 
-        SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(Constants.Config.WIRES);
+        SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constants.Config.WIRES));
 
         wires.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.WIRE_ENERGY_TRANSFER_LIMIT,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.wireTransferLimit())
                 .setSaveConsumer(this.config::setWireTransferLimit)
                 .setDefaultValue(480)
@@ -112,19 +118,19 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         wires.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.heavyWireTransferLimit())
                 .setSaveConsumer(this.config::setHeavyWireTransferLimit)
                 .setDefaultValue(1440)
                 .build()
         );
 
-        SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(Constants.Config.MACHINES);
+        SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constants.Config.MACHINES));
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                 this.config.coalGeneratorEnergyProductionRate())
                 .setSaveConsumer(this.config::setCoalGeneratorEnergyProductionRate)
                 .setDefaultValue(120)
@@ -132,8 +138,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                 this.config.solarPanelEnergyProductionRate())
                 .setSaveConsumer(this.config::setSolarPanelEnergyProductionRate)
                 .setDefaultValue(44)
@@ -141,8 +147,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE),
                 this.config.circuitFabricatorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setCircuitFabricatorEnergyConsumptionRate)
                 .setDefaultValue(20)
@@ -150,8 +156,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE),
                 this.config.electricCompressorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setElectricCompressorEnergyConsumptionRate)
                 .setDefaultValue(75)
@@ -159,8 +165,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE),
                 this.config.oxygenCollectorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setOxygenCollectorEnergyConsumptionRate)
                 .setDefaultValue(10)
@@ -168,8 +174,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.REFINERY_ENERGY_PRODUCTION_RATE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.REFINERY_ENERGY_PRODUCTION_RATE),
                 this.config.refineryEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setRefineryEnergyConsumptionRate)
                 .setDefaultValue(60)
@@ -177,8 +183,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                 this.config.energyStorageModuleStorageSize())
                 .setSaveConsumer(this.config::setEnergyStorageModuleStorageSize)
                 .setDefaultValue(500_000)
@@ -186,8 +192,8 @@ public class ConfigManagerImpl implements ConfigManager {
         );
 
         machines.add(new IntFieldBuilder(
-                Constants.Config.RESET,
-                Constants.Config.ENERGY_STORAGE_SIZE,
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.ENERGY_STORAGE_SIZE),
                 this.config.machineEnergyStorageSize())
                 .setSaveConsumer(this.config::setMachineEnergyStorageSize)
                 .setDefaultValue(30_000)
@@ -195,8 +201,8 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        b.getOrCreateCategory(Constants.Config.DEBUG).addEntry(dB.build());
-        b.getOrCreateCategory(Constants.Config.ENERGY).addEntry(wires.build()).addEntry(machines.build());
+        b.getOrCreateCategory(new TranslatableText(Constants.Config.DEBUG)).addEntry(dB.build());
+        b.getOrCreateCategory(new TranslatableText(Constants.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
 
         return b.build();
     }

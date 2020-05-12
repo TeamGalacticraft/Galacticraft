@@ -39,12 +39,14 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.level.LevelGeneratorType;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -66,7 +68,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     public MoonChunkGenerator(IWorld world, BiomeSource biomeSource, MoonChunkGeneratorConfig config) {
         super(world, biomeSource, 4, 8, 256, config, true);
         this.random.consume(2620);
-        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, 15, 0);
+        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.amplified = world.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
     }
 
@@ -76,7 +78,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         int j = region.getCenterChunkZ();
         Biome biome = region.getBiome((new ChunkPos(i, j)).getCenterBlockPos());
         ChunkRandom chunkRandom = new ChunkRandom();
-        chunkRandom.setSeed(region.getSeed(), i << 4, j << 4);
+        chunkRandom.setSeed(region.getSeed());
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
     }
 
@@ -155,14 +157,13 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Override
-    public List<Biome.SpawnEntry> getEntitySpawnList(EntityCategory category, BlockPos pos) {
-        if (category == EntityCategory.MONSTER) {
-            if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(this.world, pos)) {
+    public List<Biome.SpawnEntry> getEntitySpawnList(StructureAccessor structureAccessor, EntityCategory entityCategory, BlockPos pos) {
+        if (entityCategory == EntityCategory.MONSTER) {
+            if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(this.world, structureAccessor, pos)) {
                 return Feature.PILLAGER_OUTPOST.getMonsterSpawns();
             }
         }
-
-        return super.getEntitySpawnList(category, pos);
+        return super.getEntitySpawnList(structureAccessor, entityCategory, pos);
     }
 
     @Override
@@ -172,7 +173,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
     }
 
-    @Override
     public int getSpawnHeight() {
         return this.world.getSeaLevel() + 1;
     }
