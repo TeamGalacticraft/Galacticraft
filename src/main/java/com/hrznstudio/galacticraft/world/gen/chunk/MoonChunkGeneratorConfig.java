@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.chunk.OverworldChunkGeneratorConfig;
 
@@ -47,9 +47,4 @@ public class MoonChunkGeneratorConfig extends OverworldChunkGeneratorConfig {
     public int getForcedBiome() {
         return -1;
     }
-
-    public int getMinY() {
-        return 0;
-    }
-
 }

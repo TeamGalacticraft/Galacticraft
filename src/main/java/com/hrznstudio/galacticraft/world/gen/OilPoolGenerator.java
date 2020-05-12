@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
@@ -38,7 +38,7 @@ public class OilPoolGenerator {
 
     public static void registerOilLake() {
         for (Biome biome : Biome.BIOMES) {
-            if (!biome.getCategory().equals(Biomes.NETHER.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
+            if (!biome.getCategory().equals(Biomes.NETHER_WASTES.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
 
                 biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, new ConfiguredFeature<>((LakeFeature) Feature.LAKE, new SingleStateFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState())));
             }

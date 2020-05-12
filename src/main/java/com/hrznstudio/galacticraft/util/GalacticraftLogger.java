@@ -25,6 +25,9 @@ package com.hrznstudio.galacticraft.util;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GalacticraftLogger {
     private static final Logger logger = LogManager.getLogger("Galacticraft");
 

@@ -35,8 +35,8 @@ import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.blocks.special.rocketlaunchpad.RocketLaunchPadBlock;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.netty.buffer.Unpooled;
@@ -60,6 +60,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.MessageType;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -69,7 +70,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -479,11 +479,11 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                 if (this.getFuel().getTank(0).get().getAmount() == 0 && !debugMode) {
                     this.setStage(LaunchStage.IDLE);
                     if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
-                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendChatMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), MessageType.SYSTEM);
+                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), MessageType.SYSTEM);
                     }
                     return;
                 }
-                this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().matches(GalacticraftFluidTags.FUEL), FluidAmount.of(1, 100)); //todo find balanced values
+                this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().isIn(GalacticraftFluidTags.FUEL), FluidAmount.of(1, 100)); //todo find balanced values
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
@@ -499,10 +499,10 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.getFuel().getTank(0).get().getAmount() == 0 || !this.getFuel().getTank(0).get().getRawFluid().matches(GalacticraftFluidTags.FUEL))) {
+                if (!debugMode && (this.getFuel().getTank(0).get().getAmount() == 0 || !this.getFuel().getTank(0).get().getRawFluid().isIn(GalacticraftFluidTags.FUEL))) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
-                    this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().matches(GalacticraftFluidTags.FUEL), FluidAmount.of(1, 100)); //todo find balanced values
+                    this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().isIn(GalacticraftFluidTags.FUEL), FluidAmount.of(1, 100)); //todo find balanced values
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
@@ -728,7 +728,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
                     this.setStage(this.getStage().next());
                     if (getStage() == LaunchStage.WARNING) {
-                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendChatMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.warning"), MessageType.SYSTEM);
+                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.warning"), MessageType.SYSTEM);
                     }
                 }
             }

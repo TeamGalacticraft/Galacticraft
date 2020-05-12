@@ -43,6 +43,6 @@ public class CraterDecoratorConfig implements DecoratorConfig {
     }
 
     public <T> Dynamic<T> serialize(DynamicOps<T> dynamicOps_1) {
-        return new Dynamic(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("chance"), dynamicOps_1.createInt(this.chance))));
+        return new Dynamic<>(dynamicOps_1, dynamicOps_1.createMap(ImmutableMap.of(dynamicOps_1.createString("chance"), dynamicOps_1.createInt(this.chance))));
     }
 }

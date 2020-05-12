@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  */
 public enum GalacticraftToolMaterials implements ToolMaterial {
 
-    STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeed(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
+    STEEL(ToolMaterials.IRON.getMiningLevel(), 768, ToolMaterials.IRON.getMiningSpeedMultiplier(), ToolMaterials.IRON.getAttackDamage(), ToolMaterials.IRON.getEnchantability(), () -> {
         return Ingredient.ofStacks(new ItemStack(GalacticraftItems.COMPRESSED_STEEL));
     }),
 
@@ -70,7 +70,7 @@ public enum GalacticraftToolMaterials implements ToolMaterial {
     }
 
     @Override
-    public float getMiningSpeed() {
+    public float getMiningSpeedMultiplier() {
         return blockBreakSpeed;
     }
 

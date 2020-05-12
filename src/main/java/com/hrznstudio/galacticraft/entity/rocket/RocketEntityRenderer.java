@@ -33,7 +33,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.container.PlayerContainer;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
@@ -78,7 +78,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
 //        RenderSystem.pushTextureAttributes();
 
-        client.getTextureManager().bindTexture(PlayerContainer.BLOCK_ATLAS_TEXTURE);
+        client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         matrices.translate(0.0D, -1.75D, 0.0D);
 
         matrices.push();
@@ -126,6 +126,6 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 
     @Override
     public Identifier getTexture(RocketEntity var1) {
-        return PlayerContainer.BLOCK_ATLAS_TEXTURE;
+        return PlayerScreenHandler.BLOCK_ATLAS_TEXTURE;
     }
 }

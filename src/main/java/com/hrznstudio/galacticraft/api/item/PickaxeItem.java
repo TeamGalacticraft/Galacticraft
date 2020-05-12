@@ -24,6 +24,9 @@ package com.hrznstudio.galacticraft.api.item;
 
 import net.minecraft.item.ToolMaterial;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class PickaxeItem extends net.minecraft.item.PickaxeItem {
     public PickaxeItem(ToolMaterial material, int attackDamage, float attackSpeed, Settings settings) {
         super(material, attackDamage, attackSpeed, settings);

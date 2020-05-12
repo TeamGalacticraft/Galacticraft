@@ -28,6 +28,9 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.feature.FeatureConfig;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class GCOreGenConfig implements FeatureConfig {
     public final BlockState target;
     public final BlockState state;

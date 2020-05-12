@@ -24,7 +24,10 @@ package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
@@ -42,8 +45,7 @@ public final class MoonPlainsBiome extends Biome {
                 .scale(0.03F)
                 .temperature(0.0F)
                 .downfall(0.005F)
-                .waterColor(9937330)
-                .waterFogColor(11253183)
+                .effects(new BiomeEffects.Builder().waterColor(9937330).waterFogColor(11253183).build())
                 .parent(null));
         this.flowerFeatures.clear();
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);
@@ -60,12 +62,14 @@ public final class MoonPlainsBiome extends Biome {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getFoliageColor() {
-        return waterFogColor;
+        return getWaterFogColor();
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public int getGrassColorAt(double x, double z) {
-        return waterColor;
+        return getWaterColor();
     }
 }

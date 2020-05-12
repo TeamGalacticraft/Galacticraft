@@ -34,7 +34,7 @@ import net.minecraft.util.Rarity;
  */
 public class GenericLiquidCanister extends Item {
 
-    private Fluid allowedFluid;
+    private final Fluid allowedFluid;
 
     public GenericLiquidCanister(Settings settings, Fluid allowedFluid) {
         super(settings);

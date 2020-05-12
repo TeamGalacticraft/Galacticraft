@@ -24,9 +24,9 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.blocks.special.rocketlaunchpad.RocketLaunchPadBlock;
-import com.hrznstudio.galacticraft.blocks.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.api.EnvType;
@@ -80,13 +80,9 @@ public class RocketItem extends Item {
                 rocket.setParts(data.getParts());
                 rocket.setColor(data.getRed(), data.getGreen(), data.getBlue(), data.getAlpha());
                 rocket.setLinkedPad(pos);
-                rocket.onGround = true; //
                 rocket.resetPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
                 rocket.updatePosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-
                 context.getWorld().spawnEntity(rocket);
-                rocket.resetPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
-                rocket.updatePosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
 
                 if (!context.getPlayer().isCreative()) {
                     ItemStack stack = context.getPlayer().getStackInHand(context.getHand()).copy();
@@ -109,13 +105,13 @@ public class RocketItem extends Item {
         CompoundTag tag = stack.getOrCreateTag();
         if (Screen.hasShiftDown()) {
             if (tag.contains("red") && tag.contains("cone") && tag.contains("tier")) {
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.tier", tag.getInt("tier")).setStyle(new Style().setColor(Formatting.DARK_GRAY)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.tier", tag.getInt("tier")).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.color"));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.red", tag.getInt("red")).setStyle(new Style().setColor(Formatting.RED)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.green", tag.getInt("green")).setStyle(new Style().setColor(Formatting.GREEN)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blue", tag.getInt("blue")).setStyle(new Style().setColor(Formatting.BLUE)));
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.alpha", tag.getInt("alpha")).setStyle(new Style().setColor(Formatting.WHITE)));
-                tooltip.add(new LiteralText("-----").setStyle(new Style().setColor(Formatting.AQUA)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.red", tag.getInt("red")).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.green", tag.getInt("green")).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blue", tag.getInt("blue")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
+                tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
                     String s = new Identifier(tag.getString(type.asString())).getPath();
                     if (!(new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString()
@@ -123,11 +119,11 @@ public class RocketItem extends Item {
                         s = new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() +
                                 "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString();
                     }
-                    tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.part_type." + type.asString(), s).setStyle(new Style().setColor(Formatting.GRAY)));
+                    tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.part_type." + type.asString(), s).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
                 }
             }
         } else {
-            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(new Style().setColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
     }
 }

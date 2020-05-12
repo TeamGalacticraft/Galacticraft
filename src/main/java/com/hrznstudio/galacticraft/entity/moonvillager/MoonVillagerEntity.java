@@ -30,7 +30,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Arm;
@@ -63,17 +62,12 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         HashSet<Activity> otherActivities = new HashSet<>();
         otherActivities.add(Activity.WORK);
         this.brain.setCoreActivities(otherActivities);
+        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.25d);
     }
 
     @Override
-    protected void initAttributes() {
-        super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.MOVEMENT_SPEED).setBaseValue(0.25d);
-    }
-
-    @Override
-    public boolean canGather(Item itemIn) {
-        return itemIn == Items.BREAD || itemIn == Items.POTATO || itemIn == Items.CARROT || itemIn == Items.WHEAT || itemIn == Items.WHEAT_SEEDS;
+    public boolean canGather(ItemStack itemIn) {
+        return itemIn.getItem() == Items.BREAD || itemIn.getItem() == Items.POTATO || itemIn.getItem() == Items.CARROT || itemIn.getItem() == Items.WHEAT || itemIn.getItem() == Items.WHEAT_SEEDS;
     }
 
     @Override

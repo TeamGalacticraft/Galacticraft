@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class CapesModel {
 
-    private List<CapePlayer> players;
+    private final List<CapePlayer> players;
 
     public CapesModel(List<CapePlayer> players) {
         this.players = players;

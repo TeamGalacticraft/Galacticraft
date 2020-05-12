@@ -72,7 +72,7 @@ public class MoonDimension extends Dimension {
     }
 
     @Override
-    public Vec3d getFogColor(float v, float v1) {
+    public Vec3d modifyFogColor(Vec3d vec3d, float tickDelta) {
         return new Vec3d(0.0D, 0.0D, 0.0D);
     }
 
@@ -82,8 +82,8 @@ public class MoonDimension extends Dimension {
     }
 
     public ChunkGenerator<?> createChunkGenerator() {
-        MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createSettings();
-        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
+        MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createConfig();
+        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties().getSeed()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
     }
 
     @Override
@@ -97,9 +97,9 @@ public class MoonDimension extends Dimension {
     }
 
     public float getSkyAngle(long long_1, float float_1) {
-        double double_1 = MathHelper.fractionalPart((double)long_1 / 24000.0D - 0.25D);
+        double double_1 = MathHelper.fractionalPart((double) long_1 / 24000.0D - 0.25D);
         double double_2 = 0.5D - Math.cos(double_1 * 3.141592653589793D) / 2.0D;
-        return (float)(double_1 * 2.0D + double_2) / 3.0F;
+        return (float) (double_1 * 2.0D + double_2) / 3.0F;
     }
 
     public boolean hasVisibleSky() {
@@ -123,10 +123,6 @@ public class MoonDimension extends Dimension {
 
     @Override
     public boolean isFogThick(int x, int z) {
-        return false;
-    }
-
-    public boolean shouldRenderFog(int l1, int f2) {
         return false;
     }
 

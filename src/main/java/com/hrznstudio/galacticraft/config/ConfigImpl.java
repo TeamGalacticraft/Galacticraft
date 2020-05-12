@@ -25,6 +25,9 @@ package com.hrznstudio.galacticraft.config;
 import com.google.gson.annotations.Expose;
 import com.hrznstudio.galacticraft.api.config.Config;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class ConfigImpl implements Config {
 
     @Expose

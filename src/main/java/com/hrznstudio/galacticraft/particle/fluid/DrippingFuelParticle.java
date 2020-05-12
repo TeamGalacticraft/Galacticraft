@@ -28,7 +28,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
-import net.minecraft.particle.ParticleEffect;
 import net.minecraft.world.World;
 
 /**
@@ -37,7 +36,7 @@ import net.minecraft.world.World;
 @Environment(EnvType.CLIENT)
 public class DrippingFuelParticle extends SpriteBillboardParticle {
 
-    public DrippingFuelParticle(ParticleEffect effect, World world, double x, double y, double z, double velX, double velY, double velZ) {
+    public DrippingFuelParticle(World world, double x, double y, double z, double velX, double velY, double velZ) {
         super(world, x, y, z, velX, velY, velZ);
         setSprite(MinecraftClient.getInstance().getItemRenderer().getModels().getSprite(Blocks.ACACIA_LOG.asItem()));
         this.scale *= 0.25f;

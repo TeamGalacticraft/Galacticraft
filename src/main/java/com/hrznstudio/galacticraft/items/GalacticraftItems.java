@@ -23,7 +23,8 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.api.item.HoeItem;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.BlockState;
@@ -41,7 +42,7 @@ import net.minecraft.world.World;
 public class GalacticraftItems {
     public static final Item GLOWSTONE_TORCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.GLOWSTONE_TORCH), new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP)));
     public static final Item UNLIT_TORCH = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Blocks.UNLIT_TORCH), new WallStandingBlockItem(GalacticraftBlocks.UNLIT_TORCH, GalacticraftBlocks.UNLIT_WALL_TORCH, (new Item.Settings()).group(GalacticraftBlocks.BLOCKS_GROUP)));
-    public static ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
+    public static final ItemGroup ITEMS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Items.ITEM_GROUP))
             .icon(() -> new ItemStack(GalacticraftItems.CANVAS))
             .build();
@@ -134,12 +135,12 @@ public class GalacticraftItems {
     public static final Item HEAVY_DUTY_SHOVEL = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_SHOVEL), new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_PICKAXE), new com.hrznstudio.galacticraft.api.item.PickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_AXE), new com.hrznstudio.galacticraft.api.item.AxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_HOE), new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item HEAVY_DUTY_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_HOE), new com.hrznstudio.galacticraft.api.item.HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_SWORD = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SWORD), new SwordItem(GalacticraftToolMaterials.DESH, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_SHOVEL = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_SHOVEL), new ShovelItem(GalacticraftToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_PICKAXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_PICKAXE), new com.hrznstudio.galacticraft.api.item.PickaxeItem(GalacticraftToolMaterials.DESH, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_AXE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_AXE), new com.hrznstudio.galacticraft.api.item.AxeItem(GalacticraftToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item DESH_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_HOE), new HoeItem(GalacticraftToolMaterials.DESH, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item DESH_HOE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_HOE), new com.hrznstudio.galacticraft.api.item.HoeItem(GalacticraftToolMaterials.DESH, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_SWORD = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_SWORD), new SwordItem(GalacticraftToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
         @Override
         public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
@@ -190,11 +191,8 @@ public class GalacticraftItems {
     public static final Item THERMAL_PADDING_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_BOOTS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.FEET));
     public static final Item ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ROCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET), new RocketItem(new Item.Settings().group(ITEMS_GROUP)));
-    // SPAWN EGGS
-//    public static final Item ROCKET_SPAWN_EGG_T1 = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SPAWN_EGG_T1), new SpawnEggItem(GalacticraftEntityTypes.T1_ROCKET, 0xC9C9C9, 0x000000, new Item.Settings().group(ITEMS_GROUP)));
-//    public static final Item MOON_VILLAGER_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_VILLAGER_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
-//    public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.EVOLVED_ZOMBIE_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
 
 
-    public static void register() {}
+    public static void register() {
+    }
 }
