@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
@@ -73,7 +73,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftEntityTypes.register();
-        GalacticraftContainers.register();
+        GalacticraftScreenHandlers.register();
         GalacticraftScreenHandlerTypes.register();
         GalacticraftCommands.register();
         GalacticraftBlockEntities.init();

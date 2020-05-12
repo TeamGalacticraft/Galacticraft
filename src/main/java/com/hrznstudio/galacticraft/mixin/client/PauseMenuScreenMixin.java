@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
-import com.hrznstudio.galacticraft.container.button.SpaceRaceButtonWidget;
+import com.hrznstudio.galacticraft.client.gui.widget.SpaceRaceButtonWidget;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
