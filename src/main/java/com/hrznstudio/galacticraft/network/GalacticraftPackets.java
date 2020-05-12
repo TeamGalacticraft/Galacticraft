@@ -28,10 +28,10 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
@@ -52,21 +52,20 @@ import java.util.Objects;
  */
 public class GalacticraftPackets {
     public static void register() {
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buff) -> {
-            PacketByteBuf buf = new PacketByteBuf(buff.copy());
-            BlockPos pos = buf.readBlockPos();
-            ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getServer().execute(() -> {
-                if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(pos);
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
                     if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                        ((ConfigurableElectricMachineBlockEntity) blockEntity).setRedstoneState(buf.readEnumConstant(ConfigurableElectricMachineBlockEntity.RedstoneState.class));
+                        ((ConfigurableElectricMachineBlockEntity) blockEntity).setRedstoneState(buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.RedstoneState.class));
                     }
-                }
-            });
+                });
+            }
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buff) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buff.copy());
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (context.getPlayer() instanceof ServerPlayerEntity) {
                 context.getPlayer().getServer().execute(() -> {
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
@@ -107,7 +106,7 @@ public class GalacticraftPackets {
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> {
             if (context.getPlayer() instanceof ServerPlayerEntity) {
-                context.getPlayer().getServer().execute(() -> ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, context.getPlayer(), packetByteBuf -> {
+                context.getPlayer().getServer().execute(() -> ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, context.getPlayer(), packetByteBuf -> {
                 }));
             }
         }));

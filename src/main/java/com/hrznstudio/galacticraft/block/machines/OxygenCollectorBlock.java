@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.block.Block;
@@ -83,7 +83,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
             return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.OXYGEN_COLLECTOR_SCREEN_HANDLER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return ActionResult.SUCCESS;
     }
 

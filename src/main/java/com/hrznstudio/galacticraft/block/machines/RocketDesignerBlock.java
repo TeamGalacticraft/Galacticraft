@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -90,7 +90,7 @@ public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock impl
             return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.ROCKET_DESIGNER_CONTAINER, player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.ROCKET_DESIGNER_SCREEN_HANDLER, player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
         return ActionResult.SUCCESS;
     }
 

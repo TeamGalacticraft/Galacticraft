@@ -30,7 +30,7 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;
@@ -152,7 +152,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     @Override
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) return ActionResult.SUCCESS;
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COAL_GENERATOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.COAL_GENERATOR_SCREEN_HANDLER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return ActionResult.SUCCESS;
     }
 

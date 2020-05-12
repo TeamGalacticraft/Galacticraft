@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.screen;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
-import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
+import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;

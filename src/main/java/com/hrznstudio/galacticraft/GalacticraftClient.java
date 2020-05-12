@@ -30,10 +30,10 @@ import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRend
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerRenderer;
 import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
-import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
-import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
@@ -135,26 +135,23 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(new Identifier(Constants.MOD_ID, "block/compressor"));
         });
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COAL_GENERATOR_CONTAINER, CoalGeneratorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.REFINERY_CONTAINER, RefineryScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COMPRESSOR_CONTAINER, CompressorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorScreen.ELECTRIC_FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ROCKET_DESIGNER_CONTAINER, RocketDesignerScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ROCKET_ASSEMBLER_CONTAINER, RocketAssemblerScreen.FACTORY);
-
-        //EntityRendererRegistry.INSTANCE.register(MoonVillagerEntity.class, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
-        //EntityRendererRegistry.INSTANCE.register(EvolvedZombieEntity.class, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET, (manager, context) -> new RocketEntityRenderer(manager));
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.COAL_GENERATOR_SCREEN_HANDLER, CoalGeneratorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.BASIC_SOLAR_PANEL_SCREEN_HANDLER, BasicSolarPanelScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.CIRCUIT_FABRICATOR_SCREEN_HANDLER, CircuitFabricatorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.REFINERY_SCREEN_HANDLER, RefineryScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.COMPRESSOR_SCREEN_HANDLER, CompressorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ELECTRIC_COMPRESSOR_SCREEN_HANDLER, ElectricCompressorScreen.ELECTRIC_FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ENERGY_STORAGE_MODULE_SCREEN_HANDLER, EnergyStorageModuleScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.OXYGEN_COLLECTOR_SCREEN_HANDLER, OxygenCollectorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ROCKET_DESIGNER_SCREEN_HANDLER, RocketDesignerScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ROCKET_ASSEMBLER_SCREEN_HANDLER, RocketAssemblerScreen.FACTORY);
 
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET, (entityRenderDispatcher, context) -> new RocketEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();
 

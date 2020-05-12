@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;

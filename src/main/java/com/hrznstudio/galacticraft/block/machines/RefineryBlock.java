@@ -30,7 +30,7 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -146,7 +146,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
             return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.REFINERY_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.REFINERY_SCREEN_HANDLER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return ActionResult.SUCCESS;
     }
 
