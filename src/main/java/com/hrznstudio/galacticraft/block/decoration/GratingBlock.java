@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.block.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -38,7 +38,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -50,7 +50,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     public GratingBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(FLUID, new Identifier("empty"))
-                .with(BaseFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
+                .with(FlowableFluid.LEVEL, 8).with(GRATING_STATE, GratingState.UPPER));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
         BlockState blockState = this.getDefaultState().with(GRATING_STATE, GratingState.LOWER)
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
+                .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
         BlockPos blockPos = context.getBlockPos();
         Direction direction = context.getPlayerFacing();
 
@@ -73,7 +73,7 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState neighborBlockState, IWorld world, BlockPos blockPos, BlockPos neighborBlockPos) {
+    public BlockState getStateForNeighborUpdate(BlockState blockState, Direction direction, BlockState neighborBlockState, WorldAccess world, BlockPos blockPos, BlockPos neighborBlockPos) {
         if (!blockState.get(FLUID).equals(new Identifier("empty"))) {
             world.getFluidTickScheduler().schedule(blockPos, Registry.FLUID.get(blockState.get(FLUID)), Registry.FLUID.get(blockState.get(FLUID)).getTickRate(world));
         }
@@ -84,14 +84,14 @@ public class GratingBlock extends Block implements FluidLoggableBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(FLUID).add(GRATING_STATE).add(BaseFluid.LEVEL);
+        builder.add(FLUID).add(GRATING_STATE).add(FlowableFluid.LEVEL);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
-        if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
-            state1 = state1.with(BaseFluid.LEVEL, state.get(BaseFluid.LEVEL));
+        if (state1.getEntries().containsKey(FlowableFluid.LEVEL)) {
+            state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
         }
         return state1;
     }

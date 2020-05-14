@@ -45,7 +45,7 @@ public final class MoonPlainsBiome extends Biome {
                 .scale(0.03F)
                 .temperature(0.0F)
                 .downfall(0.005F)
-                .effects(new BiomeEffects.Builder().waterColor(9937330).waterFogColor(11253183).build())
+                .effects(new BiomeEffects.Builder().fogColor(9937330).waterColor(9937330).waterFogColor(11253183).build())
                 .parent(null));
         this.flowerFeatures.clear();
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftDecorators.CRATER_CONF);

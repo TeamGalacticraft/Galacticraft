@@ -59,9 +59,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
+import net.minecraft.world.WorldAccess;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +182,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
                 CoalGeneratorBlockEntity coalGeneratorBlockEntity = (CoalGeneratorBlockEntity) blockEntity;
 
                 for (int i = 0; i < coalGeneratorBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = coalGeneratorBlockEntity.getInventory().getInvStack(i);
+                    ItemStack itemStack = coalGeneratorBlockEntity.getInventory().getStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
@@ -195,7 +194,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
 
     @Nonnull
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 

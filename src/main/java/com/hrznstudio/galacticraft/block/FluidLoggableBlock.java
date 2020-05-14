@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.FluidFillable;
-import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -35,8 +35,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
-
+import net.minecraft.world.WorldAccess;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -84,11 +83,11 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     }
 
     @Override
-    default boolean tryFillWithFluid(IWorld world, BlockPos pos, BlockState state, FluidState fluidState) {
+    default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
         if (state.get(FLUID).equals(new Identifier("empty"))) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                        .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
+                        .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
                 world.getFluidTickScheduler().schedule(pos, fluidState.getFluid(), fluidState.getFluid().getTickRate(world));
             }
             return true;
@@ -98,7 +97,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     }
 
     @Override
-    default Fluid tryDrainFluid(IWorld world, BlockPos pos, BlockState state) {
+    default Fluid tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
         if (!state.get(FLUID).equals(new Identifier("empty"))) {
             world.setBlockState(pos, state.with(FLUID, new Identifier("empty")), 3);
             if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {

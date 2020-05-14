@@ -45,9 +45,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
+import net.minecraft.world.WorldAccess;
 import java.util.Collection;
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class StandardWrenchItem extends Item {
     }
 
 
-    private void use(PlayerEntity player, BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
+    private void use(PlayerEntity player, BlockState state, WorldAccess iWorld, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
         if (block instanceof Rotatable) {
             StateManager<Block, BlockState> StateManager = block.getStateManager();

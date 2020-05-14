@@ -28,6 +28,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,7 +52,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void init(World world_1, GameProfile gameProfile_1, CallbackInfo info) {
+    public void init(World world, BlockPos blockPos, GameProfile gameProfile, CallbackInfo info) {
         this.gearInventory = new FullFixedItemInv(12);
     }
 }

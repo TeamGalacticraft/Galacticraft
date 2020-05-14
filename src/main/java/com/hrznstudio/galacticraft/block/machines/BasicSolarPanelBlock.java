@@ -185,7 +185,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
                 BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
 
                 for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getInvStack(i);
+                    ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

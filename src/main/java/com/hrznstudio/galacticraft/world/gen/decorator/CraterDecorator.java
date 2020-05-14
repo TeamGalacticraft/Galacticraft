@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.world.gen.decorator;
 
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
@@ -42,14 +42,20 @@ public class CraterDecorator extends Decorator<CraterDecoratorConfig> {
         super(function_1);
     }
 
-    public Stream<BlockPos> getPositions(IWorld iWorld_1, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator_1, Random random_1, CraterDecoratorConfig lakeDecoratorConfig_1, BlockPos blockPos_1) {
-        if (random_1.nextInt(lakeDecoratorConfig_1.chance) == 0) {
-            int int_1 = random_1.nextInt(16);
-            int int_2 = random_1.nextInt(chunkGenerator_1.getMaxY());
-            int int_3 = random_1.nextInt(16);
-            return Stream.of(blockPos_1.add(int_1, int_2, int_3));
-        } else {
-            return Stream.empty();
-        }
+    @Override
+    public Stream<BlockPos> getPositions(WorldAccess world, ChunkGenerator generator, Random random, CraterDecoratorConfig config, BlockPos pos) {
+        return Stream.empty();
     }
 }
+
+//    public Stream<BlockPos> getPositions(WorldAccess iWorld_1, ChunkGenerator<? extends ChunkGeneratorConfig> chunkGenerator_1, Random random_1, CraterDecoratorConfig lakeDecoratorConfig_1, BlockPos blockPos_1) {
+//        if (random_1.nextInt(lakeDecoratorConfig_1.chance) == 0) {
+//            int int_1 = random_1.nextInt(16);
+//            int int_2 = random_1.nextInt(chunkGenerator_1.getMaxY());
+//            int int_3 = random_1.nextInt(16);
+//            return Stream.of(blockPos_1.add(int_1, int_2, int_3));
+//        } else {
+//            return Stream.empty();
+//        }
+//    }
+//}

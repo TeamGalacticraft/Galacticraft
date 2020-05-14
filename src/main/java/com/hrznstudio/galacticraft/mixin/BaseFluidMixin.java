@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.mixin;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.FluidFillable;
-import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-@Mixin(BaseFluid.class)
+@Mixin(FlowableFluid.class)
 public abstract class BaseFluidMixin {
     @Redirect(method = "onScheduledTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;I)Z"))
     private boolean onScheduledTickGC(World world, BlockPos pos, BlockState state, int flags) {

@@ -22,28 +22,22 @@
 
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
-import net.minecraft.entity.EntityCategory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
 import net.minecraft.world.ChunkRegion;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biome.SpawnEntry;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.PhantomSpawner;
 import net.minecraft.world.gen.PillagerSpawner;
-import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
-import net.minecraft.world.level.LevelGeneratorType;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -64,11 +58,21 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     private final PhantomSpawner phantomSpawner = new PhantomSpawner();
     private final PillagerSpawner pillagerSpawner = new PillagerSpawner();
 
-    public MoonChunkGenerator(IWorld iWorld, BiomeSource biomeSource, MoonChunkGeneratorConfig chunkGenConfig) {
-        super(iWorld, biomeSource, 4, 8, 256, chunkGenConfig, true);
-        this.random.consume(2620);
-        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, Arrays.asList(15, 0));
-        this.amplified = iWorld.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
+    public MoonChunkGenerator(BiomeSource biomeSource, long seed, MoonChunkGeneratorConfig config, int horizontalNoiseResolution, int verticalNoiseResolution, int worldHeight, boolean useSimplexNoise) {
+        super(biomeSource, seed, config, horizontalNoiseResolution, verticalNoiseResolution, worldHeight, useSimplexNoise);
+        amplified=false;
+        noiseSampler = new OctavePerlinNoiseSampler(this.random, Arrays.asList(15, 0));
+    }
+//    public MoonChunkGenerator(WorldAccess iWorld, BiomeSource biomeSource, MoonChunkGeneratorConfig chunkGenConfig) {
+//        super(iWorld, biomeSource, 4, 8, 256, chunkGenConfig, true);
+//        this.random.consume(2620);
+//        this.noiseSampler = new OctavePerlinNoiseSampler(this.random, Arrays.asList(15, 0));
+//        this.amplified = iWorld.getLevelProperties().getGeneratorType() == LevelGeneratorType.AMPLIFIED;
+//    }
+
+    @Override
+    public ChunkGenerator create(long seed) {
+        return this;
     }
 
     @Override
@@ -95,11 +99,11 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
         return d4;
     }
-
-    @Override
-    public MoonChunkGeneratorConfig getConfig() {
-        return this.config;
-    }
+//
+//    @Override
+//    public MoonChunkGeneratorConfig getConfig() {
+//        return this.config;
+//    }
 
     @Override
     protected double[] computeNoiseRange(int x, int z) {
@@ -179,11 +183,11 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
         return d;
     }
-
-    @Override
-    public List<SpawnEntry> getEntitySpawnList(StructureAccessor accessor, EntityCategory entityCategory_1, BlockPos blockPos_1) {
-        return super.getEntitySpawnList(accessor, entityCategory_1, blockPos_1);
-    }
+//
+//    @Override
+//    public List<SpawnEntry> getEntitySpawnList(StructureAccessor accessor, SpawnGroup entityCategory_1, BlockPos blockPos_1) {
+//        return super.getEntitySpawnList(accessor, entityCategory_1, blockPos_1);
+//    }
 
     public void spawnEntities(ServerWorld world, boolean boolean_1, boolean boolean_2) {
         this.phantomSpawner.spawn(world, boolean_1, boolean_2);
@@ -191,7 +195,7 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     public int getSpawnHeight() {
-        return this.world.getSeaLevel() + 1;
+        return 64;
     }
 
 }

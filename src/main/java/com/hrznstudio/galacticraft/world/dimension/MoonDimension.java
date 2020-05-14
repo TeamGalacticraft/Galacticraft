@@ -36,7 +36,9 @@ import net.minecraft.world.biome.source.BiomeSourceType;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.ChunkGeneratorType;
+
+import javax.annotation.Nullable;
+//import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -54,47 +56,59 @@ public class MoonDimension extends Dimension {
     @Override
     public void update() {
         super.update();
-        this.world.getLevelProperties().setThundering(false);
-        this.world.getLevelProperties().setRaining(false);
-        this.world.getLevelProperties().setClearWeatherTime(10000000);
-        this.world.getLevelProperties().setRainTime(0);
-        this.world.getLevelProperties().setThunderTime(0);
+//        this.world.getLevelProperties().setThundering(false);
+//        this.world.getLevelProperties().setRaining(false);
+//        this.world.getLevelProperties().setClearWeatherTime(10000000);
+//        this.world.getLevelProperties().setRainTime(0);
+//        this.world.getLevelProperties().setThunderTime(0);
     }
 
+    @Nullable
     @Override
-    public boolean hasSkyLight() {
-        return true;
+    public BlockPos getSpawningBlockInChunk(long l, ChunkPos chunkPos, boolean bl) {
+        return null;
     }
 
+    @Nullable
     @Override
-    public boolean isNether() {
-        return false;
+    public BlockPos getTopSpawningBlockPosition(long l, int i, int j, boolean bl) {
+        return null;
     }
 
-    @Override
-    public Vec3d modifyFogColor(Vec3d vec3d, float tickDelta) {
-        return new Vec3d(0.0D, 0.0D, 0.0D);
-    }
+//    @Override
+//    public boolean hasSkyLight() {
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean isNether() {
+//        return false;
+//    }
+
+//    @Override
+//    public Vec3d modifyFogColor(Vec3d vec3d, float tickDelta) {
+//        return new Vec3d(0.0D, 0.0D, 0.0D);
+//    }
 
     @Override
     public BlockPos getForcedSpawnPoint() {
         return new BlockPos(0, 100, 0);
     }
 
-    public ChunkGenerator<?> createChunkGenerator() {
-        MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createConfig();
-        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties().getSeed()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
-    }
+//    public ChunkGenerator<?> createChunkGenerator() {
+//        MoonChunkGeneratorConfig moonChunkGeneratorConfig = GalacticraftChunkGeneratorTypes.MOON.createConfig();
+//        return ChunkGeneratorType.SURFACE.create(this.world, BiomeSourceType.FIXED.applyConfig(BiomeSourceType.FIXED.getConfig(this.world.getLevelProperties().getSeed()).setBiome(GalacticraftBiomes.MOON)), moonChunkGeneratorConfig);
+//    }
 
-    @Override
-    public BlockPos getSpawningBlockInChunk(ChunkPos chunkPos, boolean b) {
-        return new BlockPos(0, 100, 0);
-    }
-
-    @Override
-    public BlockPos getTopSpawningBlockPosition(int i, int i1, boolean b) {
-        return new BlockPos(0, 100, 0);
-    }
+//    @Override
+//    public BlockPos getSpawningBlockInChunk(ChunkPos chunkPos, boolean b) {
+//        return new BlockPos(0, 100, 0);
+//    }
+//
+//    @Override
+//    public BlockPos getTopSpawningBlockPosition(int i, int i1, boolean b) {
+//        return new BlockPos(0, 100, 0);
+//    }
 
     public float getSkyAngle(long long_1, float float_1) {
         double double_1 = MathHelper.fractionalPart((double) long_1 / 24000.0D - 0.25D);
@@ -110,21 +124,21 @@ public class MoonDimension extends Dimension {
     public float[] getBackgroundColor(float l1, float f2) {
         return new float[]{0, 0, 0, 0};
     }
-
-    @Environment(EnvType.CLIENT)
-    @Override
-    public float getCloudHeight() {
-        return -1000.0F;
-    }
+//
+//    @Environment(EnvType.CLIENT)
+//    @Override
+//    public float getCloudHeight() {
+//        return -1000.0F;
+//    }
 
     public boolean canPlayersSleep() {
         return false;
     }
 
-    @Override
-    public boolean isFogThick(int x, int z) {
-        return false;
-    }
+//    @Override
+//    public boolean isFogThick(int x, int z) {
+//        return false;
+//    }
 
     public DimensionType getType() {
         return GalacticraftDimensions.MOON;

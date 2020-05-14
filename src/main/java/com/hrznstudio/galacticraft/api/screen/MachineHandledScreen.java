@@ -257,7 +257,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
                 this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
-                this.drawString(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
+                this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
 
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
@@ -301,7 +301,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions[5]), getYForOption(sideOptions[5]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
 
                 this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
-                this.drawString(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
+                this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 if (!IS_REDSTONE_OPEN) {
@@ -316,7 +316,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x + 176, this.y + 3, SECURITY_PANEL_X, SECURITY_PANEL_Y, SECURITY_PANEL_WIDTH, SECURITY_PANEL_HEIGHT);
                 this.drawTexture(stack, this.x + 176 + 4, this.y + 6, LOCK_PARTY_X, LOCK_PARTY_Y + 2, ICONS_WIDTH, ICONS_HEIGHT);
-                this.drawString(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
+                this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.security_config"), this.x + 176 + 20, this.y + 12, Formatting.GRAY.getColorValue());
 
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x + 174 + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);

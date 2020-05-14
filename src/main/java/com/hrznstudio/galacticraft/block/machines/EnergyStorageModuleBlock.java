@@ -55,9 +55,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-
+import net.minecraft.world.WorldAccess;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +107,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
                 EnergyStorageModuleBlockEntity be = (EnergyStorageModuleBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = be.getInventory().getInvStack(i);
+                    ItemStack itemStack = be.getInventory().getStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
@@ -178,7 +177,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
 
     @Nonnull
     @Override
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 

@@ -31,7 +31,6 @@ import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerRenderer;
 import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;

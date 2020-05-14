@@ -30,7 +30,7 @@
       "com.hrznstudio.galacticraft.GalacticraftClient"
     ],
     "rei_plugins": [
-      "com.hrznstudio.galacticraft.recipes.rei.GalacticraftREIPlugin"
+      "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin"
     ],
     "gc_addons": [
       "com.hrznstudio.galacticraft.hooks.GalacticraftAddon"
@@ -45,7 +45,7 @@
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",
-    "minecraft": "1.16-alpha.20.17.a",
+    "minecraft": "1.16-alpha.20.20.b",
     "cotton-energy": "*",
     "libblockattributes_items": ">=0.4.5",
     "galacticraft-api": ">=0.1.7-alpha+20w16a"

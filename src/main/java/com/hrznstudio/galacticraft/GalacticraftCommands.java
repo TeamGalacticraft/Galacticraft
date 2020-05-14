@@ -122,7 +122,7 @@ public class GalacticraftCommands {
                 entity.setPos(x, y, z);
             } else {
                 entity.detach();
-                entity.dimension = world.dimension.getType();
+                entity.dimension = world.getDimension().getType();
                 Entity entity_2 = entity;
                 entity = entity.getType().create(world);
                 if (entity == null) {
