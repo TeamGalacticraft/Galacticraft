@@ -108,7 +108,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
         };
 
             if (this.fuelTime <= 0) {
-                ItemStack fuel = getInventory().getInvStack(FUEL_INPUT_SLOT);
+                ItemStack fuel = getInventory().getStack(FUEL_INPUT_SLOT);
                 if (fuel.isEmpty()) {
                     // Machine out of fuel and no fuel present.
                     status = CompressorStatus.INACTIVE;

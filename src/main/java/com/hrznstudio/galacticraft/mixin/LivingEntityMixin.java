@@ -86,7 +86,7 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity entity = (LivingEntity) (Object) this;
         //noinspection ConstantConditions
         if (this.isAlive() && !(entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.invulnerable)) {
-            if (CelestialBodyType.getByDimType(world.dimension.getType()).isPresent() && !CelestialBodyType.getByDimType(world.dimension.getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+            if (CelestialBodyType.getByDimType(world.getDimension().getType()).isPresent() && !CelestialBodyType.getByDimType(world.getDimension().getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                 updateAir(this);
             } else {
                 if (this.isSubmergedIn(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {
@@ -121,11 +121,11 @@ public abstract class LivingEntityMixin extends Entity {
         //todo check for sealed space
         if (entity instanceof PlayerEntity) {
             FullFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
-            if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(6).getMaxDamage() - gearInventory.getInvStack(6).getDamage()) > 0)) {
-                gearInventory.getInvStack(6).setDamage(gearInventory.getInvStack(6).getDamage() + 1);
+            if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(6).getMaxDamage() - gearInventory.getStack(6).getDamage()) > 0)) {
+                gearInventory.getStack(6).setDamage(gearInventory.getStack(6).getDamage() + 1);
                 return;
-            } else if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(7).getMaxDamage() - gearInventory.getInvStack(7).getDamage()) > 0)) {
-                gearInventory.getInvStack(7).setDamage(gearInventory.getInvStack(7).getDamage() + 1);
+            } else if (gearInventory.getStack(7).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(7).getMaxDamage() - gearInventory.getStack(7).getDamage()) > 0)) {
+                gearInventory.getStack(7).setDamage(gearInventory.getStack(7).getDamage() + 1);
                 return;
             }
         }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.container.slot;
+package com.hrznstudio.galacticraft.screen.slot;
 
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import net.minecraft.inventory.Inventory;
@@ -30,9 +30,9 @@ import net.minecraft.screen.slot.Slot;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenTankSlot extends Slot {
-    public OxygenTankSlot(Inventory inventory, int id, int x, int y) {
-        super(inventory, id, x, y);
+public class ChargeSlot extends Slot {
+    public ChargeSlot(Inventory inventory, int slotId, int x, int y) {
+        super(inventory, slotId, x, y);
     }
 
     @Override
@@ -42,6 +42,6 @@ public class OxygenTankSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack itemStack) {
-        return GalacticraftEnergy.isOxygenItem(itemStack);
+        return GalacticraftEnergy.isEnergyItem(itemStack);
     }
 }

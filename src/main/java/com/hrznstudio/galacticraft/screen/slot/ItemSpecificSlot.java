@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.container.slot;
+package com.hrznstudio.galacticraft.screen.slot;
 
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;

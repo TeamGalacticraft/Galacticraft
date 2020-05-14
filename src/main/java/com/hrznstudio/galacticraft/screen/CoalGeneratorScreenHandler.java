@@ -24,8 +24,8 @@ package com.hrznstudio.galacticraft.screen;
 
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
-import com.hrznstudio.galacticraft.container.slot.ChargeSlot;
-import com.hrznstudio.galacticraft.container.slot.ItemSpecificSlot;
+import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;

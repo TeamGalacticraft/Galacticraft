@@ -30,7 +30,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStep;
@@ -80,37 +81,41 @@ public class OreGenerator {
         }
 
         @Override
-        public boolean generate(IWorld iWorld, StructureAccessor accessor, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, BlockPos blockPos, GCOreGenConfig featureConfig) {
-            float float_1 = random.nextFloat() * 3.1415927F;
-            float float_2 = (float) featureConfig.size / 8.0F;
-            int size = MathHelper.ceil(((float) featureConfig.size / 16.0F * 2.0F + 1.0F) / 2.0F);
-
-            double x1 = (float) blockPos.getX() + MathHelper.sin(float_1) * float_2;
-            double x2 = (float) blockPos.getX() - MathHelper.sin(float_1) * float_2;
-            double z1 = (float) blockPos.getZ() + MathHelper.cos(float_1) * float_2;
-            double z2 = (float) blockPos.getZ() - MathHelper.cos(float_1) * float_2;
-            double double_5 = blockPos.getY() + random.nextInt(3) - 2;
-            double double_6 = blockPos.getY() + random.nextInt(3) - 2;
-
-            int int_3 = blockPos.getX() - MathHelper.ceil(float_2) - size;
-            int int_4 = blockPos.getY() - 2 - size;
-            int int_5 = blockPos.getZ() - MathHelper.ceil(float_2) - size;
-            int int_6 = 2 * (MathHelper.ceil(float_2) + size);
-            int int_7 = 2 * (2 + size);
-
-            for (int i = int_3; i <= int_3 + int_6; ++i) {
-                for (int j = int_5; j <= int_5 + int_6; ++j) {
-
-                    if (int_4 <= iWorld.getTopY(Heightmap.Type.OCEAN_FLOOR_WG, i, j)) {
-                        return this.generateVeinPart(iWorld, random, featureConfig, x1, x2, z1, z2, double_5, double_6, int_3, int_4, int_5, int_6, int_7);
-                    }
-                }
-            }
+        public boolean generate(ServerWorldAccess serverWorldAccess, StructureAccessor accessor, ChunkGenerator generator, Random random, BlockPos pos, GCOreGenConfig config) {
             return false;
         }
+//        @Override
+//        public boolean generate(WorldAccess iWorld, StructureAccessor accessor, ChunkGenerator<? extends ChunkGeneratorConfig> generator, Random random, BlockPos blockPos, GCOreGenConfig featureConfig) {
+//            float float_1 = random.nextFloat() * 3.1415927F;
+//            float float_2 = (float) featureConfig.size / 8.0F;
+//            int size = MathHelper.ceil(((float) featureConfig.size / 16.0F * 2.0F + 1.0F) / 2.0F);
+//
+//            double x1 = (float) blockPos.getX() + MathHelper.sin(float_1) * float_2;
+//            double x2 = (float) blockPos.getX() - MathHelper.sin(float_1) * float_2;
+//            double z1 = (float) blockPos.getZ() + MathHelper.cos(float_1) * float_2;
+//            double z2 = (float) blockPos.getZ() - MathHelper.cos(float_1) * float_2;
+//            double double_5 = blockPos.getY() + random.nextInt(3) - 2;
+//            double double_6 = blockPos.getY() + random.nextInt(3) - 2;
+//
+//            int int_3 = blockPos.getX() - MathHelper.ceil(float_2) - size;
+//            int int_4 = blockPos.getY() - 2 - size;
+//            int int_5 = blockPos.getZ() - MathHelper.ceil(float_2) - size;
+//            int int_6 = 2 * (MathHelper.ceil(float_2) + size);
+//            int int_7 = 2 * (2 + size);
+//
+//            for (int i = int_3; i <= int_3 + int_6; ++i) {
+//                for (int j = int_5; j <= int_5 + int_6; ++j) {
+//
+//                    if (int_4 <= iWorld.getTopY(Heightmap.Type.OCEAN_FLOOR_WG, i, j)) {
+//                        return this.generateVeinPart(iWorld, random, featureConfig, x1, x2, z1, z2, double_5, double_6, int_3, int_4, int_5, int_6, int_7);
+//                    }
+//                }
+//            }
+//            return false;
+//        }
 
 
-        private boolean generateVeinPart(IWorld iWorld, Random random, GCOreGenConfig oreGenConfig, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, int int_1, int int_2, int int_3, int int_4, int int_5) {
+        private boolean generateVeinPart(WorldAccess iWorld, Random random, GCOreGenConfig oreGenConfig, double double_1, double double_2, double double_3, double double_4, double double_5, double double_6, int int_1, int int_2, int int_3, int int_4, int int_5) {
             int int_6 = 0;
             BitSet bitSet_1 = new BitSet(int_4 * int_5 * int_4);
             BlockPos.Mutable blockPos$Mutable_1 = new BlockPos.Mutable();

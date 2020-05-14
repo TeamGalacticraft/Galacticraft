@@ -29,7 +29,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -37,7 +37,7 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CrudeOilBlock extends FluidBlock {
-    public CrudeOilBlock(BaseFluid fluid, Settings settings) {
+    public CrudeOilBlock(FlowableFluid fluid, Settings settings) {
         super(fluid, settings);
     }
 

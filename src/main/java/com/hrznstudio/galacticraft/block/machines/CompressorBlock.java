@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -90,7 +90,7 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
     }
 
     protected void openContainer(PlayerEntity playerEntity, BlockPos blockPos) {
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftContainers.COMPRESSOR_CONTAINER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.COMPRESSOR_SCREEN_HANDLER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
     }
 
     @Override
@@ -104,7 +104,7 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
                 CompressorBlockEntity be = (CompressorBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = be.getInventory().getInvStack(i);
+                    ItemStack itemStack = be.getInventory().getStack(i);
 
                     if (!itemStack.isEmpty()) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack.copy()));

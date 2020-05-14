@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.container.button;
+package com.hrznstudio.galacticraft.client.gui.widget;
 
-import com.hrznstudio.galacticraft.container.screen.SpaceRaceScreen;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;

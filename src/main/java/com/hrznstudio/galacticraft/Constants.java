@@ -480,16 +480,16 @@ public class Constants {
         public static final int OXYGEN_LIGHT_Y = 40;
     }
 
-    public static class Container {
-        public static final String COAL_GENERATOR_CONTAINER = "coal_generator_container";
-        public static final String BASIC_SOLAR_PANEL_CONTAINER = "basic_solar_panel_container";
-        public static final String CIRCUIT_FABRICATOR_CONTAINER = "circuit_fabricator_container";
-        public static final String COMPRESSOR_CONTAINER = "compressor_container";
-        public static final String ELECTRIC_COMPRESSOR_CONTAINER = "electric_compressor_container";
-        public static final String PLAYER_INVENTORY_CONTAINER = "player_inventory_container";
-        public static final String ENERGY_STORAGE_MODULE_CONTAINER = "energy_storage_module_container";
-        public static final String REFINERY_CONTAINER = "refinery_container";
-        public static final String OXYGEN_COLLECTOR_CONTAINER = "oxygen_collector_container";
+    public static class ScreenHandler {
+        public static final String COAL_GENERATOR_SCREEN_HANDLER = "coal_generator_screen_handler";
+        public static final String BASIC_SOLAR_SCREEN_HANDLER = "basic_solar_panel_screen_handler";
+        public static final String CIRCUIT_FABRICATOR_SCREEN_HANDLER = "circuit_fabricator_screen_handler";
+        public static final String COMPRESSOR_SCREEN_HANDLER = "compressor_screen_handler";
+        public static final String ELECTRIC_COMPRESSOR_SCREEN_HANDLER = "electric_compressor_screen_handler";
+        public static final String PLAYER_INVENTORY_SCREEN_HANDLER = "player_inventory_screen_handler";
+        public static final String ENERGY_STORAGE_MODULE_SCREEN_HANDLER = "energy_storage_module_screen_handler";
+        public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
+        public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
     }
 
     public static class Biomes {

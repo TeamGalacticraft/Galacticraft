@@ -29,8 +29,7 @@ import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-
+import net.minecraft.world.WorldAccess;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -53,14 +52,14 @@ public class NetworkManager {
     }
 
     public static void createManagerForWorld(ServerWorld world) {
-        managers.put(world.dimension.getType().getRawId(), new NetworkManager());
+        managers.put(world.getDimension().getType().getRawId(), new NetworkManager());
     }
 
     public static NetworkManager getManagerForDimension(int id) {
         return managers.get(id);
     }
 
-    public static NetworkManager getManagerForWorld(IWorld world) {
+    public static NetworkManager getManagerForWorld(WorldAccess world) {
         return getManagerForDimension(world.getDimension().getType().getRawId());
     }
 

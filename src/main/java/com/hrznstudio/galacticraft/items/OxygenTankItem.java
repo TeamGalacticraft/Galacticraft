@@ -95,11 +95,11 @@ public class OxygenTankItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
-        if (((GCPlayerAccessor) player).getGearInventory().getInvStack(6).isEmpty()) {
-            ((GCPlayerAccessor) player).getGearInventory().setInvStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
+        if (((GCPlayerAccessor) player).getGearInventory().getStack(6).isEmpty()) {
+            ((GCPlayerAccessor) player).getGearInventory().setStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        } else if (((GCPlayerAccessor) player).getGearInventory().getInvStack(7).isEmpty()) {
-            ((GCPlayerAccessor) player).getGearInventory().setInvStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
+        } else if (((GCPlayerAccessor) player).getGearInventory().getStack(7).isEmpty()) {
+            ((GCPlayerAccessor) player).getGearInventory().setStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));

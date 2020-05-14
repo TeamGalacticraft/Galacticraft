@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.block.FluidLoggableBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.*;
-import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -40,7 +40,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -62,7 +62,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 .with(SOUTH, false)
                 .with(WEST, false)
                 .with(FLUID, new Identifier("empty"))
-                .with(BaseFluid.LEVEL, 8));
+                .with(FlowableFluid.LEVEL, 8));
     }
 
     private static int getDirectionMask(Direction dir) {
@@ -173,10 +173,10 @@ public class Walkway extends Block implements FluidLoggableBlock {
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
         return this.getDefaultState()
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                .with(BaseFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
+                .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, IWorld world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (!state.get(FLUID).equals(new Identifier("empty"))) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
@@ -191,14 +191,14 @@ public class Walkway extends Block implements FluidLoggableBlock {
     @Override
     public FluidState getFluidState(BlockState state) {
         FluidState state1 = Registry.FLUID.get(state.get(FLUID)).getDefaultState();
-        if (state1.getEntries().containsKey(BaseFluid.LEVEL)) {
-            state1 = state1.with(BaseFluid.LEVEL, state.get(BaseFluid.LEVEL));
+        if (state1.getEntries().containsKey(FlowableFluid.LEVEL)) {
+            state1 = state1.with(FlowableFluid.LEVEL, state.get(FlowableFluid.LEVEL));
         }
         return state1;
     }
 
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, FLUID, BaseFluid.LEVEL);
+        stateBuilder.add(NORTH, EAST, WEST, SOUTH, FLUID, FlowableFluid.LEVEL);
     }
 }

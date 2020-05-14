@@ -36,8 +36,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.model.ModelRotation;
 import net.minecraft.client.render.model.*;
+import net.minecraft.client.render.model.ModelRotation;
 import net.minecraft.client.render.model.json.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -165,9 +165,9 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
     public BakedModel bakeModel(JsonUnbakedModel model, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings settings, Identifier id, boolean hasDepth) {
         Sprite sprite = textureGetter.apply(model.resolveSprite("particle"));
         if (model.getRootModel() == ModelLoader.BLOCK_ENTITY_MARKER) {
-            return new BuiltinBakedModel(model.getTransformations(), ModelItemPropertyOverrideList.EMPTY, sprite, model.getGuiLight().isSide());
+            return new BuiltinBakedModel(model.getTransformations(), ModelOverrideList.EMPTY, sprite, model.getGuiLight().isSide());
         } else {
-            BasicBakedModel.Builder builder = (new BasicBakedModel.Builder(model, ModelItemPropertyOverrideList.EMPTY, hasDepth)).setParticle(sprite);
+            BasicBakedModel.Builder builder = (new BasicBakedModel.Builder(model, ModelOverrideList.EMPTY, hasDepth)).setParticle(sprite);
 
             for (ModelElement modelElement : model.getElements()) {
                 for (Direction direction : modelElement.faces.keySet()) {
