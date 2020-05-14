@@ -1,6 +1,6 @@
 {
-  "parent": "block/template_wall_post",
+  "parent": "minecraft:block/template_wall_post",
   "textures": {
-    "wall": "galacticraft-rewoven:block/mars_dungeon_brick"
+    "wall": "galacticraft-rewoven:mars_dungeon_brick"
   }
 }
