@@ -23,21 +23,17 @@
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.class_5284;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonChunkGeneratorConfig extends ChunkGeneratorConfig {
-
-    @Override
-    public BlockState getDefaultBlock() {
-        return GalacticraftBlocks.MOON_ROCK.getDefaultState();
-    }
-
-    @Override
-    public BlockState getDefaultFluid() {
-        return GalacticraftBlocks.MOON_TURF.getDefaultState();
+public class MoonChunkGeneratorConfig extends class_5284 { //name pending
+    public MoonChunkGeneratorConfig(ChunkGeneratorConfig config) {
+        super(config);
+        this.defaultBlock = GalacticraftBlocks.MOON_ROCK.getDefaultState();
+        this.defaultFluid = Blocks.REDSTONE_BLOCK.getDefaultState(); //DEBUG THING
     }
 }

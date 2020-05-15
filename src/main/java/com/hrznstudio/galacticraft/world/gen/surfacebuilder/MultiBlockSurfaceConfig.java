@@ -26,6 +26,7 @@ import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.surfacebuilder.SurfaceConfig;
+import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -34,7 +35,7 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MultiBlockSurfaceConfig implements SurfaceConfig {
+public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
     private final BlockStateWithChance[] topMaterials;
     private final BlockStateWithChance[] underMaterials;
     private final BlockStateWithChance[] underwaterMaterials;
@@ -42,6 +43,7 @@ public class MultiBlockSurfaceConfig implements SurfaceConfig {
     private final Random random;
 
     public MultiBlockSurfaceConfig(BlockStateWithChance[] topMaterials, BlockStateWithChance[] underMaterials, BlockStateWithChance[] underwaterMaterials) {
+        super(topMaterials[0].getState(), underMaterials[0].getState(), underwaterMaterials[0].getState());
         Arrays.sort(topMaterials, BlockStateWithChance::compareTo);
         Arrays.sort(underMaterials, BlockStateWithChance::compareTo);
         Arrays.sort(underwaterMaterials, BlockStateWithChance::compareTo);
@@ -49,10 +51,6 @@ public class MultiBlockSurfaceConfig implements SurfaceConfig {
         this.topMaterials = topMaterials;
         this.underMaterials = underMaterials;
         this.underwaterMaterials = underwaterMaterials;
-
-        assert topMaterials.length > 0;
-        assert underMaterials.length > 0;
-        assert underwaterMaterials.length > 0;
 
         this.random = new Random();
     }

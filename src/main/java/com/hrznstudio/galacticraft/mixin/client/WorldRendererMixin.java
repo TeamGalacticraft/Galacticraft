@@ -48,7 +48,6 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-@SuppressWarnings("PointlessArithmeticExpression")
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)
 public abstract class WorldRendererMixin {
@@ -111,7 +110,7 @@ public abstract class WorldRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
     private void renderSkyGC(MatrixStack matrixStack, float f, CallbackInfo ci) {
-        if (this.world.dimension.getType() == GalacticraftDimensions.MOON) {
+        if (this.world.getDimension().getType() == GalacticraftDimensions.MOON) {
             RenderSystem.disableTexture();
             RenderSystem.disableRescaleNormal();
             RenderSystem.color3f(1F, 1F, 1F);
@@ -213,7 +212,7 @@ public abstract class WorldRendererMixin {
             matrixStack.pop();
             RenderSystem.disableTexture();
             RenderSystem.color3f(0.0F, 0.0F, 0.0F);
-            double var25 = client.player.getPos().getY() - this.world.getSkyDarknessHeight();
+            double var25 = client.player.getPos().getY() - 70; //todo fix
 
             if (var25 < 0.0D) {
                 matrixStack.push();

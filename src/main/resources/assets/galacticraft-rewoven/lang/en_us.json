@@ -323,7 +323,6 @@
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
   "config.galacticraft-rewoven.title": "Galacticraft: Rewoven Config",
-  "config.galacticraft-rewoven.reset": "Reset",
   "config.galacticraft-rewoven.debug": "Debug",
   "config.galacticraft-rewoven.debug.logging": "Debug Logging",
   "config.galacticraft-rewoven.reset": "Reset",
@@ -333,7 +332,7 @@
   "biome.galacticraft-rewoven.moon_mare_craters": "Moon Mare Craters",
   "biome.galacticraft-rewoven.moon_mare_plains": "Moon Mare Plains",
   "biome.galacticraft-rewoven.moon_mare_rocks": "Moon Mare Rocks",
-  "biome.galacticraft-rewoven.moon_cheese_forest": "Moon Cheese Forest"
+  "biome.galacticraft-rewoven.moon_cheese_forest": "Moon Cheese Forest",
   "config.galacticraft-rewoven.energy": "Energy",
   "config.galacticraft-rewoven.energy.wires": "Wires",
   "config.galacticraft-rewoven.energy.wires.transfer_limit": "Wire Transfer Limit/t",

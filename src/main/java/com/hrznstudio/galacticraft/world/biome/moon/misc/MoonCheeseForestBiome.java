@@ -52,7 +52,9 @@ public final class MoonCheeseForestBiome extends Biome implements SpaceBiome {
                 .downfall(0.005F)
                 .effects(new BiomeEffects.Builder()
                         .waterColor(9937330)
-                        .waterFogColor(11243183).build())
+                        .waterFogColor(11243183)
+                        .fogColor(0)
+                        .build())
                 .parent(null));
         this.flowerFeatures.clear();
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftFeatures.CHEESE_TREE_FEATURE);

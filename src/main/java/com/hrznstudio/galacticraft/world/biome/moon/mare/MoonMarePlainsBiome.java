@@ -63,7 +63,9 @@ public final class MoonMarePlainsBiome extends Biome implements SpaceBiome {
                 .downfall(0.005F)
                 .effects(new BiomeEffects.Builder()
                         .waterColor(9937330)
-                        .waterFogColor(11243183).build())
+                        .waterFogColor(11243183)
+                        .fogColor(0)
+                        .build())
                 .parent(null));
         this.flowerFeatures.clear();
     }

@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.world.biome.moon.MoonBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsCratersBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsPlainsBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsRocksBiome;
@@ -30,6 +31,7 @@ import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareCratersBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMarePlainsBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareRocksBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.misc.MoonCheeseForestBiome;
+import com.hrznstudio.galacticraft.world.biome.moon.misc.MoonValleyBiome;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -38,6 +40,8 @@ import net.minecraft.world.biome.Biome;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBiomes {
+
+    public static final Biome MOON_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON), new MoonValleyBiome());
 
     public static final Biome MOON_HIGHLANDS_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_PLAINS), new MoonHighlandsPlainsBiome());
     public static final Biome MOON_HIGHLANDS_CRATERS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_CRATERS), new MoonHighlandsCratersBiome());

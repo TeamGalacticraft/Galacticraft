@@ -48,7 +48,11 @@ public final class MoonMareCratersBiome extends Biome implements SpaceBiome {
                 .temperature(-100F)
                 .downfall(0.005F)
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_MARE_PLAINS)
-                .effects(new BiomeEffects.Builder().waterColor(9937330).waterFogColor(11253183).build())
+                .effects(new BiomeEffects.Builder()
+                        .waterColor(9937330)
+                        .waterFogColor(11253183)
+                        .fogColor(0)
+                        .build())
                 .parent(null));
         this.flowerFeatures.clear();
     }

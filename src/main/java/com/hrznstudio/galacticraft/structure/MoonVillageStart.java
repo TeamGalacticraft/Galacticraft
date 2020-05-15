@@ -44,7 +44,7 @@ public class MoonVillageStart extends VillageStructureStart {
     private static final Identifier SHEEP = new Identifier(Constants.MOD_ID, "moon_village/sheep");
     private static final Identifier CATS = new Identifier(Constants.MOD_ID, "moon_village/cats");
     private static final Identifier BUTCHER_ANIMALS = new Identifier(Constants.MOD_ID, "moon_village/butcher_animals");
-    private static final Identifier IRON_GOLEM = new Identifier(Constants.MOD_ID, "moon_village/iron_golems");
+    private static final Identifier IRON_GOLEM = new Identifier(Constants.MOD_ID, "moon_village/iron_golem");
     private static final Identifier WELL_BOTTOMS = new Identifier(Constants.MOD_ID, "moon_village/well_bottoms");
     private static final String BASE_ID = Constants.MOD_ID + ":moon_village/";
 
@@ -304,8 +304,9 @@ public class MoonVillageStart extends VillageStructureStart {
     }
 
     @Override
-    public void init(ChunkGenerator<?> chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
+    public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
         StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
         this.setBoundingBoxFromChildren();
+
     }
 }

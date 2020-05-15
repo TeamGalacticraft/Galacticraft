@@ -32,7 +32,9 @@ public final class MoonMareRocksBiome extends Biome implements SpaceBiome {
                 .downfall(0.00002F)
                 .effects(new BiomeEffects.Builder()
                         .waterColor(9937330)
-                        .waterFogColor(11243183).build())
+                        .waterFogColor(11243183)
+                        .fogColor(0)
+                        .build())
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_ROCKS));
         this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, new ConfiguredFeature<>((ForestRockFeature) Feature.FOREST_ROCK, new BoulderFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), 10)));
     }

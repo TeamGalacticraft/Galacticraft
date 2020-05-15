@@ -25,38 +25,15 @@ package com.hrznstudio.galacticraft.world.biome.source;
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.BiomeSourceConfig;
 import net.minecraft.world.biome.source.BiomeSourceType;
-import net.minecraft.world.level.LevelProperties;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBiomeSourceTypes {
 
-    public static final BiomeSourceType<MoonBiomeSourceConfig, MoonBiomeSource> MOON;
-
-    static {
-        try {
-            MOON = Registry.register(Registry.BIOME_SOURCE_TYPE, new Identifier(Constants.MOD_ID, "moon"), instantiateBiomeSourceType(MoonBiomeSource::new, MoonBiomeSourceConfig::new));
-        } catch (NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to register biome source type!");
-        }
-    }
+    public static final BiomeSourceType MOON = Registry.register(Registry.BIOME_SOURCE_TYPE, new Identifier(Constants.MOD_ID, "moon"), new BiomeSourceType()); //???
 
     public static void init() {
-
-    }
-
-    private static <C extends BiomeSourceConfig, T extends BiomeSource> BiomeSourceType<C, T> instantiateBiomeSourceType(Function<C, T> biomeSource, Function<LevelProperties, C> function) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor<BiomeSourceType> constructor = (BiomeSourceType.class.getDeclaredConstructor(Function.class, Function.class));
-        constructor.setAccessible(true);
-        return (BiomeSourceType<C, T>) constructor.newInstance(biomeSource, function);
     }
 }

@@ -502,5 +502,6 @@ public class Constants {
         public static final String MOON_MARE_ROCKS = "moon_mare_rocks";
 
         public static final String MOON_CHEESE_FOREST = "moon_cheese_forest";
+        public static final String MOON = "moon";
     }
 }

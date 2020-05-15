@@ -26,12 +26,14 @@ import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftSurfaceBuilders {
     public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "multi_block_surface_builder"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig::deserialize));
+    public static final SurfaceBuilder<TernarySurfaceConfig> MOON_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon"), new MoonSurfaceBuilder(TernarySurfaceConfig::deserialize));
 
     public static void register() {
     }

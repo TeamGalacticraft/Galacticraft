@@ -56,7 +56,9 @@ public final class MoonHighlandsCratersBiome extends Biome implements SpaceBiome
                 .downfall(0.005F)
                 .effects(new BiomeEffects.Builder()
                         .waterColor(9937330)
-                        .waterFogColor(11243183).build())
+                        .waterFogColor(11243183)
+                        .fogColor(0)
+                        .build())
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_PLAINS));
         this.flowerFeatures.clear();
 

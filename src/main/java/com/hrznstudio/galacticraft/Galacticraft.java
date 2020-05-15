@@ -47,6 +47,7 @@ import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTyp
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import com.mojang.datafixers.DataFixerUpper;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.ItemStack;
 import org.apache.logging.log4j.LogManager;
@@ -89,7 +90,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
-
         Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
             if (object instanceof ItemStack) {
                 return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;

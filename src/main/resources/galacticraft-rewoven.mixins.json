@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "class_5285Mixin",
     "EntityAttributeInstanceAccessor",
     "FeatureMixin",
     "FireBlockAccessor",
@@ -11,6 +12,7 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerWorldMixin",
+    "StructurePoolGeneratorMixin",
     "TorchBlockMixin"
   ],
   "client": [

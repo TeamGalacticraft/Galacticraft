@@ -20,11 +20,12 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.world.biome.moon.highlands;
+package com.hrznstudio.galacticraft.world.biome.moon;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
+import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
@@ -41,44 +42,28 @@ import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
+import java.util.Set;
+
 /**
+ * Base moon biome.
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonHighlandsPlainsBiome extends Biome implements SpaceBiome {
+public abstract class MoonBiome extends Biome implements SpaceBiome {
 
     public static final TernarySurfaceConfig MOON_HIGHLANDS_BIOME_CONFIG = new TernarySurfaceConfig(GalacticraftBlocks.MOON_TURF.getDefaultState(), GalacticraftBlocks.MOON_DIRT.getDefaultState(), GalacticraftBlocks.MOON_TURF.getDefaultState());
 
-    public MoonHighlandsPlainsBiome() {
-        super((new Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, MOON_HIGHLANDS_BIOME_CONFIG)
-                .precipitation(Precipitation.NONE)
-                .category(Category.NONE)
-                .depth(0.03F)
-                .scale(0.03F)
-                .temperature(-100F)
-                .downfall(0.005F)
-//                .waterColor(9937330)
-//                .waterFogColor(11253183)
-                .effects(new BiomeEffects.Builder()
-                        .waterColor(9937330)
-                        .waterFogColor(11243183)
-                        .fogColor(0)
-                        .build())
-                .parent(null));
-        this.flowerFeatures.clear();
+    public MoonBiome(Settings settings) {
+        super(settings);
+    }
 
+    protected void addMoonVillages() {
         this.addFeature(GenerationStep.Feature.RAW_GENERATION, GalacticraftFeatures.MOON_VILLAGE.configure(new DefaultFeatureConfig()).createDecoratedFeature(new ConfiguredDecorator<>(Decorator.NOPE, DecoratorConfig.DEFAULT)));
         this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(FeatureConfig.DEFAULT));
     }
 
     @Override
     protected float computeTemperature(BlockPos blockPos) {
-        return -100F;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_highlands_plains";
+        return -1000.0F;
     }
 
     @Override
@@ -101,10 +86,5 @@ public final class MoonHighlandsPlainsBiome extends Biome implements SpaceBiome 
     @Override
     public TemperatureGroup getTemperatureGroup() {
         return TemperatureGroup.COLD;
-    }
-
-    @Override
-    public Text getName() {
-        return new TranslatableText(this.getTranslationKey());
     }
 }
