@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.client.model.entity;
 
-import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
+import com.hrznstudio.galacticraft.entity.MoonVillagerEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.model.VillagerResemblingModel;

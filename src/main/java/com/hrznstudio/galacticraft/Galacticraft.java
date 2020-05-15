@@ -50,6 +50,10 @@ import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceB
 import com.mojang.datafixers.DataFixerUpper;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.reborn.energy.*;
@@ -58,6 +62,9 @@ import team.reborn.energy.*;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class Galacticraft implements ModInitializer {
+
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>();
+    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>();
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 

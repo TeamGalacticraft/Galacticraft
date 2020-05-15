@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.evolvedzombie;
+package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import net.minecraft.entity.EntityType;

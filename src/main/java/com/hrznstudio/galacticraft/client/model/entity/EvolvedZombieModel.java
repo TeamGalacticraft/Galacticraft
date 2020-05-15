@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.model.entity;
 
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
+import com.hrznstudio.galacticraft.entity.EvolvedZombieEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
