@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.render.entity;
 
 import com.hrznstudio.galacticraft.client.model.entity.EvolvedZombieModel;
-import com.hrznstudio.galacticraft.entity.evolvedzombie.EvolvedZombieEntity;
+import com.hrznstudio.galacticraft.entity.EvolvedZombieEntity;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.util.Identifier;

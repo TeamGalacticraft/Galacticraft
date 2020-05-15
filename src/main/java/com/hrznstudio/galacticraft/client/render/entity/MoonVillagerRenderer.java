@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.render.entity;
 
 import com.hrznstudio.galacticraft.client.model.entity.MoonVillagerModel;
-import com.hrznstudio.galacticraft.entity.moonvillager.MoonVillagerEntity;
+import com.hrznstudio.galacticraft.entity.MoonVillagerEntity;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;

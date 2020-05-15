@@ -20,54 +20,37 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.moonvillager;
+package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.passive.PassiveEntity;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.util.Arm;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
-
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity {
+public class EvolvedZombieEntity extends ZombieEntity implements EvolvedEntity {
 
-    /**
-     * TO DO:
-     * - Turn into Evolved Witch when hit by lightning
-     * - Figure out how to die / lose health without crashing
-     * - Set up activities
-     * - Trading (wait until 1.15)
-     * - Villages
-     */
-
-    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
+    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {
         super(entityType, world);
         this.setHealth(20);
         this.initGoals();
         this.setCanPickUpLoot(true);
         this.brain.setDefaultActivity(Activity.CORE);
         HashSet<Activity> otherActivities = new HashSet<>();
-        otherActivities.add(Activity.WORK);
+        otherActivities.add(Activity.IDLE);
         this.brain.setCoreActivities(otherActivities);
-        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.25d);
     }
 
     @Override
-    public boolean canGather(ItemStack itemIn) {
-        return itemIn.getItem() == Items.BREAD || itemIn.getItem() == Items.POTATO || itemIn.getItem() == Items.CARROT || itemIn.getItem() == Items.WHEAT || itemIn.getItem() == Items.WHEAT_SEEDS;
+    public Arm getMainArm() {
+        return Arm.RIGHT;
     }
 
     @Override
@@ -76,36 +59,8 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     }
 
     @Override
-    public Iterable<ItemStack> getArmorItems() {
-        return null;
-    }
-
-    @Override
-    public void onDeath(DamageSource damageSource) {
-        // might need this at some point
-        super.onDeath(damageSource);
-    }
-
-    @Override
-    public boolean damage(DamageSource source, float amount) {
-        //return super.damage(source, amount);
-        this.remove();
-        return false;
-    }
-
-    @Override
-    public ItemStack getEquippedStack(EquipmentSlot equipmentSlot) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public Arm getMainArm() {
-        return null;
-    }
-
-    @Nullable
-    @Override
-    public MoonVillagerEntity createChild(PassiveEntity mate) {
-        return null;
+    protected void initAttributes() {
+        super.initAttributes();
+        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5d);
     }
 }
