@@ -13,7 +13,8 @@
     "PlayerEntityMixin",
     "ServerWorldMixin",
     "StructurePoolGeneratorMixin",
-    "TorchBlockMixin"
+    "TorchBlockMixin",
+    "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",

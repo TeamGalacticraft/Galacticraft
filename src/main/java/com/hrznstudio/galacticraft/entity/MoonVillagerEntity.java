@@ -27,12 +27,12 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import com.mojang.datafixers.Dynamic;
 import net.minecraft.datafixer.NbtOps;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityData;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.pathing.MobNavigation;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
@@ -67,7 +67,10 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
 
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world, VillagerType type) {
         super(entityType, world, type);
+        createLivingAttributes();
         assert Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(type) != null;
+        setHealth(20.0F);
+
     }
 
     @Override
@@ -148,6 +151,10 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         MoonVillagerEntity villagerEntity = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, this.world, villagerType3);
         villagerEntity.initialize(this.world, this.world.getLocalDifficulty(villagerEntity.getBlockPos()), SpawnReason.BREEDING, (EntityData)null, (CompoundTag)null);
         return villagerEntity;
+    }
+
+    public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D);
     }
 
     static {

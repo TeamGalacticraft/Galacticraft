@@ -81,6 +81,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftEntityTypes.register();
+        GalacticraftDefaultAttributes.register();
         GalacticraftScreenHandlers.register();
         GalacticraftScreenHandlerTypes.register();
         GalacticraftCommands.register();
