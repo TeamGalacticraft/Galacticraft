@@ -47,7 +47,7 @@ public class GalacticraftFeatures {
     public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = (new RandomPatchFeatureConfig.Builder(new MoonFlowerBlockStateProvider(), new SimpleBlockPlacer())).tries(64).build();
     public static final BlockPileFeatureConfig CHEESE_LOG_PILE_CONFIG = new BlockPileFeatureConfig(new PillarBlockStateProvider(GalacticraftBlocks.CHEESE_LOG));
 
-    public static void init() {
+    public static void register() {
         Feature.STRUCTURES.forcePut("Moon_Village", MOON_VILLAGE);
         Feature.JIGSAW_STRUCTURES.add(MOON_VILLAGE);
     }

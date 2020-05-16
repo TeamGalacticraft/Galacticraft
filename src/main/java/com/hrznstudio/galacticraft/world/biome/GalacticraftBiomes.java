@@ -53,6 +53,6 @@ public class GalacticraftBiomes {
 
     public static final Biome MOON_CHEESE_FOREST = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_CHEESE_FOREST), new MoonCheeseForestBiome());
 
-    public static void init() {
+    public static void register() {
     }
 }
