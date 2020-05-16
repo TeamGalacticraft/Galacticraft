@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/wall_inventory",
   "textures": {
-    "wall": "galacticraft-rewoven:mars_dungeon_brick"
+    "wall": "galacticraft-rewoven:block/mars_dungeon_brick"
   }
 }

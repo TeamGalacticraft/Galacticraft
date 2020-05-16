@@ -33,12 +33,13 @@ import com.hrznstudio.galacticraft.block.environment.*;
 import com.hrznstudio.galacticraft.block.machines.*;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
+import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.mixin.FireBlockAccessor;
+import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -113,7 +114,7 @@ public class GalacticraftBlocks {
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.GRATING);
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constants.Blocks.ALUMINUM_WIRE);
     public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION_BLOCK)), Constants.Blocks.SEALABLE_ALUMINUM_WIRE);
-    public static final Block OXYGEN_PIPE = registerBlock(new Block(FabricBlockSettings.of(Material.WOOL).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.OXYGEN_PIPE);
+    public static final Block FLUID_PIPE = registerBlock(new FluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.FLUID_PIPE);
     public static final Block SQUARE_LIGHTING_PANEL = registerBlock(new LightingPanelBlock(FabricBlockSettings.of(Material.METAL)), Constants.Blocks.SQUARE_LIGHTING_PANEL);
     public static final Block SPOTLIGHT_LIGHTING_PANEL = registerBlock(new LightingPanelBlock(FabricBlockSettings.of(Material.METAL), 3.0f), Constants.Blocks.SPOTLIGHT_LIGHTING_PANEL);
     public static final Block LINEAR_LIGHTING_PANEL = registerBlock(new LightingPanelBlock(FabricBlockSettings.of(Material.METAL), 5.0f), Constants.Blocks.LINEAR_LIGHTING_PANEL);
@@ -197,9 +198,7 @@ public class GalacticraftBlocks {
     }
 
     private static PillarBlock createLogBlock(MaterialColor topMaterialColor, MaterialColor sideMaterialColor) {
-        return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, (blockState) -> {
-            return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
-        }).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+        return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
     }
 
     private static Block registerBlock(Block block, String id) {
