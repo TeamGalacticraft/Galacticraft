@@ -10,7 +10,8 @@
         "LivingEntityMixin",
         "PlayerEntityMixin",
         "ServerWorldMixin",
-        "TorchBlockMixin"
+        "TorchBlockMixin",
+        "TypeAwareBuyForOneEmeraldFactoryMixin"
     ],
     "client": [
         "client.HandledScreenHooks",
