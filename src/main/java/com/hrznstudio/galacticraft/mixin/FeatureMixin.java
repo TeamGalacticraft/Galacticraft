@@ -2,10 +2,7 @@ package com.hrznstudio.galacticraft.mixin;
 
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.StructureFeature;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +14,7 @@ public abstract class FeatureMixin {
     @Mutable
     public static List<StructureFeature<?>> JIGSAW_STRUCTURES = createJigsawList();
 
+    @Unique
     private static List<StructureFeature<?>> createJigsawList() {
         assert JIGSAW_STRUCTURES != null;
         return new ArrayList<>(JIGSAW_STRUCTURES);

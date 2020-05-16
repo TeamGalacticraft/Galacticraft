@@ -39,8 +39,6 @@ public class class_5285Mixin {
 
     private static MoonChunkGenerator createMoonChunkGenerator(long seed) {
         MoonChunkGeneratorConfig moonConfig = new MoonChunkGeneratorConfig(new ChunkGeneratorConfig());
-        moonConfig.setDefaultBlock(Blocks.NETHERRACK.getDefaultState());
-        moonConfig.setDefaultFluid(Blocks.LAVA.getDefaultState());
         return new MoonChunkGenerator(new MoonBiomeSource(seed, 4), seed, moonConfig);
     }
 }

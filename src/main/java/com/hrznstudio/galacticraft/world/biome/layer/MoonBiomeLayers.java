@@ -22,7 +22,7 @@ public class MoonBiomeLayers {
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, int riverSize, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = MoonBaseBiomeLayer.INSTANCE.create(contextProvider.apply(1L));
-
+        layerFactory = MoonBiomeTypeLayer.INSTANCE.create(contextProvider.apply(1999L), layerFactory);
         layerFactory = ScaleLayer.FUZZY.create(contextProvider.apply(2000L), layerFactory);
         layerFactory = MoonRavineLayer.INSTANCE.create(contextProvider.apply(2100L), layerFactory);
         layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(2001L), layerFactory);

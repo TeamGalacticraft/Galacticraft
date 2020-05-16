@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.biome.moon.MoonBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsCratersBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsPlainsBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsRocksBiome;
@@ -41,7 +40,7 @@ import net.minecraft.world.biome.Biome;
  */
 public class GalacticraftBiomes {
 
-    public static final Biome MOON_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON), new MoonValleyBiome());
+    public static final Biome MOON_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_VALLEY), new MoonValleyBiome());
 
     public static final Biome MOON_HIGHLANDS_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_PLAINS), new MoonHighlandsPlainsBiome());
     public static final Biome MOON_HIGHLANDS_CRATERS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_CRATERS), new MoonHighlandsCratersBiome());

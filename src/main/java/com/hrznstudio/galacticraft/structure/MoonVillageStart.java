@@ -305,8 +305,7 @@ public class MoonVillageStart extends VillageStructureStart {
 
     @Override
     public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome) {
-        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
-        this.setBoundingBoxFromChildren();
-
+//        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
+//        this.setBoundingBoxFromChildren(); //FIXME Does't generate properly or loops infinitely or smth
     }
 }

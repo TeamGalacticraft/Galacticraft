@@ -9,15 +9,11 @@ public enum MoonBiomeTypeLayer implements IdentitySamplingLayer {
 
    @Override
    public int sample(LayerRandomnessSource context, int value) {
-      int i = context.nextInt(4);
-
-      if (value == MoonBiomeLayers.MOON_MARE_PLAINS_ID) {
-         if (i == 2) {
+      if (context.nextInt(6) == 2) {
+         if (value == MoonBiomeLayers.MOON_MARE_PLAINS_ID) {
             return MoonBiomeLayers.MOON_MARE_ROCKS_ID;
          }
-      }
-      if (value == MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID) {
-         if (i == 2) {
+         if (value == MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID) {
             return MoonBiomeLayers.MOON_HIGHLANDS_ROCKS_ID;
          }
       }

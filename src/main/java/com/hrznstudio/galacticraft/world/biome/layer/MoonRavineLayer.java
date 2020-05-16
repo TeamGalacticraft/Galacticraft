@@ -8,7 +8,6 @@ public enum MoonRavineLayer implements CrossSamplingLayer {
 
    @Override
    public int sample(LayerRandomnessSource context, int n, int e, int s, int w, int center) {
-      int i = context.nextInt(3);
       if (n != s && e != w) {
          return MoonBiomeLayers.MOON_VALLEY_ID;
       }
@@ -26,7 +25,7 @@ public enum MoonRavineLayer implements CrossSamplingLayer {
          return w;
       }
 
-      switch (i) {
+      switch (context.nextInt(3)) {
          case 0:
             return n;
          case 1:
