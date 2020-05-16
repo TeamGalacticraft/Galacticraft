@@ -50,7 +50,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
     public static final BooleanProperty EAST = ConnectingBlock.EAST;
     public static final BooleanProperty SOUTH = ConnectingBlock.SOUTH;
     public static final BooleanProperty WEST = ConnectingBlock.WEST;
-    private static final VoxelShape[] shape = createShapes();
+    private static final VoxelShape[] shape = new VoxelShape[16];
     private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
     public Walkway(Settings settings) {
@@ -69,33 +69,51 @@ public class Walkway extends Block implements FluidLoggableBlock {
         return 1 << dir.getHorizontal();
     }
 
-    private static VoxelShape[] createShapes() {
-        float f = 8.0F - 8F;
-        float g = 8.0F + 8F;
-        float h = 8.0F - 8F;
-        float i = 8.0F + 8F;
-        VoxelShape voxelShape = Block.createCuboidShape(f, 0.0F, f, g, 16.0F, g);
-        VoxelShape voxelShape2 = Block.createCuboidShape(h, 0.0F, 0.0F, i, 16.0F, i);
-        VoxelShape voxelShape3 = Block.createCuboidShape(h, 0.0F, h, i, 16.0F, 16.0F);
-        VoxelShape voxelShape4 = Block.createCuboidShape(0.0D, 0.0F, h, i, 16.0F, i);
-        VoxelShape voxelShape5 = Block.createCuboidShape(h, 0.0F, h, 16.0F, 16.0F, i);
-        VoxelShape voxelShape6 = VoxelShapes.union(voxelShape2, voxelShape5);
-        VoxelShape voxelShape7 = VoxelShapes.union(voxelShape3, voxelShape4);
-        VoxelShape[] voxelShapes = new VoxelShape[]{VoxelShapes.empty(), voxelShape3, voxelShape4, voxelShape7, voxelShape2, VoxelShapes.union(voxelShape3, voxelShape2), VoxelShapes.union(voxelShape4, voxelShape2), VoxelShapes.union(voxelShape7, voxelShape2), voxelShape5, VoxelShapes.union(voxelShape3, voxelShape5), VoxelShapes.union(voxelShape4, voxelShape5), VoxelShapes.union(voxelShape7, voxelShape5), voxelShape6, VoxelShapes.union(voxelShape3, voxelShape6), VoxelShapes.union(voxelShape4, voxelShape6), VoxelShapes.union(voxelShape7, voxelShape6)};
+    private static VoxelShape createShape(boolean north, boolean south, boolean east, boolean west) {
+        VoxelShape top1 = Block.createCuboidShape(0.0D, 13.0D, 0.0D, 2.0D, 16.0D, 16.0D);
+        VoxelShape top2 = Block.createCuboidShape(0.0D, 13.0D, 16.0D, 16.0D, 16.0D, 14.0D);
+        VoxelShape top3 = Block.createCuboidShape(16.0D, 13.0D, 16.0D, 14.0D, 16.0D, 0.0D);
+        VoxelShape top4 = Block.createCuboidShape(16.0D, 13.0D, 0.0D, 0.0D, 16.0D, 2.0D);
+        VoxelShape mTop1 = Block.createCuboidShape(6.0D, 15.0D, 2.0D, 16.0D - 6.0D, 14.0D, 16.0D - 2.0D);
+        VoxelShape mTop2 = Block.createCuboidShape(2.0D, 15.0D, 6.0D, 16.0D - 2.0D, 14.0D, 16.0D - 6.0D);
+        VoxelShape center = Block.createCuboidShape(6.0D, 15.0D, 6.0D, 10.0D, 6.0D, 10.0);
+        VoxelShape base = VoxelShapes.union(top1, top2, top3, top4, mTop1, mTop2, center);
 
-        for (int j = 0; j < 16; ++j) {
-            voxelShapes[j] = VoxelShapes.union(voxelShape, voxelShapes[j]);
+        if (north) {
+            base = VoxelShapes.union(base, Block.createCuboidShape(7.0D, 9.0D, 7.0D, 9.0D, 7.0D, 0.0D));
         }
 
-        return voxelShapes;
+        if (south) {
+            base = VoxelShapes.union(base, Block.createCuboidShape(7.0D, 9.0D, 9.0D, 9.0D, 7.0D, 16.0D));
+        }
+
+        if (east) {
+            base = VoxelShapes.union(base, Block.createCuboidShape(9.0D, 9.0D, 7.0D, 16.0D, 7.0D, 9.0D));
+        }
+
+        if (west) {
+            base = VoxelShapes.union(base, Block.createCuboidShape(7.0D, 9.0D, 7.0D, 0.0D, 7.0D, 9.0D));
+        }
+
+        return VoxelShapes.union(base);
     }
 
+    @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return shape[this.getShapeIndex(state)];
+        return getShape(state);
     }
 
+    @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return shape[this.getShapeIndex(state)];
+        return getShape(state);
+    }
+
+    private VoxelShape getShape(BlockState state) {
+        int index = getShapeIndex(state);
+        if (shape[index] != null) {
+            return shape[index];
+        }
+        return shape[index] = createShape(state.get(NORTH), state.get(SOUTH), state.get(EAST), state.get(WEST));
     }
 
     protected int getShapeIndex(BlockState state) {
