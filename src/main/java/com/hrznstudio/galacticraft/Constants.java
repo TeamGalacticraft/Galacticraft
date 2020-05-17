@@ -216,6 +216,7 @@ public class Constants {
         public static final String BEAM_REFLECTOR = "beam_reflector";
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
+        public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
     }
 
     // Fluids

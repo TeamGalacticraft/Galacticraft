@@ -33,6 +33,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
@@ -57,7 +58,7 @@ public final class MoonCheeseForestBiome extends Biome implements SpaceBiome {
                         .build())
                 .parent(null));
         this.flowerFeatures.clear();
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, GalacticraftFeatures.CHEESE_TREE_FEATURE);
+        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, Feature.TREE.configure(GalacticraftFeatures.CHEESE_TREE_CONFIG));
     }
 
     @Override

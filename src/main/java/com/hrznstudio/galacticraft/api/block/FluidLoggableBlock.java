@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.block;
+package com.hrznstudio.galacticraft.api.block;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
@@ -31,11 +31,13 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.AbstractProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +52,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     String DASH_REP = "__89_00___"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "__2_211_23";
 
-    AbstractProperty<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
+     Property<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
         private final List<Identifier> VALUES = new ArrayList<>();
 
         @Override

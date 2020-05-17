@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.block.decoration;
 
-import com.hrznstudio.galacticraft.block.FluidLoggableBlock;
+import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;

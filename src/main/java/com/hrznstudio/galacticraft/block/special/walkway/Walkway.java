@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.block.special.walkway;
 
-import com.hrznstudio.galacticraft.block.FluidLoggableBlock;
+import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.*;

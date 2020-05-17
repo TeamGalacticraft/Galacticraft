@@ -43,7 +43,6 @@ import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
-import com.hrznstudio.galacticraft.world.gen.WorldGenerator;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
@@ -92,7 +91,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBiomes.register();
         GalacticraftBiomeSourceTypes.register();
         GalacticraftDimensions.register();
-        WorldGenerator.register();
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();

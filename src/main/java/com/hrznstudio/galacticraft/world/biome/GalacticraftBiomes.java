@@ -40,6 +40,7 @@ import net.minecraft.world.biome.Biome;
  */
 public class GalacticraftBiomes {
 
+
     public static final Biome MOON_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_VALLEY), new MoonValleyBiome());
 
     public static final Biome MOON_HIGHLANDS_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_PLAINS), new MoonHighlandsPlainsBiome());
@@ -51,6 +52,8 @@ public class GalacticraftBiomes {
     public static final Biome MOON_MARE_ROCKS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_ROCKS), new MoonMareRocksBiome());
 
     public static final Biome MOON_CHEESE_FOREST = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_CHEESE_FOREST), new MoonCheeseForestBiome());
+
+    public static final Biome[] MOON_BIOMES = new Biome[]{MOON_VALLEY, MOON_MARE_CRATERS, MOON_MARE_PLAINS, MOON_MARE_ROCKS, MOON_HIGHLANDS_CRATERS, MOON_HIGHLANDS_ROCKS, MOON_HIGHLANDS_PLAINS, MOON_CHEESE_FOREST};
 
     public static void register() {
     }
