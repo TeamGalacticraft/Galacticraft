@@ -253,7 +253,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     public void updateSchematic() {
         if (this.world != null && !this.world.isClient) {
-            if (this.inventory.getInvStack(0).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+            if (this.inventory.getStack(0).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
                 ItemStack stack = new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC);
                 CompoundTag tag = new CompoundTag();
                 tag.putInt("red", red);
@@ -277,7 +277,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
                 stack.setTag(tag);
 
-                this.inventory.setInvStack(0, stack, Simulation.ACTION);
+                this.inventory.setStack(0, stack, Simulation.ACTION);
             }
         }
     }

@@ -28,9 +28,9 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
@@ -251,27 +251,27 @@ public class GalacticraftPackets {
                             if (slot < ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getSlotCount()) {
                                 if (packetContext.getPlayer().inventory.getCursorStack().isEmpty()) {
                                     success = true;
-                                    packetContext.getPlayer().inventory.setCursorStack(((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getInvStack(slot));
-                                    ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
+                                    packetContext.getPlayer().inventory.setCursorStack(((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getStack(slot));
+                                    ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setStack(slot, ItemStack.EMPTY, Simulation.ACTION);
                                 } else {
                                     if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().isItemValidForSlot(slot, packetContext.getPlayer().inventory.getCursorStack().copy())) {
-                                        if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getInvStack(slot).isEmpty()) {
+                                        if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getStack(slot).isEmpty()) {
                                             if (((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack()) >= packetContext.getPlayer().inventory.getCursorStack().getCount()) {
-                                                ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, packetContext.getPlayer().inventory.getCursorStack().copy(), Simulation.ACTION);
+                                                ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setStack(slot, packetContext.getPlayer().inventory.getCursorStack().copy(), Simulation.ACTION);
                                                 packetContext.getPlayer().inventory.setCursorStack(ItemStack.EMPTY);
                                             } else {
                                                 ItemStack stack = packetContext.getPlayer().inventory.getCursorStack().copy();
                                                 ItemStack stack1 = packetContext.getPlayer().inventory.getCursorStack().copy();
                                                 stack.setCount(((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack()));
                                                 stack1.setCount(stack1.getCount() - ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack()));
-                                                ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, stack, Simulation.ACTION);
+                                                ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setStack(slot, stack, Simulation.ACTION);
                                                 packetContext.getPlayer().inventory.setCursorStack(stack1);
                                             }
                                         } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
                                             // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
                                             ItemStack stack = packetContext.getPlayer().inventory.getCursorStack().copy();
                                             int max = ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getMaxAmount(slot, packetContext.getPlayer().inventory.getCursorStack());
-                                            stack.setCount(stack.getCount() + ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getInvStack(slot).getCount());
+                                            stack.setCount(stack.getCount() + ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().getStack(slot).getCount());
                                             if (stack.getCount() <= max) {
                                                 packetContext.getPlayer().inventory.setCursorStack(ItemStack.EMPTY);
                                             } else {
@@ -280,7 +280,7 @@ public class GalacticraftPackets {
                                                 stack1.setCount(stack1.getCount() - max);
                                                 packetContext.getPlayer().inventory.setCursorStack(stack1);
                                             }
-                                            ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setInvStack(slot, stack, Simulation.ACTION);
+                                            ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory().setStack(slot, stack, Simulation.ACTION);
                                         }
                                         success = true;
                                     }

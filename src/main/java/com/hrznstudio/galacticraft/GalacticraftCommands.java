@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.server.command.LocateCommandGC;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -70,6 +71,8 @@ public class GalacticraftCommands {
                             return 1;
                         })
         ));
+
+        CommandRegistry.INSTANCE.register(false, LocateCommandGC::register);
     }
 
     private static int teleport(CommandContext<ServerCommandSource> context) {
@@ -122,7 +125,7 @@ public class GalacticraftCommands {
                 entity.setPos(x, y, z);
             } else {
                 entity.detach();
-                entity.dimension = world.dimension.getType();
+                entity.dimension = world.getDimension().getType();
                 Entity entity_2 = entity;
                 entity = entity.getType().create(world);
                 if (entity == null) {

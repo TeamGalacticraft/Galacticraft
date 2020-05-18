@@ -117,12 +117,12 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         attemptChargeFromStack(0);
         trySpreadEnergy();
 
-        if (getInventory().getInvStack(1).getItem() instanceof FluidProviderItem) {
-            Ref<ItemStack> ref = new Ref<>(getInventory().getInvStack(1));
-            FluidVolume output = ((FluidProviderItem) getInventory().getInvStack(1).getItem()).drain(ref);
+        if (getInventory().getStack(1).getItem() instanceof FluidProviderItem) {
+            Ref<ItemStack> ref = new Ref<>(getInventory().getStack(1));
+            FluidVolume output = ((FluidProviderItem) getInventory().getStack(1).getItem()).drain(ref);
             if (output.getRawFluid().matchesType(GalacticraftFluids.CRUDE_OIL)) {
                 this.fluidInv.getTank(0).insert(output);
-                getInventory().setInvStack(1, ref.obj, Simulation.ACTION);
+                getInventory().setStack(1, ref.obj, Simulation.ACTION);
             }
         }
 
@@ -148,12 +148,12 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             this.fluidInv.getTank(1).insert(FluidVolume.create(GalacticraftFluids.FUEL, extracted.getAmount()));
         }
 
-        if (getInventory().getInvStack(2).getItem() instanceof FluidProviderItem) {
-            Ref<ItemStack> stackRef = new Ref<>(getInventory().getInvStack(2));
+        if (getInventory().getStack(2).getItem() instanceof FluidProviderItem) {
+            Ref<ItemStack> stackRef = new Ref<>(getInventory().getStack(2));
             Ref<FluidVolume> fluidRef = new Ref<>(fluidInv.getTank(1).attemptExtraction(ConstantFluidFilter.ANYTHING, FluidVolume.BUCKET, Simulation.ACTION));
-            ((FluidProviderItem) getInventory().getInvStack(2).getItem()).fill(stackRef, fluidRef);
-            if (stackRef.obj != getInventory().getInvStack(2)) {
-                getInventory().setInvStack(2, stackRef.obj, Simulation.ACTION);
+            ((FluidProviderItem) getInventory().getStack(2).getItem()).fill(stackRef, fluidRef);
+            if (stackRef.obj != getInventory().getStack(2)) {
+                getInventory().setStack(2, stackRef.obj, Simulation.ACTION);
             }
             fluidInv.getTank(1).insert(fluidRef.obj);
         }

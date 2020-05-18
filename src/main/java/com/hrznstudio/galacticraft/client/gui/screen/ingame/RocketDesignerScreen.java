@@ -27,10 +27,10 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
+import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.screen.RocketDesignerScreenHandler;
-import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -152,8 +152,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
     private RocketDesignerScreen(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
         super(new RocketDesignerScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name"));
-        this.width = 323;
-        this.height = 164;
+        this.backgroundWidth = 323;
+        this.backgroundHeight = 164;
         this.world = playerEntity.world;
         this.be = blockEntity;
         this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, world);
@@ -176,7 +176,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack, immediate, 15728880);
         immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
-        RenderSystem.popMatrix();
+        stack.pop();
     }
 
     @Override
@@ -187,7 +187,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         this.client.getTextureManager().bindTexture(TEXTURE);
 
-        drawTexture(stack, this.x, this.y, 0, 0, this.width, this.height);
+        drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         for (int i = 0; i < RocketPartType.values().length; i++) {
             this.client.getTextureManager().bindTexture(TEXTURE);
@@ -293,13 +293,13 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
-        drawString(stack, this.client.textRenderer, "R", this.x + 245 + 3, this.y + 8, Formatting.RED.getColorValue());
-        drawString(stack, this.client.textRenderer, "G", this.x + 245 + 3, this.y + 18, Formatting.GREEN.getColorValue());
-        drawString(stack, this.client.textRenderer, "B", this.x + 245 + 3, this.y + 28, Formatting.BLUE.getColorValue());
-        drawString(stack, this.client.textRenderer, "A", this.x + 245 + 3, this.y + 38, Formatting.WHITE.getColorValue());
+        client.textRenderer.draw(stack, "R", this.x + 245 + 3, this.y + 8, Formatting.RED.getColorValue());
+        client.textRenderer.draw(stack, "G", this.x + 245 + 3, this.y + 18, Formatting.GREEN.getColorValue());
+        client.textRenderer.draw(stack, "B", this.x + 245 + 3, this.y + 28, Formatting.BLUE.getColorValue());
+        client.textRenderer.draw(stack, "A", this.x + 245 + 3, this.y + 38, Formatting.WHITE.getColorValue());
 
-        drawString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.rocket_info").asString(), this.x + 245, this.y + 62 - 9, Formatting.DARK_GRAY.getColorValue());
-        drawString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(stack, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.rocket_info").asString(), this.x + 245, this.y + 62 - 9, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(stack, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
 
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }

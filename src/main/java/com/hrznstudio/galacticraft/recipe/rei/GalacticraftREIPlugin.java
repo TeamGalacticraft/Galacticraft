@@ -81,7 +81,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
     @Override
     public void registerBounds(DisplayHelper displayHelper) {
         BaseBoundsHandler.getInstance().registerExclusionZones(MachineHandledScreen.class, () -> {
-            MachineHandledScreen<?> machineScreen = (MachineHandledScreen<?>) REIHelper.getInstance().getPreviousHandledScreen();
+            MachineHandledScreen<?> machineScreen = (MachineHandledScreen<?>) REIHelper.getInstance().getPreviousContainerScreen();
             HandledScreenHooks screenHooks = (HandledScreenHooks) machineScreen;
             List<Rectangle> l = Lists.newArrayList();
 

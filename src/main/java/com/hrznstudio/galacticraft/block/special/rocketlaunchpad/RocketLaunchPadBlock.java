@@ -17,8 +17,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
 import javax.annotation.Nullable;
@@ -65,7 +65,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onBroken(IWorld world, BlockPos pos, BlockState state) {
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
         super.onBroken(world, pos, state);
         switch (state.get(PART)) {
             case NORTH:
@@ -278,7 +278,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
         return Part.NONE;
     }
 
-    public void createBlockBreakParticles(IWorld world, BlockPos pos) {
+    public void createBlockBreakParticles(WorldAccess world, BlockPos pos) {
         if (!world.getBlockState(pos).isAir()) {
             VoxelShape voxelShape = world.getBlockState(pos).getOutlineShape(world, pos, ShapeContext.absent());
             double d = 0.25D;

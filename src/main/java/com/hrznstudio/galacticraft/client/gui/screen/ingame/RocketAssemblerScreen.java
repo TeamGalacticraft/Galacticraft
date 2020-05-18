@@ -28,9 +28,9 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.recipe.RocketAssemblerRecipe;
 import com.hrznstudio.galacticraft.screen.RocketAssemblerScreenHandler;
-import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -140,8 +140,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
     private RocketAssemblerScreen(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity blockEntity) {
         super(new RocketAssemblerScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name"));
-        this.width = 323;
-        this.height = 175;
+        this.backgroundWidth = 323;
+        this.backgroundHeight = 175;
         this.world = playerEntity.world;
         this.blockEntity = blockEntity;
     }
@@ -156,7 +156,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         this.renderBackground(matrix);
         DiffuseLighting.enableGuiDepthLighting();
         this.client.getTextureManager().bindTexture(TEXTURE);
-        drawTexture(matrix, this.x, this.y, 0, 0, width, height);
+        drawTexture(matrix, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         drawTexture(matrix, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getCurrentEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxEnergy()))));
 
@@ -213,7 +213,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         for (ItemStack stack : recipe.getInput()) {
                             this.client.getTextureManager().bindTexture(TEXTURE);
 
-                            if (this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() == stack.getCount()) {
+                            if (this.blockEntity.getExtendedInventory().getStack(slot).getCount() == stack.getCount()) {
                                 drawTexture(matrix, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                             } else {
                                 drawTexture(matrix, this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
@@ -221,7 +221,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             }
 
                             itemRenderer.renderGuiItem(stack, this.x + 13 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * offsetY));
-                            itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInventory().getInvStack(slot).getCount() + "/" + stack.getCount());
+                            itemRenderer.renderGuiItemOverlay(client.textRenderer, stack, this.x + 13 + (GREEN_BOX_WIDTH + 2) * offsetX, this.y + 13 + (GREEN_BOX_HEIGHT + 2) * offsetY, this.blockEntity.getExtendedInventory().getStack(slot).getCount() + "/" + stack.getCount());
 
                             if (check(mouseX, mouseY, (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2, (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2, GREEN_BOX_WIDTH - 4, GREEN_BOX_HEIGHT - 4)) {
                                 RenderSystem.disableDepthTest();
@@ -262,15 +262,15 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         DiffuseLighting.enableGuiDepthLighting();
 
         if (blockEntity.data != null && blockEntity.data != RocketData.EMPTY) {
-            drawString(stack, client.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
-            drawString(stack, client.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
-            drawString(stack, client.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
-            drawString(stack, client.textRenderer, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
+            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft-rewoven.rocket_info").asString(), this.x + 234, this.y + 41, 11184810);
+            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft-rewoven.tier", blockEntity.data.getTier()).asString(), this.x + 234, this.y + 41 + 11, 11184810);
+            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
+            client.textRenderer.draw(stack, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
         } else {
-            drawString(stack, client.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic").asString(), this.x + 234, this.y + 41, 11184810);
-            drawString(stack, client.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic_2").asString(), this.x + 234, this.y + 41 + 11, 11184810);
-            drawString(stack, client.textRenderer, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
-            drawString(stack, client.textRenderer, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
+            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic").asString(), this.x + 234, this.y + 41, 11184810);
+            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft-rewoven.put_schematic_2").asString(), this.x + 234, this.y + 41 + 11, 11184810);
+            client.textRenderer.draw(stack, new TranslatableText("tooltip.galacticraft-rewoven.assembler_status").asString(), this.x + 234, this.y + 41 + 22, 11184810);
+            client.textRenderer.draw(stack, getStatus(), this.x + 234, this.y + 41 + 33, 11184810);
         }
     }
 
@@ -342,27 +342,27 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                                 if (slot < blockEntity.getExtendedInventory().getSlotCount()) {
                                     if (playerInventory.getCursorStack().isEmpty()) {
                                         success = true;
-                                        playerInventory.setCursorStack(blockEntity.getExtendedInventory().getInvStack(slot));
-                                        blockEntity.getExtendedInventory().setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
+                                        playerInventory.setCursorStack(blockEntity.getExtendedInventory().getStack(slot));
+                                        blockEntity.getExtendedInventory().setStack(slot, ItemStack.EMPTY, Simulation.ACTION);
                                     } else {
                                         if (blockEntity.getExtendedInventory().isItemValidForSlot(slot, playerInventory.getCursorStack().copy())) {
-                                            if (blockEntity.getExtendedInventory().getInvStack(slot).isEmpty()) {
+                                            if (blockEntity.getExtendedInventory().getStack(slot).isEmpty()) {
                                                 if (blockEntity.getExtendedInventory().getMaxAmount(slot, playerInventory.getCursorStack()) >= playerInventory.getCursorStack().getCount()) {
-                                                    blockEntity.getExtendedInventory().setInvStack(slot, playerInventory.getCursorStack().copy(), Simulation.ACTION);
+                                                    blockEntity.getExtendedInventory().setStack(slot, playerInventory.getCursorStack().copy(), Simulation.ACTION);
                                                     playerInventory.setCursorStack(ItemStack.EMPTY);
                                                 } else {
                                                     ItemStack stack = playerInventory.getCursorStack().copy();
                                                     ItemStack stack1 = playerInventory.getCursorStack().copy();
                                                     stack.setCount(blockEntity.getExtendedInventory().getMaxAmount(slot, playerInventory.getCursorStack()));
                                                     stack1.setCount(stack1.getCount() - blockEntity.getExtendedInventory().getMaxAmount(slot, playerInventory.getCursorStack()));
-                                                    blockEntity.getExtendedInventory().setInvStack(slot, stack, Simulation.ACTION);
+                                                    blockEntity.getExtendedInventory().setStack(slot, stack, Simulation.ACTION);
                                                     playerInventory.setCursorStack(stack1);
                                                 }
                                             } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
                                                 // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
                                                 ItemStack stack = playerInventory.getCursorStack().copy();
                                                 int max = blockEntity.getExtendedInventory().getMaxAmount(slot, playerInventory.getCursorStack());
-                                                stack.setCount(stack.getCount() + blockEntity.getExtendedInventory().getInvStack(slot).getCount());
+                                                stack.setCount(stack.getCount() + blockEntity.getExtendedInventory().getStack(slot).getCount());
                                                 if (stack.getCount() <= max) {
                                                     playerInventory.setCursorStack(ItemStack.EMPTY);
                                                 } else {
@@ -371,7 +371,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                                                     stack1.setCount(stack1.getCount() - max);
                                                     playerInventory.setCursorStack(stack1);
                                                 }
-                                                blockEntity.getExtendedInventory().setInvStack(slot, stack, Simulation.ACTION);
+                                                blockEntity.getExtendedInventory().setStack(slot, stack, Simulation.ACTION);
                                             }
                                             success = true;
                                         }

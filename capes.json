@@ -520,25 +520,25 @@
             "cape": "mars",
             "name": "WatermElon_Musk"
         },
-        {
-            "uuid": "dc90e627-3628-491d-8cc1-917b97f0d7e0",
-            "cape": "moon",
-            "name": "missingsemicolon"
-        },
-        {
-            "uuid": "6f0350f6-5372-4cdd-aa0b-0381753da000",
-            "cape": "moon",
-            "name": "TeenSarlacc"
-        },
-        {
-            "uuid": "e124c552-5b18-4826-b491-d3a1ac2a4418",
-            "cape": "developer",
-            "name": "iNewHorizons"
-        },
-        {
-            "uuid": "01d916c8-4932-4f54-8ab4-c49e6cd8bbf8",
-            "cape": "developer",
-            "name": "NBH_iNewHorizons"
-        }
+      {
+        "uuid": "dc90e627-3628-491d-8cc1-917b97f0d7e0",
+        "cape": "moon",
+        "name": "missingsemicolon"
+      },
+      {
+        "uuid": "6f0350f6-5372-4cdd-aa0b-0381753da000",
+        "cape": "moon",
+        "name": "TeenSarlacc"
+      },
+      {
+        "uuid": "e124c552-5b18-4826-b491-d3a1ac2a4418",
+        "cape": "developer",
+        "name": "iNewHorizons"
+      },
+      {
+        "uuid": "01d916c8-4932-4f54-8ab4-c49e6cd8bbf8",
+        "cape": "developer",
+        "name": "NBH_iNewHorizons"
+      }
     ]
 }

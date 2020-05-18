@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "galacticraft-rewoven:block/cheese_log"
+    },
+    "axis=z": {
+      "model": "galacticraft-rewoven:block/cheese_log",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "galacticraft-rewoven:block/cheese_log",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

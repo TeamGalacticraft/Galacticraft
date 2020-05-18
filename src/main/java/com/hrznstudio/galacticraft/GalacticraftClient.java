@@ -30,15 +30,12 @@ import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRend
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerRenderer;
 import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.RocketAssemblerScreen;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.RocketDesignerScreen;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -159,6 +156,7 @@ public class GalacticraftClient implements ClientModInitializer {
         GalacticraftClientPackets.register();
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
 
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.FLUID_PIPE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderLayer.getCutout());

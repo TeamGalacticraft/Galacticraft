@@ -42,8 +42,8 @@ public class OxygenGearItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (((GCPlayerAccessor) user).getGearInventory().getInvStack(5).isEmpty()) {
-            ((GCPlayerAccessor) user).getGearInventory().setInvStack(5, user.getStackInHand(hand), Simulation.ACTION);
+        if (((GCPlayerAccessor) user).getGearInventory().getStack(5).isEmpty()) {
+            ((GCPlayerAccessor) user).getGearInventory().setStack(5, user.getStackInHand(hand), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, user, hand);

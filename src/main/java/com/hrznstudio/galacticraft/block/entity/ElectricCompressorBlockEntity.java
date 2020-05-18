@@ -147,7 +147,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         boolean canCraftTwo = true;
 
         for (int i = 0; i < 9; i++) {
-            ItemStack item = getInventory().getInvStack(i);
+            ItemStack item = getInventory().getStack(i);
 
             // If slot is not empty ( must be an ingredient if we've made it this far ), and there is less than 2 items in the slot, we cannot craft two.
             if (!item.isEmpty() && item.getCount() < 2) {
@@ -156,7 +156,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
             }
         }
         if (canCraftTwo) {
-            if (getInventory().getInvStack(OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount() || getInventory().getInvStack(SECOND_OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount()) {
+            if (getInventory().getStack(OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount() || getInventory().getStack(SECOND_OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount()) {
                 // There would be too many items in the output slot. Just craft one.
                 canCraftTwo = false;
             }

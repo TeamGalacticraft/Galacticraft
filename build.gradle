@@ -25,7 +25,7 @@ allprojects {
         mavenLocal()
         jcenter() //Cloth
         maven { url "https://www.curseforge.com/api/maven" }
-        maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
+        maven { url "https://server.bbkr.space/artifactory/libs-snapshot" }
         maven { url "https://maven.modmuss50.me" }
         maven { url "https://mod-buildcraft.com/maven" }
         maven { url "https://maven.abusedmaster.xyz" }
@@ -44,7 +44,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
 
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w16a")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
@@ -67,7 +67,7 @@ dependencies {
     //modRuntime("RebornCore:RebornCore-1.16:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
-    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w16a")
+    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
     include("me.shedaniel.cloth:cloth-events:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
     include("io.github.cottonmc:cotton-energy:${project.energy_version}")

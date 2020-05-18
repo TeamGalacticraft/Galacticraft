@@ -67,7 +67,7 @@ public abstract class MusicTrackerMixin {
         int minDelay = 0;
         int maxDelay = 0;
         if (client.player != null) {
-            if (client.player.world.dimension.getType() == GalacticraftDimensions.MOON) {
+            if (client.player.world.getDimension().getType() == GalacticraftDimensions.MOON) {
                 gcMusic = GalacticraftSounds.MUSIC_MOON;
                 minDelay = 1200;
                 maxDelay = 3600;

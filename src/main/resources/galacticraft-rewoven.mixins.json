@@ -4,14 +4,18 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "class_5285Mixin",
     "EntityAttributeInstanceAccessor",
+    "FeatureMixin",
     "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "RecipeManagerMixin",
     "ServerWorldMixin",
-    "TorchBlockMixin"
+    "StructurePoolGeneratorMixin",
+    "TorchBlockMixin",
+    "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",

@@ -218,8 +218,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         extendedInventory.addListener((inv, slot, previous, current1) -> {
             boolean success = true;
             for (int i = 0; i < extendedInventory.getSlotCount(); i++) {
-                if (extendedInventory.getFilterForSlot(i).matches(extendedInventory.getInvStack(i)) &&
-                        extendedInventory.getMaxAmount(i, extendedInventory.getInvStack(i)) == extendedInventory.getInvStack(i).getCount()) {
+                if (extendedInventory.getFilterForSlot(i).matches(extendedInventory.getStack(i)) &&
+                        extendedInventory.getMaxAmount(i, extendedInventory.getStack(i)) == extendedInventory.getStack(i).getCount()) {
                     continue;
                 }
                 success = false;
@@ -242,17 +242,17 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         }
 
-        if (this.data.isEmpty() && this.getInventory().getInvStack(SCHEMATIC_INPUT_SLOT).isEmpty()) {
+        if (this.data.isEmpty() && this.getInventory().getStack(SCHEMATIC_INPUT_SLOT).isEmpty()) {
             return;
         }
 
-        if ((!this.data.isEmpty() && inventory.getInvStack(SCHEMATIC_INPUT_SLOT).isEmpty()) || (this.data.isEmpty() && !inventory.getInvStack(SCHEMATIC_INPUT_SLOT).isEmpty())) {
+        if ((!this.data.isEmpty() && inventory.getStack(SCHEMATIC_INPUT_SLOT).isEmpty()) || (this.data.isEmpty() && !inventory.getStack(SCHEMATIC_INPUT_SLOT).isEmpty())) {
             throw new RuntimeException("Error loading schematic!");
         }
 
-        if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
-            if (!this.data.equals(RocketData.fromItem(inventory.getInvStack(SCHEMATIC_INPUT_SLOT)))) {
-                schematicUpdate(data.toSchematic(), inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
+        if (inventory.getStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+            if (!this.data.equals(RocketData.fromItem(inventory.getStack(SCHEMATIC_INPUT_SLOT)))) {
+                schematicUpdate(data.toSchematic(), inventory.getStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
         }
@@ -319,8 +319,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
                 boolean success = true;
                 for (int i = 0; i < extendedInventory.getSlotCount(); i++) {
-                    if (extendedInventory.getFilterForSlot(i).matches(extendedInventory.getInvStack(i)) &&
-                            extendedInventory.getMaxAmount(i, extendedInventory.getInvStack(i)) == extendedInventory.getInvStack(i).getCount()) {
+                    if (extendedInventory.getFilterForSlot(i).matches(extendedInventory.getStack(i)) &&
+                            extendedInventory.getMaxAmount(i, extendedInventory.getStack(i)) == extendedInventory.getStack(i).getCount()) {
                         continue;
                     }
                     success = false;
@@ -380,7 +380,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         if (getEnergyAttribute().getCurrentEnergy() >= getEnergyAttribute().getMaxEnergy()) {
             return;
         }
-        ItemStack stack = inventory.getInvStack(ENERGY_INPUT_SLOT).copy();
+        ItemStack stack = inventory.getStack(ENERGY_INPUT_SLOT).copy();
         int neededEnergy = Math.min(50, getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy());
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy);
@@ -399,7 +399,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                 this.building = false;
                 this.progress = 0;
                 for (int i = 0; i < extendedInventory.getSlotCount(); i++) {
-                    extendedInventory.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
+                    extendedInventory.setStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
                 ItemStack stack1 = new ItemStack(GalacticraftItems.ROCKET);
                 stack1.setTag(data.toTag());

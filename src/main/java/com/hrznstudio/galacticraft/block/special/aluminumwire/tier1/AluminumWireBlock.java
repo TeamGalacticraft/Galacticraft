@@ -42,8 +42,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            if (network == null) network = new WireNetwork(pos, world.dimension.getType().getRawId());
+            if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
             for (Direction d : Direction.values()) {
                 if (state.get(getPropForDirection(d)) && world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
                     WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
@@ -189,7 +189,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction_1, BlockState blockState_2, IWorld world, BlockPos thisWire, BlockPos otherConnectable) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction_1, BlockState blockState_2, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
         return state.with(getPropForDirection(direction_1), (
                 !(blockState_2).isAir()
                         && blockState_2.getBlock() instanceof WireConnectable
@@ -222,7 +222,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
 
     @Override
     @Nonnull
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return WireConnectionType.WIRE;
     }
 }

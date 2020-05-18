@@ -45,8 +45,8 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.Collection;
 import java.util.List;
@@ -81,16 +81,16 @@ public class StandardWrenchItem extends Item {
     }
 
 
-    private void use(PlayerEntity player, BlockState state, IWorld iWorld, BlockPos pos, ItemStack stack) {
+    private void use(PlayerEntity player, BlockState state, WorldAccess iWorld, BlockPos pos, ItemStack stack) {
         Block block = state.getBlock();
         if (block instanceof Rotatable) {
-            StateManager<Block, BlockState> StateManager = block.getStateManager();
-            Collection<Property<?>> collection = StateManager.getProperties();
+            StateManager<Block, BlockState> manager = block.getStateManager();
+            Collection<Property<?>> collection = manager.getProperties();
             String string_1 = Registry.BLOCK.getId(block).toString();
             if (!collection.isEmpty()) {
                 CompoundTag compoundTag_1 = stack.getOrCreateSubTag("wrenchProp");
                 String string_2 = compoundTag_1.getString(string_1);
-                Property<?> property = StateManager.getProperty(string_2);
+                Property<?> property = manager.getProperty(string_2);
                 if (property == null) {
                     property = collection.iterator().next();
                 }

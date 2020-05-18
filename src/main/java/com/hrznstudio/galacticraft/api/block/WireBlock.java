@@ -38,8 +38,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -67,7 +67,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            if (network == null) network = new WireNetwork(pos, world.dimension.getType().getRawId());
+            if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
             for (Direction d : Direction.values()) {
                 if (world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
                     WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
@@ -95,7 +95,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
 
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState otherState, IWorld world, BlockPos pos, BlockPos updated) {
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos updated) {
         WireConnectionType type = WireConnectionType.NONE;
         if (otherState.getBlock() instanceof WireConnectable) {
             type = ((WireConnectable) otherState.getBlock()).canWireConnect(world, dir.getOpposite(), pos, updated);
@@ -153,7 +153,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
 
     @Override
     @Nonnull
-    public WireConnectionType canWireConnect(IWorld world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
+    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return WireConnectionType.WIRE;
     }
 

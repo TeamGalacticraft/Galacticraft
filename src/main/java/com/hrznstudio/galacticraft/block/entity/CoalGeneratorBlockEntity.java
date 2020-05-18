@@ -120,16 +120,16 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             }
         }
 
-        if (canUseAsFuel(getInventory().getInvStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE)) {
+        if (canUseAsFuel(getInventory().getStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE)) {
             this.status = CoalGeneratorStatus.WARMING;
 
-            this.fuelTimeMax = createFuelTimeMap().get(getInventory().getInvStack(0).getItem()).getLeft();
+            this.fuelTimeMax = createFuelTimeMap().get(getInventory().getStack(0).getItem()).getLeft();
             this.fuelTimeCurrent = 0;
-            this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem()).getRight();
+            this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getStack(0).getItem()).getRight();
 
-            ItemStack stack = getInventory().getInvStack(0).copy();
+            ItemStack stack = getInventory().getStack(0).copy();
             stack.decrement(1);
-            getInventory().setInvStack(0, stack, Simulation.ACTION);
+            getInventory().setStack(0, stack, Simulation.ACTION);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {
