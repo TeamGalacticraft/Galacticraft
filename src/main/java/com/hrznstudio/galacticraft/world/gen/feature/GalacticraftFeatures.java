@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.gen.feature.moonvillage.MoonVillageFeature;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.MoonFlowerBlockStateProvider;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

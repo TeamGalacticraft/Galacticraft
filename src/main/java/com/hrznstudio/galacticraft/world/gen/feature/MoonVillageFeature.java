@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.world.gen.feature.moonvillage;
+package com.hrznstudio.galacticraft.world.gen.feature;
 
 import com.hrznstudio.galacticraft.structure.MoonVillageStart;
 import com.mojang.datafixers.Dynamic;
