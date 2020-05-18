@@ -25,7 +25,7 @@ allprojects {
         mavenLocal()
         jcenter() //Cloth
         maven { url "https://www.curseforge.com/api/maven" }
-        maven { url "http://server.bbkr.space:8081/artifactory/libs-snapshot" }
+        maven { url "https://server.bbkr.space/artifactory/libs-snapshot" }
         maven { url "https://maven.modmuss50.me" }
         maven { url "https://mod-buildcraft.com/maven" }
         maven { url "https://cdn.hrzn.studio/maven" }
