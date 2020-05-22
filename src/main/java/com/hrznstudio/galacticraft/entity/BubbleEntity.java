@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.blocks.machines.bubbledistributor.BubbleDistributorBlockEntity;
+import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,11 +12,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
@@ -179,7 +179,8 @@ public class BubbleEntity extends Entity {
     }
 
     @Override
-    protected void burn(int time) {
+    protected int getBurningDuration() {
+        return 0;
     }
 
     @Override
@@ -232,11 +233,6 @@ public class BubbleEntity extends Entity {
         }
         this.remove();
         return false;
-    }
-
-    @Override
-    public void remove() {
-        super.remove();
     }
 
     @Override

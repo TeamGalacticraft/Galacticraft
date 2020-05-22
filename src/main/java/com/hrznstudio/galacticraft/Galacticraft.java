@@ -24,29 +24,34 @@ package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
+import com.hrznstudio.galacticraft.entity.attribute.GalacticraftDefaultAttributes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.network.packet.GalacticraftPackets;
+import com.hrznstudio.galacticraft.network.GalacticraftPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
-import com.hrznstudio.galacticraft.recipes.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
+import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
-import com.hrznstudio.galacticraft.world.gen.WorldGenerator;
-import com.hrznstudio.galacticraft.world.gen.chunk.GalacticraftChunkGeneratorTypes;
-import com.hrznstudio.galacticraft.world.gen.decorator.GalacticraftDecorators;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
+import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.village.VillagerProfession;
+import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.reborn.energy.*;
@@ -56,9 +61,12 @@ import team.reborn.energy.*;
  */
 public class Galacticraft implements ModInitializer {
 
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>();
+    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>();
+
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
-    public static ConfigManager configManager = new ConfigManagerImpl();
+    public static final ConfigManager configManager = new ConfigManagerImpl();
 
     @Override
     public void onInitialize() {
@@ -72,22 +80,22 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSounds.register();
         GalacticraftEnergy.register();
         GalacticraftEntityTypes.register();
-        GalacticraftContainers.register();
+        GalacticraftDefaultAttributes.register();
+        GalacticraftScreenHandlers.register();
+        GalacticraftScreenHandlerTypes.register();
         GalacticraftCommands.register();
         GalacticraftBlockEntities.init();
-        GalacticraftChunkGeneratorTypes.init();
-        GalacticraftFeatures.init();
-        GalacticraftDecorators.init();
-        GalacticraftBiomes.init();
-        GalacticraftBiomeSourceTypes.init();
-        GalacticraftDimensions.init();
-        GalacticraftSurfaceBuilders.init();
-        WorldGenerator.register();
+        GalacticraftBlockStateProviderTypes.register();
+        GalacticraftStructurePieceTypes.register();
+        GalacticraftFeatures.register();
+        GalacticraftBiomes.register();
+        GalacticraftBiomeSourceTypes.register();
+        GalacticraftDimensions.register();
+        GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
-
         Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
-            if(object instanceof ItemStack){
+            if (object instanceof ItemStack) {
                 return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
             }
             return false;
@@ -138,6 +146,6 @@ public class Galacticraft implements ModInitializer {
             };
         });
 
-        logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis()-startInitTime);
+        logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

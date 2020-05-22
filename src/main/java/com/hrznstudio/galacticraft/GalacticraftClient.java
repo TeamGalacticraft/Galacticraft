@@ -22,30 +22,20 @@
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.blocks.machines.basicsolarpanel.BasicSolarPanelScreen;
-import com.hrznstudio.galacticraft.blocks.machines.bubbledistributor.BubbleDistributorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.circuitfabricator.CircuitFabricatorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.coalgenerator.CoalGeneratorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.compressor.CompressorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.electriccompressor.ElectricCompressorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.energystoragemodule.EnergyStorageModuleScreen;
-import com.hrznstudio.galacticraft.blocks.machines.oxygencollector.OxygenCollectorScreen;
-import com.hrznstudio.galacticraft.blocks.machines.refinery.RefineryScreen;
-import com.hrznstudio.galacticraft.client.network.packet.GalacticraftClientPackets;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
+import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.BubbleEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.evolvedzombie.EvolvedZombieRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.moonvillager.MoonVillagerRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.t1rocket.RocketEntityRenderer;
-import com.hrznstudio.galacticraft.client.render.fluid.FluidRenderingResourceReloadListener;
-import com.hrznstudio.galacticraft.container.GalacticraftContainers;
-import com.hrznstudio.galacticraft.container.screen.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -56,8 +46,8 @@ import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.container.PlayerContainer;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
 /**
@@ -69,7 +59,6 @@ public class GalacticraftClient implements ClientModInitializer {
     public static JsonCapes jsonCapes;
     public static CapeLoader capeLoader;
 
-
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
@@ -79,7 +68,7 @@ public class GalacticraftClient implements ClientModInitializer {
         capeLoader.register(jsonCapes);
         capeLoader.load();
 
-        ClientSpriteRegistryCallback.event(PlayerContainer.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
+        ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
 //        ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> {
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
@@ -142,21 +131,20 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(new Identifier(Constants.MOD_ID, "block/compressor"));
         });
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.PLAYER_INVENTORY_CONTAINER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COAL_GENERATOR_CONTAINER, CoalGeneratorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.BASIC_SOLAR_PANEL_CONTAINER, BasicSolarPanelScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.CIRCUIT_FABRICATOR_CONTAINER, CircuitFabricatorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.REFINERY_CONTAINER, RefineryScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.COMPRESSOR_CONTAINER, CompressorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ELECTRIC_COMPRESSOR_CONTAINER, ElectricCompressorScreen.ELECTRIC_FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.ENERGY_STORAGE_MODULE_CONTAINER, EnergyStorageModuleScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.OXYGEN_COLLECTOR_CONTAINER, OxygenCollectorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftContainers.BUBBLE_DISTRIBUTOR_CONTAINER, BubbleDistributorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.COAL_GENERATOR_SCREEN_HANDLER, CoalGeneratorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.BASIC_SOLAR_PANEL_SCREEN_HANDLER, BasicSolarPanelScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.CIRCUIT_FABRICATOR_SCREEN_HANDLER, CircuitFabricatorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.REFINERY_SCREEN_HANDLER, RefineryScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.COMPRESSOR_SCREEN_HANDLER, CompressorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ELECTRIC_COMPRESSOR_SCREEN_HANDLER, ElectricCompressorScreen.ELECTRIC_FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ENERGY_STORAGE_MODULE_SCREEN_HANDLER, EnergyStorageModuleScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.OXYGEN_COLLECTOR_SCREEN_HANDLER, OxygenCollectorScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER, BubbleDistributorScreen.FACTORY);
 
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET_T1, (manager, context) -> new RocketEntityRenderer(manager));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
 
@@ -164,6 +152,7 @@ public class GalacticraftClient implements ClientModInitializer {
         GalacticraftParticles.registerClient();
         GalacticraftClientPackets.register();
 
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.FLUID_PIPE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderLayer.getCutout());

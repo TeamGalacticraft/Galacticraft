@@ -26,9 +26,13 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 
+@Environment(EnvType.CLIENT)
 public class ModMenuApiImpl implements ModMenuApi {
+
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return (ConfigScreenFactory<Screen>) parent -> ConfigManager.getInstance().getScreen(parent);

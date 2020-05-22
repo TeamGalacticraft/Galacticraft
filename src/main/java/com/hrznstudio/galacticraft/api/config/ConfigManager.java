@@ -39,5 +39,6 @@ public interface ConfigManager {
 
     Config get();
 
-    @Environment(EnvType.CLIENT) Screen getScreen(Screen parent);
+    @Environment(EnvType.CLIENT)
+    Screen getScreen(Screen parent);
 }

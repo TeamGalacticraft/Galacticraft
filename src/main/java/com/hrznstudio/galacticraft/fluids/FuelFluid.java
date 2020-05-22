@@ -22,17 +22,16 @@
 
 package com.hrznstudio.galacticraft.fluids;
 
-import com.hrznstudio.galacticraft.blocks.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.BaseFluid;
+import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
@@ -41,8 +40,8 @@ import net.minecraft.state.StateManager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
 import java.util.Random;
@@ -50,7 +49,7 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FuelFluid extends BaseFluid {
+public class FuelFluid extends FlowableFluid {
     @Override
     public Fluid getFlowing() {
         return GalacticraftFluids.FLOWING_FUEL;
@@ -78,7 +77,7 @@ public class FuelFluid extends BaseFluid {
 
     @Override
     public boolean canBeReplacedWith(FluidState fluidState, BlockView blockView, BlockPos blockPos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && !fluid.matches(GalacticraftFluidTags.FUEL);
+        return direction == Direction.DOWN && !fluid.matchesType(GalacticraftFluids.FUEL);
     }
 
     @Override
@@ -105,13 +104,13 @@ public class FuelFluid extends BaseFluid {
     }
 
     @Override
-    public void beforeBreakingBlock(IWorld iWorld, BlockPos blockPos, BlockState blockState) {
+    public void beforeBreakingBlock(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
         BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
         Block.dropStacks(blockState, iWorld.getWorld(), blockPos, blockEntity);
     }
 
     @Override
-    public int method_15733(WorldView WorldView) {
+    public int getFlowSpeed(WorldView WorldView) {
         return 4;
     }
 

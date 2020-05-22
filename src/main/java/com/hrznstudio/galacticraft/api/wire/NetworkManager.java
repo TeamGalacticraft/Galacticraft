@@ -24,23 +24,27 @@ package com.hrznstudio.galacticraft.api.wire;
 
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.mixin.ServerWorldMixin;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.WorldAccess;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class NetworkManager {
 
-    private static Map<Integer, NetworkManager> managers = new HashMap<>();
+    private static final Map<Integer, NetworkManager> managers = new HashMap<>();
     /**
      * A map containing all the networks in the current world.
      * Cleared on world close.
      *
-     * @see com.hrznstudio.galacticraft.mixin.ServerWorldMixin
+     * @see ServerWorldMixin
      */
     private final Map<BlockPos, WireNetwork> networks = new ConcurrentHashMap<>();
     private final Map<WireNetwork, Integer> networkRefs = new HashMap<>();
@@ -49,14 +53,14 @@ public class NetworkManager {
     }
 
     public static void createManagerForWorld(ServerWorld world) {
-        managers.put(world.dimension.getType().getRawId(), new NetworkManager());
+        managers.put(world.getDimension().getType().getRawId(), new NetworkManager());
     }
 
     public static NetworkManager getManagerForDimension(int id) {
         return managers.get(id);
     }
 
-    public static NetworkManager getManagerForWorld(IWorld world) {
+    public static NetworkManager getManagerForWorld(WorldAccess world) {
         return getManagerForDimension(world.getDimension().getType().getRawId());
     }
 
@@ -94,7 +98,7 @@ public class NetworkManager {
         for (WireNetwork network : set) {
             for (BlockPos pos : network.getQuery()) {
                 if (world.getBlockEntity(pos) instanceof EnergyAttributeProvider) {
-                    world.getBlockState(pos).updateNeighborStates(world, pos, 10);
+                    world.getBlockState(pos).updateNeighbors(world, pos, 10);
                 }
             }
             network.clearQuery();

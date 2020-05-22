@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.server.command.LocateCommandGC;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -63,13 +64,15 @@ public class GalacticraftCommands {
         // temp command
         CommandRegistry.INSTANCE.register(false, source -> source.register(
                 LiteralArgumentBuilder.<ServerCommandSource>literal("gcr_listbodies")
-                .executes(context -> {
-                    StringBuilder builder = new StringBuilder();
-                    CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey() + "\n"));
-                    context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
-                    return 1;
-                })
+                        .executes(context -> {
+                            StringBuilder builder = new StringBuilder();
+                            CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
+                            context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
+                            return 1;
+                        })
         ));
+
+        CommandRegistry.INSTANCE.register(false, LocateCommandGC::register);
     }
 
     private static int teleport(CommandContext<ServerCommandSource> context) {
@@ -88,7 +91,7 @@ public class GalacticraftCommands {
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", dimension.toString()), true);
                 return 1;
             } catch (CommandSyntaxException ignore) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(new Style().setColor(Formatting.RED)));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                 return -1;
             }
         } catch (Exception ignore) {
@@ -122,7 +125,7 @@ public class GalacticraftCommands {
                 entity.setPos(x, y, z);
             } else {
                 entity.detach();
-                entity.dimension = world.dimension.getType();
+                entity.dimension = world.getDimension().getType();
                 Entity entity_2 = entity;
                 entity = entity.getType().create(world);
                 if (entity == null) {
@@ -138,7 +141,7 @@ public class GalacticraftCommands {
 
         if (!(entity instanceof LivingEntity) || !((LivingEntity) entity).isFallFlying()) {
             entity.setVelocity(entity.getVelocity().multiply(1.0D, 0.0D, 1.0D));
-            entity.onGround = true;
+            //entity.isOnGround() = true;
         }
     }
 }

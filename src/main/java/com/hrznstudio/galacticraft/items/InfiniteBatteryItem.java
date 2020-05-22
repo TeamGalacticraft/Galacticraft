@@ -27,7 +27,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DefaultedList;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import team.reborn.energy.Energy;
 import team.reborn.energy.EnergyHolder;

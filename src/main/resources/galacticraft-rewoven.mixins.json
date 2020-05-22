@@ -4,19 +4,26 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "class_5285Mixin",
+    "EntityAttributeInstanceAccessor",
+    "FeatureMixin",
+    "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerWorldMixin",
-    "TorchBlockMixin"
+    "StructurePoolGeneratorMixin",
+    "TorchBlockMixin",
+    "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],
   "client": [
-    "InGameHudMixin",
-    "JsonCapeMixin",
-    "MusicTrackerMixin",
-    "PauseMenuScreenMixin",
-    "PlayerInventoryScreenMixin",
-    "WorldRendererMixin"
+    "client.AbstractClientPlayerEntityMixin",
+    "client.HandledScreenHooks",
+    "client.InGameHudMixin",
+    "client.MusicTrackerMixin",
+    "client.PauseMenuScreenMixin",
+    "client.PlayerInventoryScreenMixin",
+    "client.WorldRendererMixin"
   ],
   "minVersion": "0.1.0",
   "injectors": {

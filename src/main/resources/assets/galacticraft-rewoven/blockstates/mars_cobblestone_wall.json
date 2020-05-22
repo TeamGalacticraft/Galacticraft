@@ -10,7 +10,7 @@
     },
     {
       "when": {
-        "north": "true"
+        "north": "low"
       },
       "apply": {
         "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
@@ -19,7 +19,7 @@
     },
     {
       "when": {
-        "east": "true"
+        "east": "low"
       },
       "apply": {
         "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
@@ -29,7 +29,7 @@
     },
     {
       "when": {
-        "south": "true"
+        "south": "low"
       },
       "apply": {
         "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
@@ -39,10 +39,49 @@
     },
     {
       "when": {
-        "west": "true"
+        "west": "low"
       },
       "apply": {
         "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side",
+        "y": 270,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "north": "tall"
+      },
+      "apply": {
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side_tall",
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "east": "tall"
+      },
+      "apply": {
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side_tall",
+        "y": 90,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "south": "tall"
+      },
+      "apply": {
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side_tall",
+        "y": 180,
+        "uvlock": true
+      }
+    },
+    {
+      "when": {
+        "west": "tall"
+      },
+      "apply": {
+        "model": "galacticraft-rewoven:block/mars_cobblestone_wall_side_tall",
         "y": 270,
         "uvlock": true
       }
