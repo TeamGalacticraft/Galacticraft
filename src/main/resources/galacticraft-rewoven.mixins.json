@@ -3,6 +3,7 @@
   "package": "com.hrznstudio.galacticraft.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "AbstractCriterionMixin",
     "BaseFluidMixin",
     "class_5285Mixin",
     "EntityAttributeInstanceAccessor",
@@ -11,12 +12,16 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
+    "PlayerAdvancementTrackerMixin",
     "PlayerEntityMixin",
+    "PlayerManagerMixin",
     "RecipeManagerMixin",
+    "ServerPlayerEntityMixin",
     "ServerWorldMixin",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin",
-    "TypeAwareBuyForOneEmeraldFactoryMixin"
+    "TypeAwareBuyForOneEmeraldFactoryMixin",
+    "client.ClientPlayNetworkHandlerMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",

@@ -1,16 +1,13 @@
 {
   "id": "galacticraft-rewoven:example",
-  "display": {
-    "name": "research.galacticraft-rewoven.example",
+  "info": {
+    "title": "research.galacticraft-rewoven.example",
     "description": "research.galacticraft-rewoven.example.desc",
-    "items_for_render": [
+    "items_to_render": [
       "galacticraft-rewoven:raw_silicon"
-    ]
+    ],
+    "tier": 1
   },
-  "children": [
-    "galacticraft-rewoven:new_thing_1",
-    "galacticraft-rewoven:new_thing_2"
-  ],
   "criteria": {
     "killed_something": {
       "trigger": "minecraft:player_killed_entity",

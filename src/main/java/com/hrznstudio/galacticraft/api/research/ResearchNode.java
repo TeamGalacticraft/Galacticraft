@@ -8,7 +8,6 @@ import com.google.gson.JsonSyntaxException;
 import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.CriteriaMerger;
 import net.minecraft.advancement.criterion.CriterionConditions;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
@@ -24,46 +23,84 @@ import java.util.function.Function;
 
 public class ResearchNode {
     @Nullable
-    private final ResearchNode[] children;
+    private final ResearchNode[] parents;
+    private final List<ResearchNode> children = new ArrayList<>();
 
     private final Identifier id;
     private final ResearchRewards rewards;
+    private final ResearchInfo info;
     private final Map<String, AdvancementCriterion> criteria;
     private final String[][] requirements;
     private final CriteriaMerger merger;
 
-    public ResearchNode(@Nullable ResearchNode[] children, Identifier id, ResearchRewards rewards, Map<String, AdvancementCriterion> criteria, String[][] requirements, ResearchRewards researchRewards) {
-        this.children = children;
+
+    public ResearchNode(Identifier id, ResearchInfo info, ResearchRewards rewards, @Nullable ResearchNode[] parents, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
+        this.parents = parents;
         this.id = id;
+        this.info = info;
         this.rewards = rewards;
         this.criteria = criteria;
         this.requirements = requirements;
         this.merger = CriteriaMerger.AND;
+        for (ResearchNode parent : parents) {
+            parent.addChild(this);
+        }
     }
 
-    public ResearchNode[] getChildren() {
-        return children;
+    public ResearchNode[] getParents() {
+        return parents;
     }
 
     public Identifier getId() {
         return id;
     }
 
+    public void addChild(ResearchNode child) {
+        this.children.add(child);
+    }
+
+    public List<ResearchNode> getChildren() {
+        return new ArrayList<>(children);
+    }
+
+    public ResearchRewards getRewards() {
+        return rewards;
+    }
+
+    public Map<String, AdvancementCriterion> getCriteria() {
+        return new HashMap<>(criteria);
+    }
+
+    public String[][] getRequirements() {
+        return requirements;
+    }
+
+    public ResearchInfo getInfo() {
+        return info;
+    }
+
+    public Builder toBuilder() {
+        Identifier[] parentIds = new Identifier[this.parents.length];
+        for (int i = 0; i < this.parents.length; i++) {
+            parentIds[i] = this.parents[i].getId();
+        }
+        return new Builder(Arrays.asList(parentIds), this.info, this.rewards, this.criteria, this.requirements);
+    }
 
     public static class Builder {
-        private List<Identifier> childrenIds;
-        private final List<ResearchNode> children =  new ArrayList<>();
+        private final List<ResearchNode> parents = new ArrayList<>();
+        private List<Identifier> parentIds;
         private ResearchInfo info;
         private ResearchRewards rewards;
         private Map<String, AdvancementCriterion> criteria;
         private String[][] requirements;
         private CriteriaMerger merger;
 
-        private Builder(List<Identifier> childrenIds, @javax.annotation.Nullable ResearchInfo info, ResearchRewards rewards, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
+        private Builder(List<Identifier> parentIds, @Nullable ResearchInfo info, ResearchRewards rewards, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
             this.rewards = ResearchRewards.NONE;
             this.criteria = Maps.newLinkedHashMap();
             this.merger = CriteriaMerger.AND;
-            this.childrenIds = childrenIds;
+            this.parentIds = parentIds;
             this.info = info;
             this.rewards = rewards;
             this.criteria = criteria;
@@ -80,180 +117,14 @@ public class ResearchNode {
             return new Builder();
         }
 
-        public Builder child(ResearchNode child) {
-            this.children.add(child);
-            return this;
-        }
-
-        public Builder child(Identifier childId) {
-            this.childrenIds.add(childId);
-            return this;
-        }
-
-        public Builder info(Item[] icons, Text title, Text description, @javax.annotation.Nullable Identifier background, boolean hidden) {
-            return this.info(new ResearchInfo(icons, title, description, background, hidden));
-        }
-
-        public Builder info(ItemConvertible[] icons, Text title, Text description, @javax.annotation.Nullable Identifier background, boolean hidden) {
-            return this.info(new ResearchInfo(icons, title, description, background, hidden));
-        }
-
-        public Builder info(ResearchInfo info) {
-            this.info = info;
-            return this;
-        }
-
-        public Builder rewards(ResearchRewards.Builder builder) {
-            return this.rewards(builder.build());
-        }
-
-        public Builder rewards(ResearchRewards rewards) {
-            this.rewards = rewards;
-            return this;
-        }
-
-        public Builder criterion(String name, CriterionConditions criterionConditions) {
-            return this.criterion(name, new AdvancementCriterion(criterionConditions));
-        }
-
-        public Builder criterion(String name, AdvancementCriterion advancementCriterion) {
-            if (this.criteria.containsKey(name)) {
-                throw new IllegalArgumentException("Duplicate criterion " + name);
-            } else {
-                this.criteria.put(name, advancementCriterion);
-                return this;
-            }
-        }
-
-        public Builder criteriaMerger(CriteriaMerger merger) {
-            this.merger = merger;
-            return this;
-        }
-
-        public boolean findChildren(Function<Identifier, ResearchNode> parentProvider) {
-            if (this.childrenIds.isEmpty()) {
-                return true;
-            } else {
-                boolean allgood  = true;
-                for (Identifier id : childrenIds) {
-                    ResearchNode node = parentProvider.apply(id);
-                    if (node != null) {
-                        this.children.add(node);
-                    } else {
-                        allgood =false;
-                    }
-                }
-                return allgood;
-            }
-        }
-
-        public ResearchNode build(Identifier id) {
-            if (!this.findChildren((identifier) -> {
-                return null;
-            })) {
-                throw new IllegalStateException("Tried to build incomplete advancement!");
-            } else {
-                if (this.requirements == null) {
-                    this.requirements = this.merger.createRequirements(this.criteria.keySet());
-                }
-
-                return new ResearchNode(this.children.toArray(new ResearchNode[0]), id, this.rewards, this.criteria, this.requirements, this.rewards);
-            }
-        }
-
-        public ResearchNode build(Consumer<ResearchNode> consumer, String string) {
-            ResearchNode advancement = this.build(new Identifier(string));
-            consumer.accept(advancement);
-            return advancement;
-        }
-
-//        public JsonObject toJson() {
-//            if (this.requirements == null) {
-//                this.requirements = this.merger.createRequirements(this.criteria.keySet());
-//            }
-//
-//            JsonObject jsonObject = new JsonObject();
-//            if (this.children.isEmpty()) {
-//                jsonObject.add
-//                jsonObject.addProperty("parent", this.parentObj.getId().toString());
-//            } else if (this.childrenIds != null) {
-//                jsonObject.addProperty("parent", this.childrenIds.toString());
-//            }
-//
-//            if (this.info != null) {
-//                jsonObject.add("info", this.info.toJson());
-//            }
-//
-//            jsonObject.add("rewards", this.rewards.toJson());
-//            JsonObject jsonObject2 = new JsonObject();
-//
-//            for (Map.Entry<String, AdvancementCriterion> stringAdvancementCriterionEntry : this.criteria.entrySet()) {
-//                jsonObject2.add((String) ((Map.Entry<String, AdvancementCriterion>) (Map.Entry) stringAdvancementCriterionEntry).getKey(), ((AdvancementCriterion) ((Map.Entry<String, AdvancementCriterion>) (Map.Entry) stringAdvancementCriterionEntry).getValue()).toJson());
-//            }
-//
-//            jsonObject.add("criteria", jsonObject2);
-//            JsonArray jsonArray = new JsonArray();
-//            String[][] var14 = this.requirements;
-//            int var5 = var14.length;
-//
-//            for (String[] strings : var14) {
-//                JsonArray jsonArray2 = new JsonArray();
-//                int var10 = strings.length;
-//
-//                for (int var11 = 0; var11 < var10; ++var11) {
-//                    String string = strings[var11];
-//                    jsonArray2.add(string);
-//                }
-//
-//                jsonArray.add(jsonArray2);
-//            }
-//
-//            jsonObject.add("requirements", jsonArray);
-//            return jsonObject;
-//        }
-//
-//        public void toPacket(PacketByteBuf buf) {
-//            if (this.childrenIds == null) {
-//                buf.writeBoolean(false);
-//            } else {
-//                buf.writeBoolean(true);
-//                buf.writeIdentifier(this.childrenIds);
-//            }
-//
-//            if (this.info == null) {
-//                buf.writeBoolean(false);
-//            } else {
-//                buf.writeBoolean(true);
-//                this.info.toPacket(buf);
-//            }
-//
-//            AdvancementCriterion.criteriaToPacket(this.criteria, buf);
-//            buf.writeVarInt(this.requirements.length);
-//            String[][] var2 = this.requirements;
-//            int var3 = var2.length;
-//
-//            for (String[] strings : var2) {
-//                buf.writeVarInt(strings.length);
-//                int var7 = strings.length;
-//
-//                for (String string : strings) {
-//                    buf.writeString(string);
-//                }
-//            }
-//
-//        }
-
-        public String toString() {
-            return "Task Advancement{parentId=" + this.childrenIds + ", info=" + this.info + ", rewards=" + this.rewards + ", criteria=" + this.criteria + ", requirements=" + Arrays.deepToString(this.requirements) + '}';
-        }
-
         public static Builder fromJson(JsonObject obj, AdvancementEntityPredicateDeserializer predicateDeserializer) {
-            List<Identifier> children = new ArrayList<>(); //obj.has("children") ? new Identifier(JsonHelper.getString(obj, "children")) : null;
-            if (obj.has("children")) {
-                for (JsonElement element : obj.get("children").getAsJsonArray()) {
-                    children.add(new Identifier(element.getAsString()));
+            List<Identifier> parents = new ArrayList<>(); //obj.has("parents") ? new Identifier(JsonHelper.getString(obj, "parents")) : null;
+            if (obj.has("parents")) {
+                for (JsonElement element : obj.get("parents").getAsJsonArray()) {
+                    parents.add(new Identifier(element.getAsString()));
                 }
             }
+
             ResearchInfo info = obj.has("info") ? ResearchInfo.fromJson(JsonHelper.getObject(obj, "info")) : null;
             ResearchRewards rewards = obj.has("rewards") ? ResearchRewards.fromJson(JsonHelper.getObject(obj, "rewards")) : ResearchRewards.NONE;
             Map<String, AdvancementCriterion> map = AdvancementCriterion.criteriaFromJson(JsonHelper.getObject(obj, "criteria"), predicateDeserializer);
@@ -309,7 +180,7 @@ public class ResearchNode {
                 boolean bl;
                 do {
                     if (!var19.hasNext()) {
-                        return new Builder(children, info, rewards, map, strings);
+                        return new Builder(parents, info, rewards, map, strings);
                     }
 
                     string3 = var19.next();
@@ -330,11 +201,11 @@ public class ResearchNode {
         }
 
         public static Builder fromPacket(PacketByteBuf buf) {
-            List<Identifier> children = new ArrayList<>();
-            byte b = buf.readByte();
+            List<Identifier> parents = new ArrayList<>();
+            int b = buf.readVarInt();
             if (b > 0) {
                 for (int i = 0; i < b; i++) {
-                    children.add(buf.readIdentifier());
+                    parents.add(buf.readIdentifier());
                 }
             }
 
@@ -350,11 +221,124 @@ public class ResearchNode {
                 }
             }
 
-            return new Builder(children, info, ResearchRewards.NONE, map, strings);
+            return new Builder(parents, info, ResearchRewards.NONE, map, strings);
+        }
+
+        public Builder parent(ResearchNode child) {
+            this.parents.add(child);
+            return this;
+        }
+
+        public Builder info(ResearchInfo info) {
+            this.info = info;
+            return this;
+        }
+
+        public Builder rewards(ResearchRewards.Builder builder) {
+            return this.rewards(builder.build());
+        }
+
+        public Builder rewards(ResearchRewards rewards) {
+            this.rewards = rewards;
+            return this;
+        }
+
+        public Builder criterion(String name, CriterionConditions criterionConditions) {
+            return this.criterion(name, new AdvancementCriterion(criterionConditions));
+        }
+
+        public Builder criterion(String name, AdvancementCriterion advancementCriterion) {
+            if (this.criteria.containsKey(name)) {
+                throw new IllegalArgumentException("Duplicate criterion " + name);
+            } else {
+                this.criteria.put(name, advancementCriterion);
+                return this;
+            }
+        }
+
+        public Builder criteriaMerger(CriteriaMerger merger) {
+            this.merger = merger;
+            return this;
+        }
+
+        public Builder parent(Identifier childId) {
+            this.parentIds.add(childId);
+            return this;
+        }
+
+        public Builder info(ItemConvertible[] icons, Text title, Text description, @Nullable Identifier background, boolean hidden, int tier) {
+            return this.info(new ResearchInfo(icons, title, description, background, hidden, tier));
+        }
+
+        public ResearchNode build(Consumer<ResearchNode> consumer, String string) {
+            ResearchNode advancement = this.build(new Identifier(string));
+            consumer.accept(advancement);
+            return advancement;
+        }
+
+        public boolean findParents(Function<Identifier, ResearchNode> parentProvider) {
+            if (this.parentIds.isEmpty()) {
+                return true;
+            } else {
+                boolean allgood = true;
+                for (Identifier id : parentIds) {
+                    ResearchNode node = parentProvider.apply(id);
+                    if (node != null) {
+                        this.parents.add(node);
+                    } else {
+                        allgood = false;
+                    }
+                }
+                return allgood;
+            }
+        }
+
+        public ResearchNode build(Identifier id) {
+            if (!this.findParents((identifier) -> {
+                return null;
+            })) {
+                throw new IllegalStateException("Tried to build incomplete research node!");
+            } else {
+                if (this.requirements == null) {
+                    this.requirements = this.merger.createRequirements(this.criteria.keySet());
+                }
+
+                return new ResearchNode(id, this.info, this.rewards, this.parents.toArray(new ResearchNode[0]), this.criteria, this.requirements);
+            }
+        }
+
+        public String toString() {
+            return "ResearchBuilder{parentId=" + this.parentIds + ", info=" + this.info + ", rewards=" + this.rewards + ", criteria=" + this.criteria + ", requirements=" + Arrays.deepToString(this.requirements) + '}';
         }
 
         public Map<String, AdvancementCriterion> getCriteria() {
             return this.criteria;
+        }
+
+        public List<Identifier> getParents() {
+            return parentIds;
+        }
+
+        public void toPacket(PacketByteBuf buf) {
+            buf.writeVarInt(parentIds.size());
+            for (Identifier id : parentIds) {
+                buf.writeIdentifier(id);
+            }
+
+            buf.writeBoolean(info != null);
+            if (info != null) {
+                info.toPacket(buf);
+            }
+
+            AdvancementCriterion.criteriaToPacket(criteria, buf);
+
+            buf.writeVarInt(requirements.length);
+            for (String[] requirement : requirements) {
+                buf.writeVarInt(requirement.length);
+                for (String s : requirement) {
+                    buf.writeString(s);
+                }
+            }
         }
     }
 }

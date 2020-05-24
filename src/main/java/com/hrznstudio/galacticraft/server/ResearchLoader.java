@@ -57,6 +57,10 @@ public class ResearchLoader extends JsonDataLoader {
         this.manager = researchManager;
     }
 
+    public ResearchManager getManager() {
+        return manager;
+    }
+
     @Override
     public String getName() {
         return "Galacticraft: Rewoven - Research Data Loader";
