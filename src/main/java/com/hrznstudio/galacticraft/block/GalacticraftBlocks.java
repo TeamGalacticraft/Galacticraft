@@ -28,6 +28,7 @@ import com.hrznstudio.galacticraft.api.block.StairsBlock;
 import com.hrznstudio.galacticraft.block.decoration.*;
 import com.hrznstudio.galacticraft.block.environment.*;
 import com.hrznstudio.galacticraft.block.machines.*;
+import com.hrznstudio.galacticraft.block.special.ResearchTableBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlock;
@@ -193,6 +194,7 @@ public class GalacticraftBlocks {
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY);
+    public static final Block RESEARCH_TABLE = registerBlock(new ResearchTableBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.RESEARCH_TABLE);
     public static final Block ROCKET_DESIGNER = registerMachine(new RocketDesignerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_DESIGNER);
     public static final Block ROCKET_ASSEMBLER = registerMachine(new RocketAssemblerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_ASSEMBLER);
 

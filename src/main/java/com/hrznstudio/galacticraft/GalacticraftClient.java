@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.entity.ResearchTableBlockEntity;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
 import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
@@ -36,6 +37,7 @@ import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.screen.ResearchTableScreenHandler;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -144,6 +146,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.OXYGEN_COLLECTOR_SCREEN_HANDLER, OxygenCollectorScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ROCKET_DESIGNER_SCREEN_HANDLER, RocketDesignerScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ROCKET_ASSEMBLER_SCREEN_HANDLER, RocketAssemblerScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.RESEARCH_TABLE_SCREEN_HANDLER, ((i, identifier, playerEntity, packetByteBuf) -> new ResearchTableScreen(new ResearchTableScreenHandler(i, playerEntity, (ResearchTableBlockEntity) playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos())), playerEntity.inventory)));
 
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));

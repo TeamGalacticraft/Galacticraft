@@ -229,6 +229,7 @@ public class Constants {
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
+        public static final String RESEARCH_TABLE = "research_table";
     }
 
     // Fluids
@@ -511,6 +512,7 @@ public class Constants {
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String ROCKET_DESIGNER_SCREEN_HANDLER = "rocket_designer_screen_handler";
         public static final String ROCKET_ASSEMBLER_SCREEN_HANDLER = "rocket_assembler_screen_handler";
+        public static final String RESEARCH_TABLE_SCREEN_HANDLER = "research_table_screen_handler";
     }
 
     public static class Biomes {

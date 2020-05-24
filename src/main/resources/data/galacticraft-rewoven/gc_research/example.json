@@ -1,0 +1,37 @@
+{
+  "id": "galacticraft-rewoven:example",
+  "display": {
+    "name": "research.galacticraft-rewoven.example",
+    "description": "research.galacticraft-rewoven.example.desc",
+    "items_for_render": [
+      "galacticraft-rewoven:raw_silicon"
+    ]
+  },
+  "children": [
+    "galacticraft-rewoven:new_thing_1",
+    "galacticraft-rewoven:new_thing_2"
+  ],
+  "criteria": {
+    "killed_something": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {}
+    },
+    "killed_by_something": {
+      "trigger": "minecraft:entity_killed_player",
+      "conditions": {}
+    }
+  },
+  "requirements": [
+    [
+      "killed_something",
+      "killed_by_something"
+    ]
+  ],
+  "rewards": {
+    "rocket_parts": [
+      "galacticraft-rewoven:rocket_body"
+    ],
+    "experience": 100
+  }
+
+}

@@ -10,6 +10,7 @@
     "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
+    "MinecraftServerMixin",
     "PlayerEntityMixin",
     "RecipeManagerMixin",
     "ServerWorldMixin",

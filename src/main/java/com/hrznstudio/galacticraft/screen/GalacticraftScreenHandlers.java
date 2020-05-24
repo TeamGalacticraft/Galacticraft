@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.RocketDesignerScreen;
+import com.hrznstudio.galacticraft.block.entity.ResearchTableBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.minecraft.util.Identifier;
 
@@ -43,6 +43,7 @@ public class GalacticraftScreenHandlers {
     public static final Identifier OXYGEN_COLLECTOR_SCREEN_HANDLER = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COLLECTOR_SCREEN_HANDLER);
     public static final Identifier ROCKET_ASSEMBLER_SCREEN_HANDLER = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ROCKET_ASSEMBLER_SCREEN_HANDLER);
     public static final Identifier ROCKET_DESIGNER_SCREEN_HANDLER = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ROCKET_DESIGNER_SCREEN_HANDLER);
+    public static final Identifier RESEARCH_TABLE_SCREEN_HANDLER = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.RESEARCH_TABLE_SCREEN_HANDLER);
 
     public static void register() {
         ContainerProviderRegistry.INSTANCE.registerFactory(PLAYER_INVENTORY_SCREEN_HANDLER, (syncId, id, player, buf) -> new PlayerInventoryGCScreenHandler(player.inventory, player));
@@ -57,5 +58,6 @@ public class GalacticraftScreenHandlers {
         ContainerProviderRegistry.INSTANCE.registerFactory(OXYGEN_COLLECTOR_SCREEN_HANDLER, OxygenCollectorScreenHandler.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(ROCKET_ASSEMBLER_SCREEN_HANDLER, RocketAssemblerScreenHandler.FACTORY);
         ContainerProviderRegistry.INSTANCE.registerFactory(ROCKET_DESIGNER_SCREEN_HANDLER, RocketDesignerScreenHandler.FACTORY);
+        ContainerProviderRegistry.INSTANCE.registerFactory(RESEARCH_TABLE_SCREEN_HANDLER, ((i, identifier, playerEntity, packetByteBuf) -> new ResearchTableScreenHandler(i, playerEntity, (ResearchTableBlockEntity) playerEntity.world.getBlockEntity(packetByteBuf.readBlockPos()))));
     }
 }
