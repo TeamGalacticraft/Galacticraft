@@ -56,7 +56,6 @@ public class GalacticraftBlockEntities {
             return obj instanceof WireBlock; //bad stuff
         }
     }).build(null));
-    public static final BlockEntityType<ResearchTableBlockEntity> RESEARCH_TABLE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.RESEARCH_TABLE), BlockEntityType.Builder.create(ResearchTableBlockEntity::new, GalacticraftBlocks.RESEARCH_TABLE).build(null));
     public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_LAUNCH_PAD), BlockEntityType.Builder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlocks.ROCKET_LAUNCH_PAD).build(null));
 
     public static void init() {

@@ -20,13 +20,13 @@
     "ServerWorldMixin",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin",
-    "TypeAwareBuyForOneEmeraldFactoryMixin",
-    "client.ClientPlayNetworkHandlerMixin"
+    "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.BipedEntityModelMixin",
     "client.ClientPlayerEntityMixin",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
     "client.MusicTrackerMixin",
