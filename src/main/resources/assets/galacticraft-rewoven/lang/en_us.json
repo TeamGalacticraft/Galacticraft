@@ -271,6 +271,7 @@
   "tooltip.galacticraft-rewoven.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
   "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
+
   "ui.galacticraft-rewoven.machine.status": "Status: %s",
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: %s",
@@ -309,7 +310,6 @@
   "ui.galacticraft-rewoven.tabs.side_config.west": "Left",
   "ui.galacticraft-rewoven.tabs.side_config.up": "Top",
   "ui.galacticraft-rewoven.tabs.side_config.down": "Bottom",
-
   "ui.galacticraft-rewoven.tabs.security_config": "Security",
   "ui.galacticraft-rewoven.tabs.security_config_2": "Security: ",
   "ui.galacticraft-rewoven.tabs.security_config.private": "Only you",
@@ -320,6 +320,12 @@
   "ui.galacticraft-rewoven.tabs.security_config.public_2": "Public",
   "ui.galacticraft-rewoven.tabs.security_config.not_your_machine": "This is not your machine!",
   "ui.galacticraft-rewoven.tabs.security_config.owner": "Owner: %s",
+  "ui.galacticraft-rewoven.space_race_manager": "Space Race Manager",
+  "ui.galacticraft-rewoven.space_race_manager.add_players": "Add Player(s)",
+  "ui.galacticraft-rewoven.space_race_manager.remove_players": "Remove Player(s)",
+  "ui.galacticraft-rewoven.space_race_manager.server_stats": "Server Statistics",
+  "ui.galacticraft-rewoven.space_race_manager.global_stats": "Global Statistics",
+  "ui.galacticraft-rewoven.space_race_manager.coming_soon": "Coming Soon™",
   "category.rei.circuit_fabricator": "Circuit Fabricating",
   "category.rei.compressing": "Compressing",
   "galacticraft-rewoven:moon": "Moon",
