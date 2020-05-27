@@ -26,6 +26,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -33,6 +34,10 @@ import net.minecraft.client.util.math.MatrixStack;
 @Environment(EnvType.CLIENT)
 public class DrawableUtils {
     public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, String text, int x, int y, int color) {
+        textRenderer.draw(stack, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+    }
+
+    public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int color) {
         textRenderer.draw(stack, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 }
