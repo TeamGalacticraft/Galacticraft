@@ -1,0 +1,65 @@
+{
+  "info": {
+    "title": "research.galacticraft-rewoven.root",
+    "description": "research.galacticraft-rewoven.root.desc",
+    "items_to_render": [
+      "galacticraft-rewoven:raw_silicon",
+      "galacticraft-rewoven:copper_ingot",
+      "galacticraft-rewoven:aluminum_ingot"
+    ],
+    "tier": 1
+  },
+  "criteria": {
+    "copper_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraft-rewoven:copper_ingot"
+          }
+        ]
+      }
+    },
+    "tin_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraft-rewoven:tin_ingot"
+          }
+        ]
+      }
+    },
+    "raw_silicon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraft-rewoven:raw_silicon"
+          }
+        ]
+      }
+    },
+    "aluminum_ingot": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraft-rewoven:copper_ingot"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "copper_ingot",
+      "tin_ingot",
+      "aluminum_ingot"
+    ],
+    [
+      "aluminum_ingot",
+      "raw_silicon"
+    ]
+  ]
+}

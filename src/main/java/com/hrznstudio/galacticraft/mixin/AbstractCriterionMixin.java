@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.mixin;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.research.PlayerResearchTracker;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -54,6 +56,47 @@ public class AbstractCriterionMixin<T extends AbstractCriterionConditions> {
         }
     }
 
+    @Unique
+    private static final Field owner = getOwner();
+
+    @Unique
+    private static Field getOwner() {
+        try {
+            Field owner = PlayerAdvancementTracker.class.getDeclaredField("owner");
+            owner.setAccessible(true);
+            return owner;
+        } catch (NoSuchFieldException | ClassCastException e) {
+            try {
+                @SuppressWarnings("JavaReflectionMemberAccess") Field owner = PlayerAdvancementTracker.class.getDeclaredField("field_13391");
+                owner.setAccessible(true);
+                return owner;
+            } catch (NoSuchFieldException | ClassCastException ex) {
+                ex.addSuppressed(e);
+                ex.printStackTrace();
+            }
+        }
+        throw new RuntimeException("Unable to get field 'owner'!");
+    }
+
+    @Inject(method = "grant", at = @At("RETURN"))
+    private void grantResearch(PlayerAdvancementTracker tracker, CallbackInfo ci) {
+        if (tracker != null) {
+            Set<Criterion.ConditionsContainer<T>> set = null;
+            owner.setAccessible(true);
+            try {
+                set = this.progressions.get((((ServerPlayerEntityAccessor) owner.get(tracker)).getResearchTracker()));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+            if (set != null && !set.isEmpty()) {
+
+                for (Criterion.ConditionsContainer<T> container : ImmutableSet.copyOf(set)) {
+                    container.grant(tracker);
+                }
+            }
+        }
+    }
+
     @Inject(method = "test", at = @At("RETURN"))
     private void testResearch(ServerPlayerEntity player, Predicate<T> tester, CallbackInfo ci) {
         try {
@@ -62,18 +105,18 @@ public class AbstractCriterionMixin<T extends AbstractCriterionConditions> {
             if (set != null) {
                 LootContext lootContext = EntityPredicate.createAdvancementEntityLootContext(player, player);
                 List<ResearchConditionsContainer<T>> list = null;
-                Iterator<Criterion.ConditionsContainer<T>> var7 = set.iterator();
+                Iterator<Criterion.ConditionsContainer<T>> iterator = set.iterator();
 
-                ResearchConditionsContainer<T> conditionsContainer2;
-                while (var7.hasNext()) {
-                    conditionsContainer2 = (ResearchConditionsContainer<T>) var7.next();
-                    T abstractCriterionConditions = conditionsContainer2.getConditions();
+                ResearchConditionsContainer<T> container1;
+                while (iterator.hasNext()) {
+                    container1 = (ResearchConditionsContainer<T>) iterator.next();
+                    T abstractCriterionConditions = container1.getConditions();
                     if (((EntityPredicate.Extended) getPlayerPredicate.invoke(abstractCriterionConditions)).test(lootContext) && tester.test(abstractCriterionConditions)) {
                         if (list == null) {
                             list = Lists.newArrayList();
                         }
 
-                        list.add(conditionsContainer2);
+                        list.add(container1);
                     }
 
                 }

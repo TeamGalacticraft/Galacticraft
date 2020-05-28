@@ -13,15 +13,20 @@ import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ResearchInfo {
     private final ItemConvertible[] icons;
     private final Text title;
     private final Text description;
+    @Nullable
     private final Identifier background;
     private final boolean hidden;
     private final int tier;
+    private float x;
+    private float y;
 
     public ResearchInfo(ItemConvertible[] icons, Text title, Text description, @Nullable Identifier background, boolean hidden, int tier) {
         this.icons = icons;
@@ -30,6 +35,23 @@ public class ResearchInfo {
         this.background = background;
         this.hidden = hidden;
         this.tier = tier;
+    }
+
+    public void setPos(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public int getTier() {
+        return tier;
     }
 
     public static ResearchInfo fromJson(JsonObject info) {
@@ -101,5 +123,41 @@ public class ResearchInfo {
 
         buf.writeBoolean(hidden);
         buf.writeInt(tier);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ResearchInfo that = (ResearchInfo) o;
+        return hidden == that.hidden &&
+                tier == that.tier &&
+                Float.compare(that.x, x) == 0 &&
+                Float.compare(that.y, y) == 0 &&
+                Arrays.equals(icons, that.icons) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(background, that.background);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(title, description, background, hidden, tier, x, y);
+        result = 31 * result + Arrays.hashCode(icons);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ResearchInfo{" +
+                "icons=" + Arrays.toString(icons) +
+                ", title=" + title +
+                ", description=" + description +
+                ", background=" + background +
+                ", hidden=" + hidden +
+                ", tier=" + tier +
+                ", x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

@@ -2,8 +2,6 @@ package com.hrznstudio.galacticraft.api.research;
 
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.hrznstudio.galacticraft.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,11 +12,9 @@ import java.util.*;
 import java.util.function.Function;
 
 public class ResearchManager {
-    private static final Gson GSON = new GsonBuilder().create();
-
     public final List<Listener> listeners = new ArrayList<>();
     private final Map<Identifier, ResearchNode> research = new HashMap<>();
-    private final Set<ResearchNode> roots = new HashSet<>();
+    private final List<ResearchNode> roots = new ArrayList<>();
     private final Set<ResearchNode> dependants = new HashSet<>();
 
     public void load(Map<Identifier, ResearchNode.Builder> research) {
@@ -33,19 +29,19 @@ public class ResearchManager {
                 Identifier identifier = entry.getKey();
                 ResearchNode.Builder builder = entry.getValue();
                 if (builder.findParents(function)) {
-                    ResearchNode advancement = builder.build(identifier);
-                    this.research.put(identifier, advancement);
+                    ResearchNode node = builder.build(identifier);
+                    this.research.put(identifier, node);
                     bl = true;
                     iterator.remove();
-                    if (advancement.getParents() == null || advancement.getParents().length == 0) {
-                        this.roots.add(advancement);
+                    if (node.getParents() == null || node.getParents().length == 0) {
+                        this.roots.add(node);
                         for (Listener listener : listeners) {
-                            listener.onRootAdded(advancement);
+                            listener.onRootAdded(node);
                         }
                     } else {
-                        this.dependants.add(advancement);
+                        this.dependants.add(node);
                         for (Listener listener : listeners) {
-                            listener.onDependentAdded(advancement);
+                            listener.onDependentAdded(node);
                         }
                     }
                 }
@@ -59,6 +55,20 @@ public class ResearchManager {
                     Galacticraft.logger.error("Couldn't load research node {}: {}", entry.getKey(), entry.getValue());
                 }
             }
+        }
+
+        roots.sort((node1, node2) -> {
+            if (node1.getInfo().getTier() < node2.getInfo().getTier()) {
+                return -1;
+            } else if (node1.getInfo().getTier() == node2.getInfo().getTier()) {
+                throw new RuntimeException("2 roots for the same tier!");
+            } else {
+                return 1;
+            }
+        });
+
+        for (ResearchNode node : roots) {
+            new ResearchPositioner().position(node);
         }
     }
 
@@ -82,11 +92,11 @@ public class ResearchManager {
     @Environment(EnvType.CLIENT)
     public void removeAll(Set<Identifier> advancements) {
         for (Identifier identifier : advancements) {
-            ResearchNode advancement = this.research.get(identifier);
-            if (advancement == null) {
+            ResearchNode node = this.research.get(identifier);
+            if (node == null) {
                 Galacticraft.logger.warn("Told to remove research node {} but it's not valid!", identifier);
             } else {
-                this.remove(advancement);
+                this.remove(node);
             }
         }
     }

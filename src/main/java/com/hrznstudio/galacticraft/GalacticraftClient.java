@@ -79,6 +79,7 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MAP_SCREEN));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.RESEARCH_PANELS));
 
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_HEAD));
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_CHEST));

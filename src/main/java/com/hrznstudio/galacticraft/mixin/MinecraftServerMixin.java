@@ -63,6 +63,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerAccessor {
         PlayerResearchTracker researchTracker = this.researchTrackers.get(uuid);
         if (researchTracker == null) {
             File file = new File(method_27050(class_5218.field_24180).toFile().getParentFile(), "/research/");
+            file.mkdir();
             File file2 = new File(file, uuid + ".json");
             researchTracker = new PlayerResearchTracker((MinecraftServer) (Object) this, file2, player);
             this.researchTrackers.put(uuid, researchTracker);

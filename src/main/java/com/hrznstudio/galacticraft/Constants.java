@@ -463,6 +463,7 @@ public class Constants {
 
         public static final String MAP_SCREEN = "gui/map";
         public static final String PLANET_ICONS = "gui/planet_icons";
+        public static final String RESEARCH_PANELS = "gui/research_panels";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";

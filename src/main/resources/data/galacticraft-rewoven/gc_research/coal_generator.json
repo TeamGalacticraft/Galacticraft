@@ -1,0 +1,33 @@
+{
+  "info": {
+    "title": "research.galacticraft-rewoven.coal_generator",
+    "description": "research.galacticraft-rewoven.coal_generator.desc",
+    "items_to_render": [
+      "galacticraft-rewoven:coal_generator"
+    ],
+    "tier": 1
+  },
+  "parents": [
+    "galacticraft-rewoven:root"
+  ],
+  "criteria": {
+    "coal_generator": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraft-rewoven:coal_generator"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "coal_generator"
+    ]
+  ],
+  "rewards": {
+    "experience": 50
+  }
+}

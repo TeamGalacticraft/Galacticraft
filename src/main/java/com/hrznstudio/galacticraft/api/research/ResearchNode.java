@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import com.hrznstudio.galacticraft.Galacticraft;
 import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.CriteriaMerger;
 import net.minecraft.advancement.criterion.CriterionConditions;
@@ -15,6 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -22,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ResearchNode {
-    @Nullable
+    @NotNull
     private final ResearchNode[] parents;
     private final List<ResearchNode> children = new ArrayList<>();
 
@@ -34,7 +36,7 @@ public class ResearchNode {
     private final CriteriaMerger merger;
 
 
-    public ResearchNode(Identifier id, ResearchInfo info, ResearchRewards rewards, @Nullable ResearchNode[] parents, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
+    public ResearchNode(Identifier id, ResearchInfo info, ResearchRewards rewards, @NotNull ResearchNode[] parents, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
         this.parents = parents;
         this.id = id;
         this.info = info;
@@ -271,9 +273,9 @@ public class ResearchNode {
         }
 
         public ResearchNode build(Consumer<ResearchNode> consumer, String string) {
-            ResearchNode advancement = this.build(new Identifier(string));
-            consumer.accept(advancement);
-            return advancement;
+            ResearchNode node = this.build(new Identifier(string));
+            consumer.accept(node);
+            return node;
         }
 
         public boolean findParents(Function<Identifier, ResearchNode> parentProvider) {
@@ -282,6 +284,16 @@ public class ResearchNode {
             } else {
                 boolean allgood = true;
                 for (Identifier id : parentIds) {
+                    boolean preCalculated = false;
+                    for (ResearchNode parent : this.parents) {
+                        if (parent.getId().equals(id)) {
+                            preCalculated = true;
+                            break;
+                        }
+                    }
+                    if (preCalculated) {
+                        continue;
+                    }
                     ResearchNode node = parentProvider.apply(id);
                     if (node != null) {
                         this.parents.add(node);
@@ -297,6 +309,7 @@ public class ResearchNode {
             if (!this.findParents((identifier) -> {
                 return null;
             })) {
+                Galacticraft.logger.fatal(this.toString());
                 throw new IllegalStateException("Tried to build incomplete research node!");
             } else {
                 if (this.requirements == null) {
@@ -307,8 +320,38 @@ public class ResearchNode {
             }
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Builder builder = (Builder) o;
+            return Objects.equals(parents, builder.parents) &&
+                    Objects.equals(parentIds, builder.parentIds) &&
+                    Objects.equals(info, builder.info) &&
+                    Objects.equals(rewards, builder.rewards) &&
+                    Objects.equals(criteria, builder.criteria) &&
+                    Arrays.equals(requirements, builder.requirements) &&
+                    Objects.equals(merger, builder.merger);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = Objects.hash(parents, parentIds, info, rewards, criteria, merger);
+            result = 31 * result + Arrays.hashCode(requirements);
+            return result;
+        }
+
+        @Override
         public String toString() {
-            return "ResearchBuilder{parentId=" + this.parentIds + ", info=" + this.info + ", rewards=" + this.rewards + ", criteria=" + this.criteria + ", requirements=" + Arrays.deepToString(this.requirements) + '}';
+            return "Builder{" +
+                    "parents=" + parents +
+                    ", parentIds=" + parentIds +
+                    ", info=" + info +
+                    ", rewards=" + rewards +
+                    ", criteria=" + criteria +
+                    ", requirements=" + Arrays.toString(requirements) +
+                    ", merger=" + merger +
+                    '}';
         }
 
         public Map<String, AdvancementCriterion> getCriteria() {

@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
@@ -34,12 +35,15 @@ import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class SpaceRaceScreen extends Screen {
+    private static final Identifier RESEARCH_TEX = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.RESEARCH_PANELS);
+
     private int widthSize = 0;
     private int heightSize = 0;
     private Menu menu = Menu.MAIN;
@@ -222,6 +226,7 @@ public class SpaceRaceScreen extends Screen {
 
             if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 125, 100, 30)) {
                 setMenu(Menu.RESEARCH);
+                assert MinecraftClient.getInstance().player != null;
                 return true;
             }
 
