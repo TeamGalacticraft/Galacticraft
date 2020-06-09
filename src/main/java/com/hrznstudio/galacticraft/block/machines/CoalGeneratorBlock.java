@@ -198,7 +198,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
                 CoalGeneratorBlockEntity coalGeneratorBlockEntity = (CoalGeneratorBlockEntity) blockEntity;
 
                 for (int i = 0; i < coalGeneratorBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = coalGeneratorBlockEntity.getInventory().getStack(i);
+                    ItemStack itemStack = coalGeneratorBlockEntity.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

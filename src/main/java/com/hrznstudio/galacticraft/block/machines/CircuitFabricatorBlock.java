@@ -193,7 +193,7 @@ public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock imp
                 CircuitFabricatorBlockEntity circuitFabricatorBlockEntity = (CircuitFabricatorBlockEntity) blockEntity;
 
                 for (int i = 0; i < circuitFabricatorBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = circuitFabricatorBlockEntity.getInventory().getStack(i);
+                    ItemStack itemStack = circuitFabricatorBlockEntity.getInventory().getInvStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

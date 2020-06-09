@@ -180,7 +180,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
                 ElectricCompressorBlockEntity be = (ElectricCompressorBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = be.getInventory().getStack(i);
+                    ItemStack itemStack = be.getInventory().getInvStack(i);
 
                     if (!itemStack.isEmpty()) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack.copy()));

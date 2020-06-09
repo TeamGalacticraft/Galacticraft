@@ -70,13 +70,13 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
             if (!client.player.isCreative()) {
                 FullFixedItemInv gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
-                if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem) {
-                    this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getStack(6).getMaxDamage() - (double) gearInventory.getStack(6).getDamage()) / (double) gearInventory.getStack(6).getMaxDamage()))));
+                if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem) {
+                    this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(6).getMaxDamage() - (double) gearInventory.getInvStack(6).getDamage()) / (double) gearInventory.getInvStack(6).getMaxDamage()))));
                 } else if (client.player.isCreative()) {
                     this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
                 }
-                if (gearInventory.getStack(7).getItem() instanceof OxygenTankItem) {
-                    this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getStack(7).getMaxDamage() - (double) gearInventory.getStack(7).getDamage()) / (double) gearInventory.getStack(7).getMaxDamage()))));
+                if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem) {
+                    this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getInvStack(7).getMaxDamage() - (double) gearInventory.getInvStack(7).getDamage()) / (double) gearInventory.getInvStack(7).getMaxDamage()))));
                 } else if (client.player.isCreative()) {
                     this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
                 }

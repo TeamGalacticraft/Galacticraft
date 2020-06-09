@@ -151,7 +151,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         if (getEnergyAttribute().getCurrentEnergy() >= getEnergyAttribute().getMaxEnergy()) {
             return;
         }
-        ItemStack stack = inventory.getStack(slot).copy();
+        ItemStack stack = inventory.getInvStack(slot).copy();
         int neededEnergy = Math.min(getBatteryTransferRate(), getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy());
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy);
@@ -175,7 +175,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         if (available <= 0) {
             return;
         }
-        ItemStack stack = inventory.getStack(slot).copy();
+        ItemStack stack = inventory.getInvStack(slot).copy();
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             if (GalacticraftEnergy.getEnergy(stack) < GalacticraftEnergy.getMaxEnergy(stack)) {
                 int i = GalacticraftEnergy.insertEnergy(stack, available);

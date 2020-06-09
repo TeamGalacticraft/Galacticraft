@@ -52,9 +52,9 @@ public class ThermalArmorItem extends Item {
     @Override //should sync with server
     public TypedActionResult<ItemStack> use(World world_1, PlayerEntity playerEntity_1, Hand hand_1) {
         FullFixedItemInv inv = ((GCPlayerAccessor) playerEntity_1).getGearInventory();
-        ItemStack thermalPiece = inv.getStack(getSlotIdForType(getSlotType()));
+        ItemStack thermalPiece = inv.getInvStack(getSlotIdForType(getSlotType()));
         if (thermalPiece.isEmpty()) {
-            inv.setStack(getSlotIdForType(getSlotType()), playerEntity_1.getStackInHand(hand_1), Simulation.ACTION);
+            inv.setInvStack(getSlotIdForType(getSlotType()), playerEntity_1.getStackInHand(hand_1), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world_1, playerEntity_1, hand_1);

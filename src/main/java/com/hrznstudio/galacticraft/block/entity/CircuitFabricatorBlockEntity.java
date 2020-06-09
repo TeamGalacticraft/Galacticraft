@@ -138,7 +138,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
 
-        if (isValidRecipe(this.getInventory().getStack(5))) {
+        if (isValidRecipe(this.getInventory().getInvStack(5))) {
             if (canPutStackInResultSlot(getResultFromRecipeStack())) {
                 this.status = CircuitFabricatorStatus.PROCESSING;
             }
@@ -170,7 +170,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     // This is just for testing purposes
     private ItemStack getResultFromRecipeStack() {
-        BasicInventory inv = new BasicInventory(getInventory().getStack(5));
+        BasicInventory inv = new BasicInventory(getInventory().getInvStack(5));
         // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
         FabricationRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("Not a valid recipe."));
         return recipe.craft(inv);
@@ -201,10 +201,10 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     private boolean hasMandatoryMaterials() {
-        return getInventory().getStack(1).getItem() == mandatoryMaterials[0] &&
-                getInventory().getStack(2).getItem() == mandatoryMaterials[1] &&
-                getInventory().getStack(3).getItem() == mandatoryMaterials[2] &&
-                getInventory().getStack(4).getItem() == mandatoryMaterials[3];
+        return getInventory().getInvStack(1).getItem() == mandatoryMaterials[0] &&
+                getInventory().getInvStack(2).getItem() == mandatoryMaterials[1] &&
+                getInventory().getInvStack(3).getItem() == mandatoryMaterials[2] &&
+                getInventory().getInvStack(4).getItem() == mandatoryMaterials[3];
     }
 
 
