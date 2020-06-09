@@ -33,7 +33,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -50,7 +49,7 @@ public class CircuitFabricatorBlockEntityRenderer extends ConfigurableElectricMa
 
     @Nonnull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull CircuitFabricatorBlockEntity entity, @Nullable Direction direction) {
+    public SpriteIdentifier getDefaultSpriteId(@Nonnull CircuitFabricatorBlockEntity entity, @Nonnull Direction direction) {
         if (direction == Direction.NORTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/circuit_fabricator"));
         }

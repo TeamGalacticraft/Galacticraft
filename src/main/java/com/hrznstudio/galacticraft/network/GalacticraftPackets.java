@@ -76,7 +76,7 @@ public class GalacticraftPackets {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buffer) -> {
             PacketByteBuf buf = new PacketByteBuf(buffer.copy());
             context.getTaskQueue().execute(() -> {
-                BlockPos pos = buffer.readBlockPos();
+                BlockPos pos = buf.readBlockPos();
                 if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
                     if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
@@ -89,7 +89,6 @@ public class GalacticraftPackets {
                         }
                     }
                 });
-
         }));
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, context.getPlayer(), packetByteBuf -> {

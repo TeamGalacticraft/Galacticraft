@@ -31,7 +31,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -43,7 +42,7 @@ public class CoalGeneratorBlockEntityRenderer extends ConfigurableElectricMachin
 
     @Nonnull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull CoalGeneratorBlockEntity entity, @Nullable Direction direction) {
+    public SpriteIdentifier getDefaultSpriteId(@Nonnull CoalGeneratorBlockEntity entity, @Nonnull Direction direction) {
         if (direction == Direction.NORTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/coal_generator"));
         }

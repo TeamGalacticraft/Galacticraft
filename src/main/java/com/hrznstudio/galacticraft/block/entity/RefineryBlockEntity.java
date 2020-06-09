@@ -85,6 +85,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             }
         }
     };
+
     public RefineryStatus status = RefineryStatus.IDLE;
 
     public RefineryBlockEntity() {
@@ -94,6 +95,10 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     @Override
     protected int getInvSize() {
         return 3;
+    }
+
+    public SimpleFixedFluidInv getFluidInv() {
+        return fluidInv;
     }
 
     @Override

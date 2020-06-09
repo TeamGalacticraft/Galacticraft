@@ -33,13 +33,10 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.api.EnergyAttribute;
 import io.github.cottonmc.energy.api.EnergyAttributeProvider;
 import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -47,6 +44,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -96,7 +94,6 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
     }
 
-    @Environment(EnvType.CLIENT)
     public MachineStatus getStatusForTooltip() {
         return null;
     }
@@ -244,37 +241,36 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     public void trySpreadEnergy() {
-        for (int i = 0; i < ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos)).length; i++) {
-            if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_OUTPUT) {
-                if (world.getBlockState(pos.offset(Direction.values()[i])).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    if (((ConfigurableElectricMachineBlock) world.getBlockState(pos.offset(Direction.values()[i])).getBlock()).canWireConnect(world, Direction.values()[i], pos, pos.offset(Direction.values()[i])) == WireConnectionType.ENERGY_INPUT) {
-                        EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
-                        if (energyAttribute.canExtractEnergy()) {
-                            int failed = getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
-                            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+        BlockState state = world.getBlockState(pos);
+        for (ConfigurableElectricMachineBlock.BlockFace face : ConfigurableElectricMachineBlock.BlockFace.values()) {
+            SideOption option = state.get(((ConfigurableElectricMachineBlock) state.getBlock()).getProperty(face));
+            if (option == SideOption.POWER_INPUT || option == SideOption.POWER_OUTPUT) {
+                Direction direction = face.toDirection(state.get(Properties.HORIZONTAL_FACING));
+                BlockState other = world.getBlockState(pos.offset(direction));
+                EnergyAttribute attribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, direction);
+                if (!(other.getBlock() instanceof ConfigurableElectricMachineBlock)) {
+                    if (option == SideOption.POWER_INPUT) {
+                        if (attribute.canExtractEnergy() && attribute.getPreferredType().isCompatibleWith(getEnergyAttribute().getPreferredType())) {
+                            int extracted = attribute.extractEnergy(getEnergyAttribute().getPreferredType(), Math.min(256, getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy()), Simulation.ACTION);
+                            getEnergyAttribute().insertEnergy(getEnergyAttribute().getPreferredType(), extracted, Simulation.ACTION);
+                        }
+                    } else {
+                        if (attribute.canInsertEnergy() && attribute.getPreferredType().isCompatibleWith(getEnergyAttribute().getPreferredType())) {
+                            int extracted = getEnergyAttribute().extractEnergy(getEnergyAttribute().getPreferredType(), Math.min(256, attribute.getMaxEnergy() - attribute.getCurrentEnergy()), Simulation.ACTION);
+                            attribute.insertEnergy(getEnergyAttribute().getPreferredType(), extracted, Simulation.ACTION);
                         }
                     }
                 } else {
-                    EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
-                    if (energyAttribute.canExtractEnergy()) {
-                        int failed = getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
-                        this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
-                    }
-                }
-            } else if (ConfigurableElectricMachineBlock.optionsToArray(this.world.getBlockState(pos))[i] == SideOption.POWER_INPUT) {
-                if (world.getBlockState(pos.offset(Direction.values()[i])).getBlock() instanceof ConfigurableElectricMachineBlock) {
-                    if (((ConfigurableElectricMachineBlock) world.getBlockState(pos.offset(Direction.values()[i])).getBlock()).canWireConnect(world, Direction.values()[i], pos, pos.offset(Direction.values()[i])) == WireConnectionType.ENERGY_OUTPUT) {
-                        EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
-                        if (energyAttribute.canExtractEnergy()) {
-                            int failed = getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
-                            this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+                    if (option == SideOption.POWER_INPUT && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_OUTPUT) {
+                        if (attribute.canExtractEnergy() && attribute.getPreferredType().isCompatibleWith(getEnergyAttribute().getPreferredType())) {
+                            int extracted = attribute.extractEnergy(getEnergyAttribute().getPreferredType(), Math.min(256, getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy()), Simulation.ACTION);
+                            getEnergyAttribute().insertEnergy(getEnergyAttribute().getPreferredType(), extracted, Simulation.ACTION);
                         }
-                    }
-                } else {
-                    EnergyAttribute energyAttribute = EnergyAttribute.ENERGY_ATTRIBUTE.getFirstFromNeighbour(this, Direction.values()[i]);
-                    if (energyAttribute.canExtractEnergy()) {
-                        int failed = getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5, Simulation.ACTION);
-                        this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 5 - failed, Simulation.ACTION);
+                    } else {
+                        if (attribute.canInsertEnergy() && attribute.getPreferredType().isCompatibleWith(getEnergyAttribute().getPreferredType()) && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_INPUT) {
+                            int extracted = getEnergyAttribute().extractEnergy(getEnergyAttribute().getPreferredType(), Math.min(256, attribute.getMaxEnergy() - attribute.getCurrentEnergy()), Simulation.ACTION);
+                            attribute.insertEnergy(getEnergyAttribute().getPreferredType(), extracted, Simulation.ACTION);
+                        }
                     }
                 }
             }

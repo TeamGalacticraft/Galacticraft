@@ -127,6 +127,8 @@ public class GalacticraftClient implements ClientModInitializer {
 
             registry.register(new Identifier(Constants.MOD_ID, "block/coal_generator"));
             registry.register(new Identifier(Constants.MOD_ID, "block/compressor"));
+
+            registry.register(new Identifier(Constants.MOD_ID, "block/empty"));
         });
 
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
