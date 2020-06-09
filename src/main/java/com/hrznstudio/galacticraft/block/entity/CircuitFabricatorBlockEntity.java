@@ -42,6 +42,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
@@ -123,13 +124,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
 
         if (getEnergyAttribute().getCurrentEnergy() <= 0) {
-            status = CircuitFabricatorStatus.NOT_ENOUGH_POWER;
+            status = CircuitFabricatorStatus.NOT_ENOUGH_ENERGY;
         } else {
             status = CircuitFabricatorStatus.IDLE;
         }
 
 
-        if (status == CircuitFabricatorStatus.NOT_ENOUGH_POWER) {
+        if (status == CircuitFabricatorStatus.NOT_ENOUGH_ENERGY) {
             if (progress > 0) {
                 this.progress--;
             }
@@ -142,7 +143,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 this.status = CircuitFabricatorStatus.PROCESSING;
             }
         } else {
-            if (this.status != CircuitFabricatorStatus.NOT_ENOUGH_POWER) {
+            if (this.status != CircuitFabricatorStatus.NOT_ENOUGH_ENERGY) {
                 this.status = CircuitFabricatorStatus.IDLE;
             }
         }
@@ -253,29 +254,32 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CircuitFabricatorStatus {
+    public enum CircuitFabricatorStatus implements MachineStatus {
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN),
+
         /**
          * Fabricator is not processing.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
+
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_POWER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_power").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString()),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY),
+
         /**
          * The fabricator has been switched off.
          */
-        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString());
+        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off"), Formatting.RED);
 
 
-        private final String name;
+        private final Text text;
 
-        CircuitFabricatorStatus(String name) {
-            this.name = name;
+        CircuitFabricatorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static CircuitFabricatorStatus get(int index) {
@@ -287,13 +291,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 case 3:
                     return OFF;
                 default:
-                    return NOT_ENOUGH_POWER;
+                    return NOT_ENOUGH_ENERGY;
             }
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }

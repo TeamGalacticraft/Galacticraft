@@ -118,7 +118,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         int fuelUsageScale;
         CompressorBlockEntity.CompressorStatus status = this.handler.blockEntity.status;
 
-        if (status != CompressorBlockEntity.CompressorStatus.INACTIVE) {
+        if (status != CompressorBlockEntity.CompressorStatus.IDLE) {
             fuelUsageScale = getFuelProgress();
             this.drawTexture(stack, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }

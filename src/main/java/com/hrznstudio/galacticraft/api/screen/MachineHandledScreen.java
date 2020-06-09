@@ -232,7 +232,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (check(mouseX, mouseY, energyX, energyY, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>();
             if (handler.blockEntity.getStatusForTooltip() != null) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", this.handler.blockEntity.getStatusForTooltip().toString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatusForTooltip().getText()));
             }
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));

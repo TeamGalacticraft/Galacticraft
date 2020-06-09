@@ -96,7 +96,7 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = CompressorBlockEntity.CompressorStatus.get(status.get());
+        blockEntity.status = ElectricCompressorBlockEntity.ElectricCompressorStatus.get(status.get());
         blockEntity.progress = progress.get();
     }
 

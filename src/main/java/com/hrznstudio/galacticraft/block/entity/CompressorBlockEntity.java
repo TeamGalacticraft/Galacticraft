@@ -43,6 +43,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
@@ -56,7 +57,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    public CompressorStatus status = CompressorStatus.INACTIVE;
+    public CompressorStatus status = CompressorStatus.IDLE;
     public int fuelTime;
     public int maxFuelTime;
     public int progress;
@@ -111,7 +112,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
                 ItemStack fuel = getInventory().getStack(FUEL_INPUT_SLOT);
                 if (fuel.isEmpty()) {
                     // Machine out of fuel and no fuel present.
-                    status = CompressorStatus.INACTIVE;
+                    status = CompressorStatus.IDLE;
                     progress = 0;
                     return;
                 } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
@@ -121,7 +122,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
                     status = CompressorStatus.PROCESSING;
                 } else {
                     // Can't start processing any new materials anyway, don't waste fuel.
-                    status = CompressorStatus.INACTIVE;
+                    status = CompressorStatus.IDLE;
                     progress = 0;
                     return;
                 }
@@ -222,41 +223,34 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CompressorStatus {
+    public enum CompressorStatus implements MachineStatus {
 
         /**
-         * Generator is active and is generating energy.
+         * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
-        /**
-         * Generator has fuel but buffer is full.
-         */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
-        /**
-         * The generator has no energy.
-         */
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString());
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
 
-        private final String name;
+        /**
+         * Compressor has no items to process.
+         */
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD);
 
-        CompressorStatus(String name) {
-            this.name = name;
+        private final Text text;
+
+        CompressorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static CompressorStatus get(int index) {
-            switch (index) {
-                case 0:
-                    return PROCESSING;
-                case 1:
-                    return IDLE;
-                default:
-                    return INACTIVE;
+            if (index == 0) {
+                return PROCESSING;
             }
+            return IDLE;
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }

@@ -36,6 +36,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import team.reborn.energy.EnergySide;
@@ -206,16 +210,16 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenCollectorStatus {
-        INACTIVE(16733525), //red
-        NOT_ENOUGH_LEAVES(16733525), //red
-        COLLECTING(5635925), //green
-        FULL(16755200); //gold
+    public enum OxygenCollectorStatus implements MachineStatus {
+        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED),
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD);
 
-        private final int textColor;
+        private final Text text;
 
-        OxygenCollectorStatus(int textColor) {
-            this.textColor = textColor;
+        OxygenCollectorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static OxygenCollectorStatus get(int index) {
@@ -223,8 +227,9 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
             return OxygenCollectorStatus.values()[index % OxygenCollectorStatus.values().length];
         }
 
-        public int getTextColor() {
-            return textColor;
+        @Override
+        public Text getText() {
+            return text;
         }
     }
 }

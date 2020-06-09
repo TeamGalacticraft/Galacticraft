@@ -100,10 +100,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.client.textRenderer.draw(stack, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
-        String status = this.handler.blockEntity.status == OxygenCollectorBlockEntity.OxygenCollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
-                : this.handler.blockEntity.status == OxygenCollectorBlockEntity.OxygenCollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
-                : this.handler.blockEntity.status == OxygenCollectorBlockEntity.OxygenCollectorStatus.FULL ? "ui.galacticraft-rewoven.machinestatus.full" : "ui.galacticraft-rewoven.machinestatus.inactive";
-        this.client.textRenderer.draw(stack, new TranslatableText(status).getString(), statusX + this.client.textRenderer.getWidth(statusText), statusY, this.handler.blockEntity.status.getTextColor());
+        this.client.textRenderer.draw(stack, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText(), statusX + this.client.textRenderer.getWidth(statusText), statusY, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().getStyle().getColor().getRgb());
 
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.lastCollectAmount.get()).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);

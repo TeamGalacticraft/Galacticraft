@@ -32,6 +32,7 @@ import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.energy.api.EnergyAttribute;
@@ -46,6 +47,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
@@ -95,7 +97,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     @Environment(EnvType.CLIENT)
-    public Enum<?> getStatusForTooltip() {
+    public MachineStatus getStatusForTooltip() {
         return null;
     }
 
@@ -163,16 +165,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     public final boolean canUse(PlayerEntity player) {
         ConfigurableElectricMachineBlockEntity.SecurityInfo security = this.getSecurity();
-        switch (security.getPublicity()) {
-            case PUBLIC:
-                return true;
-            case SPACE_RACE:
-                return player.getUuid().equals(this.getSecurity().getOwner()); //todo space race
-            case PRIVATE:
-                return player.getUuid().equals(this.getSecurity().getOwner());
-            default:
-                return false;
-        }
+        return security.hasAccess(player);
     }
 
     /**
@@ -226,7 +219,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         super.toTag(tag);
         tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
         tag.put("Inventory", inventory.toTag());
-        this.security.fromTag(tag);
+        this.security.toTag(tag);
         tag.putString("Redstone", redstoneState.asString());
         return tag;
     }
@@ -331,6 +324,10 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         }
     }
 
+    public interface MachineStatus {
+        Text getText();
+    }
+
     public static class SecurityInfo {
         private UUID owner;
         private String username;
@@ -342,6 +339,28 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             this.publicity = Publicity.PUBLIC;
             this.team = null;
             this.username = "";
+        }
+
+        public boolean isOwner(PlayerEntity player) {
+            return isOwner(player.getUuid());
+        }
+
+        public boolean isOwner(UUID uuid) {
+            if (owner == null) owner = uuid;
+            return this.owner.equals(uuid);
+        }
+
+        public boolean hasAccess(PlayerEntity player) {
+            switch (publicity) {
+                case PUBLIC:
+                    return true;
+                case SPACE_RACE:
+                    return (((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUuid()) != null)
+                            && ((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUuid()).players.containsKey(owner);
+                case PRIVATE:
+                    return isOwner(player);
+            }
+            return false;
         }
 
         public Publicity getPublicity() {
@@ -399,11 +418,13 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
         public void fromTag(CompoundTag tag) {
             CompoundTag compoundTag = tag.getCompound("security");
+
             if (compoundTag.contains("owner")) {
                 if (!this.hasOwner()) {
                     this.owner = compoundTag.getUuidNew("owner");
                 }
             }
+
             if (compoundTag.contains("team")) {
                 if (!this.hasTeam()) {
                     this.team = new Identifier(compoundTag.getString("team"));
@@ -411,10 +432,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
             }
 
             this.username = compoundTag.getString("username");
-
-            if (compoundTag.contains("publicity")) {
-                this.publicity = Publicity.valueOf(compoundTag.getString("publicity"));
-            }
+            this.publicity = Publicity.valueOf(compoundTag.getString("publicity"));
         }
 
 

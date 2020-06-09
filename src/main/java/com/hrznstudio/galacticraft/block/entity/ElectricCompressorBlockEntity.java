@@ -41,6 +41,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyStorage;
@@ -56,7 +60,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    public CompressorBlockEntity.CompressorStatus status = CompressorBlockEntity.CompressorStatus.INACTIVE;
+    public ElectricCompressorStatus status = ElectricCompressorStatus.IDLE;
     public int progress;
 
     public ElectricCompressorBlockEntity() {
@@ -87,7 +91,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
     @Override
     @Environment(EnvType.CLIENT)
-    public CompressorBlockEntity.CompressorStatus getStatusForTooltip() {
+    public ElectricCompressorStatus getStatusForTooltip() {
         return status;
     }
 
@@ -108,14 +112,14 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
         if (getEnergyAttribute().getCurrentEnergy() < 1) {
-            status = CompressorBlockEntity.CompressorStatus.INACTIVE;
+            status = ElectricCompressorStatus.IDLE;
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-            status = CompressorBlockEntity.CompressorStatus.PROCESSING;
+            status = ElectricCompressorStatus.PROCESSING;
         } else {
-            status = CompressorBlockEntity.CompressorStatus.IDLE;
+            status = ElectricCompressorStatus.IDLE;
         }
 
-        if (status == CompressorBlockEntity.CompressorStatus.PROCESSING) {
+        if (status == ElectricCompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
             this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
             this.progress++;
@@ -129,7 +133,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
                 craftItem(resultStack);
             }
-        } else if (status == CompressorBlockEntity.CompressorStatus.INACTIVE) {
+        } else if (status == ElectricCompressorStatus.IDLE) {
             if (progress > 0) {
                 progress--;
             }
@@ -249,5 +253,49 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
+    }
+
+    /**
+     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     */
+    public enum ElectricCompressorStatus implements MachineStatus {
+
+        /**
+         * Compressor is compressing items.
+         */
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
+
+        /**
+         * Compressor has no items to process.
+         */
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
+
+        /**
+         * Compressor has no items to process.
+         */
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED);
+
+        private final Text text;
+
+        ElectricCompressorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
+        }
+
+        public static ElectricCompressorStatus get(int index) {
+            switch (index) {
+                case 0:
+                    return PROCESSING;
+                case 1:
+                    return IDLE;
+                case 2:
+                    return NOT_ENOUGH_ENERGY;
+            }
+            return IDLE;
+        }
+
+        @Override
+        public Text getText() {
+            return text;
+        }
     }
 }

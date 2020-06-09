@@ -38,6 +38,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
@@ -60,7 +61,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
         SLOT_FILTERS[1] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
-    public CoalGeneratorStatus status = CoalGeneratorStatus.INACTIVE;
+    public CoalGeneratorStatus status = CoalGeneratorStatus.IDLE;
     public int fuelTimeMax;
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
@@ -112,7 +113,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             return;
         }
 
-        if (status == CoalGeneratorStatus.IDLE || status == CoalGeneratorStatus.INACTIVE) {
+        if (status == CoalGeneratorStatus.IDLE) {
             if (heat >= 1.0F) {
                 heat -= 0.05F;
             } else {
@@ -120,7 +121,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             }
         }
 
-        if (canUseAsFuel(getInventory().getStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && (status == CoalGeneratorStatus.INACTIVE || status == CoalGeneratorStatus.IDLE)) {
+        if (canUseAsFuel(getInventory().getStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
             this.status = CoalGeneratorStatus.WARMING;
 
             this.fuelTimeMax = createFuelTimeMap().get(getInventory().getStack(0).getItem()).getLeft();
@@ -144,7 +145,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat), Simulation.ACTION);
 
             if (fuelTimeCurrent >= fuelTimeMax) {
-                this.status = CoalGeneratorStatus.INACTIVE;
+                this.status = CoalGeneratorStatus.IDLE;
                 this.fuelTimeCurrent = 0;
             }
         }
@@ -181,28 +182,26 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CoalGeneratorStatus {
+    public enum CoalGeneratorStatus implements MachineStatus {
         /**
-         * Generator is active and is generating energy.
+         * The generator is active and is generating energy.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
-        /**
-         * Generator has fuel but buffer is full.
-         */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
-        /**
-         * The generator has no fuel.
-         */
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString()),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
+
         /**
          * The generator is warming up.
          */
-        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString());
+        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming"), Formatting.GOLD),
 
-        private final String name;
+        /**
+         * The generator is full or out of fuel.
+         */
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD);
 
-        CoalGeneratorStatus(String name) {
-            this.name = name;
+        private final Text text;
+
+        CoalGeneratorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static CoalGeneratorStatus get(int index) {
@@ -211,8 +210,8 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }

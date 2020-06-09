@@ -40,6 +40,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
@@ -84,7 +85,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             }
         }
     };
-    public RefineryStatus status = RefineryStatus.INACTIVE;
+    public RefineryStatus status = RefineryStatus.IDLE;
 
     public RefineryBlockEntity() {
         super(GalacticraftBlockEntities.REFINERY_TYPE);
@@ -127,7 +128,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         }
 
         if (getEnergyAttribute().getCurrentEnergy() <= 0) {
-            status = RefineryStatus.INACTIVE;
+            status = RefineryStatus.NOT_ENOUGH_ENERGY;
             return;
         }
 
@@ -200,34 +201,37 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum RefineryStatus {
+    public enum RefineryStatus implements MachineStatus {
 
         /**
-         * Refinery is active and is converting oil into fuel.
+         * Refinery is active and is refining oil into fuel.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining"), Formatting.GREEN),
+
         /**
          * Refinery has oil but the fuel tank is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
-        /**
-         * The refinery has no oil.
-         */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.BLACK)).getString()),
-        /**
-         * The refinery has no energy.
-         */
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString());
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
 
-        private final String name;
+        /**
+         * The refinery is out of oil.
+         */
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GRAY),
 
-        RefineryStatus(String name) {
-            this.name = name;
+        /**
+         * The refinery is out of oil.
+         */
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED);
+
+        private final Text text;
+
+        RefineryStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }
