@@ -35,6 +35,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -52,7 +54,11 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    public void init(World world, BlockPos blockPos, GameProfile gameProfile, CallbackInfo info) {
-        this.gearInventory = new FullFixedItemInv(12);
+    public void init(World world, BlockPos blockPos, GameProfile gameProfile, CallbackInfo info) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        this.gearInventory = (FullFixedItemInv) getClass().getClassLoader()
+                .loadClass("alexiil.mc.lib.attributes.item.impl.FullFixedItemInv")
+                .getConstructor(int.class)
+                .newInstance(12);
+//        this.gearInventory = new FullFixedItemInv(12);
     }
 }

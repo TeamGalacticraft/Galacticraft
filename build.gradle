@@ -40,16 +40,14 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
 
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre4")
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
     modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
     
-    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}") { transitive = false }
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}") { transitive = false }
+    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth', module: 'config-2'
@@ -66,9 +64,7 @@ dependencies {
     include("me.shedaniel.cloth:cloth-events:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
     include("io.github.cottonmc:cotton-energy:${project.energy_version}")
-    include("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
-    include("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}")
-    include("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+    include("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
     include("teamreborn:energy:+")
 	
     // Needed for LBA in order for eclipse to work
