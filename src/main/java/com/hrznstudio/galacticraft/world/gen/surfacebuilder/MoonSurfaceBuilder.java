@@ -1,9 +1,7 @@
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.mojang.datafixers.Dynamic;
-import java.util.Random;
-import java.util.function.Function;
+import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -12,9 +10,11 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
-public class MoonSurfaceBuilder extends SurfaceBuilder<TernarySurfaceConfig> {
-   public MoonSurfaceBuilder(Function<Dynamic<?>, ? extends TernarySurfaceConfig> function) {
-      super(function);
+import java.util.Random;
+
+public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceBuilder<C> {
+   public MoonSurfaceBuilder(Codec<C> codec) {
+      super(codec);
    }
 
    public void generate(Random random, Chunk chunk, Biome biome, int x, int z, int height, double noise, BlockState defaultBlock, BlockState fluidBlock, int seaLevel, long seed, TernarySurfaceConfig ternarySurfaceConfig) {
