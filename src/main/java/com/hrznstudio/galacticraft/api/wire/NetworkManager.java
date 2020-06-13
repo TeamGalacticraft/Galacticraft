@@ -30,6 +30,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.dimension.DimensionType;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,7 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NetworkManager {
 
-    private static final Map<Integer, NetworkManager> managers = new HashMap<>();
+    private static final Map<DimensionType, NetworkManager> managers = new HashMap<>();
     /**
      * A map containing all the networks in the current world.
      * Cleared on world close.
@@ -52,15 +54,15 @@ public class NetworkManager {
     }
 
     public static void createManagerForWorld(ServerWorld world) {
-        managers.put(world.getDimension().getType().getRawId(), new NetworkManager());
+        managers.put(world.getDimension(), new NetworkManager());
     }
 
-    public static NetworkManager getManagerForDimension(int id) {
+    public static NetworkManager getManagerForDimension(DimensionType id) {
         return managers.get(id);
     }
 
     public static NetworkManager getManagerForWorld(WorldAccess world) {
-        return getManagerForDimension(world.getDimension().getType().getRawId());
+        return getManagerForDimension(world.getDimension());
     }
 
     public void removeWire(BlockPos pos) {

@@ -61,7 +61,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
     @Inject(method = "render", at = @At(value = "TAIL"))
     private void draw(MatrixStack stack, float float_1, CallbackInfo ci) {
-        if (CelestialBodyType.getByDimType(client.player.world.getDimension().getType()).isPresent() && !CelestialBodyType.getByDimType(client.player.world.getDimension().getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+        if (CelestialBodyType.getByDimType(client.player.world.getDimension()).isPresent() && !CelestialBodyType.getByDimType(client.player.world.getDimension()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             DiffuseLighting.enableGuiDepthLighting();
             client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));
 

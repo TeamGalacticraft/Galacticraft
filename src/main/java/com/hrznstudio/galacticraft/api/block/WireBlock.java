@@ -66,7 +66,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
+            if (network == null) network = new WireNetwork(pos, world.getDimension());
             for (Direction d : Direction.values()) {
                 if (world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
                     WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
@@ -103,7 +103,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
         if (!world.isClient() && type != WireConnectionType.NONE) {
             if (world.getBlockState(updated).getBlock() instanceof WireConnectable) {
                 WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-                if (network == null) network = new WireNetwork(pos, world.getDimension().getRawId());
+                if (network == null) network = new WireNetwork(pos, world.getDimension());
                 if (type == WireConnectionType.WIRE) {
                     WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(updated);
                     if (network1 != network) {

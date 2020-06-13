@@ -77,7 +77,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
+            if (network == null) network = new WireNetwork(pos, world.getDimension());
             for (Direction d : Direction.values()) {
                 if (state.get(getPropForDirection(d)) && world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
                     WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));

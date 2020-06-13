@@ -74,7 +74,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     private int collectOxygen(BlockPos center) {
-        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getDimension().getType());
+        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getDimension());
 
         if (celestialBodyType.isPresent()) {
             if (celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {

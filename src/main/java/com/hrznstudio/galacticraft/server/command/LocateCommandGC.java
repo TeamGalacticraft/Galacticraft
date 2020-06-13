@@ -26,13 +26,14 @@ public class LocateCommandGC {
     }
 
     private static int execute(ServerCommandSource source, String structure) throws CommandSyntaxException {
-        BlockPos blockPos = new BlockPos(source.getPosition());
-        BlockPos blockPos2 = source.getWorld().locateStructure(structure, blockPos, 100, false);
-        if (blockPos2 == null) {
-            throw FAILED_EXCEPTION.create();
-        } else {
-            return sendCoordinates(source, structure, blockPos, blockPos2, "commands.locate.success");
-        }
+//        BlockPos blockPos = new BlockPos(source.getPosition());
+//        BlockPos blockPos2 = source.getWorld().locateStructure(structure, blockPos, 100, false);
+//        if (blockPos2 == null) {
+//            throw FAILED_EXCEPTION.create();
+//        } else {
+//            return sendCoordinates(source, structure, blockPos, blockPos2, "commands.locate.success");
+//        } TODO: update to new 1.16 world stuff
+        return -1;
     }
 
     public static int sendCoordinates(ServerCommandSource serverCommandSource, String string, BlockPos blockPos, BlockPos blockPos2, String successMessage) {

@@ -110,7 +110,7 @@ public abstract class WorldRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
     private void renderSkyGC(MatrixStack matrixStack, float f, CallbackInfo ci) {
-        if (this.world.getDimension().getType() == GalacticraftDimensions.MOON) {
+        if (this.world.getDimension() == GalacticraftDimensions.MOON) {
             RenderSystem.disableTexture();
             RenderSystem.disableRescaleNormal();
             RenderSystem.color3f(1F, 1F, 1F);

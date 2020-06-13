@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.api.wire;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.dimension.DimensionType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,15 +38,15 @@ public class WireNetwork {
     private final List<BlockPos> producers = new ArrayList<>();
     private final List<BlockPos> query = new ArrayList<>();
 
-    private final int dimId;
+    private final DimensionType dimId;
 
-    public WireNetwork(BlockPos start, int dimId) {
+    public WireNetwork(BlockPos start, DimensionType dimId) {
         this(dimId);
         addVertex(new BlockPos(start));
         NetworkManager.getManagerForDimension(dimId).addWire(start, this);
     }
 
-    public WireNetwork(int dimId) {
+    public WireNetwork(DimensionType dimId) {
         this.dimId = dimId;
     }
 

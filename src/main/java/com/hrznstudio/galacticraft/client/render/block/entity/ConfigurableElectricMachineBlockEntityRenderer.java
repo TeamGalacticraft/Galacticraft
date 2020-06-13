@@ -35,6 +35,7 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.model.*;
+import net.minecraft.client.render.model.ModelRotation;
 import net.minecraft.client.render.model.json.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -220,7 +221,7 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(getDegrees(direction)));
         matrices.translate(-0.5F, 0.0F, -0.5F);
         MinecraftClient.getInstance().getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-        render(matrices.peek(), vertexConsumers.getBuffer(RenderLayers.getEntityBlockLayer(blockEntity.getWorld().getBlockState(blockEntity.getPos()))), null, this.getModelForState(blockEntity, blockEntity.getWorld().getBlockState(blockEntity.getPos())), 1.0F, 1.0F, 1.0F, light, overlay);
+        render(matrices.peek(), vertexConsumers.getBuffer(RenderLayers.getEntityBlockLayer(blockEntity.getWorld().getBlockState(blockEntity.getPos()), true)), null, this.getModelForState(blockEntity, blockEntity.getWorld().getBlockState(blockEntity.getPos())), 1.0F, 1.0F, 1.0F, light, overlay);
         matrices.pop();
     }
 

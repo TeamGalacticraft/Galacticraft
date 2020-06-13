@@ -86,7 +86,7 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity entity = (LivingEntity) (Object) this;
         //noinspection ConstantConditions
         if (this.isAlive() && !(entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.invulnerable)) {
-            if (CelestialBodyType.getByDimType(world.getDimension().getType()).isPresent() && !CelestialBodyType.getByDimType(world.getDimension().getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+            if (CelestialBodyType.getByDimType(world.getDimension()).isPresent() && !CelestialBodyType.getByDimType(world.getDimension()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                 updateAir(this);
             } else {
                 if (this.isSubmergedIn(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {

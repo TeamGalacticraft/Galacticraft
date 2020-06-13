@@ -26,12 +26,13 @@ import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.Blocks;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
+import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonChunkGeneratorConfig extends ChunkGeneratorType { //name pending
-    public MoonChunkGeneratorConfig(ChunkGeneratorConfig config) {
+    public MoonChunkGeneratorConfig(FlatChunkGeneratorConfig config) {
         super(config);
         this.defaultBlock = GalacticraftBlocks.MOON_ROCK.getDefaultState();
         this.defaultFluid = Blocks.REDSTONE_BLOCK.getDefaultState(); //DEBUG THING
