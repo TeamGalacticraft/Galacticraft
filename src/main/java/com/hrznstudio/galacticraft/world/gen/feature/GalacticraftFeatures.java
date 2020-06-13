@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.gen.stateprovider.MoonFlowerBlockStateProvider;
+import com.hrznstudio.galacticraft.world.gen.stateprovider.MoonFloraBlockStateProvider;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -47,7 +47,7 @@ public class GalacticraftFeatures {
     public static final TreeFeatureConfig CHEESE_TREE_CONFIG = (new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(GalacticraftBlocks.CHEESE_LOG.getDefaultState()), new SimpleBlockStateProvider(GalacticraftBlocks.CHEESE_LEAVES.getDefaultState()), new AcaciaFoliagePlacer(2, 0, 0, 0), new ForkingTrunkPlacer(5, 2, 2), new TwoLayersFeatureSize(1, 0, 2))).ignoreVines().build();
 
     public static final StructureFeature<DefaultFeatureConfig> MOON_VILLAGE = Registry.register(Registry.STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), Registry.register(Registry.FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), new MoonVillageFeature(DefaultFeatureConfig::deserialize)));
-    public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = (new RandomPatchFeatureConfig.Builder(new MoonFlowerBlockStateProvider(), new SimpleBlockPlacer())).tries(64).build();
+    public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = (new RandomPatchFeatureConfig.Builder(new MoonFloraBlockStateProvider(), new SimpleBlockPlacer())).tries(64).build();
     public static final BlockPileFeatureConfig CHEESE_LOG_PILE_CONFIG = new BlockPileFeatureConfig(new PillarBlockStateProvider(GalacticraftBlocks.CHEESE_LOG));
 
     public static final GCOreFeature GC_ORE_FEATURE = new GCOreFeature(GCOreFeatureConfig::deserialize);
