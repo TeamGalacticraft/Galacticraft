@@ -3,7 +3,7 @@ package com.hrznstudio.galacticraft.world.biome.layer;
 import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 
-public enum MoonBiomeTypeLayer implements IdentitySamplingLayer {
+public enum MoonBiomeRockLayer implements IdentitySamplingLayer {
    INSTANCE;
 
 

@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
+import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -323,6 +324,8 @@ public class MoonChunkGenerator extends ChunkGenerator {
         }
 
         this.buildBedrock(chunk, chunkRandom);
+
+        buildCraters(chunk, region);
     }
 
     public void buildBedrock(Chunk chunk, Random random) {
@@ -549,10 +552,6 @@ public class MoonChunkGenerator extends ChunkGenerator {
         return this.field_24779;
     }
 
-    public int getSeaLevel() {
-        return this.field_24774.method_28561();
-    }
-
     public List<Biome.SpawnEntry> getEntitySpawnList(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
         if (group == SpawnGroup.MONSTER) {
             if (accessor.method_28388(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
@@ -570,6 +569,102 @@ public class MoonChunkGenerator extends ChunkGenerator {
         ChunkRandom chunkRandom = new ChunkRandom();
         chunkRandom.setPopulationSeed(region.getSeed(), i << 4, j << 4);
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
+    }
+
+
+    private double sampleDepthNoise(int x, int y) {
+        double d = this.interpolationNoise.sample(x * 200, 10.0D, y * 200, 1.0D, 0.0D, true) * 65535.0D / 8000.0D;
+        if (d < 0.0D) {
+            d = -d * 0.3D;
+        }
+
+        d = d * 3.0D - 2.0D;
+        if (d < 0.0D) {
+            d /= 28.0D;
+        } else {
+            if (d > 1.0D) {
+                d = 1.0D;
+            }
+
+            d /= 40.0D;
+        }
+
+        return d;
+    }
+
+    private void buildCraters(Chunk chunk, ChunkRegion region) {
+        for (int cx = chunk.getPos().x - 2; cx <= chunk.getPos().x + 2; cx++) {
+            for (int cz = chunk.getPos().z - 2; cz <= chunk.getPos().z + 2; cz++) {
+                Biome biome = region.getBiome(new BlockPos(chunk.getPos().x << 4 + 8, 0, chunk.getPos().z << 4));
+                if (biome instanceof SpaceBiome && ((SpaceBiome) biome).hasCraters()) {
+                    for (int x = 0; x < 16; x++) {
+                        for (int z = 0; z < 16; z++) {
+                            if (Math.abs(this.randFromPoint(cx << 4 + x, (cz << 4 + z) * 1000)) < this.sampleDepthNoise(x << 4 + x, cz << 4 + z) / (((SpaceBiome) biome).getCraterChance())) {
+                                Random random = new Random((cx << 4) + x + ((cz << 4) + z) * 102L);
+                                int size;
+
+                                int i = random.nextInt(14 + 8 + 2 + 1);
+                                if (i < 1) {
+                                    size = random.nextInt(30 - 26) + 26;
+                                } else if (i < 2) {
+                                    size = random.nextInt(17 - 13) + 13;
+                                } else if (i < 8) {
+                                    size = random.nextInt(25 - 18) + 18;
+                                } else {
+                                    size = random.nextInt(12 - 8) + 8;
+                                }
+
+                                if (((SpaceBiome) biome).forceSmallCraters()) {
+                                    size = random.nextInt(12 - 8) + 8;
+                                } else if (((SpaceBiome) biome).forceMediumCraters()) {
+                                    size = random.nextInt(25 - 18) + 18;
+                                } else if (((SpaceBiome) biome).forceLargeCraters()) {
+                                    size = random.nextInt(17 - 13) + 13;
+                                }
+                                this.makeCrater((cx << 4) + x, (cz << 4) + z, chunk.getPos().x << 4, chunk.getPos().z << 4, size, chunk);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private double randFromPoint(int x, int z) {
+        int n;
+        n = x + z * 57;
+        n = n << 13 ^ n;
+        return 1.0D - (n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff) / 1073741824.0;
+    }
+
+    private void makeCrater(int craterX, int craterZ, int chunkX, int chunkZ, int size, Chunk chunk) {
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                double xDev = craterX - (chunkX + x);
+                double zDev = craterZ - (chunkZ + z);
+                if (xDev * xDev + zDev * zDev < size * size) {
+                    xDev /= size;
+                    zDev /= size;
+                    final double sqrtY = xDev * xDev + zDev * zDev;
+                    final double yDev = 5 -(sqrtY * sqrtY * 6);
+                    int helper = 0;
+                    for (int y = 127; y > 0; y--) {
+                        if (!chunk.getBlockState(new BlockPos(x, y, z)).isAir() && helper <= yDev) {
+                            chunk.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState(), false);
+                            helper++;
+                        }
+                        if (helper > yDev) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public int getSeaLevel() {
+        return 0;
     }
 
     static {

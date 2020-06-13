@@ -18,4 +18,7 @@ public interface SpaceBiome {
         return true;
     }
 
+    default double getCraterChance() {
+        return 100.0D;
+    }
 }

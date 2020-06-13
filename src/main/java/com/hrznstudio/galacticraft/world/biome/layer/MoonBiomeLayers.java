@@ -13,19 +13,26 @@ import net.minecraft.world.biome.source.BiomeLayerSampler;
 import java.util.function.LongFunction;
 
 public class MoonBiomeLayers {
-    public static final int MOON_VALLEY_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_VALLEY);
     public static final int MOON_CHEESE_FOREST_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_CHEESE_FOREST);
-    public static final int MOON_HIGHLANDS_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_ROCKS);
-    public static final int MOON_MARE_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_ROCKS);
+
     public static final int MOON_HIGHLANDS_PLAINS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS);
+    public static final int MOON_HIGHLANDS_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_ROCKS);
+    public static final int MOON_HIGHLANDS_VALLEY_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_VALLEY);
+    public static final int MOON_HIGHLANDS_CRATERS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_CRATERS);
+
     public static final int MOON_MARE_PLAINS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_PLAINS);
+    public static final int MOON_MARE_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_ROCKS);
+    public static final int MOON_MARE_VALLEY_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_VALLEY);
+    public static final int MOON_MARE_CRATERS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_CRATERS);
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, int riverSize, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = MoonBaseBiomeLayer.INSTANCE.create(contextProvider.apply(1L));
-        layerFactory = MoonBiomeTypeLayer.INSTANCE.create(contextProvider.apply(1999L), layerFactory);
         layerFactory = ScaleLayer.FUZZY.create(contextProvider.apply(2000L), layerFactory);
-        layerFactory = MoonRavineLayer.INSTANCE.create(contextProvider.apply(2100L), layerFactory);
-        layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(2001L), layerFactory);
+        layerFactory = MoonBiomeRockLayer.INSTANCE.create(contextProvider.apply(1999L), layerFactory);
+        layerFactory = MoonBiomeCraterLayer.INSTANCE.create(contextProvider.apply(2003L), layerFactory);
+        layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(2004L), layerFactory);
+        layerFactory = MoonValleyLayer.INSTANCE.create(contextProvider.apply(2001L), layerFactory);
+
 //        layerFactory = AddIslandLayer.INSTANCE.create(contextProvider.apply(2L), layerFactory);
 
 //        LayerFactory<T> layerFactory2 = OceanTemperatureLayer.INSTANCE.create(contextProvider.apply(2L));
@@ -92,8 +99,8 @@ public class MoonBiomeLayers {
         if (id1 == id2) {
             return true;
         } else {
-            Biome biome = (Biome) Registry.BIOME.get(id1);
-            Biome biome2 = (Biome)Registry.BIOME.get(id2);
+            Biome biome = Registry.BIOME.get(id1);
+            Biome biome2 = Registry.BIOME.get(id2);
             if (biome != null && biome2 != null) {
                 if (biome != Biomes.WOODED_BADLANDS_PLATEAU && biome != Biomes.BADLANDS_PLATEAU) {
                     if (biome.getCategory() != Biome.Category.NONE && biome2.getCategory() != Biome.Category.NONE && biome.getCategory() == biome2.getCategory()) {

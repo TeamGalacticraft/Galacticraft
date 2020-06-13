@@ -7,6 +7,7 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PaneBlock;
 import net.minecraft.structure.StructureManager;
+import net.minecraft.structure.StructureStart;
 import net.minecraft.structure.VillageStructureStart;
 import net.minecraft.structure.pool.*;
 import net.minecraft.structure.processor.RuleStructureProcessor;
@@ -19,14 +20,11 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.FeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.*;
 
 import static com.mojang.datafixers.util.Pair.of;
 
-public class MoonVillageStart extends VillageStructureStart {
+public class MoonVillageStart extends StructureStart<StructurePoolFeatureConfig> {
 
     private static final Identifier EMPTY = new Identifier("empty");
     private static final Identifier TOWN_CENTERS = new Identifier(Constants.MOD_ID, "moon_village/town_centers");
@@ -300,13 +298,30 @@ public class MoonVillageStart extends VillageStructureStart {
 //                StructurePool.Projection.RIGID));
 //    }
 
-    public MoonVillageStart(StructureFeature<?> structureFeature, int chunkX, int chunkZ, BlockBox blockBox, int i, long l) {
+    public MoonVillageStart(StructureFeature<StructurePoolFeatureConfig> structureFeature, int chunkX, int chunkZ, BlockBox blockBox, int i, long l) {
         super(structureFeature, chunkX, chunkZ, blockBox, i, l);
     }
 
     @Override
-    public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome, FeatureConfig featureConfig) {
-        ////        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
-        ////        this.setBoundingBoxFromChildren(); //FIXME Does't generate properly or loops infinitely or smth
+    public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome, StructurePoolFeatureConfig featureConfig) {
+        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
+        this.setBoundingBoxFromChildren();
+    }
+
+    @Override
+    protected void setBoundingBoxFromChildren() {
+        super.setBoundingBoxFromChildren();
+        BlockBox var10000 = this.boundingBox;
+        var10000.minX -= 12;
+        var10000 = this.boundingBox;
+        var10000.minY -= 12;
+        var10000 = this.boundingBox;
+        var10000.minZ -= 12;
+        var10000 = this.boundingBox;
+        var10000.maxX += 12;
+        var10000 = this.boundingBox;
+        var10000.maxY += 12;
+        var10000 = this.boundingBox;
+        var10000.maxZ += 12;
     }
 }
