@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock.BlockFace;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
@@ -258,7 +259,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (IS_REDSTONE_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
                 this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
 
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -278,14 +279,14 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                         break;
                 }
 
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.GUNPOWDER), this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26);
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 23, REDSTONE_TORCH_OFF_X, REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE_TORCH), this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 25 - 2);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE_TORCH), this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 25 - 2);
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_TAB_WIDTH, this.y + 3, REDSTONE_TAB_X, REDSTONE_TAB_Y, REDSTONE_TAB_WIDTH, REDSTONE_TAB_HEIGHT);
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_TAB_WIDTH + 4, this.y + 6);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - REDSTONE_TAB_WIDTH + 4, this.y + 6);
             }
             if (IS_CONFIG_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -302,16 +303,16 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions.get(BlockFace.BOTTOM)), getYForOption(sideOptions.get(BlockFace.BOTTOM)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
 
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
                 this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 if (!IS_REDSTONE_OPEN) {
                     this.drawTexture(stack, this.x - CONFIG_TAB_WIDTH, this.y + 26, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-                    this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 26 + 3);
+                    this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 26 + 3);
                 } else {
                     this.drawTexture(stack, this.x - CONFIG_TAB_WIDTH, this.y + 96, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-                    this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 96 + 3);
+                    this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 96 + 3);
                 }
             }
             if (IS_SECURITY_OPEN) {

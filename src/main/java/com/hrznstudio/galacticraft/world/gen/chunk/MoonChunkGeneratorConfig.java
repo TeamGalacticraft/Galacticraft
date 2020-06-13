@@ -24,13 +24,13 @@ package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.Blocks;
-import net.minecraft.class_5284;
 import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
+import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonChunkGeneratorConfig extends class_5284 { //name pending
+public class MoonChunkGeneratorConfig extends ChunkGeneratorType { //name pending
     public MoonChunkGeneratorConfig(ChunkGeneratorConfig config) {
         super(config);
         this.defaultBlock = GalacticraftBlocks.MOON_ROCK.getDefaultState();

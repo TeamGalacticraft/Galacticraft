@@ -42,6 +42,7 @@
   "mixins": [
     "galacticraft-rewoven.mixins.json"
   ],
+  "accessWidener" : "galacticraftRewoven.accesswidener",
   "depends": {
     "fabricloader": ">=0.4.0",
     "fabric": "*",

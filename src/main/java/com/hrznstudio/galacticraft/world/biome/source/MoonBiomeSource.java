@@ -32,7 +32,7 @@ public class MoonBiomeSource extends BiomeSource {
    }
 
    @Environment(EnvType.CLIENT)
-   public BiomeSource create(long seed) {
+   public BiomeSource withSeed(long seed) {
       return new MoonBiomeSource(seed, this.biomeSize);
    }
 

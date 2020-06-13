@@ -23,6 +23,8 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
+import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
+import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
 import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
@@ -42,18 +44,24 @@ import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
+import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
+import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LifeCycle;
 import team.reborn.energy.*;
 
 /**
@@ -61,8 +69,8 @@ import team.reborn.energy.*;
  */
 public class Galacticraft implements ModInitializer {
 
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>();
-    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>();
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_prof")), Lifecycle.stable());
+    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
@@ -94,6 +102,16 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftFluidTags.register();
+
+        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
+            Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
+            Registry.register(registry, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
+        });
+
+        CelestialBodyRegistryCallback.EVENT.register(registry -> {
+            Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
+        });
+
         Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
             if (object instanceof ItemStack) {
                 return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;

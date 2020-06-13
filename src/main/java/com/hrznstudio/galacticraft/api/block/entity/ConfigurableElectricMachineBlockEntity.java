@@ -401,7 +401,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         public CompoundTag toTag(CompoundTag tag) {
             CompoundTag compoundTag = new CompoundTag();
             if (this.hasOwner()) {
-                compoundTag.putUuidNew("owner", this.owner);
+                compoundTag.putUuid("owner", this.owner);
             }
             compoundTag.putString("username", this.username);
             compoundTag.putString("publicity", this.publicity.asString());
@@ -417,7 +417,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
             if (compoundTag.contains("owner")) {
                 if (!this.hasOwner()) {
-                    this.owner = compoundTag.getUuidNew("owner");
+                    this.owner = compoundTag.getUuid("owner");
                 }
             }
 

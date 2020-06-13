@@ -85,8 +85,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         this.mouseY = (float)/*y*/ this.client.getWindow().getScaledHeight() / 2;
 
         DiffuseLighting.enableGuiDepthLighting();
-        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
     }
 
     @Override

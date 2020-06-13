@@ -36,7 +36,7 @@ import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.BasicInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -170,13 +170,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     // This is just for testing purposes
     private ItemStack getResultFromRecipeStack() {
-        BasicInventory inv = new BasicInventory(getInventory().getInvStack(5));
+        SimpleInventory inv = new SimpleInventory(getInventory().getInvStack(5));
         // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
         FabricationRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("Not a valid recipe."));
         return recipe.craft(inv);
     }
 
-    private Optional<FabricationRecipe> getRecipe(BasicInventory input) {
+    private Optional<FabricationRecipe> getRecipe(SimpleInventory input) {
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
     }
 
@@ -196,7 +196,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     // This is just for testing
     private boolean isValidRecipe(ItemStack input) {
         // TODO check up on this
-        return getRecipe(new BasicInventory(input)).isPresent() && hasMandatoryMaterials();
+        return getRecipe(new SimpleInventory(input)).isPresent() && hasMandatoryMaterials();
 //        return !input.isEmpty() && hasMandatoryMaterials();
     }
 

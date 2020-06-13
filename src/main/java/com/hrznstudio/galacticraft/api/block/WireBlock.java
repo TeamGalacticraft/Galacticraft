@@ -103,7 +103,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
         if (!world.isClient() && type != WireConnectionType.NONE) {
             if (world.getBlockState(updated).getBlock() instanceof WireConnectable) {
                 WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-                if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
+                if (network == null) network = new WireNetwork(pos, world.getDimension().getRawId());
                 if (type == WireConnectionType.WIRE) {
                     WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(updated);
                     if (network1 != network) {
@@ -127,8 +127,8 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
 
     @Override
     @Deprecated
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onBlockRemoved(state, world, pos, newState, moved);
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
         if (!world.isClient()) {
             WireNetwork myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
             NetworkManager.getManagerForWorld(world).removeWire(pos);

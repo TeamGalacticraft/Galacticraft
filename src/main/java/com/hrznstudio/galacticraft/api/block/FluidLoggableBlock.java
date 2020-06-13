@@ -51,7 +51,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     String DASH_REP = "__89_00___"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "__2_211_23";
 
-     Property<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
+     Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
         private final List<Identifier> VALUES = new ArrayList<>();
 
         @Override

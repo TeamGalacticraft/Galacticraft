@@ -56,8 +56,8 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
     }
 
     @Environment(EnvType.CLIENT)
-    public ChunkGenerator create(long seed) {
-        return new MoonChunkGenerator((MoonBiomeSource) this.biomeSource.create(seed), seed, this.generatorConfig);
+    public ChunkGenerator withSeed(long seed) {
+        return new MoonChunkGenerator((MoonBiomeSource) this.biomeSource.withSeed(seed), seed, this.generatorConfig);
     }
 
     public void populateEntities(ChunkRegion region) {
