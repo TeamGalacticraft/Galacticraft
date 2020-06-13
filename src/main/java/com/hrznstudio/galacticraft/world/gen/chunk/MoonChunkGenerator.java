@@ -18,9 +18,9 @@ import net.minecraft.world.SpawnHelper;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.*;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
-import net.minecraft.world.gen.chunk.SurfaceChunkGenerator;
+import net.minecraft.world.gen.chunk.*;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGeneratorConfig> {
+public class MoonChunkGenerator extends SurfaceChunkGenerator {
     private static final float[] BIOME_WEIGHT_TABLE = Util.make(new float[25], (array) -> {
         for(int i = -2; i <= 2; ++i) {
             for(int j = -2; j <= 2; ++j) {
@@ -67,10 +67,6 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
         ChunkRandom chunkRandom = new ChunkRandom();
         chunkRandom.setPopulationSeed(region.getSeed(), i << 4, j << 4);
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
-    }
-
-    protected void sampleNoiseColumn(double[] buffer, int x, int z) {
-        this.sampleNoiseColumn(buffer, x, z, 684.4119873046875D, 684.4119873046875D, 8.555149841308594D, 4.277574920654297D, 3, -10);
     }
 
     protected double computeNoiseFalloff(double depth, double scale, int y) {
@@ -138,8 +134,8 @@ public class MoonChunkGenerator extends SurfaceChunkGenerator<MoonChunkGenerator
 
     public List<Biome.SpawnEntry> getEntitySpawnList(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
         if (group == SpawnGroup.MONSTER) {
-            if (Feature.PILLAGER_OUTPOST.isApproximatelyInsideStructure(accessor, pos)) {
-                return Feature.PILLAGER_OUTPOST.getMonsterSpawns();
+            if (accessor.method_28388(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
+                return StructureFeature.PILLAGER_OUTPOST.getMonsterSpawns();
             }
         }
 

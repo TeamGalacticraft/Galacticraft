@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
 import net.minecraft.world.gen.chunk.ChunkGeneratorType;
 import net.minecraft.world.gen.chunk.FlatChunkGeneratorConfig;
 

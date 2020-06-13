@@ -22,8 +22,8 @@
 
 package com.hrznstudio.galacticraft.world.dimension;
 
-import com.hrznstudio.galacticraft.api.addon.AddonRegistry;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 

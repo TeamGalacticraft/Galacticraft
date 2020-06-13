@@ -1,0 +1,10 @@
+{
+  "generator": {
+    "type": "galacticraft-rewoven:moon",
+    "biome_source": {
+      "type": "galacticraft-rewoven:moon",
+      "biome_size": 4
+    }
+  },
+  "type": "galacticraft-rewoven:moon_type"
+}
