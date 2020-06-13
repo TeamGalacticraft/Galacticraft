@@ -43,8 +43,6 @@ import java.util.function.BooleanSupplier;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
-    @Shadow public abstract ServerChunkManager getChunkManager();
-
     private NetworkManager networkManager = new NetworkManager();
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -56,11 +54,5 @@ public abstract class ServerWorldMixin implements ServerWorldAccessor {
     @Override
     public NetworkManager getNetworkManager() {
         return networkManager;
-    }
-
-    @SoftOverride
-    public void close() throws IOException {
-        this.getChunkManager().close();
-        this.networkManager.worldClose();
     }
 }
