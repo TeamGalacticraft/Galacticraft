@@ -24,13 +24,17 @@ package com.hrznstudio.galacticraft.world.biome.moon;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.MoonVillageStart;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.sound.MusicSound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
+
+import java.util.Optional;
 
 /**
  * Base moon biome.
@@ -38,6 +42,7 @@ import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class MoonBiome extends Biome implements SpaceBiome {
+    public static final MusicSound MOON_MUSIC = new MusicSound(GalacticraftSounds.MUSIC_MOON, 1200, 3600, true);
 
     public MoonBiome(Settings settings) {
         super(settings);
@@ -50,6 +55,12 @@ public abstract class MoonBiome extends Biome implements SpaceBiome {
     @Override
     public String getTranslationKey() {
         return "biome." + Constants.MOD_ID + ".moon." + getCategoryName() + "." + getBiomeName();
+    }
+    
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Optional<MusicSound> method_27343() {
+        return Optional.of(MOON_MUSIC);
     }
 
     protected abstract String getCategoryName();

@@ -36,15 +36,7 @@ import java.util.Random;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
-    public static final Codec<MultiBlockSurfaceConfig> CODEC = RecordCodecBuilder.create((instance) -> {
-        return instance.group(BlockStateWithChance.CODEC.listOf().fieldOf("top_materials").forGetter((surfaceConfig) -> {
-            return Lists.newArrayList(surfaceConfig.topMaterials);
-        }), BlockStateWithChance.CODEC.listOf().fieldOf("under_materials").forGetter((surfaceConfig) -> {
-            return Lists.newArrayList(surfaceConfig.underMaterials);
-        }), BlockStateWithChance.CODEC.listOf().fieldOf("underwater_materials").forGetter((surfaceConfig) -> {
-            return Lists.newArrayList(surfaceConfig.underwaterMaterials);
-        })).apply(instance, MultiBlockSurfaceConfig::new);
-    });
+    public static final Codec<MultiBlockSurfaceConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockStateWithChance.CODEC.listOf().fieldOf("top_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.topMaterials)), BlockStateWithChance.CODEC.listOf().fieldOf("under_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.underMaterials)), BlockStateWithChance.CODEC.listOf().fieldOf("underwater_materials").forGetter((surfaceConfig) -> Lists.newArrayList(surfaceConfig.underwaterMaterials))).apply(instance, MultiBlockSurfaceConfig::new));
 
     private final BlockStateWithChance[] topMaterials;
     private final BlockStateWithChance[] underMaterials;

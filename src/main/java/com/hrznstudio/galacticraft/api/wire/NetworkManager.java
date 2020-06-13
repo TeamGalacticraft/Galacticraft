@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class NetworkManager {
 
-    private static final Map<DimensionType, NetworkManager> managers = new HashMap<>();
+//    private static final Map<DimensionType, NetworkManager> managers = new HashMap<>();
     /**
      * A map containing all the networks in the current world.
      * Cleared on world close.
@@ -51,21 +51,6 @@ public class NetworkManager {
      */
     private final Map<BlockPos, WireNetwork> networks = new ConcurrentHashMap<>();
     private final Map<WireNetwork, Integer> networkRefs = new HashMap<>();
-
-    private NetworkManager() {
-    }
-
-    public static void createManagerForWorld(ServerWorld world) {
-        managers.put(world.getDimension(), new NetworkManager());
-    }
-
-    public static NetworkManager getManagerForDimension(DimensionType id) {
-        return managers.get(id);
-    }
-
-    public static NetworkManager getManagerForWorld(WorldAccess world) {
-        return getManagerForDimension(world.getDimension());
-    }
 
     public void removeWire(BlockPos pos) {
         WireNetwork network = this.networks.remove(pos);
@@ -138,5 +123,6 @@ public class NetworkManager {
 
     public void worldClose() {
         this.networks.clear();
+        this.networkRefs.clear();
     }
 }

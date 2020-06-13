@@ -142,7 +142,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, @Nullable Direction side) {
         if (type == UniversalComponents.CAPACITOR_COMPONENT) {
             BlockState state = blockView.getBlockState(pos);
-            SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(Direction.NORTH, side));
+            SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(state.get(ConfigurableElectricMachineBlock.FACING), side));
             return option == SideOption.POWER_INPUT || option == SideOption.POWER_OUTPUT;
         }
         return false;
@@ -153,7 +153,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public <T extends Component> T getComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, @Nullable Direction side) {
         if (type == UniversalComponents.CAPACITOR_COMPONENT) {
             BlockState state = blockView.getBlockState(pos);
-            SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(Direction.NORTH, side));
+            SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(state.get(ConfigurableElectricMachineBlock.FACING), side));
             if (option == SideOption.POWER_INPUT || option == SideOption.POWER_OUTPUT) {
                 SimpleCapacitorComponent cc = new SimpleCapacitorComponent(capacitorComponent.getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
                     @Override
@@ -180,7 +180,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos pos, @Nullable Direction side) {
         Set<ComponentType<?>> set = new HashSet<>();
         BlockState state = blockView.getBlockState(pos);
-        SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(Direction.NORTH, side));
+        SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(state.get(ConfigurableElectricMachineBlock.FACING), side));
         if (option == SideOption.POWER_OUTPUT || option == SideOption.POWER_INPUT) {
             set.add(UniversalComponents.CAPACITOR_COMPONENT);
         }

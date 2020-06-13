@@ -18,7 +18,6 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
-    "client.MusicTrackerMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.WorldRendererMixin"

@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.block.special.aluminumwire.tier1;
 
+import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
@@ -36,6 +37,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
@@ -78,13 +80,13 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
-            WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            if (network == null) network = new WireNetwork(pos, world.getDimension());
+            WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
+            if (network == null) network = new WireNetwork(pos, ((ServerWorld) world));
             for (Direction d : Direction.values()) {
                 if (state.get(getPropForDirection(d)) && world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
                     WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
                     if (type == WireConnectionType.WIRE) {
-                        WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(pos.offset(d));
+                        WireNetwork network1 = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos.offset(d));
                         if (network1 != network) {
                             if (network1 != null) {
                                 network = network1.merge(network); // prefer other network rather than this one
@@ -219,11 +221,5 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
     @Override
     public boolean isTranslucent(BlockState state, BlockView blockView_1, BlockPos pos) {
         return true;
-    }
-
-    @Override
-    @Nonnull
-    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return WireConnectionType.WIRE;
     }
 }
