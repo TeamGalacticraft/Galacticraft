@@ -34,8 +34,7 @@ import net.minecraft.world.biome.source.VanillaLayeredBiomeSource;
  */
 public class GalacticraftBiomeSourceTypes {
 
-    public static final MoonBiomeSource MOON = Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), new MoonBiomeSource()); //???
-
     public static void register() {
+        Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);
     }
 }

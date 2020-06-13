@@ -10,6 +10,8 @@ import java.util.function.LongFunction;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.Lifecycle;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.biome.Biome;
@@ -21,11 +23,15 @@ import net.minecraft.world.biome.layer.util.LayerFactory;
 import net.minecraft.world.biome.layer.util.LayerSampleContext;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.biome.source.VanillaLayeredBiomeSource;
 
 import static net.minecraft.world.biome.source.VanillaLayeredBiomeSource.CODEC;
 
 public class MoonBiomeSource extends BiomeSource {
-   private final BiomeLayerSampler sampler;
+   public static final Codec<MoonBiomeSource> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.LONG.fieldOf("seed").stable().forGetter((moonBiomeSource) -> moonBiomeSource.seed), Codec.INT.optionalFieldOf("biome_size", 4, Lifecycle.stable()).forGetter((moonBiomeSource) -> moonBiomeSource.biomeSize)).apply(instance, instance.stable(MoonBiomeSource::new)));
+
+    private final BiomeLayerSampler sampler;
+    private final long seed;
    private static final List<Biome> BIOMES = ImmutableList.of(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS, GalacticraftBiomes.MOON_HIGHLANDS_CRATERS, GalacticraftBiomes.MOON_HIGHLANDS_ROCKS,
            GalacticraftBiomes.MOON_MARE_PLAINS, GalacticraftBiomes.MOON_MARE_CRATERS, GalacticraftBiomes.MOON_MARE_ROCKS, GalacticraftBiomes.MOON_CHEESE_FOREST);
    private final int biomeSize;
@@ -33,6 +39,7 @@ public class MoonBiomeSource extends BiomeSource {
    public MoonBiomeSource(long seed, int biomeSize) {
       super(BIOMES);
       this.biomeSize = biomeSize;
+      this.seed = seed;
 
       this.sampler = MoonBiomeLayers.build(seed, biomeSize, 0);
    }
