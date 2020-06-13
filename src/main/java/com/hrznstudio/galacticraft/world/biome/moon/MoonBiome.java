@@ -24,23 +24,17 @@ package com.hrznstudio.galacticraft.world.biome.moon;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
-import com.hrznstudio.galacticraft.structure.MoonVillagePiece;
 import com.hrznstudio.galacticraft.structure.MoonVillageStart;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.decorator.ConfiguredDecorator;
-import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.DecoratorConfig;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.FeatureConfig;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
 /**
  * Base moon biome.
+ *
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class MoonBiome extends Biome implements SpaceBiome {

@@ -173,7 +173,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof RefineryBlockEntity)) return;
         RefineryBlockEntity refinery = (RefineryBlockEntity) be;
-        to.offer(refinery.getEnergyAttribute());
+        to.offer(refinery.getCapacitatorComponent());
         to.offer(refinery.getExposedInventory());
         to.offer(refinery.getFluidInv());
     }

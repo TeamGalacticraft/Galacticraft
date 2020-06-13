@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
 import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -39,6 +38,7 @@ import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
@@ -52,7 +52,6 @@ import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStat
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -61,8 +60,6 @@ import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LifeCycle;
-import team.reborn.energy.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -110,58 +107,6 @@ public class Galacticraft implements ModInitializer {
 
         CelestialBodyRegistryCallback.EVENT.register(registry -> {
             Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
-        });
-
-        Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
-            if (object instanceof ItemStack) {
-                return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
-            }
-            return false;
-        }, object -> {
-            final ItemStack stack = (ItemStack) object;
-            final EnergyHolder energyHolder = (EnergyHolder) stack.getItem();
-            return new EnergyStorage() {
-                @Override
-                public double getStored(EnergySide face) {
-                    validateNBT();
-                    return stack.getOrCreateTag().getDouble("energy");
-                }
-
-                @Override
-                public void setStored(double amount) {
-                    validateNBT();
-                    if (stack.getItem() instanceof EnergyHolderItem && stack.hasTag() && !stack.getTag().getBoolean("skipGC")) {
-                        if (!((EnergyHolderItem) stack.getItem()).isInfinite()) {
-                            if (amount == getMaxStoredPower()) { //5 off :/
-                                stack.getTag().putInt("Energy", ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack));
-                                stack.getTag().putInt("Damage", 0);
-                            } else {
-                                stack.getTag().putInt("Energy", Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
-                                stack.setDamage(stack.getMaxDamage() - Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
-                            }
-                        } else {
-                            return;
-                        }
-                    }
-                    stack.getTag().putDouble("energy", amount);
-                }
-
-                @Override
-                public double getMaxStoredPower() {
-                    return energyHolder.getMaxStoredPower();
-                }
-
-                @Override
-                public EnergyTier getTier() {
-                    return energyHolder.getTier();
-                }
-
-                private void validateNBT() {
-                    if (!stack.hasTag()) {
-                        stack.getOrCreateTag().putDouble("energy", 0);
-                    }
-                }
-            };
         });
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);

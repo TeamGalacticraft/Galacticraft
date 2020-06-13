@@ -22,12 +22,12 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Style;
@@ -35,14 +35,11 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     public double multiplier;
 
@@ -65,6 +62,16 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     @Override
     protected ItemFilter getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+    }
+
+    @Override
+    protected boolean canExtractEnergy() {
+        return true;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return false;
     }
 
     @Override
@@ -102,7 +109,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (time > 1000.0D && time < 11000.0D) {
             status = BasicSolarPanelStatus.COLLECTING;
-            if (getEnergyAttribute().getCurrentEnergy() >= getEnergyAttribute().getMaxEnergy()) {
+            if (getCapacitatorComponent().getCurrentEnergy() >= getCapacitatorComponent().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.FULL;
             }
         } else {
@@ -122,32 +129,12 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (time > 6000) time -= 6000D;
 
-        this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier), Simulation.ACTION);
+        this.getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier), ActionType.PERFORM);
     }
 
     @Override
     protected int getBatteryTransferRate() {
         return 10;
-    }
-
-    @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
     }
 
     /**

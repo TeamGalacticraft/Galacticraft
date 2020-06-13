@@ -92,7 +92,7 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
 
     @Override
     public void sendContentUpdates() {
-        energy.set(blockEntity.getEnergyAttribute().getCurrentEnergy());
+        energy.set(blockEntity.getCapacitatorComponent().getCurrentEnergy());
         super.sendContentUpdates();
     }
 

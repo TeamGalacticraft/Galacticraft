@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -17,10 +18,12 @@ import net.minecraft.structure.StructurePiece;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.noise.*;
+import net.minecraft.util.math.noise.NoiseSampler;
+import net.minecraft.util.math.noise.OctavePerlinNoiseSampler;
+import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
+import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ProtoChunk;
@@ -37,22 +40,22 @@ import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class MoonChunkGenerator extends ChunkGenerator {
-    public static final Codec<SurfaceChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BiomeSource.field_24713.fieldOf("biome_source").forGetter((surfaceChunkGenerator) -> surfaceChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((surfaceChunkGenerator) -> surfaceChunkGenerator.field_24778), ChunkGeneratorType.field_24781.fieldOf("settings").forGetter((surfaceChunkGenerator) -> surfaceChunkGenerator.field_24774)).apply(instance, instance.stable(SurfaceChunkGenerator::new)));
+    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((surfaceChunkGenerator) -> surfaceChunkGenerator.seed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
 
     public static float[] field_16649 = Util.make(new float[13824], (array) -> {
-        for(int i = 0; i < 24; ++i) {
-            for(int j = 0; j < 24; ++j) {
-                for(int k = 0; k < 24; ++k) {
-                    array[i * 24 * 24 + j * 24 + k] = (float)method_16571(j - 12, k - 12, i - 12);
+        for (int i = 0; i < 24; ++i) {
+            for (int j = 0; j < 24; ++j) {
+                for (int k = 0; k < 24; ++k) {
+                    array[i * 24 * 24 + j * 24 + k] = (float) method_16571(j - 12, k - 12, i - 12);
                 }
             }
         }
 
     });
     public static float[] field_24775 = Util.make(new float[25], (fs) -> {
-        for(int i = -2; i <= 2; ++i) {
-            for(int j = -2; j <= 2; ++j) {
-                float f = 10.0F / MathHelper.sqrt((float)(i * i + j * j) + 0.2F);
+        for (int i = -2; i <= 2; ++i) {
+            for (int j = -2; j <= 2; ++j) {
+                float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
                 fs[i + 2 + (j + 2) * 5] = f;
             }
         }
@@ -72,18 +75,14 @@ public class MoonChunkGenerator extends ChunkGenerator {
     public OctavePerlinNoiseSampler field_24776;
     public BlockState defaultBlock;
     public BlockState defaultFluid;
-    public long field_24778;
-    public ChunkGeneratorType field_24774;
+    public long seed;
+    public ChunkGeneratorType chunkGeneratorType;
     public int field_24779;
 
-    public MoonChunkGenerator(BiomeSource biomeSource, long l, ChunkGeneratorType chunkGeneratorType) {
-        this(biomeSource, biomeSource, l, chunkGeneratorType);
-    }
-
-    public MoonChunkGenerator(BiomeSource biomeSource, BiomeSource biomeSource2, long l, ChunkGeneratorType chunkGeneratorType) {
-        super(biomeSource, biomeSource2, chunkGeneratorType.getConfig(), l);
-        this.field_24778 = l;
-        this.field_24774 = chunkGeneratorType;
+    public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
+        super(biomeSource, biomeSource, new StructuresConfig(false), seed);
+        this.seed = seed;
+        this.chunkGeneratorType = new ChunkGeneratorType(new StructuresConfig(false), new NoiseConfig(256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D), new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0), 1, 2, 1.0D, -0.46875D, true, true, false, false), Blocks.STONE.getDefaultState(), Blocks.WATER.getDefaultState(), -10, 0, 63, false);
         NoiseConfig noiseConfig = chunkGeneratorType.method_28559();
         this.field_24779 = noiseConfig.getHeight();
         this.verticalNoiseResolution = noiseConfig.getSizeVertical() * 4;
@@ -93,7 +92,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
         this.noiseSizeX = 16 / this.horizontalNoiseResolution;
         this.noiseSizeY = noiseConfig.getHeight() / this.verticalNoiseResolution;
         this.noiseSizeZ = 16 / this.horizontalNoiseResolution;
-        this.random = new ChunkRandom(l);
+        this.random = new ChunkRandom(seed);
         this.lowerInterpolatedNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.upperInterpolatedNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.interpolationNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-7, 0));
@@ -108,35 +107,34 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
     @Environment(EnvType.CLIENT)
     public ChunkGenerator withSeed(long seed) {
-        return new SurfaceChunkGenerator(this.biomeSource.withSeed(seed), seed, this.field_24774);
+        return new SurfaceChunkGenerator(this.biomeSource.withSeed(seed), seed, this.chunkGeneratorType);
     }
 
     public double sampleNoise(int x, int y, int z, double horizontalScale, double verticalScale, double horizontalStretch, double verticalStretch) {
         double d = 0.0D;
         double e = 0.0D;
         double f = 0.0D;
-        boolean bl = true;
         double g = 1.0D;
 
-        for(int i = 0; i < 16; ++i) {
-            double h = OctavePerlinNoiseSampler.maintainPrecision((double)x * horizontalScale * g);
-            double j = OctavePerlinNoiseSampler.maintainPrecision((double)y * verticalScale * g);
-            double k = OctavePerlinNoiseSampler.maintainPrecision((double)z * horizontalScale * g);
+        for (int i = 0; i < 16; ++i) {
+            double h = OctavePerlinNoiseSampler.maintainPrecision((double) x * horizontalScale * g);
+            double j = OctavePerlinNoiseSampler.maintainPrecision((double) y * verticalScale * g);
+            double k = OctavePerlinNoiseSampler.maintainPrecision((double) z * horizontalScale * g);
             double l = verticalScale * g;
             PerlinNoiseSampler perlinNoiseSampler = this.lowerInterpolatedNoise.getOctave(i);
             if (perlinNoiseSampler != null) {
-                d += perlinNoiseSampler.sample(h, j, k, l, (double)y * l) / g;
+                d += perlinNoiseSampler.sample(h, j, k, l, (double) y * l) / g;
             }
 
             PerlinNoiseSampler perlinNoiseSampler2 = this.upperInterpolatedNoise.getOctave(i);
             if (perlinNoiseSampler2 != null) {
-                e += perlinNoiseSampler2.sample(h, j, k, l, (double)y * l) / g;
+                e += perlinNoiseSampler2.sample(h, j, k, l, (double) y * l) / g;
             }
 
             if (i < 8) {
                 PerlinNoiseSampler perlinNoiseSampler3 = this.interpolationNoise.getOctave(i);
                 if (perlinNoiseSampler3 != null) {
-                    f += perlinNoiseSampler3.sample(OctavePerlinNoiseSampler.maintainPrecision((double)x * horizontalStretch * g), OctavePerlinNoiseSampler.maintainPrecision((double)y * verticalStretch * g), OctavePerlinNoiseSampler.maintainPrecision((double)z * horizontalStretch * g), verticalStretch * g, (double)y * verticalStretch * g) / g;
+                    f += perlinNoiseSampler3.sample(OctavePerlinNoiseSampler.maintainPrecision((double) x * horizontalStretch * g), OctavePerlinNoiseSampler.maintainPrecision((double) y * verticalStretch * g), OctavePerlinNoiseSampler.maintainPrecision((double) z * horizontalStretch * g), verticalStretch * g, (double) y * verticalStretch * g) / g;
                 }
             }
 
@@ -153,7 +151,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
     }
 
     public void sampleNoiseColumn(double[] buffer, int x, int z) {
-        NoiseConfig noiseConfig = this.field_24774.method_28559();
+        NoiseConfig noiseConfig = this.chunkGeneratorType.method_28559();
         double ac;
         double ad;
         double ai;
@@ -164,8 +162,8 @@ public class MoonChunkGenerator extends ChunkGenerator {
         int k = this.getSeaLevel();
         float l = this.biomeSource.getBiomeForNoiseGen(x, k, z).getDepth();
 
-        for(int m = -2; m <= 2; ++m) {
-            for(int n = -2; n <= 2; ++n) {
+        for (int m = -2; m <= 2; ++m) {
+            for (int n = -2; n <= 2; ++n) {
                 Biome biome = this.biomeSource.getBiomeForNoiseGen(x + m, k, z + n);
                 float o = biome.getDepth();
                 float p = biome.getScale();
@@ -202,9 +200,9 @@ public class MoonChunkGenerator extends ChunkGenerator {
         double ap = noiseConfig.getDensityFactor();
         double aq = noiseConfig.getDensityOffset();
 
-        for(int ar = 0; ar <= this.noiseSizeY; ++ar) {
+        for (int ar = 0; ar <= this.noiseSizeY; ++ar) {
             double as = this.sampleNoise(x, ar, z, ae, af, ag, ah);
-            double at = 1.0D - (double)ar * 2.0D / (double)this.noiseSizeY;
+            double at = 1.0D - (double) ar * 2.0D / (double) this.noiseSizeY;
             double au = at * ap + aq;
             double av = (au + ac) * ad;
             if (av > 0.0D) {
@@ -215,12 +213,12 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
             double ax;
             if (aj > 0.0D) {
-                ax = ((double)(this.noiseSizeY - ar) - ak) / aj;
+                ax = ((double) (this.noiseSizeY - ar) - ak) / aj;
                 as = MathHelper.clampedLerp(ai, as, ax);
             }
 
             if (am > 0.0D) {
-                ax = ((double)ar - an) / am;
+                ax = ((double) ar - an) / am;
                 as = MathHelper.clampedLerp(al, as, ax);
             }
 
@@ -257,11 +255,11 @@ public class MoonChunkGenerator extends ChunkGenerator {
         int j = Math.floorDiv(z, this.horizontalNoiseResolution);
         int k = Math.floorMod(x, this.horizontalNoiseResolution);
         int l = Math.floorMod(z, this.horizontalNoiseResolution);
-        double d = (double)k / (double)this.horizontalNoiseResolution;
-        double e = (double)l / (double)this.horizontalNoiseResolution;
+        double d = (double) k / (double) this.horizontalNoiseResolution;
+        double e = (double) l / (double) this.horizontalNoiseResolution;
         double[][] ds = new double[][]{this.sampleNoiseColumn(i, j), this.sampleNoiseColumn(i, j + 1), this.sampleNoiseColumn(i + 1, j), this.sampleNoiseColumn(i + 1, j + 1)};
 
-        for(int m = this.noiseSizeY - 1; m >= 0; --m) {
+        for (int m = this.noiseSizeY - 1; m >= 0; --m) {
             double f = ds[0][m];
             double g = ds[1][m];
             double h = ds[2][m];
@@ -271,8 +269,8 @@ public class MoonChunkGenerator extends ChunkGenerator {
             double q = ds[2][m + 1];
             double r = ds[3][m + 1];
 
-            for(int s = this.verticalNoiseResolution - 1; s >= 0; --s) {
-                double t = (double)s / (double)this.verticalNoiseResolution;
+            for (int s = this.verticalNoiseResolution - 1; s >= 0; --s) {
+                double t = (double) s / (double) this.verticalNoiseResolution;
                 double u = MathHelper.lerp3(t, d, e, f, o, h, q, g, p, n, r);
                 int v = m * this.verticalNoiseResolution + s;
                 BlockState blockState = this.getBlockState(u, v);
@@ -313,12 +311,12 @@ public class MoonChunkGenerator extends ChunkGenerator {
         int l = chunkPos2.getStartZ();
         BlockPos.Mutable mutable = new BlockPos.Mutable();
 
-        for(int m = 0; m < 16; ++m) {
-            for(int n = 0; n < 16; ++n) {
+        for (int m = 0; m < 16; ++m) {
+            for (int n = 0; n < 16; ++n) {
                 int o = k + m;
                 int p = l + n;
                 int q = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, m, n) + 1;
-                double e = this.surfaceDepthNoise.sample((double)o * 0.0625D, (double)p * 0.0625D, 0.0625D, (double)m * 0.0625D) * 15.0D;
+                double e = this.surfaceDepthNoise.sample((double) o * 0.0625D, (double) p * 0.0625D, 0.0625D, (double) m * 0.0625D) * 15.0D;
                 region.getBiome(mutable.set(k + m, q, l + n)).buildSurface(chunkRandom, chunk, o, p, q, e, this.defaultBlock, this.defaultFluid, this.getSeaLevel(), region.getSeed());
             }
         }
@@ -332,14 +330,14 @@ public class MoonChunkGenerator extends ChunkGenerator {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         int i = chunk.getPos().getStartX();
         int j = chunk.getPos().getStartZ();
-        int k = this.field_24774.getBedrockFloorY();
-        int l = this.field_24779 - 1 - this.field_24774.getBedrockCeilingY();
+        int k = this.chunkGeneratorType.getBedrockFloorY();
+        int l = this.field_24779 - 1 - this.chunkGeneratorType.getBedrockCeilingY();
         boolean bl = l + 4 >= 0 && l < this.field_24779;
         boolean bl2 = k + 4 >= 0 && k < this.field_24779;
         if (bl || bl2) {
             Iterator<BlockPos> var11 = BlockPos.iterate(i, 0, j, i + 15, 0, j + 15).iterator();
 
-            while(true) {
+            while (true) {
                 BlockPos blockPos;
                 int o;
                 do {
@@ -349,15 +347,15 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
                     blockPos = var11.next();
                     if (bl) {
-                        for(o = 0; o < 5; ++o) {
+                        for (o = 0; o < 5; ++o) {
                             if (o <= random.nextInt(5)) {
                                 chunk.setBlockState(mutable.set(blockPos.getX(), l - o, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
                             }
                         }
                     }
-                } while(!bl2);
+                } while (!bl2);
 
-                for(o = 4; o >= 0; --o) {
+                for (o = 4; o >= 0; --o) {
                     if (o <= random.nextInt(5)) {
                         chunk.setBlockState(mutable.set(blockPos.getX(), k + o, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
                     }
@@ -379,64 +377,64 @@ public class MoonChunkGenerator extends ChunkGenerator {
             accessor.getStructuresWithChildren(ChunkSectionPos.from(chunkPos, 0), feature).forEach((start) -> {
                 Iterator<StructurePiece> var6 = start.getChildren().iterator();
 
-                    while (true) {
-                        StructurePiece structurePiece;
-                        do {
-                            if (!var6.hasNext()) {
-                                return;
-                            }
-
-                            structurePiece = var6.next();
-                        } while (!structurePiece.intersectsChunk(chunkPos, 12));
-
-                        if (structurePiece instanceof PoolStructurePiece) {
-                            PoolStructurePiece poolStructurePiece = (PoolStructurePiece) structurePiece;
-                            StructurePool.Projection projection = poolStructurePiece.getPoolElement().getProjection();
-                            if (projection == StructurePool.Projection.RIGID) {
-                                objectList.add(poolStructurePiece);
-                            }
-
-                            for (JigsawJunction jigsawJunction : poolStructurePiece.getJunctions()) {
-                                int kx = jigsawJunction.getSourceX();
-                                int lx = jigsawJunction.getSourceZ();
-                                if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
-                                    objectList2.add(jigsawJunction);
-                                }
-                            }
-                        } else {
-                            objectList.add(structurePiece);
+                while (true) {
+                    StructurePiece structurePiece;
+                    do {
+                        if (!var6.hasNext()) {
+                            return;
                         }
+
+                        structurePiece = var6.next();
+                    } while (!structurePiece.intersectsChunk(chunkPos, 12));
+
+                    if (structurePiece instanceof PoolStructurePiece) {
+                        PoolStructurePiece poolStructurePiece = (PoolStructurePiece) structurePiece;
+                        StructurePool.Projection projection = poolStructurePiece.getPoolElement().getProjection();
+                        if (projection == StructurePool.Projection.RIGID) {
+                            objectList.add(poolStructurePiece);
+                        }
+
+                        for (JigsawJunction jigsawJunction : poolStructurePiece.getJunctions()) {
+                            int kx = jigsawJunction.getSourceX();
+                            int lx = jigsawJunction.getSourceZ();
+                            if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
+                                objectList2.add(jigsawJunction);
+                            }
+                        }
+                    } else {
+                        objectList.add(structurePiece);
                     }
+                }
 
             });
         }
 
         double[][][] ds = new double[2][this.noiseSizeZ + 1][this.noiseSizeY + 1];
 
-        for(int m = 0; m < this.noiseSizeZ + 1; ++m) {
+        for (int m = 0; m < this.noiseSizeZ + 1; ++m) {
             ds[0][m] = new double[this.noiseSizeY + 1];
             this.sampleNoiseColumn(ds[0][m], i * this.noiseSizeX, j * this.noiseSizeZ + m);
             ds[1][m] = new double[this.noiseSizeY + 1];
         }
 
-        ProtoChunk protoChunk = (ProtoChunk)chunk;
+        ProtoChunk protoChunk = (ProtoChunk) chunk;
         Heightmap heightmap = protoChunk.getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
         Heightmap heightmap2 = protoChunk.getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         ObjectListIterator<StructurePiece> objectListIterator = objectList.iterator();
         ObjectListIterator<JigsawJunction> objectListIterator2 = objectList2.iterator();
 
-        for(int n = 0; n < this.noiseSizeX; ++n) {
+        for (int n = 0; n < this.noiseSizeX; ++n) {
             int p;
-            for(p = 0; p < this.noiseSizeZ + 1; ++p) {
+            for (p = 0; p < this.noiseSizeZ + 1; ++p) {
                 this.sampleNoiseColumn(ds[1][p], i * this.noiseSizeX + n + 1, j * this.noiseSizeZ + p);
             }
 
-            for(p = 0; p < this.noiseSizeZ; ++p) {
+            for (p = 0; p < this.noiseSizeZ; ++p) {
                 ChunkSection chunkSection = protoChunk.getSection(15);
                 chunkSection.lock();
 
-                for(int q = this.noiseSizeY - 1; q >= 0; --q) {
+                for (int q = this.noiseSizeY - 1; q >= 0; --q) {
                     double d = ds[0][p][q];
                     double e = ds[0][p + 1][q];
                     double f = ds[1][p][q];
@@ -446,7 +444,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
                     double s = ds[1][p][q + 1];
                     double t = ds[1][p + 1][q + 1];
 
-                    for(int u = this.verticalNoiseResolution - 1; u >= 0; --u) {
+                    for (int u = this.verticalNoiseResolution - 1; u >= 0; --u) {
                         int v = q * this.verticalNoiseResolution + u;
                         int w = v & 15;
                         int x = v >> 4;
@@ -456,40 +454,40 @@ public class MoonChunkGenerator extends ChunkGenerator {
                             chunkSection.lock();
                         }
 
-                        double y = (double)u / (double)this.verticalNoiseResolution;
+                        double y = (double) u / (double) this.verticalNoiseResolution;
                         double z = MathHelper.lerp(y, d, h);
                         double aa = MathHelper.lerp(y, f, s);
                         double ab = MathHelper.lerp(y, e, r);
                         double ac = MathHelper.lerp(y, g, t);
 
-                        for(int ad = 0; ad < this.horizontalNoiseResolution; ++ad) {
+                        for (int ad = 0; ad < this.horizontalNoiseResolution; ++ad) {
                             int ae = k + n * this.horizontalNoiseResolution + ad;
                             int af = ae & 15;
-                            double ag = (double)ad / (double)this.horizontalNoiseResolution;
+                            double ag = (double) ad / (double) this.horizontalNoiseResolution;
                             double ah = MathHelper.lerp(ag, z, aa);
                             double ai = MathHelper.lerp(ag, ab, ac);
 
-                            for(int aj = 0; aj < this.horizontalNoiseResolution; ++aj) {
+                            for (int aj = 0; aj < this.horizontalNoiseResolution; ++aj) {
                                 int ak = l + p * this.horizontalNoiseResolution + aj;
                                 int al = ak & 15;
-                                double am = (double)aj / (double)this.horizontalNoiseResolution;
+                                double am = (double) aj / (double) this.horizontalNoiseResolution;
                                 double an = MathHelper.lerp(am, ah, ai);
                                 double ao = MathHelper.clamp(an / 200.0D, -1.0D, 1.0D);
 
                                 int at;
                                 int au;
                                 int ar;
-                                for(ao = ao / 2.0D - ao * ao * ao / 24.0D; objectListIterator.hasNext(); ao += method_16572(at, au, ar) * 0.8D) {
+                                for (ao = ao / 2.0D - ao * ao * ao / 24.0D; objectListIterator.hasNext(); ao += method_16572(at, au, ar) * 0.8D) {
                                     StructurePiece structurePiece = objectListIterator.next();
                                     BlockBox blockBox = structurePiece.getBoundingBox();
                                     at = Math.max(0, Math.max(blockBox.minX - ae, ae - blockBox.maxX));
-                                    au = v - (blockBox.minY + (structurePiece instanceof PoolStructurePiece ? ((PoolStructurePiece)structurePiece).getGroundLevelDelta() : 0));
+                                    au = v - (blockBox.minY + (structurePiece instanceof PoolStructurePiece ? ((PoolStructurePiece) structurePiece).getGroundLevelDelta() : 0));
                                     ar = Math.max(0, Math.max(blockBox.minZ - ak, ak - blockBox.maxZ));
                                 }
 
                                 objectListIterator.back(objectList.size());
 
-                                while(objectListIterator2.hasNext()) {
+                                while (objectListIterator2.hasNext()) {
                                     JigsawJunction jigsawJunction = objectListIterator2.next();
                                     int as = ae - jigsawJunction.getSourceX();
                                     at = v - jigsawJunction.getSourceGroundY();
@@ -530,7 +528,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
         int n = k + 12;
         if (l >= 0 && l < 24) {
             if (m >= 0 && m < 24) {
-                return n >= 0 && n < 24 ? (double)field_16649[n * 24 * 24 + l * 24 + m] : 0.0D;
+                return n >= 0 && n < 24 ? (double) field_16649[n * 24 * 24 + l * 24 + m] : 0.0D;
             } else {
                 return 0.0D;
             }
@@ -541,7 +539,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
     public static double method_16571(int i, int j, int k) {
         double d = i * i + k * k;
-        double e = (double)j + 0.5D;
+        double e = (double) j + 0.5D;
         double f = e * e;
         double g = Math.pow(2.718281828459045D, -(f / 16.0D + d / 16.0D));
         double h = -e * MathHelper.fastInverseSqrt(f / 2.0D + d / 2.0D) / 2.0D;
@@ -646,7 +644,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
                     xDev /= size;
                     zDev /= size;
                     final double sqrtY = xDev * xDev + zDev * zDev;
-                    final double yDev = 5 -(sqrtY * sqrtY * 6);
+                    final double yDev = 5 - (sqrtY * sqrtY * 6);
                     int helper = 0;
                     for (int y = 127; y > 0; y--) {
                         if (!chunk.getBlockState(new BlockPos(x, y, z)).isAir() && helper <= yDev) {

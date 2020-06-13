@@ -32,6 +32,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
+import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -46,16 +47,13 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
@@ -90,6 +88,16 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public ElectricCompressorStatus getStatusForTooltip() {
         return status;
@@ -111,7 +119,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         };
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
-        if (getEnergyAttribute().getCurrentEnergy() < 1) {
+        if (getCapacitatorComponent().getCurrentEnergy() < 1) {
             status = ElectricCompressorStatus.IDLE;
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
             status = ElectricCompressorStatus.PROCESSING;
@@ -121,7 +129,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
         if (status == ElectricCompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
+            this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             this.progress++;
 
             if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
@@ -179,7 +187,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
+        tag.putInt("Energy", getCapacitatorComponent().getCurrentEnergy());
 
         return tag;
     }
@@ -187,7 +195,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
+        getCapacitatorComponent().setCurrentEnergy(tag.getInt("Energy"));
     }
 
     @Override
@@ -228,26 +236,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
 
         return shapelessRecipe.isPresent() || shapedRecipe.isPresent();
-    }
-
-    @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
     }
 
     @Override

@@ -31,7 +31,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
-import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -67,8 +67,28 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    public SimpleEnergyAttribute getEnergyAttribute() {
-        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    public SimpleCapacitorComponent getCapacitatorComponent() {
+        return new SimpleCapacitorComponent(0, GalacticraftEnergy.GALACTICRAFT_JOULES) {
+            @Override
+            public boolean canExtractEnergy() {
+                return false;
+            }
+
+            @Override
+            public boolean canInsertEnergy() {
+                return false;
+            }
+        };
+    }
+
+    @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return false;
     }
 
     @Override
@@ -108,26 +128,26 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
             }
         };
 
-            if (this.fuelTime <= 0) {
-                ItemStack fuel = getInventory().getInvStack(FUEL_INPUT_SLOT);
-                if (fuel.isEmpty()) {
-                    // Machine out of fuel and no fuel present.
-                    status = CompressorStatus.IDLE;
-                    progress = 0;
-                    return;
-                } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-                    this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
-                    this.fuelTime = maxFuelTime;
-                    getInventory().getSlot(FUEL_INPUT_SLOT).extract(1);
-                    status = CompressorStatus.PROCESSING;
-                } else {
-                    // Can't start processing any new materials anyway, don't waste fuel.
-                    status = CompressorStatus.IDLE;
-                    progress = 0;
-                    return;
-                }
+        if (this.fuelTime <= 0) {
+            ItemStack fuel = getInventory().getInvStack(FUEL_INPUT_SLOT);
+            if (fuel.isEmpty()) {
+                // Machine out of fuel and no fuel present.
+                status = CompressorStatus.IDLE;
+                progress = 0;
+                return;
+            } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+                this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
+                this.fuelTime = maxFuelTime;
+                getInventory().getSlot(FUEL_INPUT_SLOT).extract(1);
+                status = CompressorStatus.PROCESSING;
+            } else {
+                // Can't start processing any new materials anyway, don't waste fuel.
+                status = CompressorStatus.IDLE;
+                progress = 0;
+                return;
             }
-            this.fuelTime--;
+        }
+        this.fuelTime--;
 
 
         if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv)) {
@@ -200,7 +220,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
         tag.putInt("Progress", this.progress);
 
-            tag.putInt("FuelTime", this.fuelTime);
+        tag.putInt("FuelTime", this.fuelTime);
 
         return tag;
     }

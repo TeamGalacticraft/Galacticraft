@@ -1,6 +1,10 @@
 {
   "variants": {
-    "grating_state=upper": { "model": "galacticraft-rewoven:block/grating_block_upper" },
-    "grating_state=lower": { "model": "galacticraft-rewoven:block/grating_block_lower" }
+    "grating_state=upper": {
+      "model": "galacticraft-rewoven:block/grating_block_upper"
+    },
+    "grating_state=lower": {
+      "model": "galacticraft-rewoven:block/grating_block_lower"
+    }
   }
 }

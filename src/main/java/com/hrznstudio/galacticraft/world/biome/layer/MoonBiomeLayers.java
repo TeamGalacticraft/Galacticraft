@@ -62,7 +62,7 @@ public class MoonBiomeLayers {
 //        layerFactory3 = SmoothenShorelineLayer.INSTANCE.create(contextProvider.apply(1000L), layerFactory3);
 //        layerFactory4 = AddSunflowerPlainsLayer.INSTANCE.create(contextProvider.apply(1001L), layerFactory4);
 //
-        for(int i = 0; i < biomeSize; ++i) {
+        for (int i = 0; i < biomeSize; ++i) {
             layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(1000L + i), layerFactory);
             if (i == 0) {
                 layerFactory = IncreaseEdgeCurvatureLayer.INSTANCE.create(contextProvider.apply(3L), layerFactory);
@@ -83,13 +83,13 @@ public class MoonBiomeLayers {
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> stack(long seed, ParentedLayer layer, LayerFactory<T> parent, int count, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = parent;
 
-        for(int i = 0; i < count; ++i) {
-            layerFactory = layer.create(contextProvider.apply(seed + (long)i), layerFactory);
+        for (int i = 0; i < count; ++i) {
+            layerFactory = layer.create(contextProvider.apply(seed + (long) i), layerFactory);
         }
 
         return layerFactory;
     }
-    
+
     public static BiomeLayerSampler build(long seed, int biomeSize, int riverSize) {
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, riverSize, (salt) -> new CachingLayerContext(25, seed, salt));
         return new BiomeLayerSampler(layerFactory);

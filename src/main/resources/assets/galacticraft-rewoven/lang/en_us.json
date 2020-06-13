@@ -2,13 +2,11 @@
   "itemGroup.galacticraft-rewoven.blocks": "Galacticraft Blocks",
   "itemGroup.galacticraft-rewoven.items": "Galacticraft Items",
   "itemGroup.galacticraft-rewoven.machines": "Galacticraft Machines",
-
   "block.galacticraft-rewoven.aluminum_ore": "Aluminum Ore",
   "block.galacticraft-rewoven.copper_ore": "Copper Ore",
   "block.galacticraft-rewoven.tin_ore": "Tin Ore",
   "block.galacticraft-rewoven.silicon_ore": "Silicon Ore",
   "block.galacticraft-rewoven.desh_ore": "Desh Ore",
-
   "block.galacticraft-rewoven.aluminum_block": "Block of Aluminum",
   "block.galacticraft-rewoven.copper_block": "Block of Copper",
   "block.galacticraft-rewoven.tin_block": "Block of Tin",
@@ -16,7 +14,6 @@
   "block.galacticraft-rewoven.desh_block": "Block of Desh",
   "block.galacticraft-rewoven.titanium_block": "Block of Titanium",
   "block.galacticraft-rewoven.lead_block": "Block of Lead",
-
   "block.galacticraft-rewoven.moon_cheese_log": "Moon Cheese Log",
   "block.galacticraft-rewoven.moon_cheese_leaves": "Moon Cheese Leaves",
   "block.galacticraft-rewoven.moon_turf": "Moon Turf",
@@ -106,25 +103,21 @@
   "block.galacticraft-rewoven.lighting_panel_block_linear": "Lighting Panel (Linear)",
   "block.galacticraft-rewoven.lighting_panel_block_dark": "Lighting Panel (Dark)",
   "block.galacticraft-rewoven.lighting_panel_block_dark_angle": "Lighting Panel (Dark)",
-
   "item.galacticraft-rewoven.heavy_duty_sword": "Heavy Duty Sword",
   "item.galacticraft-rewoven.heavy_duty_shovel": "Heavy Duty Shovel",
   "item.galacticraft-rewoven.heavy_duty_pickaxe": "Heavy Duty Pickaxe",
   "item.galacticraft-rewoven.heavy_duty_axe": "Heavy Duty Axe",
   "item.galacticraft-rewoven.heavy_duty_hoe": "Heavy Duty Hoe",
-
   "item.galacticraft-rewoven.desh_sword": "Desh Sword",
   "item.galacticraft-rewoven.desh_shovel": "Desh Shovel",
   "item.galacticraft-rewoven.desh_pickaxe": "Desh Pickaxe",
   "item.galacticraft-rewoven.desh_axe": "Desh Axe",
   "item.galacticraft-rewoven.desh_hoe": "Desh Hoe",
-
   "item.galacticraft-rewoven.titanium_sword": "Titanium Sword",
   "item.galacticraft-rewoven.titanium_shovel": "Titanium Shovel",
   "item.galacticraft-rewoven.titanium_pickaxe": "Titanium Pickaxe",
   "item.galacticraft-rewoven.titanium_axe": "Titanium Axe",
   "item.galacticraft-rewoven.titanium_hoe": "Titanium Hoe",
-
   "item.galacticraft-rewoven.aluminum_ingot": "Aluminum Ingot",
   "item.galacticraft-rewoven.copper_ingot": "Copper Ingot",
   "item.galacticraft-rewoven.meteoric_iron_ingot": "Meteoric Iron Ingot",
@@ -132,11 +125,9 @@
   "item.galacticraft-rewoven.titanium_ingot": "Titanium Ingot",
   "item.galacticraft-rewoven.desh_ingot": "Desh Ingot",
   "item.galacticraft-rewoven.lead_ingot": "Lead Ingot",
-
   "item.galacticraft-rewoven.raw_meteoric_iron": "Raw Meteoric Iron",
   "item.galacticraft-rewoven.raw_silicon": "Raw Silicon",
   "item.galacticraft-rewoven.lunar_sapphire": "Lunar Sapphire",
-
   "item.galacticraft-rewoven.basic_wafer": "Basic Wafer",
   "item.galacticraft-rewoven.advanced_wafer": "Advanced Wafer",
   "item.galacticraft-rewoven.blue_solar_wafer": "Blue Solar Wafer",
@@ -151,22 +142,17 @@
   "item.galacticraft-rewoven.compressed_iron": "Compressed Iron",
   "item.galacticraft-rewoven.compressed_meteoric_iron": "Compressed Meteoric Iron",
   "item.galacticraft-rewoven.compressed_steel": "Compressed Steel",
-
   "item.galacticraft-rewoven.compressed_desh": "Compressed Desh",
   "item.galacticraft-rewoven.compressed_titanium": "Compressed Titanium",
   "item.galacticraft-rewoven.raw_desh": "Unrefined Desh",
   "item.galacticraft-rewoven.desh_stick": "Desh Stick",
-
   "item.galacticraft-rewoven.tin_canister": "Tin Canister",
   "item.galacticraft-rewoven.copper_canister": "Copper Canister",
-
   "item.galacticraft-rewoven.carbon_fragments": "Carbon Fragments",
   "item.galacticraft-rewoven.titanium_shard": "Titanium Shard",
   "item.galacticraft-rewoven.iron_shard": "Iron Shard",
-
   "item.galacticraft-rewoven.titanium_dust": "Titanium Dust",
   "item.galacticraft-rewoven.solar_dust": "Solar Dust",
-
   "item.galacticraft-rewoven.beam_core": "Beam Core",
   "item.galacticraft-rewoven.canvas": "Canvas",
   "item.galacticraft-rewoven.fluid_manipulator": "Fluid Manipulator",
@@ -192,9 +178,7 @@
   "item.galacticraft-rewoven.engine_t1booster": "Tier 1 Booster",
   "item.galacticraft-rewoven.buggy_seat": "Buggy Seat",
   "item.galacticraft-rewoven.buggy_storage": "Buggy Storage",
-
   "item.galacticraft-rewoven.standard_wrench": "Standard Wrench",
-
   "item.galacticraft-rewoven.parachute": "Parachute",
   "item.galacticraft-rewoven.orange_parachute": "Orange Parachute",
   "item.galacticraft-rewoven.magenta_parachute": "Magenta Parachute",
@@ -211,7 +195,6 @@
   "item.galacticraft-rewoven.green_parachute": "Green Parachute",
   "item.galacticraft-rewoven.red_parachute": "Red Parachute",
   "item.galacticraft-rewoven.black_parachute": "Black Parachute",
-
   "item.galacticraft-rewoven.canned_dehydrated_apple": "Canned Dehydrated Apple",
   "item.galacticraft-rewoven.canned_dehydrated_carrot": "Canned Dehydrated Carrot",
   "item.galacticraft-rewoven.canned_dehydrated_melon": "Canned Dehydrated Melon",
@@ -224,26 +207,22 @@
   "item.galacticraft-rewoven.burger_bun": "Burger Bun",
   "item.galacticraft-rewoven.beef_patty": "Cooked Beef Patty",
   "item.galacticraft-rewoven.ground_beef": "Raw Beef Patty",
-
   "item.galacticraft-rewoven.oxygen_mask": "Oxygen Mask",
   "item.galacticraft-rewoven.oxygen_gear": "Oxygen Gear",
   "item.galacticraft-rewoven.small_oxygen_tank": "Small Oxygen Tank",
   "item.galacticraft-rewoven.medium_oxygen_tank": "Medium Oxygen Tank",
   "item.galacticraft-rewoven.large_oxygen_tank": "Large Oxygen Tank",
-
-  "item.galacticraft-rewoven.shield_controller" : "Shield Controller",
-  "item.galacticraft-rewoven.frequency_module" : "Frequency Module",
-
+  "item.galacticraft-rewoven.shield_controller": "Shield Controller",
+  "item.galacticraft-rewoven.frequency_module": "Frequency Module",
   "item.galacticraft-rewoven.thermal_padding_helmet": "Thermal Padding Helm",
   "item.galacticraft-rewoven.thermal_padding_chestpiece": "Thermal Padding Chestpiece",
   "item.galacticraft-rewoven.thermal_padding_leggings": "Thermal Padding Leggings",
   "item.galacticraft-rewoven.thermal_padding_boots": "Thermal Padding Boots",
-
-  "item.galacticraft-rewoven.tier_2_rocket_schematic" : "Tier 2 Rocket Schematic",
-  "item.galacticraft-rewoven.cargo_rocket_schematic" : "Cargo Rocket Schematic",
-  "item.galacticraft-rewoven.moon_buggy_schematic" : "Moon Buggy Schematic",
-  "item.galacticraft-rewoven.tier_3_rocket_schematic" : "Tier 3 Rocket Schematic",
-  "item.galacticraft-rewoven.astro_miner_schematic" : "Astro Miner Schematic",
+  "item.galacticraft-rewoven.tier_2_rocket_schematic": "Tier 2 Rocket Schematic",
+  "item.galacticraft-rewoven.cargo_rocket_schematic": "Cargo Rocket Schematic",
+  "item.galacticraft-rewoven.moon_buggy_schematic": "Moon Buggy Schematic",
+  "item.galacticraft-rewoven.tier_3_rocket_schematic": "Tier 3 Rocket Schematic",
+  "item.galacticraft-rewoven.astro_miner_schematic": "Astro Miner Schematic",
   "item.galacticraft-rewoven.battery": "Battery",
   "item.galacticraft-rewoven.infinite_battery": "Infinite Battery",
   "item.galacticraft-rewoven.crude_oil_bucket": "Oil Bucket",
@@ -300,7 +279,6 @@
   "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2": "Disable Machine",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on": "Redstone enables the machine",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2": "Enable Machine",
-
   "ui.galacticraft-rewoven.tabs.side_config": "Configuration",
   "ui.galacticraft-rewoven.tabs.side_config.north": "Front",
   "ui.galacticraft-rewoven.tabs.side_config.south": "Back",
@@ -332,6 +310,7 @@
   "galacticraft-rewoven:moon": "Moon",
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Successfully teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Successfully teleported to %s",
+  "commands.galacticraft-rewoven.dimensiontp.failure.dimension": "Failed to locate dimension!",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "That is not a valid entity!",
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",

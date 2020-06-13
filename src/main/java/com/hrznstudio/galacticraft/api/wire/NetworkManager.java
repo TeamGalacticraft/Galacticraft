@@ -22,10 +22,12 @@
 
 package com.hrznstudio.galacticraft.api.wire;
 
-import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.mixin.ServerWorldMixin;
-import io.github.cottonmc.energy.api.EnergyAttributeProvider;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.CapacitorComponent;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -98,7 +100,8 @@ public class NetworkManager {
         Set<WireNetwork> set = new HashSet<>(networkRefs.keySet());
         for (WireNetwork network : set) {
             for (BlockPos pos : network.getQuery()) {
-                if (world.getBlockEntity(pos) instanceof EnergyAttributeProvider) {
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity instanceof ComponentProvider && ((ComponentProvider) entity).hasComponent(UniversalComponents.CAPACITOR_COMPONENT)) {
                     world.getBlockState(pos).updateNeighbors(world, pos, 10);
                 }
             }
@@ -110,9 +113,10 @@ public class NetworkManager {
             int available = 0;
             for (BlockPos pos : producers) {
                 BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof EnergyAttributeProvider) {
-                    if (((EnergyAttributeProvider) entity).getEnergyAttribute().canExtractEnergy()) {
-                        available += ((EnergyAttributeProvider) entity).getEnergyAttribute().getCurrentEnergy();
+                if (entity instanceof ComponentProvider) {
+                    CapacitorComponent component = ((ComponentProvider) entity).getComponent(UniversalComponents.CAPACITOR_COMPONENT);
+                    if (component != null && component.canExtractEnergy()) {
+                        available += component.getCurrentEnergy();
                     }
                 }
             }
@@ -120,9 +124,10 @@ public class NetworkManager {
             int amountPerMachine = available / Math.max(1, i--);
             for (BlockPos pos : consumers) {
                 BlockEntity entity = world.getBlockEntity(pos);
-                if (entity instanceof EnergyAttributeProvider) {
-                    if (((EnergyAttributeProvider) entity).getEnergyAttribute().canInsertEnergy()) {
-                        available -= (amountPerMachine - ((EnergyAttributeProvider) entity).getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerMachine, Simulation.ACTION));
+                if (entity instanceof ComponentProvider) {
+                    CapacitorComponent component = ((ComponentProvider) entity).getComponent(UniversalComponents.CAPACITOR_COMPONENT);
+                    if (component != null && component.canInsertEnergy()) {
+                        available -= (amountPerMachine - component.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amountPerMachine, ActionType.PERFORM));
                     }
                 }
 

@@ -33,6 +33,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
+import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -46,16 +47,13 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     private static final ItemFilter[] SLOT_FILTERS;
@@ -80,6 +78,16 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         // Stop automation from inserting into the output or extracting from the inputs.
         getLimitedInventory().getSubRule(1, 6).disallowExtraction();
         getLimitedInventory().getRule(6).filterInserts(ConstantItemFilter.NOTHING);
+    }
+
+    @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return true;
     }
 
     @Override
@@ -123,7 +131,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
 
-        if (getEnergyAttribute().getCurrentEnergy() <= 0) {
+        if (getCapacitatorComponent().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.NOT_ENOUGH_ENERGY;
         } else {
             status = CircuitFabricatorStatus.IDLE;
@@ -152,7 +160,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
+                this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             } else {
                 progress = 0;
 
@@ -224,31 +232,6 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
-    }
-
-    @Override
-    public double getStored(EnergySide face) {
-        /*if (world.getBlockState(pos).getBlock() instanceof WireConnectable) {
-            if (((WireConnectable) world.getBlockState(pos).getBlock()).canWireConnect(world, ConfigurableElectricMachineBlock.energySideToDirection(face),  pos.offset(ConfigurableElectricMachineBlock.energySideToDirection(face)), pos) != WireNetwork.WireConnectionType.NONE) {
-                return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-            }
-        }*/
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
     }
 
     /**

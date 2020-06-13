@@ -22,8 +22,6 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
-import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
-import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

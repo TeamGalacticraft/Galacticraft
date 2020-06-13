@@ -54,29 +54,31 @@ import java.util.Random;
 public abstract class WorldRendererMixin {
     private static final Identifier EARTH_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final Identifier SUN_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/sun.png");
-    @Shadow
-    public MinecraftClient client;
 
     @Shadow
-    public ClientWorld world;
+    @Final
+    private MinecraftClient client;
 
     @Shadow
-    public VertexFormat skyVertexFormat;
+    private ClientWorld world;
+
+    @Shadow
+    @Final
+    private VertexFormat skyVertexFormat;
+
     private VertexBuffer starBufferMoon;
-    private VertexBuffer lightSkyBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void initGalacticraft(MinecraftClient client, BufferBuilderStorage bufferBuilders, CallbackInfo ci) {
         starBufferMoon = new VertexBuffer(skyVertexFormat);
         this.generateStarBufferMoon();
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        this.lightSkyBufferMoon = new VertexBuffer(skyVertexFormat);
+        VertexBuffer lightSkyBufferMoon = new VertexBuffer(skyVertexFormat);
 
         final byte byte2 = 64;
         final int i = 256 / byte2 + 2;
         float f = 16F;
-        BufferBuilder buffer = tessellator.getBuffer();
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
 
         for (int j = -byte2 * i; j <= byte2 * i; j += byte2) {
             for (int l = -byte2 * i; l <= byte2 * i; l += byte2) {
@@ -103,6 +105,15 @@ public abstract class WorldRendererMixin {
         }
 
         buffer.end();
+    }
+
+    @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;FDDD)V", at = @At("HEAD"), cancellable = true)
+    private void renderClouds(MatrixStack matrices, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
+        if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
+            ci.cancel();
+            //noinspection UnnecessaryReturnStatement
+            return;
+        }
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
@@ -168,7 +179,7 @@ public abstract class WorldRendererMixin {
             assert client.player != null;
             float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getZ()) * 0.01F;
             matricies.scale(0.6F, 0.6F, 0.6F);
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngle(delta) * 360.0F) * 0.001F) );
+            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngle(delta) * 360.0F) * 0.001F));
             matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
 
             client.getTextureManager().bindTexture(EARTH_TEXTURE);
@@ -199,13 +210,11 @@ public abstract class WorldRendererMixin {
         final float var2 = this.world.getSkyAngle(delta);
         float var3 = 1.0F - (MathHelper.cos((float) (var2 * Math.PI * 2.0D) * 2.0F + 0.25F));
 
-        if (var3 < 0.0F)
-        {
+        if (var3 < 0.0F) {
             var3 = 0.0F;
         }
 
-        if (var3 > 1.0F)
-        {
+        if (var3 > 1.0F) {
             var3 = 1.0F;
         }
 

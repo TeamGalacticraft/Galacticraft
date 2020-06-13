@@ -1,12 +1,6 @@
 package com.hrznstudio.galacticraft.world.biome.source;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
-import java.util.List;
-import java.util.Set;
-import java.util.function.LongFunction;
-
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
@@ -15,23 +9,16 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.layer.BiomeLayers;
-import net.minecraft.world.biome.layer.ContinentLayer;
-import net.minecraft.world.biome.layer.util.CachingLayerContext;
-import net.minecraft.world.biome.layer.util.CachingLayerSampler;
-import net.minecraft.world.biome.layer.util.LayerFactory;
-import net.minecraft.world.biome.layer.util.LayerSampleContext;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.VanillaLayeredBiomeSource;
 
-import static net.minecraft.world.biome.source.VanillaLayeredBiomeSource.CODEC;
+import java.util.List;
 
 public class MoonBiomeSource extends BiomeSource {
    public static final Codec<MoonBiomeSource> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.LONG.fieldOf("seed").stable().forGetter((moonBiomeSource) -> moonBiomeSource.seed), Codec.INT.optionalFieldOf("biome_size", 4, Lifecycle.stable()).forGetter((moonBiomeSource) -> moonBiomeSource.biomeSize)).apply(instance, instance.stable(MoonBiomeSource::new)));
 
-    private final BiomeLayerSampler sampler;
-    private final long seed;
+   private final BiomeLayerSampler sampler;
+   private final long seed;
    private static final List<Biome> BIOMES = ImmutableList.of(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS, GalacticraftBiomes.MOON_HIGHLANDS_CRATERS, GalacticraftBiomes.MOON_HIGHLANDS_ROCKS,
            GalacticraftBiomes.MOON_MARE_PLAINS, GalacticraftBiomes.MOON_MARE_CRATERS, GalacticraftBiomes.MOON_MARE_ROCKS, GalacticraftBiomes.MOON_CHEESE_FOREST);
    private final int biomeSize;

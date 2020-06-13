@@ -36,6 +36,7 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import io.github.cottonmc.component.api.ActionType;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -44,14 +45,11 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private static final ItemFilter[] SLOT_FILTERS;
 
@@ -107,6 +105,16 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     }
 
     @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
     public RefineryStatus getStatusForTooltip() {
         return status;
     }
@@ -132,7 +140,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             }
         }
 
-        if (getEnergyAttribute().getCurrentEnergy() <= 0) {
+        if (getCapacitatorComponent().getCurrentEnergy() <= 0) {
             status = RefineryStatus.NOT_ENOUGH_ENERGY;
             return;
         }
@@ -147,7 +155,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         }
 
         if (status == RefineryStatus.ACTIVE) {
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().refineryEnergyConsumptionRate(), Simulation.ACTION); //x2 an average machine
+            this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().refineryEnergyConsumptionRate(), ActionType.PERFORM); //x2 an average machine
 
 
             FluidVolume extracted = this.fluidInv.getTank(0).extract(1);
@@ -176,26 +184,6 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         fluidInv.fromTag(tag.getCompound("FluidInventory"));
-    }
-
-    @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
     }
 
     @Override

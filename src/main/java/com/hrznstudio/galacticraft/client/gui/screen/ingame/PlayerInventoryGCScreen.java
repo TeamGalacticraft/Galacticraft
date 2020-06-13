@@ -23,9 +23,9 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;

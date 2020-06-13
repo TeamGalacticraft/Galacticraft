@@ -27,7 +27,8 @@ import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.util.WireConnectable;
-import io.github.cottonmc.energy.api.EnergyAttributeProvider;
+import io.github.cottonmc.component.UniversalComponents;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -44,6 +45,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
@@ -141,7 +143,7 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
                 if (((WireConnectable) block).canWireConnect(context.getWorld(), direction.getOpposite(), context.getBlockPos(), context.getBlockPos().offset(direction)) != WireConnectionType.NONE) {
                     state = state.with(propFromDirection(direction), true);
                 }
-            } else if (block instanceof EnergyAttributeProvider) {
+            } else if (block instanceof ComponentProvider && ((ComponentProvider) block).hasComponent(UniversalComponents.CAPACITOR_COMPONENT)) {
                 state = state.with(propFromDirection(direction), true);
             }
         }

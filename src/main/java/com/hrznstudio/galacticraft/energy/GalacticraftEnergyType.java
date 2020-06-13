@@ -22,18 +22,29 @@
 
 package com.hrznstudio.galacticraft.energy;
 
-import io.github.cottonmc.energy.api.ElectricalEnergyType;
-import io.github.cottonmc.energy.api.EnergyType;
+import io.github.cottonmc.component.energy.impl.ElectricalEnergyType;
+import io.github.cottonmc.component.energy.impl.WUEnergyType;
+import io.github.cottonmc.component.energy.type.EnergyType;
 import net.minecraft.text.TranslatableText;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GalacticraftEnergyType implements EnergyType {
+public class GalacticraftEnergyType extends ElectricalEnergyType {
 
     @Override
     public int getMaximumTransferSize() {
         return Integer.MAX_VALUE;
+    }
+
+    @Override
+    public float getEnergyPerFuelTick() {
+        return 120;
+    }
+
+    @Override
+    public String getDisplaySubkey() {
+        return null;
     }
 
     @Override
@@ -55,19 +66,14 @@ public class GalacticraftEnergyType implements EnergyType {
     }
 
     @Override
-    public boolean isCompatibleWith(EnergyType type) {
-        return type == this || type instanceof ElectricalEnergyType;
-    }
-
-    @Override
     public int convertFrom(EnergyType type, int amount) {
         if (type == this) return amount;
-        return (type instanceof ElectricalEnergyType) ? amount * 192 : 0;
+        return (type instanceof WUEnergyType) ? amount * 192 : 0;
     }
 
     @Override
     public int convertTo(EnergyType type, int amount) {
         if (type == this) return amount;
-        return (type instanceof ElectricalEnergyType) ? (int) Math.floor(amount / 192f) : 0;
+        return (type instanceof WUEnergyType) ? (int) Math.floor(amount / 192f) : 0;
     }
 }

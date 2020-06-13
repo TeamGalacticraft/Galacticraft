@@ -22,12 +22,9 @@
 
 package com.hrznstudio.galacticraft.world.biome.source;
 
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.source.BiomeSource;
-import net.minecraft.world.biome.source.VanillaLayeredBiomeSource;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
