@@ -22,15 +22,26 @@
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BlockStateWithChance implements Comparable<BlockStateWithChance> {
+    public static final Codec<BlockStateWithChance> CODEC = RecordCodecBuilder.create((instance) -> {
+        return instance.group(BlockState.CODEC.fieldOf("state").forGetter((bswc) -> {
+            return bswc.state;
+        }), Codec.INT.fieldOf("chance").forGetter((bswc) -> {
+            return bswc.chance;
+        })).apply(instance, BlockStateWithChance::new);
+    });
     private final BlockState state;
     private final int chance;
 

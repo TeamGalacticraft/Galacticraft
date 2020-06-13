@@ -22,16 +22,31 @@
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
+import com.google.common.collect.Lists;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
+    public static final Codec<MultiBlockSurfaceConfig> CODEC = RecordCodecBuilder.create((instance) -> {
+        return instance.group(BlockStateWithChance.CODEC.listOf().fieldOf("top_materials").forGetter((surfaceConfig) -> {
+            return Lists.newArrayList(surfaceConfig.topMaterials);
+        }), BlockStateWithChance.CODEC.listOf().fieldOf("under_materials").forGetter((surfaceConfig) -> {
+            return Lists.newArrayList(surfaceConfig.underMaterials);
+        }), BlockStateWithChance.CODEC.listOf().fieldOf("underwater_materials").forGetter((surfaceConfig) -> {
+            return Lists.newArrayList(surfaceConfig.underwaterMaterials);
+        })).apply(instance, MultiBlockSurfaceConfig::new);
+    });
+
     private final BlockStateWithChance[] topMaterials;
     private final BlockStateWithChance[] underMaterials;
     private final BlockStateWithChance[] underwaterMaterials;
@@ -49,6 +64,10 @@ public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
         this.underwaterMaterials = underwaterMaterials;
 
         this.random = new Random();
+    }
+
+    public MultiBlockSurfaceConfig(List<BlockStateWithChance> topMaterials, List<BlockStateWithChance> underMaterials, List<BlockStateWithChance> underwaterMaterials) {
+        this(topMaterials.toArray(new BlockStateWithChance[0]), topMaterials.toArray(new BlockStateWithChance[0]), topMaterials.toArray(new BlockStateWithChance[0]));
     }
 
     @Override
