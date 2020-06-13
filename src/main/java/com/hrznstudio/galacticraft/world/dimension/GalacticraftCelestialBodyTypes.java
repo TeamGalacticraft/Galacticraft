@@ -35,7 +35,7 @@ public class GalacticraftCelestialBodyTypes {
 public static final CelestialBodyType THE_MOON = register(
         new CelestialBodyType.Builder(new Identifier("galacticraft-rewoven", "the_moon"))
                 .translationKey("ui.galacticraft-rewoven.bodies.the_moon")
-                .dimension(GalacticraftDimensions.MOON)
+                .world(GalacticraftDimensions.MOON)
                 .parent(CelestialBodyType.EARTH)
                 .weight(1)
                 .gravity(0.16f)
