@@ -66,13 +66,14 @@ public abstract class MusicTrackerMixin {
         SoundEvent gcMusic = null;
         int minDelay = 0;
         int maxDelay = 0;
-        if (client.player != null) {
-            if (client.player.world.getDimension() == GalacticraftDimensions.MOON) {
-                gcMusic = GalacticraftSounds.MUSIC_MOON;
-                minDelay = 1200;
-                maxDelay = 3600;
-            } //todo mars/space stations
-        }
+//        Marcus says this code isnt needed.
+//        if (client.player != null) {
+//            if (client.player.world.getDimension() == GalacticraftDimensions.MOON) {
+//                gcMusic = GalacticraftSounds.MUSIC_MOON;
+//                minDelay = 1200;
+//                maxDelay = 3600;
+//            } //todo mars/space stations
+//        }
 
         if (gcMusic != null) {
             if (this.current != null) {

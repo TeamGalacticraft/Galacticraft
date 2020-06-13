@@ -41,7 +41,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
 
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre4")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre5")
 
     modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
