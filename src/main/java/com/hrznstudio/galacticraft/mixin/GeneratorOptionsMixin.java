@@ -40,6 +40,6 @@ public class GeneratorOptionsMixin {
 //                        new StructuresConfig(Optional.empty(), ImmutableMap.of())
 //                ));
         //TODO: above code only works client side
-        return new MoonChunkGenerator(new MoonBiomeSource(seed, 4), seed, null);
+        return new MoonChunkGenerator(new MoonBiomeSource(seed, 4), seed, null); //fixme dont pass null
     }
 }

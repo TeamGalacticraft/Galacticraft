@@ -1,7 +1,6 @@
 package com.hrznstudio.galacticraft.world.gen.stateprovider;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.mojang.datafixers.Dynamic;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;

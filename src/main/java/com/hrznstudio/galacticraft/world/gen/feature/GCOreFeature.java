@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Codec;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
@@ -12,11 +12,10 @@ import net.minecraft.world.gen.feature.Feature;
 
 import java.util.BitSet;
 import java.util.Random;
-import java.util.function.Function;
 
 public class GCOreFeature extends Feature<GCOreFeatureConfig> {
-    public GCOreFeature(Function<Dynamic<?>, ? extends GCOreFeatureConfig> function) {
-        super(function);
+    public GCOreFeature(Codec<GCOreFeatureConfig> codec) {
+        super(codec);
     }
 
     @Override

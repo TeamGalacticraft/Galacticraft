@@ -22,12 +22,8 @@
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
-import com.mojang.datafixers.Dynamic;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.world.gen.surfacebuilder.SurfaceConfig;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -96,23 +92,23 @@ public class MultiBlockSurfaceConfig extends TernarySurfaceConfig {
         return underwaterMaterials[random.nextInt(underwaterMaterials.length)].getState();
     }
 
-    public static MultiBlockSurfaceConfig deserialize(@NotNull Dynamic<?> dynamic) {
-        BlockStateWithChance[] topMaterials = new BlockStateWithChance[dynamic.get("top_material_count").asInt(1)];
-        for (int i = 0; i < topMaterials.length; i++) {
-            topMaterials[i] = new BlockStateWithChance(dynamic.get("top_material_" + i).map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState()), dynamic.get("top_material_chance_" + i).asInt(0));
-        }
-
-        BlockStateWithChance[] underMaterials = new BlockStateWithChance[dynamic.get("under_material_count").asInt(1)];
-        for (int i = 0; i < underMaterials.length; i++) {
-            underMaterials[i] = new BlockStateWithChance(dynamic.get("under_material_" + i).map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState()), dynamic.get("under_material_chance_" + i).asInt(0));
-        }
-
-        BlockStateWithChance[] underwaterMaterials = new BlockStateWithChance[dynamic.get("underwater_material_count").asInt(1)];
-        for (int i = 0; i < underwaterMaterials.length; i++) {
-            underwaterMaterials[i] = new BlockStateWithChance(dynamic.get("underwater_material_" + i).map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState()), dynamic.get("underwater_material_chance_" + i).asInt(0));
-        }
-
-        return new MultiBlockSurfaceConfig(topMaterials, underMaterials, underwaterMaterials);
-    }
+//    public static MultiBlockSurfaceConfig deserialize(@NotNull Dynamic<?> dynamic) { //todo fix - I cant be bothered to turn this into a Codec
+//        BlockStateWithChance[] topMaterials = new BlockStateWithChance[dynamic.get("top_material_count").asInt(1)];
+//        for (int i = 0; i < topMaterials.length; i++) {
+//            topMaterials[i] = new BlockStateWithChance(dynamic.get("top_material_" + i).map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState()), dynamic.get("top_material_chance_" + i).asInt(0));
+//        }
+//
+//        BlockStateWithChance[] underMaterials = new BlockStateWithChance[dynamic.get("under_material_count").asInt(1)];
+//        for (int i = 0; i < underMaterials.length; i++) {
+//            underMaterials[i] = new BlockStateWithChance(dynamic.get("under_material_" + i).map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState()), dynamic.get("under_material_chance_" + i).asInt(0));
+//        }
+//
+//        BlockStateWithChance[] underwaterMaterials = new BlockStateWithChance[dynamic.get("underwater_material_count").asInt(1)];
+//        for (int i = 0; i < underwaterMaterials.length; i++) {
+//            underwaterMaterials[i] = new BlockStateWithChance(dynamic.get("underwater_material_" + i).map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState()), dynamic.get("underwater_material_chance_" + i).asInt(0));
+//        }
+//
+//        return new MultiBlockSurfaceConfig(topMaterials, underMaterials, underwaterMaterials);
+//    }
 
 }
