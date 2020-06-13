@@ -22,17 +22,19 @@
 
 package com.hrznstudio.galacticraft.world.biome.source;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.biome.source.BiomeSourceType;
+import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.biome.source.VanillaLayeredBiomeSource;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBiomeSourceTypes {
 
-    public static final BiomeSourceType MOON = Registry.register(Registry.BIOME_SOURCE_TYPE, new Identifier(Constants.MOD_ID, "moon"), new BiomeSourceType()); //???
+    public static final MoonBiomeSource MOON = Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), new MoonBiomeSource()); //???
 
     public static void register() {
     }
