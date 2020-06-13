@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Blocks;
@@ -43,16 +44,13 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 import java.util.Map;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
 
@@ -92,6 +90,16 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     }
 
     @Override
+    protected boolean canExtractEnergy() {
+        return true;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return false;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public CoalGeneratorStatus getStatusForTooltip() {
         return status;
@@ -121,7 +129,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             }
         }
 
-        if (canUseAsFuel(getInventory().getInvStack(0)) && getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
+        if (canUseAsFuel(getInventory().getInvStack(0)) && getCapacitatorComponent().getCurrentEnergy() < getCapacitatorComponent().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
             this.status = CoalGeneratorStatus.WARMING;
 
             this.fuelTimeMax = createFuelTimeMap().get(getInventory().getInvStack(0).getItem()).getLeft();
@@ -142,7 +150,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         if (status == CoalGeneratorStatus.ACTIVE || this.status == CoalGeneratorStatus.WARMING) {
             fuelTimeCurrent++;
-            getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat), Simulation.ACTION);
+            getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat), ActionType.PERFORM);
 
             if (fuelTimeCurrent >= fuelTimeMax) {
                 this.status = CoalGeneratorStatus.IDLE;
@@ -152,26 +160,6 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         trySpreadEnergy();
         attemptDrainPowerToStack(1);
-    }
-
-    @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
     }
 
     @Override

@@ -46,7 +46,7 @@ public abstract class TorchBlockMixin extends Block {
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (CelestialBodyType.getByDimType(world.getDimension().getType()).isPresent() && !CelestialBodyType.getByDimType(world.getDimension().getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+        if (CelestialBodyType.getByDimType(world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             if (state.getBlock() == Blocks.TORCH) {
                 world.setBlockState(pos, GalacticraftBlocks.UNLIT_TORCH.getDefaultState());
             } else if (state.getBlock() == Blocks.WALL_TORCH) {

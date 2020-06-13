@@ -26,11 +26,12 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsCratersBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsPlainsBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsRocksBiome;
+import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsValleyBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareCratersBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMarePlainsBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareRocksBiome;
+import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareValleyBiome;
 import com.hrznstudio.galacticraft.world.biome.moon.misc.MoonCheeseForestBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.misc.MoonValleyBiome;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -39,21 +40,19 @@ import net.minecraft.world.biome.Biome;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBiomes {
-
-
-    public static final Biome MOON_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_VALLEY), new MoonValleyBiome());
-
     public static final Biome MOON_HIGHLANDS_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_PLAINS), new MoonHighlandsPlainsBiome());
     public static final Biome MOON_HIGHLANDS_CRATERS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_CRATERS), new MoonHighlandsCratersBiome());
     public static final Biome MOON_HIGHLANDS_ROCKS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_ROCKS), new MoonHighlandsRocksBiome());
+    public static final Biome MOON_HIGHLANDS_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_VALLEY), new MoonHighlandsValleyBiome());
 
     public static final Biome MOON_MARE_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_PLAINS), new MoonMarePlainsBiome());
     public static final Biome MOON_MARE_CRATERS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_CRATERS), new MoonMareCratersBiome());
     public static final Biome MOON_MARE_ROCKS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_ROCKS), new MoonMareRocksBiome());
+    public static final Biome MOON_MARE_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_VALLEY), new MoonMareValleyBiome());
 
     public static final Biome MOON_CHEESE_FOREST = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_CHEESE_FOREST), new MoonCheeseForestBiome());
 
-    public static final Biome[] MOON_BIOMES = new Biome[]{MOON_VALLEY, MOON_MARE_CRATERS, MOON_MARE_PLAINS, MOON_MARE_ROCKS, MOON_HIGHLANDS_CRATERS, MOON_HIGHLANDS_ROCKS, MOON_HIGHLANDS_PLAINS, MOON_CHEESE_FOREST};
+    public static final Biome[] MOON_BIOMES = new Biome[]{MOON_MARE_VALLEY, MOON_HIGHLANDS_VALLEY, MOON_MARE_CRATERS, MOON_MARE_PLAINS, MOON_MARE_ROCKS, MOON_HIGHLANDS_CRATERS, MOON_HIGHLANDS_ROCKS, MOON_HIGHLANDS_PLAINS, MOON_CHEESE_FOREST};
 
     public static void register() {
     }

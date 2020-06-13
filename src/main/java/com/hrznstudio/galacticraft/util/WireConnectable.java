@@ -26,6 +26,7 @@ import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.WorldAccess;
+
 import javax.annotation.Nonnull;
 
 /**

@@ -86,9 +86,9 @@ public class GalacticraftPackets {
                             context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
                                     .with(prop, buf.readEnumConstant(SideOption.class)));
                         }
-                        }
                     }
-                });
+                }
+            });
         }));
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, context.getPlayer(), packetByteBuf -> {

@@ -29,7 +29,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteBillboardParticle;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

@@ -37,10 +37,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -56,7 +53,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements MachineBlock, WireConnectable {
-    protected static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public ConfigurableElectricMachineBlock(Settings block$Settings_1) {
         super(block$Settings_1);
@@ -122,7 +119,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         Text text = machineInfo(itemStack_1, blockView_1, tooltipContext_1);
         if (text != null) {
             List<Text> info = new ArrayList<>();
-            for (Text s : MinecraftClient.getInstance().textRenderer.wrapLines(text, 150)) {
+            for (StringRenderable s : MinecraftClient.getInstance().textRenderer.wrapLines(text, 150)) {
                 info.add(new LiteralText(s.getString()).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
             }
             if (!info.isEmpty()) {

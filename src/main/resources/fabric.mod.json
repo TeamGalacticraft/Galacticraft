@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "galacticraft-rewoven",
   "version": "$version",
-
   "name": "Galacticraft: Rewoven",
   "icon": "assets/galacticraft-rewoven/icon.png",
   "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
@@ -42,13 +41,14 @@
   "mixins": [
     "galacticraft-rewoven.mixins.json"
   ],
+  "accessWidener": "galacticraft_rewoven.accesswidener",
   "depends": {
-    "fabricloader": ">=0.4.0",
+    "fabricloader": ">=0.8.0",
     "fabric": "*",
-    "minecraft": "1.16-alpha.20.20.b",
-    "cotton-energy": "*",
-    "libblockattributes_items": ">=0.4.5",
-    "galacticraft-api": ">=0.1.7-alpha+20w16a"
+    "minecraft": "1.16-rc.5",
+    "universalcomponents": "*",
+    "libblockattributes_items": ">=0.6.6",
+    "galacticraft-api": ">=0.2.5-alpha+1.16-pre5"
   },
   "suggests": {
     "modmenu": "*"

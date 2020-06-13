@@ -22,10 +22,13 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import net.minecraft.server.world.ServerChunkManager;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.SoftOverride;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,21 +41,18 @@ import java.util.function.BooleanSupplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin {
+public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
-    private boolean hasRunOnceForWorldReload = false;
+    private NetworkManager networkManager = new NetworkManager();
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
         GalacticraftEnergy.Values.incrementTick();
-        if (!hasRunOnceForWorldReload) {
-            hasRunOnceForWorldReload = true;
-            NetworkManager.createManagerForWorld((ServerWorld) (Object) this);
-        }
-        NetworkManager.getManagerForWorld((ServerWorld) (Object) this).updateNetworks((ServerWorld) (Object) this);
+        this.networkManager.updateNetworks((ServerWorld) (Object) this);
     }
 
-    public void close() throws IOException {
-        NetworkManager.getManagerForWorld((ServerWorld) (Object) this).worldClose();
+    @Override
+    public NetworkManager getNetworkManager() {
+        return networkManager;
     }
 }

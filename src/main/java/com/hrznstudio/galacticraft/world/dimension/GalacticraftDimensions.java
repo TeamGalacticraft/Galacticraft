@@ -23,18 +23,34 @@
 package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensionType;
+import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGenerator;
+import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.block.pattern.BlockPattern;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftDimensions {
-    public static final DimensionType MOON = FabricDimensionType.builder().skyLight(true).desiredRawId(30).factory(MoonDimension::new).defaultPlacer((entity, serverWorld, direction, v, v1) -> new BlockPattern.TeleportTarget(new Vec3d(0, 100, 0), new Vec3d(0, 100, 0), 0)).buildAndRegister(new Identifier(Constants.MOD_ID, "moon"));
+    public static RegistryKey<World> MOON;
+//    public static final DimensionType MOON = FabricDimensionType.builder().skyLight(true).desiredRawId(30).factory(MoonDimension::new).defaultPlacer((entity, serverWorld, direction, v, v1) -> new BlockPattern.TeleportTarget(new Vec3d(0, 100, 0), new Vec3d(0, 100, 0), 0)).buildAndRegister(new Identifier(Constants.MOD_ID, "moon"));
 
     public static void register() {
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
+
+        MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
+
+        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
+    }
+
+    private static BlockPattern.TeleportTarget placeEntity(Entity entity, ServerWorld world, Direction direction, double v, double v1) {
+        return new BlockPattern.TeleportTarget(new Vec3d(entity.getX(), 128, entity.getZ()), Vec3d.ZERO, 0);
     }
 }

@@ -179,7 +179,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
         BlockEntity be = world.getBlockEntity(pos);
         if (!(be instanceof BasicSolarPanelBlockEntity)) return;
         BasicSolarPanelBlockEntity generator = (BasicSolarPanelBlockEntity) be;
-        to.offer(generator.getEnergyAttribute());
+        to.offer(generator.getCapacitatorComponent());
         to.offer(generator.getExposedInventory());
     }
 

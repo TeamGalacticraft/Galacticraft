@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
@@ -32,6 +33,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -40,6 +42,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -55,7 +58,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     @Deprecated
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled()) {
-            Galacticraft.logger.info(NetworkManager.getManagerForWorld(world).getNetwork(pos));
+            Galacticraft.logger.info(((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos));
         }
         return super.onUse(state, world, pos, player, hand, hit);
     }
@@ -65,13 +68,13 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
-            WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
+            WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
+            if (network == null) network = new WireNetwork(pos, ((ServerWorld) world));
             for (Direction d : Direction.values()) {
                 if (world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {
                     WireConnectionType type = ((WireConnectable) world.getBlockState(pos.offset(d)).getBlock()).canWireConnect(world, d.getOpposite(), pos, pos.offset(d));
                     if (type == WireConnectionType.WIRE) {
-                        WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(pos.offset(d));
+                        WireNetwork network1 = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos.offset(d));
                         if (network1 != network) {
                             if (network1 != null) {
                                 network = network1.merge(network); // prefer other network rather than this one
@@ -102,10 +105,10 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
 
         if (!world.isClient() && type != WireConnectionType.NONE) {
             if (world.getBlockState(updated).getBlock() instanceof WireConnectable) {
-                WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-                if (network == null) network = new WireNetwork(pos, world.getDimension().getType().getRawId());
+                WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
+                if (network == null) network = new WireNetwork(pos, ((ServerWorld) world));
                 if (type == WireConnectionType.WIRE) {
-                    WireNetwork network1 = NetworkManager.getManagerForWorld(world).getNetwork(updated);
+                    WireNetwork network1 = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(updated);
                     if (network1 != network) {
                         if (network1 != null) {
                             network1.merge(network); // prefer other network rather than this one
@@ -127,13 +130,13 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
 
     @Override
     @Deprecated
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onBlockRemoved(state, world, pos, newState, moved);
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
         if (!world.isClient()) {
-            WireNetwork myNet = NetworkManager.getManagerForWorld(world).getNetwork(pos);
-            NetworkManager.getManagerForWorld(world).removeWire(pos);
+            WireNetwork myNet = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
+            ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
             myNet.removeWire(pos);
-            WireNetwork network = NetworkManager.getManagerForWorld(world).getNetwork(pos);
+            WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
             if (network == null) return;
             for (Direction d : Direction.values()) {
                 if (world.getBlockState(pos.offset(d)).getBlock() instanceof WireConnectable) {

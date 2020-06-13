@@ -17,6 +17,7 @@ group = project.maven_group
 
 minecraft {
 	refmapName = 'galacticraft-rewoven.refmap.json'
+    accessWidener "src/main/resources/galacticraft_rewoven.accesswidener"
 }
 
 allprojects {
@@ -24,9 +25,10 @@ allprojects {
         mavenLocal()
         jcenter() //Cloth
         maven { url "https://www.curseforge.com/api/maven" }
-        maven { url "https://server.bbkr.space/artifactory/libs-snapshot" }
+        maven { url "https://server.bbkr.space/artifactory/libs-release" }
         maven { url "https://maven.modmuss50.me" }
         maven { url "https://mod-buildcraft.com/maven" }
+        maven { url "https://dl.bintray.com/ladysnake/libs" }
         maven { url "https://cdn.hrzn.studio/maven" }
     }
 }
@@ -40,16 +42,25 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
 
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre5")
 
-    modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
+    modImplementation("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
+
     modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
-    modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
-    
-    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}") { transitive = false }
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}") { transitive = false }
+
+    modImplementation("io.github.cottonmc:UniversalComponents:${project.uc_version}") { transitive = false }
+
+    modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}")
+    modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
+    modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
+
+//    modCompileOnly("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}")
+//    modCompileOnly("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-chunk:${project.cardinal_version}")
+//    modCompileOnly("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-world:${project.cardinal_version}")
+//    modCompileOnly("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-level:${project.cardinal_version}")
+
+    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth', module: 'config-2'
@@ -58,17 +69,16 @@ dependencies {
     }
 
     modImplementation("teamreborn:energy:+") { transitive = false }
-    //modRuntime("TechReborn:TechReborn-1.16:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
-    //modRuntime("RebornCore:RebornCore-1.16:${project.reborn_core_version}")
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
-    include("me.shedaniel.cloth:cloth-events:${project.cloth_version}")
+    include("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
-    include("io.github.cottonmc:cotton-energy:${project.energy_version}")
-    include("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
-    include("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}")
-    include("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+    include("io.github.cottonmc:UniversalComponents:${project.uc_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
+    include("alexiil.mc.lib:libblockattributes-all:${project.attributes_version}")
     include("teamreborn:energy:+")
 	
     // Needed for LBA in order for eclipse to work

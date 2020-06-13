@@ -4,9 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
-    "class_5285Mixin",
     "EntityAttributeInstanceAccessor",
-    "FeatureMixin",
     "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
@@ -20,7 +18,6 @@
     "client.AbstractClientPlayerEntityMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
-    "client.MusicTrackerMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.WorldRendererMixin"
