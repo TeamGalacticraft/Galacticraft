@@ -23,10 +23,6 @@ public class GCOreFeatureConfig implements FeatureConfig {
         this.target = target;
     }
 
-    public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
-        return new Dynamic<>(ops, ops.createMap(ImmutableMap.of(ops.createString("size"), ops.createInt(this.size), ops.createString("state"), BlockState.serialize(ops, this.state).getValue()))).merge(target.serialize(ops));
-    }
-
     public static <T> GCOreFeatureConfig deserialize(Dynamic<T> dynamic) {
         int size = dynamic.get("size").asInt(0);
         BlockState state = dynamic.get("state").map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState());
@@ -48,15 +44,6 @@ public class GCOreFeatureConfig implements FeatureConfig {
                 }
             }
             return false;
-        }
-        
-        public <T> Dynamic<T> serialize(DynamicOps<T> ops) {
-            Map<T, T> map = new HashMap<>();
-            map.put(ops.createString("blocks"), ops.createInt(blocks.length));
-            for (int i = 0; i < blocks.length; i++) {
-                map.put(ops.createString("block_" + i), ops.createString(Registry.BLOCK.getId(blocks[i]).toString()));
-            }
-            return new Dynamic<>(ops, ops.createMap(ImmutableMap.copyOf(map)));
         }
         
         public static <T> OreTargetPredicate deserialize(Dynamic<T> dynamic) {
