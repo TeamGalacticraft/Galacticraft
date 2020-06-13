@@ -126,7 +126,7 @@ public class GalacticraftCommands {
                 entity.setPos(x, y, z);
             } else {
                 entity.detach();
-                entity.world.dimension = world.getDimension();
+                entity.world.dimension = world.getDimension(); //fixme this doesn't seem safe at all
                 Entity entity_2 = entity;
                 entity = entity.getType().create(world);
                 if (entity == null) {

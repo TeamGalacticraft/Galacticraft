@@ -17,7 +17,7 @@ group = project.maven_group
 
 minecraft {
 	refmapName = 'galacticraft-rewoven.refmap.json'
-    accessWidener "src/main/resources/galacticraftRewoven.accesswidener"
+    accessWidener "src/main/resources/galacticraft_rewoven.accesswidener"
 }
 
 allprojects {
