@@ -338,7 +338,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     public void idleEnergyDecrement(boolean off) {
-        if (getEnergyUsagePerTick() > 0) {
+        if (getEnergyUsagePerTick() > 0 && getEnergyUsagePerTick() / 20 > 0) {
             if (GalacticraftEnergy.Values.getTick() % ((75 * (getEnergyUsagePerTick() / 20)) * (off ? 2 : 1)) == 0) {
                 getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
             }
