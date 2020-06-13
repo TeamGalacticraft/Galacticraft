@@ -6,7 +6,6 @@
     "BaseFluidMixin",
     "GeneratorOptionsMixin",
     "EntityAttributeInstanceAccessor",
-    "FeatureMixin",
     "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",

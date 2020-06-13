@@ -1,58 +1,63 @@
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.google.common.collect.ImmutableMap;
-import net.minecraft.block.Block;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.StringIdentifiable;
 import net.minecraft.world.gen.feature.FeatureConfig;
 
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class GCOreFeatureConfig implements FeatureConfig {
-    public final OreTargetPredicate target;
+    public static final Codec<GCOreFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Target.field_24898.fieldOf("target").forGetter((oreFeatureConfig) -> oreFeatureConfig.target), BlockState.CODEC.fieldOf("state").forGetter((oreFeatureConfig) -> oreFeatureConfig.state), Codec.INT.fieldOf("size").withDefault(0).forGetter((oreFeatureConfig) -> oreFeatureConfig.size)).apply(instance, GCOreFeatureConfig::new));
+
+    public final GCOreFeatureConfig.Target target;
     public final int size;
     public final BlockState state;
 
-    public GCOreFeatureConfig(OreTargetPredicate target, BlockState state, int size) {
+    public GCOreFeatureConfig(GCOreFeatureConfig.Target target, BlockState state, int size) {
         this.size = size;
         this.state = state;
         this.target = target;
     }
 
-    public static <T> GCOreFeatureConfig deserialize(Dynamic<T> dynamic) {
-        int size = dynamic.get("size").asInt(0);
-        BlockState state = dynamic.get("state").map(BlockState::deserialize).orElse(Blocks.AIR.getDefaultState());
-        return new GCOreFeatureConfig(OreTargetPredicate.deserialize(dynamic), state, size);
-    }
-    
-    public static class OreTargetPredicate implements Predicate<Block> {
-        private final Block[] blocks;
-        
-        public OreTargetPredicate(Block... blocks) {
-            this.blocks = blocks;
+    public enum Target implements StringIdentifiable {
+        MOON("moon", (blockState) -> {
+            if (blockState == null) {
+                return false;
+            } else {
+                return blockState.isOf(GalacticraftBlocks.MOON_ROCK);
+            }
+        });
+
+        public static final Codec<GCOreFeatureConfig.Target> field_24898 = StringIdentifiable.method_28140(GCOreFeatureConfig.Target::values, GCOreFeatureConfig.Target::byName);
+        public static Map<String, GCOreFeatureConfig.Target> nameMap = Arrays.stream(values()).collect(Collectors.toMap(GCOreFeatureConfig.Target::getName, (target) -> target));
+        public String name;
+        public Predicate<BlockState> predicate;
+
+        Target(String name, Predicate<BlockState> predicate) {
+            this.name = name;
+            this.predicate = predicate;
         }
 
-        @Override
-        public boolean test(Block block) {
-            for (Block block1 : blocks) {
-                if (block == block1) {
-                    return true;
-                }
-            }
-            return false;
+        public String getName() {
+            return this.name;
         }
-        
-        public static <T> OreTargetPredicate deserialize(Dynamic<T> dynamic) {
-            int size = dynamic.get("blocks").asInt(0);
-            Block[] blocks = new Block[size];
-            for (int i = 0; i < size; i++) {
-                blocks[i] = Registry.BLOCK.get(new Identifier(dynamic.get("block_" + i).asString().orElse("minecraft:air")));
-            }
-            return new OreTargetPredicate(blocks);
+
+        public static GCOreFeatureConfig.Target byName(String name) {
+            return nameMap.get(name);
+        }
+
+        public Predicate<BlockState> getCondition() {
+            return this.predicate;
+        }
+
+        public String asString() {
+            return this.name;
         }
     }
 }

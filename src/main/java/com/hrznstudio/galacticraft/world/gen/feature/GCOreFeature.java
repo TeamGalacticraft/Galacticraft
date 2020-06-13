@@ -117,7 +117,7 @@ public class GCOreFeature extends Feature<GCOreFeatureConfig> {
                                         if (!bitSet.get(am)) {
                                             bitSet.set(am);
                                             mutable.set(ag, ai, ak);
-                                            if (config.target.test(world.getBlockState(mutable).getBlock())) {
+                                            if (config.target.predicate.test(world.getBlockState(mutable))) {
                                                 world.setBlockState(mutable, config.state, 2);
                                                 ++j;
                                             }
