@@ -74,11 +74,11 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
                 return itemStack;
             }
 
-            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
-                if (!this.insertItem(itemStack1, this.blockEntity.getInventory().getSlotCount(), this.slots.size(), true)) {
+            if (slotId < this.blockEntity.getInventory().getSize()) {
+                if (!this.insertItem(itemStack1, this.blockEntity.getInventory().getSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.blockEntity.getInventory().getSlotCount(), false)) {
+            } else if (!this.insertItem(itemStack1, 0, this.blockEntity.getInventory().getSize(), false)) {
                 return ItemStack.EMPTY;
             }
             if (itemStack1.getCount() == 0) {

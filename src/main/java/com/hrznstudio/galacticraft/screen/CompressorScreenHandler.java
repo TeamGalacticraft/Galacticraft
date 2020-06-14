@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -48,12 +47,7 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
 
     public CompressorScreenHandler(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return CompressorScreenHandler.this.canUse(player);
-            }
-        };
+        this.inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         addProperty(progress);
         addProperty(fuelTime);

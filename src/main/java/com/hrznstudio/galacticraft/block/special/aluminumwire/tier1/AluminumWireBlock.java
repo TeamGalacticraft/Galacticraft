@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.block.special.aluminumwire.tier1;
 
 import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
-import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.util.WireConnectable;
@@ -48,7 +47,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 /**

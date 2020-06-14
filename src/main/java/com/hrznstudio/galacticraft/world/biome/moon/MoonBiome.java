@@ -56,7 +56,7 @@ public abstract class MoonBiome extends Biome implements SpaceBiome {
     public String getTranslationKey() {
         return "biome." + Constants.MOD_ID + ".moon." + getCategoryName() + "." + getBiomeName();
     }
-    
+
     @Override
     @Environment(EnvType.CLIENT)
     public Optional<MusicSound> method_27343() {

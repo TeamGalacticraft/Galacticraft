@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -30,11 +29,14 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -50,7 +52,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 1;
     }
 
@@ -60,7 +62,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 

@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.dimension.DimensionType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,8 +88,12 @@ public class WireNetwork {
     }
 
     private void addEdge(BlockPos value1, BlockPos value2) {
-        adjacentVertices.get(value1).add(value2);
-        adjacentVertices.get(value2).add(value1);
+        if (!adjacentVertices.get(value1).contains(value2)) {
+            adjacentVertices.get(value1).add(value2);
+        }
+        if (!adjacentVertices.get(value2).contains(value1)) {
+            adjacentVertices.get(value2).add(value1);
+        }
     }
 
     private void addVertex(BlockPos value) {

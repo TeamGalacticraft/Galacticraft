@@ -22,21 +22,19 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
+import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import io.github.cottonmc.component.item.InventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -49,6 +47,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -98,12 +97,12 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 11;
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == FUEL_INPUT_SLOT) {
             return AbstractFurnaceBlockEntity::canUseAsFuel;
         } else {
@@ -121,15 +120,20 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
         if (this.disabled()) {
             return;
         }
-        InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+        InventoryWrapper inv = new InventoryWrapper() {
             @Override
-            public boolean canPlayerUse(PlayerEntity var1) {
-                return true;
+            public InventoryComponent getComponent() {
+                return getInventory();
+            }
+
+            @Override
+            public int size() {
+                return 9;
             }
         };
 
         if (this.fuelTime <= 0) {
-            ItemStack fuel = getInventory().getInvStack(FUEL_INPUT_SLOT);
+            ItemStack fuel = getInventory().getStack(FUEL_INPUT_SLOT);
             if (fuel.isEmpty()) {
                 // Machine out of fuel and no fuel present.
                 status = CompressorStatus.IDLE;
@@ -138,7 +142,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
             } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
                 this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
                 this.fuelTime = maxFuelTime;
-                getInventory().getSlot(FUEL_INPUT_SLOT).extract(1);
+                decrement(FUEL_INPUT_SLOT, 1);
                 status = CompressorStatus.PROCESSING;
             } else {
                 // Can't start processing any new materials anyway, don't waste fuel.
@@ -172,9 +176,9 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     private void craftItem(ItemStack craftingResult) {
         for (int i = 0; i < 9; i++) {
-            getInventory().getSlot(i).extract(1);
+            decrement(i, 1);
         }
-        getInventory().getSlot(OUTPUT_SLOT).insert(craftingResult);
+        insert(OUTPUT_SLOT, craftingResult);
     }
 
     private ItemStack getResultFromRecipeStack(Inventory inv) {
@@ -196,7 +200,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     protected boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return getInventory().getSlot(OUTPUT_SLOT).attemptInsertion(itemStack, Simulation.SIMULATE).isEmpty();
+        return canInsert(OUTPUT_SLOT, itemStack);
     }
 
     public int getProgress() {

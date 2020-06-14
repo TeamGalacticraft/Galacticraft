@@ -122,8 +122,8 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
             if (blockEntity instanceof EnergyStorageModuleBlockEntity) {
                 EnergyStorageModuleBlockEntity be = (EnergyStorageModuleBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = be.getInventory().getInvStack(i);
+                for (int i = 0; i < be.getInventory().getSize(); i++) {
+                    ItemStack itemStack = be.getInventory().getStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

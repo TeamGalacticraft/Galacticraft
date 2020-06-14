@@ -22,11 +22,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.AggregateItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.Maps;
+import com.google.common.collect.ImmutableMap;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -34,7 +30,6 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -42,20 +37,23 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.math.Direction;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
-    private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
+    private static final Predicate<ItemStack>[] SLOT_FILTERS = new Predicate[2];
+    public static final Map<Item, Integer> FUEL_MAP = new HashMap<>(ImmutableMap.of(Items.COAL_BLOCK, 320 * 10, Items.COAL, 320, Items.CHARCOAL, 310));
 
     static {
-        SLOT_FILTERS[0] = AggregateItemFilter.anyOf(createFuelTimeMap().keySet().stream().map(ExactItemFilter::new).toArray(ItemFilter[]::new));
+        SLOT_FILTERS[0] = stack -> FUEL_MAP.containsKey(stack.getItem());
         SLOT_FILTERS[1] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
@@ -73,20 +71,11 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
-        //automatically mark dirty whenever the energy attribute is changed
-        getLimitedInventory().getRule(0).disallowExtraction();
     }
 
-    public static Map<Item, Pair<Integer, Integer>> createFuelTimeMap() {
-        Map<Item, Pair<Integer, Integer>> map = Maps.newLinkedHashMap(); //Time (in ticks), energy per tick
-        map.put(Items.COAL, new Pair<>(320, 120)); //1 coal will power 4 T1 machines // 120gj/t over 320 ticks
-        map.put(Blocks.COAL_BLOCK.asItem(), new Pair<>(320 * 10, 120)); //lasts longer
-        map.put(Items.CHARCOAL, new Pair<>(320, 120));
-        return map;
-    }
-
-    public static boolean canUseAsFuel(ItemStack itemStack) {
-        return createFuelTimeMap().containsKey(itemStack.getItem());
+    @Override
+    protected boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return super.canExtract(slot, stack, dir) && slot != 0;
     }
 
     @Override
@@ -106,12 +95,12 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 2;
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         return SLOT_FILTERS[slot];
     }
 
@@ -129,16 +118,16 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             }
         }
 
-        if (canUseAsFuel(getInventory().getInvStack(0)) && getCapacitatorComponent().getCurrentEnergy() < getCapacitatorComponent().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
+        if (FUEL_MAP.containsKey(getInventory().getStack(0).getItem()) && getCapacitatorComponent().getCurrentEnergy() < getCapacitatorComponent().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
             this.status = CoalGeneratorStatus.WARMING;
 
-            this.fuelTimeMax = createFuelTimeMap().get(getInventory().getInvStack(0).getItem()).getLeft();
+            this.fuelTimeMax = FUEL_MAP.get(getInventory().getStack(0).getItem());
             this.fuelTimeCurrent = 0;
-            this.fuelEnergyPerTick = createFuelTimeMap().get(this.getInventory().getInvStack(0).getItem()).getRight();
+            this.fuelEnergyPerTick = 120;
 
-            ItemStack stack = getInventory().getInvStack(0).copy();
+            ItemStack stack = getInventory().getStack(0).copy();
             stack.decrement(1);
-            getInventory().setInvStack(0, stack, Simulation.ACTION);
+            getInventory().setStack(0, stack);
         }
 
         if (this.status == CoalGeneratorStatus.WARMING) {

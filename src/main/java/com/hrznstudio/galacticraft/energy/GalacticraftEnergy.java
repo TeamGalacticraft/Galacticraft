@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.energy;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import io.github.cottonmc.component.UniversalComponents;
@@ -34,6 +33,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.function.Predicate;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -42,7 +43,7 @@ public class GalacticraftEnergy {
     // GJ is worth LESS than TR Energy
     public static final OxygenEnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
 
-    public static final ItemFilter ENERGY_HOLDER_ITEM_FILTER = GalacticraftEnergy::isEnergyItem;
+    public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = GalacticraftEnergy::isEnergyItem;
 
     public static void register() {
         Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);

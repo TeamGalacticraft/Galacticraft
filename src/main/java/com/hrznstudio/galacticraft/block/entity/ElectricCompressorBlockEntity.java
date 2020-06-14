@@ -22,9 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -33,10 +30,11 @@ import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
+import io.github.cottonmc.component.item.InventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -49,6 +47,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -66,7 +65,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 12;
     }
 
@@ -79,7 +78,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == FUEL_INPUT_SLOT) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else {
@@ -111,10 +110,15 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
             return;
         }
 
-        InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+        Inventory inv = new InventoryWrapper() {
             @Override
-            public boolean canPlayerUse(PlayerEntity var1) {
-                return true;
+            public InventoryComponent getComponent() {
+                return getInventory();
+            }
+
+            @Override
+            public int size() {
+                return 9;
             }
         };
 
@@ -159,7 +163,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         boolean canCraftTwo = true;
 
         for (int i = 0; i < 9; i++) {
-            ItemStack item = getInventory().getInvStack(i);
+            ItemStack item = getInventory().getStack(i);
 
             // If slot is not empty ( must be an ingredient if we've made it this far ), and there is less than 2 items in the slot, we cannot craft two.
             if (!item.isEmpty() && item.getCount() < 2) {
@@ -168,19 +172,19 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
             }
         }
         if (canCraftTwo) {
-            if (getInventory().getInvStack(OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount() || getInventory().getInvStack(SECOND_OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount()) {
+            if (getInventory().getStack(OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount() || getInventory().getStack(SECOND_OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount()) {
                 // There would be too many items in the output slot. Just craft one.
                 canCraftTwo = false;
             }
         }
 
         for (int i = 0; i < 9; i++) {
-            getInventory().getSlot(i).extract(canCraftTwo ? 2 : 1);
+            decrement(i, canCraftTwo ? 2 : 1);
         }
 
         // <= because otherwise it loops only once and puts in only one slot
         for (int i = OUTPUT_SLOT; i <= SECOND_OUTPUT_SLOT; i++) {
-            getInventory().getSlot(i).insert(craftingResult);
+            insert(i, craftingResult);
         }
     }
 
@@ -228,7 +232,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     protected boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return getInventory().getSlot(OUTPUT_SLOT).attemptInsertion(itemStack, Simulation.SIMULATE).isEmpty();
+        return canInsert(OUTPUT_SLOT, itemStack);
     }
 
     public boolean isValidRecipe(Inventory input) {

@@ -22,43 +22,34 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.mojang.authlib.GameProfile;
+import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.lang.reflect.InvocationTargetException;
+import org.spongepowered.asm.mixin.Unique;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayerAccessor {
-    private FullFixedItemInv gearInventory;
+    @Unique
+    private EntitySyncedInventoryComponent gearInventory;
 
     public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world_1) {
         super(entityType_1, world_1);
     }
 
     @Override
-    public FullFixedItemInv getGearInventory() {
+    public EntitySyncedInventoryComponent getGearInventory() {
         return gearInventory;
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void init(World world, BlockPos blockPos, GameProfile gameProfile, CallbackInfo info) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        this.gearInventory = (FullFixedItemInv) getClass().getClassLoader()
-                .loadClass("alexiil.mc.lib.attributes.item.impl.FullFixedItemInv")
-                .getConstructor(int.class)
-                .newInstance(12);
-//        this.gearInventory = new FullFixedItemInv(12);
+    @Override
+    public void setGearInventory(EntitySyncedInventoryComponent gearInventory) {
+        this.gearInventory = gearInventory;
     }
 }

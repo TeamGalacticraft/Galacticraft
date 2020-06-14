@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
@@ -35,6 +34,7 @@ import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -44,6 +44,7 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -61,7 +62,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 1;
     }
 
@@ -76,7 +77,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 

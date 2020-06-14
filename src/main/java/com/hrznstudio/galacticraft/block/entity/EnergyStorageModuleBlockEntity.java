@@ -22,12 +22,14 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -56,12 +58,12 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 2;
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 

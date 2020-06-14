@@ -22,12 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
-import alexiil.mc.lib.attributes.item.FixedItemInv;
-import alexiil.mc.lib.attributes.item.ItemInvSlotChangeListener.ItemInvSlotListener;
-import alexiil.mc.lib.attributes.item.LimitedFixedItemInv;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -35,9 +29,12 @@ import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.compat.vanilla.SidedInventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import io.github.cottonmc.component.item.InventoryComponent;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import nerdhub.cardinal.components.api.component.Component;
@@ -46,6 +43,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.property.Properties;
@@ -55,29 +54,83 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, BlockComponentProvider {
 
-    private final FullFixedItemInv inventory = new FullFixedItemInv(getInvSize()) {
+    private final SimpleInventoryComponent inventory = new SimpleInventoryComponent(getInventorySize()) {
+        private final SidedInventory sidedInv = new SidedInventoryWrapper() {
+            @Override
+            public InventoryComponent getComponent() {
+                return inventory;
+            }
+
+            @Nullable
+            @Override
+            public InventoryComponent getComponent(@Nullable Direction dir) {
+                return inventory;
+            }
+
+            @Override
+            public int[] getAvailableSlots(Direction side) {
+                return ConfigurableElectricMachineBlockEntity.this.getAvailableSlots(side);
+            }
+
+            @Override
+            public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+                return ConfigurableElectricMachineBlockEntity.this.canInsert(slot, stack, dir);
+            }
+
+            @Override
+            public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+                return ConfigurableElectricMachineBlockEntity.this.canExtract(slot, stack, dir);
+            }
+        };
+
         @Override
-        public boolean isItemValidForSlot(int slot, ItemStack item) {
-            return getFilterForSlot(slot).matches(item);
+        public boolean isAcceptableStack(int slot, ItemStack stack) {
+            return ConfigurableElectricMachineBlockEntity.this.getFilterForSlot(slot).test(stack) || stack.isEmpty();
         }
 
         @Override
-        public ItemFilter getFilterForSlot(int slot) {
-            return ConfigurableElectricMachineBlockEntity.this.getFilterForSlot(slot);
+        public Inventory asInventory() {
+            return sidedInv;
+        }
+
+        @Override
+        public SidedInventory asLocalInventory(WorldAccess world, BlockPos pos) {
+            return sidedInv;
         }
     };
+
+    protected int[] getAvailableSlots(Direction side) {
+        int[] ints = new int[getInventorySize()];
+
+        for (int i = 0; i < getInventorySize(); i++) {
+            ints[i] = i;
+        }
+
+        return ints;
+    }
+
+    protected boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return inventory.canExtract(slot) && inventory.getStack(slot).isItemEqual(stack);
+    }
+
+    protected boolean canInsert(int slot, ItemStack stack, Direction dir) {
+        return getInventory().insertStack(stack, ActionType.TEST).isEmpty() && canInsert(slot, stack);
+    }
+
 
     private final SimpleCapacitorComponent capacitorComponent = new SimpleCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
         @Override
@@ -95,16 +148,13 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
     protected abstract boolean canInsertEnergy();
 
-    private final LimitedFixedItemInv limitedInventory = inventory.createLimitedFixedInv();
-    private final FixedItemInv exposedInventory = limitedInventory.asUnmodifiable();
-
     private final SecurityInfo security = new SecurityInfo();
     private RedstoneState redstoneState = RedstoneState.DISABLED;
 
     public ConfigurableElectricMachineBlockEntity(BlockEntityType<? extends ConfigurableElectricMachineBlockEntity> blockEntityType) {
         super(blockEntityType);
         capacitorComponent.getListeners().add(this::markDirty);
-        this.inventory.setOwnerListener((ItemInvSlotListener) (inv, slot) -> markDirty());
+        this.inventory.getListeners().add(this::markDirty);
     }
 
     public RedstoneState getRedstoneState() {
@@ -176,6 +226,12 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         return null;
     }
 
+    protected void decrement(int slot, int amount) {
+        ItemStack stack = getInventory().getStack(slot);
+        stack.decrement(amount);
+        getInventory().setStack(slot, stack);
+    }
+
     @Override
     public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos pos, @Nullable Direction side) {
         Set<ComponentType<?>> set = new HashSet<>();
@@ -197,10 +253,10 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     /**
-     * @return The {@link ItemFilter} for the given slot of {@link #getInventory()}.
+     * @return The {@link Predicate} for the given slot of {@link #getInventory()}.
      */
-    protected ItemFilter getFilterForSlot(int slot) {
-        return ConstantItemFilter.ANYTHING;
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
+        return (itemStack -> true);
     }
 
     /**
@@ -222,12 +278,12 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         if (getCapacitatorComponent().getCurrentEnergy() >= getCapacitatorComponent().getMaxEnergy()) {
             return;
         }
-        ItemStack stack = inventory.getInvStack(slot).copy();
+        ItemStack stack = inventory.getStack(slot);
         int neededEnergy = Math.min(getBatteryTransferRate(), getCapacitatorComponent().getMaxEnergy() - getCapacitatorComponent().getCurrentEnergy());
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy, ActionType.PERFORM);
             this.getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, ActionType.PERFORM);
-            inventory.forceSetInvStack(slot, stack);
+            inventory.setStack(slot, stack);
         }
     }
 
@@ -246,35 +302,20 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         if (available <= 0) {
             return;
         }
-        ItemStack stack = inventory.getInvStack(slot).copy();
+        ItemStack stack = inventory.getStack(slot);
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             if (GalacticraftEnergy.getEnergy(stack) < GalacticraftEnergy.getMaxEnergy(stack)) {
                 int i = GalacticraftEnergy.insertEnergy(stack, available, ActionType.PERFORM);
                 this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, ActionType.PERFORM);
-                inventory.forceSetInvStack(slot, stack);
+                inventory.setStack(slot, stack);
             }
         }
     }
 
-    protected abstract int getInvSize();
+    protected abstract int getInventorySize();
 
-    public final FullFixedItemInv getInventory() {
+    public final SimpleInventoryComponent getInventory() {
         return inventory;
-    }
-
-    /**
-     * @return A {@link LimitedFixedItemInv} that can be used to limit what neighbouring blocks do with the
-     * {@link #getExposedInventory() exposed inventory}.
-     */
-    public final LimitedFixedItemInv getLimitedInventory() {
-        return limitedInventory;
-    }
-
-    /**
-     * @return The {@link FixedItemInv} that is exposed to neighbouring blocks via attributes.
-     */
-    public final FixedItemInv getExposedInventory() {
-        return exposedInventory;
     }
 
     @Nonnull
@@ -285,20 +326,34 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Energy", getCapacitatorComponent().getCurrentEnergy());
-        tag.put("Inventory", inventory.toTag());
-        this.security.toTag(tag);
         tag.putString("Redstone", redstoneState.asString());
+        this.capacitorComponent.toTag(tag);
+        this.inventory.toTag(tag);
+        this.security.toTag(tag);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        getCapacitatorComponent().setCurrentEnergy(tag.getInt("Energy"));
-        inventory.fromTag(tag.getCompound("Inventory"));
+        this.redstoneState = RedstoneState.fromString(tag.getString("Redstone"));
+        this.capacitorComponent.fromTag(tag);
+        this.inventory.fromTag(tag);
         this.security.fromTag(tag);
-        redstoneState = RedstoneState.fromString(tag.getString("Redstone"));
+    }
+
+    public boolean canInsert(int slot, ItemStack stack) {
+        return getInventory().insertStack(slot, stack, ActionType.TEST).isEmpty();
+    }
+
+    public void insert(int slot, ItemStack stack) {
+        ItemStack current = inventory.getStack(slot);
+        if (canInsert(slot, stack)) {
+            current.increment(stack.getCount());
+            inventory.setStack(slot, current);
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     @Override
@@ -321,18 +376,19 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
                 CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, pos.offset(direction), direction.getOpposite()); //
 
-                if (option == SideOption.POWER_INPUT && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_OUTPUT) {
-                    if (component.canExtractEnergy() && component.getPreferredType().isCompatibleWith(getCapacitatorComponent().getPreferredType())) {
-                        int extracted = component.extractEnergy(getCapacitatorComponent().getPreferredType(), Math.min(256, getCapacitatorComponent().getMaxEnergy() - getCapacitatorComponent().getCurrentEnergy()), ActionType.PERFORM);
-                        getCapacitatorComponent().insertEnergy(getCapacitatorComponent().getPreferredType(), extracted, ActionType.PERFORM);
-                    }
-                } else {
-                    if (component.canInsertEnergy() && component.getPreferredType().isCompatibleWith(getCapacitatorComponent().getPreferredType()) && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_INPUT) {
-                        int extracted = getCapacitatorComponent().extractEnergy(getCapacitatorComponent().getPreferredType(), Math.min(256, component.getMaxEnergy() - component.getCurrentEnergy()), ActionType.PERFORM);
-                        component.insertEnergy(getCapacitatorComponent().getPreferredType(), extracted, ActionType.PERFORM);
+                if (component != null) {
+                    if (option == SideOption.POWER_INPUT && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_OUTPUT) {
+                        if (component.canExtractEnergy() && component.getPreferredType().isCompatibleWith(getCapacitatorComponent().getPreferredType())) {
+                            int extracted = component.extractEnergy(getCapacitatorComponent().getPreferredType(), Math.min(256, getCapacitatorComponent().getMaxEnergy() - getCapacitatorComponent().getCurrentEnergy()), ActionType.PERFORM);
+                            getCapacitatorComponent().insertEnergy(getCapacitatorComponent().getPreferredType(), extracted, ActionType.PERFORM);
+                        }
+                    } else {
+                        if (component.canInsertEnergy() && component.getPreferredType().isCompatibleWith(getCapacitatorComponent().getPreferredType()) && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_INPUT) {
+                            int extracted = getCapacitatorComponent().extractEnergy(getCapacitatorComponent().getPreferredType(), Math.min(256, component.getMaxEnergy() - component.getCurrentEnergy()), ActionType.PERFORM);
+                            component.insertEnergy(getCapacitatorComponent().getPreferredType(), extracted, ActionType.PERFORM);
+                        }
                     }
                 }
-
             }
         }
     }

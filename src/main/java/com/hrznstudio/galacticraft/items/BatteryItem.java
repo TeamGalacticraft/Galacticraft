@@ -83,6 +83,7 @@ public class BatteryItem extends Item implements ItemComponentCallback {
 
             ItemStack depleted = new ItemStack(this);
             GalacticraftEnergy.setEnergy(depleted, 0);
+            depleted.setDamage(depleted.getMaxDamage() - 1);
             groupStacks.add(depleted);
         }
     }

@@ -54,7 +54,7 @@ import java.util.function.Function;
 
 public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends ConfigurableElectricMachineBlockEntity> extends BlockEntityRenderer<T> {
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();
-
+    public static final SpriteIdentifier EMPTY = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/empty"));
     protected static final List<ModelElement> element = generateCube();
     private static final Map<String, BakedModel> MODEL_CACHE = new HashMap<>(); //Manual rotation required when rendering the models
 
@@ -135,9 +135,9 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
             case SOUTH:
                 return 180;
             case EAST:
-                return 90;
-            case WEST:
                 return 270;
+            case WEST:
+                return 90;
         }
         return 0;
     }
@@ -157,7 +157,7 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
         }
         if (!MODEL_CACHE.containsKey(builder.toString())) {
             Map<String, Either<SpriteIdentifier, String>> texMap = new HashMap<>();
-            texMap.put("particle", Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/empty"))));
+            texMap.put("particle", Either.left(EMPTY));
             for (Direction direction : Direction.values()) {
                 switch (((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(Direction.NORTH, direction))) { //north so that the model doesn't rotate
                     case DEFAULT:

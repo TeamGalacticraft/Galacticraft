@@ -22,8 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -69,7 +67,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, MultiBlock, MachineBlock {
+public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements Rotatable, MultiBlock, MachineBlock {
 
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
@@ -173,17 +171,6 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
-        Direction dir = to.getSearchDirection();
-        if (dir == null) return;
-        BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof BasicSolarPanelBlockEntity)) return;
-        BasicSolarPanelBlockEntity generator = (BasicSolarPanelBlockEntity) be;
-        to.offer(generator.getCapacitatorComponent());
-        to.offer(generator.getExposedInventory());
-    }
-
-    @Override
     public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
         super.onBreak(world, blockPos, blockState, playerEntity);
         dropInventory(world, blockPos);
@@ -202,8 +189,8 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
             if (blockEntity instanceof BasicSolarPanelBlockEntity) {
                 BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
 
-                for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getInvStack(i);
+                for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSize(); i++) {
+                    ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

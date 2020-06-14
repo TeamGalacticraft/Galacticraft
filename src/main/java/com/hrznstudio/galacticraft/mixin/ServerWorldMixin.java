@@ -43,7 +43,7 @@ import java.util.function.BooleanSupplier;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
-    private NetworkManager networkManager = new NetworkManager();
+    private final NetworkManager networkManager = new NetworkManager();
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {

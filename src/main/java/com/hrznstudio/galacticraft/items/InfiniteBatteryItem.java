@@ -32,10 +32,7 @@ import nerdhub.cardinal.components.api.component.ComponentContainer;
 import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
 import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import team.reborn.energy.Energy;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -49,15 +46,6 @@ public class InfiniteBatteryItem extends Item implements ItemComponentCallback {
     @Override
     public boolean hasEnchantmentGlint(ItemStack itemStack_1) {
         return true;
-    }
-
-    @Override
-    public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> defaultedList_1) {
-        if (itemGroup_1 == GalacticraftItems.ITEMS_GROUP) {
-            ItemStack stack = new ItemStack(this);
-            Energy.of(stack).set(Double.MAX_VALUE);
-            defaultedList_1.add(stack);
-        }
     }
 
     @Override

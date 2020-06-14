@@ -22,8 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -62,7 +60,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
+public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT);
@@ -167,17 +165,6 @@ public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock imp
     }
 
     @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
-        Direction dir = to.getSearchDirection();
-        if (dir != null) return;
-        BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof CircuitFabricatorBlockEntity)) return;
-        CircuitFabricatorBlockEntity fabricator = (CircuitFabricatorBlockEntity) be;
-        to.offer(fabricator.getCapacitatorComponent());
-        fabricator.getExposedInventory().offerSelfAsAttribute(to, null, null);
-    }
-
-    @Override
     public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
         return new TranslatableText("tooltip.galacticraft-rewoven.circuit_fabricator");
     }
@@ -192,8 +179,8 @@ public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock imp
             if (blockEntity instanceof CircuitFabricatorBlockEntity) {
                 CircuitFabricatorBlockEntity circuitFabricatorBlockEntity = (CircuitFabricatorBlockEntity) blockEntity;
 
-                for (int i = 0; i < circuitFabricatorBlockEntity.getInventory().getSlotCount(); i++) {
-                    ItemStack itemStack = circuitFabricatorBlockEntity.getInventory().getInvStack(i);
+                for (int i = 0; i < circuitFabricatorBlockEntity.getInventory().getSize(); i++) {
+                    ItemStack itemStack = circuitFabricatorBlockEntity.getInventory().getStack(i);
 
                     if (itemStack != null) {
                         world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));

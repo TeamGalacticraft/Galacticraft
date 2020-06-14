@@ -31,8 +31,6 @@ import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.dimension.DimensionType;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
 import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
@@ -51,7 +52,11 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.mojang.serialization.Lifecycle;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
+import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -103,6 +108,12 @@ public class Galacticraft implements ModInitializer {
         AtmosphericGasRegistryCallback.EVENT.register(registry -> {
             Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
             Registry.register(registry, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
+        });
+
+        EntityComponentCallback.event(PlayerEntity.class).register((playerEntity, componentContainer) -> { //cant do it in a mixin
+            EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, playerEntity);
+            componentContainer.put(UniversalComponents.INVENTORY_COMPONENT, inventory);
+            ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
         });
 
         CelestialBodyRegistryCallback.EVENT.register(registry -> {

@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
-import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.util.WireConnectable;

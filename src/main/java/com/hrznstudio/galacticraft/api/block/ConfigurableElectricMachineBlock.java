@@ -43,7 +43,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
-import team.reborn.energy.EnergySide;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -63,24 +62,6 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
     public final SideOption getOption(BlockState state, BlockFace direction) {
         return state.get(getProperty(direction));
-    }
-
-    public static Direction energySideToDirection(EnergySide side) {
-        switch (side) {
-            case NORTH:
-                return Direction.NORTH;
-            case SOUTH:
-                return Direction.SOUTH;
-            case EAST:
-                return Direction.EAST;
-            case DOWN:
-                return Direction.DOWN;
-            case UP:
-                return Direction.UP;
-            case WEST:
-                return Direction.WEST;
-        }
-        return Direction.NORTH;
     }
 
     public abstract ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);

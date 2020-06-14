@@ -22,12 +22,12 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -120,12 +120,12 @@ public abstract class LivingEntityMixin extends Entity {
     private void updateAir(Entity entity) {
         //todo check for sealed space
         if (entity instanceof PlayerEntity) {
-            FullFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
-            if (gearInventory.getInvStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(6).getMaxDamage() - gearInventory.getInvStack(6).getDamage()) > 0)) {
-                gearInventory.getInvStack(6).setDamage(gearInventory.getInvStack(6).getDamage() + 1);
+            SimpleInventoryComponent gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
+            if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(6).getMaxDamage() - gearInventory.getStack(6).getDamage()) > 0)) {
+                gearInventory.getStack(6).setDamage(gearInventory.getStack(6).getDamage() + 1);
                 return;
-            } else if (gearInventory.getInvStack(7).getItem() instanceof OxygenTankItem && ((gearInventory.getInvStack(7).getMaxDamage() - gearInventory.getInvStack(7).getDamage()) > 0)) {
-                gearInventory.getInvStack(7).setDamage(gearInventory.getInvStack(7).getDamage() + 1);
+            } else if (gearInventory.getStack(7).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(7).getMaxDamage() - gearInventory.getStack(7).getDamage()) > 0)) {
+                gearInventory.getStack(7).setDamage(gearInventory.getStack(7).getDamage() + 1);
                 return;
             }
         }

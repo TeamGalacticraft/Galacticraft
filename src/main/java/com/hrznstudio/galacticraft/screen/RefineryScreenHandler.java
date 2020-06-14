@@ -22,8 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.fluid.FluidProviderItem;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -46,18 +44,13 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
     public RefineryScreenHandler(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
         addProperty(status);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return RefineryScreenHandler.this.canUse(player);
-            }
-        };
+        this.inventory = blockEntity.getInventory().asInventory();
         // Energy slot
         this.addSlot(new ChargeSlot(this.inventory, 0, 8, 79));
         this.addSlot(new Slot(this.inventory, 1, 8, 15) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() instanceof FluidProviderItem;
+                return blockEntity.getFilterForSlot(1).test(itemStack_1);
             }
 
             @Override
@@ -68,7 +61,7 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
         this.addSlot(new Slot(this.inventory, 2, 8 + (18 * 3), 79) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() instanceof FluidProviderItem;
+                return blockEntity.getFilterForSlot(2).test(itemStack_1);
             }
 
             @Override
