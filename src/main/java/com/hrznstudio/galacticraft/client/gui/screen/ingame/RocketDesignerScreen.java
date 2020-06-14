@@ -44,6 +44,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.TranslatableText;
@@ -159,24 +160,29 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, world);
     }
 
-    public static void drawEntity(MatrixStack stack, int x, int y, RocketEntity entity) {
-        stack.push();
-        stack.translate((float) x, (float) y, 1050.0F);
-        stack.scale(1.0F, 1.0F, -1.0F);
-        stack.translate(0.0D, 0.0D, 1000.0D);
+    public static void drawEntity(int x, int y, RocketEntity entity) {
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef((float)x, (float)y, 1050.0F);
+        RenderSystem.scalef(3.0F, 3.0F, -3.0F);
+        MatrixStack matrixStack = new MatrixStack();
+        matrixStack.translate(0.0D, 0.0D, 1000.0D);
         Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
         Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(0.0F);
         quaternion.hamiltonProduct(quaternion2);
-        stack.multiply(quaternion);
+        matrixStack.multiply(quaternion);
+        entity.yaw = 180.0F;
+        entity.pitch = -20.0F;
         EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderManager();
         quaternion2.conjugate();
         entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, stack, immediate, 15728880);
+        RenderSystem.runAsFancy(() -> {
+            entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880);
+        });
         immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
-        stack.pop();
+        RenderSystem.popMatrix();
     }
 
     @Override
@@ -196,7 +202,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             } else {
                 drawTexture(stack, this.x - 29, this.y + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             }
-            this.itemRenderer.renderGuiItem(new ItemStack(RocketParts.getPartToRenderForType(RocketPartType.values()[i]).getDesignerItem()), (this.x - 31) + 13, this.y + 3 + ((27) * i) + 4);
+            this.itemRenderer.renderGuiItemIcon(new ItemStack(RocketParts.getPartToRenderForType(RocketPartType.values()[i]).getDesignerItem()), (this.x - 31) + 13, this.y + 3 + ((27) * i) + 4);
         }
     }
 
@@ -216,7 +222,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
             this.client.getTextureManager().bindTexture(TEXTURE);
             drawTexture(stack, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_X, WHITE_BOX_Y, BOX_WIDTH, BOX_HEIGHT);
-            this.itemRenderer.renderGuiItem(new ItemStack(part.getDesignerItem().asItem()), this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y));
+            this.itemRenderer.renderGuiItemIcon(new ItemStack(part.getDesignerItem().asItem()), this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y));
             if (++x == 5) {
                 x = 0;
                 if (++y == 5) {
@@ -242,13 +248,13 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             }
         }
 
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.CONE).getDesignerItem().asItem()), this.x + 156, this.y + 8);
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BODY).getDesignerItem().asItem()), this.x + 156, this.y + 24);
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.FIN).getDesignerItem().asItem()), this.x + 156, this.y + 40);
+        this.itemRenderer.renderGuiItemIcon(new ItemStack(this.be.getPart(RocketPartType.CONE).getDesignerItem().asItem()), this.x + 156, this.y + 8);
+        this.itemRenderer.renderGuiItemIcon(new ItemStack(this.be.getPart(RocketPartType.BODY).getDesignerItem().asItem()), this.x + 156, this.y + 24);
+        this.itemRenderer.renderGuiItemIcon(new ItemStack(this.be.getPart(RocketPartType.FIN).getDesignerItem().asItem()), this.x + 156, this.y + 40);
 
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.UPGRADE).getDesignerItem().asItem()), this.x + 225, this.y + 26);
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOOSTER).getDesignerItem().asItem()), this.x + 225, this.y + 44);
-        this.itemRenderer.renderGuiItem(new ItemStack(this.be.getPart(RocketPartType.BOTTOM).getDesignerItem().asItem()), this.x + 225, this.y + 60);
+        this.itemRenderer.renderGuiItemIcon(new ItemStack(this.be.getPart(RocketPartType.UPGRADE).getDesignerItem().asItem()), this.x + 225, this.y + 26);
+        this.itemRenderer.renderGuiItemIcon(new ItemStack(this.be.getPart(RocketPartType.BOOSTER).getDesignerItem().asItem()), this.x + 225, this.y + 44);
+        this.itemRenderer.renderGuiItemIcon(new ItemStack(this.be.getPart(RocketPartType.BOTTOM).getDesignerItem().asItem()), this.x + 225, this.y + 60);
 
         this.client.getTextureManager().bindTexture(TEXTURE);
 
@@ -289,7 +295,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         }
         this.entity.setColor(this.be.getRed(), this.be.getGreen(), this.be.getBlue(), this.be.getAlpha());
 
-        drawEntity(stack, this.x + 172 + 24, this.y + 64, entity);
+        drawEntity(this.x + 172 + 24, this.y + 64, entity);
 
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
@@ -349,7 +355,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (r < 0) {
                         r = 0;
                     }
-                    this.be.setRed(r);
+                    this.be.setRedClient(r);
                 } else if (b == 1) {
                     int g = (int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255);
                     if (g > 255) {
@@ -357,7 +363,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (g < 0) {
                         g = 0;
                     }
-                    this.be.setGreen(g);
+                    this.be.setGreenClient(g);
                 } else if (b == 2) {
                     int blue = (int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255);
                     if (blue > 255) {
@@ -365,7 +371,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (blue < 0) {
                         blue = 0;
                     }
-                    this.be.setBlue(blue);
+                    this.be.setBlueClient(blue);
                 } else {
                     int a = (int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255);
                     if (a > 255) {
@@ -373,23 +379,23 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (a < 0) {
                         a = 0;
                     }
-                    this.be.setAlpha(a);
+                    this.be.setAlphaClient(a);
                 }
             } else {
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -9.0F && this.y - mouseY > -15.0F) {
-                    this.be.setRed((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.be.setRedClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
 
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -19.0F && this.y - mouseY > -25.0F) {
-                    this.be.setGreen((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.be.setGreenClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
 
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -29.0F && this.y - mouseY > -35.0F) {
-                    this.be.setBlue((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.be.setBlueClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
 
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -39.0F && this.y - mouseY > -45.0F) {
-                    this.be.setAlpha((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.be.setAlphaClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
             }
         }
@@ -434,7 +440,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).size(); i++) {
                     RocketPart part = Galacticraft.ROCKET_PARTS.getPartsForType(OPEN_TAB).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
-                        this.be.setPart(part);
+                        this.be.setPartClient(part);
                         break;
                     }
                     if (++x == 5) {
@@ -448,7 +454,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAllEntries().size(); i++) {
                     RocketPart part = Galacticraft.ROCKET_PARTS.getAllEntries().get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
-                        this.be.setPart(part);
+                        this.be.setPartClient(part);
                         break;
                     }
                     if (++x == 5) {

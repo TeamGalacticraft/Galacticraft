@@ -80,7 +80,7 @@ public class Galacticraft implements ModInitializer {
 
     public static final ConfigManager configManager = new ConfigManagerImpl();
 
-    public static final RocketPartRegistry ROCKET_PARTS = Registry.register(Registry.REGISTRIES, new Identifier(Constants.MOD_ID, "rocket_parts"), new RocketPartRegistry());
+    public static final RocketPartRegistry ROCKET_PARTS = new RocketPartRegistry(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "rocket_parts")), Lifecycle.stable());
 
     @Override
     public void onInitialize() {

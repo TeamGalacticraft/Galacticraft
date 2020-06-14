@@ -22,13 +22,6 @@
 
 package com.hrznstudio.galacticraft.entity.rocket;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
-import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -39,7 +32,14 @@ import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.fluid.impl.EntitySyncedTankComponent;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
+import nerdhub.cardinal.components.api.component.Component;
+import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
@@ -86,7 +86,7 @@ import java.util.Objects;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
+public class RocketEntity extends Entity implements EntityComponentCallback<RocketEntity> { //pitch+90
 
     private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
         @Override
@@ -105,26 +105,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         }
     });
 
-    private static final TrackedData<SimpleFixedFluidInv> FUEL_INV = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<SimpleFixedFluidInv>() {
-        @Override
-        public void write(PacketByteBuf var1, SimpleFixedFluidInv var2) {
-            var1.writeCompoundTag(var2.toTag());
-        }
-
-        @Override
-        public SimpleFixedFluidInv read(PacketByteBuf var1) {
-            SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
-            fluidInv.fromTag(var1.readCompoundTag());
-            return fluidInv;
-        }
-
-        @Override
-        public SimpleFixedFluidInv copy(SimpleFixedFluidInv var1) {
-            SimpleFixedFluidInv fluidInv = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
-            fluidInv.fromTag(var1.toTag());
-            return fluidInv;
-        }
-    });
+    private final EntitySyncedTankComponent tank = new EntitySyncedTankComponent(1, Fraction.ofWhole(12), UniversalComponents.TANK_COMPONENT, this);
     
     private static final TrackedData<Float[]> COLOR = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Float[]>() {
 
@@ -199,7 +180,6 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         TrackedDataHandlerRegistry.register(STAGE.getType());
         TrackedDataHandlerRegistry.register(COLOR.getType());
         TrackedDataHandlerRegistry.register(SPEED.getType());
-        TrackedDataHandlerRegistry.register(FUEL_INV.getType());
         TrackedDataHandlerRegistry.register(PARTS.getType());
     }
 
@@ -284,9 +264,12 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
     }
 
     @Override
-    public boolean interact(PlayerEntity playerEntity_1, Hand hand_1) {
-        playerEntity_1.startRiding(this);
-        return true;
+    public ActionResult interact(PlayerEntity playerEntity_1, Hand hand_1) {
+        if (this.getPassengerList().isEmpty()) {
+            playerEntity_1.startRiding(this);
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.FAIL;
     }
 
     @Override
@@ -307,7 +290,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
-        this.getFuel().fromTag(tag);
+        this.tank.fromTag(tag);
 
         CompoundTag parts = tag.getCompound("Parts");
         List<RocketPart> list = new ArrayList<>();
@@ -339,7 +322,7 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
-        this.getFuel().toTag(tag);
+        this.tank.toTag(tag);
 
         CompoundTag parts = new CompoundTag();
         CompoundTag color = new CompoundTag();
@@ -400,7 +383,6 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         dataTracker.startTracking(STAGE, LaunchStage.IDLE);
         dataTracker.startTracking(COLOR, new Float[]{255.0F, 255.0F, 255.0F, 255.0F});
         dataTracker.startTracking(SPEED, 0.0D);
-        dataTracker.startTracking(FUEL_INV, new SimpleFixedFluidInv(1, 10000));
 
         dataTracker.startTracking(DAMAGE_WOBBLE_TICKS, 0);
         dataTracker.startTracking(DAMAGE_WOBBLE_SIDE, 0);
@@ -474,16 +456,14 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
             }
 
             if (getStage() == LaunchStage.IGNITED) {
-                this.getFuel().setInvFluid(0, FluidKeys.get(GalacticraftFluids.FUEL).withAmount(FluidAmount.A_MILLION), Simulation.ACTION); //for testing purposes only
-
-                if (this.getFuel().getTank(0).get().getAmount() == 0 && !debugMode) {
+                if (this.tank.getContents(0).isEmpty() && !debugMode) {
                     this.setStage(LaunchStage.IDLE);
                     if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
-                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), MessageType.SYSTEM);
+                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), false);
                     }
                     return;
                 }
-                this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().isIn(GalacticraftFluidTags.FUEL), FluidAmount.of(1, 100)); //todo find balanced values
+                this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
@@ -499,10 +479,10 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.getFuel().getTank(0).get().getAmount() == 0 || !this.getFuel().getTank(0).get().getRawFluid().isIn(GalacticraftFluidTags.FUEL))) {
+                if (!debugMode && (this.tank.isEmpty() || !this.tank.getContents(0).getFluid().equals(GalacticraftFluids.FUEL))) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
-                    this.getFuel().extract((FluidKey fluidKey) -> fluidKey.getRawFluid().isIn(GalacticraftFluidTags.FUEL), FluidAmount.of(1, 100)); //todo find balanced values
+                    this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
@@ -711,24 +691,17 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
         super.removePassenger(entity_1);
     }
 
-    public SimpleFixedFluidInv getFuel() {
-        return this.dataTracker.get(FUEL_INV);
-    }
-
-    @Override
-    public FluidVolume attemptInsertion(FluidVolume fluid, Simulation simulation) {
-        return this.getFuel().attemptInsertion(fluid, simulation);
-    }
-
     private long ticksSinceJump = 0;
 
     public void onJump() {
         if (!this.getPassengerList().isEmpty() && ticksSinceJump > 10) {
             if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    this.setStage(this.getStage().next());
-                    if (getStage() == LaunchStage.WARNING) {
-                        ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.warning"), MessageType.SYSTEM);
+                    if (!tank.getContents(0).isEmpty()) {
+                        this.setStage(this.getStage().next());
+                        if (getStage() == LaunchStage.WARNING) {
+                            ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.warning"), true);
+                        }
                     }
                 }
             }
@@ -782,5 +755,10 @@ public class RocketEntity extends Entity implements FluidInsertable { //pitch+90
 
     public void dropItems(DamageSource source, boolean exploded) {
 
+    }
+
+    @Override
+    public void initComponents(RocketEntity rocketEntity, ComponentContainer<Component> componentContainer) {
+        componentContainer.put(UniversalComponents.TANK_COMPONENT, rocketEntity.tank);
     }
 }

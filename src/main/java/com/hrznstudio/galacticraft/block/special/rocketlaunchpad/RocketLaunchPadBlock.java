@@ -65,8 +65,8 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
     }
 
     @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        super.onBroken(world, pos, state);
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        super.onStateReplaced(state, world, pos, newState, moved);
         switch (state.get(PART)) {
             case NORTH:
             case SOUTH:
@@ -114,16 +114,6 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                 return;
             }
         }
-    }
-
-    @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-    }
-
-    @Override
-    public void onBlockRemoved(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        super.onBlockRemoved(state, world, pos, newState, moved);
     }
 
     @Override
