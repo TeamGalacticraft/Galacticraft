@@ -71,7 +71,7 @@ dependencies {
     modImplementation("teamreborn:energy:+") { transitive = false }
 
     //include everything mandatory inside the jar
-    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
+    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+${project.minecraft_version}")
     include("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
     include("io.github.cottonmc:UniversalComponents:${project.uc_version}")
