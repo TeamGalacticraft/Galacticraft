@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -39,11 +40,13 @@ public class GalacticraftEntityTypes {
 
     public static final EntityType<RocketEntity> ROCKET = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.ROCKET), FabricEntityTypeBuilder.create(SpawnGroup.MISC, RocketEntity::new).trackable(32, 2, false).dimensions(EntityDimensions.fixed(2.3F, 5.25F)).build()); //PLAYER VALUES
     public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.MOON_VILLAGER), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType.EntityFactory<MoonVillagerEntity>) MoonVillagerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 2.4F)).build());
-    public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.MOON_VILLAGER), FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType.EntityFactory<MoonVillagerEntity>) MoonVillagerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 2.4F)).build());
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_ZOMBIE), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedZombieEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build());
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_CREEPER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.changing(0.65F, 1.8F)).build());
 
     public static void register() {
-        Galacticraft.logger.info("Registered entity types!");
+        FabricDefaultAttributeRegistry.register(MOON_VILLAGER, MoonVillagerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createMobAttributes());
+        Galacticraft.logger.info("Registered entities!");
     }
 }
