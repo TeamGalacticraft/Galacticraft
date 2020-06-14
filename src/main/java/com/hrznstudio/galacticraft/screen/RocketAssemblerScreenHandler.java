@@ -65,7 +65,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
+                return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC && this.getStack().isEmpty();
             }
 
             @Override
@@ -77,7 +77,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ROCKET_OUTPUT_SLOT, 299, 19) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() == GalacticraftItems.ROCKET;
+                return itemStack_1.getItem() == GalacticraftItems.ROCKET && this.getStack().isEmpty();
             }
 
             @Override
@@ -89,7 +89,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 156, 72) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return GalacticraftEnergy.isEnergyItem(itemStack_1);
+                return GalacticraftEnergy.isEnergyItem(itemStack_1) && this.getStack().isEmpty();
             }
 
             @Override

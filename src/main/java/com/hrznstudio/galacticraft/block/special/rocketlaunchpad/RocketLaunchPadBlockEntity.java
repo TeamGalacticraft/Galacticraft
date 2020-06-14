@@ -25,6 +25,10 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
 
     }
 
+    public int getRocketEntityId() {
+        return rocketEntityId;
+    }
+
     public boolean hasRocket() {
         return this.rocketEntityUUID != null && this.rocketEntityId != Integer.MIN_VALUE;
     }

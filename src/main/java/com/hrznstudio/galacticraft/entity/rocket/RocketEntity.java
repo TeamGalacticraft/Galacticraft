@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.entity.rocket;
 
+import com.google.common.collect.Sets;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -37,8 +38,10 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.impl.EntitySyncedTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
+import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.Component;
 import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -76,17 +79,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntity extends Entity implements EntityComponentCallback<RocketEntity> { //pitch+90
+public class RocketEntity extends Entity implements EntityComponentCallback<RocketEntity>, ComponentProvider { //pitch+90
 
     private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
         @Override
@@ -760,5 +761,22 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     @Override
     public void initComponents(RocketEntity rocketEntity, ComponentContainer<Component> componentContainer) {
         componentContainer.put(UniversalComponents.TANK_COMPONENT, rocketEntity.tank);
+    }
+
+    @Override
+    public boolean hasComponent(ComponentType<?> componentType) {
+        return componentType == UniversalComponents.TANK_COMPONENT;
+    }
+
+    @Nullable
+    @Override
+    public <C extends Component> C getComponent(ComponentType<C> componentType) {
+        //noinspection unchecked
+        return componentType == UniversalComponents.TANK_COMPONENT ? (C)tank : null;
+    }
+
+    @Override
+    public @NotNull Set<ComponentType<?>> getComponentTypes() {
+        return Sets.newHashSet(UniversalComponents.TANK_COMPONENT);
     }
 }

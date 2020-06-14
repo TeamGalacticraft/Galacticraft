@@ -33,7 +33,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
     }
 
     public static BlockPos partToCenterPos(Part part) {
-        if (part == null) return new BlockPos(0, 0, 0);
+        if (part == null) return BlockPos.ORIGIN;
         switch (part) {
             case NORTH:
             case SOUTH:

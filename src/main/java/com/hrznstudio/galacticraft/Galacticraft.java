@@ -55,10 +55,18 @@ import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStat
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.mojang.serialization.Lifecycle;
 import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
+import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.BucketItem;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -67,6 +75,8 @@ import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

@@ -5,6 +5,8 @@ accessible   field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator   field
 
 accessible   field   net/minecraft/world/gen/chunk/ChunkGenerator   biomeSource   Lnet/minecraft/world/biome/source/BiomeSource;
 
+accessible   field   net/minecraft/item/BucketItem   fluid   Lnet/minecraft/fluid/Fluid;
+
 accessible   field   net/minecraft/world/World dimension   Lnet/minecraft/world/dimension/DimensionType;
 mutable   field   net/minecraft/world/World dimension   Lnet/minecraft/world/dimension/DimensionType;
 
