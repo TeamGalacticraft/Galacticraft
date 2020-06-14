@@ -24,7 +24,9 @@ package com.hrznstudio.galacticraft.api.registry;
 
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
-import net.minecraft.util.Identifier;
+import com.mojang.serialization.Lifecycle;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.commons.lang3.Validate;
 
@@ -39,20 +41,17 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
 
     private final HashMap<RocketPartType, List<RocketPart>> parts = new HashMap<>();
 
-    public RocketPartRegistry() {
-        super();
+    public RocketPartRegistry(RegistryKey<Registry<RocketPart>> registryKey, Lifecycle lifecycle) {
+        super(registryKey, lifecycle);
         for (RocketPartType type : RocketPartType.values()) {
             parts.put(type, new ArrayList<>());
         }
     }
 
     @Override
-    public <V extends RocketPart> V set(int i, Identifier identifier, V object) {
-        Validate.notNull(object.getBlockToRender().getBlock().asItem(), "Rocket render block must not be null! ID: " + identifier);
-        Validate.notNull(identifier);
-        Validate.notNull(object);
-        parts.get(object.getType()).add(object);
-        return super.set(i, identifier, object);
+    public <V extends RocketPart> V add(RegistryKey<RocketPart> key, V entry) {
+        parts.get(entry.getType()).add(entry);
+        return super.add(key, entry);
     }
 
     public List<RocketPart> getPartsForType(RocketPartType type) {
@@ -60,6 +59,6 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
     }
 
     public List<RocketPart> getAllEntries() {
-        return new ArrayList<>(entries.values());
+        return new ArrayList<>(entriesById.values());
     }
 }

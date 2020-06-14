@@ -22,9 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -32,31 +29,35 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
+import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
+import io.github.cottonmc.component.item.InventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    public CompressorBlockEntity.CompressorStatus status = CompressorBlockEntity.CompressorStatus.INACTIVE;
+    public ElectricCompressorStatus status = ElectricCompressorStatus.IDLE;
     public int progress;
 
     public ElectricCompressorBlockEntity() {
@@ -64,7 +65,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 12;
     }
 
@@ -77,7 +78,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == FUEL_INPUT_SLOT) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else {
@@ -86,8 +87,18 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
-    public CompressorBlockEntity.CompressorStatus getStatusForTooltip() {
+    public ElectricCompressorStatus getStatusForTooltip() {
         return status;
     }
 
@@ -99,25 +110,30 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
             return;
         }
 
-        InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+        Inventory inv = new InventoryWrapper() {
             @Override
-            public boolean canPlayerUse(PlayerEntity var1) {
-                return true;
+            public InventoryComponent getComponent() {
+                return getInventory();
+            }
+
+            @Override
+            public int size() {
+                return 9;
             }
         };
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
-        if (getEnergyAttribute().getCurrentEnergy() < 1) {
-            status = CompressorBlockEntity.CompressorStatus.INACTIVE;
+        if (getCapacitatorComponent().getCurrentEnergy() < 1) {
+            status = ElectricCompressorStatus.IDLE;
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-            status = CompressorBlockEntity.CompressorStatus.PROCESSING;
+            status = ElectricCompressorStatus.PROCESSING;
         } else {
-            status = CompressorBlockEntity.CompressorStatus.IDLE;
+            status = ElectricCompressorStatus.IDLE;
         }
 
-        if (status == CompressorBlockEntity.CompressorStatus.PROCESSING) {
+        if (status == ElectricCompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
-            this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
+            this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             this.progress++;
 
             if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
@@ -129,7 +145,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
                 craftItem(resultStack);
             }
-        } else if (status == CompressorBlockEntity.CompressorStatus.INACTIVE) {
+        } else if (status == ElectricCompressorStatus.IDLE) {
             if (progress > 0) {
                 progress--;
             }
@@ -163,19 +179,19 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         }
 
         for (int i = 0; i < 9; i++) {
-            getInventory().getSlot(i).extract(canCraftTwo ? 2 : 1);
+            decrement(i, canCraftTwo ? 2 : 1);
         }
 
         // <= because otherwise it loops only once and puts in only one slot
         for (int i = OUTPUT_SLOT; i <= SECOND_OUTPUT_SLOT; i++) {
-            getInventory().getSlot(i).insert(craftingResult);
+            insert(i, craftingResult);
         }
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Energy", getEnergyAttribute().getCurrentEnergy());
+        tag.putInt("Energy", getCapacitatorComponent().getCurrentEnergy());
 
         return tag;
     }
@@ -183,7 +199,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        getEnergyAttribute().setCurrentEnergy(tag.getInt("Energy"));
+        getCapacitatorComponent().setCurrentEnergy(tag.getInt("Energy"));
     }
 
     @Override
@@ -216,7 +232,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     protected boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return getInventory().getSlot(OUTPUT_SLOT).attemptInsertion(itemStack, Simulation.SIMULATE).isEmpty();
+        return canInsert(OUTPUT_SLOT, itemStack);
     }
 
     public boolean isValidRecipe(Inventory input) {
@@ -227,27 +243,51 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
-    }
-
-    @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
+    }
+
+    /**
+     * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+     */
+    public enum ElectricCompressorStatus implements MachineStatus {
+
+        /**
+         * Compressor is compressing items.
+         */
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
+
+        /**
+         * Compressor has no items to process.
+         */
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
+
+        /**
+         * Compressor has no items to process.
+         */
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED);
+
+        private final Text text;
+
+        ElectricCompressorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
+        }
+
+        public static ElectricCompressorStatus get(int index) {
+            switch (index) {
+                case 0:
+                    return PROCESSING;
+                case 1:
+                    return IDLE;
+                case 2:
+                    return NOT_ENOUGH_ENERGY;
+            }
+            return IDLE;
+        }
+
+        @Override
+        public Text getText() {
+            return text;
+        }
     }
 }

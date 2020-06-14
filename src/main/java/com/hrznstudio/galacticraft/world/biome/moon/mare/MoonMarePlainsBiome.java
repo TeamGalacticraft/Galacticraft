@@ -22,39 +22,17 @@
 
 package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
-import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.world.gen.surfacebuilder.BlockStateWithChance;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import com.hrznstudio.galacticraft.world.gen.surfacebuilder.MultiBlockSurfaceConfig;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonMarePlainsBiome extends Biome implements SpaceBiome {
-
-    public static final MultiBlockSurfaceConfig MOON_MARE_BIOME_CONFIG = new MultiBlockSurfaceConfig(
-            new BlockStateWithChance[]{
-                    new BlockStateWithChance(GalacticraftBlocks.MOON_BASALT.getDefaultState(), -1),
-                    new BlockStateWithChance(GalacticraftBlocks.MOON_TURF.getDefaultState(), 100)}, //DISABLED for now. Need to find a good ratio
-            new BlockStateWithChance[]{
-                    new BlockStateWithChance(GalacticraftBlocks.MOON_BASALT.getDefaultState(), -1),
-                    new BlockStateWithChance(GalacticraftBlocks.MOON_DIRT.getDefaultState(), 100)},
-            new BlockStateWithChance[]{
-                    new BlockStateWithChance(GalacticraftBlocks.MOON_BASALT.getDefaultState(), -1),
-                    new BlockStateWithChance(GalacticraftBlocks.MOON_ROCK.getDefaultState(), 100)}
-    );
+public final class MoonMarePlainsBiome extends MoonMareBiome {
 
     public MoonMarePlainsBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MULTI_BLOCK_SURFACE_BUILDER, MOON_MARE_BIOME_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MOON_MARE_BIOME_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.03F)
@@ -68,42 +46,11 @@ public final class MoonMarePlainsBiome extends Biome implements SpaceBiome {
                         .build())
                 .parent(null));
         this.flowerFeatures.clear();
+        addMoonVillages();
     }
 
     @Override
-    protected float computeTemperature(BlockPos blockPos) {
-        return -100F;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_mare_plains";
-    }
-
-    @Override
-    public int getSkyColor() {
-        return 0;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getFoliageColor() {
-        return getWaterFogColor();
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getGrassColorAt(double x, double z) {
-        return getWaterColor();
-    }
-
-    @Override
-    public TemperatureGroup getTemperatureGroup() {
-        return TemperatureGroup.COLD;
-    }
-
-    @Override
-    public Text getName() {
-        return new TranslatableText(this.getTranslationKey());
+    protected String getBiomeName() {
+        return "plains";
     }
 }

@@ -164,17 +164,14 @@
   "item.galacticraft-rewoven.large_oxygen_tank": "Stor Oksygentank",
   "item.galacticraft-rewoven.battery": "Batteri",
   "item.galacticraft-rewoven.infinite_battery": "Evigvarande Batteri",
-
   "item.galacticraft-rewoven.crude_oil_bucket": "Bytte Med Olje",
-
   "tooltip.galacticraft-rewoven.press_shift": "Hold SHIFT for meir informasjon",
   "tooltip.galacticraft-rewoven.energy": "%s GJ",
   "tooltip.galacticraft-rewoven.energy.k": "%sK GJ",
   "tooltip.galacticraft-rewoven.energy.m": "%sM GJ",
   "tooltip.galacticraft-rewoven.energy.g": "%sG GJ",
   "tooltip.galacticraft-rewoven.coal_generator": "Brenner kol og trekol for elektrisitet. Den enklaste, men minst effektive straumforsyninga.",
-
-  "ui.galacticraft-rewoven.machine.status": "Status: %s",
+  "ui.galacticraft-rewoven.machine.status": "Status: ",
   "ui.galacticraft-rewoven.machine.current_energy": "Energi: %s",
   "ui.galacticraft-rewoven.machine.max_energy": "Straumkapasitet: %s",
   "ui.galacticraft-rewoven.machinestatus.active": "Aktiv",

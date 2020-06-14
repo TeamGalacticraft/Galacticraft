@@ -22,18 +22,17 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,6 +49,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -70,36 +70,27 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     private RocketPart bottom = RocketParts.DEFAULT_BOTTOM;
     private RocketPart upgrade = RocketParts.NO_UPGRADE;
 
-    private final FullFixedItemInv inventory = new FullFixedItemInv(1) {
+    private final SimpleInventoryComponent inventory = new SimpleInventoryComponent(1) {
         @Override
-        public boolean isItemValidForSlot(int slot, ItemStack item) {
-            return getFilterForSlot(slot).matches(item);
-        }
-
-        @Override
-        public ItemFilter getFilterForSlot(int slot) {
-            if (slot == 0) {
-                return (itemStack -> itemStack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC);
-            } else {
-                return (itemStack -> false);
-            }
+        public boolean isAcceptableStack(int slot, ItemStack stack) {
+            return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC && slot == 0;
         }
     };
+
+    private ItemStack previous = ItemStack.EMPTY;
 
     public RocketDesignerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_DESIGNER_TYPE);
 
-        this.inventory.addListener((fixedItemInvView, i, itemStack, itemStack1) -> {
-            if (itemStack.isEmpty()) {
-                this.updateSchematic();
-            } else if (!itemStack.getOrCreateTag().equals(itemStack1.getTag())) {
+        this.inventory.listen(() -> {
+            if (!previous.getOrCreateTag().equals(inventory.getStack(0).getTag())) {
                 this.updateSchematic();
             }
-        }, () -> {
+            previous = inventory.getStack(0).copy();
         });
     }
 
-    public FullFixedItemInv getInventory() {
+    public SimpleInventoryComponent getInventory() {
         return inventory;
     }
 
@@ -170,7 +161,32 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         }
     }
 
-    public void setPart(RocketPart part) {
+    public void setPartServer(RocketPart part) {
+        switch (part.getType()) {
+            case BOOSTER:
+                booster = part;
+                break;
+            case BOTTOM:
+                bottom = part;
+                break;
+            case CONE:
+                cone = part;
+                break;
+            case BODY:
+                body = part;
+                break;
+            case FIN:
+                fin = part;
+                break;
+            case UPGRADE:
+                upgrade = part;
+                break;
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void setPartClient(RocketPart part) {
+        assert world.isClient;
         switch (part.getType()) {
             case BOOSTER:
                 booster = part;
@@ -192,9 +208,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 break;
         }
 
-        if (this.world != null && this.world.isClient && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-            sendDesignerPartUpdate(part);
-        }
+        sendDesignerPartUpdate(part);
     }
 
     @Environment(EnvType.CLIENT)
@@ -224,37 +238,50 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     }
 
     public void setRed(int red) {
-        if (this.world != null && this.world.isClient && this.red != red) {
-            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
-        }
         this.red = red;
     }
 
     public void setGreen(int green) {
-        if (this.world != null && this.world.isClient && this.green != green) {
-            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
-        }
         this.green = green;
     }
 
     public void setBlue(int blue) {
-        if (this.world != null && this.world.isClient && this.blue != blue) {
-            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
-        }
         this.blue = blue;
     }
 
     public void setAlpha(int alpha) {
-        if (this.world != null && this.world.isClient && this.alpha != alpha) {
-            Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
-        }
+        this.alpha = alpha;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void setRedClient(int red) {
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_red"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(red - 128))));
+        this.red = red;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void setGreenClient(int green) {
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_green"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(green - 128))));
+        this.green = green;
+    }
+
+
+    @Environment(EnvType.CLIENT)
+    public void setBlueClient(int blue) {
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_blue"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(blue - 128))));
+        this.blue = blue;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public void setAlphaClient(int alpha) {
+        Objects.requireNonNull(MinecraftClient.getInstance().getNetworkHandler()).sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "designer_alpha"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(pos).writeByte(alpha - 128))));
         this.alpha = alpha;
     }
 
     public void updateSchematic() {
         if (this.world != null && !this.world.isClient) {
             if (this.inventory.getStack(0).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
-                ItemStack stack = new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC);
+                ItemStack stack = this.inventory.getStack(0).copy();
                 CompoundTag tag = new CompoundTag();
                 tag.putInt("red", red);
                 tag.putInt("green", green);
@@ -276,8 +303,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 tag.putInt("tier", tier);
 
                 stack.setTag(tag);
-
-                this.inventory.setStack(0, stack, Simulation.ACTION);
+                if (!this.inventory.getStack(0).getOrCreateTag().equals(tag)) this.inventory.setStack(0, stack);
             }
         }
     }

@@ -131,6 +131,8 @@ public class GalacticraftClient implements ClientModInitializer {
 
             registry.register(new Identifier(Constants.MOD_ID, "block/coal_generator"));
             registry.register(new Identifier(Constants.MOD_ID, "block/compressor"));
+
+            registry.register(new Identifier(Constants.MOD_ID, "block/empty"));
         });
 
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
@@ -145,6 +147,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.OXYGEN_COLLECTOR_SCREEN_HANDLER, OxygenCollectorScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ROCKET_DESIGNER_SCREEN_HANDLER, RocketDesignerScreen.FACTORY);
         ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ROCKET_ASSEMBLER_SCREEN_HANDLER, RocketAssemblerScreen.FACTORY);
+        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.FUEL_LOADER_SCREEN_HANDLER, FuelLoaderScreen.FACTORY);
 
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));

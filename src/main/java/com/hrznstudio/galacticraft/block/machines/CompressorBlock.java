@@ -103,7 +103,7 @@ public class CompressorBlock extends AbstractHorizontalDirectionalBlock implemen
             if (blockEntity instanceof CompressorBlockEntity) {
                 CompressorBlockEntity be = (CompressorBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
+                for (int i = 0; i < be.getInventory().getSize(); i++) {
                     ItemStack itemStack = be.getInventory().getStack(i);
 
                     if (!itemStack.isEmpty()) {

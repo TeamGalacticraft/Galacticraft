@@ -22,12 +22,12 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -86,7 +86,7 @@ public abstract class LivingEntityMixin extends Entity {
         LivingEntity entity = (LivingEntity) (Object) this;
         //noinspection ConstantConditions
         if (this.isAlive() && !(entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.invulnerable)) {
-            if (CelestialBodyType.getByDimType(world.getDimension().getType()).isPresent() && !CelestialBodyType.getByDimType(world.getDimension().getType()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+            if (CelestialBodyType.getByDimType(world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
                 updateAir(this);
             } else {
                 if (this.isSubmergedIn(FluidTags.WATER) && this.world.getBlockState(new BlockPos(this.getX(), this.getEyeY(), this.getZ())).getBlock() != Blocks.BUBBLE_COLUMN) {
@@ -120,7 +120,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void updateAir(Entity entity) {
         //todo check for sealed space
         if (entity instanceof PlayerEntity) {
-            FullFixedItemInv gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
+            SimpleInventoryComponent gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
             if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(6).getMaxDamage() - gearInventory.getStack(6).getDamage()) > 0)) {
                 gearInventory.getStack(6).setDamage(gearInventory.getStack(6).getDamage() + 1);
                 return;

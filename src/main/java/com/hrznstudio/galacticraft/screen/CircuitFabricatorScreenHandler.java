@@ -22,11 +22,10 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -52,12 +51,7 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
         super(syncId, playerEntity, blockEntity);
         addProperty(progress);
         addProperty(status);
-        Inventory inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return CircuitFabricatorScreenHandler.this.canUse(player);
-            }
-        };
+        Inventory inventory = blockEntity.getInventory().asInventory();
         // Energy slot
         this.addSlot(new ChargeSlot(inventory, 0, 8, 79));
         this.addSlot(new ItemSpecificSlot(inventory, 1, 8, 15, Items.DIAMOND));

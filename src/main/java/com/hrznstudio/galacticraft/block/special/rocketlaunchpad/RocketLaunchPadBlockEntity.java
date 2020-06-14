@@ -25,6 +25,10 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
 
     }
 
+    public int getRocketEntityId() {
+        return rocketEntityId;
+    }
+
     public boolean hasRocket() {
         return this.rocketEntityUUID != null && this.rocketEntityId != Integer.MIN_VALUE;
     }
@@ -33,7 +37,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         if (tag.contains("rocketUuid")) {
-            this.rocketEntityUUID = tag.getUuidNew("rocketUuid");
+            this.rocketEntityUUID = tag.getUuid("rocketUuid");
             for (Entity entity : world.getEntities(null, new Box(-3, -2, -3, 3, 9, 3))) {
                 if (entity instanceof RocketEntity) {
                     if (entity.getUuid() == this.rocketEntityUUID) {
@@ -47,7 +51,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        if (hasRocket()) tag.putUuidNew("rocketUuid", rocketEntityUUID);
+        if (hasRocket()) tag.putUuid("rocketUuid", rocketEntityUUID);
         return super.toTag(tag);
     }
 

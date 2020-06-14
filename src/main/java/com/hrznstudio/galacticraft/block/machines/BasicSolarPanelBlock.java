@@ -22,8 +22,6 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -48,8 +46,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -61,6 +59,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,7 +67,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, MultiBlock, MachineBlock {
+public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements Rotatable, MultiBlock, MachineBlock {
 
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
@@ -76,10 +75,28 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
-    private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
     public BasicSolarPanelBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+        switch (direction) {
+            case FRONT:
+                return FRONT_SIDE_OPTION;
+            case RIGHT:
+                return RIGHT_SIDE_OPTION;
+            case LEFT:
+                return LEFT_SIDE_OPTION;
+            case BACK:
+                return BACK_SIDE_OPTION;
+            case TOP:
+                return TOP_SIDE_OPTION;
+            case BOTTOM:
+                return BOTTOM_SIDE_OPTION;
+        }
+        throw new NullPointerException();
     }
 
     @Override
@@ -154,18 +171,6 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
-        Direction dir = to.getSearchDirection();
-        if (dir != null) return;
-        BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof BasicSolarPanelBlockEntity)) return;
-        BasicSolarPanelBlockEntity generator = (BasicSolarPanelBlockEntity) be;
-        to.offer(generator.getEnergyAttribute());
-        to.offer(generator);
-        generator.getExposedInventory().offerSelfAsAttribute(to, null, null);
-    }
-
-    @Override
     public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
         super.onBreak(world, blockPos, blockState, playerEntity);
         dropInventory(world, blockPos);
@@ -184,7 +189,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
             if (blockEntity instanceof BasicSolarPanelBlockEntity) {
                 BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
 
-                for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSlotCount(); i++) {
+                for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSize(); i++) {
                     ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getStack(i);
 
                     if (itemStack != null) {

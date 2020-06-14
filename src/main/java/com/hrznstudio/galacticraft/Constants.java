@@ -399,6 +399,7 @@ public class Constants {
 
         public static final String ROCKET_SCHEMATIC = "rocket_schematic";
         public static final String ROCKET = "rocket";
+        public static final String FLUID_CANISTER = "fluid_canister";
     }
 
     public static class Particles {
@@ -464,6 +465,7 @@ public class Constants {
         public static final String MAP_SCREEN = "gui/map";
         public static final String PLANET_ICONS = "gui/planet_icons";
         public static final String RESEARCH_PANELS = "gui/research_panels";
+        public static final String FUEL_LOADER_SCREEN = "gui/fuel_loader_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -512,6 +514,7 @@ public class Constants {
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String ROCKET_DESIGNER_SCREEN_HANDLER = "rocket_designer_screen_handler";
         public static final String ROCKET_ASSEMBLER_SCREEN_HANDLER = "rocket_assembler_screen_handler";
+        public static final String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
     }
 
     public static class Biomes {
@@ -524,6 +527,7 @@ public class Constants {
         public static final String MOON_MARE_ROCKS = "moon_mare_rocks";
 
         public static final String MOON_CHEESE_FOREST = "moon_cheese_forest";
-        public static final String MOON_VALLEY = "moon_valley";
+        public static final String MOON_HIGHLANDS_VALLEY = "moon_highlands_valley";
+        public static final String MOON_MARE_VALLEY = "moon_mare_valley";
     }
 }

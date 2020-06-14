@@ -31,7 +31,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -43,8 +42,8 @@ public class EnergyStorageModuleBlockEntityRenderer extends ConfigurableElectric
 
     @Nonnull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull EnergyStorageModuleBlockEntity entity, @Nullable Direction direction) {
-        int level = (int) (((float) entity.getEnergyAttribute().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
+    public SpriteIdentifier getDefaultSpriteId(@Nonnull EnergyStorageModuleBlockEntity entity, @Nonnull Direction direction) {
+        int level = (int) (((float) entity.getCapacitatorComponent().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + level));
         }

@@ -144,7 +144,16 @@
     ]
   },
   "ambience.singledrip": {
-    "sounds": ["galacticraft-rewoven:ambience/singledrip1", "galacticraft-rewoven:ambience/singledrip2", "galacticraft-rewoven:ambience/singledrip3", "galacticraft-rewoven:ambience/singledrip4", "galacticraft-rewoven:ambience/singledrip5", "galacticraft-rewoven:ambience/singledrip6", "galacticraft-rewoven:ambience/singledrip7", "galacticraft-rewoven:ambience/singledrip8"]
+    "sounds": [
+      "galacticraft-rewoven:ambience/singledrip1",
+      "galacticraft-rewoven:ambience/singledrip2",
+      "galacticraft-rewoven:ambience/singledrip3",
+      "galacticraft-rewoven:ambience/singledrip4",
+      "galacticraft-rewoven:ambience/singledrip5",
+      "galacticraft-rewoven:ambience/singledrip6",
+      "galacticraft-rewoven:ambience/singledrip7",
+      "galacticraft-rewoven:ambience/singledrip8"
+    ]
   },
   "ambience.scaryscape": {
     "sounds": [

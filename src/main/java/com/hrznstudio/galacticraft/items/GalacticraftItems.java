@@ -191,6 +191,7 @@ public class GalacticraftItems {
     public static final Item THERMAL_PADDING_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THERMAL_PADDING_BOOTS), new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.FEET));
     public static final Item ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ROCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET), new RocketItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item FLUID_CANISTER = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FLUID_CANISTER), new FluidCanister(new Item.Settings().group(ITEMS_GROUP).maxCount(1).maxDamage(1000)));
 
 
     public static void register() {

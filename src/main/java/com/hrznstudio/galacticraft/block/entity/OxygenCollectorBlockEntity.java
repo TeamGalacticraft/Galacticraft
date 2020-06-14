@@ -22,36 +22,38 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.energy.api.EnergyAttribute;
-import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
+import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.CapacitorComponent;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int MAX_OXYGEN = 5000;
     public static final int BATTERY_SLOT = 0;
 
-    private final SimpleEnergyAttribute oxygen = new SimpleEnergyAttribute(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
+    private final SimpleCapacitorComponent oxygen = new SimpleCapacitorComponent(MAX_OXYGEN, GalacticraftEnergy.GALACTICRAFT_OXYGEN);
     public int collectionAmount = 0;
     public OxygenCollectorStatus status = OxygenCollectorStatus.INACTIVE;
 
@@ -60,17 +62,27 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 1;
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return true;
+    }
+
+    @Override
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
     private int collectOxygen(BlockPos center) {
-        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getDimension().getType());
+        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
 
         if (celestialBodyType.isPresent()) {
             if (celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
@@ -118,7 +130,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         attemptChargeFromStack(BATTERY_SLOT);
         trySpreadEnergy();
 
-        if (this.getEnergyAttribute().getCurrentEnergy() > 0) {
+        if (this.getCapacitatorComponent().getCurrentEnergy() > 0) {
             this.status = OxygenCollectorStatus.COLLECTING;
         } else {
             this.status = OxygenCollectorStatus.INACTIVE;
@@ -138,9 +150,9 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
             // If the oxygen capacity isn't full, add collected oxygen.
             if (this.getOxygen().getMaxEnergy() > this.oxygen.getCurrentEnergy()) {
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
+                this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
 
-                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, collectionAmount, Simulation.ACTION);
+                this.oxygen.insertEnergy(GalacticraftEnergy.GALACTICRAFT_OXYGEN, collectionAmount, ActionType.PERFORM);
             } else {
                 status = OxygenCollectorStatus.FULL;
             }
@@ -152,7 +164,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Oxygen", oxygen.getCurrentEnergy());
+        oxygen.toTag(tag);
 
         return tag;
     }
@@ -160,8 +172,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-
-        this.oxygen.setCurrentEnergy(tag.getInt("Oxygen"));
+        oxygen.fromTag(tag);
     }
 
     @Override
@@ -174,28 +185,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         return this.toTag(tag);
     }
 
-    public EnergyAttribute getOxygen() {
+    public CapacitorComponent getOxygen() {
         return this.oxygen;
-    }
-
-    @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
     }
 
     @Override
@@ -206,16 +197,16 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenCollectorStatus {
-        INACTIVE(16733525), //red
-        NOT_ENOUGH_LEAVES(16733525), //red
-        COLLECTING(5635925), //green
-        FULL(16755200); //gold
+    public enum OxygenCollectorStatus implements MachineStatus {
+        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED),
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD);
 
-        private final int textColor;
+        private final Text text;
 
-        OxygenCollectorStatus(int textColor) {
-            this.textColor = textColor;
+        OxygenCollectorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static OxygenCollectorStatus get(int index) {
@@ -223,8 +214,9 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
             return OxygenCollectorStatus.values()[index % OxygenCollectorStatus.values().length];
         }
 
-        public int getTextColor() {
-            return textColor;
+        @Override
+        public Text getText() {
+            return text;
         }
     }
 }

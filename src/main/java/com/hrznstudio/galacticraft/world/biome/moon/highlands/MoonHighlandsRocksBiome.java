@@ -1,30 +1,23 @@
 package com.hrznstudio.galacticraft.world.biome.moon.highlands;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.decorator.ConfiguredDecorator;
+import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
-import net.minecraft.world.gen.decorator.DecoratorConfig;
-import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.BoulderFeatureConfig;
+import net.minecraft.world.gen.feature.DecoratedFeature;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
-public final class MoonHighlandsRocksBiome extends Biome implements SpaceBiome {
+public final class MoonHighlandsRocksBiome extends MoonHighlandsBiome {
 
-    public static final TernarySurfaceConfig MOON_ROCK_CONFIG = new TernarySurfaceConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState());
+    public static final TernarySurfaceConfig MOON_HIGHLANDS_ROCK_CONFIG = new TernarySurfaceConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState());
 
     public MoonHighlandsRocksBiome() {
-        super((new Biome.Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, MOON_ROCK_CONFIG)
+        super((new Settings())
+                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, MOON_HIGHLANDS_ROCK_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.65F)
@@ -36,47 +29,12 @@ public final class MoonHighlandsRocksBiome extends Biome implements SpaceBiome {
                         .waterFogColor(11243183)
                         .fogColor(0)
                         .build())
-                .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_CRATERS));
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, new ConfiguredFeature<>((ForestRockFeature) Feature.FOREST_ROCK, new BoulderFeatureConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), 10)));
-
-        this.addFeature(GenerationStep.Feature.RAW_GENERATION, GalacticraftFeatures.MOON_VILLAGE.configure(new DefaultFeatureConfig()).createDecoratedFeature(new ConfiguredDecorator<>(Decorator.NOPE, DecoratorConfig.DEFAULT)));
-        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(FeatureConfig.DEFAULT));
+                .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_ROCKS));
+        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, DecoratedFeature.FOREST_ROCK.configure(new BoulderFeatureConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), 6)).createDecoratedFeature(Decorator.WATER_LAKE.configure(new ChanceDecoratorConfig(4))));
     }
 
     @Override
-    public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_highlands_rocks";
-    }
-
-    @Override
-    public int getSkyColor() {
-        return 0;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getFoliageColor() {
-        return getWaterFogColor();
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getGrassColorAt(double x, double z) {
-        return getWaterColor();
-    }
-
-    @Override
-    public TemperatureGroup getTemperatureGroup() {
-        return TemperatureGroup.COLD;
-    }
-
-    @Override
-    public Text getName() {
-        return new TranslatableText(this.getTranslationKey());
-    }
-
-    @Override
-    public Precipitation getPrecipitation() {
-        return Precipitation.NONE;
+    protected String getBiomeName() {
+        return "rocks";
     }
 }

@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -39,12 +38,7 @@ public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<Energ
 
     public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity playerEntity, EnergyStorageModuleBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
-        Inventory inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return EnergyStorageModuleScreenHandler.this.canUse(player);
-            }
-        };
+        Inventory inventory = blockEntity.getInventory().asInventory();
 
         // Battery slots
         this.addSlot(new ChargeSlot(inventory, 0, 18 * 6 - 6, 18 + 6));
