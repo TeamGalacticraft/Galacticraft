@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -41,6 +42,9 @@ public class GalacticraftEntityTypes {
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_CREEPER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.changing(0.65F, 1.8F)).build());
 
     public static void register() {
-        Galacticraft.logger.info("Registered entity types!");
+        FabricDefaultAttributeRegistry.register(MOON_VILLAGER, MoonVillagerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createMobAttributes());
+        Galacticraft.logger.info("Registered entities!");
     }
 }
