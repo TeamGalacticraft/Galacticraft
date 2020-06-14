@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
-import com.mojang.datafixers.Dynamic;
+import com.mojang.serialization.Codec;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
@@ -31,13 +31,12 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 
 import java.util.Random;
-import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MultiBlockSurfaceBuilder extends SurfaceBuilder<MultiBlockSurfaceConfig> {
-    public MultiBlockSurfaceBuilder(Function<Dynamic<?>, ? extends MultiBlockSurfaceConfig> function) {
+    public MultiBlockSurfaceBuilder(Codec<MultiBlockSurfaceConfig> function) {
         super(function);
     }
 

@@ -22,8 +22,12 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
+import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
+import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -38,27 +42,22 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergyTier;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
+public class BatteryItem extends Item implements ItemComponentCallback {
     public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
         super(settings);
+        ItemComponentCallback.registerSelf(this);
     }
 
-    @Override
-    public int getMaxEnergy(ItemStack battery) {
-        if (battery.getItem() instanceof BatteryItem) {
-            return MAX_ENERGY;
-        }
-        throw new IllegalArgumentException(battery + "is not a GC battery!" + "(com.hrznstudio.galacticraft.items.BatteryItem)");
+    public static int getMaxEnergy() {
+        return MAX_ENERGY;
     }
 
     @Override
@@ -84,6 +83,7 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
 
             ItemStack depleted = new ItemStack(this);
             GalacticraftEnergy.setEnergy(depleted, 0);
+            depleted.setDamage(depleted.getMaxDamage() - 1);
             groupStacks.add(depleted);
         }
     }
@@ -91,12 +91,8 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
     @Override
     public void onCraft(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
         CompoundTag batteryTag = battery.getOrCreateTag();
-        batteryTag.putInt("Energy", 0);
-        batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
-        batteryTag.putBoolean("skipGC", false);
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
-        GalacticraftEnergy.setEnergy(battery, 0);
     }
 
     @Override
@@ -110,13 +106,7 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
     }
 
     @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(BatteryItem.MAX_ENERGY);
+    public void initComponents(ItemStack stack, ComponentContainer<CopyableComponent<?>> components) {
+        components.put(UniversalComponents.CAPACITOR_COMPONENT, new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES));
     }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.LOW;
-    }
-
 }

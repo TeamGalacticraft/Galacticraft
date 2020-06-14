@@ -22,15 +22,9 @@
 
 package com.hrznstudio.galacticraft.world.biome.moon.misc;
 
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.world.biome.moon.MoonBiome;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.Feature;
@@ -40,7 +34,7 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonCheeseForestBiome extends Biome implements SpaceBiome {
+public final class MoonCheeseForestBiome extends MoonBiome {
 
     public MoonCheeseForestBiome() {
         super((new Settings())
@@ -62,39 +56,12 @@ public final class MoonCheeseForestBiome extends Biome implements SpaceBiome {
     }
 
     @Override
-    protected float computeTemperature(BlockPos blockPos) {
-        return -100F;
+    protected String getCategoryName() {
+        return "misc";
     }
 
     @Override
-    public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_cheese_forest";
-    }
-
-    @Override
-    public int getSkyColor() {
-        return 0;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getFoliageColor() {
-        return getWaterFogColor();
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getGrassColorAt(double x, double z) {
-        return getWaterColor();
-    }
-
-    @Override
-    public TemperatureGroup getTemperatureGroup() {
-        return TemperatureGroup.COLD;
-    }
-
-    @Override
-    public Text getName() {
-        return new TranslatableText(this.getTranslationKey());
+    protected String getBiomeName() {
+        return "cheese_forest";
     }
 }

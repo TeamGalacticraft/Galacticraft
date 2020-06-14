@@ -22,11 +22,13 @@
 
 package com.hrznstudio.galacticraft.accessor;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public interface GCPlayerAccessor {
-    FullFixedItemInv getGearInventory();
+    EntitySyncedInventoryComponent getGearInventory();
+
+    void setGearInventory(EntitySyncedInventoryComponent component);
 }

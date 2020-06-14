@@ -72,7 +72,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     @Override
     public void setVillagerData(VillagerData villagerData) {
         if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null
-        && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerData.getType()) != null) {
+                && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerData.getType()) != null) {
             super.setVillagerData(villagerData);
         } else {
             Galacticraft.logger.warn("Invaild profession or type for moon villager");
@@ -134,7 +134,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {
-            villagerType3 = ((MoonVillagerEntity)passiveEntity).getVillagerData().getType();
+            villagerType3 = ((MoonVillagerEntity) passiveEntity).getVillagerData().getType();
         }
         if (Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerType3) == null) {
             if (this.random.nextBoolean() && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(this.getVillagerData().getType()) != null) {

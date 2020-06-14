@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.energy;
 
-import io.github.cottonmc.energy.api.EnergyType;
+import io.github.cottonmc.component.energy.type.EnergyType;
 import net.minecraft.text.TranslatableText;
 
 /**

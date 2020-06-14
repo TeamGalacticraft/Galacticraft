@@ -87,22 +87,15 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.status == BasicSolarPanelBlockEntity.BasicSolarPanelStatus.COLLECTING) {
+        if (this.handler.blockEntity.status != BasicSolarPanelBlockEntity.BasicSolarPanelStatus.FULL
+                && this.handler.blockEntity.status != BasicSolarPanelBlockEntity.BasicSolarPanelStatus.BLOCKED) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * this.handler.blockEntity.multiplier).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
             } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
-            }
-        } else if (this.handler.blockEntity.status == BasicSolarPanelBlockEntity.BasicSolarPanelStatus.RAINING) {
-            long time = world.getTimeOfDay() % 24000;
-            if (time > 6000) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((((6000D - (time - 6000D)) / 705.882353D) / 3.0D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
-            } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((time / 705.882353D) / 3.0D) + 0.5D) * (this.handler.blockEntity.visiblePanels / 9)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * this.handler.blockEntity.multiplier).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
             }
         }
-        lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.blocked_panels", this.handler.blockEntity.visiblePanels).setStyle(Style.EMPTY.withColor(Formatting.YELLOW)));
         return lines;
     }
 }

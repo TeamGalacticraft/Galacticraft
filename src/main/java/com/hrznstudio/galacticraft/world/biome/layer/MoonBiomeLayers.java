@@ -13,19 +13,26 @@ import net.minecraft.world.biome.source.BiomeLayerSampler;
 import java.util.function.LongFunction;
 
 public class MoonBiomeLayers {
-    public static final int MOON_VALLEY_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_VALLEY);
     public static final int MOON_CHEESE_FOREST_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_CHEESE_FOREST);
-    public static final int MOON_HIGHLANDS_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_ROCKS);
-    public static final int MOON_MARE_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_ROCKS);
+
     public static final int MOON_HIGHLANDS_PLAINS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS);
+    public static final int MOON_HIGHLANDS_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_ROCKS);
+    public static final int MOON_HIGHLANDS_VALLEY_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_VALLEY);
+    public static final int MOON_HIGHLANDS_CRATERS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_CRATERS);
+
     public static final int MOON_MARE_PLAINS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_PLAINS);
+    public static final int MOON_MARE_ROCKS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_ROCKS);
+    public static final int MOON_MARE_VALLEY_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_VALLEY);
+    public static final int MOON_MARE_CRATERS_ID = Registry.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_CRATERS);
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, int riverSize, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = MoonBaseBiomeLayer.INSTANCE.create(contextProvider.apply(1L));
-        layerFactory = MoonBiomeTypeLayer.INSTANCE.create(contextProvider.apply(1999L), layerFactory);
         layerFactory = ScaleLayer.FUZZY.create(contextProvider.apply(2000L), layerFactory);
-        layerFactory = MoonRavineLayer.INSTANCE.create(contextProvider.apply(2100L), layerFactory);
-        layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(2001L), layerFactory);
+        layerFactory = MoonBiomeRockLayer.INSTANCE.create(contextProvider.apply(1999L), layerFactory);
+        layerFactory = MoonBiomeCraterLayer.INSTANCE.create(contextProvider.apply(2003L), layerFactory);
+        layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(2004L), layerFactory);
+        layerFactory = MoonValleyLayer.INSTANCE.create(contextProvider.apply(2001L), layerFactory);
+
 //        layerFactory = AddIslandLayer.INSTANCE.create(contextProvider.apply(2L), layerFactory);
 
 //        LayerFactory<T> layerFactory2 = OceanTemperatureLayer.INSTANCE.create(contextProvider.apply(2L));
@@ -55,7 +62,7 @@ public class MoonBiomeLayers {
 //        layerFactory3 = SmoothenShorelineLayer.INSTANCE.create(contextProvider.apply(1000L), layerFactory3);
 //        layerFactory4 = AddSunflowerPlainsLayer.INSTANCE.create(contextProvider.apply(1001L), layerFactory4);
 //
-        for(int i = 0; i < biomeSize; ++i) {
+        for (int i = 0; i < biomeSize; ++i) {
             layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(1000L + i), layerFactory);
             if (i == 0) {
                 layerFactory = IncreaseEdgeCurvatureLayer.INSTANCE.create(contextProvider.apply(3L), layerFactory);
@@ -76,13 +83,13 @@ public class MoonBiomeLayers {
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> stack(long seed, ParentedLayer layer, LayerFactory<T> parent, int count, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = parent;
 
-        for(int i = 0; i < count; ++i) {
-            layerFactory = layer.create(contextProvider.apply(seed + (long)i), layerFactory);
+        for (int i = 0; i < count; ++i) {
+            layerFactory = layer.create(contextProvider.apply(seed + (long) i), layerFactory);
         }
 
         return layerFactory;
     }
-    
+
     public static BiomeLayerSampler build(long seed, int biomeSize, int riverSize) {
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, riverSize, (salt) -> new CachingLayerContext(25, seed, salt));
         return new BiomeLayerSampler(layerFactory);

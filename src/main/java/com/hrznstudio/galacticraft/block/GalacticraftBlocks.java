@@ -72,8 +72,7 @@ public class GalacticraftBlocks {
     public static final ItemGroup BLOCKS_GROUP = FabricItemGroupBuilder.create(
             new Identifier(Constants.MOD_ID, Constants.Blocks.ITEM_GROUP_BLOCKS))
             // Set the tab icon
-            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF)).build()
-            ;
+            .icon(() -> new ItemStack(GalacticraftBlocks.MOON_TURF)).build();
     // Blocks
     public static final Block WALKWAY = registerBlock(new Walkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WALKWAY);
     public static final Block WIRE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.PIPE_WALKWAY);

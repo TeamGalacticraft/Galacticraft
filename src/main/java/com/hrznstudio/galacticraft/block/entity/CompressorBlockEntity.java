@@ -22,32 +22,32 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
-import io.github.cottonmc.energy.impl.SimpleEnergyAttribute;
+import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import io.github.cottonmc.component.item.InventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -56,7 +56,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    public CompressorStatus status = CompressorStatus.INACTIVE;
+    public CompressorStatus status = CompressorStatus.IDLE;
     public int fuelTime;
     public int maxFuelTime;
     public int progress;
@@ -66,8 +66,28 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    public SimpleEnergyAttribute getEnergyAttribute() {
-        return new SimpleEnergyAttribute(0, GalacticraftEnergy.GALACTICRAFT_JOULES);
+    public SimpleCapacitorComponent getCapacitatorComponent() {
+        return new SimpleCapacitorComponent(0, GalacticraftEnergy.GALACTICRAFT_JOULES) {
+            @Override
+            public boolean canExtractEnergy() {
+                return false;
+            }
+
+            @Override
+            public boolean canInsertEnergy() {
+                return false;
+            }
+        };
+    }
+
+    @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return false;
     }
 
     @Override
@@ -77,12 +97,12 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 11;
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == FUEL_INPUT_SLOT) {
             return AbstractFurnaceBlockEntity::canUseAsFuel;
         } else {
@@ -100,33 +120,38 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
         if (this.disabled()) {
             return;
         }
-        InventoryFixedWrapper inv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+        InventoryWrapper inv = new InventoryWrapper() {
             @Override
-            public boolean canPlayerUse(PlayerEntity var1) {
-                return true;
+            public InventoryComponent getComponent() {
+                return getInventory();
+            }
+
+            @Override
+            public int size() {
+                return 9;
             }
         };
 
-            if (this.fuelTime <= 0) {
-                ItemStack fuel = getInventory().getStack(FUEL_INPUT_SLOT);
-                if (fuel.isEmpty()) {
-                    // Machine out of fuel and no fuel present.
-                    status = CompressorStatus.INACTIVE;
-                    progress = 0;
-                    return;
-                } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-                    this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
-                    this.fuelTime = maxFuelTime;
-                    getInventory().getSlot(FUEL_INPUT_SLOT).extract(1);
-                    status = CompressorStatus.PROCESSING;
-                } else {
-                    // Can't start processing any new materials anyway, don't waste fuel.
-                    status = CompressorStatus.INACTIVE;
-                    progress = 0;
-                    return;
-                }
+        if (this.fuelTime <= 0) {
+            ItemStack fuel = getInventory().getStack(FUEL_INPUT_SLOT);
+            if (fuel.isEmpty()) {
+                // Machine out of fuel and no fuel present.
+                status = CompressorStatus.IDLE;
+                progress = 0;
+                return;
+            } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
+                this.maxFuelTime = AbstractFurnaceBlockEntity.createFuelTimeMap().get(fuel.getItem());
+                this.fuelTime = maxFuelTime;
+                decrement(FUEL_INPUT_SLOT, 1);
+                status = CompressorStatus.PROCESSING;
+            } else {
+                // Can't start processing any new materials anyway, don't waste fuel.
+                status = CompressorStatus.IDLE;
+                progress = 0;
+                return;
             }
-            this.fuelTime--;
+        }
+        this.fuelTime--;
 
 
         if (status == CompressorStatus.PROCESSING && !isValidRecipe(inv)) {
@@ -151,9 +176,9 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     private void craftItem(ItemStack craftingResult) {
         for (int i = 0; i < 9; i++) {
-            getInventory().getSlot(i).extract(1);
+            decrement(i, 1);
         }
-        getInventory().getSlot(OUTPUT_SLOT).insert(craftingResult);
+        insert(OUTPUT_SLOT, craftingResult);
     }
 
     private ItemStack getResultFromRecipeStack(Inventory inv) {
@@ -175,7 +200,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     protected boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return getInventory().getSlot(OUTPUT_SLOT).attemptInsertion(itemStack, Simulation.SIMULATE).isEmpty();
+        return canInsert(OUTPUT_SLOT, itemStack);
     }
 
     public int getProgress() {
@@ -199,7 +224,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
         tag.putInt("Progress", this.progress);
 
-            tag.putInt("FuelTime", this.fuelTime);
+        tag.putInt("FuelTime", this.fuelTime);
 
         return tag;
     }
@@ -222,41 +247,34 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CompressorStatus {
+    public enum CompressorStatus implements MachineStatus {
 
         /**
-         * Generator is active and is generating energy.
+         * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
-        /**
-         * Generator has fuel but buffer is full.
-         */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
-        /**
-         * The generator has no energy.
-         */
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString());
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
 
-        private final String name;
+        /**
+         * Compressor has no items to process.
+         */
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD);
 
-        CompressorStatus(String name) {
-            this.name = name;
+        private final Text text;
+
+        CompressorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static CompressorStatus get(int index) {
-            switch (index) {
-                case 0:
-                    return PROCESSING;
-                case 1:
-                    return IDLE;
-                default:
-                    return INACTIVE;
+            if (index == 0) {
+                return PROCESSING;
             }
+            return IDLE;
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }

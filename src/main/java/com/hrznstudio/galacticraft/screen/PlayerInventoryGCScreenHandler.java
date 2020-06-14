@@ -22,13 +22,12 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.items.ThermalArmorItem;
+import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,12 +63,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         super(null, 1);
 
         this.player = playerEntity;
-        this.inventory = new InventoryFixedWrapper(((GCPlayerAccessor) player).getGearInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return player.getUuid() == PlayerInventoryGCScreenHandler.this.player.getUuid();
-            }
-        };
+        this.inventory = ((GCPlayerAccessor) player).getGearInventory().asInventory();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];

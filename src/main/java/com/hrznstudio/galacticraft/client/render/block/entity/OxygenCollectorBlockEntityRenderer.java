@@ -31,7 +31,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -43,10 +42,7 @@ public class OxygenCollectorBlockEntityRenderer extends ConfigurableElectricMach
 
     @Nonnull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull OxygenCollectorBlockEntity entity, @Nullable Direction direction) {
-        if (direction != null) {
-            return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/oxygen_collector"));
-        }
+    public SpriteIdentifier getDefaultSpriteId(@Nonnull OxygenCollectorBlockEntity entity, @Nonnull Direction direction) {
         return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")); // particle
     }
 }

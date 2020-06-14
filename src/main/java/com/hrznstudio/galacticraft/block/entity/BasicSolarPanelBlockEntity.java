@@ -22,28 +22,28 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
-    public int visiblePanels;
+    public double multiplier;
 
     public BasicSolarPanelStatus status = BasicSolarPanelStatus.NIGHT;
 
@@ -52,7 +52,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 1;
     }
 
@@ -62,8 +62,18 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+    }
+
+    @Override
+    protected boolean canExtractEnergy() {
+        return true;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return false;
     }
 
     @Override
@@ -74,60 +84,54 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
     @Override
     public void tick() {
-        double i = 0;
+        trySpreadEnergy();
+        attemptDrainPowerToStack(0);
+
+        int visiblePanels = 0;
+
         for (int z = -1; z < 2; z++) {
             for (int y = -1; y < 2; y++) {
                 if (world.isSkyVisible(pos.add(z, 2, y))) {
-                    i++;
+                    visiblePanels++;
                 }
             }
         }
-        visiblePanels = (int) i;
-        i /= 9;
 
-        if (world.isClient) {
+        multiplier = ((double) visiblePanels) / 9D;
+
+        if (world.isClient || disabled()) {
             return;
         }
-        if (disabled()) {
-            trySpreadEnergy();
-            attemptDrainPowerToStack(0);
-            return;
-        }
+
         double time = (world.getTimeOfDay() % 24000);
+        if (world.isRaining() || world.isThundering()) {
+            status = BasicSolarPanelStatus.PARTIALLY_BLOCKED;
+            multiplier *= 0.55;
+        }
+
         if (time > 1000.0D && time < 11000.0D) {
-            if (getEnergyAttribute().getCurrentEnergy() < getEnergyAttribute().getMaxEnergy()) {
-                if (world.isRaining() || world.isThundering()) {
-                    status = BasicSolarPanelStatus.RAINING;
-                } else {
-                    status = BasicSolarPanelStatus.COLLECTING;
-                }
-            } else {
+            status = BasicSolarPanelStatus.COLLECTING;
+            if (getCapacitatorComponent().getCurrentEnergy() >= getCapacitatorComponent().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.FULL;
             }
         } else {
+            multiplier *= 0.15D;
             status = BasicSolarPanelStatus.NIGHT;
-            trySpreadEnergy();
-            attemptDrainPowerToStack(0);
-            return;
         }
 
-        if (i == 0) {
+        if (visiblePanels < 9) {
+            if (status != BasicSolarPanelStatus.NIGHT) status = BasicSolarPanelStatus.PARTIALLY_BLOCKED;
+            multiplier *= 0.8D;
+        }
+
+        if (visiblePanels == 0) {
             status = BasicSolarPanelStatus.BLOCKED;
-            trySpreadEnergy();
-            attemptDrainPowerToStack(0);
             return;
         }
 
         if (time > 6000) time -= 6000D;
 
-        if (status == BasicSolarPanelStatus.COLLECTING) {
-            getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000) * i), Simulation.ACTION);
-        } else if (status == BasicSolarPanelStatus.RAINING) {
-            getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000) * i) / 3, Simulation.ACTION);
-        }
-
-        trySpreadEnergy();
-        attemptDrainPowerToStack(0);
+        this.getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier), ActionType.PERFORM);
     }
 
     @Override
@@ -135,54 +139,39 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
         return 10;
     }
 
-    @Override
-    public double getStored(EnergySide face) {
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
-    }
-
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum BasicSolarPanelStatus {
+    public enum BasicSolarPanelStatus implements MachineStatus {
         /**
          * Solar panel is active and is generating energy.
          */
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
+
         /**
-         * Solar Panel is generating energy, but the buffer is full.
+         * Solar Panel can generate energy, but the buffer is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD),
+
         /**
-         * Solar Panel is generating energy, but less efficiently.
+         * Solar Panel is generating energy, but less efficiently as it is blocked or raining.
          */
-        RAINING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.raining").setStyle(Style.EMPTY.withColor(Formatting.DARK_AQUA)).getString()),
+        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.partially_blocked"), Formatting.DARK_AQUA),
+
         /**
-         * Solar Panel is not generating energy.
+         * Solar Panel is generating very little energy as it is night.
          */
-        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night").setStyle(Style.EMPTY.withColor(Formatting.BLUE)).getString()),
+        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night"), Formatting.BLUE),
+
         /**
          * The sun is not visible.
          */
-        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)).getString());
-        private final String name;
+        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked"), Formatting.DARK_GRAY);
 
-        BasicSolarPanelStatus(String name) {
-            this.name = name;
+        private final Text text;
+
+        BasicSolarPanelStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static BasicSolarPanelStatus get(int index) {
@@ -191,8 +180,8 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }

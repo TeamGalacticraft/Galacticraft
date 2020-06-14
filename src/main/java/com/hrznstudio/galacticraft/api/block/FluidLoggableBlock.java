@@ -30,7 +30,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.property.AbstractProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -52,7 +51,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     String DASH_REP = "__89_00___"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "__2_211_23";
 
-     Property<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
+    Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
         private final List<Identifier> VALUES = new ArrayList<>();
 
         @Override

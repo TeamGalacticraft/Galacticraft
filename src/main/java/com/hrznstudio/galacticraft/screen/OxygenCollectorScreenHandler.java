@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -43,12 +42,8 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
 
     public OxygenCollectorScreenHandler(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
-        Inventory inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return OxygenCollectorScreenHandler.this.canUse(player);
-            }
-        };
+        Inventory inventory = blockEntity.getInventory().asInventory();
+
         addProperty(status);
         addProperty(oxygen);
         addProperty(lastCollectAmount);

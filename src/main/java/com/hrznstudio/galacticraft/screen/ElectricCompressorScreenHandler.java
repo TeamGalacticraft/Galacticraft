@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
@@ -47,12 +46,7 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
     public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
 
         super(syncId, player, blockEntity);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return ElectricCompressorScreenHandler.this.canUse(player);
-            }
-        };
+        this.inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         addProperty(progress);
 
@@ -96,7 +90,7 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = CompressorBlockEntity.CompressorStatus.get(status.get());
+        blockEntity.status = ElectricCompressorBlockEntity.ElectricCompressorStatus.get(status.get());
         blockEntity.progress = progress.get();
     }
 

@@ -1,14 +1,12 @@
-package com.hrznstudio.galacticraft.world.biome.moon.misc;
+package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
-import com.hrznstudio.galacticraft.world.biome.moon.MoonBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMarePlainsBiome;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.world.biome.BiomeEffects;
 
-public class MoonValleyBiome extends MoonBiome {
-    public MoonValleyBiome() {
+public final class MoonMareValleyBiome extends MoonMareBiome {
+    public MoonMareValleyBiome() {
         super(new Settings()
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MoonMarePlainsBiome.MOON_MARE_BIOME_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MoonMareRocksBiome.MOON_MARE_ROCK_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(-0.5F)
@@ -22,5 +20,10 @@ public class MoonValleyBiome extends MoonBiome {
                         .build())
                 .parent(null)
         );
+    }
+
+    @Override
+    protected String getBiomeName() {
+        return "valley";
     }
 }

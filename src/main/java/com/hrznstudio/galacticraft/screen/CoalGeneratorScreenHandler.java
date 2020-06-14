@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
@@ -46,12 +45,7 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
 
     public CoalGeneratorScreenHandler(int syncId, PlayerEntity playerEntity, CoalGeneratorBlockEntity generator) {
         super(syncId, playerEntity, generator);
-        Inventory inventory = new InventoryFixedWrapper(generator.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return CoalGeneratorScreenHandler.this.canUse(player);
-            }
-        };
+        Inventory inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         // Coal Generator fuel slot
         this.addSlot(new ItemSpecificSlot(inventory, 0, 8, 72, fuel));
