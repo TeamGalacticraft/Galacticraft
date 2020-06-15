@@ -398,5 +398,14 @@
   "config.galacticraft-rewoven.energy.machines.energy_storage_size": "Default Machine Energy Storage Size",
   "config.galacticraft-rewoven.dimension.common.gravity": "Gravity",
   "config.galacticraft-rewoven.dimension.moon": "Moon",
-  "config.galacticraft-rewoven.dimension.mars": "Mars"
+  "config.galacticraft-rewoven.dimension.mars": "Mars",
+
+  "research.galacticraft-rewoven.root": "Title goes here, yes",
+  "research.galacticraft-rewoven.root.desc": "Very long description will this be wrapped correctly by my code? maybe",
+  "research.galacticraft-rewoven.coal_generator": "Coal Generator",
+  "research.galacticraft-rewoven.coal_generator.desc": "i dunno make a coal generator",
+  "research.galacticraft-rewoven.circuit_fabricator": "Circuit Fabricator",
+  "research.galacticraft-rewoven.circuit_fabricator.desc": "Fabricates circuits for you",
+  "research.galacticraft-rewoven.alu_wire": "Aluminum Wire",
+  "research.galacticraft-rewoven.alu_wire.desc": "Easy power transfer"
 }

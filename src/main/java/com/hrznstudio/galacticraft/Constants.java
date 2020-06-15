@@ -207,8 +207,8 @@ public class Constants {
         public static final String ROCKET_BODY = "rocket_body";
         public static final String ROCKET_BOTTOM = "rocket_bottom";
         public static final String ROCKET_FINS = "rocket_fins";
-        public static final String ROCKET_THRUSTER_TIER_1 = "rocket_thruster_tier_1";
-        public static final String ROCKET_THRUSTER_TIER_2 = "rocket_thruster_tier_2";
+        public static final String ROCKET_BOOSTER_TIER_1 = "rocket_thruster_tier_1";
+        public static final String ROCKET_BOOSTER_TIER_2 = "rocket_thruster_tier_2";
         public static final String ROCKET_CONE_BASIC = "rocket_cone_basic";
         public static final String ROCKET_CONE_ADVANCED = "rocket_cone_advanced";
         public static final String ROCKET_CONE_SLOPED = "rocket_cone_sloped";

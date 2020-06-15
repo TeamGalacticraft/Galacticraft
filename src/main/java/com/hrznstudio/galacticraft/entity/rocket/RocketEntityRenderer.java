@@ -82,39 +82,39 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         matrices.translate(0.0D, -1.75D, 0.0D);
 
         matrices.push();
-        entity.getPartForType(RocketPartType.BOTTOM).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-        entity.getPartForType(RocketPartType.BOTTOM).postRender(entity);
+        entity.getPartForType(RocketPartType.BOTTOM).preRender(matrices, entity, vertexConsumers, tickDelta);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BOTTOM).getRenderState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOTTOM).getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
+        entity.getPartForType(RocketPartType.BOTTOM).postRender(matrices, entity, vertexConsumers, tickDelta);
         matrices.pop();
 
         matrices.translate(0.0D, 0.5, 0.0D);
 
         matrices.push();
-        entity.getPartForType(RocketPartType.BOOSTER).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-        entity.getPartForType(RocketPartType.BOOSTER).postRender(entity);
+        entity.getPartForType(RocketPartType.BOOSTER).preRender(matrices, entity, vertexConsumers, tickDelta);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BOOSTER).getRenderState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BOOSTER).getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
+        entity.getPartForType(RocketPartType.BOOSTER).postRender(matrices, entity, vertexConsumers, tickDelta);
         matrices.pop();
 
         matrices.push();
-        entity.getPartForType(RocketPartType.FIN).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.FIN).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-        entity.getPartForType(RocketPartType.FIN).postRender(entity);
+        entity.getPartForType(RocketPartType.FIN).preRender(matrices, entity, vertexConsumers, tickDelta);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.FIN).getRenderState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.FIN).getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
+        entity.getPartForType(RocketPartType.FIN).postRender(matrices, entity, vertexConsumers, tickDelta);
 
         matrices.pop();
 
         matrices.translate(0.0D, 1.0D, 0.0D);
 
         matrices.push();
-        entity.getPartForType(RocketPartType.BODY).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BODY).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-        entity.getPartForType(RocketPartType.BODY).postRender(entity);
+        entity.getPartForType(RocketPartType.BODY).preRender(matrices, entity, vertexConsumers, tickDelta);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.BODY).getRenderState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.BODY).getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
+        entity.getPartForType(RocketPartType.BODY).postRender(matrices, entity, vertexConsumers, tickDelta);
         matrices.pop();
 
         matrices.translate(0.0D, 1.75, 0.0D);
 
-        entity.getPartForType(RocketPartType.CONE).preRender(entity);
-        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.CONE).getBlockToRender(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getBlockToRender()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-        entity.getPartForType(RocketPartType.CONE).postRender(entity);
+        entity.getPartForType(RocketPartType.CONE).preRender(matrices, entity, vertexConsumers, tickDelta);
+        client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), entity.getPartForType(RocketPartType.CONE).getRenderState(), client.getBlockRenderManager().getModel(entity.getPartForType(RocketPartType.CONE).getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
+        entity.getPartForType(RocketPartType.CONE).postRender(matrices, entity, vertexConsumers, tickDelta);
 
         matrices.pop();
     }

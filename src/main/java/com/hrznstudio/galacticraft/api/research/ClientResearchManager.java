@@ -2,6 +2,8 @@ package com.hrznstudio.galacticraft.api.research;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.advancement.AdvancementProgress;
@@ -11,6 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -56,6 +60,13 @@ public class ClientResearchManager {
             identifier3 = buf.readIdentifier();
             setProgress.put(identifier3, AdvancementProgress.fromPacket(buf));
         }
+
+        i = buf.readVarInt();
+        List<RocketPart> list = new ArrayList<>();
+        for (l = 0; l < i; l++) {
+            list.add(Galacticraft.ROCKET_PARTS.get(buf.readIdentifier()));
+        }
+        manager.unlockParts(list);
 
         if (clearCurrent) {
             this.manager.clear();

@@ -246,7 +246,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         } else {
                             drawTexture(matrix, this.x + 9, this.y + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                         }
-                        itemRenderer.renderGuiItemIcon(new ItemStack(blockEntity.data.getPartForType(RocketPartType.values()[i]).getDesignerItem()), this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY));
+                        itemRenderer.renderGuiItemIcon(blockEntity.data.getPartForType(RocketPartType.values()[i]).getRenderStack(), this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY));
 
                     }
                 }

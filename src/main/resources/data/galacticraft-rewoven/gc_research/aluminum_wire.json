@@ -1,7 +1,7 @@
 {
   "info": {
-    "title": "research.galacticraft-rewoven.coal_gen",
-    "description": "research.galacticraft-rewoven.coal_gen.desc",
+    "title": "research.galacticraft-rewoven.alu_wire",
+    "description": "research.galacticraft-rewoven.alu_wire.desc",
     "items_to_render": [
       "galacticraft-rewoven:aluminum_wire"
     ],

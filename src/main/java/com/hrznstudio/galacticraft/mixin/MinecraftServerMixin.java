@@ -41,6 +41,11 @@ public abstract class MinecraftServerMixin implements MinecraftServerAccessor {
     }
 
     @Override
+    public void removeResearchTracker(UUID uuid) {
+        this.researchTrackers.remove(uuid);
+    }
+
+    @Override
     @Unique
     public PlayerResearchTracker getResearchTracker(ServerPlayerEntity player) {
         UUID uuid = player.getUuid();

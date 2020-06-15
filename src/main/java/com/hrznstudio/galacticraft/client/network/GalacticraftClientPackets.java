@@ -91,14 +91,18 @@ public class GalacticraftClientPackets {
             });
         }));
 
-        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
-            int size = packetByteBuf.readVarInt();
-            Map<Identifier, ResearchNode.Builder> map = new HashMap<>(size);
-            for (int i =0; i < size; i++) {
-                Identifier id = packetByteBuf.readIdentifier();
-                map.put(id, ResearchNode.Builder.fromPacket(packetByteBuf));
-            }
-            packetContext.getTaskQueue().execute(() -> ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().load(map));
-        });
+//        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
+//            int size = packetByteBuf.readVarInt();
+//            Map<Identifier, ResearchNode.Builder> map = new HashMap<>(size);
+//            for (int i =0; i < size; i++) {
+//                Identifier id = packetByteBuf.readIdentifier();
+//                map.put(id, ResearchNode.Builder.fromPacket(packetByteBuf));
+//            }
+//            packetContext.getTaskQueue().execute(() -> ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().load(map));
+//        });
+                ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
+
+                });
+
     }
 }

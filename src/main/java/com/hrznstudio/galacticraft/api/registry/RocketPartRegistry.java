@@ -22,13 +22,18 @@
 
 package com.hrznstudio.galacticraft.api.registry;
 
+import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
+import com.hrznstudio.galacticraft.api.research.ResearchManager;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.mojang.serialization.Lifecycle;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
-import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,8 +59,19 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
         return super.add(key, entry);
     }
 
-    public List<RocketPart> getPartsForType(RocketPartType type) {
-        return parts.get(type);
+    @Environment(EnvType.CLIENT)
+    public List<RocketPart> getAvailablePartsForType(PlayerEntity player, RocketPartType type) {
+        if (player instanceof ClientPlayerEntity) {
+            List<RocketPart> valid = new ArrayList<>();
+            ResearchManager manager = ((ClientPlayNetworkHandlerAccessor) ((ClientPlayerEntity) player).networkHandler).getClientResearchManager().getManager();
+            for (RocketPart part : parts.get(type)) {
+                if (manager.isUnlocked(part)) {
+                    valid.add(part);
+                }
+            }
+            return valid;
+        }
+        return null;
     }
 
     public List<RocketPart> getAllEntries() {

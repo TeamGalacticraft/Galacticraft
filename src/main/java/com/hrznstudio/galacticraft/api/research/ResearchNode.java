@@ -13,6 +13,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import org.apache.commons.lang3.ArrayUtils;
@@ -266,7 +267,7 @@ public class ResearchNode {
             return this;
         }
 
-        public Builder info(ItemConvertible[] icons, Text title, Text description, @Nullable Identifier background, boolean hidden, int tier) {
+        public Builder info(ItemConvertible[] icons, TranslatableText title, TranslatableText description, @Nullable Identifier background, boolean hidden, int tier) {
             return this.info(new ResearchInfo(icons, title, description, background, hidden, tier));
         }
 

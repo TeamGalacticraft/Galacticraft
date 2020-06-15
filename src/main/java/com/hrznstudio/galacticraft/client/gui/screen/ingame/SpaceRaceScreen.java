@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.research.ResearchNode;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
@@ -36,6 +35,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -267,8 +267,8 @@ public class SpaceRaceScreen extends Screen {
                     int posYFit = getPosYToFit(basePY);
                     int texPosXFit = getTexPosXToFit(basePX, appTX, NODE_WIDTH);
                     int texPosYFit = getTexPosYToFit(basePY, appTY, NODE_HEIGHT);
-                    int texWidthFit = getWidthToFit(basePX, appTX, texPosXFit, NODE_WIDTH);
-                    int texHeightFit = getHeightToFit(basePY, appTY, texPosYFit, NODE_HEIGHT);
+                    int texWidthFit = getWidthToFit(basePX, NODE_WIDTH);
+                    int texHeightFit = getHeightToFit(basePY, NODE_HEIGHT);
                     if (texWidthFit > 0 && texHeightFit > 0
                             && texPosXFit != appTX + NODE_WIDTH && texPosYFit != appTY + NODE_HEIGHT) {
                         this.drawTexture(matrices,
@@ -281,22 +281,28 @@ public class SpaceRaceScreen extends Screen {
                         );
 
                         if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
-                            drawTexture(matrices, posXFit, getPosYToFit(basePY + 72), texPosXFit, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 72, NODE_DESC_ADDON_Y, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), NODE_DESC_ADDON_HEIGHT)); //X matches
-                            drawAndAutotrimTextDoubleSizeSplit(matrices, posXFit + 4, basePY + 72 + 4, node.getInfo().getDescription().asString(), Formatting.GRAY.getColorValue(), 170 / 2); // /2 because its scaled x2
+                            drawTexture(matrices, posXFit, getPosYToFit(basePY + 72), texPosXFit, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 72, NODE_DESC_ADDON_HEIGHT)); //X matches
+                            drawAndAutotrimTextDoubleSizeSplit(matrices, posXFit + 4, basePY + 72 + 4, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), 170 / 2); // /2 because its scaled x2
                         }
 
-                        drawAndAutotrimTextDoubleSizeSplit(matrices, basePX + 6, basePY + 6, node.getInfo().getTitle().asString(), Formatting.DARK_GRAY.getColorValue(), 65536);//no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
+                        drawAndAutotrimTextDoubleSizeSplit(matrices, basePX + 6, basePY + 6, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536);//no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
 
                         for (int i = 0; i < node.getInfo().getIcons().length && i < 4; i++) {
                             // 6, 31
                             // 43
 
-                            int baseX = 6 + (43 * (i)) + BASE_RESEARCH_OFFSET + (int) (-researchScrollX + TIER_TO_X_MAX_DIST.get(node.getInfo().getTier() - 1) +( node.getInfo().getX() * (NODE_WIDTH + 10)));
-                            int baseY = 31 + BASE_RESEARCH_OFFSET + (int) (-researchScrollY + (node.getInfo().getY() * (NODE_HEIGHT + 8)));
-                            this.drawTexture(matrices, getPosXToFit(baseX), getPosYToFit(baseY),
-                                    getTexPosXToFit(baseX, getSlotAppX(node), SLOT_WIDTH), getTexPosYToFit(baseY, getSlotAppY(node), SLOT_HEIGHT),
-                                    getWidthToFit(baseX, getSlotAppX(node), getTexPosXToFit(baseX, getSlotAppX(node), SLOT_WIDTH), SLOT_WIDTH),
-                                    getHeightToFit(baseY, getSlotAppY(node), getTexPosYToFit(baseY, getSlotAppY(node), SLOT_HEIGHT), SLOT_HEIGHT));
+                            int baseX = 6 + (43 * (i)) + basePX;
+                            int baseY = 31 + basePY;
+                            client.getTextureManager().bindTexture(RESEARCH_TEX);
+                            this.drawTexture(matrices,
+                                    getPosXToFit(baseX),
+                                    getPosYToFit(baseY),
+
+                                    getTexPosXToFit(baseX, getSlotAppX(node), SLOT_WIDTH),
+                                    getTexPosYToFit(baseY, getSlotAppY(node), SLOT_HEIGHT),
+
+                                    getWidthToFit(baseX, SLOT_WIDTH),
+                                    getHeightToFit(baseY, SLOT_HEIGHT));
 
                             //THIS CODE MAKES THE ITEM NOT RENDER IF IT BLEEDS OUT EVEN ONE PIXEL. I CAN'T TRIM THE ITEM RENDER LIKE THE BOX
                             if (getPosXToFit(baseX) == baseX && getPosYToFit(baseY) == baseY
@@ -304,7 +310,7 @@ public class SpaceRaceScreen extends Screen {
                                     && baseX + SLOT_WIDTH <= this.getRight() - 10 && baseY + SLOT_WIDTH <= this.getBottom() - 10
                                     && baseX <= this.getRight() - 10 && baseY <= this.getBottom() - 10) {
                                 RenderSystem.pushMatrix();
-                                RenderSystem.translatef(baseX, baseY, getZOffset());
+                                RenderSystem.translatef(baseX + 4, baseY + 4, getZOffset());
                                 RenderSystem.scalef(2F, 2F, 2F);
                                 itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getStackForRender(), 0, 0);
                                 RenderSystem.scalef(0.5F, 0.5F, 0.5F);
@@ -341,8 +347,9 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private void drawAndAutotrimTextDoubleSizeSplit(MatrixStack matrices, int x, int y, String text, int color, int maxLength) {
-        if (maxLength == Integer.MAX_VALUE)
+        if (maxLength == Integer.MAX_VALUE) {
             maxLength = 65536; //large enough that it shouldn't be reached, small enough it shouldn't overflow.
+        }
         int xOffset = 0;
         int yOffset = 0;
         char[] charArray = text.toCharArray();
@@ -524,47 +531,41 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private int getPosXToFit(int x) {
-        if (x >= this.getLeft() + 10) return x;
-        return x + ((this.getLeft() + 10) - x);
+        return Math.max(x, this.getLeft() + 10);
     }
 
     private int getPosYToFit(int y) {
-        if (y >= this.getTop() + 25) return y;
-        return y + ((this.getTop() + 25) - y);
+        return Math.max(y, this.getTop() + 25);
     }
 
     private int getTexPosXToFit(int x, int texPosX, int texWidth) {
-        if (x >= this.getLeft() + 10) return texPosX;
-        return Math.min(texPosX + texWidth, texPosX + ((this.getLeft() + 10) - x));
+        int rX = getPosXToFit(x);
+        if (rX - x == 0) return texPosX;
+        if (rX - x > texWidth) return  texPosX + texWidth;
+        return texPosX + (rX - x);
     }
 
     private int getTexPosYToFit(int y, int texPosY, int texHeight) {
-        if (y >= this.getTop() + 25) return texPosY;
-        return Math.min(texPosY + texHeight, texPosY + ((this.getTop() + 25) - y));
+        int rY = getPosYToFit(y);
+        if (rY - y == 0) return texPosY;
+        if (rY - y > texHeight) return  texPosY + texHeight;
+        return texPosY + (rY - y);
     }
 
-    private int getWidthToFit(int x, int texPosX, int trimmedTPX, int width) {
-        if (x > this.getRight() - 10) {
-            return 0;
+    private int getWidthToFit(int x, int width) {
+        if (x >= this.getRight() - 10) return 0; //too far past
+        if (x + width >= this.getRight() - 10) {
+            return getRight() - 10 - x;
         }
-
-        if (x + width > this.getRight() - 10) {
-            return Math.min(0, (x + width) - (this.getRight() - 10));
-        }
-
-        return width - (trimmedTPX-texPosX);
+        return width;
     }
 
-    private int getHeightToFit(int y, int texPosY, int trimmedTPY, int height) {
-        if (y > this.getBottom() - 10) {
-            return 0;
+    private int getHeightToFit(int y, int height) {
+        if (y >= this.getBottom() - 10) return 0; //too far past
+        if (y + height >= this.getBottom() - 10) {
+            return getBottom() - 10 - y;
         }
-
-        if (y + height > this.getBottom() - 10) {
-            return Math.min(0, (y + height) - (this.getBottom() - 10));
-        }
-
-        return height - (trimmedTPY-texPosY);
+        return height;
     }
 
     private boolean isAnimationComplete() {

@@ -295,12 +295,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
                 tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(bottom)).toString());
                 tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(upgrade)).toString());
 
-                int tier = 0;
-                for (RocketPart part : getParts()) {
-                    tier = Math.max(part.getTier(getParts()), tier);
-                }
-
-                tag.putInt("tier", tier);
+//                int tier = 0;
+//                for (RocketPart part : getParts()) {
+//                    tier = Math.max(part.getTier(getParts()), tier);
+//                }
+//
+//                tag.putInt("tier", tier);
 
                 stack.setTag(tag);
                 if (!this.inventory.getStack(0).getOrCreateTag().equals(tag)) this.inventory.setStack(0, stack);

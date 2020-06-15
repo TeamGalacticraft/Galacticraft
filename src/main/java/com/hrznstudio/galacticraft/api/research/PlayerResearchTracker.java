@@ -1,14 +1,9 @@
 package com.hrznstudio.galacticraft.api.research;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
@@ -20,7 +15,6 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import io.netty.buffer.Unpooled;
-import net.minecraft.SharedConstants;
 import net.minecraft.advancement.AdvancementCriterion;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.advancement.PlayerAdvancementTracker;
@@ -57,6 +51,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     private ServerPlayerEntity owner;
     private final ServerResearchLoader researchLoader;
     private boolean dirty = true;
+    private final List<RocketPart> newParts = new ArrayList<>();
 
     public PlayerResearchTracker(DataFixer dataFixer, PlayerManager playerManager, ServerResearchLoader researchLoader, File file, ServerPlayerEntity serverPlayerEntity) {
         //noinspection ConstantConditions
@@ -119,7 +114,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
         for (ResearchNode node : researchLoader.getManager().getResearch().values()) {
             if (node.getCriteria().isEmpty()) {
                 this.grantCriterion(node, "");
-                node.getRewards().apply(this.owner);
+                node.getRewards().apply(this.owner, this);
             }
         }
 
@@ -130,6 +125,19 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
             try {
                 JsonReader jsonReader = new JsonReader(new StringReader(Files.toString(this.researchFile, StandardCharsets.UTF_8)));
                 Throwable var2 = null;
+
+                File partFile = new File(researchFile.getParentFile(), owner.getUuidAsString() + "-unlocks.json");
+                BufferedReader reader = new BufferedReader(new StringReader(Files.toString(partFile, StandardCharsets.UTF_8)));
+                StringBuilder builder = new StringBuilder();
+                while (reader.ready()) {
+                    builder.append(reader.readLine()).append("\n");
+                }
+                reader.close();
+
+                JsonArray arr = GSON.fromJson(builder.toString(), JsonArray.class);
+                for (JsonElement s : arr) {
+                    unlockedParts.add(Galacticraft.ROCKET_PARTS.get(new Identifier(s.getAsString())));
+                }
 
                 try {
                     jsonReader.setLenient(false);
@@ -192,12 +200,63 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
             }
         }
 
+        File partFile = new File(researchFile.getParentFile(), owner.getUuidAsString() + "-unlocks.json");
+        JsonArray jsonArray = new JsonArray();
+        for (RocketPart part : unlockedParts) {
+            jsonArray.add(Galacticraft.ROCKET_PARTS.getId(part).toString());
+        }
+
         if (this.researchFile.getParentFile() != null) {
             this.researchFile.getParentFile().mkdirs();
         }
 
+        try {
+            OutputStream outputStream = new FileOutputStream(partFile);
+            Throwable var38 = null;
+
+            try {
+                Writer writer = new OutputStreamWriter(outputStream, Charsets.UTF_8.newEncoder());
+                Throwable var6 = null;
+
+                try {
+                    GSON.toJson(jsonArray, writer);
+                } catch (Throwable var31) {
+                    var6 = var31;
+                    throw var31;
+                } finally {
+                    if (var6 != null) {
+                        try {
+                            writer.close();
+                        } catch (Throwable var30) {
+                            var6.addSuppressed(var30);
+                        }
+                    } else {
+                        writer.close();
+                    }
+
+                }
+            } catch (Throwable var33) {
+                var38 = var33;
+                throw var33;
+            } finally {
+                if (var38 != null) {
+                    try {
+                        outputStream.close();
+                    } catch (Throwable var29) {
+                        var38.addSuppressed(var29);
+                    }
+                } else {
+                    outputStream.close();
+                }
+
+            }
+        } catch (IOException var35) {
+            LOGGER.error("Couldn't save player research unlocks to {}", this.researchFile, var35);
+        }
+
+
         JsonElement jsonElement = GSON.toJsonTree(map);
-        jsonElement.getAsJsonObject().addProperty("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
+//        jsonElement.getAsJsonObject().addProperty("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
 
         try {
             OutputStream outputStream = new FileOutputStream(this.researchFile);
@@ -240,7 +299,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
 
             }
         } catch (IOException var35) {
-            LOGGER.error("Couldn't save player advancements to {}", this.researchFile, var35);
+            LOGGER.error("Couldn't save player research to {}", this.researchFile, var35);
         }
 
     }
@@ -259,7 +318,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
             this.progressUpdates.add(node);
             bl = true;
             if (!bl2 && progress.isDone()) {
-                node.getRewards().apply(this.owner);
+                node.getRewards().apply(this.owner, this);
                 Galacticraft.logger.info("Research completed! " + node.getId());
 //            if (node.getInfo() != null && node.getInfo().shouldAnnounceToChat() && this.owner.world.getGameRules().getBoolean(GameRules.ANNOUNCE_ADVANCEMENTS)) { //TODO: Do we need to announce to chat?
 //               this.server.getPlayerManager().sendToAll((Text)(new TranslatableText("chat.type.advancement." + node.getDisplay().getFrame().getId(), new Object[]{this.owner.getDisplayName(), node.toHoverableText()})));
@@ -339,7 +398,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     }
 
     public void sendUpdate(ServerPlayerEntity player) {
-        if (this.dirty || !this.visibilityUpdates.isEmpty() || !this.progressUpdates.isEmpty()) {
+        if (this.dirty || !this.visibilityUpdates.isEmpty() || !this.progressUpdates.isEmpty() || !newParts.isEmpty()) {
             Map<Identifier, AdvancementProgress> map = Maps.newHashMap();
             Set<ResearchNode> set = new LinkedHashSet<>();
             Set<Identifier> set2 = new LinkedHashSet<>();
@@ -358,7 +417,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
                 }
             }
 
-            if (this.dirty || !map.isEmpty() || !set.isEmpty() || !set2.isEmpty()) {
+            if (this.dirty || !map.isEmpty() || !set.isEmpty() || !set2.isEmpty() || !newParts.isEmpty()) {
                 player.networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "research_update"), new PacketByteBuf(createPacket(this.dirty, set, set2, map, new PacketByteBuf(Unpooled.buffer())))));
                 this.visibilityUpdates.clear();
                 this.progressUpdates.clear();
@@ -399,6 +458,14 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
             buf.writeIdentifier(entry.getKey());
             entry.getValue().toPacket(buf);
         }
+
+        buf.writeVarInt(newParts.size());
+        for (RocketPart part : newParts) {
+            buf.writeIdentifier(Galacticraft.ROCKET_PARTS.getId(part));
+        }
+
+        newParts.clear();
+
         return buf;
     }
 
@@ -498,5 +565,11 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
 
         }
         return true;
+    }
+
+    public void unlockRocketPart(Identifier partId) {
+        unlockedParts.add(Galacticraft.ROCKET_PARTS.get(partId));
+        newParts.add(Galacticraft.ROCKET_PARTS.get(partId));
+
     }
 }

@@ -59,7 +59,7 @@ public class ResearchRewards {
         return new ResearchRewards(i, identifiers, identifiers2, lazyContainer2);
     }
 
-    public void apply(ServerPlayerEntity player) {
+    public void apply(ServerPlayerEntity player, PlayerResearchTracker tracker) {
         player.addExperience(this.experience);
         LootContext lootContext = (new LootContext.Builder(player.getServerWorld())).parameter(LootContextParameters.THIS_ENTITY, player).parameter(LootContextParameters.POSITION, player.getBlockPos()).random(player.getRandom()).build(LootContextTypes.ADVANCEMENT_REWARD);
         boolean stackAdded = false;
@@ -91,7 +91,7 @@ public class ResearchRewards {
         }
 
         for (Identifier id : this.rocketParts) {
-            //todo
+            tracker.unlockRocketPart(id);
         }
 
         MinecraftServer minecraftServer = player.server;

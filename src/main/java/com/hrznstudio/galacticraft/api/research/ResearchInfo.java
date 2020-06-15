@@ -19,8 +19,8 @@ import java.util.Objects;
 
 public class ResearchInfo {
     private final ItemConvertible[] icons;
-    private final Text title;
-    private final Text description;
+    private final TranslatableText title;
+    private final TranslatableText description;
     @Nullable
     private final Identifier background;
     private final boolean hidden;
@@ -28,7 +28,7 @@ public class ResearchInfo {
     private float x;
     private float y;
 
-    public ResearchInfo(ItemConvertible[] icons, Text title, Text description, @Nullable Identifier background, boolean hidden, int tier) {
+    public ResearchInfo(ItemConvertible[] icons, TranslatableText title, TranslatableText description, @Nullable Identifier background, boolean hidden, int tier) {
         this.icons = icons;
         this.title = title;
         this.description = description;
@@ -72,10 +72,10 @@ public class ResearchInfo {
         for (int i = 0; i < items.length; i++) {
             items[i] = Registry.ITEM.get(buf.readIdentifier());
         }
-        Text title = buf.readText();
-        Text desc = null;
+        TranslatableText title = (TranslatableText) buf.readText();
+        TranslatableText desc = null;
         if (buf.readBoolean()) {
-            desc = buf.readText();
+            desc = (TranslatableText) buf.readText();
         }
         Identifier back = null;
         if (buf.readBoolean()) {
@@ -89,11 +89,11 @@ public class ResearchInfo {
         return icons;
     }
 
-    public Text getTitle() {
+    public TranslatableText getTitle() {
         return title;
     }
 
-    public Text getDescription() {
+    public TranslatableText getDescription() {
         return description;
     }
 
