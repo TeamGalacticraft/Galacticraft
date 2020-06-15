@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "connected=true": {
+      "model": "galacticraft-rewoven:block/fuel_loader_connected"
+    },
+    "connected=false": {
+      "model": "galacticraft-rewoven:block/fuel_loader"
+    }
+  }
+}
