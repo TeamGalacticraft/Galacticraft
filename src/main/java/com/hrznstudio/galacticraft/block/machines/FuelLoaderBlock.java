@@ -42,6 +42,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
@@ -69,9 +70,11 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock implements
     private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
     private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
+    public static final BooleanProperty CONNECTED = BooleanProperty.of("connected");
 
     public FuelLoaderBlock(Settings settings) {
         super(settings);
+        setDefaultState(getStateManager().getDefaultState().with(CONNECTED, false));
     }
 
     @Override
@@ -97,6 +100,7 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock implements
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
         super.appendProperties(stateBuilder);
+        stateBuilder.add(CONNECTED);
         stateBuilder.add(FACING);
         stateBuilder.add(FRONT_SIDE_OPTION);
         stateBuilder.add(BACK_SIDE_OPTION);
