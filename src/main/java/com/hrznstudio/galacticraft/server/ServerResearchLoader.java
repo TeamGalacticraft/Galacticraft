@@ -1,9 +1,6 @@
 package com.hrznstudio.galacticraft.server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
+import com.google.gson.*;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.research.ResearchManager;
 import com.hrznstudio.galacticraft.api.research.ResearchNode;
@@ -18,18 +15,27 @@ import net.minecraft.util.profiler.Profiler;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResearchLoader extends JsonDataLoader {
+public class ServerResearchLoader extends JsonDataLoader {
     private static final Gson GSON = new GsonBuilder().create();
     private final LootConditionManager conditionManager;
     private ResearchManager manager;
 
-    public ResearchLoader(LootConditionManager conditionManager) {
+    public ServerResearchLoader(LootConditionManager conditionManager) {
         super(GSON, "gc_research");
         this.conditionManager = conditionManager;
     }
 
+    public ResearchManager getManager() {
+        return manager;
+    }
+
     @Override
-    protected void apply(Map<Identifier, JsonObject> loader, ResourceManager manager, Profiler profiler) {
+    public String getName() {
+        return "Galacticraft: Rewoven - Research Data Loader";
+    }
+
+    @Override
+    protected void apply(Map<Identifier, JsonElement> loader, ResourceManager manager, Profiler profiler) {
         Galacticraft.logger.info("Loading research!");
         Map<Identifier, ResearchNode.Builder> map2 = new HashMap<>();
         loader.forEach((identifier, jsonObject) -> {
@@ -45,24 +51,6 @@ public class ResearchLoader extends JsonDataLoader {
 
         ResearchManager researchManager = new ResearchManager();
         researchManager.load(map2);
-//        Iterator var6 = researchManager.getRoots().iterator();
-//
-//        while(var6.hasNext()) {
-//            Advancement advancement = (Advancement)var6.next();
-//            if (advancement.getDisplay() != null) {
-//                AdvancementPositioner.arrangeForTree(advancement);
-//            }
-//        }
-
         this.manager = researchManager;
-    }
-
-    public ResearchManager getManager() {
-        return manager;
-    }
-
-    @Override
-    public String getName() {
-        return "Galacticraft: Rewoven - Research Data Loader";
     }
 }

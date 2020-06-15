@@ -13,9 +13,12 @@ import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.accessor.MinecraftServerAccessor;
-import com.mojang.datafixers.Dynamic;
-import com.mojang.datafixers.types.JsonOps;
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.rocket.RocketPart;
+import com.hrznstudio.galacticraft.server.ServerResearchLoader;
+import com.mojang.datafixers.DataFixer;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
 import io.netty.buffer.Unpooled;
 import net.minecraft.SharedConstants;
 import net.minecraft.advancement.AdvancementCriterion;
@@ -27,7 +30,7 @@ import net.minecraft.advancement.criterion.CriterionConditions;
 import net.minecraft.advancement.criterion.CriterionProgress;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -45,21 +48,26 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     private static final Gson GSON = (new GsonBuilder()).registerTypeAdapter(AdvancementProgress.class, new AdvancementProgress.Serializer()).registerTypeAdapter(Identifier.class, new Identifier.Serializer()).setPrettyPrinting().create();
     private static final TypeToken<Map<Identifier, AdvancementProgress>> JSON_TYPE = new TypeToken<Map<Identifier, AdvancementProgress>>() {
     };
-    private final MinecraftServer server;
     private final File researchFile;
-    private final Map<ResearchNode, AdvancementProgress> researchToProgress = Maps.newLinkedHashMap();
-    private final Set<ResearchNode> visibleResearch = Sets.newLinkedHashSet();
-    private final Set<ResearchNode> visibilityUpdates = Sets.newLinkedHashSet();
-    private final Set<ResearchNode> progressUpdates = Sets.newLinkedHashSet();
+    private final Map<ResearchNode, AdvancementProgress> researchToProgress = new LinkedHashMap<>();
+    private final Set<ResearchNode> visibleResearch = new LinkedHashSet<>();
+    private final Set<ResearchNode> visibilityUpdates = new LinkedHashSet<>();
+    private final Set<ResearchNode> progressUpdates = new LinkedHashSet<>();
+    private final Set<RocketPart> unlockedParts = new LinkedHashSet<>();
     private ServerPlayerEntity owner;
+    private final ServerResearchLoader researchLoader;
     private boolean dirty = true;
 
-    public PlayerResearchTracker(MinecraftServer server, File researchFile, ServerPlayerEntity owner) {
-        super(server, new File(""), owner);
-        this.server = server;
-        this.researchFile = researchFile;
-        this.owner = owner;
+    public PlayerResearchTracker(DataFixer dataFixer, PlayerManager playerManager, ServerResearchLoader researchLoader, File file, ServerPlayerEntity serverPlayerEntity) {
+        //noinspection ConstantConditions
+        super(dataFixer, playerManager, null, new File(""), serverPlayerEntity);
+        this.researchFile = file;
+        this.researchLoader = researchLoader;
         this.load();
+    }
+
+    public ServerResearchLoader getResearchLoader() {
+        return researchLoader;
     }
 
     @Override
@@ -87,14 +95,14 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
 
     private void beginTrackingAllResearch() {
 
-        for (ResearchNode node : ((MinecraftServerAccessor) this.server).getResearchLoader().getManager().getResearch().values()) {
+        for (ResearchNode node : researchLoader.getManager().getResearch().values()) {
             this.beginTracking(node);
         }
 
     }
 
     private void updateCompleted() {
-        List<ResearchNode> list = Lists.newArrayList();
+        List<ResearchNode> list = new ArrayList<>();
         for (Map.Entry<ResearchNode, AdvancementProgress> entry : this.researchToProgress.entrySet()) {
             if ((entry.getValue()).isDone()) {
                 list.add(entry.getKey());
@@ -108,7 +116,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     }
 
     private void rewardEmptyResearch() {
-        for (ResearchNode node : ((MinecraftServerAccessor) this.server).getResearchLoader().getManager().getResearch().values()) {
+        for (ResearchNode node : researchLoader.getManager().getResearch().values()) {
             if (node.getCriteria().isEmpty()) {
                 this.grantCriterion(node, "");
                 node.getRewards().apply(this.owner);
@@ -137,10 +145,10 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
                         throw new JsonParseException("Found null for research");
                     }
 
-                    Stream<Entry<Identifier, AdvancementProgress>> stream = map.entrySet().stream().sorted(Comparator.comparing(Entry::getValue));
+                    Stream<Entry<Identifier, AdvancementProgress>> stream = map.entrySet().stream().sorted(Entry.comparingByValue());
 
                     for (Entry<Identifier, AdvancementProgress> progress : stream.collect(Collectors.toList())) {
-                        ResearchNode node = ((MinecraftServerAccessor) this.server).getResearchLoader().getManager().getResearch().get(progress.getKey());
+                        ResearchNode node = researchLoader.getManager().getResearch().get(progress.getKey());
                         if (node == null) {
                             LOGGER.warn("Ignored research node '{}' in progress file {} - it doesn't exist anymore?", progress.getKey(), this.researchFile);
                         } else {
@@ -252,6 +260,7 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
             bl = true;
             if (!bl2 && progress.isDone()) {
                 node.getRewards().apply(this.owner);
+                Galacticraft.logger.info("Research completed! " + node.getId());
 //            if (node.getInfo() != null && node.getInfo().shouldAnnounceToChat() && this.owner.world.getGameRules().getBoolean(GameRules.ANNOUNCE_ADVANCEMENTS)) { //TODO: Do we need to announce to chat?
 //               this.server.getPlayerManager().sendToAll((Text)(new TranslatableText("chat.type.advancement." + node.getDisplay().getFrame().getId(), new Object[]{this.owner.getDisplayName(), node.toHoverableText()})));
 //            }
@@ -332,8 +341,8 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     public void sendUpdate(ServerPlayerEntity player) {
         if (this.dirty || !this.visibilityUpdates.isEmpty() || !this.progressUpdates.isEmpty()) {
             Map<Identifier, AdvancementProgress> map = Maps.newHashMap();
-            Set<ResearchNode> set = Sets.newLinkedHashSet();
-            Set<Identifier> set2 = Sets.newLinkedHashSet();
+            Set<ResearchNode> set = new LinkedHashSet<>();
+            Set<Identifier> set2 = new LinkedHashSet<>();
 
             for (ResearchNode node : this.progressUpdates) {
                 if (this.visibleResearch.contains(node)) {

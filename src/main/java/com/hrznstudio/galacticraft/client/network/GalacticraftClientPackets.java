@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.client.network;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
+import com.hrznstudio.galacticraft.api.research.ResearchNode;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.api.EnvType;
@@ -36,7 +37,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -89,5 +90,15 @@ public class GalacticraftClientPackets {
                 ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().onResearch(buffer);
             });
         }));
+
+//        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
+//            int size = packetByteBuf.readVarInt();
+//            Map<Identifier, ResearchNode.Builder> map = new HashMap<>(size);
+//            for (int i =0; i < size; i++) {
+//                Identifier id = packetByteBuf.readIdentifier();
+//                map.put(id, ResearchNode.Builder.fromPacket(packetByteBuf));
+//            }
+//            packetContext.getTaskQueue().execute(() -> ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().load(map));
+//        });
     }
 }

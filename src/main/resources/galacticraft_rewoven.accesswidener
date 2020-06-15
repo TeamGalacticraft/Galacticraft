@@ -14,3 +14,4 @@ accessible   method   net/minecraft/world/gen/stateprovider/BlockStateProviderTy
 accessible   method   net/minecraft/world/gen/chunk/ChunkGeneratorType   <init>   (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/NoiseConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
 accessible   method   net/minecraft/structure/pool/LegacySinglePoolElement   <init>   (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
 accessible   method   net/minecraft/structure/pool/FeaturePoolElement   <init>   (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
+accessible   method   net/minecraft/advancement/criterion/AbstractCriterionConditions   getPlayerPredicate   ()Lnet/minecraft/predicate/entity/EntityPredicate$Extended;

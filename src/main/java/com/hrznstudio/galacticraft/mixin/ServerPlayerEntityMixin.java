@@ -1,10 +1,12 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.accessor.MinecraftServerAccessor;
+import com.hrznstudio.galacticraft.accessor.ServerResourceAccessor;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.research.PlayerResearchTracker;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
