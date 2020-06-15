@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "part=center": {
+      "model": "galacticraft-rewoven:block/launch_pad_center"
+    },
+    "part=none": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=north_west": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=north": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=north_east": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=west": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=east": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=south_west": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=south": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    },
+    "part=south_east": {
+      "model": "galacticraft-rewoven:block/launch_pad"
+    }
+  }
+}
