@@ -28,20 +28,22 @@ public class ResearchManager {
                 Map.Entry<Identifier, ResearchNode.Builder> entry = iterator.next();
                 Identifier identifier = entry.getKey();
                 ResearchNode.Builder builder = entry.getValue();
-                if (builder.findParents(function)) {
-                    ResearchNode node = builder.build(identifier);
-                    this.research.put(identifier, node);
-                    bl = true;
-                    iterator.remove();
-                    if (node.getParents() == null || node.getParents().length == 0) {
-                        this.roots.add(node);
-                        for (Listener listener : listeners) {
-                            listener.onRootAdded(node);
-                        }
-                    } else {
-                        this.dependants.add(node);
-                        for (Listener listener : listeners) {
-                            listener.onDependentAdded(node);
+                if (!this.research.containsKey(identifier)) {
+                    if (builder.findParents(function)) {
+                        ResearchNode node = builder.build(identifier);
+                        this.research.put(identifier, node);
+                        bl = true;
+                        iterator.remove();
+                        if (node.getParents() == null || node.getParents().length == 0) {
+                            this.roots.add(node);
+                            for (Listener listener : listeners) {
+                                listener.onRootAdded(node);
+                            }
+                        } else {
+                            this.dependants.add(node);
+                            for (Listener listener : listeners) {
+                                listener.onDependentAdded(node);
+                            }
                         }
                     }
                 }
@@ -61,7 +63,7 @@ public class ResearchManager {
             if (node1.getInfo().getTier() < node2.getInfo().getTier()) {
                 return -1;
             } else if (node1.getInfo().getTier() == node2.getInfo().getTier()) {
-                throw new RuntimeException("2 roots for the same tier!");
+                throw new RuntimeException("2 roots for the same tier?!");
             } else {
                 return 1;
             }
@@ -70,6 +72,14 @@ public class ResearchManager {
         for (ResearchNode node : roots) {
             new ResearchPositioner().position(node);
         }
+    }
+
+    public List<ResearchNode> getRoots() {
+        return roots;
+    }
+
+    public Set<ResearchNode> getDependants() {
+        return dependants;
     }
 
     public Map<Identifier, ResearchNode> getResearch() {

@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.hrznstudio.galacticraft.Galacticraft;
 import net.minecraft.advancement.AdvancementCriterion;
-import net.minecraft.advancement.CriteriaMerger;
+import net.minecraft.advancement.CriterionMerger;
 import net.minecraft.advancement.criterion.CriterionConditions;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.network.PacketByteBuf;
@@ -33,7 +33,6 @@ public class ResearchNode {
     private final ResearchInfo info;
     private final Map<String, AdvancementCriterion> criteria;
     private final String[][] requirements;
-    private final CriteriaMerger merger;
 
 
     public ResearchNode(Identifier id, ResearchInfo info, ResearchRewards rewards, @NotNull ResearchNode[] parents, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
@@ -43,7 +42,6 @@ public class ResearchNode {
         this.rewards = rewards;
         this.criteria = criteria;
         this.requirements = requirements;
-        this.merger = CriteriaMerger.AND;
         for (ResearchNode parent : parents) {
             parent.addChild(this);
         }
@@ -96,12 +94,12 @@ public class ResearchNode {
         private ResearchRewards rewards;
         private Map<String, AdvancementCriterion> criteria;
         private String[][] requirements;
-        private CriteriaMerger merger;
+        private CriterionMerger merger;
 
         private Builder(List<Identifier> parentIds, @Nullable ResearchInfo info, ResearchRewards rewards, Map<String, AdvancementCriterion> criteria, String[][] requirements) {
             this.rewards = ResearchRewards.NONE;
             this.criteria = Maps.newLinkedHashMap();
-            this.merger = CriteriaMerger.AND;
+            this.merger = CriterionMerger.AND;
             this.parentIds = parentIds;
             this.info = info;
             this.rewards = rewards;
@@ -112,7 +110,7 @@ public class ResearchNode {
         private Builder() {
             this.rewards = ResearchRewards.NONE;
             this.criteria = Maps.newLinkedHashMap();
-            this.merger = CriteriaMerger.AND;
+            this.merger = CriterionMerger.AND;
         }
 
         public static Builder create() {
@@ -258,7 +256,7 @@ public class ResearchNode {
             }
         }
 
-        public Builder criteriaMerger(CriteriaMerger merger) {
+        public Builder CriterionMerger(CriterionMerger merger) {
             this.merger = merger;
             return this;
         }

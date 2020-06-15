@@ -15,6 +15,7 @@
     "PlayerManagerMixin",
     "RecipeManagerMixin",
     "ServerPlayerEntityMixin",
+    "ServerResourceManagerMixin",
     "ServerWorldMixin",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin",

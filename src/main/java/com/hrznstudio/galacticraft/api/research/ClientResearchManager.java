@@ -123,6 +123,14 @@ public class ClientResearchManager {
 
     }
 
+    public boolean isComplete(ResearchNode node) {
+        return this.researchProgresses.get(node).isDone();
+    }
+
+    public AdvancementProgress getProgress(ResearchNode node) {
+        return this.researchProgresses.get(node);
+    }
+
     @Environment(EnvType.CLIENT)
     public interface Listener extends ResearchManager.Listener {
         void setProgress(ResearchNode node, AdvancementProgress progress);
