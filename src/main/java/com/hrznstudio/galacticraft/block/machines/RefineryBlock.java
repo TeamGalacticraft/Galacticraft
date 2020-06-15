@@ -22,13 +22,10 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import alexiil.mc.lib.attributes.AttributeList;
-import alexiil.mc.lib.attributes.AttributeProvider;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
@@ -44,8 +41,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -55,7 +52,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -64,14 +60,13 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlock extends ConfigurableElectricMachineBlock implements AttributeProvider, Rotatable, WireConnectable, MachineBlock {
+public class RefineryBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
     private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
     private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    private static final DirectionProperty FACING = DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
 
     public RefineryBlock(Settings settings) {
         super(settings);
@@ -85,6 +80,25 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
     @Override
     public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new RefineryBlockEntity();
+    }
+
+    @Override
+    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+        switch (direction) {
+            case FRONT:
+                return FRONT_SIDE_OPTION;
+            case RIGHT:
+                return RIGHT_SIDE_OPTION;
+            case LEFT:
+                return LEFT_SIDE_OPTION;
+            case BACK:
+                return BACK_SIDE_OPTION;
+            case TOP:
+                return TOP_SIDE_OPTION;
+            case BOTTOM:
+                return BOTTOM_SIDE_OPTION;
+        }
+        throw new NullPointerException();
     }
 
     @Override
@@ -151,17 +165,6 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
     }
 
     @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState state, AttributeList<?> to) {
-        Direction dir = to.getSearchDirection();
-        if (dir != null) return;
-        BlockEntity be = world.getBlockEntity(pos);
-        if (!(be instanceof RefineryBlockEntity)) return;
-        RefineryBlockEntity refinery = (RefineryBlockEntity) be;
-        to.offer(refinery.getEnergyAttribute());
-        refinery.getExposedInventory().offerSelfAsAttribute(to, null, null);
-    }
-
-    @Override
     public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
         return new TranslatableText("tooltip.galacticraft-rewoven.refinery");
     }
@@ -176,7 +179,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
             if (blockEntity instanceof RefineryBlockEntity) {
                 RefineryBlockEntity refineryBlockEntity = (RefineryBlockEntity) blockEntity;
 
-                for (int i = 0; i < refineryBlockEntity.getInventory().getSlotCount(); i++) {
+                for (int i = 0; i < refineryBlockEntity.getInventory().getSize(); i++) {
                     ItemStack itemStack = refineryBlockEntity.getInventory().getStack(i);
 
                     if (itemStack != null) {
@@ -185,12 +188,6 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock implements A
                 }
             }
         }
-    }
-
-    @Nonnull
-    @Override
-    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 
     @Override

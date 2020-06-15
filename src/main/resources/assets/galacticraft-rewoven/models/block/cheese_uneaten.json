@@ -7,15 +7,37 @@
     "side": "galacticraft-rewoven:block/cheese_2"
   },
   "elements": [
-    {   "from": [ 1, 0, 1 ],
-      "to": [ 15, 8, 15 ],
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
       "faces": {
-        "down":  { "texture": "#bottom", "cullface": "down" },
-        "up":    { "texture": "#top" },
-        "north": { "texture": "#side" },
-        "south": { "texture": "#side" },
-        "west":  { "texture": "#side" },
-        "east":  { "texture": "#side" }
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        }
       }
     }
   ]

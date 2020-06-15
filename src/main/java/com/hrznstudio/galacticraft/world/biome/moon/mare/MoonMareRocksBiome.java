@@ -1,29 +1,23 @@
 package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.world.biome.Biome;
+import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.BoulderFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.ForestRockFeature;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
+import net.minecraft.world.gen.feature.DecoratedFeature;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
-public final class MoonMareRocksBiome extends Biome implements SpaceBiome {
+public final class MoonMareRocksBiome extends MoonMareBiome {
 
     public static final TernarySurfaceConfig MOON_MARE_ROCK_CONFIG = new TernarySurfaceConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), GalacticraftBlocks.MOON_BASALT.getDefaultState(), GalacticraftBlocks.MOON_BASALT.getDefaultState());
 
     public MoonMareRocksBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(SurfaceBuilder.DEFAULT, MOON_MARE_ROCK_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MOON_MARE_ROCK_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.65F)
@@ -36,44 +30,11 @@ public final class MoonMareRocksBiome extends Biome implements SpaceBiome {
                         .fogColor(0)
                         .build())
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_ROCKS));
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, new ConfiguredFeature<>((ForestRockFeature) Feature.FOREST_ROCK, new BoulderFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), 10)));
+        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, DecoratedFeature.FOREST_ROCK.configure(new BoulderFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), 6)).createDecoratedFeature(Decorator.WATER_LAKE.configure(new ChanceDecoratorConfig(4))));
     }
 
     @Override
-    public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_mare_rocks";
+    protected String getBiomeName() {
+        return "rocks";
     }
-
-    @Override
-    public int getSkyColor() {
-        return 0;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getFoliageColor() {
-        return getWaterFogColor();
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getGrassColorAt(double x, double z) {
-        return getWaterColor();
-    }
-
-    @Override
-    public TemperatureGroup getTemperatureGroup() {
-        return TemperatureGroup.COLD;
-    }
-
-    @Override
-    public Text getName() {
-        return new TranslatableText(this.getTranslationKey());
-    }
-
-    @Override
-    public Precipitation getPrecipitation() {
-        return Precipitation.NONE;
-    }
-
 }

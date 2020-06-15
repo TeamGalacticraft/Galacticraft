@@ -1,6 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft-rewoven:block/crude_oil" }
+      "model": "galacticraft-rewoven:block/crude_oil"
+    }
   }
 }

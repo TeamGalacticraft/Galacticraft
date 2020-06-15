@@ -1,0 +1,30 @@
+{
+  "info": {
+    "title": "research.galacticraft-rewoven.coal_gen",
+    "description": "research.galacticraft-rewoven.coal_gen.desc",
+    "items_to_render": [
+      "galacticraft-rewoven:aluminum_wire"
+    ],
+    "tier": 1
+  },
+  "parents": [
+    "galacticraft-rewoven:root"
+  ],
+  "criteria": {
+    "aluminum_wire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "galacticraft-rewoven:aluminum_wire"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "aluminum_wire"
+    ]
+  ]
+}

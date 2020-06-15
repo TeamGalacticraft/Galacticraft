@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -43,12 +42,7 @@ public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSola
 
     public BasicSolarPanelScreenHandler(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity);
-        Inventory inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return BasicSolarPanelScreenHandler.this.canUse(player);
-            }
-        };
+        Inventory inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
 
         this.addSlot(new ChargeSlot(inventory, 0, 8, 53));

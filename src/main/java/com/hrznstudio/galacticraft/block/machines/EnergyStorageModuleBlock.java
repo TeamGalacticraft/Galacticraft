@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.block.entity.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import com.hrznstudio.galacticraft.util.Rotatable;
@@ -42,9 +41,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -56,7 +54,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -72,7 +69,6 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
     private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
-    private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public EnergyStorageModuleBlock(Settings settings) {
         super(settings);
@@ -86,6 +82,25 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
 
         ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.ENERGY_STORAGE_MODULE_SCREEN_HANDLER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
         return ActionResult.SUCCESS;
+    }
+
+    @Override
+    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+        switch (direction) {
+            case FRONT:
+                return FRONT_SIDE_OPTION;
+            case RIGHT:
+                return RIGHT_SIDE_OPTION;
+            case LEFT:
+                return LEFT_SIDE_OPTION;
+            case BACK:
+                return BACK_SIDE_OPTION;
+            case TOP:
+                return TOP_SIDE_OPTION;
+            case BOTTOM:
+                return BOTTOM_SIDE_OPTION;
+        }
+        throw new NullPointerException();
     }
 
     @Override
@@ -107,7 +122,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
             if (blockEntity instanceof EnergyStorageModuleBlockEntity) {
                 EnergyStorageModuleBlockEntity be = (EnergyStorageModuleBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
+                for (int i = 0; i < be.getInventory().getSize(); i++) {
                     ItemStack itemStack = be.getInventory().getStack(i);
 
                     if (itemStack != null) {
@@ -174,12 +189,6 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock i
     @Override
     public boolean generatesFluids() {
         return false;
-    }
-
-    @Nonnull
-    @Override
-    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
     }
 
     @Override

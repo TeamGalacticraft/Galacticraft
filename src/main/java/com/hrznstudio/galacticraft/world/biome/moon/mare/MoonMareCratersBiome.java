@@ -23,24 +23,17 @@
 package com.hrznstudio.galacticraft.world.biome.moon.mare;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonMareCratersBiome extends Biome implements SpaceBiome {
+public final class MoonMareCratersBiome extends MoonMareBiome {
 
     public MoonMareCratersBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MULTI_BLOCK_SURFACE_BUILDER, MoonMarePlainsBiome.MOON_MARE_BIOME_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MOON_MARE_BIOME_CONFIG)
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.03F)
@@ -58,44 +51,12 @@ public final class MoonMareCratersBiome extends Biome implements SpaceBiome {
     }
 
     @Override
-    protected float computeTemperature(BlockPos blockPos) {
-        return -100F;
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "biome.galacticraft-rewoven.moon_mare_craters";
-    }
-
-    @Override
-    public int getSkyColor() {
-        return 0;
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getFoliageColor() {
-        return getWaterFogColor();
-    }
-
-    @Override
-    @Environment(EnvType.CLIENT)
-    public int getGrassColorAt(double x, double z) {
-        return getWaterColor();
-    }
-
-    @Override
     public boolean forceSmallCraters() {
         return true;
     }
 
     @Override
-    public TemperatureGroup getTemperatureGroup() {
-        return TemperatureGroup.COLD;
-    }
-
-    @Override
-    public Text getName() {
-        return new TranslatableText(this.getTranslationKey());
+    protected String getBiomeName() {
+        return "craters";
     }
 }

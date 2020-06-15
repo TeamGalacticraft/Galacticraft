@@ -28,8 +28,6 @@ import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.*;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -59,6 +57,7 @@ public class GalacticraftBlockEntities {
         }
     }).build(null));
     public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_LAUNCH_PAD), BlockEntityType.Builder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlocks.ROCKET_LAUNCH_PAD).build(null));
+    public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FUEL_LOADER), BlockEntityType.Builder.create(FuelLoaderBlockEntity::new, GalacticraftBlocks.FUEL_LOADER).build(null));
 
     public static void init() {
     }

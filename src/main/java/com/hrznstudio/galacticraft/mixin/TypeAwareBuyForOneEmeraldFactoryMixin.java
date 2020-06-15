@@ -22,14 +22,18 @@ import java.util.stream.Stream;
 public class TypeAwareBuyForOneEmeraldFactoryMixin {
 
     @Mutable
-    @Shadow @Final private Map<VillagerType, Item> map;
+    @Shadow
+    @Final
+    private Map<VillagerType, Item> map;
 
-    @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/registry/DefaultedRegistry;stream()Ljava/util/stream/Stream;"))
+    @SuppressWarnings("UnnecessaryQualifiedMemberReference")
+    @Redirect(method = "Lnet/minecraft/village/TradeOffers$TypeAwareBuyForOneEmeraldFactory;<init>(IIILjava/util/Map;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/registry/DefaultedRegistry;stream()Ljava/util/stream/Stream;"))
     private Stream<VillagerType> skipCheck(DefaultedRegistry<VillagerType> defaultedRegistry) {
         return Stream.empty(); //skip check
     }
 
-    @Inject(method = "<init>", at = @At(value = "RETURN"))
+    @SuppressWarnings("UnnecessaryQualifiedMemberReference")
+    @Inject(method = "Lnet/minecraft/village/TradeOffers$TypeAwareBuyForOneEmeraldFactory;<init>(IIILjava/util/Map;)V", at = @At(value = "RETURN"))
     private void addMoonVillagerTrades(int i, int j, int experience, Map<VillagerType, Item> map, CallbackInfo ci) {
         this.map = new HashMap<>(this.map);
         this.map.put(MoonVillagerEntity.MOON_VILLAGER_TYPE, Items.AIR);

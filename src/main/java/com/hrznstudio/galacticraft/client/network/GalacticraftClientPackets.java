@@ -23,13 +23,16 @@
 package com.hrznstudio.galacticraft.client.network;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -72,6 +75,19 @@ public class GalacticraftClientPackets {
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             };
             context.getTaskQueue().execute(spawn);
+        }));
+
+        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "canister_packet_of_doom"), (packetContext, packetByteBuf) -> {
+            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
+            packetContext.getTaskQueue().execute(() -> MinecraftClient.getInstance().player.inventory.setStack(buf.readVarInt(), buf.readItemStack()));
+        });
+
+        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_update"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+
+            context.getTaskQueue().execute(() -> {
+                ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().onResearch(buffer);
+            });
         }));
     }
 }

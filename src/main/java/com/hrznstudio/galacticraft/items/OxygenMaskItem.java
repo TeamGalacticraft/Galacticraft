@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -43,7 +42,7 @@ public class OxygenMaskItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (((GCPlayerAccessor) user).getGearInventory().getStack(4).isEmpty()) {
-            ((GCPlayerAccessor) user).getGearInventory().setStack(4, user.getStackInHand(hand), Simulation.ACTION);
+            ((GCPlayerAccessor) user).getGearInventory().setStack(4, user.getStackInHand(hand));
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, user, hand);

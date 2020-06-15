@@ -35,17 +35,14 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
-import team.reborn.energy.EnergySide;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -55,41 +52,16 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements MachineBlock, WireConnectable {
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public ConfigurableElectricMachineBlock(Settings block$Settings_1) {
         super(block$Settings_1);
     }
 
-    public static SideOption[] optionsToArray(BlockState state) {
-        if (state.getBlock() instanceof ConfigurableElectricMachineBlock) {
-            List<SideOption> applicable = SideOption.getApplicableValuesForMachine(state.getBlock());
-            return new SideOption[]{state.get(EnumProperty.of("north", SideOption.class, applicable)),
-                    state.get(EnumProperty.of("south", SideOption.class, applicable)),
-                    state.get(EnumProperty.of("east", SideOption.class, applicable)),
-                    state.get(EnumProperty.of("west", SideOption.class, applicable)),
-                    state.get(EnumProperty.of("up", SideOption.class, applicable)),
-                    state.get(EnumProperty.of("down", SideOption.class, applicable))
-            };
-        }
-        return new SideOption[]{SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT, SideOption.DEFAULT};
-    }
+    public abstract Property<SideOption> getProperty(BlockFace direction);
 
-    public static Direction energySideToDirection(EnergySide side) {
-        switch (side) {
-            case NORTH:
-                return Direction.NORTH;
-            case SOUTH:
-                return Direction.SOUTH;
-            case EAST:
-                return Direction.EAST;
-            case DOWN:
-                return Direction.DOWN;
-            case UP:
-                return Direction.UP;
-            case WEST:
-                return Direction.WEST;
-        }
-        return Direction.NORTH;
+    public final SideOption getOption(BlockState state, BlockFace direction) {
+        return state.get(getProperty(direction));
     }
 
     public abstract ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);
@@ -109,173 +81,16 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     @Nonnull
     @Override
     public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        List<SideOption> values = SideOption.getApplicableValuesForMachine(world.getBlockState(connectionTargetPos).getBlock());
+        BlockState state = world.getBlockState(connectionTargetPos);
 
-        EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, values);
-        EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, values);
-        EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, values);
-        EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, values);
-        EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, values);
-        EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, values);
+        SideOption option = getOption(state, BlockFace.toFace(state.get(FACING), opposite));
 
-        BlockState blockState = world.getBlockState(connectionTargetPos);
-
-        if (opposite == Direction.UP) { //Always the same, no matter what 'facing' is
-            if (blockState.get(TOP_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                return WireConnectionType.ENERGY_INPUT;
-            } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                return WireConnectionType.ENERGY_OUTPUT;
-            } else {
-                return WireConnectionType.NONE;
-            }
-        } else if (opposite == Direction.DOWN) {
-            if (blockState.get(BOTTOM_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                return WireConnectionType.ENERGY_INPUT;
-            } else if (blockState.get(BOTTOM_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                return WireConnectionType.ENERGY_OUTPUT;
-            } else {
-                return WireConnectionType.NONE;
-            }
+        if (option == SideOption.POWER_INPUT) {
+            return WireConnectionType.ENERGY_INPUT;
+        } else if (option == SideOption.POWER_OUTPUT) {
+            return WireConnectionType.ENERGY_OUTPUT;
         }
 
-        if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.NORTH) { //Only N, S, E, W
-            if (opposite == Direction.NORTH) {
-                if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.SOUTH) {
-                if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.EAST) {
-                if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.WEST) {
-                if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            }
-
-        } else if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.SOUTH) {
-            if (opposite == Direction.NORTH) {
-                if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.SOUTH) {
-                if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.EAST) {
-                if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.WEST) {
-                if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            }
-        } else if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.EAST) {
-            if (opposite == Direction.NORTH) {
-                if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.SOUTH) {
-                if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.EAST) {
-                if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.WEST) {
-                if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            }
-        } else if (blockState.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST)) == Direction.WEST) {
-            if (opposite == Direction.NORTH) {
-                if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(LEFT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.SOUTH) {
-                if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(RIGHT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.EAST) {
-                if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(BACK_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            } else if (opposite == Direction.WEST) {
-                if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_INPUT) {
-                    return WireConnectionType.ENERGY_INPUT;
-                } else if (blockState.get(FRONT_SIDE_OPTION) == SideOption.POWER_OUTPUT) {
-                    return WireConnectionType.ENERGY_OUTPUT;
-                } else {
-                    return WireConnectionType.NONE;
-                }
-            }
-        }
         return WireConnectionType.NONE;
     }
 
@@ -285,7 +100,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         Text text = machineInfo(itemStack_1, blockView_1, tooltipContext_1);
         if (text != null) {
             List<Text> info = new ArrayList<>();
-            for (Text s : MinecraftClient.getInstance().textRenderer.wrapLines(text, 150)) {
+            for (StringRenderable s : MinecraftClient.getInstance().textRenderer.wrapLines(text, 150)) {
                 info.add(new LiteralText(s.getString()).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
             }
             if (!info.isEmpty()) {
@@ -346,4 +161,158 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
     public abstract List<Direction> disabledSides();
 
+    public enum BlockFace {
+        FRONT,
+        RIGHT,
+        BACK,
+        LEFT,
+        TOP,
+        BOTTOM;
+
+        @Nonnull
+        public static BlockFace toFace(Direction facing, Direction target) {
+            assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
+
+            if (target == Direction.DOWN) {
+                return BOTTOM;
+            } else if (target == Direction.UP) {
+                return TOP;
+            }
+
+            switch (facing) {
+                case NORTH:
+                    switch (target) {
+                        case NORTH:
+                            return FRONT;
+                        case EAST:
+                            return RIGHT;
+                        case SOUTH:
+                            return BACK;
+                        case WEST:
+                            return LEFT;
+                    }
+                    break;
+                case EAST:
+                    switch (target) {
+                        case EAST:
+                            return FRONT;
+                        case NORTH:
+                            return RIGHT;
+                        case WEST:
+                            return BACK;
+                        case SOUTH:
+                            return LEFT;
+                    }
+                    break;
+                case SOUTH:
+                    switch (target) {
+                        case SOUTH:
+                            return FRONT;
+                        case WEST:
+                            return RIGHT;
+                        case NORTH:
+                            return BACK;
+                        case EAST:
+                            return LEFT;
+                    }
+                    break;
+                case WEST:
+                    switch (target) {
+                        case WEST:
+                            return FRONT;
+                        case SOUTH:
+                            return RIGHT;
+                        case EAST:
+                            return BACK;
+                        case NORTH:
+                            return LEFT;
+                    }
+                    break;
+            }
+
+            throw new RuntimeException();
+        }
+
+        @Nonnull
+        public Direction toDirection(Direction facing) {
+            assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
+
+            if (this == BOTTOM) {
+                return Direction.DOWN;
+            } else if (this == TOP) {
+                return Direction.UP;
+            }
+
+            switch (facing) {
+                case NORTH:
+                    switch (this) {
+                        case FRONT:
+                            return Direction.NORTH;
+                        case RIGHT:
+                            return Direction.EAST;
+                        case BACK:
+                            return Direction.SOUTH;
+                        case LEFT:
+                            return Direction.WEST;
+                    }
+                    break;
+                case EAST:
+                    switch (this) {
+                        case RIGHT:
+                            return Direction.NORTH;
+                        case FRONT:
+                            return Direction.EAST;
+                        case LEFT:
+                            return Direction.SOUTH;
+                        case BACK:
+                            return Direction.WEST;
+                    }
+                    break;
+                case SOUTH:
+                    switch (this) {
+                        case BACK:
+                            return Direction.NORTH;
+                        case LEFT:
+                            return Direction.EAST;
+                        case FRONT:
+                            return Direction.SOUTH;
+                        case RIGHT:
+                            return Direction.WEST;
+                    }
+                    break;
+                case WEST:
+                    switch (this) {
+                        case LEFT:
+                            return Direction.NORTH;
+                        case BACK:
+                            return Direction.EAST;
+                        case RIGHT:
+                            return Direction.SOUTH;
+                        case FRONT:
+                            return Direction.WEST;
+                    }
+                    break;
+            }
+
+            throw new RuntimeException();
+        }
+
+        public BlockFace getOpposite() {
+            switch (this) {
+                case BOTTOM:
+                    return TOP;
+                case TOP:
+                    return BOTTOM;
+                case BACK:
+                    return FRONT;
+                case LEFT:
+                    return RIGHT;
+                case RIGHT:
+                    return LEFT;
+                case FRONT:
+                    return BACK;
+            }
+            throw new RuntimeException();
+        }
+    }
 }

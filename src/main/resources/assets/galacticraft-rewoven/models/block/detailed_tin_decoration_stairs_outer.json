@@ -1,8 +1,8 @@
 {
-    "parent": "block/outer_stairs",
-    "textures": {
-        "bottom": "galacticraft-rewoven:block/detailed_tin_decoration_side",
-        "top": "galacticraft-rewoven:block/detailed_tin_decoration_top",
-        "side": "galacticraft-rewoven:block/detailed_tin_decoration_side"
-    }
+  "parent": "block/outer_stairs",
+  "textures": {
+    "bottom": "galacticraft-rewoven:block/detailed_tin_decoration_side",
+    "top": "galacticraft-rewoven:block/detailed_tin_decoration_top",
+    "side": "galacticraft-rewoven:block/detailed_tin_decoration_side"
+  }
 }

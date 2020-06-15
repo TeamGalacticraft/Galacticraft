@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerFactory;
@@ -32,6 +31,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -55,12 +55,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
     public RocketDesignerScreenHandler(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
         super(null, syncId);
         this.blockEntity = blockEntity;
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return RocketDesignerScreenHandler.this.canUse(player);
-            }
-        };
+        this.inventory = blockEntity.getInventory().asInventory();
 
         int playerInvYOffset = 84;
         int playerInvXOffset = 148;
@@ -104,7 +99,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
                 return itemStack;
             }
 
-            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
+            if (slotId < this.blockEntity.getInventory().getSize()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
@@ -119,6 +114,24 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
             }
         }
         return itemStack;
+    }
+
+    @Override
+    public ItemStack onSlotClick(int i, int j, SlotActionType actionType, PlayerEntity playerEntity) {
+        if (actionType == SlotActionType.QUICK_MOVE) {
+            if (slots.get(i).getStack().getItem() != GalacticraftItems.ROCKET_SCHEMATIC) {
+                return ItemStack.EMPTY;
+            } else {
+                if(inventory.getStack(0).isEmpty()) {
+                    inventory.setStack(0, slots.get(i).getStack().copy());
+                    slots.get(i).setStack(ItemStack.EMPTY);
+                    return inventory.getStack(0);
+                } else {
+                    return ItemStack.EMPTY;
+                }
+            }
+        }
+        return super.onSlotClick(i, j, actionType, playerEntity);
     }
 
     @Override
