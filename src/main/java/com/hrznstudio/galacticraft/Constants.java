@@ -179,7 +179,8 @@ public class Constants {
 
         // Pad Blocks
         public static final String BUGGY_FUELING_PAD = "buggy_fueling";
-        public static final String ROCKET_LAUNCH_PAD = "rocket_launch_pad";
+        public static final String ROCKET_LAUNCH_PAD = "launch_pad";
+        public static final String ROCKET_LAUNCH_PAD_CENTER = "launch_pad_center";
         public static final String FUEL_LOADER = "fuel_loader";
         public static final String CARGO_LOADER = "cargo_loader";
         public static final String CARGO_UNLOADER = "cargo_unloader";

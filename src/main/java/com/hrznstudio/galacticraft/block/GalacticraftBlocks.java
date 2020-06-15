@@ -78,6 +78,8 @@ public class GalacticraftBlocks {
     public static final Block WALKWAY = registerBlock(new Walkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WALKWAY);
     public static final Block WIRE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.PIPE_WALKWAY);
     public static final Block PIPE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WIRE_WALKWAY);
+    public static final Block LAUNCH_PAD = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.ROCKET_LAUNCH_PAD);
+    public static final Block LAUNCH_PAD_CENTER = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.ROCKET_LAUNCH_PAD_CENTER);
 
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.SOLID_ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F)), Constants.Blocks.MOON_TURF);
     public static final Block MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.MOON_ROCK);
