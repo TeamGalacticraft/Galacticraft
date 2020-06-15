@@ -4,7 +4,8 @@ import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -26,6 +27,9 @@ import javax.annotation.Nullable;
 public class RocketLaunchPadBlock extends BlockWithEntity {
     public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
     private static final Direction[] CARDINAL = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+
+    public VoxelShape CENTER_SHAPE = VoxelShapes.cuboid(0.0D, 0.0D, 0.0D, 1.0D, 0.1875D, 1.0D);
+    public VoxelShape NORMAL_SHAPE = VoxelShapes.cuboid(0.0D, 0.0D, 0.0D, 1.0D, 1D / 8D, 1.0D);
 
     public RocketLaunchPadBlock(Settings settings) {
         super(settings);
@@ -49,9 +53,14 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(PART);
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        super.onPlaced(world, pos, state, placer, itemStack);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
+        super.appendProperties(stateBuilder);
+        stateBuilder.add(PART);
     }
 
     @Override
@@ -61,7 +70,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        return VoxelShapes.cuboid(0.0D, 0.0D, 0.0D, 1.0D, state.get(PART) == Part.CENTER ? 0.25D : 0.1875D, 1.0D);
+        return state.get(PART) == Part.CENTER ? CENTER_SHAPE : NORMAL_SHAPE;
     }
 
     @Override
