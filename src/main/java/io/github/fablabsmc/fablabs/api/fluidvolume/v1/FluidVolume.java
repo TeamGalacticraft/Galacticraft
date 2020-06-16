@@ -11,6 +11,8 @@ import net.minecraft.util.registry.Registry;
 
 /**
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
+ *
+ * This is a patched? version of the fluid API as it seems that deserialization and serialization doesn't work properly
  */
 public final class FluidVolume {
 	public static final FluidVolume EMPTY = new FluidVolume(Fluids.EMPTY);
@@ -33,7 +35,18 @@ public final class FluidVolume {
 
 	private FluidVolume(CompoundTag tag) {
 		fluid = Registry.FLUID.get(new Identifier(tag.getString("Id")));
-		amount = Fraction.CODEC.parse(NbtOps.INSTANCE, tag.getList("Amount", NbtType.INT_ARRAY)).resultOrPartial(UniversalComponents.logger::error).orElse(Fraction.ZERO);
+		if (tag.contains("Amount")) {
+			int[] amounts = tag.getIntArray("Amount");
+			if (amounts.length == 2) {
+				amount = Fraction.of(amounts[0], amounts[1]);
+			} else if (amounts.length == 1) {
+				amount = Fraction.ofWhole(amounts[0]);
+			} else {
+				amount = Fraction.ZERO;
+			}
+		} else {
+			amount = Fraction.ZERO;
+		}
 
 		if (tag.contains("Tag", NbtType.COMPOUND)) {
 			this.tag = tag.getCompound("Tag");

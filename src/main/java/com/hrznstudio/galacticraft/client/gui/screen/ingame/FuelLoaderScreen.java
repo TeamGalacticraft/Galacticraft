@@ -55,10 +55,10 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
     public static final ContainerFactory<HandledScreen> FACTORY = createFactory(FuelLoaderBlockEntity.class, FuelLoaderScreen::new);
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.FUEL_LOADER_SCREEN));
 
-    public static final int X_X = 177;
-    public static final int X_Y = 42;
-    public static final int X_WIDTH = 12;
-    public static final int X_HEIGHT = 12;
+    public static final int X_X = 176;
+    public static final int X_Y = 40;
+    public static final int X_WIDTH = 11;
+    public static final int X_HEIGHT = 11;
 
     public static final int TANK_OVERLAY_X = 176;
     public static final int TANK_OVERLAY_Y = 0;
@@ -87,12 +87,14 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
             stack.push();
             Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.blockEntity.getTank().getContents(0).getFluid()).getFluidSprites(null, null, this.blockEntity.getTank().getContents(0).getFluid().getDefaultState())[0];
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-            drawSprite(stack, x + 106, y + 46, getZOffset(), TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT, sprite);  //todo scaling
+            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (blockEntity.getTank().getContents(0).getAmount().doubleValue() / blockEntity.getTank().getMaxCapacity(0).doubleValue())), sprite);
             stack.pop();
             this.client.getTextureManager().bindTexture(BACKGROUND);
-            drawTexture(stack, x + 69, y + 9, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
+            drawTexture(stack, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
+
         if (blockEntity.status == FuelLoaderBlockEntity.FuelLoaderStatus.NO_ROCKET) {
+            this.client.getTextureManager().bindTexture(BACKGROUND);
             drawTexture(stack, x + 155, y + 44, X_X, X_Y, X_WIDTH, X_HEIGHT);
         }
         // 115 44
@@ -114,7 +116,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
             if (blockEntity.getTank().getContents(0).isEmpty()) {
                 list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid"));
             } else {
-                Fraction fraction = blockEntity.getTank().getContents(0).getAmount().multiply(Fraction.ONE); //the multiplication simplifies it apparently
+                Fraction fraction = blockEntity.getTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
                 if (fraction.getDenominator() == 1) {
                     list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()));
                 } else {

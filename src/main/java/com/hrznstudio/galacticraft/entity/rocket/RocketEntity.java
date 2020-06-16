@@ -32,7 +32,6 @@ import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.impl.EntitySyncedTankComponent;
@@ -61,7 +60,6 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.MessageType;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
@@ -297,7 +295,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         List<RocketPart> list = new ArrayList<>();
         for (RocketPartType type : RocketPartType.values()) {
             if (Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString()))) == null) {
-                list.add(RocketParts.getPartForType(type));
+                list.add(RocketParts.getDefaultPartForType(type));
             } else {
                 list.add(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString())))));
             }
@@ -391,7 +389,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
         List<RocketPart> parts = new ArrayList<>();
         for (RocketPartType type : RocketPartType.values()) {
-            parts.add(RocketParts.getPartForType(type));
+            parts.add(RocketParts.getDefaultPartForType(type));
         }
         dataTracker.startTracking(PARTS, parts);
     }
