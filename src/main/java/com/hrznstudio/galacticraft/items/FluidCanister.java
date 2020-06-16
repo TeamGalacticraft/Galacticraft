@@ -22,14 +22,11 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import io.netty.buffer.Unpooled;
 import nerdhub.cardinal.components.api.component.ComponentContainer;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
 import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
@@ -45,16 +42,12 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -92,8 +85,6 @@ public class FluidCanister extends Item implements ItemComponentCallback {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
         TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
-        Galacticraft.logger.info(component.getContents(0).getAmount());
-        Galacticraft.logger.info(component.getContents(0).getFluid());
         if (component.getContents(0).isEmpty()) {
             tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid"));
         } else {
@@ -114,44 +105,43 @@ public class FluidCanister extends Item implements ItemComponentCallback {
             itemStack.setDamage((int) (1.0D - component.getContents(0).getAmount().doubleValue()) * 1000);
         });
         componentContainer.put(UniversalComponents.TANK_COMPONENT, component);
-    } 
+    }
 
-    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (world.isClient) return super.use(world, user, hand);
         ItemStack itemStack = user.getStackInHand(hand);
         TankComponent tank = ComponentProvider.fromItemStack(itemStack).getComponent(UniversalComponents.TANK_COMPONENT);
-        if (tank.getContents(0).getFluid() == Fluids.EMPTY) {
-            HitResult hitResult = rayTrace(world, user, tank.getContents(0).getFluid() == Fluids.EMPTY ? RayTraceContext.FluidHandling.SOURCE_ONLY : RayTraceContext.FluidHandling.NONE);
+
+        if (tank.isEmpty()) {
+            BlockHitResult hitResult = rayTrace(world, user, RayTraceContext.FluidHandling.SOURCE_ONLY);
             if (hitResult.getType() == HitResult.Type.MISS) {
                 return TypedActionResult.pass(itemStack);
             } else if (hitResult.getType() != HitResult.Type.BLOCK) {
                 return TypedActionResult.pass(itemStack);
             } else {
-                BlockHitResult blockHitResult = (BlockHitResult) hitResult;
-                BlockPos blockPos = blockHitResult.getBlockPos();
-                Direction direction = blockHitResult.getSide();
+                BlockPos blockPos = hitResult.getBlockPos();
+                Direction direction = hitResult.getSide();
                 BlockPos blockPos2 = blockPos.offset(direction);
                 if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos2, direction, itemStack)) {
-                    BlockState blockState = world.getBlockState(blockPos);
-                    if (blockState.getBlock() instanceof FluidDrainable) {
-                        Fluid fluid = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
-                        if (fluid != Fluids.EMPTY) {
-                            user.incrementStat(Stats.USED.getOrCreateStat(this));
-                            user.playSound(fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-                            ItemStack itemStack2 = itemStack.copy();
-                            ComponentProvider.fromItemStack(itemStack2).getComponent(UniversalComponents.TANK_COMPONENT).setFluid(0, new FluidVolume(fluid, Fraction.ONE));
-                            user.setStackInHand(hand, itemStack2); // :concern:
-                            ((ServerPlayerEntity) user).networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "canister_packet_of_doom"), new PacketByteBuf(Unpooled.buffer()).writeVarInt(user.inventory.selectedSlot).writeItemStack(itemStack2)));
+                    BlockState blockState;
+                    if (tank.isEmpty()) {
+                        blockState = world.getBlockState(blockPos);
+                        if (blockState.getBlock() instanceof FluidDrainable) {
+                            Fluid fluid = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
+                            if (fluid != Fluids.EMPTY) {
+                                user.incrementStat(Stats.USED.getOrCreateStat(this));
+                                user.playSound(fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                                ItemStack itemStack2 = itemStack.copy();
+                                ComponentProvider.fromItemStack(itemStack2).getComponent(UniversalComponents.TANK_COMPONENT).setFluid(0, new FluidVolume(fluid, Fraction.ONE));
 
-                            return TypedActionResult.success(itemStack2);
+                                return TypedActionResult.method_29237(itemStack2, world.isClient());
+                            }
                         }
-                    }
 
+                        return TypedActionResult.fail(itemStack);
+                    }
                 }
             }
-            return TypedActionResult.fail(itemStack);
         }
-        return TypedActionResult.pass(itemStack);
+        return TypedActionResult.fail(itemStack);
     }
 }

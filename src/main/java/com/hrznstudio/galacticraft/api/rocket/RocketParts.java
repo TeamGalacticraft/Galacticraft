@@ -89,7 +89,7 @@ public class RocketParts {
     }
 
     @Nonnull
-    public static RocketPart getPartForType(RocketPartType type) {
+    public static RocketPart getDefaultPartForType(RocketPartType type) {
         switch (type) {
             case BODY:
                 return DEFAULT_BODY;

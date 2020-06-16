@@ -7,6 +7,7 @@ import com.google.gson.*;
 import com.google.gson.internal.Streams;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
@@ -123,21 +124,27 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     private void load() {
         if (this.researchFile.isFile()) {
             try {
+                File partFile = new File(researchFile.getParentFile(), researchFile.getName().replace(".json", "") + "-unlocks.json");
+                if (partFile.exists()) {
+                    JsonReader jsonReader2 = new JsonReader(new StringReader(Files.toString(partFile, StandardCharsets.UTF_8)));
+                    List<String> list = new ArrayList<>();
+                    jsonReader2.beginArray();
+                    while (jsonReader2.peek() == JsonToken.STRING) {
+                        list.add(jsonReader2.nextString());
+                    }
+                    jsonReader2.endArray();
+                    jsonReader2.close();
+
+                    for (String s : list) {
+                        unlockedParts.add(Galacticraft.ROCKET_PARTS.get(new Identifier(s)));
+                    }
+                    list.clear();
+                } else {
+                    Galacticraft.logger.error("World did not contain research unlock file.");
+                }
+
                 JsonReader jsonReader = new JsonReader(new StringReader(Files.toString(this.researchFile, StandardCharsets.UTF_8)));
                 Throwable var2 = null;
-
-                File partFile = new File(researchFile.getParentFile(), owner.getUuidAsString() + "-unlocks.json");
-                BufferedReader reader = new BufferedReader(new StringReader(Files.toString(partFile, StandardCharsets.UTF_8)));
-                StringBuilder builder = new StringBuilder();
-                while (reader.ready()) {
-                    builder.append(reader.readLine()).append("\n");
-                }
-                reader.close();
-
-                JsonArray arr = GSON.fromJson(builder.toString(), JsonArray.class);
-                for (JsonElement s : arr) {
-                    unlockedParts.add(Galacticraft.ROCKET_PARTS.get(new Identifier(s.getAsString())));
-                }
 
                 try {
                     jsonReader.setLenient(false);

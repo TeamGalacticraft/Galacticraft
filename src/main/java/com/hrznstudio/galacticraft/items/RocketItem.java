@@ -22,8 +22,10 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
@@ -34,6 +36,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +48,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -95,6 +99,24 @@ public class RocketItem extends Item {
             return ActionResult.SUCCESS;
         }
         return ActionResult.FAIL;
+    }
+
+    @Override
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
+        if (isIn(group)) {
+            ItemStack stack = new ItemStack(this);
+            CompoundTag tag = new CompoundTag();
+            tag.putInt("tier", 1);
+            tag.putInt("red", 255);
+            tag.putInt("green", 255);
+            tag.putInt("blue", 255);
+            tag.putInt("alpha", 255);
+            for (RocketPartType type : RocketPartType.values()) {
+                tag.putString(type.asString(), Galacticraft.ROCKET_PARTS.getId(RocketParts.getDefaultPartForType(type)).toString());
+            }
+            stack.setTag(tag);
+            stacks.add(stack);
+        }
     }
 
     @Override

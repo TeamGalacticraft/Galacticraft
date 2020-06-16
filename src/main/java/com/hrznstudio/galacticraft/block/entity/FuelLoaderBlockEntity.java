@@ -77,7 +77,9 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
         super(GalacticraftBlockEntities.FUEL_LOADER_TYPE);
         tank.listen(() -> {
             this.markDirty();
-            if (!world.isClient)sync();
+            if (!world.isClient) {
+                sync();
+            }
         });
     }
 
@@ -126,7 +128,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
             return;
         }
 
-        if (this.getTank().getContents(0).getAmount().doubleValue() + 1.0D < tank.getMaxCapacity(0).doubleValue()) {
+        if (this.getTank().getContents(0).getAmount().doubleValue() + 1.0D <= tank.getMaxCapacity(0).doubleValue()) {
             if (getInventory().getStack(1).getItem() instanceof BucketItem) {
                 if (((BucketItem) getInventory().getStack(1).getItem()).fluid == GalacticraftFluids.FUEL) {
                     getInventory().setStack(1, new ItemStack(Items.BUCKET));
@@ -169,12 +171,24 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
                     status = FuelLoaderStatus.NO_ROCKET;
                 }
             } else {
-                status = FuelLoaderStatus.NOT_ENOUGH_FUEL;
+                status = FuelLoaderStatus.NO_ROCKET;
                 // 4294967298
             }
         } else {
             status = FuelLoaderStatus.NO_ROCKET;
         }
+    }
+
+    @Override
+    public CompoundTag toTag(CompoundTag tag) {
+        tank.toTag(tag);
+        return super.toTag(tag);
+    }
+
+    @Override
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
+        tank.fromTag(tag);
     }
 
     public void updateConnections(Direction direction) {
