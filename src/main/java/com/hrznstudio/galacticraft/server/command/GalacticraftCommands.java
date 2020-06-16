@@ -23,10 +23,15 @@
 package com.hrznstudio.galacticraft.server.command;
 
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.arguments.DimensionArgumentType;
 import net.minecraft.command.arguments.EntityArgumentType;
 import net.minecraft.entity.Entity;
@@ -50,6 +55,12 @@ public class GalacticraftCommands {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
             commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                    .executes(context -> {
+                        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
+                            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen());
+                        }
+                        return 1;
+                    })
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                             .executes(GalacticraftCommands::teleport)
                             .then(CommandManager.argument("entities", EntityArgumentType.entities())
