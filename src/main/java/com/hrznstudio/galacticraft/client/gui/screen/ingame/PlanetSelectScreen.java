@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -25,7 +26,7 @@ public class PlanetSelectScreen extends Screen {
         matrices.push();
         //rotation test code
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(45));
-        renderPlanet(100, 100, matrices, GalacticraftBlocks.ALUMINUM_BLOCK.getDefaultState());
+        renderPlanet(100, 100, matrices, GalacticraftBlocks.EARTH_BLOCK.getDefaultState());
         matrices.pop();
     }
 
@@ -38,7 +39,7 @@ public class PlanetSelectScreen extends Screen {
         RenderSystem.scalef(16.0F, 16.0F, 16.0F);
 
         VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
-        MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(planet, matrices, immediate, 1000, 1);
+        MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(planet, matrices, immediate, 1000, OverlayTexture.DEFAULT_UV);
         immediate.draw();
         RenderSystem.enableDepthTest();
         RenderSystem.disableRescaleNormal();

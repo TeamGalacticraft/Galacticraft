@@ -169,6 +169,11 @@ public class GalacticraftBlocks {
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly()), Constants.Blocks.MOON_BERRY_BUSH);
 
+    //PLANNET BLOCKS - REQUIRED FOR 3D PLANET SCELECTION
+    public static final Block SUN_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.SUN_BLOCK);
+    public static final Block MOON_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.MOON_BLOCK);
+    public static final Block EARTH_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.EARTH_BLOCK);
+
     //DUMMY BLOCKS - REQUIRED FOR ENTITY .OBJ FILE RENDERING
     public static final Block ROCKET_BODY_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BODY);
     public static final Block ROCKET_CONE_BASIC_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_BASIC);
