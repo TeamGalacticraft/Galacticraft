@@ -230,6 +230,9 @@ public class Constants {
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
+        public static final String EARTH_BLOCK = "earth_planet";
+        public static final String MOON_BLOCK = "moon_planet";
+        public static final String SUN_BLOCK = "sun_planet";
     }
 
     // Fluids

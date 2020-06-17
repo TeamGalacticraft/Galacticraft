@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.client.network;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
-import com.hrznstudio.galacticraft.api.research.ResearchNode;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
@@ -39,7 +38,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -94,6 +93,9 @@ public class GalacticraftClientPackets {
 //                MinecraftClient.getInstance().world.setBlockEntity(pos, new RocketLaunchPadBlockEntity()); // Launch pad block entities are created on-demand (not in #createBlockEntity()) so we need to spawn it on the client manually apparently
 //            });
 //        });
+        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
+
+        });
 
     }
 }
