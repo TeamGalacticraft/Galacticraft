@@ -1,6 +1,9 @@
 package com.hrznstudio.galacticraft.planetscreen;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 public class CelestialBodyDisplay {
 
@@ -12,13 +15,16 @@ public class CelestialBodyDisplay {
     public int x;
     public int y;
 
-    public CelestialBodyDisplay(Block planetModel, int size, int rotation, int x, int y, String name) {
+    public Identifier dimension;
+
+    public CelestialBodyDisplay(Block planetModel, int size, int rotation, int x, int y, String name, Identifier dim) {
         this.planetModel = planetModel;
         this.size = size;
         this.rotation = rotation;
         this.x = x;
         this.y = y;
         this.name = name;
+        this.dimension = dim;
     }
 
     public void tick(){
