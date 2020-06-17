@@ -57,6 +57,5 @@ public class PlayerManagerMixin {
             buf.writeIdentifier(entry.getKey());
             entry.getValue().toBuilder().toPacket(buf);
         }
-//        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "research_sync"), buf));
     }
 }

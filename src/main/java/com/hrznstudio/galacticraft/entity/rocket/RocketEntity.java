@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
+import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
@@ -226,6 +227,18 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
             }
         } else {
             return true;
+        }
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+        if (this.linkedPad != null) {
+            if (this.world.getBlockEntity(this.linkedPad) instanceof RocketLaunchPadBlockEntity){
+                ((RocketLaunchPadBlockEntity) this.world.getBlockEntity(this.linkedPad)).setRocketEntityId(Integer.MIN_VALUE);
+                ((RocketLaunchPadBlockEntity) this.world.getBlockEntity(this.linkedPad)).setRocketEntityUUID(null);
+            }
+
         }
     }
 
@@ -776,5 +789,13 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     @Override
     public @NotNull Set<ComponentType<?>> getComponentTypes() {
         return Sets.newHashSet(UniversalComponents.TANK_COMPONENT);
+    }
+
+    public EntitySyncedTankComponent getFuelTank() {
+        return tank;
+    }
+
+    public void onBaseDestroyed() {
+        //todo
     }
 }

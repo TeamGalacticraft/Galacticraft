@@ -317,6 +317,7 @@
   "ui.galacticraft-rewoven.machinestatus.night": "Night",
   "ui.galacticraft-rewoven.machinestatus.full": "Full",
   "ui.galacticraft-rewoven.machinestatus.blocked": "Blocked",
+  "ui.galacticraft-rewoven.machinestatus.rocket_is_full": "Rocket Is Full",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config": "Redstone",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config_2": "Redstone Activation: ",
   "ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore": "Ignore Redstone",

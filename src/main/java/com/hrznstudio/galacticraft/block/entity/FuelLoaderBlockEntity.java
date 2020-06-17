@@ -46,7 +46,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -72,6 +71,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
     public FuelLoaderStatus status = FuelLoaderStatus.NO_ROCKET;
     private final SimpleTankComponent tank = new SimpleTankComponent(1, Fraction.ofWhole(10));
     private BlockPos connectionPos = null;
+    private Direction check = null;
 
     public FuelLoaderBlockEntity() {
         super(GalacticraftBlockEntities.FUEL_LOADER_TYPE);
@@ -81,6 +81,11 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
                 sync();
             }
         });
+    }
+
+    @Nullable
+    public BlockPos getConnectionPos() {
+        return connectionPos;
     }
 
     @Override
@@ -128,6 +133,20 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
             return;
         }
 
+        if (check != null) {
+            BlockPos launchPad = this.pos.offset(check);
+            if (world.getBlockState(launchPad).getBlock() == GalacticraftBlocks.ROCKET_LAUNCH_PAD) {
+                launchPad = launchPad.add(RocketLaunchPadBlock.partToCenterPos(world.getBlockState(launchPad).get(RocketLaunchPadBlock.PART)));
+                if (world.getBlockState(launchPad).getBlock() instanceof RocketLaunchPadBlock
+                        && world.getBlockState(launchPad).get(RocketLaunchPadBlock.PART) == RocketLaunchPadBlock.Part.CENTER
+                        && world.getBlockEntity(launchPad) instanceof RocketLaunchPadBlockEntity) {
+                    connectionPos = launchPad;
+                    sync();
+                }
+            }
+            check = null;
+        }
+
         if (this.getTank().getContents(0).getAmount().doubleValue() + 1.0D <= tank.getMaxCapacity(0).doubleValue()) {
             if (getInventory().getStack(1).getItem() instanceof BucketItem) {
                 if (((BucketItem) getInventory().getStack(1).getItem()).fluid == GalacticraftFluids.FUEL) {
@@ -153,12 +172,14 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
                         if (this.getCapacitatorComponent().getCurrentEnergy() > 0) {
                             RocketEntity rocketEntity = (RocketEntity) world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                             TankComponent tank = rocketEntity.getComponent(UniversalComponents.TANK_COMPONENT);
-                            if (tank.getContents(0).getFluid().equals(this.tank.getContents(0).getFluid())
-                                    && tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) < 0
-                                    && tank.getContents(0).getFluid().equals(GalacticraftFluids.FUEL)) {
-                                tank.insertFluid(0, this.tank.takeFluid(0, tank.getMaxCapacity(0).subtract(tank.getContents(0).getAmount()), ActionType.PERFORM), ActionType.PERFORM);
-                                this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
-                                status = FuelLoaderStatus.LOADING;
+                            if (tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) < 0) {
+                                if ((tank.getContents(0).isEmpty() || tank.getContents(0).getFluid().equals(this.tank.getContents(0).getFluid()))) {
+                                    tank.insertFluid(0, this.tank.takeFluid(0, tank.getMaxCapacity(0).subtract(tank.getContents(0).getAmount()), ActionType.PERFORM), ActionType.PERFORM);
+                                    this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+                                    status = FuelLoaderStatus.LOADING;
+                                }
+                            } else {
+                                status = FuelLoaderStatus.ROCKET_IS_FULL;
                             }
 
                         } else {
@@ -171,6 +192,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
                     status = FuelLoaderStatus.NO_ROCKET;
                 }
             } else {
+                connectionPos = null;
                 status = FuelLoaderStatus.NO_ROCKET;
                 // 4294967298
             }
@@ -182,6 +204,12 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         tank.toTag(tag);
+        if (connectionPos != null) {
+            tag.putBoolean("con" , true);
+            tag.putInt("conX", connectionPos.getX());
+            tag.putInt("conY", connectionPos.getY());
+            tag.putInt("conZ", connectionPos.getZ());
+        }
         return super.toTag(tag);
     }
 
@@ -189,27 +217,33 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         tank.fromTag(tag);
+        if (tag.getBoolean("con")) {
+            connectionPos = new BlockPos(tag.getInt("conX"), tag.getInt("conY"), tag.getInt("conZ"));
+        }
     }
 
     public void updateConnections(Direction direction) {
-        BlockPos launchPad = this.pos.offset(direction);
-        if (world.getBlockState(launchPad).getBlock() == GalacticraftBlocks.ROCKET_LAUNCH_PAD) {
-            launchPad = RocketLaunchPadBlock.partToCenterPos(world.getBlockState(launchPad).get(RocketLaunchPadBlock.PART));
-            if (launchPad != BlockPos.ORIGIN) {
-                connectionPos = launchPad;
-            }
-        }
+        check = direction; // after updates
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
         tank.toTag(tag);
+        if (connectionPos != null) {
+            tag.putBoolean("con" , true);
+            tag.putInt("conX", connectionPos.getX());
+            tag.putInt("conY", connectionPos.getY());
+            tag.putInt("conZ", connectionPos.getZ());
+        }
         return tag;
     }
 
     @Override
     public void fromClientTag(CompoundTag tag) {
         tank.fromTag(tag);
+        if (tag.getBoolean("con")) {
+            connectionPos = new BlockPos(tag.getInt("conX"), tag.getInt("conY"), tag.getInt("conZ"));
+        }
     }
 
     @Override
@@ -282,7 +316,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
         /**
          * The sun is not visible.
          */
-        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked"), Formatting.DARK_GRAY);
+        ROCKET_IS_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.rocket_is_full"), Formatting.GOLD);
 
         private final Text text;
 

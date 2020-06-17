@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.client.network;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
+import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,6 +35,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
@@ -77,11 +79,6 @@ public class GalacticraftClientPackets {
             context.getTaskQueue().execute(spawn);
         }));
 
-        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "canister_packet_of_doom"), (packetContext, packetByteBuf) -> {
-            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
-            packetContext.getTaskQueue().execute(() -> MinecraftClient.getInstance().player.inventory.setStack(buf.readVarInt(), buf.readItemStack()));
-        });
-
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_update"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
 
@@ -90,14 +87,11 @@ public class GalacticraftClientPackets {
             });
         }));
 
-//        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
-//            int size = packetByteBuf.readVarInt();
-//            Map<Identifier, ResearchNode.Builder> map = new HashMap<>(size);
-//            for (int i =0; i < size; i++) {
-//                Identifier id = packetByteBuf.readIdentifier();
-//                map.put(id, ResearchNode.Builder.fromPacket(packetByteBuf));
-//            }
-//            packetContext.getTaskQueue().execute(() -> ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().load(map));
+//        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "create_launch_pad_be"), (packetContext, packetByteBuf) -> {
+//            BlockPos pos = packetByteBuf.readBlockPos();
+//            packetContext.getTaskQueue().execute(() -> {
+//                MinecraftClient.getInstance().world.setBlockEntity(pos, new RocketLaunchPadBlockEntity()); // Launch pad block entities are created on-demand (not in #createBlockEntity()) so we need to spawn it on the client manually apparently
+//            });
 //        });
         ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
 

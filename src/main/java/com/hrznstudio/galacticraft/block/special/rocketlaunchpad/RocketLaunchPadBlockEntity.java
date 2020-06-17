@@ -22,7 +22,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
 
     public void setRocketEntityUUID(UUID rocketEntityUUID) {
         this.rocketEntityUUID = rocketEntityUUID;
-
+        if (!world.isClient) sync();
     }
 
     public int getRocketEntityId() {
@@ -46,6 +46,8 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
                 }
             }
             if (rocketEntityId == Integer.MIN_VALUE) throw new IllegalStateException("Unable to find linked rocket!");
+        } else {
+            rocketEntityUUID = null;
         }
     }
 
@@ -57,15 +59,23 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
 
     public void setRocketEntityId(int entityId) {
         rocketEntityId = entityId;
+        if (!world.isClient) sync();
     }
 
     @Override
-    public void fromClientTag(CompoundTag compoundTag) {
-
+    public void fromClientTag(CompoundTag tag) {
+        if (tag.contains("rocketUuid")) {
+            this.rocketEntityUUID = tag.getUuid("rocketUuid");
+        } else {
+            rocketEntityUUID = null;
+        }
+        rocketEntityId = tag.getInt("reid");
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag compoundTag) {
+        toTag(compoundTag);
+        compoundTag.putInt("reid", rocketEntityId);
         return compoundTag;
     }
 }
