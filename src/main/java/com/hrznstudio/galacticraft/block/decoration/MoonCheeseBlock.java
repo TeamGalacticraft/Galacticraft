@@ -33,12 +33,12 @@ import net.minecraft.state.property.Properties;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CheeseBlock extends CakeBlock {
+public class MoonCheeseBlock extends CakeBlock {
 
     private static final IntProperty BITES = IntProperty.of("bites", 0, 6);
     private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    public CheeseBlock(Settings settings) {
+    public MoonCheeseBlock(Settings settings) {
         super(settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(BITES, 0));
     }

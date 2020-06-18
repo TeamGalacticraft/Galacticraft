@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SGS",
+    " T "
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:glass_pane"
+    },
+    "G": {
+      "item": "galacticraft-rewoven:glowstone_torch"
+    },
+    "T": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:light_panel_dashed",
+    "count": 1
+  }
+}

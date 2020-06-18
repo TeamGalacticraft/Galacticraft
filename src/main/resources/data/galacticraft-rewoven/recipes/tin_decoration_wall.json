@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft-rewoven:tin_decoration"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:tin_decoration_wall",
+    "count": 6
+  }
+}

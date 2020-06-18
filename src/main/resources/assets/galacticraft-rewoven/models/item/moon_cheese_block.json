@@ -1,5 +1,5 @@
 {
-  "parent": "galacticraft-rewoven:block/cheese_uneaten",
+  "parent": "galacticraft-rewoven:block/moon_cheese_uneaten",
   "display": {
     "firstperson_righthand": {
       "rotation": [
