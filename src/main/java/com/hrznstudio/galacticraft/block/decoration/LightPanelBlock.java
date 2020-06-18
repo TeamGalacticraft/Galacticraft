@@ -27,16 +27,16 @@ import com.hrznstudio.galacticraft.api.block.AbstractDirectionalBlock;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class LightingPanelBlock extends AbstractDirectionalBlock {
+public class LightPanelBlock extends AbstractDirectionalBlock {
 
     private float lightLevel = 6.0f;
 
-    public LightingPanelBlock(Settings settings) {
+    public LightPanelBlock(Settings settings) {
         super(settings);
         settings.strength(2.0f, 2.0f);
     }
 
-    public LightingPanelBlock(Settings settings, float lightLevel) {
+    public LightPanelBlock(Settings settings, float lightLevel) {
         super(settings);
         settings.strength(2.0f, 2.0f);
         this.lightLevel = lightLevel;

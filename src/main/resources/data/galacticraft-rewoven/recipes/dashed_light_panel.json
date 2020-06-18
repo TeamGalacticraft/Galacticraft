@@ -1,9 +1,8 @@
 {
   "type": "crafting_shaped",
   "pattern": [
-    "S S",
     "SGS",
-    "STS"
+    " T "
   ],
   "key": {
     "S": {
@@ -17,7 +16,7 @@
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:light_panel_diagonal",
+    "item": "galacticraft-rewoven:dashed_light_panel",
     "count": 1
   }
 }

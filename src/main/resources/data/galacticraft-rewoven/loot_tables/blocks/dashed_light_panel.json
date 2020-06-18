@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:vacuum_glass_tin"
+          "name": "galacticraft-rewoven:dashed_light_panel"
         }
       ],
       "conditions": [

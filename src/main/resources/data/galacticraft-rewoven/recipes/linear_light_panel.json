@@ -1,7 +1,7 @@
 {
   "type": "crafting_shaped",
   "pattern": [
-    "SSS",
+    "S S",
     "SGS",
     "STS"
   ],
@@ -17,7 +17,7 @@
     }
   },
   "result": {
-    "item": "galacticraft-rewoven:light_panel_square",
+    "item": "galacticraft-rewoven:linear_light_panel",
     "count": 1
   }
 }

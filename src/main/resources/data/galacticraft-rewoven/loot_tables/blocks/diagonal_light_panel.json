@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:lighting_panel_block_dark_angle"
+          "name": "galacticraft-rewoven:diagonal_light_panel"
         }
       ],
       "conditions": [
