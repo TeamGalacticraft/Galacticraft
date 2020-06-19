@@ -312,6 +312,9 @@ public class Constants {
         public static final String BUGGY_SEAT = "buggy_seat";
         public static final String BUGGY_STORAGE = "buggy_storage";
         public static final String BUGGY_WHEEL = "buggy_wheel";
+        //THROWABLE METEOR CHUNKS
+        public static final String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
+        public static final String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
         //TOOLS + WEAPONS
         public static final String HEAVY_DUTY_SWORD = "heavy_duty_sword";
         public static final String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";

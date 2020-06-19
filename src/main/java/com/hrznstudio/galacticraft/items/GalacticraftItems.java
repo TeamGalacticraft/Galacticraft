@@ -197,7 +197,9 @@ public class GalacticraftItems {
     // SPAWN EGGS
     //public static final Item MOON_VILLAGER_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.MOON_VILLAGER_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.MOON_VILLAGER, 0xC0C9C0, 0x5698D8, new Item.Settings().group(ITEMS_GROUP)));
     //public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.EVOLVED_ZOMBIE_SPAWN_EGG), new SpawnEggItem(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 0xC0CCC0, 0x99EE99, new Item.Settings().group(ITEMS_GROUP)));
-
+    // THROWABLE METEOR CHUNKS
+    public static final Item THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THROWABLE_METEOR_CHUNK), new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item HOT_THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HOT_THROWABLE_METEOR_CHUNK), new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
 
     public static void register() {
     }
