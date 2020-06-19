@@ -74,8 +74,6 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null
                 && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerData.getType()) != null) {
             super.setVillagerData(villagerData);
-        } else {
-            Galacticraft.logger.warn("Invaild profession or type for moon villager");
         }
     }
 
