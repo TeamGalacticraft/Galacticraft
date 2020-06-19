@@ -1,0 +1,22 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "ICI",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "I": {
+      "item": "galacticraft-rewoven:compressed_iron"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:buggy_storage"
+  }
+}
