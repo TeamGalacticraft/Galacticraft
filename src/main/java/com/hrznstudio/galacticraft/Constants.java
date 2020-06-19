@@ -84,6 +84,7 @@ public class Constants {
         public static final String DESH_BLOCK = "desh_block";
         public static final String TITANIUM_BLOCK = "titanium_block";
         public static final String LEAD_BLOCK = "lead_block";
+        public static final String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
 
         // Decorative BLocks
         public static final String TIN_DECORATION = "tin_decoration";
