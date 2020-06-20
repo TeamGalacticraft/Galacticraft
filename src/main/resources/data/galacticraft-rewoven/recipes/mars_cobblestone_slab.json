@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TTT"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:mars_cobblestone"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:mars_cobblestone_slab",
+    "count": 6
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft-rewoven:moon_basalt"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:moon_basalt_slab",
+    "count": 6
+  }
+}

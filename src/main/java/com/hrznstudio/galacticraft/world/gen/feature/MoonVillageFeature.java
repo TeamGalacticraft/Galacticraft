@@ -15,9 +15,4 @@ public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureCon
     public StructureFeature.StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
         return MoonVillageStart::new;
     }
-
-    @Override
-    public String getName() {
-        return "Moon_Village";
-    }
 }

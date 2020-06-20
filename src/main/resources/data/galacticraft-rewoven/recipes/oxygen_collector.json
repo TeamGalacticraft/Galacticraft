@@ -1,0 +1,32 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "FTV",
+    "ACA"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "F": {
+      "item": "galacticraft-rewoven:oxygen_fan"
+    },
+    "T": {
+      "item": "galacticraft-rewoven:tin_canister"
+    },
+    "V": {
+      "item": "galacticraft-rewoven:oxygen_vent"
+    },
+    "A": {
+      "item": "galacticraft-rewoven:compressed_aluminum"
+    },
+    "C": {
+      "item": "galacticraft-rewoven:oxygen_concentrator"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:oxygen_collector",
+    "count": 1
+  }
+}

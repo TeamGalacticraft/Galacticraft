@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "tag": "c:aluminum_ingot"
+      "tag": "c:aluminum_ingots"
     },
     {
-      "tag": "c:aluminum_ingot"
+      "tag": "c:aluminum_ingots"
     }
   ],
   "result": {

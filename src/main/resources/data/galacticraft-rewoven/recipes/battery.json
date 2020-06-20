@@ -13,7 +13,7 @@
       "item": "minecraft:redstone"
     },
     "C": {
-      "item": "minecraft:coal"
+      "tag": "minecraft:coals"
     }
   },
   "result": {

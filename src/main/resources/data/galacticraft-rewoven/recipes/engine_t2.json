@@ -1,0 +1,28 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " FB",
+    "PTP",
+    "PVP"
+  ],
+  "key": {
+    "P": {
+      "item": "galacticraft-rewoven:heavy_plating_t3"
+    },
+    "T": {
+      "item": "galacticraft-rewoven:tin_canister"
+    },
+    "V": {
+      "item": "galacticraft-rewoven:oxygen_vent"
+    },
+    "F": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "B": {
+      "item": "minecraft:stone_button"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:engine_t2"
+  }
+}

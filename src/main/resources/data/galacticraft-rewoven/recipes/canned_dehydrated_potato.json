@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "CAA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:potato"
+    },
+    "C": {
+      "item": "galacticraft-rewoven:tin_canister"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:canned_dehydrated_potato"
+  }
+}

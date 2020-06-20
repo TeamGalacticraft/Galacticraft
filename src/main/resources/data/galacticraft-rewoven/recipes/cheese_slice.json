@@ -2,7 +2,7 @@
   "type": "crafting_shapeless",
   "ingredients": [
     {
-      "item": "galacticraft-rewoven:cheese_block"
+      "item": "galacticraft-rewoven:moon_cheese_block"
     }
   ],
   "result": {

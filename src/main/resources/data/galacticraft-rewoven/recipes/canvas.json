@@ -10,7 +10,7 @@
       "item": "minecraft:string"
     },
     "S": {
-      "tag": "c:stick"
+      "item": "minecraft:stick"
     }
   },
   "result": {
