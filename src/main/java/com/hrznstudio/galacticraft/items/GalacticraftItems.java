@@ -47,9 +47,6 @@ public class GalacticraftItems {
             .icon(() -> new ItemStack(GalacticraftItems.CANVAS))
             .build();
     // MATERIALS
-    public static final Item ALUMINUM_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ALUMINUM_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item COPPER_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.COPPER_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TIN_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIN_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item LEAD_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LEAD_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item RAW_SILICON = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RAW_SILICON), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item RAW_METEORIC_IRON = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RAW_METEORIC_IRON), new Item(new Item.Settings().group(ITEMS_GROUP)));

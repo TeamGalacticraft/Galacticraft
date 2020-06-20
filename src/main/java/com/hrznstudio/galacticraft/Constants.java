@@ -237,9 +237,6 @@ public class Constants {
     //Items
     public static class Items {
         public static final String ITEM_GROUP = "items";
-        public static final String ALUMINUM_INGOT = "aluminum_ingot";
-        public static final String COPPER_INGOT = "copper_ingot";
-        public static final String TIN_INGOT = "tin_ingot";
         public static final String LEAD_INGOT = "lead_ingot";
         public static final String RAW_SILICON = "raw_silicon";
         public static final String RAW_METEORIC_IRON = "raw_meteoric_iron";

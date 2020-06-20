@@ -1,9 +1,0 @@
-{
-  "type": "smelting",
-  "ingredient": {
-    "tag": "c:aluminum_ore"
-  },
-  "result": "galacticraft-rewoven:aluminum_ingot",
-  "experience": 0.1,
-  "cookingtime": 200
-}

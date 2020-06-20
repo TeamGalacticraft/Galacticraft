@@ -61,6 +61,7 @@ dependencies {
         exclude group: 'me.shedaniel.cloth', module: 'config-events'
         //need autoconfig and nothing else
     }
+    modApi ("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre8")
@@ -71,6 +72,7 @@ dependencies {
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}")
+    include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
 
     // Needed for LBA in order for eclipse to work
     compile "com.google.code.findbugs:jsr305:3.0.2"

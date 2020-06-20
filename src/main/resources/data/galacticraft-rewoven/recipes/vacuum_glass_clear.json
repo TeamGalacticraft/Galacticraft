@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "item": "galacticraft-rewoven:aluminum_ingot"
+      "tag": "c:aluminum_ingots"
     },
     "G": {
       "item": "minecraft:glass"
