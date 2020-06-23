@@ -45,7 +45,7 @@
   "depends": {
     "fabricloader": ">=0.8.0",
     "fabric": "*",
-    "minecraft": "1.16-rc.9",
+    "minecraft": "1.16",
     "universalcomponents": "*",
     "galacticraft-api": ">=0.2.5-alpha+1.16-pre5",
     "cotton-resources": ">=1.7.0"
