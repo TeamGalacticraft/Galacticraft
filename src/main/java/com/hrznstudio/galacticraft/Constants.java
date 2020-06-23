@@ -76,9 +76,6 @@ public class Constants {
         public static final String GALENA_ORE = "galena_ore";
 
         // Solid Blocks
-        public static final String ALUMINUM_BLOCK = "aluminum_block";
-        public static final String COPPER_BLOCK = "copper_block";
-        public static final String TIN_BLOCK = "tin_block";
         public static final String SILICON_BLOCK = "silicon_block";
         public static final String SOLID_METEORIC_IRON_BLOCK = "solid_meteoric_iron";
         public static final String DESH_BLOCK = "desh_block";
