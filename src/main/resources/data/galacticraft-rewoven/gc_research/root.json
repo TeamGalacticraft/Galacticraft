@@ -4,8 +4,8 @@
     "description": "research.galacticraft-rewoven.root.desc",
     "items_to_render": [
       "galacticraft-rewoven:raw_silicon",
-      "galacticraft-rewoven:copper_ingot",
-      "galacticraft-rewoven:aluminum_ingot"
+      "c:copper_ingot",
+      "c:aluminum_ingot"
     ],
     "tier": 1
   },
@@ -15,7 +15,7 @@
       "conditions": {
         "items": [
           {
-            "item": "galacticraft-rewoven:copper_ingot"
+            "tag": "c:copper_ingots"
           }
         ]
       }
@@ -25,7 +25,7 @@
       "conditions": {
         "items": [
           {
-            "item": "galacticraft-rewoven:tin_ingot"
+            "tag": "c:tin_ingots"
           }
         ]
       }
@@ -45,7 +45,7 @@
       "conditions": {
         "items": [
           {
-            "item": "galacticraft-rewoven:copper_ingot"
+            "tag": "c:aluminum_ingots"
           }
         ]
       }

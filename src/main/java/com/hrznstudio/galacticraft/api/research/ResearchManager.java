@@ -20,6 +20,7 @@ public class ResearchManager {
     private final Set<RocketPart> unlockedParts = new HashSet<>();
 
     public void load(Map<Identifier, ResearchNode.Builder> research) {
+        long time = System.currentTimeMillis();
         Function<Identifier, ResearchNode> function = Functions.forMap(this.research, null);
 
         while (!research.isEmpty()) {
@@ -57,6 +58,9 @@ public class ResearchManager {
                 while (iterator.hasNext()) {
                     Map.Entry<Identifier, ResearchNode.Builder> entry = iterator.next();
                     Galacticraft.logger.error("Couldn't load research node {}: {}", entry.getKey(), entry.getValue());
+                }
+                if (System.currentTimeMillis() > time + 30000) {
+                    throw new RuntimeException("Research has taken over 30 seconds to load! This isn't supposed to happen! You might have invalid custom nodes.");
                 }
             }
         }

@@ -42,6 +42,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -80,6 +81,7 @@ public class SpaceRaceScreen extends Screen {
 
     private int researchScrollX = 0;
     private int researchScrollY = 0;
+    private byte resetHoldTime = 0;
 
     private int widthSize = 0;
     private int heightSize = 0;
@@ -261,8 +263,8 @@ public class SpaceRaceScreen extends Screen {
                     client.getTextureManager().bindTexture(RESEARCH_TEX);
                     int appTX = getAppropriateNodeTexX(node);
                     int appTY = getAppropriateNodeTexY(node);
-                    int basePX = BASE_RESEARCH_OFFSET + (int) (-researchScrollX + TIER_TO_X_MAX_DIST.get(node.getInfo().getTier() - 1) + (node.getInfo().getX() * (NODE_WIDTH + 10)));
-                    int basePY = BASE_RESEARCH_OFFSET + (int) (-researchScrollY + (node.getInfo().getY() * (NODE_HEIGHT + 8)));
+                    int basePX = BASE_RESEARCH_OFFSET + (int) (researchScrollX + TIER_TO_X_MAX_DIST.get(node.getInfo().getTier() - 1) + (node.getInfo().getX() * (NODE_WIDTH + 10)));
+                    int basePY = BASE_RESEARCH_OFFSET + (int) (researchScrollY + (node.getInfo().getY() * (NODE_HEIGHT + 8)));
                     int posXFit = getPosXToFit(basePX);
                     int posYFit = getPosYToFit(basePY);
                     int texPosXFit = getTexPosXToFit(basePX, appTX, NODE_WIDTH);
@@ -282,10 +284,10 @@ public class SpaceRaceScreen extends Screen {
 
                         if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
                             drawTexture(matrices, posXFit, getPosYToFit(basePY + 72), texPosXFit, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 72, NODE_DESC_ADDON_HEIGHT)); //X matches
-                            drawAndAutotrimTextDoubleSizeSplit(matrices, posXFit + 4, basePY + 72 + 4, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), 170 / 2); // /2 because its scaled x2
+                            drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 72 + 6, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), 168, 1.0F);
                         }
 
-                        drawAndAutotrimTextDoubleSizeSplit(matrices, basePX + 6, basePY + 6, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536);//no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
+                        drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 6, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 2.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
 
                         for (int i = 0; i < node.getInfo().getIcons().length && i < 4; i++) {
                             // 6, 31
@@ -337,53 +339,51 @@ public class SpaceRaceScreen extends Screen {
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (menu == Menu.RESEARCH) {
             if (mouseX > getLeft() && mouseX < getRight() && mouseY > getTop() && mouseY < getBottom()) {
-                researchScrollX += -deltaX;
-                researchScrollY += -deltaY;
-                researchScrollX = Math.max(researchScrollX, -64);
-                researchScrollY = Math.max(researchScrollY, -64);
+                researchScrollX += deltaX;
+                researchScrollY += deltaY;
             }
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    private void drawAndAutotrimTextDoubleSizeSplit(MatrixStack matrices, int x, int y, String text, int color, int maxLength) {
+    private void drawAndAutotrimTextScaleSplit(MatrixStack matrices, int x, int y, String text, int color, int maxLength, float scale) {
         if (maxLength == Integer.MAX_VALUE) {
             maxLength = 65536; //large enough that it shouldn't be reached, small enough it shouldn't overflow.
         }
-        int xOffset = 0;
-        int yOffset = 0;
+        float xOffset = 0;
+        float yOffset = 0;
         char[] charArray = text.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
             char c = charArray[i];
             if (c == ' ') {
-                int dist = 0;
+                float dist = 0;
                 for (int j = i + 1; j < charArray.length; j++) {
                     if (charArray[j] == ' ') {
                         break;
                     } else {
-                        dist += textRenderer.getWidth("" + charArray[j]);
+                        dist += textRenderer.getTextHandler().getWidth(String.valueOf(charArray[j]));
                     }
                 }
-                if (xOffset + dist + x - researchScrollX >= x + maxLength) {
+                if (xOffset + dist + x + researchScrollX >= x + maxLength) {
                     yOffset += textRenderer.fontHeight;
                     xOffset = 0;
                     continue;
                 }
             }
-            if (xOffset + x - researchScrollX >= this.getLeft() + 10) {
-                if (xOffset + textRenderer.getWidth("" + c) + x - researchScrollX < this.getRight() - 10) {
+
+            if (xOffset + x + researchScrollX >= this.getLeft()) {
+                if (xOffset + x + researchScrollX + textRenderer.getTextHandler().getWidth(String.valueOf(c)) < this.getRight() - 10) {
                     matrices.push();
-                    matrices.translate(x, y, getZOffset());
-                    matrices.scale(2.0F, 2.0F, 2.0F);
-                    matrices.translate(xOffset, yOffset, 0); //x2
-                    textRenderer.draw(matrices, "" + c, 0, 0, color);
+                    matrices.translate(x + xOffset, y + yOffset, getZOffset());
+                    matrices.scale(scale, scale, scale);
+                    textRenderer.draw(matrices, String.valueOf(c), 0, 0, color);
                     matrices.scale(0.5F, 0.5F, 0.5F);
                     matrices.pop();
                 } else {
                     break;
                 }
             }
-            xOffset += textRenderer.getWidth("" + c);
+            xOffset += textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale;
         }
     }
 
@@ -464,6 +464,22 @@ public class SpaceRaceScreen extends Screen {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (menu == Menu.RESEARCH) {
+            if (keyCode == GLFW.GLFW_KEY_R) {
+                if (++resetHoldTime == 50) {
+                    researchScrollX = 0;
+                    researchScrollY = 0;
+                    resetHoldTime = 0;
+                }
+            } else {
+                resetHoldTime = 0;
+            }
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -589,7 +605,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private int getYMargins() {
@@ -614,7 +630,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private enum Menu {
