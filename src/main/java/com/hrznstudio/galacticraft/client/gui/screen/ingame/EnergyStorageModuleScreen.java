@@ -47,7 +47,7 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ENERGY_STORAGE_MODULE_SCREEN));
 
     public EnergyStorageModuleScreen(int syncId, PlayerEntity playerEntity, EnergyStorageModuleBlockEntity blockEntity) {
-        super(new EnergyStorageModuleScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.energy_storage_module.name"));
+        super(new EnergyStorageModuleScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".energy_storage_module"));
     }
 
     @Override

@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
@@ -45,7 +46,7 @@ public class SpaceRaceScreen extends Screen {
     private Menu menu = Menu.MAIN;
 
     public SpaceRaceScreen() {
-        super(new TranslatableText("ui.galacticraft-rewoven.space_race_manager"));
+        super(new TranslatableText("ui" + Constants.MOD_ID + "space_race_manager"));
     }
 
     @Override

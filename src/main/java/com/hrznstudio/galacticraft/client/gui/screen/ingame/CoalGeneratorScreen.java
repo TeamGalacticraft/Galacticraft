@@ -48,7 +48,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
 
     public CoalGeneratorScreen(int syncId, PlayerEntity player, CoalGeneratorBlockEntity blockEntity) {
-        super(new CoalGeneratorScreenHandler(syncId, player, blockEntity), player.inventory, player.getEntityWorld(), blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.coal_generator.name"));
+        super(new CoalGeneratorScreenHandler(syncId, player, blockEntity), player.inventory, player.getEntityWorld(), blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".coal_generator"));
         this.backgroundHeight = 176;
     }
 

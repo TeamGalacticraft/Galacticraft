@@ -49,7 +49,7 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
 
 
     public RefineryScreen(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
-        super(new RefineryScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.circuit_fabricator.name"));
+        super(new RefineryScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".refinery"));
         this.backgroundHeight = 192;
     }
 
