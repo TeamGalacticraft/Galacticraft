@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "tag": "c:tin_ingot"
+      "tag": "c:tin_ingots"
     },
     {
-      "tag": "c:tin_ingot"
+      "tag": "c:tin_ingots"
     }
   ],
   "result": {

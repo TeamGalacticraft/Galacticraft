@@ -1,0 +1,41 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "ABC",
+    "DEF",
+    "GHI"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:diamond_ore"
+    },
+    "B": {
+      "item": "minecraft:lapis_ore"
+    },
+    "C": {
+      "item": "minecraft:gold_ore"
+    },
+    "D": {
+      "item": "minecraft:redstone_ore"
+    },
+    "E": {
+      "item": "galacticraft-rewoven:beam_core"
+    },
+    "F": {
+      "item": "minecraft:coal_ore"
+    },
+    "G": {
+      "item": "galacticraft-rewoven:moon_cheese_ore"
+    },
+    "H": {
+      "item": "galacticraft-rewoven:desh_ore"
+    },
+    "I": {
+      "item": "galacticraft-rewoven:ilmenite_ore"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:orion_drive",
+    "count": 1
+  }
+}

@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:iron_ingots"
     },
     {
-      "item": "minecraft:iron_ingot"
+      "tag": "c:iron_ingots"
     }
   ],
   "result": {

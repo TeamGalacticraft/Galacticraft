@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
+import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
@@ -81,7 +82,7 @@ public class RocketItem extends Item {
             if (context.getWorld() instanceof ServerWorld) {
                 RocketEntity rocket = new RocketEntity(GalacticraftEntityTypes.ROCKET, context.getWorld());
                 RocketData data = RocketData.fromItem(context.getPlayer().getStackInHand(context.getHand()));
-                rocket.setParts(data.getParts());
+                rocket.setParts(data.getParts().toArray(new RocketPart[0]));
                 rocket.setColor(data.getRed(), data.getGreen(), data.getBlue(), data.getAlpha());
                 rocket.setLinkedPad(pos);
                 rocket.resetPosition(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);

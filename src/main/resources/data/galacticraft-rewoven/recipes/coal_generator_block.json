@@ -7,10 +7,10 @@
   ],
   "key": {
     "C": {
-      "tag": "c:copper_ingot"
+      "tag": "c:copper_ingots"
     },
     "A": {
-      "tag": "c:aluminum_ingot"
+      "tag": "c:aluminum_ingots"
     },
     "F": {
       "item": "minecraft:furnace"

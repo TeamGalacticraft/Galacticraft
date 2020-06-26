@@ -47,9 +47,6 @@ public class GalacticraftItems {
             .icon(() -> new ItemStack(GalacticraftItems.CANVAS))
             .build();
     // MATERIALS
-    public static final Item ALUMINUM_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ALUMINUM_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item COPPER_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.COPPER_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TIN_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIN_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item LEAD_INGOT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.LEAD_INGOT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item RAW_SILICON = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RAW_SILICON), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item RAW_METEORIC_IRON = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.RAW_METEORIC_IRON), new Item(new Item.Settings().group(ITEMS_GROUP)));
@@ -110,13 +107,6 @@ public class GalacticraftItems {
     public static final Item TIER_1_HEAVY_DUTY_PLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_HEAVY_DUTY_PLATE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_2_HEAVY_DUTY_PLATE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_3_HEAVY_DUTY_PLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_HEAVY_DUTY_PLATE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item NOSE_CONE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.NOSE_CONE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_NOSE_CONE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_NOSE_CONE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ROCKET_ENGINE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_ENGINE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_ROCKET_ENGINE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_ROCKET_ENGINE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ROCKET_FIN = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_FIN), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_ROCKET_FIN = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_ROCKET_FIN), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TIER_1_BOOSTER = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_BOOSTER), new Item(new Item.Settings().group(ITEMS_GROUP)));
     //BUGGY PARTS
     public static final Item BUGGY_SEAT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_SEAT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BUGGY_STORAGE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE), new Item(new Item.Settings().group(ITEMS_GROUP)));
@@ -192,7 +182,9 @@ public class GalacticraftItems {
     public static final Item ROCKET_SCHEMATIC = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_SCHEMATIC), new RocketSchematicItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item ROCKET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET), new RocketItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item FLUID_CANISTER = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.FLUID_CANISTER), new FluidCanister(new Item.Settings().group(ITEMS_GROUP).maxCount(1).maxDamage(1000)));
-
+    // THROWABLE METEOR CHUNKS
+    public static final Item THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THROWABLE_METEOR_CHUNK), new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item HOT_THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HOT_THROWABLE_METEOR_CHUNK), new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
 
     public static void register() {
     }

@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.RocketAssemblerRecipe;
 import com.hrznstudio.galacticraft.screen.RocketAssemblerScreenHandler;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -169,8 +170,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             drawTexture(matrix, this.x - 29, this.y + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             drawTexture(matrix, this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 8);
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 35);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.MOON_TURF), this.x - 20, this.y + 35);
 
             if (!this.blockEntity.data.isEmpty()) {
                 drawEntity(this.x + 186 + 17, this.y + 73, this.blockEntity.fakeEntity);
@@ -179,8 +180,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             drawTexture(matrix, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
             drawTexture(matrix, this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 8);
-            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.ALUMINUM_BLOCK), this.x - 20, this.y + 35);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
+            itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.MOON_TURF), this.x - 20, this.y + 35);
         }
 
         if (blockEntity.building()) {

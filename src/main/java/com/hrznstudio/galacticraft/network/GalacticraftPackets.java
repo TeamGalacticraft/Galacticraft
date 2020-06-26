@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.network;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -191,8 +192,12 @@ public class GalacticraftPackets {
                     if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
                         RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
                         assert blockEntity != null;
-                        blockEntity.setPartServer(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(buf.readIdentifier())));
-                        blockEntity.updateSchematic();
+                        Identifier id = buf.readIdentifier();
+                        if (packetContext.getPlayer() instanceof ServerPlayerEntityAccessor
+                                && ((ServerPlayerEntityAccessor) packetContext.getPlayer()).getResearchTracker().isUnlocked(id)) {
+                            blockEntity.setPartServer(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(id)));
+                            blockEntity.updateSchematic();
+                        }
                     }
                 }
             });

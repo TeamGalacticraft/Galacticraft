@@ -1,0 +1,23 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SCS",
+    "SCS",
+    "SFS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "C": {
+      "item": "galacticraft-rewoven:copper_canister"
+    },
+    "F": {
+      "item": "minecraft:blast_furnace"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:refinery",
+    "count": 1
+  }
+}

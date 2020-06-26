@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "CAA"
+  ],
+  "key": {
+    "A": {
+      "item": "galacticraft-rewoven:beef_patty"
+    },
+    "C": {
+      "item": "galacticraft-rewoven:tin_canister"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:canned_beef"
+  }
+}

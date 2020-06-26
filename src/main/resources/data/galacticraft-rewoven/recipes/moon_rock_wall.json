@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft-rewoven:moon_rock"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:moon_rock_wall",
+    "count": 6
+  }
+}

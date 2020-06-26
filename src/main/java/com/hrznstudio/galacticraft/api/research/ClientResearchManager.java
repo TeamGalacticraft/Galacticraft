@@ -13,11 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 @Environment(EnvType.CLIENT)
 public class ClientResearchManager {
@@ -26,8 +23,7 @@ public class ClientResearchManager {
     private final Map<ResearchNode, AdvancementProgress> researchProgresses = Maps.newHashMap();
     @Nullable
     private ClientResearchManager.Listener listener;
-//   @Nullable
-//   private Advancement selectedTab; //fixme not relevant
+    private final Set<Identifier> unlockedParts = new HashSet<>();
 
     public ClientResearchManager() {
     }
@@ -62,11 +58,9 @@ public class ClientResearchManager {
         }
 
         i = buf.readVarInt();
-        List<RocketPart> list = new ArrayList<>();
         for (l = 0; l < i; l++) {
-            list.add(Galacticraft.ROCKET_PARTS.get(buf.readIdentifier()));
+            this.unlockedParts.add(buf.readIdentifier());
         }
-        manager.unlockParts(list);
 
         if (clearCurrent) {
             this.manager.clear();
@@ -140,6 +134,10 @@ public class ClientResearchManager {
 
     public AdvancementProgress getProgress(ResearchNode node) {
         return this.researchProgresses.get(node);
+    }
+
+    public boolean isUnlocked(Identifier part) {
+        return unlockedParts.contains(part);
     }
 
     @Environment(EnvType.CLIENT)

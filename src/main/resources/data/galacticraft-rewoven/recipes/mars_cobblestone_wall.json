@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "LLL",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft-rewoven:mars_cobblestone"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:mars_cobblestone_wall",
+    "count": 6
+  }
+}
