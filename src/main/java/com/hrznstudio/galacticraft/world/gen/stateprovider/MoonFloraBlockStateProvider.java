@@ -18,8 +18,9 @@ public class MoonFloraBlockStateProvider extends BlockStateProvider {
     public static BlockState[] mix1 = new BlockState[]{Blocks.ORANGE_TULIP.getDefaultState(), Blocks.RED_TULIP.getDefaultState(), Blocks.PINK_TULIP.getDefaultState(), Blocks.WHITE_TULIP.getDefaultState()};
     public static BlockState[] mix2 = new BlockState[]{Blocks.POPPY.getDefaultState(), Blocks.AZURE_BLUET.getDefaultState(), Blocks.OXEYE_DAISY.getDefaultState(), Blocks.CORNFLOWER.getDefaultState()};
 
-    protected BlockStateProviderType<?> method_28862() {
-        return BlockStateProviderType.PLAIN_FLOWER_PROVIDER;
+    @Override
+    protected BlockStateProviderType<MoonFloraBlockStateProvider> getType() {
+        return GalacticraftBlockStateProviderTypes.MOON_FLOWER_PROVIDER;
     }
 
     public BlockState getBlockState(Random random, BlockPos pos) {
