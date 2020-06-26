@@ -347,10 +347,8 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     }
 
     public void insert(int slot, ItemStack stack) {
-        ItemStack current = inventory.getStack(slot);
         if (canInsert(slot, stack)) {
-            current.increment(stack.getCount());
-            inventory.setStack(slot, current);
+            getInventory().insertStack(slot, stack, ActionType.PERFORM);
         } else {
             throw new RuntimeException();
         }
