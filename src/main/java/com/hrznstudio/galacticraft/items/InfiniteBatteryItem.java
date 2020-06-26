@@ -44,7 +44,7 @@ public class InfiniteBatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public boolean hasEnchantmentGlint(ItemStack itemStack_1) {
+    public boolean hasGlint(ItemStack stack) {
         return true;
     }
 
