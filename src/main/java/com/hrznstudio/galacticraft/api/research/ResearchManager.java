@@ -17,7 +17,6 @@ public class ResearchManager {
     private final Map<Identifier, ResearchNode> research = new HashMap<>();
     private final List<ResearchNode> roots = new ArrayList<>();
     private final Set<ResearchNode> dependants = new HashSet<>();
-    private final Set<RocketPart> unlockedParts = new HashSet<>();
 
     public void load(Map<Identifier, ResearchNode.Builder> research) {
         long time = System.currentTimeMillis();
@@ -78,10 +77,6 @@ public class ResearchManager {
         for (ResearchNode node : roots) {
             new ResearchPositioner().position(node);
         }
-    }
-
-    public void unlockParts(List<RocketPart> parts) {
-        unlockedParts.addAll(parts);
     }
 
     public List<ResearchNode> getRoots() {
@@ -152,11 +147,6 @@ public class ResearchManager {
         }
 
     }
-
-    public boolean isUnlocked(RocketPart part) {
-        return unlockedParts.contains(part);
-    }
-
 
     public interface Listener {
         void onRootAdded(ResearchNode root);

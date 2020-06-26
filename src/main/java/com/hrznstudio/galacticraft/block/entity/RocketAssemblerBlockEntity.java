@@ -195,7 +195,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
         if (!data.isEmpty()) {
             for (RocketPart part : data.getParts()) {
-                fakeEntity.setPart(part);
+                if (part != null) {
+                    fakeEntity.setPart(part);
+                }
             }
             fakeEntity.setColor(this.data.getRed(), this.data.getGreen(), this.data.getBlue(), this.data.getAlpha());
         }
@@ -289,7 +291,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
         if (!data.isEmpty()) {
             for (RocketPart part : data.getParts()) {
-                fakeEntity.setPart(part);
+                if (part != null) {
+                    fakeEntity.setPart(part);
+                }
             }
         }
 

@@ -48,11 +48,11 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     private final Set<ResearchNode> visibleResearch = new LinkedHashSet<>();
     private final Set<ResearchNode> visibilityUpdates = new LinkedHashSet<>();
     private final Set<ResearchNode> progressUpdates = new LinkedHashSet<>();
-    private final Set<RocketPart> unlockedParts = new LinkedHashSet<>();
+    private final Set<Identifier> unlockedParts = new LinkedHashSet<>();
     private ServerPlayerEntity owner;
     private final ServerResearchLoader researchLoader;
     private boolean dirty = true;
-    private final List<RocketPart> newParts = new ArrayList<>();
+    private final List<Identifier> newParts = new ArrayList<>();
 
     public PlayerResearchTracker(DataFixer dataFixer, PlayerManager playerManager, ServerResearchLoader researchLoader, File file, ServerPlayerEntity serverPlayerEntity) {
         //noinspection ConstantConditions
@@ -77,6 +77,10 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
             criterion.endTracking(this);
         }
 
+    }
+
+    public boolean isUnlocked(Identifier id) {
+        return unlockedParts.contains(id);
     }
 
     public void reload() {
@@ -135,8 +139,8 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
                     jsonReader2.endArray();
                     jsonReader2.close();
 
-                    for (String s : list) {
-                        unlockedParts.add(Galacticraft.ROCKET_PARTS.get(new Identifier(s)));
+                    for (String id : list) {
+                        unlockedParts.add(new Identifier(id));
                     }
                     list.clear();
                 } else {
@@ -209,8 +213,8 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
 
         File partFile = new File(researchFile.getParentFile(), owner.getUuidAsString() + "-unlocks.json");
         JsonArray jsonArray = new JsonArray();
-        for (RocketPart part : unlockedParts) {
-            jsonArray.add(Galacticraft.ROCKET_PARTS.getId(part).toString());
+        for (Identifier id : unlockedParts) {
+            jsonArray.add(id.toString());
         }
 
         if (this.researchFile.getParentFile() != null) {
@@ -467,28 +471,14 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
         }
 
         buf.writeVarInt(newParts.size());
-        for (RocketPart part : newParts) {
-            buf.writeIdentifier(Galacticraft.ROCKET_PARTS.getId(part));
+        for (Identifier part : newParts) {
+            buf.writeIdentifier(part);
         }
 
         newParts.clear();
 
         return buf;
     }
-
-//   public void setDisplayTab(@Nullable ResearchNode advancement) { //not relevant? fixme
-//      ResearchNode advancement2 = this.currentDisplayTab;
-//      if (advancement != null && advancement.getParent() == null && advancement.getDisplay() != null) {
-//         this.currentDisplayTab = advancement;
-//      } else {
-//         this.currentDisplayTab = null;
-//      }
-//
-//      if (advancement2 != this.currentDisplayTab) {
-//         this.owner.networkHandler.sendPacket(new SelectAdvancementTabS2CPacket(this.currentDisplayTab == null ? null : this.currentDisplayTab.getId()));
-//      }
-//
-//   }
 
     public AdvancementProgress getProgress(ResearchNode node) {
         AdvancementProgress advancementProgress = this.researchToProgress.get(node);
@@ -575,8 +565,8 @@ public class PlayerResearchTracker extends PlayerAdvancementTracker {
     }
 
     public void unlockRocketPart(Identifier partId) {
-        unlockedParts.add(Galacticraft.ROCKET_PARTS.get(partId));
-        newParts.add(Galacticraft.ROCKET_PARTS.get(partId));
+        unlockedParts.add(partId);
+        newParts.add(partId);
 
     }
 }

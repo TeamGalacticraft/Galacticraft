@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.client.network;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
+import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.api.EnvType;
@@ -72,7 +73,7 @@ public class GalacticraftClientPackets {
                 entity.setUuid(entityUUID);
 
                 entity.setColor(data.getRed(), data.getGreen(), data.getBlue(), data.getAlpha());
-                entity.setParts(data.getParts());
+                entity.setParts(data.getParts().toArray(new RocketPart[0]));
 
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             };

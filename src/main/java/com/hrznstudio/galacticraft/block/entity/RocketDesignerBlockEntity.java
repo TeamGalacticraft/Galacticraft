@@ -47,6 +47,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -63,12 +64,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     private int blue = 255;
     private int alpha = 255;
 
-    private RocketPart cone = RocketParts.DEFAULT_CONE;
-    private RocketPart body = RocketParts.DEFAULT_BODY;
-    private RocketPart fin = RocketParts.DEFAULT_FIN;
-    private RocketPart booster = RocketParts.NO_BOOSTER;
-    private RocketPart bottom = RocketParts.DEFAULT_BOTTOM;
-    private RocketPart upgrade = RocketParts.NO_UPGRADE;
+    private RocketPart cone = null;
+    private RocketPart body = null;
+    private RocketPart fin = null;
+    private RocketPart booster = null;
+    private RocketPart bottom = null;
+    private RocketPart upgrade = null;
 
     private final SimpleInventoryComponent inventory = new SimpleInventoryComponent(1) {
         @Override
@@ -103,12 +104,12 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         tag.putInt("blue", blue);
         tag.putInt("alpha", alpha);
 
-        tag.putString("cone", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(cone)).toString());
-        tag.putString("body", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(body)).toString());
-        tag.putString("fin", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(fin)).toString());
-        tag.putString("booster", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(booster)).toString());
-        tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(bottom)).toString());
-        tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(upgrade)).toString());
+        if (cone != null) tag.putString("cone", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(cone)).toString());
+        if (body != null) tag.putString("body", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(body)).toString());
+        if (fin != null) tag.putString("fin", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(fin)).toString());
+        if (booster != null) tag.putString("booster", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(booster)).toString());
+        if (bottom != null) tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(bottom)).toString());
+        if (upgrade != null) tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(upgrade)).toString());
 
         return tag;
     }
@@ -117,19 +118,17 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
 
-        if (tag.contains("red") && tag.contains("cone")) {
-            red = tag.getInt("red");
-            green = tag.getInt("green");
-            blue = tag.getInt("blue");
-            alpha = tag.getInt("alpha");
+        if (tag.contains("red")) red = tag.getInt("red");
+        if (tag.contains("green")) green = tag.getInt("green");
+        if (tag.contains("blue")) tag.getInt("blue");
+        if (tag.contains("alpha")) alpha = tag.getInt("alpha");
 
-            cone = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("cone")));
-            body = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("body")));
-            fin = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("fin")));
-            booster = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("booster")));
-            bottom = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("bottom")));
-            upgrade = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("upgrade")));
-        }
+        if (tag.contains("cone")) cone = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("cone")));
+        if (tag.contains("body")) body = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("body")));
+        if (tag.contains("fin")) fin = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("fin")));
+        if (tag.contains("booster")) booster = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("booster")));
+        if (tag.contains("bottom")) bottom = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("bottom")));
+        if (tag.contains("upgrade")) upgrade = Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString("upgrade")));
     }
 
     @Override
@@ -142,6 +141,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
         return this.toTag(compoundTag);
     }
 
+    @Nullable
     public RocketPart getPart(RocketPartType type) {
         switch (type) {
             case BOOSTER:

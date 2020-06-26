@@ -22,7 +22,9 @@
 
 package com.hrznstudio.galacticraft.api.registry;
 
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
+import com.hrznstudio.galacticraft.api.research.ClientResearchManager;
 import com.hrznstudio.galacticraft.api.research.ResearchManager;
 import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
@@ -31,10 +33,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,18 +58,34 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
     }
 
     @Override
-    public <V extends RocketPart> V add(RegistryKey<RocketPart> key, V entry) {
+    public <V extends RocketPart> V set(int rawId, RegistryKey<RocketPart> key, V entry) {
         parts.get(entry.getType()).add(entry);
-        return super.add(key, entry);
+        return super.set(rawId, key, entry);
     }
 
     @Environment(EnvType.CLIENT)
     public List<RocketPart> getAvailablePartsForType(PlayerEntity player, RocketPartType type) {
         if (player instanceof ClientPlayerEntity) {
             List<RocketPart> valid = new ArrayList<>();
-            ResearchManager manager = ((ClientPlayNetworkHandlerAccessor) ((ClientPlayerEntity) player).networkHandler).getClientResearchManager().getManager();
+            ClientResearchManager manager = ((ClientPlayNetworkHandlerAccessor) ((ClientPlayerEntity) player).networkHandler).getClientResearchManager();
             for (RocketPart part : parts.get(type)) {
-                if (manager.isUnlocked(part)) {
+                if (manager.isUnlocked(getId(part))) {
+                    valid.add(part);
+                }
+            }
+            return valid;
+        }
+        return null;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public List<RocketPart> getAllValidParts(PlayerEntity player) {
+        if (player instanceof ClientPlayerEntity) {
+            List<RocketPart> all = new ArrayList<>(entriesById.values());
+            List<RocketPart> valid = new ArrayList<>();
+            ClientResearchManager manager = ((ClientPlayNetworkHandlerAccessor) ((ClientPlayerEntity) player).networkHandler).getClientResearchManager();
+            for (RocketPart part : all) {
+                if (manager.isUnlocked(Galacticraft.ROCKET_PARTS.getId(part))) {
                     valid.add(part);
                 }
             }

@@ -28,6 +28,8 @@
     ]
   ],
   "rewards": {
-    "experience": 50
+    "rocket_parts": [
+      "galacticraft-rewoven:default_bottom"
+    ]
   }
 }

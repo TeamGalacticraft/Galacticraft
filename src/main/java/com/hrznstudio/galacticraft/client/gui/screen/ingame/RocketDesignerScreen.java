@@ -52,6 +52,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -145,6 +148,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
     private int page = 0;
     private int maxPage = 0;
+    private final List<RocketPart> validParts = new ArrayList<>();
     private RocketPartType OPEN_TAB = RocketPartType.CONE;
 
     private final RocketEntity entity;
@@ -156,6 +160,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.world = playerEntity.world;
         this.be = blockEntity;
         this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, world);
+        this.validParts.addAll(Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerEntity, OPEN_TAB));
     }
 
     public static void drawEntity(int x, int y, RocketEntity entity) {
@@ -215,8 +220,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         int x = 0;
         int y = 0;
-        for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).size(); i++) {
-            RocketPart part = Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).get(i);
+        for (int i = page * 25; i < validParts.size(); i++) {
+            RocketPart part = validParts.get(i);
 
             this.client.getTextureManager().bindTexture(TEXTURE);
             drawTexture(stack, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_X, WHITE_BOX_Y, BOX_WIDTH, BOX_HEIGHT);
@@ -229,8 +234,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             }
         }
 
-        if (Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).size() > 25) {
-            maxPage = (int) ((Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).size() / 25.0F) - ((Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).size() / 25.0F) % 1.0F)) - 1; //round down, index 0
+        if (validParts.size() > 25) {
+            maxPage = (int) ((validParts.size() / 25.0F) - ((validParts.size() / 25.0F) % 1.0F)) - 1; //round down, index 0
         } else {
             page = 0;
         }
@@ -245,14 +250,18 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 drawTexture(stack, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_X, BACK_ARROW_Y, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
             }
         }
-
-        this.itemRenderer.renderGuiItemIcon(this.be.getPart(RocketPartType.CONE).getRenderStack(), this.x + 156, this.y + 8);
-        this.itemRenderer.renderGuiItemIcon(this.be.getPart(RocketPartType.BODY).getRenderStack(), this.x + 156, this.y + 24);
-        this.itemRenderer.renderGuiItemIcon(this.be.getPart(RocketPartType.FIN).getRenderStack(), this.x + 156, this.y + 40);
-
-        this.itemRenderer.renderGuiItemIcon(this.be.getPart(RocketPartType.UPGRADE).getRenderStack(), this.x + 225, this.y + 26);
-        this.itemRenderer.renderGuiItemIcon(this.be.getPart(RocketPartType.BOOSTER).getRenderStack(), this.x + 225, this.y + 44);
-        this.itemRenderer.renderGuiItemIcon(this.be.getPart(RocketPartType.BOTTOM).getRenderStack(), this.x + 225, this.y + 60);
+        RocketPart part = this.be.getPart(RocketPartType.CONE);
+        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 8);
+        part = this.be.getPart(RocketPartType.BODY);
+        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 24);
+        part = this.be.getPart(RocketPartType.FIN);
+        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 40);
+        part = this.be.getPart(RocketPartType.UPGRADE);
+        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 26);
+        part = this.be.getPart(RocketPartType.BOOSTER);
+        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 44);
+        part = this.be.getPart(RocketPartType.BOTTOM);
+        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 60);
 
         this.client.getTextureManager().bindTexture(TEXTURE);
 
@@ -289,7 +298,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.drawTexture(stack, this.x + 257, this.y + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
 
         for (RocketPartType type : RocketPartType.values()) {
-            this.entity.setPart(this.be.getPart(type));
+            if (this.be.getPart(type) != null) this.entity.setPart(this.be.getPart(type));
         }
         this.entity.setColor(this.be.getRed(), this.be.getGreen(), this.be.getBlue(), this.be.getAlpha());
 
@@ -416,6 +425,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 if (RocketPartType.values()[i] != OPEN_TAB) {
                     if (check(mouseX, mouseY, this.x - 27, this.y + 3 + ((27) * i), DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
                         OPEN_TAB = RocketPartType.values()[i];
+                        validParts.clear();
+                        validParts.addAll(Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB));
                         page = 0;
                         return true;
                     }
@@ -435,8 +446,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             int x = 0;
             int y = 0;
             if (OPEN_TAB != null) {
-                for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).size(); i++) {
-                    RocketPart part = Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB).get(i);
+                for (int i = page * 25; i < validParts.size(); i++) {
+                    RocketPart part = validParts.get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
                         this.be.setPartClient(part);
                         break;
@@ -449,8 +460,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     }
                 }
             } else {
-                for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAllEntries().size(); i++) {
-                    RocketPart part = Galacticraft.ROCKET_PARTS.getAllEntries().get(i);
+                for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAllValidParts(playerInventory.player).size(); i++) {
+                    RocketPart part = Galacticraft.ROCKET_PARTS.getAllValidParts(playerInventory.player).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
                         this.be.setPartClient(part);
                         break;

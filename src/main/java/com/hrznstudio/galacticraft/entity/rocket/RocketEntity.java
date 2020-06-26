@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.entity.rocket;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -150,28 +151,33 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         }
     });
 
-    public static final TrackedData<List<RocketPart>> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<List<RocketPart>>() {
+    public static final TrackedData<RocketPart[]> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<RocketPart[]>() {
         @Override
-        public void write(PacketByteBuf var1, List<RocketPart> var2) {
+        public void write(PacketByteBuf var1, RocketPart[] var2) {
             for (byte i = 0; i < RocketPartType.values().length; i++) {
-                var1.writeIdentifier(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(var2.get(i))));
+                var1.writeBoolean(var2[i] != null);
+                if (var2[i] != null) {
+                    var1.writeIdentifier(Galacticraft.ROCKET_PARTS.getId(var2[i]));
+                }
             }
         }
 
         @Override
-        public List<RocketPart> read(PacketByteBuf var1) {
-            List<RocketPart> list = new ArrayList<>();
-            for (int i = 0; i < RocketPartType.values().length; i++) {
-                RocketPart part = Galacticraft.ROCKET_PARTS.get(var1.readIdentifier());
-                list.set(part.getType().ordinal(), part);
+        public RocketPart[] read(PacketByteBuf var1) {
+            RocketPart[] array = new RocketPart[RocketPartType.values().length];
+            for (byte i = 0; i < RocketPartType.values().length; i++) {
+                if (var1.readBoolean()) {
+                    array[i] = Galacticraft.ROCKET_PARTS.get(var1.readIdentifier());
+                }
             }
-
-            return list;
+            return array;
         }
 
         @Override
-        public List<RocketPart> copy(List<RocketPart> var1) {
-            return new ArrayList<>(var1);
+        public RocketPart[] copy(RocketPart[] var1) {
+            RocketPart[] parts = new RocketPart[RocketPartType.values().length];
+            System.arraycopy(var1, 0, parts, 0, var1.length);
+            return parts;
         }
     });
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
@@ -266,7 +272,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     public int getTier() {
         int tier = 0;
         for (RocketPart part : this.getParts()) {
-            tier = Math.max(part.getTier(this.getParts()), tier);
+            if (part != null) tier = Math.max(part.getTier(Lists.newArrayList(this.getParts())), tier);
         }
         return tier;
     }
@@ -305,12 +311,10 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         this.tank.fromTag(tag);
 
         CompoundTag parts = tag.getCompound("Parts");
-        List<RocketPart> list = new ArrayList<>();
+        RocketPart[] list = new RocketPart[RocketPartType.values().length];
         for (RocketPartType type : RocketPartType.values()) {
-            if (Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString()))) == null) {
-                list.add(RocketParts.getDefaultPartForType(type));
-            } else {
-                list.add(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString())))));
+            if (parts.contains(type.asString())) {
+                list[type.ordinal()] = Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString())));
             }
         }
 
@@ -340,7 +344,9 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         CompoundTag color = new CompoundTag();
 
         for (RocketPart part : this.getParts()) {
-            part.toTag(parts);
+            if (part != null) {
+                part.toTag(parts);
+            }
         }
 
         color.putFloat("red", this.getColor()[0]);
@@ -400,10 +406,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         dataTracker.startTracking(DAMAGE_WOBBLE_SIDE, 0);
         dataTracker.startTracking(DAMAGE_WOBBLE_STRENGTH, 0.0F);
 
-        List<RocketPart> parts = new ArrayList<>();
-        for (RocketPartType type : RocketPartType.values()) {
-            parts.add(RocketParts.getDefaultPartForType(type));
-        }
+        RocketPart[] parts = new RocketPart[RocketPartType.values().length];
         dataTracker.startTracking(PARTS, parts);
     }
 
@@ -419,12 +422,23 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         tag.putFloat("green", getColor()[1]);
         tag.putFloat("blue", getColor()[2]);
         tag.putFloat("alpha", getColor()[3]);
-        tag.putString("cone", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.CONE))).toString());
-        tag.putString("body", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BODY))).toString());
-        tag.putString("fin", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.FIN))).toString());
-        tag.putString("booster", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOOSTER))).toString());
-        tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOTTOM))).toString());
-        tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.UPGRADE))).toString());
+        RocketPart part = this.getPartForType(RocketPartType.CONE);
+        if (part != null) tag.putString("cone", Galacticraft.ROCKET_PARTS.getId(part).toString());
+
+        part = this.getPartForType(RocketPartType.BODY);
+        if (part != null) tag.putString("body", Galacticraft.ROCKET_PARTS.getId(part).toString());
+
+        part = this.getPartForType(RocketPartType.FIN);
+        if (part != null) tag.putString("fin", Galacticraft.ROCKET_PARTS.getId(part).toString());
+
+        part = this.getPartForType(RocketPartType.BOOSTER);
+        if (part != null) tag.putString("booster", Galacticraft.ROCKET_PARTS.getId(part).toString());
+
+        part = this.getPartForType(RocketPartType.BOTTOM);
+        if (part != null) tag.putString("bottom", Galacticraft.ROCKET_PARTS.getId(part).toString());
+
+        part = this.getPartForType(RocketPartType.UPGRADE);
+        if (part != null) tag.putString("upgrade", Galacticraft.ROCKET_PARTS.getId(part).toString());
 
         buf.writeCompoundTag(tag);
 
@@ -534,12 +548,12 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
                                 tag.putFloat("green", getColor()[1]);
                                 tag.putFloat("blue", getColor()[2]);
                                 tag.putFloat("alpha", getColor()[3]);
-                                tag.putString("cone", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.CONE))).toString());
-                                tag.putString("body", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BODY))).toString());
-                                tag.putString("fin", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.FIN))).toString());
-                                tag.putString("booster", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOOSTER))).toString());
-                                tag.putString("bottom", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOTTOM))).toString());
-                                tag.putString("upgrade", Objects.requireNonNull(Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.UPGRADE))).toString());
+                                tag.putString("cone", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.CONE))).toString()); //NOTHING should be null at this point
+                                tag.putString("body", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BODY))).toString());
+                                tag.putString("fin", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.FIN))).toString());
+                                tag.putString("booster", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOOSTER))).toString());
+                                tag.putString("bottom", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOTTOM))).toString());
+                                tag.putString("upgrade", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.UPGRADE))).toString());
 
                                 buf.writeCompoundTag(tag);
                             });
@@ -706,6 +720,10 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     private long ticksSinceJump = 0;
 
     public void onJump() {
+        for (RocketPart part : this.getParts()) {
+            if (part == null) return;
+        }
+
         if (!this.getPassengerList().isEmpty() && ticksSinceJump > 10) {
             if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
@@ -720,7 +738,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         }
     }
 
-    public List<RocketPart> getParts() {
+    public RocketPart[] getParts() {
         return this.dataTracker.get(PARTS);
     }
 
@@ -736,17 +754,10 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     public void setPart(RocketPart part) {
-        List<RocketPart> parts = new ArrayList<>(this.dataTracker.get(PARTS));
-        for (int i = 0; i < parts.size(); i++) {
-            if (part.getType() == parts.get(i).getType()) {
-                parts.set(i, part);
-                this.dataTracker.set(PARTS, parts);
-                return;
-            }
-        }
+        this.dataTracker.get(PARTS)[part.getType().ordinal()] = part;
     }
 
-    public void setParts(List<RocketPart> parts) {
+    public void setParts(RocketPart[] parts) {
         this.dataTracker.set(PARTS, parts);
     }
 
