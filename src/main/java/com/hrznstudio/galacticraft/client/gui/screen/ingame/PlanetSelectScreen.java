@@ -3,7 +3,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.planetscreen.CelestialBodyDisplay;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.block.BlockState;
