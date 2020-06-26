@@ -185,9 +185,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 stack.decrement(1);
                 getInventory().setStack(5, stack);
 
-                stack = getInventory().getStack(6);
-                stack.increment(1);
-                getInventory().setStack(6, stack);
+                getInventory().insertStack(6, resultStack, ActionType.PERFORM);
             }
         }
 

@@ -279,6 +279,8 @@
   "tooltip.galacticraft-rewoven.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
   "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
+  "death.attack.gc.suffocation": "%s died from lack of oxygen",
+  "ui.galacticraft-rewoven.player_inv_screen": "",
   "tooltip.galacticraft-rewoven.buckets_mixed_number": "%s %s/%s buckets",
   "tooltip.galacticraft-rewoven.buckets_fraction": "%s/%s buckets",
   "tooltip.galacticraft-rewoven.buckets": "%s buckets",
@@ -336,7 +338,6 @@
   "ui.galacticraft-rewoven.tabs.security_config.public_2": "Public",
   "ui.galacticraft-rewoven.tabs.security_config.not_your_machine": "This is not your machine!",
   "ui.galacticraft-rewoven.tabs.security_config.owner": "Owner: %s",
-
   "ui.galacticraft-rewoven.part_type.cone": "Cone",
   "ui.galacticraft-rewoven.part_type.body": "Body",
   "ui.galacticraft-rewoven.part_type.fin": "Fin",
