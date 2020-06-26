@@ -46,7 +46,7 @@ public class SpaceRaceScreen extends Screen {
     private Menu menu = Menu.MAIN;
 
     public SpaceRaceScreen() {
-        super(new TranslatableText("ui" + Constants.MOD_ID + "space_race_manager"));
+        super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
     }
 
     @Override
