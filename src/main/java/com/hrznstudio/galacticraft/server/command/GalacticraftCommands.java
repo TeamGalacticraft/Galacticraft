@@ -22,17 +22,21 @@
 
 package com.hrznstudio.galacticraft.server.command;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.arguments.DimensionArgumentType;
 import net.minecraft.command.arguments.EntityArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
@@ -40,6 +44,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -55,8 +60,8 @@ public class GalacticraftCommands {
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
                         if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
-                            net.minecraft.client.MinecraftClient.getInstance().openScreen(new PlanetSelectScreen());
-                        }
+                            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+                            ClientSidePacketRegistry.INSTANCE.sendToServer(new Identifier(Constants.MOD_ID, "planet_menu_open"), passedData);                        }
                         return 1;
                     })
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
