@@ -313,13 +313,6 @@ public class Constants {
         public static final String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         public static final String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
         public static final String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
-        public static final String NOSE_CONE = "nose_cone";
-        public static final String HEAVY_NOSE_CONE = "heavy_nose_cone";
-        public static final String ROCKET_ENGINE = "engine_t1";
-        public static final String HEAVY_ROCKET_ENGINE = "engine_t2";
-        public static final String ROCKET_FIN = "rocket_fins_item";
-        public static final String HEAVY_ROCKET_FIN = "rocket_fins_t2";
-        public static final String TIER_1_BOOSTER = "engine_t1booster";
         //BUGGY
         public static final String BUGGY_SEAT = "buggy_seat";
         public static final String BUGGY_STORAGE = "buggy_storage";

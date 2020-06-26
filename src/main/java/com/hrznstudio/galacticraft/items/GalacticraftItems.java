@@ -107,13 +107,6 @@ public class GalacticraftItems {
     public static final Item TIER_1_HEAVY_DUTY_PLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_HEAVY_DUTY_PLATE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_2_HEAVY_DUTY_PLATE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_3_HEAVY_DUTY_PLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_3_HEAVY_DUTY_PLATE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item NOSE_CONE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.NOSE_CONE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_NOSE_CONE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_NOSE_CONE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ROCKET_ENGINE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_ENGINE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_ROCKET_ENGINE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_ROCKET_ENGINE), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ROCKET_FIN = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ROCKET_FIN), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_ROCKET_FIN = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_ROCKET_FIN), new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TIER_1_BOOSTER = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TIER_1_BOOSTER), new Item(new Item.Settings().group(ITEMS_GROUP)));
     //BUGGY PARTS
     public static final Item BUGGY_SEAT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_SEAT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BUGGY_STORAGE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE), new Item(new Item.Settings().group(ITEMS_GROUP)));
