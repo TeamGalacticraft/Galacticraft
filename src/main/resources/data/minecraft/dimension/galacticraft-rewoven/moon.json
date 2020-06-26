@@ -1,0 +1,15 @@
+{
+  "generator": {
+    "type": "galacticraft-rewoven:moon",
+    "biome_source": {
+      "type": "galacticraft-rewoven:moon",
+      "seed": 12893581272,
+      "biome_size": 4
+    },
+    "settings": {
+    },
+    "seed": 29783173792,
+    "__comment": "hardcoded seed.... how do you make it not hardcoded!?"
+  },
+  "type": "galacticraft-rewoven:moon_type"
+}

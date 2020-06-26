@@ -8,7 +8,6 @@ accessible   field   net/minecraft/world/gen/chunk/ChunkGenerator   biomeSource 
 accessible   field   net/minecraft/world/World dimension   Lnet/minecraft/world/dimension/DimensionType;
 mutable   field   net/minecraft/world/World dimension   Lnet/minecraft/world/dimension/DimensionType;
 
-accessible   method   net/minecraft/world/dimension/DimensionType   <init>   (Ljava/util/OptionalLong;ZZZZZZZZZZILnet/minecraft/world/biome/source/BiomeAccessType;Lnet/minecraft/util/Identifier;F)V
 accessible   method   net/minecraft/world/gen/stateprovider/BlockStateProviderType   register   (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/gen/stateprovider/BlockStateProviderType;
 accessible   method   net/minecraft/world/gen/chunk/ChunkGeneratorType   <init>   (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/NoiseConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
 accessible   method   net/minecraft/structure/pool/LegacySinglePoolElement   <init>   (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
