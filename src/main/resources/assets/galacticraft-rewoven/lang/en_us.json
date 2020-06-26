@@ -244,6 +244,8 @@
   "tooltip.galacticraft-rewoven.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
   "tooltip.galacticraft-rewoven.oxygen-remaining": "Oxygen Remaining: %s",
   "tooltip.galacticraft-rewoven.energy-remaining": "Energy Remaining: %s",
+  "death.attack.gc.suffocation": "%s died from lack of oxygen",
+  "ui.galacticraft-rewoven.player_inv_screen": "",
   "ui.galacticraft-rewoven.machine.status": "Status: ",
   "ui.galacticraft-rewoven.machine.current_energy": "Energy: ",
   "ui.galacticraft-rewoven.machine.max_energy": "Maximum Energy: ",

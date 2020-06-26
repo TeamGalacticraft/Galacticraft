@@ -87,7 +87,7 @@ public abstract class LivingEntityMixin extends Entity {
         if (worldRegistryKey == GalacticraftDimensions.MOON) {
             StatusEffectInstance statusEffectInstanc = this.getStatusEffect(StatusEffects.JUMP_BOOST);
             float ff = statusEffectInstanc == null ? 0.0F : (float)(statusEffectInstanc.getAmplifier() + 6);
-            cir.setReturnValue(MathHelper.ceil(((fallDistance/(1/0.16f)) - 16.0F - ff) * damageMultiplier));
+            cir.setReturnValue(MathHelper.ceil((MathHelper.ceil(fallDistance/(1/0.16f)) - 16.0F - ff) * damageMultiplier));
         }
     }
 

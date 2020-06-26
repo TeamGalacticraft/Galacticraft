@@ -48,7 +48,7 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
 
     public PlayerInventoryGCScreen(PlayerEntity player) {
 //        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCScreenHandler(player.inventory, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
+        super(new PlayerInventoryGCScreenHandler(player.inventory, player), player.inventory, new TranslatableText("ui." + Constants.MOD_ID + ".player_inv_screen"));
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
