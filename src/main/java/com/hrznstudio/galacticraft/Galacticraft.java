@@ -89,7 +89,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftItems.register();
-        GalacticraftParticles.register();
         GalacticraftRecipes.register();
         GalacticraftSounds.register();
         GalacticraftEnergy.register();

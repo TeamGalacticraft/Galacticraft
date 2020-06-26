@@ -3,7 +3,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.planetscreen.CelestialBodyDisplay;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.block.BlockState;
@@ -30,7 +29,7 @@ public class PlanetSelectScreen extends Screen {
     public static final Identifier SKY = new Identifier(Constants.MOD_ID, "textures/planet_select_screen/stars.png");
 
     static {
-        celestialBodyDisplays.add(new CelestialBodyDisplay(GalacticraftBlocks.SUN_BLOCK, 1, 0, 100, 100, "Sun", null));
+        celestialBodyDisplays.add(new CelestialBodyDisplay(GalacticraftBlocks.SUN_BLOCK, 1, 0, 200, 130, "Sun", null));
         celestialBodyDisplays.add(new CelestialBodyDisplay(GalacticraftBlocks.EARTH_BLOCK, 1, 0, 140, 140, "Earth", new Identifier("overworld")));
         celestialBodyDisplays.add(new CelestialBodyDisplay(GalacticraftBlocks.MOON_BLOCK, 1, 0, 180, 180, "Moon", new Identifier("galacticraft-rewoven", "moon")));
     }
@@ -52,7 +51,7 @@ public class PlanetSelectScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        super.renderBackground(matrices);
+        renderBackground(matrices);
         checkForPlanetInteraction(mouseX, mouseY);
         renderPlanets(matrices);
         if(currentPlanet != null){
@@ -70,29 +69,26 @@ public class PlanetSelectScreen extends Screen {
     public void renderPlanet(int x, int y, MatrixStack matrices, BlockState planet) {
         MinecraftClient.getInstance().getTextureManager().bindTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX);
         MinecraftClient.getInstance().getTextureManager().getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEX).setFilter(false, false);
-        RenderSystem.pushMatrix();
-        RenderSystem.enableRescaleNormal();
-        RenderSystem.translatef((float) x, (float) y, 100.0F);
-        RenderSystem.scalef(1.0F, -1.0F, 1.0F);
-        RenderSystem.scalef(16.0F, 16.0F, 16.0F);
+        matrices.translate((float) x, (float) y, 100.0F);
+        matrices.scale(1.0F, -1.0F, 1.0F);
+        matrices.scale(16.0F, 16.0F, 16.0F);
 
         VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
         MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(planet, matrices, immediate, 10000, OverlayTexture.DEFAULT_UV);
         immediate.draw();
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableRescaleNormal();
-        RenderSystem.popMatrix();
     }
 
-    public void rotate(MatrixStack stack, float angle) {
+    public void rotate(MatrixStack stack, float angle, float pivotX, float pivotY) {
+        stack.translate(-pivotX, -pivotY, 0);
         stack.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(angle));
+        stack.translate(pivotX, pivotY, 0);
     }
 
     public void renderPlanets(MatrixStack matrices) {
 
         for (CelestialBodyDisplay planet : celestialBodyDisplays) {
             matrices.push();
-            rotate(matrices, earthRotation);
+            rotate(matrices, earthRotation, planet.x, planet.y);
             renderPlanet(planet.x, planet.y, matrices, planet.planetModel.getDefaultState());
             matrices.pop();
         }
@@ -120,7 +116,6 @@ public class PlanetSelectScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(button == GLFW.GLFW_MOUSE_BUTTON_LEFT){
-            System.out.println("Worked!");
             if(currentPlanet != null) {
                 if(currentPlanet.dimension == null) return false;
                 PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
