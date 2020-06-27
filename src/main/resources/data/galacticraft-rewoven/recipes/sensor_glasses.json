@@ -1,0 +1,25 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SDS",
+    "S S",
+    "MLM"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:string"
+    },
+    "L": {
+      "item": "galacticraft-rewoven:meteoric_iron_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "M": {
+      "item": "galacticraft-rewoven:sensor_lens"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:sensor_glasses"
+  }
+}
