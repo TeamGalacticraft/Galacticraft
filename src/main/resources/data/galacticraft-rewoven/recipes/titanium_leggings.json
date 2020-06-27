@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "TTT",
+    "T T",
+    "T T"
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:compressed_titanium"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:titanium_leggings",
+    "count": 1
+  }
+}

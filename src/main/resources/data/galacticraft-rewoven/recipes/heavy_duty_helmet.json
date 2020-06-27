@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:heavy_duty_helmet",
+    "count": 1
+  }
+}

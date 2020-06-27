@@ -1,0 +1,16 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DDD",
+    "D D",
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:desh_ingot"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:desh_helmet",
+    "count": 1
+  }
+}
