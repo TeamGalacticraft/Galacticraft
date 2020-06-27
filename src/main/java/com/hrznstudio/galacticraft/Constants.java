@@ -310,6 +310,19 @@ public class Constants {
         //THROWABLE METEOR CHUNKS
         public static final String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
         public static final String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
+        //ARMOR
+        public static final String HEAVY_DUTY_HELMET = "heavy_duty_helmet";
+        public static final String HEAVY_DUTY_CHESTPLATE = "heavy_duty_chestplate";
+        public static final String HEAVY_DUTY_LEGGINGS = "heavy_duty_leggings";
+        public static final String HEAVY_DUTY_BOOTS = "heavy_duty_boots";
+        public static final String DESH_HELMET = "desh_helmet";
+        public static final String DESH_CHESTPLATE = "desh_chestplate";
+        public static final String DESH_LEGGINGS = "desh_leggings";
+        public static final String DESH_BOOTS = "desh_boots";
+        public static final String TITANIUM_HELMET = "titanium_helmet";
+        public static final String TITANIUM_CHESTPLATE = "titanium_chestplate";
+        public static final String TITANIUM_LEGGINGS = "titanium_leggings";
+        public static final String TITANIUM_BOOTS = "titanium_boots";
         //TOOLS + WEAPONS
         public static final String HEAVY_DUTY_SWORD = "heavy_duty_sword";
         public static final String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";
