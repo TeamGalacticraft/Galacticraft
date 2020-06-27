@@ -79,8 +79,8 @@ public class SpaceRaceScreen extends Screen {
     private static final int SLOT_WIDTH = 40;
     private static final int SLOT_HEIGHT = 40;
 
-    private float researchScrollX = 0;
-    private float researchScrollY = 0;
+    private double researchScrollX = 0;
+    private double researchScrollY = 0;
     private byte resetHoldTime = 0;
 
     private int widthSize = 0;
@@ -165,7 +165,7 @@ public class SpaceRaceScreen extends Screen {
         if (heightSize < maxHeight) {
             heightSize += Math.min(2, maxHeight - heightSize);
         }
-        fill(stack, getLeft(), getTop(), getLeft() + widthSize, getTop() + heightSize, 0x80000000);
+        fill(stack, getLeft(), getTop(), getRight(), getBottom(), 0x80000000);
     }
 
     private void renderForeground(MatrixStack stack, int mouseX, int mouseY) {
@@ -347,11 +347,11 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private void drawAndAutotrimTextScaleSplit(MatrixStack matrices, int x, int y, String text, int color, int maxLength, float scale) {
-        if (maxLength == Integer.MAX_VALUE) {
-            maxLength = 65536; //large enough that it shouldn't be reached, small enough it shouldn't overflow.
+        if (maxLength > 1048576) {
+            maxLength = 1048576; //large enough that it shouldn't be reached, small enough it shouldn't overflow.
         }
-        float xOffset = 0;
-        float yOffset = 0;
+        double xOffset = 0;
+        double yOffset = 0;
         char[] charArray = text.toCharArray();
         for (int i = 0; i < charArray.length; i++) {
             char c = charArray[i];
@@ -360,30 +360,30 @@ public class SpaceRaceScreen extends Screen {
                 for (int j = i + 1; j < charArray.length; j++) {
                     if (charArray[j] == ' ') {
                         break;
-                    } else {
-                        dist += textRenderer.getTextHandler().getWidth(String.valueOf(charArray[j]));
                     }
+                    dist += textRenderer.getTextHandler().getWidth(String.valueOf(charArray[j]));
                 }
-                if (xOffset + dist + x + researchScrollX >= x + maxLength) {
-                    yOffset += textRenderer.fontHeight;
+                if (xOffset + dist >= maxLength) {
+                    yOffset += textRenderer.fontHeight * scale;
                     xOffset = 0;
                     continue;
                 }
+                xOffset = xOffset + (textRenderer.getTextHandler().getWidth(" ") * scale);
+                continue;
             }
 
-            if (xOffset + x + researchScrollX >= this.getLeft()) {
-                if (xOffset + x + researchScrollX + textRenderer.getTextHandler().getWidth(String.valueOf(c)) < this.getRight() - 10) {
-                    matrices.push();
-                    matrices.translate(x + xOffset, y + yOffset, getZOffset());
-                    matrices.scale(scale, scale, scale);
-                    textRenderer.draw(matrices, String.valueOf(c), 0, 0, color);
-                    matrices.scale(0.5F, 0.5F, 0.5F);
-                    matrices.pop();
-                } else {
-                    break;
+            if (xOffset + x >= this.getLeft() + 10) {
+                if (xOffset + x + textRenderer.getTextHandler().getWidth(String.valueOf(c)) < this.getRight() - 10) {
+                    if (yOffset + y - (textRenderer.fontHeight * scale) >= this.getTop() + 10 && yOffset + y + (textRenderer.fontHeight * scale) <= this.getBottom() - 10) {
+                        matrices.push();
+                        matrices.translate(x + xOffset, y + yOffset, getZOffset());
+                        matrices.scale(scale, scale, scale);
+                        textRenderer.draw(matrices, String.valueOf(c), 0, 0, color);
+                        matrices.pop();
+                    }
                 }
             }
-            xOffset += textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale;
+            xOffset = xOffset + (textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale);
         }
     }
 
@@ -571,17 +571,16 @@ public class SpaceRaceScreen extends Screen {
     private int getWidthToFit(int x, int width) {
         if (x >= this.getRight() - 10) return 0; //too far past
         if (x < this.getLeft() + 10) return width - Math.abs(x - (this.getLeft() + 10));
-        if (x + width >= this.getRight() - 10) {
-            return width - (width - Math.abs(x - (this.getRight() - 10)));
-        }
+        if (x + width >= this.getRight() - 10) return width - (width - Math.abs(x - (this.getRight() - 10)));
+
         return width;
     }
 
     private int getHeightToFit(int y, int height) {
         if (y >= this.getBottom() - 10) return 0; //too far past
-        if (y + height >= this.getBottom() - 10) {
-            return getBottom() - 10 - y;
-        }
+        if (y < this.getTop() + 25) return height - Math.abs(y - (this.getTop() + 25));
+        if (y + height >= this.getBottom() - 10) return getBottom() - 10 - y;
+
         return height;
     }
 
