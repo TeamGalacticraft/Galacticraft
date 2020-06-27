@@ -79,8 +79,8 @@ public class SpaceRaceScreen extends Screen {
     private static final int SLOT_WIDTH = 40;
     private static final int SLOT_HEIGHT = 40;
 
-    private int researchScrollX = 0;
-    private int researchScrollY = 0;
+    private float researchScrollX = 0;
+    private float researchScrollY = 0;
     private byte resetHoldTime = 0;
 
     private int widthSize = 0;
@@ -570,8 +570,9 @@ public class SpaceRaceScreen extends Screen {
 
     private int getWidthToFit(int x, int width) {
         if (x >= this.getRight() - 10) return 0; //too far past
+        if (x < this.getLeft() + 10) return width - Math.abs(x - (this.getLeft() + 10));
         if (x + width >= this.getRight() - 10) {
-            return getRight() - 10 - x;
+            return width - (width - Math.abs(x - (this.getRight() - 10)));
         }
         return width;
     }
