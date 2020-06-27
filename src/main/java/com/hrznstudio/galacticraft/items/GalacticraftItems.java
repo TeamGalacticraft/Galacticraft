@@ -132,6 +132,7 @@ public class GalacticraftItems {
     public static final Item TITANIUM_CHESTPLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_CHESTPLATE), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item TITANIUM_LEGGINGS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_LEGGINGS), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.LEGS, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item TITANIUM_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_BOOTS), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item SENSOR_GLASSES = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SENSOR_GLASSES), new ArmorItem(GalacticraftArmorMaterials.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Settings().group(ITEMS_GROUP)));
     //TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_SWORD), new SwordItem(GalacticraftToolMaterials.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
         @Override

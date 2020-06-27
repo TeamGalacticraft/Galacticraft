@@ -323,6 +323,7 @@ public class Constants {
         public static final String TITANIUM_CHESTPLATE = "titanium_chestplate";
         public static final String TITANIUM_LEGGINGS = "titanium_leggings";
         public static final String TITANIUM_BOOTS = "titanium_boots";
+        public static final String SENSOR_GLASSES = "sensor_glasses";
         //TOOLS + WEAPONS
         public static final String HEAVY_DUTY_SWORD = "heavy_duty_sword";
         public static final String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";

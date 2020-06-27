@@ -37,13 +37,16 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum GalacticraftArmorMaterials implements ArmorMaterial {
-    HEAVY_DUTY("heavy_duty", 30, new int[]{3,6,8,3}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, () -> {
+    SENSOR_GLASSES("sensor_glasses", 0, new int[]{0,0,0,0}, 0, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 0.0f, () -> {
+        return Ingredient.ofItems(GalacticraftItems.METEORIC_IRON_INGOT);
+    }, 0.0f), // TODO: add actual functionality
+    HEAVY_DUTY("heavy_duty", 30, new int[]{3,6,8,3}, 9, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f, () -> {
         return Ingredient.ofItems(GalacticraftItems.COMPRESSED_STEEL);
     }, 1.0f),
-    DESH("desh", 42, new int[]{4,7,9,4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0F, () -> {
+    DESH("desh", 42, new int[]{4,7,9,4}, 12, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 3.0f, () -> {
         return Ingredient.ofItems(GalacticraftItems.DESH_INGOT);
     }, 2.0f),
-    TITANIUM("titanium", 26, new int[]{5,7,10,5}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F, () -> {
+    TITANIUM("titanium", 26, new int[]{5,7,10,5}, 20, SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0f, () -> {
         return Ingredient.ofItems(GalacticraftItems.COMPRESSED_TITANIUM);
     }, 0.0f);
 
