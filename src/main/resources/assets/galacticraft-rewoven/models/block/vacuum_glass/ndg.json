@@ -1,0 +1,37 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "galacticraft-rewoven:block/tin_decoration",
+		"particle": "galacticraft-rewoven:block/vacuum_glass_pane"
+	},
+	"elements": [
+		{
+			"name": "ng_u3",
+			"from": [4, 0, 0],
+			"to": [12, 1, 4],
+			"faces": {
+				"east": {"uv": [12, 15, 16, 16], "texture": "#1"},
+				"west": {"uv": [0, 15, 4, 16], "texture": "#1"},
+				"up": {"uv": [4, 0, 12, 4], "texture": "#1"},
+				"down": {"uv": [4, 0, 12, 4], "rotation": 180, "texture": "#1"}
+			}
+		},
+		{
+			"name": "ng_u4",
+			"from": [5, 1, 0],
+			"to": [11, 2, 5],
+			"faces": {
+				"east": {"uv": [4, 1, 9, 2], "texture": "#1"},
+				"west": {"uv": [4, 1, 9, 2], "texture": "#1"},
+				"up": {"uv": [5, 9, 11, 14], "rotation": 180, "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "ndg",
+			"origin": [8, 8, 2.5],
+			"children": [0, 1]
+		}
+	]
+}

@@ -1,0 +1,39 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"1": "galacticraft-rewoven:block/tin_decoration",
+		"particle": "galacticraft-rewoven:block/vacuum_glass_pane"
+	},
+	"elements": [
+		{
+			"name": "ng_u1",
+			"from": [4, 15, 1],
+			"to": [12, 16, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 3.5]},
+			"faces": {
+				"east": {"uv": [12, 0, 15, 1], "rotation": 180, "texture": "#1"},
+				"west": {"uv": [1, 0, 4, 1], "rotation": 180, "texture": "#1"},
+				"up": {"uv": [4, 1, 12, 4], "texture": "#1"},
+				"down": {"uv": [4, 2, 12, 5], "rotation": 180, "texture": "#1"}
+			}
+		},
+		{
+			"name": "ng_u2",
+			"from": [5, 14, 2],
+			"to": [11, 15, 5],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 4.5]},
+			"faces": {
+				"east": {"uv": [6, 1, 9, 2], "rotation": 180, "texture": "#1"},
+				"west": {"uv": [6, 1, 9, 2], "rotation": 180, "texture": "#1"},
+				"down": {"uv": [5, 2, 11, 5], "texture": "#1"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "nu",
+			"origin": [8, 8, 2.5],
+			"children": [0, 1]
+		}
+	]
+}

@@ -139,6 +139,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.VACUUM_GLASS, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WIRE_WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.PIPE_WALKWAY, RenderLayer.getTranslucent());

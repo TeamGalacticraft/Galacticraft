@@ -28,8 +28,9 @@ import com.hrznstudio.galacticraft.api.block.FluidBlock;
 import com.hrznstudio.galacticraft.block.decoration.GratingBlock;
 import com.hrznstudio.galacticraft.block.decoration.LightPanelBlock;
 import com.hrznstudio.galacticraft.block.decoration.LunarCartographyTableBlock;
-import com.hrznstudio.galacticraft.block.decoration.VacuumGlassBlock;
+import com.hrznstudio.galacticraft.block.special.vacuumglass.VacuumGlass;
 import com.hrznstudio.galacticraft.block.entity.*;
+import com.hrznstudio.galacticraft.block.special.vacuumglass.VacuumGlass;
 import com.hrznstudio.galacticraft.block.environment.*;
 import com.hrznstudio.galacticraft.block.machines.*;
 import com.hrznstudio.galacticraft.block.special.SolarPanelPartBlock;
@@ -144,6 +145,31 @@ public class GalacticraftBlocks {
     public static final Block LINEAR_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 5.0f), Constants.Blocks.LINEAR_LIGHT_PANEL);
     public static final Block DASHED_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 1.0f), Constants.Blocks.DASHED_LIGHT_PANEL);
     public static final Block DIAGONAL_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 1.0f), Constants.Blocks.DIAGONAL_LIGHT_PANEL);
+
+    // VACUUM GLASS
+    public static final Block VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.VACUUM_GLASS);
+    //public static final Block CLEAR_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.CLEAR_VACUUM_GLASS);
+    //public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.STRONG_VACUUM_GLASS);
+
+    // ORES
+    public static final Block TIN_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.TIN_DECORATION_SLAB);
+    public static final Block TIN_DECORATION_SLAB_1 = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.DETAILED_TIN_DECORATION_SLAB);
+    public static final Block DARK_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.DARK_DECORATION_SLAB);
+    public static final Block MARS_COBBLESTONE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.MARS_COBBLESTONE_SLAB);
+    public static final Block MARS_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MARS_DUNGEON_BRICK_SLAB);
+    public static final Block MOON_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_DUNGEON_BRICK_SLAB);
+    public static final Block MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_ROCK_SLAB);
+    public static final Block MOON_ROCK_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_ROCK_STAIRS);
+    public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f)), Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS);
+    public static final Block TIN_DECORATION_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.TIN_DECORATION_STAIRS);
+    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(DETAILED_TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS);
+    public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f)), Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS);
+    public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new com.hrznstudio.galacticraft.api.block.StairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f)), Constants.Blocks.MARS_COBBLESTONE_STAIRS);
+    public static final Block TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F)), Constants.Blocks.TIN_DECORATION_WALL);
+    public static final Block DETAILED_TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F)), Constants.Blocks.DETAILED_TIN_DECORATION_WALL);
+    public static final Block MOON_DUNGEON_BRICKS_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0F, 5.0F)), Constants.Blocks.MOON_DUNGEON_BRICK_WALL);
+    public static final Block MARS_COBBLESTONE_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.MARS_COBBLESTONE_WALL);
+    public static final Block MARS_DUNGEON_BRICKS_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0F, 5.0F)), Constants.Blocks.MARS_DUNGEON_BRICK_WALL);
 
     // VACUUM GLASS
     public static final Block VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.VACUUM_GLASS);
