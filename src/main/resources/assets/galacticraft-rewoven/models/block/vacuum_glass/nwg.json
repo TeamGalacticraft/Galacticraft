@@ -1,0 +1,46 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "galacticraft-rewoven:block/vacuum_glass_pane",
+		"particle": "galacticraft-rewoven:block/vacuum_glass_pane"
+	},
+	"elements": [
+		{
+			"name": "nw_glass_1",
+			"from": [6, 0, 0],
+			"to": [10, 16, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 6]},
+			"faces": {
+				"east": {"uv": [10, 0, 16, 16], "texture": "#2"},
+				"west": {"uv": [2, 0, 8, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "nw_glass_2",
+			"from": [6, 0, 6],
+			"to": [10, 16, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 12]},
+			"faces": {
+				"east": {"uv": [6, 0, 10, 16], "texture": "#2"},
+				"south": {"uv": [6, 0, 10, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "nw_glass_3",
+			"from": [0, 0, 6],
+			"to": [6, 16, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [2, 6, 12]},
+			"faces": {
+				"north": {"uv": [8, 0, 14, 16], "texture": "#2"},
+				"south": {"uv": [0, 0, 6, 16], "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "nwg",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2]
+		}
+	]
+}

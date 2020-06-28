@@ -1,0 +1,54 @@
+{
+	"credit": "Made with Blockbench",
+	"textures": {
+		"2": "galacticraft-rewoven:block/vacuum_glass_pane",
+		"particle": "galacticraft-rewoven:block/vacuum_glass_pane"
+	},
+	"elements": [
+		{
+			"name": "nes_glass_1",
+			"from": [6, 0, 0],
+			"to": [10, 16, 6],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 6]},
+			"faces": {
+				"east": {"uv": [10, 0, 16, 16], "texture": "#2"},
+				"west": {"uv": [0, 0, 6, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "nes_glass_2",
+			"from": [6, 0, 6],
+			"to": [10, 16, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 8]},
+			"faces": {
+				"west": {"uv": [6, 0, 10, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "nes_glass_3",
+			"from": [6, 0, 10],
+			"to": [10, 16, 16],
+			"faces": {
+				"east": {"uv": [0, 0, 6, 16], "texture": "#2"},
+				"west": {"uv": [10, 0, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"name": "nes_glass_4",
+			"from": [10, 0, 6],
+			"to": [16, 16, 10],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 8]},
+			"faces": {
+				"north": {"uv": [5, 0, 11, 16], "texture": "#2"},
+				"south": {"uv": [5, 0, 11, 16], "texture": "#2"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "nesg",
+			"origin": [8, 8, 8],
+			"children": [0, 1, 2, 3]
+		}
+	]
+}
