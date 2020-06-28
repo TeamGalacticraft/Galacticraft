@@ -24,9 +24,9 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
-import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
-import com.hrznstudio.galacticraft.api.rocket.RocketParts;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;

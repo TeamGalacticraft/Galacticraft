@@ -1,4 +1,4 @@
-package com.hrznstudio.galacticraft.api.rocket;
+package com.hrznstudio.galacticraft.api.rocket.part;
 
 import net.minecraft.util.StringIdentifiable;
 

@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.api.item.SchematicItem;
-import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;

@@ -3,7 +3,6 @@ package com.hrznstudio.galacticraft.api.research;
 import com.google.common.base.Functions;
 import com.google.common.collect.ImmutableMap;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;

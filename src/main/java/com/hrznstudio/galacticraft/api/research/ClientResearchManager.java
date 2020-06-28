@@ -2,8 +2,6 @@ package com.hrznstudio.galacticraft.api.research;
 
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.advancement.AdvancementProgress;

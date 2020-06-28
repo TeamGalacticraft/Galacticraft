@@ -22,9 +22,10 @@
 
 package com.hrznstudio.galacticraft.entity.rocket;
 
+import com.hrznstudio.galacticraft.api.client.rocket.part.RocketPartRendererRegistry;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
-import com.hrznstudio.galacticraft.api.rocket.RocketPart;
-import com.hrznstudio.galacticraft.api.rocket.RocketPartType;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.OverlayTexture;
@@ -85,9 +86,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         RocketPart part = entity.getPartForType(RocketPartType.BOTTOM);
         if (part != null) {
             matrices.push();
-            part.preRender(matrices, entity, vertexConsumers, tickDelta);
-            client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), part.getRenderState(), client.getBlockRenderManager().getModel(part.getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-            part.postRender(matrices, entity, vertexConsumers, tickDelta);
+            RocketPartRendererRegistry.render(matrices, part, entity, vertexConsumers, light, tickDelta);
             matrices.pop();
         }
 
@@ -96,18 +95,14 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.BOOSTER);
         if (part != null) {
             matrices.push();
-            part.preRender(matrices, entity, vertexConsumers, tickDelta);
-            client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), part.getRenderState(), client.getBlockRenderManager().getModel(part.getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-            part.postRender(matrices, entity, vertexConsumers, tickDelta);
+            RocketPartRendererRegistry.render(matrices, part, entity, vertexConsumers, light, tickDelta);
             matrices.pop();
         }
 
         part = entity.getPartForType(RocketPartType.FIN);
         if (part != null) {
             matrices.push();
-            part.preRender(matrices, entity, vertexConsumers, tickDelta);
-            client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), part.getRenderState(), client.getBlockRenderManager().getModel(part.getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-            part.postRender(matrices, entity, vertexConsumers, tickDelta);
+            RocketPartRendererRegistry.render(matrices, part, entity, vertexConsumers, light, tickDelta);
             matrices.pop();
         }
 
@@ -116,9 +111,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.BODY);
         if (part != null) {
             matrices.push();
-            part.preRender(matrices, entity, vertexConsumers, tickDelta);
-            client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), part.getRenderState(), client.getBlockRenderManager().getModel(part.getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-            part.postRender(matrices, entity, vertexConsumers, tickDelta);
+            RocketPartRendererRegistry.render(matrices, part, entity, vertexConsumers, light, tickDelta);
             matrices.pop();
         }
 
@@ -127,9 +120,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         part = entity.getPartForType(RocketPartType.CONE);
         if (part != null) {
             matrices.push();
-            part.preRender(matrices, entity, vertexConsumers, tickDelta);
-            client.getBlockRenderManager().getModelRenderer().render(matrices.peek(), vertexConsumers.getBuffer(TexturedRenderLayers.getEntityCutout()), part.getRenderState(), client.getBlockRenderManager().getModel(part.getRenderState()), red, green, blue, light, OverlayTexture.DEFAULT_UV);
-            part.postRender(matrices, entity, vertexConsumers, tickDelta);
+            RocketPartRendererRegistry.render(matrices, part, entity, vertexConsumers, light, tickDelta);
             matrices.pop();
         }
 

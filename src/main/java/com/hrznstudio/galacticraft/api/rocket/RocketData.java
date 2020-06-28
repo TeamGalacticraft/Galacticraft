@@ -2,6 +2,8 @@ package com.hrznstudio.galacticraft.api.rocket;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
