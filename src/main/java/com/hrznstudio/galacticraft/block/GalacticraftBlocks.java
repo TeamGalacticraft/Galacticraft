@@ -118,7 +118,7 @@ public class GalacticraftBlocks {
     public static final Block LINEAR_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 5.0f), Constants.Blocks.LINEAR_LIGHT_PANEL);
     public static final Block DASHED_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 1.0f), Constants.Blocks.DASHED_LIGHT_PANEL);
     public static final Block DIAGONAL_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 1.0f), Constants.Blocks.DIAGONAL_LIGHT_PANEL);
-    public static final Block VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.VACUUM_GLASS);
+    public static final Block VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).strength(2.0f, 0.0f)), Constants.Blocks.VACUUM_GLASS);
     //public static final Block CLEAR_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.CLEAR_VACUUM_GLASS);
     //public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlass(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.STRONG_VACUUM_GLASS);
     public static final Block TIN_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.TIN_DECORATION_SLAB);
