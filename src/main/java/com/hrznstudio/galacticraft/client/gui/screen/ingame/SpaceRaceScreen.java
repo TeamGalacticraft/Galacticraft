@@ -44,10 +44,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -254,6 +251,7 @@ public class SpaceRaceScreen extends Screen {
 
     private void drawResearch(MatrixStack matrices, int mouseX, int mouseY) {
         matrices.push();
+        List<Runnable> postRenderingThings = new ArrayList<>();
         for (ResearchNode root : ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().getRoots()) {
             Queue<ResearchNode> queue = new LinkedList<>();
             queue.add(root);
@@ -283,8 +281,11 @@ public class SpaceRaceScreen extends Screen {
                         );
 
                         if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
-                            drawTexture(matrices, posXFit, getPosYToFit(basePY + 72), texPosXFit, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 72, NODE_DESC_ADDON_HEIGHT)); //X matches
-                            drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 72 + 6, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), 168, 1.0F);
+                            postRenderingThings.add(() -> {
+                                client.getTextureManager().bindTexture(RESEARCH_TEX);
+                                drawTexture(matrices, posXFit, getPosYToFit(basePY + 72), texPosXFit, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 72, NODE_DESC_ADDON_HEIGHT)); //X matches
+                                drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 72 + 6, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), 168, 1.0F);
+                            });
                         }
 
                         drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 6, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 2.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
@@ -315,7 +316,6 @@ public class SpaceRaceScreen extends Screen {
                                 RenderSystem.translatef(baseX + 4, baseY + 4, getZOffset());
                                 RenderSystem.scalef(2F, 2F, 2F);
                                 itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getStackForRender(), 0, 0);
-                                RenderSystem.scalef(0.5F, 0.5F, 0.5F);
                                 RenderSystem.popMatrix();
                             }
                         }
@@ -332,6 +332,11 @@ public class SpaceRaceScreen extends Screen {
                 }
             }
         }
+
+        for (Runnable runnable : postRenderingThings) {
+            runnable.run();
+        }
+        postRenderingThings.clear();
         matrices.pop();
     }
 

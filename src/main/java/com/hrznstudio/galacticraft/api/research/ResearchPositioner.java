@@ -72,13 +72,6 @@ public class ResearchPositioner {
         private ResearchPos findChildrenRecursively(ResearchNode node, @Nullable ResearchPos lastChild) {
             ResearchNode research;
             if (node.getInfo() != null) {
-//             List<ResearchPos> parents = new ArrayList<>();
-//             for (ResearchNode parent : node.getParents()) {
-//                parents.add(positioner.map.get(parent));
-//                if (positioner.map.get(parent) == null) {
-//                   Galacticraft.logger.fatal("child loaded before parent?!");
-//                }
-//             }
                 lastChild = new ResearchPos(node, Arrays.asList(node.getParents()), lastChild, this.children.size() + 1, this.depth + 1, this.positioner);
                 this.children.add(lastChild);
             } else {
@@ -93,7 +86,7 @@ public class ResearchPositioner {
         private void calculateRecursively() {
             if (this.children.isEmpty()) {
                 if (this.previousSibling != null) {
-                    this.row = this.previousSibling.row + 1.0F;
+                    this.row = this.previousSibling.row + 1.5F;
                 } else {
                     this.row = 0.0F;
                 }
@@ -108,9 +101,13 @@ public class ResearchPositioner {
                 }
 
                 this.onFinishChildrenCalculation();
-                float f = ((this.children.get(0)).row + (this.children.get(this.children.size() - 1)).row) / 2.0F;
+                float f = 0.0f;
+                for (ResearchPos pos : children) {
+                    f += pos.row;
+                }
+                f /= (float)children.size();
                 if (this.previousSibling != null) {
-                    this.row = this.previousSibling.row + 1.0F;
+                    this.row = this.previousSibling.row + 1.5F;
                     this.relativeRowInSiblings = this.row - f;
                 } else {
                     this.row = f;
@@ -192,7 +189,7 @@ public class ResearchPositioner {
                     child = child.getFirstChild();
                     node = node.getLastChild();
                     node.optionalLast = this;
-                    float j = siblingNode.row + h - (research.row + f) + 1.0F;
+                    float j = siblingNode.row + h - (research.row + f) + 1.5F;
                     if (j > 0.0F) {
                         siblingNode.getLast(this, last).pushDown(this, j);
                         f += j;
