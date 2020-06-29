@@ -69,7 +69,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
         super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel").getKey(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
