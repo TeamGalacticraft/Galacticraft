@@ -22,13 +22,20 @@
 
 package com.hrznstudio.galacticraft.client.gui.widget;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.EmptyByteBuf;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -38,9 +45,12 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     private final int screenWidth;
     private final int screenHeight;
 
-    public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, new LiteralText(""), (button) -> minecraft.openScreen(new SpaceRaceScreen()));
-        this.font = minecraft.textRenderer;
+    public SpaceRaceButtonWidget(MinecraftClient client, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
+        super(x, y, buttonWidth, buttonHeight, new LiteralText(""), (button) -> {
+            client.openScreen(new SpaceRaceScreen());
+            client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "request_scroll"), new PacketByteBuf(Unpooled.buffer(0))));
+        });
+        this.font = client.textRenderer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }

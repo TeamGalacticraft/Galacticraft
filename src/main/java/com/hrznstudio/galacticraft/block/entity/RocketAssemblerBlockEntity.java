@@ -97,11 +97,13 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     public RocketAssemblerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_ASSEMBLER_TYPE);
         inventory.listen(() -> {
-            if (!inventory.getStack(SCHEMATIC_INPUT_SLOT).getOrCreateTag().equals(previous.getOrCreateTag())) {
-                schematicUpdate(previous.copy(), inventory.getStack(SCHEMATIC_INPUT_SLOT));
+            if (!world.isClient) {
+                if (!inventory.getStack(SCHEMATIC_INPUT_SLOT).getOrCreateTag().equals(previous.getOrCreateTag())) {
+                    schematicUpdate(previous.copy(), inventory.getStack(SCHEMATIC_INPUT_SLOT));
+                }
+                markDirty();
+                previous = inventory.getStack(SCHEMATIC_INPUT_SLOT).copy();
             }
-            markDirty();
-            previous = inventory.getStack(SCHEMATIC_INPUT_SLOT).copy();
         });
         
         fakeEntity = new RocketEntity(GalacticraftEntityTypes.ROCKET, null);

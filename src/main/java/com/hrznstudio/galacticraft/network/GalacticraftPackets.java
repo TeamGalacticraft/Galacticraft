@@ -33,12 +33,14 @@ import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.EnumProperty;
@@ -300,6 +302,13 @@ public class GalacticraftPackets {
                     }
                 }
             });
+        }));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "assembler_build"), ((packetContext, buff) -> packetContext.getTaskQueue().execute(() -> ((ServerPlayerEntity) packetContext.getPlayer()).networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "research_scroll"), new PacketByteBuf(Unpooled.buffer().writeDouble(((ServerPlayerEntityAccessor) packetContext.getPlayer()).getResearchScrollX()).writeDouble(((ServerPlayerEntityAccessor) packetContext.getPlayer()).getResearchScrollY())))))));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_scroll"), ((packetContext, buff) -> {
+            PacketByteBuf buf = new PacketByteBuf(buff.copy());
+            packetContext.getTaskQueue().execute(() -> ((ServerPlayerEntityAccessor) packetContext.getPlayer()).setResearchScroll(buf.readDouble(), buf.readDouble()));
         }));
     }
 }

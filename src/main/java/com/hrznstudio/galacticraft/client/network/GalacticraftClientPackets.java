@@ -27,6 +27,7 @@ import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -49,6 +50,13 @@ public class GalacticraftClientPackets {
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "planet_menu_open"), ((context, buf) -> {
             MinecraftClient.getInstance().openScreen(new PlanetSelectScreen());
+        }));
+
+        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_scroll"), ((context, buf) -> {
+            if (MinecraftClient.getInstance().currentScreen instanceof SpaceRaceScreen) {
+                ((SpaceRaceScreen) MinecraftClient.getInstance().currentScreen).researchScrollX = buf.readDouble();
+                ((SpaceRaceScreen) MinecraftClient.getInstance().currentScreen).researchScrollY = buf.readDouble();
+            }
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((context, buf) -> {
@@ -91,16 +99,5 @@ public class GalacticraftClientPackets {
                 ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().onResearch(buffer);
             });
         }));
-
-//        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "create_launch_pad_be"), (packetContext, packetByteBuf) -> {
-//            BlockPos pos = packetByteBuf.readBlockPos();
-//            packetContext.getTaskQueue().execute(() -> {
-//                MinecraftClient.getInstance().world.setBlockEntity(pos, new RocketLaunchPadBlockEntity()); // Launch pad block entities are created on-demand (not in #createBlockEntity()) so we need to spawn it on the client manually apparently
-//            });
-//        });
-        ClientSidePacketRegistry.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_sync"), (packetContext, packetByteBuf) -> {
-
-        });
-
     }
 }

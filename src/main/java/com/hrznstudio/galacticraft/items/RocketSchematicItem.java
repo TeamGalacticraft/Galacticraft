@@ -22,7 +22,9 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.item.SchematicItem;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -72,13 +74,7 @@ public class RocketSchematicItem extends Item implements SchematicItem {
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.alpha", tag.getInt("alpha")).setStyle(Style.EMPTY.withColor(Formatting.WHITE)));
                 tooltip.add(new LiteralText("-----").setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
                 for (RocketPartType type : RocketPartType.values()) {
-                    String s = new Identifier(tag.getString(type.asString())).getPath();
-                    if (!(new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString()
-                            .equals("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() + "." + new Identifier(tag.getString(type.asString())).getPath() + ".name"))) {
-                        s = new TranslatableText("tooltip." + new Identifier(tag.getString(type.asString())).getNamespace() +
-                                "." + new Identifier(tag.getString(type.asString())).getPath() + ".name").asString();
-                    }
-                    tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.part_type." + type.asString(), s).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+                    tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.part_type." + type.asString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(Galacticraft.ROCKET_PARTS.get(new Identifier(tag.getString(type.asString()))).getName()));
                 }
             } else {
                 tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.blank").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));

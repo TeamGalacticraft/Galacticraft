@@ -27,6 +27,7 @@ import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.research.ResearchNode;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.netty.buffer.Unpooled;
 import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -37,6 +38,8 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -74,8 +77,8 @@ public class SpaceRaceScreen extends Screen {
     private static final int SLOT_WIDTH = 20;
     private static final int SLOT_HEIGHT = 20;
 
-    private double researchScrollX = 0;
-    private double researchScrollY = 0;
+    public double researchScrollX = 0;
+    public double researchScrollY = 0;
     private byte resetHoldTime = 0;
 
     private int widthSize = 0;
@@ -88,8 +91,7 @@ public class SpaceRaceScreen extends Screen {
         TIER_TO_X_MAX_DIST.put(0, 0F);
         for (ResearchNode root : ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().getRoots()) {
             float x = root.getInfo().getX() + (root.getInfo().getTier() > 1 ? TIER_TO_X_MAX_DIST.get(root.getInfo().getTier() - 1) : 0);
-            Queue<ResearchNode> queue = new LinkedList<>();
-            queue.addAll(root.getChildren());
+            Queue<ResearchNode> queue = new LinkedList<>(root.getChildren());
             while (!queue.isEmpty()) {
                 queue.addAll(queue.peek().getChildren());
                 x += queue.poll().getInfo().getX();
@@ -105,6 +107,12 @@ public class SpaceRaceScreen extends Screen {
 
     public static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    }
+
+    @Override
+    public void onClose() {
+        super.onClose();
+        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "research_scroll"), new PacketByteBuf(Unpooled.buffer().writeDouble(researchScrollX).writeDouble(researchScrollY))));
     }
 
     @Override

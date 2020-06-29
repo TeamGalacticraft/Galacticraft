@@ -26,6 +26,10 @@ public class RocketPart {
         this.hasRecipe = hasRecipe;
     }
 
+    public Text getName() {
+        return name;
+    }
+
     public int getTier(List<RocketPart> pieces) {
         return tier.getTier(pieces);
     }

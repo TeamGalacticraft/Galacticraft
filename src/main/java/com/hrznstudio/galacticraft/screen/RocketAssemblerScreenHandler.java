@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft.screen;
 
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
+import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
@@ -33,6 +36,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -65,7 +69,15 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC && this.getStack().isEmpty();
+                RocketData data = RocketData.fromItem(stack);
+                return stack.getItem() != GalacticraftItems.ROCKET_SCHEMATIC || !this.getStack().isEmpty() || (!(playerEntity instanceof ServerPlayerEntity)) || (
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getCone())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getBody())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getBooster())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getBottom())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getFin())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getUpgrade()))
+                );
             }
 
             @Override
