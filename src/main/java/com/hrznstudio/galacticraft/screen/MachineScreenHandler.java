@@ -29,6 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
@@ -41,24 +42,11 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
     public final T blockEntity;
     public final Property energy = Property.create();
 
-    protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity) {
-        super(null, syncId);
+    protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
+        super(handlerType, syncId);
         this.playerEntity = playerEntity;
         this.blockEntity = blockEntity;
         addProperty(energy);
-    }
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<ScreenHandler> createFactory(
-            Class<T> machineClass, MachineContainerConstructor<? extends ScreenHandler, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
     }
 
     @Override

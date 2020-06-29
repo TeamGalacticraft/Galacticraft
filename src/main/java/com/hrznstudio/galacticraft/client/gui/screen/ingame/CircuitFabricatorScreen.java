@@ -33,6 +33,8 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -42,8 +44,6 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorScreenHandler> {
-
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorScreen::new);
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
 
@@ -55,8 +55,8 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private int progressDisplayX;
     private int progressDisplayY;
 
-    public CircuitFabricatorScreen(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
-        super(new CircuitFabricatorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".circuit_fabricator"));
+    public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
     }
 

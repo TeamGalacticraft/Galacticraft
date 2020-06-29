@@ -35,6 +35,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -48,7 +49,6 @@ import net.minecraft.util.math.BlockPos;
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreen::new);
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -57,26 +57,9 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected int progressDisplayX;
     protected int progressDisplayY;
 
-    public CompressorScreen(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
-        this(new CompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("block." + Constants.MOD_ID + ".compressor"));
+    public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
+        super(electricCompressorContainer, inv, title);
         this.backgroundHeight = 192;
-    }
-
-    public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerEntity playerEntity, Text textComponents) {
-        super(electricCompressorContainer, playerEntity.inventory, textComponents);
-    }
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<HandledScreen> createFactory(
-            Class<T> machineClass, MachineScreenHandler.MachineContainerConstructor<? extends HandledScreen<?>, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
     }
 
     protected String getBackgroundLocation() {

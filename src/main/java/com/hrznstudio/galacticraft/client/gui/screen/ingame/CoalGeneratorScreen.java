@@ -33,6 +33,8 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -43,12 +45,10 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorScreen::new);
-
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
 
-    public CoalGeneratorScreen(int syncId, PlayerEntity player, CoalGeneratorBlockEntity blockEntity) {
-        super(new CoalGeneratorScreenHandler(syncId, player, blockEntity), player.inventory, player.getEntityWorld(), blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".coal_generator"));
+    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 176;
     }
 

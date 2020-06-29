@@ -33,6 +33,7 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -44,7 +45,6 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> ELECTRIC_FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreen::new);
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -54,13 +54,9 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private int progressDisplayX;
     private int progressDisplayY;
 
-    public ElectricCompressorScreen(int syncId, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity) {
-        this(new ElectricCompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("block." + Constants.MOD_ID + ".electric_compressor"));
+    public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 199;
-    }
-
-    private ElectricCompressorScreen(ElectricCompressorScreenHandler electricCompressorContainer, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity, Text textComponents) {
-        super(electricCompressorContainer, playerEntity.inventory, playerEntity.world, blockEntity.getPos(), textComponents);
     }
 
     protected void updateProgressDisplay() {

@@ -26,8 +26,10 @@ import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -37,12 +39,11 @@ import net.minecraft.screen.slot.Slot;
  */
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(RefineryBlockEntity.class, RefineryScreenHandler::new);
     private final Property status = Property.create();
     private final Inventory inventory;
 
     public RefineryScreenHandler(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
         addProperty(status);
         this.inventory = blockEntity.getInventory().asInventory();
         // Energy slot
@@ -83,6 +84,10 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 168));
         }
 
+    }
+
+    public RefineryScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (RefineryBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

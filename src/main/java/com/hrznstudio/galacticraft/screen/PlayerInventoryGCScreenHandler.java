@@ -60,7 +60,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
     private final PlayerEntity player;
 
     public PlayerInventoryGCScreenHandler(PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        super(null, 1);
+        super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
 
         this.player = playerEntity;
         this.inventory = ((GCPlayerAccessor) player).getGearInventory().asInventory();

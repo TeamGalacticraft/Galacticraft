@@ -23,13 +23,16 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.CoalGeneratorScreen;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -40,11 +43,10 @@ import net.minecraft.screen.slot.Slot;
 public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGeneratorBlockEntity> {
 
     private static final Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorScreenHandler::new);
     public final Property status = Property.create();
 
     public CoalGeneratorScreenHandler(int syncId, PlayerEntity playerEntity, CoalGeneratorBlockEntity generator) {
-        super(syncId, playerEntity, generator);
+        super(syncId, playerEntity, generator, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
         Inventory inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         // Coal Generator fuel slot
@@ -63,6 +65,10 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 152));
         }
 
+    }
+
+    public CoalGeneratorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

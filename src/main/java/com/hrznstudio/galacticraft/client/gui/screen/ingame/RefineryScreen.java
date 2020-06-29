@@ -33,6 +33,8 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -43,13 +45,11 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(RefineryBlockEntity.class, RefineryScreen::new);
-
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
 
 
-    public RefineryScreen(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
-        super(new RefineryScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".refinery"));
+    public RefineryScreen(RefineryScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
     }
 
