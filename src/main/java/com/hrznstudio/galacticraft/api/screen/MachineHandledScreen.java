@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.api.screen;
@@ -32,14 +33,11 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler.MachineContainerConstructor;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.resource.language.I18n;
@@ -163,19 +161,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 sideOptions.put(face, ((ConfigurableElectricMachineBlock) world.getBlockState(pos).getBlock()).getOption(world.getBlockState(pos), face));
             }
         }
-    }
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<HandledScreen> createFactory(
-            Class<T> machineClass, MachineContainerConstructor<? extends MachineHandledScreen<?>, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
     }
 
     private void sendSecurityUpdate(ConfigurableElectricMachineBlockEntity entity) {
@@ -703,5 +688,10 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void playButtonSound() {
         this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+    @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+
     }
 }

@@ -26,21 +26,23 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import com.hrznstudio.galacticraft.util.Rotatable;
 import com.hrznstudio.galacticraft.util.WireConnectable;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
@@ -174,7 +176,25 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock implements
             return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.FUEL_LOADER_SCREEN_HANDLER, playerEntity, packetByteBuf -> packetByteBuf.writeBlockPos(blockPos));
+        playerEntity.openHandledScreen(new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                buf.writeBlockPos(blockPos);
+            }
+
+            @Override
+            public Text getDisplayName() {
+                return new TranslatableText("block.galacticraft-rewoven.fuel_loader");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(blockPos); // idk why we have to do this again, might want to look into it
+                //TODO: Look into why we have to create a new PacketByteBuf.
+                return new FuelLoaderScreenHandler(syncId, inv, buf);
+            }
+        });
         return ActionResult.SUCCESS;
     }
 

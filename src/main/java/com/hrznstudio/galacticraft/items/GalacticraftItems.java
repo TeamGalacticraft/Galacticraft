@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.item.HoeItem;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
@@ -111,6 +113,20 @@ public class GalacticraftItems {
     public static final Item BUGGY_SEAT = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_SEAT), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BUGGY_STORAGE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_STORAGE), new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BUGGY_WHEEL = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.BUGGY_WHEEL), new Item(new Item.Settings().group(ITEMS_GROUP)));
+    //ARMOR
+    public static final Item HEAVY_DUTY_HELMET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_HELMET), new ArmorItem(GalacticraftArmorMaterials.HEAVY_DUTY, EquipmentSlot.HEAD, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item HEAVY_DUTY_CHESTPLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_CHESTPLATE), new ArmorItem(GalacticraftArmorMaterials.HEAVY_DUTY, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item HEAVY_DUTY_LEGGINGS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_LEGGINGS), new ArmorItem(GalacticraftArmorMaterials.HEAVY_DUTY, EquipmentSlot.LEGS, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item HEAVY_DUTY_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_BOOTS), new ArmorItem(GalacticraftArmorMaterials.HEAVY_DUTY, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item DESH_HELMET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_HELMET), new ArmorItem(GalacticraftArmorMaterials.DESH, EquipmentSlot.HEAD, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item DESH_CHESTPLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_CHESTPLATE), new ArmorItem(GalacticraftArmorMaterials.DESH, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item DESH_LEGGINGS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_LEGGINGS), new ArmorItem(GalacticraftArmorMaterials.DESH, EquipmentSlot.LEGS, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item DESH_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.DESH_BOOTS), new ArmorItem(GalacticraftArmorMaterials.DESH, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item TITANIUM_HELMET = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_HELMET), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.HEAD, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item TITANIUM_CHESTPLATE = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_CHESTPLATE), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item TITANIUM_LEGGINGS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_LEGGINGS), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.LEGS, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item TITANIUM_BOOTS = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.TITANIUM_BOOTS), new ArmorItem(GalacticraftArmorMaterials.TITANIUM, EquipmentSlot.FEET, (new Item.Settings().group(ITEMS_GROUP))));
+    public static final Item SENSOR_GLASSES = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.SENSOR_GLASSES), new ArmorItem(GalacticraftArmorMaterials.SENSOR_GLASSES, EquipmentSlot.HEAD, new Item.Settings().group(ITEMS_GROUP)));
     //TOOLS + WEAPONS
     public static final Item HEAVY_DUTY_SWORD = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HEAVY_DUTY_SWORD), new SwordItem(GalacticraftToolMaterials.STEEL, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
         @Override
@@ -186,6 +202,5 @@ public class GalacticraftItems {
     public static final Item THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THROWABLE_METEOR_CHUNK), new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HOT_THROWABLE_METEOR_CHUNK), new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
 
-    public static void register() {
-    }
+    public static void register() {}
 }

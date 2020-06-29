@@ -25,14 +25,17 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
+import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -44,21 +47,11 @@ import net.minecraft.util.math.BlockPos;
  */
 public class RocketAssemblerScreenHandler extends ScreenHandler {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
-        BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
-        if (be instanceof RocketAssemblerBlockEntity) {
-            return new RocketAssemblerScreenHandler(syncId, player, (RocketAssemblerBlockEntity) be);
-        } else {
-            return null;
-        }
-    };
-
     protected Inventory inventory;
-    protected RocketAssemblerBlockEntity blockEntity;
+    public final RocketAssemblerBlockEntity blockEntity;
 
     public RocketAssemblerScreenHandler(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity blockEntity) {
-        super(null, syncId);
+        super(GalacticraftScreenHandlerTypes.ROCKET_ASSEMBLER_HANDLER, syncId);
         this.blockEntity = blockEntity;
         this.inventory = blockEntity.getInventory().asInventory();
 
@@ -121,6 +114,10 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
             }
         }
+    }
+
+    public RocketAssemblerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (RocketAssemblerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

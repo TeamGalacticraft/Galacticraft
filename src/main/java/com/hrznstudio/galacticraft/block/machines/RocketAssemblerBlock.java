@@ -24,18 +24,23 @@ package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.screen.RocketAssemblerScreenHandler;
 import com.hrznstudio.galacticraft.util.Rotatable;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -80,7 +85,25 @@ public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock imp
             return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.ROCKET_ASSEMBLER_SCREEN_HANDLER, player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
+        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                buf.writeBlockPos(pos);
+            }
+
+            @Override
+            public Text getDisplayName() {
+                return new TranslatableText("block.galacticraft-rewoven.rocket_assembler");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
+                //TODO: Look into why we have to create a new PacketByteBuf.
+                return new RocketAssemblerScreenHandler(syncId, inv, buf);
+            }
+        });
         return ActionResult.SUCCESS;
     }
 

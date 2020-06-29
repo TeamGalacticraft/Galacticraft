@@ -35,8 +35,6 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -44,7 +42,8 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -61,19 +60,8 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = (syncId, id, player, buffer) -> {
-        BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
-        if (be instanceof RocketDesignerBlockEntity) {
-            return new RocketDesignerScreen(syncId, player, (RocketDesignerBlockEntity) be);
-        } else {
-            return null;
-        }
-    };
     protected final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ROCKET_DESIGNER_SCREEN));
-    protected BlockPos blockPos;
-    protected World world;
-    protected RocketDesignerBlockEntity be;
+    protected RocketDesignerBlockEntity blockEntity;
 
     private static final int WHITE_BOX_X = 192;
     private static final int WHITE_BOX_Y = 166;
@@ -153,14 +141,13 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
     private final RocketEntity entity;
 
-    private RocketDesignerScreen(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
-        super(new RocketDesignerScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name"));
+    public RocketDesignerScreen(RocketDesignerScreenHandler screenHandler, PlayerInventory inv, Text title) {
+        super(screenHandler, inv, title);
         this.backgroundWidth = 323;
         this.backgroundHeight = 164;
-        this.world = playerEntity.world;
-        this.be = blockEntity;
-        this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, world);
-        this.validParts.addAll(Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerEntity, OPEN_TAB));
+        this.blockEntity = screenHandler.blockEntity;
+        this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, inv.player.world);
+        this.validParts.addAll(Galacticraft.ROCKET_PARTS.getAvailablePartsForType(inv.player, OPEN_TAB));
     }
 
     public static void drawEntity(int x, int y, RocketEntity entity) {
@@ -250,22 +237,22 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 drawTexture(stack, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_X, BACK_ARROW_Y, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
             }
         }
-        RocketPart part = this.be.getPart(RocketPartType.CONE);
+        RocketPart part = this.blockEntity.getPart(RocketPartType.CONE);
         if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 8);
-        part = this.be.getPart(RocketPartType.BODY);
+        part = this.blockEntity.getPart(RocketPartType.BODY);
         if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 24);
-        part = this.be.getPart(RocketPartType.FIN);
+        part = this.blockEntity.getPart(RocketPartType.FIN);
         if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 40);
-        part = this.be.getPart(RocketPartType.UPGRADE);
+        part = this.blockEntity.getPart(RocketPartType.UPGRADE);
         if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 26);
-        part = this.be.getPart(RocketPartType.BOOSTER);
+        part = this.blockEntity.getPart(RocketPartType.BOOSTER);
         if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 44);
-        part = this.be.getPart(RocketPartType.BOTTOM);
+        part = this.blockEntity.getPart(RocketPartType.BOTTOM);
         if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 60);
 
         this.client.getTextureManager().bindTexture(TEXTURE);
 
-        int red = (int) (56.0F * (this.be.getRed() / 255.0F));
+        int red = (int) (56.0F * (this.blockEntity.getRed() / 255.0F));
         if (red >= 3 && red != 255) {
             this.drawTexture(stack, this.x + (257 + red - 2), this.y + 9, RED_END_COLOUR_X, RED_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             red -= 2;
@@ -273,7 +260,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         this.drawTexture(stack, this.x + 257, this.y + 9, RED_COLOUR_X, RED_COLOUR_Y, red, COLOUR_PICKER_HEIGHT);
 
-        int green = (int) (56.0F * (this.be.getGreen() / 255.0F));
+        int green = (int) (56.0F * (this.blockEntity.getGreen() / 255.0F));
         if (green >= 3 && green != 255) {
             this.drawTexture(stack, this.x + (257 + green - 2), this.y + 19, GREEN_END_COLOUR_X, GREEN_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             green -= 2;
@@ -281,7 +268,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         this.drawTexture(stack, this.x + 257, this.y + 19, GREEN_COLOUR_X, GREEN_COLOUR_Y, green, COLOUR_PICKER_HEIGHT);
 
-        int blue = (int) (56.0F * (this.be.getBlue() / 255.0F));
+        int blue = (int) (56.0F * (this.blockEntity.getBlue() / 255.0F));
         if (blue >= 3 && blue != 255) {
             this.drawTexture(stack, this.x + (257 + blue - 2), this.y + 29, BLUE_END_COLOUR_X, BLUE_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             blue -= 2;
@@ -289,7 +276,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         this.drawTexture(stack, this.x + 257, this.y + 29, BLUE_COLOUR_X, BLUE_COLOUR_Y, blue, COLOUR_PICKER_HEIGHT);
 
-        int alpha = (int) (56.0F * (this.be.getAlpha() / 255.0F));
+        int alpha = (int) (56.0F * (this.blockEntity.getAlpha() / 255.0F));
         if (alpha >= 3 && alpha != 255) {
             this.drawTexture(stack, this.x + (257 + alpha - 2), this.y + 39, ALPHA_END_X, ALPHA_END_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             alpha -= 2;
@@ -298,9 +285,9 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.drawTexture(stack, this.x + 257, this.y + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
 
         for (RocketPartType type : RocketPartType.values()) {
-            if (this.be.getPart(type) != null) this.entity.setPart(this.be.getPart(type));
+            if (this.blockEntity.getPart(type) != null) this.entity.setPart(this.blockEntity.getPart(type));
         }
-        this.entity.setColor(this.be.getRed(), this.be.getGreen(), this.be.getBlue(), this.be.getAlpha());
+        this.entity.setColor(this.blockEntity.getRed(), this.blockEntity.getGreen(), this.blockEntity.getBlue(), this.blockEntity.getAlpha());
 
         drawEntity(this.x + 172 + 24, this.y + 64, entity);
 
@@ -362,7 +349,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (r < 0) {
                         r = 0;
                     }
-                    this.be.setRedClient(r);
+                    this.blockEntity.setRedClient(r);
                 } else if (b == 1) {
                     int g = (int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255);
                     if (g > 255) {
@@ -370,7 +357,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (g < 0) {
                         g = 0;
                     }
-                    this.be.setGreenClient(g);
+                    this.blockEntity.setGreenClient(g);
                 } else if (b == 2) {
                     int blue = (int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255);
                     if (blue > 255) {
@@ -378,7 +365,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (blue < 0) {
                         blue = 0;
                     }
-                    this.be.setBlueClient(blue);
+                    this.blockEntity.setBlueClient(blue);
                 } else {
                     int a = (int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255);
                     if (a > 255) {
@@ -386,23 +373,23 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     } else if (a < 0) {
                         a = 0;
                     }
-                    this.be.setAlphaClient(a);
+                    this.blockEntity.setAlphaClient(a);
                 }
             } else {
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -9.0F && this.y - mouseY > -15.0F) {
-                    this.be.setRedClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.blockEntity.setRedClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
 
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -19.0F && this.y - mouseY > -25.0F) {
-                    this.be.setGreenClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.blockEntity.setGreenClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
 
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -29.0F && this.y - mouseY > -35.0F) {
-                    this.be.setBlueClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.blockEntity.setBlueClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
 
                 if (this.x - mouseX < -256.0F && this.x - mouseX > -313.0F && this.y - mouseY < -39.0F && this.y - mouseY > -45.0F) {
-                    this.be.setAlphaClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
+                    this.blockEntity.setAlphaClient((int) (((((this.x - mouseX) - -257F) * -1F) / 55.5F) * 255));
                 }
             }
         }
@@ -449,7 +436,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 for (int i = page * 25; i < validParts.size(); i++) {
                     RocketPart part = validParts.get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
-                        this.be.setPartClient(part);
+                        this.blockEntity.setPartClient(part);
                         break;
                     }
                     if (++x == 5) {
@@ -463,7 +450,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                 for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAllValidParts(playerInventory.player).size(); i++) {
                     RocketPart part = Galacticraft.ROCKET_PARTS.getAllValidParts(playerInventory.player).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
-                        this.be.setPartClient(part);
+                        this.blockEntity.setPartClient(part);
                         break;
                     }
                     if (++x == 5) {

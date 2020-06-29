@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.mixin;
@@ -77,22 +78,6 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Shadow
     protected abstract int getNextAirUnderwater(int air);
-
-    // What follows should be replaced by the Galacticraft API:
-    @Shadow
-    public abstract StatusEffectInstance getStatusEffect(StatusEffect effect);
-
-    @Inject(method = "computeFallDamage", at = @At("HEAD"), cancellable = true)
-    protected void onComputeFallDamage(float fallDistance, float damageMultiplier, CallbackInfoReturnable<Integer> cir) {
-        RegistryKey<World> worldRegistryKey = this.world.getRegistryKey();
-
-        if (worldRegistryKey == GalacticraftDimensions.MOON) {
-            StatusEffectInstance statusEffectInstanc = this.getStatusEffect(StatusEffects.JUMP_BOOST);
-            float ff = statusEffectInstanc == null ? 0.0F : (float)(statusEffectInstanc.getAmplifier() + 6);
-            cir.setReturnValue(MathHelper.ceil(((fallDistance/(1/0.16)) - 3.0F - ff) * damageMultiplier));
-        }
-    }
-    // End of code that should be removed for a better solution
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getNextAirOnLand(I)I"))
     private int skipAirCheck_1gc(LivingEntity livingEntity, int air) {

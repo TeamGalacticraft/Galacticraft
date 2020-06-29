@@ -22,13 +22,16 @@
 
 package com.hrznstudio.galacticraft.screen;
 
+import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -39,21 +42,11 @@ import net.minecraft.util.math.BlockPos;
  */
 public class RocketDesignerScreenHandler extends ScreenHandler {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = (syncId, id, player, buffer) -> {
-        BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
-        if (be instanceof RocketDesignerBlockEntity) {
-            return new RocketDesignerScreenHandler(syncId, player, (RocketDesignerBlockEntity) be);
-        } else {
-            return null;
-        }
-    };
-
     protected Inventory inventory;
-    protected RocketDesignerBlockEntity blockEntity;
+    public RocketDesignerBlockEntity blockEntity;
 
     public RocketDesignerScreenHandler(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
-        super(null, syncId);
+        super(GalacticraftScreenHandlerTypes.ROCKET_DESIGNER_HANDLER, syncId);
         this.blockEntity = blockEntity;
         this.inventory = blockEntity.getInventory().asInventory();
 
@@ -84,6 +77,10 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
             }
         }
+    }
+
+    public RocketDesignerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (RocketDesignerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

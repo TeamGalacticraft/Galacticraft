@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.network;
@@ -31,19 +32,22 @@ import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
+import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -117,8 +121,9 @@ public class GalacticraftPackets {
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, context.getPlayer(), packetByteBuf -> {
-        }))));
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> {
+            context.getPlayer().openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, player) -> new PlayerInventoryGCScreenHandler(inv, player), new TranslatableText("")));
+        })));
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_red"), (packetContext, buff) -> {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
@@ -310,5 +315,10 @@ public class GalacticraftPackets {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
             packetContext.getTaskQueue().execute(() -> ((ServerPlayerEntityAccessor) packetContext.getPlayer()).setResearchScroll(buf.readDouble(), buf.readDouble()));
         }));
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> {
+            ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlerTypes.PLAYER_INVENTORY_HANDLER_ID, context.getPlayer(), packetByteBuf -> {
+            });
+            context.getPlayer().openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, player) -> new PlayerInventoryGCScreenHandler(inv, player), new TranslatableText("")));
+        })));
     }
 }

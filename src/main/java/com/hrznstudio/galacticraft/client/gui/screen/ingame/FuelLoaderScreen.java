@@ -41,6 +41,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -56,7 +57,6 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(FuelLoaderBlockEntity.class, FuelLoaderScreen::new);
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.FUEL_LOADER_SCREEN));
 
     public static final int X_X = 176;
@@ -76,9 +76,9 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
 
     private final FuelLoaderBlockEntity blockEntity;
 
-    public FuelLoaderScreen(int syncId, PlayerEntity playerEntity, FuelLoaderBlockEntity blockEntity) {
-        super(new FuelLoaderScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new LiteralText(""));
-        this.blockEntity = blockEntity;
+    public FuelLoaderScreen(FuelLoaderScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        this.blockEntity = handler.blockEntity;
     }
 
     @Override

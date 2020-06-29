@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -33,6 +34,8 @@ import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -43,12 +46,10 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CoalGeneratorBlockEntity.class, CoalGeneratorScreen::new);
-
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
 
-    public CoalGeneratorScreen(int syncId, PlayerEntity player, CoalGeneratorBlockEntity blockEntity) {
-        super(new CoalGeneratorScreenHandler(syncId, player, blockEntity), player.inventory, player.getEntityWorld(), blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.coal_generator.name"));
+    public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 176;
     }
 

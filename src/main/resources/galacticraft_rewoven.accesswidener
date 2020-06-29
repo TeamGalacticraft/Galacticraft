@@ -1,17 +1,16 @@
-accessWidener	v1	named
+accessWidener	v1	 named
 
-accessible   field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator   field_24774   Lnet/minecraft/world/gen/chunk/ChunkGeneratorType;
-accessible   field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator   field_24778   J
+accessible   field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator                 field_24774         Lnet/minecraft/world/gen/chunk/ChunkGeneratorType;
+accessible   field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator                 field_24778         J
 
-accessible   field   net/minecraft/world/gen/chunk/ChunkGenerator   biomeSource   Lnet/minecraft/world/biome/source/BiomeSource;
+accessible   field    net/minecraft/world/gen/chunk/ChunkGenerator                       biomeSource         Lnet/minecraft/world/biome/source/BiomeSource;
 
-accessible   field   net/minecraft/item/BucketItem   fluid   Lnet/minecraft/fluid/Fluid;
+accessible   field    net/minecraft/world/World                                          dimension           Lnet/minecraft/world/dimension/DimensionType;
+mutable      field    net/minecraft/world/World                                          dimension           Lnet/minecraft/world/dimension/DimensionType;
+accessible   field    net/minecraft/item/BucketItem                                      fluid               Lnet/minecraft/fluid/Fluid;
 
-accessible   field   net/minecraft/world/World dimension   Lnet/minecraft/world/dimension/DimensionType;
-mutable   field   net/minecraft/world/World dimension   Lnet/minecraft/world/dimension/DimensionType;
-
-accessible   method   net/minecraft/world/gen/stateprovider/BlockStateProviderType   register   (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/gen/stateprovider/BlockStateProviderType;
-accessible   method   net/minecraft/world/gen/chunk/ChunkGeneratorType   <init>   (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/NoiseConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
-accessible   method   net/minecraft/structure/pool/LegacySinglePoolElement   <init>   (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible   method   net/minecraft/structure/pool/FeaturePoolElement   <init>   (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible   method   net/minecraft/advancement/criterion/AbstractCriterionConditions   getPlayerPredicate   ()Lnet/minecraft/predicate/entity/EntityPredicate$Extended;
+accessible   method   net/minecraft/world/gen/stateprovider/BlockStateProviderType       register            (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/gen/stateprovider/BlockStateProviderType;
+accessible   method   net/minecraft/world/gen/chunk/ChunkGeneratorType                   <init>              (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/NoiseConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
+accessible   method   net/minecraft/structure/pool/LegacySinglePoolElement               <init>              (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
+accessible   method   net/minecraft/structure/pool/FeaturePoolElement                    <init>              (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
+accessible   method   net/minecraft/advancement/criterion/AbstractCriterionConditions    getPlayerPredicate  ()Lnet/minecraft/predicate/entity/EntityPredicate$Extended;

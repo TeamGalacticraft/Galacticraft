@@ -43,7 +43,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
 
     // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre8")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16.1")
 
     modImplementation("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
@@ -66,7 +66,7 @@ dependencies {
     modApi ("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
 
     //include everything mandatory inside the jar
-    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16-pre8")
+    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16.1")
     include("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
     include("io.github.cottonmc:UniversalComponents:${project.uc_version}")

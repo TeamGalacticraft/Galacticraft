@@ -47,10 +47,12 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -125,27 +127,15 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     public static final int PROGRESS_ARROW_X = 364;
     public static final int PROGRESS_ARROW_Y = 8;
 
-    public static final ContainerFactory<HandledScreen> FACTORY = (syncId, id, player, buffer) -> {
-        BlockPos pos = buffer.readBlockPos();
-        BlockEntity be = player.world.getBlockEntity(pos);
-        if (be instanceof RocketAssemblerBlockEntity) {
-            return new RocketAssemblerScreen(syncId, player, (RocketAssemblerBlockEntity) be);
-        } else {
-            return null;
-        }
-    };
-
     protected final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ROCKET_ASSEMBLER_SCREEN));
-    private final World world;
     private final RocketAssemblerBlockEntity blockEntity;
     private Tab tab = Tab.ROCKET;
 
-    private RocketAssemblerScreen(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity blockEntity) {
-        super(new RocketAssemblerScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name"));
+    public RocketAssemblerScreen(RocketAssemblerScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, title);
         this.backgroundWidth = 323;
         this.backgroundHeight = 175;
-        this.world = playerEntity.world;
-        this.blockEntity = blockEntity;
+        this.blockEntity = handler.blockEntity;
     }
 
     @Override
