@@ -1,5 +1,25 @@
 {
+  "enabled": "true",
   "extends": [
     "config:base"
+  ],
+
+  "gradle": {
+    "enabled": false
+  },
+
+  "gradle-wrapper": {
+    "enabled": false
+  },
+
+  "regexManagers": [
+    {
+      "datasourceTemplate": "docker",
+      "fileMatch": ["^cloudbuild.yaml$"],
+      "matchStrings": [
+        "name: (?<depName>.*):(?<currentValue>.*)\n"
+      ],
+      "versioningTemplate": "docker"
+    }
   ]
 }
