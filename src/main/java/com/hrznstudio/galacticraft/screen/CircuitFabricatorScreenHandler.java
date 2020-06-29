@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -28,9 +29,11 @@ import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
@@ -43,12 +46,11 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
 
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static final Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorScreenHandler::new);
     public final Property progress = Property.create();
     private final Property status = Property.create();
 
     public CircuitFabricatorScreenHandler(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER);
         addProperty(progress);
         addProperty(status);
         Inventory inventory = blockEntity.getInventory().asInventory();
@@ -74,6 +76,10 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 168));
         }
 
+    }
+
+    public CircuitFabricatorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (CircuitFabricatorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

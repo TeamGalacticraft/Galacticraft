@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -29,10 +30,8 @@ import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -50,12 +49,10 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(BasicSolarPanelBlockEntity.class, BasicSolarPanelScreen::new);
-
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
 
-    public BasicSolarPanelScreen(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
-        super(new BasicSolarPanelScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".basic_solar_panel"));
+    public BasicSolarPanelScreen(BasicSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
     }
 
     @Override
@@ -73,7 +70,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
         super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel").getKey(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 

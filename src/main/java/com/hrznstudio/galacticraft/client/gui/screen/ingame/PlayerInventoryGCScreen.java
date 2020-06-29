@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -31,9 +32,11 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
@@ -46,9 +49,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     private float mouseX;
     private float mouseY;
 
-    public PlayerInventoryGCScreen(PlayerEntity player) {
-//        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCScreenHandler(player.inventory, player), player.inventory, new TranslatableText("ui." + Constants.MOD_ID + ".player_inv_screen"));
+    public PlayerInventoryGCScreen(PlayerInventoryGCScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, title);
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {

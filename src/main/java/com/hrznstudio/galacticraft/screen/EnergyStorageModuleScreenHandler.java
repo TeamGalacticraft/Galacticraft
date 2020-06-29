@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -26,7 +27,9 @@ import com.hrznstudio.galacticraft.block.entity.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
@@ -34,10 +37,9 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<EnergyStorageModuleBlockEntity> {
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(EnergyStorageModuleBlockEntity.class, EnergyStorageModuleScreenHandler::new);
 
     public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity playerEntity, EnergyStorageModuleBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER);
         Inventory inventory = blockEntity.getInventory().asInventory();
 
         // Battery slots
@@ -57,5 +59,9 @@ public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<Energ
         for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
         }
+    }
+
+    public EnergyStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (EnergyStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 }

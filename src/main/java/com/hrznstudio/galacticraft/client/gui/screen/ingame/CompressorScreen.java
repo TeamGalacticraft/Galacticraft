@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,29 +18,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -48,7 +44,6 @@ import net.minecraft.util.math.BlockPos;
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
 
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreen::new);
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
@@ -57,26 +52,9 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected int progressDisplayX;
     protected int progressDisplayY;
 
-    public CompressorScreen(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
-        this(new CompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("block." + Constants.MOD_ID + ".compressor"));
+    public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
+        super(electricCompressorContainer, inv, title);
         this.backgroundHeight = 192;
-    }
-
-    public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerEntity playerEntity, Text textComponents) {
-        super(electricCompressorContainer, playerEntity.inventory, textComponents);
-    }
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<HandledScreen> createFactory(
-            Class<T> machineClass, MachineScreenHandler.MachineContainerConstructor<? extends HandledScreen<?>, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
     }
 
     protected String getBackgroundLocation() {
@@ -103,10 +81,10 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     protected String getContainerDisplayName() {
@@ -150,5 +128,10 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
             this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+
     }
 }

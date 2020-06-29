@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -60,7 +61,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
     private final PlayerEntity player;
 
     public PlayerInventoryGCScreenHandler(PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        super(null, 1);
+        super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
 
         this.player = playerEntity;
         this.inventory = ((GCPlayerAccessor) player).getGearInventory().asInventory();

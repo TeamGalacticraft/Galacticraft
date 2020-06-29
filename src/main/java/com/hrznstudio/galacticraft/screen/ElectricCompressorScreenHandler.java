@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -27,7 +28,9 @@ import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
@@ -38,14 +41,12 @@ import net.minecraft.screen.slot.Slot;
  */
 public class ElectricCompressorScreenHandler extends MachineScreenHandler<ElectricCompressorBlockEntity> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreenHandler::new);
     public final Property status = Property.create();
     public final Property progress = Property.create();
     protected final Inventory inventory;
 
     public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
-
-        super(syncId, player, blockEntity);
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER);
         this.inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         addProperty(progress);
@@ -78,6 +79,10 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
         addProperty(energy);
         addSlot(new FurnaceOutputSlot(player, this.inventory, ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, getOutputSlotPos()[0], getOutputSlotPos()[1] + 18));
         addSlot(new ChargeSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75));
+    }
+
+    public ElectricCompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (ElectricCompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

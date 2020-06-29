@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,19 +18,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,24 +40,11 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
     public final T blockEntity;
     public final Property energy = Property.create();
 
-    protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity) {
-        super(null, syncId);
+    protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
+        super(handlerType, syncId);
         this.playerEntity = playerEntity;
         this.blockEntity = blockEntity;
         addProperty(energy);
-    }
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<ScreenHandler> createFactory(
-            Class<T> machineClass, MachineContainerConstructor<? extends ScreenHandler, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
     }
 
     @Override
