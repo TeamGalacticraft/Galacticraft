@@ -23,15 +23,12 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

@@ -32,14 +32,11 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineB
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler.MachineContainerConstructor;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.resource.language.I18n;
@@ -690,5 +687,10 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void playButtonSound() {
         this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+    @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+
     }
 }

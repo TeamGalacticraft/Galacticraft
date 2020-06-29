@@ -23,25 +23,19 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -86,10 +80,10 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     protected String getContainerDisplayName() {
@@ -133,5 +127,10 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
             this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
         }
+    }
+
+    @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+
     }
 }
