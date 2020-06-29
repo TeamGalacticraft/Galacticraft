@@ -56,7 +56,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private int progressDisplayY;
 
     public CircuitFabricatorScreen(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
-        super(new CircuitFabricatorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.circuit_fabricator.name"));
+        super(new CircuitFabricatorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".circuit_fabricator"));
         this.backgroundHeight = 192;
     }
 

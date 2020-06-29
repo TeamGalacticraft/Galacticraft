@@ -67,7 +67,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     private int oxygenDisplayY = 0;
 
     public OxygenCollectorScreen(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
-        super(new OxygenCollectorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.oxygen_collector.name"));
+        super(new OxygenCollectorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".oxygen_collector"));
         this.backgroundHeight = 181;
     }
 

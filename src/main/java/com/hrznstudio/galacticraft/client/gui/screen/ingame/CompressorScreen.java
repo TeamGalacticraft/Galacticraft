@@ -58,7 +58,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected int progressDisplayY;
 
     public CompressorScreen(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
-        this(new CompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("ui.galacticraft-rewoven.compressor.name"));
+        this(new CompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, new TranslatableText("block." + Constants.MOD_ID + ".compressor"));
         this.backgroundHeight = 192;
     }
 

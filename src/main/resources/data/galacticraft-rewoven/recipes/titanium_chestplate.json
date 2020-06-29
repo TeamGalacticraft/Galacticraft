@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "T T",
+    "TTT",
+    "TTT"
+  ],
+  "key": {
+    "T": {
+      "item": "galacticraft-rewoven:compressed_titanium"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:titanium_chestplate",
+    "count": 1
+  }
+}

@@ -55,7 +55,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private int progressDisplayY;
 
     public ElectricCompressorScreen(int syncId, PlayerEntity playerEntity, ElectricCompressorBlockEntity blockEntity) {
-        this(new ElectricCompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("ui.galacticraft-rewoven.electric_compressor.name"));
+        this(new ElectricCompressorScreenHandler(syncId, playerEntity, blockEntity), playerEntity, blockEntity, new TranslatableText("block." + Constants.MOD_ID + ".electric_compressor"));
         this.backgroundHeight = 199;
     }
 

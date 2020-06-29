@@ -55,7 +55,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
 
     public BasicSolarPanelScreen(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
-        super(new BasicSolarPanelScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.basic_solar_panel.name"));
+        super(new BasicSolarPanelScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("block." + Constants.MOD_ID + ".basic_solar_panel"));
     }
 
     @Override

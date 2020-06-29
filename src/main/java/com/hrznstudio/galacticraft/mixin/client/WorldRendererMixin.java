@@ -72,39 +72,6 @@ public abstract class WorldRendererMixin {
     private void initGalacticraft(MinecraftClient client, BufferBuilderStorage bufferBuilders, CallbackInfo ci) {
         starBufferMoon = new VertexBuffer(skyVertexFormat);
         this.generateStarBufferMoon();
-
-        VertexBuffer lightSkyBufferMoon = new VertexBuffer(skyVertexFormat);
-
-        final byte byte2 = 64;
-        final int i = 256 / byte2 + 2;
-        float f = 16F;
-        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-
-        for (int j = -byte2 * i; j <= byte2 * i; j += byte2) {
-            for (int l = -byte2 * i; l <= byte2 * i; l += byte2) {
-                buffer.begin(7, VertexFormats.POSITION);
-                buffer.vertex(j, f, l).next();
-                buffer.vertex(j + byte2, f, l).next();
-                buffer.vertex(j + byte2, f, l + byte2).next();
-                buffer.vertex(j, f, l + byte2).next();
-                buffer.end();
-                lightSkyBufferMoon.upload(buffer);
-            }
-        }
-
-        f = -16F;
-        buffer.begin(7, VertexFormats.POSITION);
-
-        for (int k = -byte2 * i; k <= byte2 * i; k += byte2) {
-            for (int i1 = -byte2 * i; i1 <= byte2 * i; i1 += byte2) {
-                buffer.vertex(k + byte2, f, i1).next();
-                buffer.vertex(k, f, i1).next();
-                buffer.vertex(k, f, i1 + byte2).next();
-                buffer.vertex(k + byte2, f, i1 + byte2).next();
-            }
-        }
-
-        buffer.end();
     }
 
     @Inject(method = "renderClouds(Lnet/minecraft/client/util/math/MatrixStack;FDDD)V", at = @At("HEAD"), cancellable = true)
@@ -126,7 +93,6 @@ public abstract class WorldRendererMixin {
             RenderSystem.disableBlend();
             RenderSystem.disableLighting();
             RenderSystem.depthMask(false);
-            RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
 
             final BufferBuilder buffer = Tessellator.getInstance().getBuffer();
             float starBrightness = getStarBrightness(delta);
@@ -225,9 +191,8 @@ public abstract class WorldRendererMixin {
     private void generateStarBufferMoon() {
         Random random = new Random(1671120782L);
 
-        final Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder bufferBuilder = tessellator.getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION);
+        BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+        buffer.begin(7, VertexFormats.POSITION);
         for (int i = 0; i < 12000; ++i) {
             double j = random.nextFloat() * 2.0F - 1.0F;
             double k = random.nextFloat() * 2.0F - 1.0F;
@@ -263,12 +228,12 @@ public abstract class WorldRendererMixin {
                     double h = b * v - e * w;
                     double aa = h * s - f * t;
                     double ab = f * s + h * t;
-                    bufferBuilder.vertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1)).next();
+                    buffer.vertex((o + aa) * (i > 6000 ? -1 : 1), (p + g) * (i > 6000 ? -1 : 1), (q + ab) * (i > 6000 ? -1 : 1)).next();
                 }
             }
         }
-        bufferBuilder.end();
-        starBufferMoon.upload(bufferBuilder);
+        buffer.end();
+        starBufferMoon.upload(buffer);
     }
 
 }
