@@ -53,28 +53,26 @@ public class SpaceRaceScreen extends Screen {
     private static final Identifier RESEARCH_TEX = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.RESEARCH_PANELS));
     private static final Map<Integer, Float> TIER_TO_X_MAX_DIST = new HashMap<>();
 
-    public static final int BASE_RESEARCH_OFFSET = 90;
+    public static final int BASE_RESEARCH_OFFSET = 25;
 
-    private static final int NODE_WIDTH = 180;
-    private static final int NODE_HEIGHT = 76;
+    private static final int NODE_WIDTH = 90;
+    private static final int NODE_HEIGHT = 38;
 
     private static final int NODE_X = 0;
     private static final int NODE_UNLOCKABLE_Y = 0;
-    private static final int NODE_IN_PROGRESS_Y = 76;
-    private static final int NODE_COMPLETE_Y = 152;
+    private static final int NODE_IN_PROGRESS_Y = 38;
+    private static final int NODE_COMPLETE_Y = 76;
 
-    private static final int NODE_DESC_ADDON_X = 0;
-    private static final int NODE_DESC_ADDON_Y = 228;
-    private static final int NODE_DESC_ADDON_WIDTH = 180;
-    private static final int NODE_DESC_ADDON_HEIGHT = 48;
+    private static final int NODE_DESC_ADDON_Y = 114;
+    private static final int NODE_DESC_ADDON_HEIGHT = 24;
 
     private static final int SLOT_UNLOCKABLE_X = 0;
-    private static final int SLOT_IN_PROGRESS_X = 40;
-    private static final int SLOT_COMPLETE_X = 80;
+    private static final int SLOT_IN_PROGRESS_X = 20;
+    private static final int SLOT_COMPLETE_X = 40;
 
-    private static final int SLOT_Y = 276;
-    private static final int SLOT_WIDTH = 40;
-    private static final int SLOT_HEIGHT = 40;
+    private static final int SLOT_Y = 138;
+    private static final int SLOT_WIDTH = 20;
+    private static final int SLOT_HEIGHT = 20;
 
     private double researchScrollX = 0;
     private double researchScrollY = 0;
@@ -148,7 +146,7 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void drawTexture(MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
-        drawTexture(matrices, x, y, u, v, width, height, 256, 512);
+        drawTexture(matrices, x, y, u, v, width, height, 128, 256);
     }
 
     @Override
@@ -261,8 +259,8 @@ public class SpaceRaceScreen extends Screen {
                     client.getTextureManager().bindTexture(RESEARCH_TEX);
                     int appTX = getAppropriateNodeTexX(node);
                     int appTY = getAppropriateNodeTexY(node);
-                    int basePX = BASE_RESEARCH_OFFSET + (int) (researchScrollX + TIER_TO_X_MAX_DIST.get(node.getInfo().getTier() - 1) + (node.getInfo().getX() * (NODE_WIDTH + 10)));
-                    int basePY = BASE_RESEARCH_OFFSET + (int) (researchScrollY + (node.getInfo().getY() * (NODE_HEIGHT + 8)));
+                    int basePX = BASE_RESEARCH_OFFSET + (int) (researchScrollX + TIER_TO_X_MAX_DIST.get(node.getInfo().getTier() - 1) + (node.getInfo().getX() * (NODE_WIDTH + 5)));
+                    int basePY = BASE_RESEARCH_OFFSET + (int) (researchScrollY + (node.getInfo().getY() * (NODE_HEIGHT + 4)));
                     int posXFit = getPosXToFit(basePX);
                     int posYFit = getPosYToFit(basePY);
                     int texPosXFit = getTexPosXToFit(basePX, appTX, NODE_WIDTH);
@@ -283,19 +281,19 @@ public class SpaceRaceScreen extends Screen {
                         if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
                             postRenderingThings.add(() -> {
                                 client.getTextureManager().bindTexture(RESEARCH_TEX);
-                                drawTexture(matrices, posXFit, getPosYToFit(basePY + 72), texPosXFit, getTexPosYToFit(basePY + 72, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 72, NODE_DESC_ADDON_HEIGHT)); //X matches
-                                drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 72 + 6, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), 168, 1.0F);
+                                drawTexture(matrices, posXFit, getPosYToFit(basePY + 36), texPosXFit, getTexPosYToFit(basePY + 36, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 36, NODE_DESC_ADDON_HEIGHT)); //X matches
+                                drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 39, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), NODE_WIDTH - 3, 0.5F);
                             });
                         }
 
-                        drawAndAutotrimTextScaleSplit(matrices, basePX + 6, basePY + 6, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 2.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
+                        drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 3, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 1.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
 
                         for (int i = 0; i < node.getInfo().getIcons().length && i < 4; i++) {
                             // 6, 31
                             // 43
 
-                            int baseX = 6 + (43 * (i)) + basePX;
-                            int baseY = 31 + basePY;
+                            int baseX = 3 + ((SLOT_WIDTH + 2) * i) + basePX;
+                            int baseY = 15 + basePY;
                             client.getTextureManager().bindTexture(RESEARCH_TEX);
                             this.drawTexture(matrices,
                                     getPosXToFit(baseX),
@@ -312,11 +310,7 @@ public class SpaceRaceScreen extends Screen {
                                     && baseX >= this.getLeft() + 10 && baseY >= this.getTop() + 25
                                     && baseX + SLOT_WIDTH <= this.getRight() - 10 && baseY + SLOT_WIDTH <= this.getBottom() - 10
                                     && baseX <= this.getRight() - 10 && baseY <= this.getBottom() - 10) {
-                                RenderSystem.pushMatrix();
-                                RenderSystem.translatef(baseX + 4, baseY + 4, getZOffset());
-                                RenderSystem.scalef(2F, 2F, 2F);
-                                itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getStackForRender(), 0, 0);
-                                RenderSystem.popMatrix();
+                                itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getStackForRender(), baseX + 2, baseY + 2);
                             }
                         }
                     }
@@ -444,7 +438,6 @@ public class SpaceRaceScreen extends Screen {
             }
             if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 125, 100, 30)) {
                 setMenu(Menu.RESEARCH);
-                assert MinecraftClient.getInstance().player != null;
                 return true;
             }
         } else if (menu == Menu.ADD_PLAYERS) {
@@ -496,13 +489,6 @@ public class SpaceRaceScreen extends Screen {
             this.drawMouseoverTooltip(stack, x, y);
         }
         super.render(stack, x, y, dleta);
-
-//        this.mouseX = (float) x;
-//        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
-//
-//        DiffuseLighting.enableForItems();
-//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getStackForRender(), this.x + 6, this.y - 20);
-//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getStackForRender(), this.x + 35, this.y - 20);
     }
 
     private void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
