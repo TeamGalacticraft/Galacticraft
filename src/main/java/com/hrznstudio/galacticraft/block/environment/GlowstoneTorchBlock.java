@@ -58,7 +58,7 @@ public class GlowstoneTorchBlock extends TorchBlock {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void buildTooltip(ItemStack itemStack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+    public void buildTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
             list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_torch").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {

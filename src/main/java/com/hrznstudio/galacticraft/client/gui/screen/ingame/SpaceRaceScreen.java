@@ -118,10 +118,10 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void resize(MinecraftClient minecraftClient_1, int int_1, int int_2) {
+    public void resize(MinecraftClient client, int width, int height) {
         this.widthSize = 0;
         this.heightSize = 0;
-        super.resize(minecraftClient_1, int_1, int_2);
+        super.resize(client, width, height);
     }
 
     private static void fillSolid(Matrix4f matrix, int x1, int y1, int x2, int y2, int color) {

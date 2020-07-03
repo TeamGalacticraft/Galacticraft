@@ -115,12 +115,12 @@ public class GalacticraftEnergy {
         ((SimpleCapacitorComponent) ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT)).setCurrentEnergy(amount);
     }
 
-    public static boolean isOxygenItem(ItemStack itemStack) {
-        if (!itemStack.hasTag()) {
+    public static boolean isOxygenItem(ItemStack stack) {
+        if (!stack.hasTag()) {
             return false;
         }
 
-        CompoundTag tag = itemStack.getTag() == null ? new CompoundTag() : itemStack.getTag();
+        CompoundTag tag = stack.getTag() == null ? new CompoundTag() : stack.getTag();
         return tag.contains(OxygenTankItem.OXYGEN_NBT_KEY) && tag.contains(OxygenTankItem.MAX_OXYGEN_NBT_KEY);
     }
 

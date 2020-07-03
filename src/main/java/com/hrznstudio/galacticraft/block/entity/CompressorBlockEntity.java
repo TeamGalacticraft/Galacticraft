@@ -200,8 +200,8 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
     }
 
-    protected boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return canInsert(OUTPUT_SLOT, itemStack);
+    protected boolean canPutStackInResultSlot(ItemStack stack) {
+        return canInsert(OUTPUT_SLOT, stack);
     }
 
     public int getProgress() {

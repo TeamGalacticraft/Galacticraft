@@ -73,7 +73,7 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void onCraft(ItemStack tank, World world_1, PlayerEntity playerEntity_1) {
+    public void onCraft(ItemStack tank, World world, PlayerEntity player) {
         applyDefaultTags(tank, 0);
     }
 

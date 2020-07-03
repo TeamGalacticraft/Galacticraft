@@ -24,26 +24,35 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
+import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
+import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ENERGY_STORAGE_MODULE_SCREEN));
+public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolarPanelScreenHandler> {
 
-    public EnergyStorageModuleScreen(EnergyStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
+
+    public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
     }
 
@@ -52,21 +61,41 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 58, this.y + 24);
-        this.drawConfigTabs(stack);
+        int leftPos = this.x;
+        int topPos = this.y;
+
+        this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
     }
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
         super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.energy_storage_module").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
     @Override
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 58, this.y + 24);
+        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
+    }
+
+    @Override
+    @NotNull
+    protected Collection<? extends Text> getEnergyTooltipLines() {
+        List<Text> lines = new ArrayList<>();
+        if (this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.FULL
+                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.BLOCKED
+                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.NIGHT
+        ) {
+            long time = world.getTimeOfDay() % 24000;
+            if (time > 6000) {
+                time = 6000 - (time - 6000);
+            }
+
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) Math.min(Galacticraft.configManager.get().solarPanelEnergyProductionRate(), (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * this.handler.blockEntity.multiplier) * 4)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
+        }
+        return lines;
     }
 }

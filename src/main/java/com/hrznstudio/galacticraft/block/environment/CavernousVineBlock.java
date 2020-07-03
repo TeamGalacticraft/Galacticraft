@@ -71,7 +71,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onEntityCollision(BlockState blockState_1, World world_1, BlockPos blockPos_1, Entity entity) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (!(entity instanceof LivingEntity) || (entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.flying)) {
             return;
         }
@@ -80,7 +80,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
+    public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 
@@ -132,8 +132,8 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos pos_2, boolean boolean_1) {
-        super.neighborUpdate(state, world, pos, block, pos_2, boolean_1);
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos pos_2, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, pos_2, notify);
         if (!canPlaceAt(state, world, pos)) {
             world.breakBlock(pos, false);
         }
@@ -170,7 +170,7 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack itemStack) {
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity livingEntity, ItemStack stack) {
         BlockPos abovePos = new BlockPos(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ());
         BlockState stateAbove = world.getBlockState(abovePos);
 

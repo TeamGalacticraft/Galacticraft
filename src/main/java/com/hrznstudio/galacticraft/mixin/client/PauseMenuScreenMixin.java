@@ -37,8 +37,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(GameMenuScreen.class)
 public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(Text textComponent_1) {
-        super(textComponent_1);
+    protected PauseMenuScreenMixin(Text text) {
+        super(text);
     }
 
     @Inject(method = "init", at = @At("RETURN"))

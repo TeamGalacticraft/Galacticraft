@@ -23,8 +23,9 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
+import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelPartBlockEntity;
+import com.hrznstudio.galacticraft.block.entity.MultiBlockPartBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -44,82 +45,81 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvider {
-    // createCuboidShape(minX, minY, minZ, maxX, maxY, maxZ)
+public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
     private static final VoxelShape POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 16, 8 + 2);
     private static final VoxelShape TOP_POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8, 8 + 2);
     private static final VoxelShape TOP_SHAPE = createCuboidShape(0, 6, 0, 16, 10, 16);
     private static final VoxelShape TOP_MID_SHAPE = VoxelShapes.union(TOP_POLE_SHAPE, TOP_SHAPE);
 
-    public BasicSolarPanelPartBlock(Settings settings) {
+    public SolarPanelPartBlock(Settings settings) {
         super(settings);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
+    public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState blockState_1, BlockView blockView_1, BlockPos pos, ShapeContext context) {
-        Block down = blockView_1.getBlockState(pos.down()).getBlock();
-        if (down == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView blockView, BlockPos pos, ShapeContext context) {
+        Block down = blockView.getBlockState(pos.down()).getBlock();
+        if (down instanceof MultiBlockBase) {
             return POLE_SHAPE;
-        } else if (blockView_1.getBlockState(pos.down().down()).getBlock() == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
+        } else if (blockView.getBlockState(pos.down().down()).getBlock() == GalacticraftBlocks.BASIC_SOLAR_PANEL) {
             return TOP_MID_SHAPE;
         }
         return TOP_SHAPE;
     }
 
     @Override
-    public void onBreak(World world_1, BlockPos partPos, BlockState partState, PlayerEntity playerEntity_1) {
-        BlockEntity partBE = world_1.getBlockEntity(partPos);
-        BasicSolarPanelPartBlockEntity be = (BasicSolarPanelPartBlockEntity) partBE;
+    public void onBreak(World world, BlockPos partPos, BlockState partState, PlayerEntity player) {
+        BlockEntity partBE = world.getBlockEntity(partPos);
+        MultiBlockPartBlockEntity be = (MultiBlockPartBlockEntity) partBE;
 
         if (be == null) {
             // Probably already been destroyed by the code in the base.
             return;
         }
-        if (be.basePos == null) {
+        if (be.basePos == BlockPos.ORIGIN) {
             // There is no base! Probably created using /setblock
             return;
         }
         BlockPos basePos = new BlockPos(be.basePos);
-        BlockState baseState = world_1.getBlockState(basePos);
+        BlockState baseState = world.getBlockState(basePos);
 
         if (baseState.isAir()) {
             // The base has been destroyed already.
             return;
         }
 
-        BasicSolarPanelBlock block = (BasicSolarPanelBlock) baseState.getBlock();
-        block.onPartDestroyed(world_1, partState, partPos, baseState, basePos, !playerEntity_1.isCreative());
+        MultiBlockBase block = (MultiBlockBase) baseState.getBlock();
+        block.onPartDestroyed(world, player, baseState, basePos, partState, partPos);
 
-        super.onBroken(world_1, partPos, partState);
+        super.onBroken(world, partPos, partState);
     }
 
     @Override
-    public PistonBehavior getPistonBehavior(BlockState blockState_1) {
+    public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.BLOCK;
     }
 
     @Override
-    public ItemStack getPickStack(BlockView blockView_1, BlockPos blockPos_1, BlockState blockState_1) {
+    public ItemStack getPickStack(BlockView blockView, BlockPos pos, BlockState state) {
         return new ItemStack(GalacticraftBlocks.BASIC_SOLAR_PANEL);
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockView var1) {
-        return new BasicSolarPanelPartBlockEntity();
+        return new MultiBlockPartBlockEntity();
     }
 
     @Environment(EnvType.CLIENT)
-    public float getAmbientOcclusionLightLevel(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView blockView, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public boolean isTranslucent(BlockState state, BlockView blockView, BlockPos pos) {
         return true;
     }
 
@@ -130,19 +130,18 @@ public class BasicSolarPanelPartBlock extends Block implements BlockEntityProvid
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState_1, World world_1, BlockPos blockPos_1, PlayerEntity playerEntity_1, Hand hand_1, BlockHitResult blockHitResult_1) {
-        BlockEntity partEntity = world_1.getBlockEntity(blockPos_1);
-        if (world_1.isAir(blockPos_1) || !(partEntity instanceof BasicSolarPanelPartBlockEntity)) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
+        BlockEntity partEntity = world.getBlockEntity(pos);
+        if (world.isAir(pos) || !(partEntity instanceof MultiBlockPartBlockEntity)) {
             return ActionResult.SUCCESS;
         }
 
-        if (world_1.isClient) return ActionResult.SUCCESS;
+        if (world.isClient) return ActionResult.SUCCESS;
 
-        BlockPos basePos = ((BasicSolarPanelPartBlockEntity) partEntity).basePos;
+        BlockPos basePos = ((MultiBlockPartBlockEntity) partEntity).basePos;
 
-        BlockState base = world_1.getBlockState(basePos);
-        Block baseBlock = base.getBlock();
-        return ((BasicSolarPanelBlock) baseBlock).onUse(base, world_1, basePos, playerEntity_1, hand_1, blockHitResult_1);
+        BlockState base = world.getBlockState(basePos);
+        return base.getBlock().onUse(base, world, basePos, player, hand, blockHitResult);
     }
 
 }

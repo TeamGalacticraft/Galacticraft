@@ -76,8 +76,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
                 }
 
                 @Override
-                public boolean canInsert(ItemStack itemStack_1) {
-                    return slot == getPreferredEquipmentSlot(itemStack_1);
+                public boolean canInsert(ItemStack stack) {
+                    return slot == getPreferredEquipmentSlot(stack);
                 }
 
                 @Override
@@ -138,8 +138,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
     }
 
-    private EquipmentSlot getPreferredEquipmentSlot(ItemStack itemStack_1) {
-        Item item_1 = itemStack_1.getItem();
+    private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
+        Item item_1 = stack.getItem();
         return ((ThermalArmorItem) item_1).getSlotType();
     }
 
@@ -154,8 +154,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
 
         @Override
-        public boolean canInsert(ItemStack itemStack_1) {
-            return itemStack_1.getItem() instanceof OxygenTankItem;
+        public boolean canInsert(ItemStack stack) {
+            return stack.getItem() instanceof OxygenTankItem;
         }
 
         @Override
