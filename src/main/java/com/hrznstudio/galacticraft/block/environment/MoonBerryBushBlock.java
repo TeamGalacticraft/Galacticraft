@@ -67,7 +67,7 @@ public class MoonBerryBushBlock extends PlantBlock {
     }
 
     @Environment(EnvType.CLIENT)
-    public ItemStack getPickStack(BlockView blockView_1, BlockPos blockPos_1, BlockState blockState_1) {
+    public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         return new ItemStack(GalacticraftItems.MOON_BERRIES);
     }
 

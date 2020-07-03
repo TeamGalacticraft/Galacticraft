@@ -42,7 +42,7 @@ public class ChargeSlot extends Slot {
     }
 
     @Override
-    public boolean canInsert(ItemStack itemStack) {
-        return GalacticraftEnergy.isEnergyItem(itemStack);
+    public boolean canInsert(ItemStack stack) {
+        return GalacticraftEnergy.isEnergyItem(stack);
     }
 }

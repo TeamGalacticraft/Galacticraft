@@ -47,7 +47,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack stack, int int_1, int int_2, float float_1) {
+    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float delta) {
         int screenWidth = this.screenWidth;
         int screenHeight = this.screenHeight;
         int buttonWidth = 100;

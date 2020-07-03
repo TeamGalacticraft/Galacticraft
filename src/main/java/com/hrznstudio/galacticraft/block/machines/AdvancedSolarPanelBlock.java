@@ -28,9 +28,9 @@ import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
+import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.MultiBlockPartBlockEntity;
-import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
+import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
@@ -70,7 +70,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements MultiBlockBase {
+public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock implements MultiBlockBase {
 
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
@@ -79,7 +79,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
 
-    public BasicSolarPanelBlock(Settings settings) {
+    public AdvancedSolarPanelBlock(Settings settings) {
         super(settings);
     }
 
@@ -148,7 +148,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
-        return new BasicSolarPanelBlockEntity();
+        return new AdvancedSolarPanelBlockEntity();
     }
 
     @Override
@@ -172,7 +172,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
             @Override
             public Text getDisplayName() {
-                return new TranslatableText("block.galacticraft-rewoven.basic_solar_panel");
+                return new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel");
             }
 
             @Override
@@ -180,7 +180,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
                 //TODO: Look into why we have to create a new PacketByteBuf.
-                return new BasicSolarPanelScreenHandler(syncId, inv, buf);
+                return new AdvancedSolarPanelScreenHandler(syncId, inv, buf);
             }
         });
         return ActionResult.SUCCESS;
@@ -202,11 +202,11 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity != null) {
-            if (blockEntity instanceof BasicSolarPanelBlockEntity) {
-                BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
+            if (blockEntity instanceof AdvancedSolarPanelBlockEntity) {
+                AdvancedSolarPanelBlockEntity entity = (AdvancedSolarPanelBlockEntity) blockEntity;
 
-                for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSize(); i++) {
-                    ItemStack stack = basicSolarPanelBlockEntity.getInventory().getStack(i);
+                for (int i = 0; i < entity.getInventory().getSize(); i++) {
+                    ItemStack stack = entity.getInventory().getStack(i);
 
                     if (stack != null) {
                         world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
@@ -290,7 +290,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel");
+        return new TranslatableText("tooltip.galacticraft-rewoven.advanced_solar_panel");
     }
 
     @Override

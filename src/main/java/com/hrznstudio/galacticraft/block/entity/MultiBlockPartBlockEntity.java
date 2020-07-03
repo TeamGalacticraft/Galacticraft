@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.hrznstudio.galacticraft.block.machines.BasicSolarPanelBlock;
+import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -33,39 +33,36 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelPartBlockEntity extends BlockEntity {
-    public BlockPos basePos;
+public class MultiBlockPartBlockEntity extends BlockEntity {
+    public BlockPos basePos = BlockPos.ORIGIN;
 
-    public BasicSolarPanelPartBlockEntity() {
-        super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_PART_TYPE);
+    public MultiBlockPartBlockEntity() {
+        super(GalacticraftBlockEntities.GENERIC_MULTIBLOCK_PART_TYPE);
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag = super.toTag(tag);
-        CompoundTag baseTag = new CompoundTag();
-        baseTag.putInt("X", this.basePos.getX());
-        baseTag.putInt("Y", this.basePos.getY());
-        baseTag.putInt("Z", this.basePos.getZ());
-
-        tag.put("Base", baseTag);
+        super.toTag(tag);
+        if (this.basePos != BlockPos.ORIGIN) {
+            tag.putInt("baseX", this.basePos.getX());
+            tag.putInt("baseY", this.basePos.getY());
+            tag.putInt("baseZ", this.basePos.getZ());
+        }
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        CompoundTag base = tag.getCompound("Base");
-        this.basePos = new BlockPos(base.getInt("X"), base.getInt("Y"), base.getInt("Z"));
+        if (tag.contains("baseX")) {
+            this.basePos = new BlockPos(tag.getInt("baseX"), tag.getInt("baseY"), tag.getInt("baseZ"));
+        }
     }
 
-    public boolean setBasePos(BlockPos basePos) {
-        if (this.world.getBlockState(basePos).getBlock() instanceof BasicSolarPanelBlock) {
+    public void setBasePos(BlockPos basePos) {
+        if (this.world.getBlockState(basePos).getBlock() instanceof MultiBlockBase) {
             this.basePos = basePos;
             this.markDirty();
-            return true;
-        } else {
-            return false;
         }
     }
 }

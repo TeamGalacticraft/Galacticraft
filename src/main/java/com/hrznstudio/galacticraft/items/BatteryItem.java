@@ -90,7 +90,7 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public void onCraft(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
+    public void onCraft(ItemStack battery, World world, PlayerEntity player) {
         CompoundTag batteryTag = battery.getOrCreateTag();
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
@@ -102,7 +102,7 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
+    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
         return false;
     }
 

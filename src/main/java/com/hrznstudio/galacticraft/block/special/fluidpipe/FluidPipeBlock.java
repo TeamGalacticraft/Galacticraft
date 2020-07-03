@@ -175,7 +175,7 @@ public class FluidPipeBlock extends Block {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView blockView_1, BlockPos pos) {
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;
     }
 

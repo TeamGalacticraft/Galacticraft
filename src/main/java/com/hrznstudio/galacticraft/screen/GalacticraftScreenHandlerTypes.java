@@ -40,6 +40,13 @@ public class GalacticraftScreenHandlerTypes {
                 BasicSolarPanelScreenHandler::new
             );
 
+    public static final Identifier ADVANCED_SOLAR_PANEL_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ADVANCED_SOLAR_SCREEN_HANDLER);
+    public static final ScreenHandlerType<AdvancedSolarPanelScreenHandler> ADVANCED_SOLAR_PANEL_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                ADVANCED_SOLAR_PANEL_HANDLER_ID,
+                AdvancedSolarPanelScreenHandler::new
+            );
+
     public static final Identifier CIRCUIT_FABRICATOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<CircuitFabricatorScreenHandler> CIRCUIT_FABRICATOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(

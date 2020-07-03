@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.util.WireConnectable;
+import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;

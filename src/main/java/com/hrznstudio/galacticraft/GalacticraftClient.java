@@ -70,7 +70,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
 //        ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> {
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_TABS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
@@ -124,6 +124,7 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(new Identifier(Constants.MOD_ID, "block/refinery_top"));
 
             registry.register(new Identifier(Constants.MOD_ID, "block/basic_solar_panel"));
+            registry.register(new Identifier(Constants.MOD_ID, "block/advanced_solar_panel"));
             registry.register(new Identifier(Constants.MOD_ID, "block/solar_panel"));
 
             registry.register(new Identifier(Constants.MOD_ID, "block/coal_generator"));
@@ -133,6 +134,7 @@ public class GalacticraftClient implements ClientModInitializer {
         });
 
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ADVANCED_SOLAR_PANEL_HANDLER, AdvancedSolarPanelScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.REFINERY_HANDLER, RefineryScreen::new);
