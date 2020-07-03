@@ -33,6 +33,7 @@ import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.impl.EntitySyncedTankComponent;
@@ -504,7 +505,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.tank.isEmpty() || !this.tank.getContents(0).getFluid().equals(GalacticraftFluids.FUEL))) {
+                if (!debugMode && (this.tank.isEmpty() || !this.tank.getContents(0).getFluid().isIn(GalacticraftFluidTags.FUEL))) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
                     this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values

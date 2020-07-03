@@ -31,7 +31,7 @@ import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPad
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
@@ -148,17 +148,18 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
         }
 
         if (this.getTank().getContents(0).getAmount().doubleValue() + 1.0D <= tank.getMaxCapacity(0).doubleValue()) {
-            if (getInventory().getStack(1).getItem() instanceof BucketItem) {
-                if (((BucketItem) getInventory().getStack(1).getItem()).fluid == GalacticraftFluids.FUEL) {
+            ItemStack bucket = getInventory().getStack(1);
+            if (bucket.getItem() instanceof BucketItem) {
+                if (((BucketItem) bucket.getItem()).fluid.isIn(GalacticraftFluidTags.FUEL)) {
                     getInventory().setStack(1, new ItemStack(Items.BUCKET));
-                    this.tank.insertFluid(0, new FluidVolume(GalacticraftFluids.FUEL, Fraction.ONE), ActionType.PERFORM);
+                    this.tank.insertFluid(0, new FluidVolume(((BucketItem) bucket.getItem()).fluid, Fraction.ONE), ActionType.PERFORM);
                 }
             }
         }
         if (this.getTank().getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) < 0) {
             if (ComponentProvider.fromItemStack(getInventory().getStack(1)).hasComponent(UniversalComponents.TANK_COMPONENT)) {
                 TankComponent component = ComponentProvider.fromItemStack(getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
-                if (component.getContents(0).getFluid() == GalacticraftFluids.FUEL) {
+                if (component.getContents(0).getFluid().isIn(GalacticraftFluidTags.FUEL)) {
                     tank.insertFluid(0, component.takeFluid(0, Fraction.of(1, 20), ActionType.PERFORM), ActionType.PERFORM);
                 }
             }
