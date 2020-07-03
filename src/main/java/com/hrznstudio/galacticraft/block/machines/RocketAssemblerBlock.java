@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.screen.RocketAssemblerScreenHandler;
-import com.hrznstudio.galacticraft.util.Rotatable;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -58,7 +57,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock implements BlockEntityProvider, Rotatable {
+public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock implements BlockEntityProvider {
     public RocketAssemblerBlock(Settings settings) {
         super(settings);
     }
@@ -71,11 +70,11 @@ public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock imp
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
+    public final void buildTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.rocket_assembler").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.rocket_assembler").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
     }
 

@@ -23,17 +23,13 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
 import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
-import com.hrznstudio.galacticraft.util.Rotatable;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
@@ -65,7 +61,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FuelLoaderBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
+public class FuelLoaderBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
@@ -77,11 +73,6 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock implements
     public FuelLoaderBlock(Settings settings) {
         super(settings);
         setDefaultState(getStateManager().getDefaultState().with(CONNECTED, false));
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -199,7 +190,7 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock implements
     }
 
     @Override
-    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+    public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
         return new TranslatableText("tooltip.galacticraft-rewoven.fuel_loader");
     }
 

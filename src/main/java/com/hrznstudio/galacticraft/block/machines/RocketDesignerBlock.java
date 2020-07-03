@@ -25,13 +25,11 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.api.block.AbstractHorizontalDirectionalBlock;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.screen.RocketDesignerScreenHandler;
-import com.hrznstudio.galacticraft.util.Rotatable;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockEntityProvider;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
@@ -59,7 +57,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock implements Rotatable, BlockEntityProvider {
+public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock implements BlockEntityProvider {
     public RocketDesignerBlock(Settings settings) {
         super(settings);
     }
@@ -71,22 +69,17 @@ public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock impl
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        super.buildTooltip(itemStack_1, blockView_1, list_1, tooltipContext_1);
+    public final void buildTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
+        super.buildTooltip(stack, view, lines, context);
         if (Screen.hasShiftDown()) {
-            list_1.add(new TranslatableText(getTooltipKey()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            lines.add(new TranslatableText(getTooltipKey()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {
-            list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
     }
 
     protected String getTooltipKey() {
         return "tooltip.galacticraft-rewoven.rocket_designer";
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
     }
 
     @Override
