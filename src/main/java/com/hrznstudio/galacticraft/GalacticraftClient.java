@@ -26,6 +26,7 @@ package com.hrznstudio.galacticraft;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
 import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
+import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
@@ -36,6 +37,7 @@ import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
+import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,9 +47,12 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.SkyProperties;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -161,6 +166,8 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_WALL_TORCH, RenderLayer.getCutout());
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
+
+        SkyProperties.BY_DIMENSION_TYPE.put(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), new MoonSkyProperties());
 
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
