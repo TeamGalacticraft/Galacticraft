@@ -21,7 +21,7 @@
  *
  */
 
-package com.hrznstudio.galacticraft.world.biome.layer;
+package com.hrznstudio.galacticraft.world.biome.layer.moon;
 
 import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;

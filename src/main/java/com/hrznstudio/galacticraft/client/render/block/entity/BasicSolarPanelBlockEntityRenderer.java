@@ -120,7 +120,7 @@ public class BasicSolarPanelBlockEntityRenderer extends ConfigurableElectricMach
     @Override
     public void render(BasicSolarPanelBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
         light = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(Direction.UP, 3));
-        renderBlock(blockEntity, tickDelta, matrices, vertexConsumers, light, overlay);
+        renderBlock(blockEntity, matrices, vertexConsumers, overlay);
         MinecraftClient.getInstance().getTextureManager().bindTexture(BasicSolarPanelBlockEntityRenderer.solarPanelTexture);
 
         matrices.push();
@@ -130,7 +130,7 @@ public class BasicSolarPanelBlockEntityRenderer extends ConfigurableElectricMach
         matrices.pop();
     }
 
-    private void renderBlock(BasicSolarPanelBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int ignored, int overlay) {
+    private void renderBlock(BasicSolarPanelBlockEntity blockEntity, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int overlay) {
         int[] light = new int[Direction.values().length];
         for (Direction direction : Direction.values()) {
             light[getId(direction)] = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(Direction.UP, 3).offset(direction));

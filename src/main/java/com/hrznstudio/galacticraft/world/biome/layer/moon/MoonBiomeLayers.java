@@ -21,13 +21,12 @@
  *
  */
 
-package com.hrznstudio.galacticraft.world.biome.layer;
+package com.hrznstudio.galacticraft.world.biome.layer.moon;
 
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
-import net.minecraft.world.biome.layer.IncreaseEdgeCurvatureLayer;
 import net.minecraft.world.biome.layer.ScaleLayer;
 import net.minecraft.world.biome.layer.type.ParentedLayer;
 import net.minecraft.world.biome.layer.util.*;
