@@ -21,8 +21,9 @@
  *
  */
 
-package com.hrznstudio.galacticraft.structure;
+package com.hrznstudio.galacticraft.structure.moon_village;
 
+import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructureManager;

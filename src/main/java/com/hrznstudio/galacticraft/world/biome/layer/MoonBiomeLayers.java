@@ -87,9 +87,9 @@ public class MoonBiomeLayers {
 //
         for (int i = 0; i < biomeSize; ++i) {
             layerFactory = ScaleLayer.NORMAL.create(contextProvider.apply(1000L + i), layerFactory);
-            if (i == 0) {
-                layerFactory = IncreaseEdgeCurvatureLayer.INSTANCE.create(contextProvider.apply(3L), layerFactory);
-            }
+//            if (i == 0) {
+//                layerFactory = IncreaseEdgeCurvatureLayer.INSTANCE.create(contextProvider.apply(3L), layerFactory);
+//            }
 
 //            if (i == 1 || biomeSize == 1) {
 //                layerFactory = AddEdgeBiomesLayer.INSTANCE.create(contextProvider.apply(1000L), layerFactory4);

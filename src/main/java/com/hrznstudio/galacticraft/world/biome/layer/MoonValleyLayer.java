@@ -47,24 +47,23 @@ public enum MoonValleyLayer implements CrossSamplingLayer {
             if (Registry.BIOME.get(w) instanceof MoonMareBiome) {
                 mare++;
             }
-            if (mare == 2)
-                return context.nextInt(1) == 0 ? MoonBiomeLayers.MOON_MARE_VALLEY_ID : MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID;
+            if (mare == 2) return context.nextInt(2) == 0 ? MoonBiomeLayers.MOON_MARE_VALLEY_ID : MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID;
             return mare < 2 ? MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID : MoonBiomeLayers.MOON_MARE_VALLEY_ID;
         }
 
-        if (n == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || n == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(2) == 0) {
+        if (n == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || n == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(3) == 0) {
             return n;
         }
 
-        if (s == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || s == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(2) == 0) {
+        if (s == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || s == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(3) == 0) {
             return s;
         }
 
-        if (e == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || e == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(2) == 0) {
+        if (e == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || e == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(3) == 0) {
             return e;
         }
 
-        if (w == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || w == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(2) == 0) {
+        if (w == MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID || w == MoonBiomeLayers.MOON_MARE_VALLEY_ID && context.nextInt(3) == 0) {
             return w;
         }
 
