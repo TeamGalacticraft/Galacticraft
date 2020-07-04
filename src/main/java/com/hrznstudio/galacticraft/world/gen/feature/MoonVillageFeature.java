@@ -23,15 +23,23 @@
 
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.hrznstudio.galacticraft.structure.MoonVillageStart;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageStart;
 import com.mojang.serialization.Codec;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
+
+import java.util.List;
 
 public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureConfig> {
 
     public MoonVillageFeature(Codec<StructurePoolFeatureConfig> codec) {
         super(codec);
+    }
+
+    @Override
+    public List<Biome.SpawnEntry> getCreatureSpawns() {
+        return super.getCreatureSpawns();
     }
 
     @Override

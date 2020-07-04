@@ -51,10 +51,10 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
 
     @Override
     public T read(Identifier id, PacketByteBuf packet) {
-        String string_1 = packet.readString(32767);
-        Ingredient ingredient_1 = Ingredient.fromPacket(packet);
-        ItemStack itemStack_1 = packet.readItemStack();
-        return this.recipeFactory.create(id, string_1, ingredient_1, itemStack_1);
+        String group = packet.readString(32767);
+        Ingredient ingredient = Ingredient.fromPacket(packet);
+        ItemStack stack = packet.readItemStack();
+        return this.recipeFactory.create(id, group, ingredient, stack);
     }
 
     @Override

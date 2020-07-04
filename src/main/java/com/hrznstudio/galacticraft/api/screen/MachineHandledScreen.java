@@ -628,9 +628,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     @Override
-    public boolean mouseClicked(double double_1, double double_2, int int_1) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isAllowed()) {
-            return this.checkTabsClick(new MatrixStack(), double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
+            return this.checkTabsClick(new MatrixStack(), mouseX, mouseY, button) || super.mouseClicked(mouseX, mouseY, button);
         } else {
             return false;
         }

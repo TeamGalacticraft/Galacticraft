@@ -226,7 +226,7 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public boolean matches(Inventory inv, World world_1) {
+    public boolean matches(Inventory inv, World world) {
         int invWidth = 3;
         int invHeight = 3;
 

@@ -257,7 +257,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * @return The {@link Predicate} for the given slot of {@link #getInventory()}.
      */
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return (itemStack -> true);
+        return (stack -> true);
     }
 
     /**

@@ -1,27 +1,4 @@
-/*
- * Copyright (c) 2020 HRZN LTD
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- *
- */
-
-package com.hrznstudio.galacticraft.structure;
+package com.hrznstudio.galacticraft.structure.moon_village;
 
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
@@ -31,8 +8,6 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.PaneBlock;
-import net.minecraft.structure.StructureManager;
-import net.minecraft.structure.StructureStart;
 import net.minecraft.structure.pool.*;
 import net.minecraft.structure.processor.RuleStructureProcessor;
 import net.minecraft.structure.processor.StructureProcessor;
@@ -40,20 +15,12 @@ import net.minecraft.structure.processor.StructureProcessorRule;
 import net.minecraft.structure.rule.*;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.StructureFeature;
-import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
-public class MoonVillageStart extends StructureStart<StructurePoolFeatureConfig> {
+public class MoonVillageData {
 
     private static final Identifier EMPTY = new Identifier("empty");
-    private static final Identifier TOWN_CENTERS = new Identifier(Constants.MOD_ID, "moon_village/town_centers");
-    public static final Identifier BASE_POOL = TOWN_CENTERS;
     private static final Identifier STREETS = new Identifier(Constants.MOD_ID, "moon_village/streets");
     private static final Identifier DEAD_STREETS = new Identifier(Constants.MOD_ID, "moon_village/dead/streets");
     private static final Identifier TERMINATORS = new Identifier(Constants.MOD_ID, "moon_village/terminators");
@@ -70,6 +37,9 @@ public class MoonVillageStart extends StructureStart<StructurePoolFeatureConfig>
     private static final Identifier BUTCHER_ANIMALS = new Identifier(Constants.MOD_ID, "moon_village/butcher_animals");
     private static final Identifier IRON_GOLEM = new Identifier(Constants.MOD_ID, "moon_village/iron_golem");
     private static final Identifier WELL_BOTTOMS = new Identifier(Constants.MOD_ID, "moon_village/well_bottoms");
+
+    public static final Identifier TOWN_CENTERS = new Identifier(Constants.MOD_ID, "moon_village/town_centers");
+    public static final Identifier BASE_POOL = TOWN_CENTERS;
 
     static {
         ImmutableList<StructureProcessor> immutableList = ImmutableList.of(new RuleStructureProcessor(ImmutableList.of(
@@ -321,30 +291,7 @@ public class MoonVillageStart extends StructureStart<StructurePoolFeatureConfig>
                 StructurePool.Projection.RIGID));
     }
 
-    public MoonVillageStart(StructureFeature<StructurePoolFeatureConfig> structureFeature, int chunkX, int chunkZ, BlockBox blockBox, int i, long l) {
-        super(structureFeature, chunkX, chunkZ, blockBox, i, l);
-    }
+    public static void init() {
 
-    @Override
-    public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome, StructurePoolFeatureConfig featureConfig) {
-        StructurePoolBasedGenerator.addPieces(BASE_POOL, 6, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 70, z * 16), this.children, random, true, true);
-        this.setBoundingBoxFromChildren();
-    }
-
-    @Override
-    protected void setBoundingBoxFromChildren() {
-        super.setBoundingBoxFromChildren();
-        BlockBox var10000 = this.boundingBox;
-        var10000.minX -= 12;
-        var10000 = this.boundingBox;
-        var10000.minY -= 12;
-        var10000 = this.boundingBox;
-        var10000.minZ -= 12;
-        var10000 = this.boundingBox;
-        var10000.maxX += 12;
-        var10000 = this.boundingBox;
-        var10000.maxY += 12;
-        var10000 = this.boundingBox;
-        var10000.maxZ += 12;
     }
 }

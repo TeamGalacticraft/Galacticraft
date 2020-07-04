@@ -24,10 +24,11 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.client.MinecraftClient;
@@ -47,16 +48,17 @@ import net.minecraft.world.WorldAccess;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements MachineBlock, WireConnectable {
+public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements WireConnectable {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    public ConfigurableElectricMachineBlock(Settings block$Settings_1) {
-        super(block$Settings_1);
+    public ConfigurableElectricMachineBlock(Settings settings) {
+        super(settings);
     }
 
     public abstract Property<SideOption> getProperty(BlockFace direction);
@@ -96,9 +98,14 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     }
 
     @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
-    public final void buildTooltip(ItemStack itemStack_1, BlockView blockView_1, List<Text> list_1, TooltipContext tooltipContext_1) {
-        Text text = machineInfo(itemStack_1, blockView_1, tooltipContext_1);
+    public final void buildTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
+        Text text = machineInfo(stack, view, context);
         if (text != null) {
             List<Text> info = new ArrayList<>();
             for (StringRenderable s : MinecraftClient.getInstance().textRenderer.wrapLines(text, 150)) {
@@ -106,40 +113,40 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
             }
             if (!info.isEmpty()) {
                 if (Screen.hasShiftDown()) {
-                    list_1.addAll(info);
+                    lines.addAll(info);
                 } else {
-                    list_1.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
+                    lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
                 }
             }
         }
 
-        if (itemStack_1 != null && itemStack_1.getTag() != null && itemStack_1.getTag().contains("BlockEntityTag")) {
-            list_1.add(new LiteralText(""));
-            list_1.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", itemStack_1.getTag().getCompound("BlockEntityTag").getInt("Energy")).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
-            list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", itemStack_1.getTag().getCompound("BlockEntityTag").getString("OwnerUsername")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
-            if (itemStack_1.getTag().getCompound("BlockEntityTag").getBoolean("Public")) {
-                list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
+        if (stack != null && stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
+            lines.add(new LiteralText(""));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", stack.getTag().getCompound("BlockEntityTag").getInt("Energy")).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", stack.getTag().getCompound("BlockEntityTag").getString("OwnerUsername")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
+            if (stack.getTag().getCompound("BlockEntityTag").getBoolean("Public")) {
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
                         .withColor(Formatting.GRAY)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public_2")
                         .setStyle(Style.EMPTY.withColor(Formatting.GREEN))));
 
-            } else if (itemStack_1.getTag().getCompound("BlockEntityTag").getBoolean("Party")) {
-                list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
+            } else if (stack.getTag().getCompound("BlockEntityTag").getBoolean("Party")) {
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
                         .withColor(Formatting.GRAY)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race_2")
                         .setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))));
 
             } else {
-                list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
                         .withColor(Formatting.GRAY)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private_2")
                         .setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
 
             }
 
-            if (itemStack_1.getTag().getCompound("BlockEntityTag").getString("Redstone").equals("DISABLED")) {
-                list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Style.EMPTY.withColor(Formatting.GRAY))));
-            } else if (itemStack_1.getTag().getCompound("BlockEntityTag").getString("Redstone").equals("OFF")) {
-                list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+            if (stack.getTag().getCompound("BlockEntityTag").getString("Redstone").equals("DISABLED")) {
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Style.EMPTY.withColor(Formatting.GRAY))));
+            } else if (stack.getTag().getCompound("BlockEntityTag").getString("Redstone").equals("OFF")) {
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
             } else {
-                list_1.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
             }
 
         }
@@ -147,20 +154,22 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
     @Override
     @Environment(EnvType.CLIENT)
-    public ItemStack getPickStack(BlockView blockView_1, BlockPos blockPos_1, BlockState blockState_1) {
-        ItemStack stack = super.getPickStack(blockView_1, blockPos_1, blockState_1);
+    public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getPickStack(view, pos, state);
         CompoundTag tag = (stack.getTag() != null ? stack.getTag() : new CompoundTag());
-        if (blockView_1.getBlockEntity(blockPos_1) != null) {
-            tag.put("BlockEntityTag", blockView_1.getBlockEntity(blockPos_1).toTag(new CompoundTag()));
+        if (view.getBlockEntity(pos) != null) {
+            tag.put("BlockEntityTag", view.getBlockEntity(pos).toTag(new CompoundTag()));
         }
 
         stack.setTag(tag);
         return stack;
     }
 
-    public abstract Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1);
+    public abstract Text machineInfo(ItemStack stack, BlockView view, TooltipContext context);
 
-    public abstract List<Direction> disabledSides();
+    public List<Direction> disabledSides() {
+        return Collections.emptyList();
+    }
 
     public enum BlockFace {
         FRONT,

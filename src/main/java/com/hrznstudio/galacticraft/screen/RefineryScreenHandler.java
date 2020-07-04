@@ -51,8 +51,8 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
         this.addSlot(new ChargeSlot(this.inventory, 0, 8, 79));
         this.addSlot(new Slot(this.inventory, 1, 8, 15) {
             @Override
-            public boolean canInsert(ItemStack itemStack_1) {
-                return blockEntity.getFilterForSlot(1).test(itemStack_1);
+            public boolean canInsert(ItemStack stack) {
+                return blockEntity.getFilterForSlot(1).test(stack);
             }
 
             @Override
@@ -62,8 +62,8 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
         });
         this.addSlot(new Slot(this.inventory, 2, 8 + (18 * 3), 79) {
             @Override
-            public boolean canInsert(ItemStack itemStack_1) {
-                return blockEntity.getFilterForSlot(2).test(itemStack_1);
+            public boolean canInsert(ItemStack stack) {
+                return blockEntity.getFilterForSlot(2).test(stack);
             }
 
             @Override

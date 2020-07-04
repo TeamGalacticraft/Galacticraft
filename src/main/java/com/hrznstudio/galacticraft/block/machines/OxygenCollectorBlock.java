@@ -24,19 +24,13 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
-import com.hrznstudio.galacticraft.util.Rotatable;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -58,20 +52,16 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock implements Rotatable, MachineBlock {
+public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
@@ -84,15 +74,15 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
 
-        playerEntity.openHandledScreen(new ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(blockPos);
+                buf.writeBlockPos(pos);
             }
 
             @Override
@@ -100,11 +90,10 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
                 return new TranslatableText("block.galacticraft-rewoven.oxygen_collector");
             }
 
-            @Nullable
             @Override
             public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(blockPos); // idk why we have to do this again, might want to look into it
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
                 //TODO: Look into why we have to create a new PacketByteBuf.
                 return new OxygenCollectorScreenHandler(syncId, inv, buf);
             }
@@ -133,34 +122,29 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public boolean isTranslucent(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
+    public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos_1) {
         return false;
     }
 
     @Override
-    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+    public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
         return new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector");
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity != null) {
             if (blockEntity instanceof OxygenCollectorBlockEntity) {
                 OxygenCollectorBlockEntity be = (OxygenCollectorBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSize(); i++) {
-                    ItemStack itemStack = be.getInventory().getStack(i);
+                    ItemStack stack = be.getInventory().getStack(i);
 
-                    if (itemStack != null) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    if (stack != null) {
+                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
                     }
                 }
             }
@@ -168,15 +152,15 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FACING);
+    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
 
-        stateBuilder.add(FRONT_SIDE_OPTION);
-        stateBuilder.add(BACK_SIDE_OPTION);
-        stateBuilder.add(RIGHT_SIDE_OPTION);
-        stateBuilder.add(LEFT_SIDE_OPTION);
-        stateBuilder.add(TOP_SIDE_OPTION);
-        stateBuilder.add(BOTTOM_SIDE_OPTION);
+        builder.add(FRONT_SIDE_OPTION);
+        builder.add(BACK_SIDE_OPTION);
+        builder.add(RIGHT_SIDE_OPTION);
+        builder.add(LEFT_SIDE_OPTION);
+        builder.add(TOP_SIDE_OPTION);
+        builder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -226,7 +210,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public void randomDisplayTick(BlockState blockState_1, World world, BlockPos pos, Random random_1) {
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (!(blockEntity instanceof OxygenCollectorBlockEntity)) {
             return;
@@ -235,8 +219,6 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
         OxygenCollectorBlockEntity collector = (OxygenCollectorBlockEntity) blockEntity;
         if (collector.collectionAmount > 0) {
             for (int particleCount = 0; particleCount < 10; particleCount++) {
-                Random random = world.random;
-
                 for (int int_1 = 0; int_1 < 32; ++int_1) {
                     world.addParticle(
                             new DustParticleEffect(0.9f, 0.9f, 1.0f, 1.0F),
@@ -249,10 +231,5 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock imple
                 }
             }
         }
-    }
-
-    @Override
-    public List<Direction> disabledSides() {
-        return new ArrayList<>();
     }
 }

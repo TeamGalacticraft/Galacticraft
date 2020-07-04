@@ -24,22 +24,15 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
-import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
-import com.hrznstudio.galacticraft.util.Rotatable;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -68,15 +61,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock implements Rotatable, WireConnectable, MachineBlock {
+public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock {
 
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
@@ -90,21 +80,16 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
-    }
+    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(FACING);
 
-    @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder);
-        stateBuilder.add(FACING);
-
-        stateBuilder.add(FRONT_SIDE_OPTION);
-        stateBuilder.add(BACK_SIDE_OPTION);
-        stateBuilder.add(RIGHT_SIDE_OPTION);
-        stateBuilder.add(LEFT_SIDE_OPTION);
-        stateBuilder.add(TOP_SIDE_OPTION);
-        stateBuilder.add(BOTTOM_SIDE_OPTION);
+        builder.add(FRONT_SIDE_OPTION);
+        builder.add(BACK_SIDE_OPTION);
+        builder.add(RIGHT_SIDE_OPTION);
+        builder.add(LEFT_SIDE_OPTION);
+        builder.add(TOP_SIDE_OPTION);
+        builder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -173,13 +158,13 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) return ActionResult.SUCCESS;
 
-        playerEntity.openHandledScreen(new ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(blockPos);
+                buf.writeBlockPos(pos);
             }
 
             @Override
@@ -187,11 +172,10 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
                 return new TranslatableText("block.galacticraft-rewoven.coal_generator");
             }
 
-            @Nullable
             @Override
             public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(blockPos); // idk why we have to do this again, might want to look into it
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
                 //TODO: Look into why we have to create a new PacketByteBuf.
                 return new CoalGeneratorScreenHandler(syncId, inv, buf);
             }
@@ -201,53 +185,48 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock impleme
     }
 
     @Override
-    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+    public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
         return new TranslatableText("tooltip.galacticraft-rewoven.coal_generator");
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
 
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity != null) {
             if (blockEntity instanceof CoalGeneratorBlockEntity) {
                 CoalGeneratorBlockEntity coalGeneratorBlockEntity = (CoalGeneratorBlockEntity) blockEntity;
 
                 for (int i = 0; i < coalGeneratorBlockEntity.getInventory().getSize(); i++) {
-                    ItemStack itemStack = coalGeneratorBlockEntity.getInventory().getStack(i);
+                    ItemStack stack = coalGeneratorBlockEntity.getInventory().getStack(i);
 
-                    if (itemStack != null) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    if (stack != null) {
+                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
                     }
                 }
             }
         }
     }
 
-    @Override
-    public List<Direction> disabledSides() {
-        return new ArrayList<>();
-    }
-
     @Environment(EnvType.CLIENT)
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos blockPos_1, Random rand) {
-        if (world.getBlockEntity(blockPos_1) instanceof CoalGeneratorBlockEntity && ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos_1)).status == CoalGeneratorBlockEntity.CoalGeneratorStatus.ACTIVE || ((CoalGeneratorBlockEntity) world.getBlockEntity(blockPos_1)).status == CoalGeneratorBlockEntity.CoalGeneratorStatus.WARMING) {
-            double x = (double) blockPos_1.getX() + 0.5D;
-            double y = blockPos_1.getY();
-            double z = (double) blockPos_1.getZ() + 0.5D;
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random rand) {
+        if (world.getBlockEntity(pos) instanceof CoalGeneratorBlockEntity && ((CoalGeneratorBlockEntity) world.getBlockEntity(pos)).status == CoalGeneratorBlockEntity.CoalGeneratorStatus.ACTIVE || ((CoalGeneratorBlockEntity) world.getBlockEntity(pos)).status == CoalGeneratorBlockEntity.CoalGeneratorStatus.WARMING) {
+            double x = (double) pos.getX() + 0.5D;
+            double y = pos.getY();
+            double z = (double) pos.getZ() + 0.5D;
             if (rand.nextDouble() < 0.1D) {
                 world.playSound(x, y, z, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction_1 = state.get(FACING);
-            Direction.Axis direction$Axis_1 = direction_1.getAxis();
+            Direction direction = state.get(FACING);
+            Direction.Axis axis = direction.getAxis();
             double d = rand.nextDouble() * 0.6D - 0.3D;
-            double xo = direction$Axis_1 == Direction.Axis.X ? (double) direction_1.getOffsetX() * 0.52D : d;
+            double xo = axis == Direction.Axis.X ? (double) direction.getOffsetX() * 0.52D : d;
             double yo = rand.nextDouble() * 6.0D / 16.0D;
-            double zo = direction$Axis_1 == Direction.Axis.Z ? (double) direction_1.getOffsetZ() * 0.52D : d;
+            double zo = axis == Direction.Axis.Z ? (double) direction.getOffsetZ() * 0.52D : d;
             world.addParticle(ParticleTypes.SMOKE, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
             world.addParticle(ParticleTypes.FLAME, x + xo, y + yo, z + zo, 0.0D, 0.0D, 0.0D);
 

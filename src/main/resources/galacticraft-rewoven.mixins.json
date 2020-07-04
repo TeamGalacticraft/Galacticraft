@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "DimensionOptionsMixin",
+    "DimensionTypeMixin",
     "EntityAttributeInstanceAccessor",
     "FireBlockAccessor",
     "ItemStackMixin",

@@ -67,7 +67,7 @@ public class FabricationRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public boolean matches(Inventory inventory, World world_1) {
+    public boolean matches(Inventory inventory, World world) {
         return this.input.test(inventory.getStack(0));
     }
 

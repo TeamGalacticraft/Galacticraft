@@ -24,6 +24,7 @@
 package com.hrznstudio.galacticraft.structure;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillagePiece;
 import net.minecraft.structure.StructurePieceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

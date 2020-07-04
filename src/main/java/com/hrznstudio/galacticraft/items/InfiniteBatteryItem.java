@@ -50,7 +50,7 @@ public class InfiniteBatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
+    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
         return false;
     }
 

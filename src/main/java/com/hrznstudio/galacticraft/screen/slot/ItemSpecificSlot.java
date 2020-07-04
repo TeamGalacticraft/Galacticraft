@@ -44,7 +44,7 @@ public class ItemSpecificSlot extends Slot {
     }
 
     @Override
-    public boolean canInsert(ItemStack itemStack) {
-        return items.contains(itemStack.getItem());
+    public boolean canInsert(ItemStack stack) {
+        return items.contains(stack.getItem());
     }
 }

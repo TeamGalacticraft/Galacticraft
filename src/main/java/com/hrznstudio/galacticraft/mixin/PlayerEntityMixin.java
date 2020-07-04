@@ -40,8 +40,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayer
     @Unique
     private EntitySyncedInventoryComponent gearInventory;
 
-    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world_1) {
-        super(entityType_1, world_1);
+    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world) {
+        super(entityType_1, world);
     }
 
     @Override

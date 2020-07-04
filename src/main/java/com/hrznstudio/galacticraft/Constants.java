@@ -199,7 +199,7 @@ public class Constants {
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
-        public static final String BASIC_SOLAR_PANEL_PART = "basic_solar_panel_part";
+        public static final String GENERIC_MULTIBLOCK_PART = "generic_multiblock_part";
         public static final String ADVANCED_SOLAR_PANEL = "advanced_solar_panel";
         public static final String COAL_GENERATOR = "coal_generator";
         public static final String GEOTHERMAL_GENERATOR = "geothermal_generator";
@@ -440,7 +440,7 @@ public class Constants {
 
     public static class ScreenTextures {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
-        public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
+        public static final String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
@@ -495,6 +495,7 @@ public class Constants {
     public static class ScreenHandler {
         public static final String COAL_GENERATOR_SCREEN_HANDLER = "coal_generator_screen_handler";
         public static final String BASIC_SOLAR_SCREEN_HANDLER = "basic_solar_panel_screen_handler";
+        public static final String ADVANCED_SOLAR_SCREEN_HANDLER = "advanced_solar_panel_screen_handler";
         public static final String CIRCUIT_FABRICATOR_SCREEN_HANDLER = "circuit_fabricator_screen_handler";
         public static final String COMPRESSOR_SCREEN_HANDLER = "compressor_screen_handler";
         public static final String ELECTRIC_COMPRESSOR_SCREEN_HANDLER = "electric_compressor_screen_handler";
