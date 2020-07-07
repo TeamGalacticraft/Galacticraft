@@ -226,6 +226,7 @@ public class Constants {
         public static final String BACTERIAL_ACID_STILL = "bacterial_acid_still";
         public static final String SULFURIC_ACID_FLOWING = "sulfuric_acid_flowing";
         public static final String SULFURIC_ACID_STILL = "sulfuric_acid_still";
+        public static final String OXYGEN = "oxygen";
 
         public static Identifier getIdentifier(String s) {
             return new Identifier(Constants.MOD_ID, "block/" + s);

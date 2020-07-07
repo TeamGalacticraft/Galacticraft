@@ -143,7 +143,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             }
         }
 
-        if (getCapacitatorComponent().getCurrentEnergy() <= 0) {
+        if (getCapacitorComponent().getCurrentEnergy() <= 0) {
             status = RefineryStatus.NOT_ENOUGH_ENERGY;
             return;
         }
@@ -158,7 +158,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         }
 
         if (status == RefineryStatus.ACTIVE) {
-            this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().refineryEnergyConsumptionRate(), ActionType.PERFORM); //x2 an average machine
+            this.getCapacitorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().refineryEnergyConsumptionRate(), ActionType.PERFORM); //x2 an average machine
 
 
             FluidVolume extracted = this.tank.takeFluid(0, Fraction.of(1, 1000), ActionType.PERFORM);

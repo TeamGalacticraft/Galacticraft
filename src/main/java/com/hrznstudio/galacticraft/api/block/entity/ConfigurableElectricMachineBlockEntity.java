@@ -268,7 +268,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         return 50;
     }
 
-    public SimpleCapacitorComponent getCapacitatorComponent() {
+    public SimpleCapacitorComponent getCapacitorComponent() {
         return capacitorComponent;
     }
 
@@ -276,14 +276,14 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * Tries to charge this machine from the item in the given slot in this {@link #getInventory}.
      */
     protected void attemptChargeFromStack(int slot) {
-        if (getCapacitatorComponent().getCurrentEnergy() >= getCapacitatorComponent().getMaxEnergy()) {
+        if (getCapacitorComponent().getCurrentEnergy() >= getCapacitorComponent().getMaxEnergy()) {
             return;
         }
         ItemStack stack = inventory.getStack(slot);
-        int neededEnergy = Math.min(getBatteryTransferRate(), getCapacitatorComponent().getMaxEnergy() - getCapacitatorComponent().getCurrentEnergy());
+        int neededEnergy = Math.min(getBatteryTransferRate(), getCapacitorComponent().getMaxEnergy() - getCapacitorComponent().getCurrentEnergy());
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy, ActionType.PERFORM);
-            this.getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, ActionType.PERFORM);
+            this.getCapacitorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, ActionType.PERFORM);
             inventory.setStack(slot, stack);
         }
     }
@@ -299,7 +299,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
      * @param slot The slot id of the item
      */
     protected void attemptDrainPowerToStack(int slot) {
-        int available = Math.min(getBatteryTransferRate(), getCapacitatorComponent().getCurrentEnergy());
+        int available = Math.min(getBatteryTransferRate(), getCapacitorComponent().getCurrentEnergy());
         if (available <= 0) {
             return;
         }
@@ -307,7 +307,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
         if (GalacticraftEnergy.isEnergyItem(stack)) {
             if (GalacticraftEnergy.getEnergy(stack) < GalacticraftEnergy.getMaxEnergy(stack)) {
                 int i = GalacticraftEnergy.insertEnergy(stack, available, ActionType.PERFORM);
-                this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, ActionType.PERFORM);
+                this.getCapacitorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, ActionType.PERFORM);
                 inventory.setStack(slot, stack);
             }
         }
@@ -377,14 +377,14 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
 
                 if (component != null) {
                     if (option == SideOption.POWER_INPUT && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_OUTPUT) {
-                        if (component.canExtractEnergy() && component.getPreferredType().isCompatibleWith(getCapacitatorComponent().getPreferredType())) {
-                            int extracted = component.extractEnergy(getCapacitatorComponent().getPreferredType(), Math.min(256, getCapacitatorComponent().getMaxEnergy() - getCapacitatorComponent().getCurrentEnergy()), ActionType.PERFORM);
-                            getCapacitatorComponent().insertEnergy(getCapacitatorComponent().getPreferredType(), extracted, ActionType.PERFORM);
+                        if (component.canExtractEnergy() && component.getPreferredType().isCompatibleWith(getCapacitorComponent().getPreferredType())) {
+                            int extracted = component.extractEnergy(getCapacitorComponent().getPreferredType(), Math.min(256, getCapacitorComponent().getMaxEnergy() - getCapacitorComponent().getCurrentEnergy()), ActionType.PERFORM);
+                            getCapacitorComponent().insertEnergy(getCapacitorComponent().getPreferredType(), extracted, ActionType.PERFORM);
                         }
                     } else {
-                        if (component.canInsertEnergy() && component.getPreferredType().isCompatibleWith(getCapacitatorComponent().getPreferredType()) && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_INPUT) {
-                            int extracted = getCapacitatorComponent().extractEnergy(getCapacitatorComponent().getPreferredType(), Math.min(256, component.getMaxEnergy() - component.getCurrentEnergy()), ActionType.PERFORM);
-                            component.insertEnergy(getCapacitatorComponent().getPreferredType(), extracted, ActionType.PERFORM);
+                        if (component.canInsertEnergy() && component.getPreferredType().isCompatibleWith(getCapacitorComponent().getPreferredType()) && ((ConfigurableElectricMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_INPUT) {
+                            int extracted = getCapacitorComponent().extractEnergy(getCapacitorComponent().getPreferredType(), Math.min(256, component.getMaxEnergy() - component.getCurrentEnergy()), ActionType.PERFORM);
+                            component.insertEnergy(getCapacitorComponent().getPreferredType(), extracted, ActionType.PERFORM);
                         }
                     }
                 }
@@ -395,7 +395,7 @@ public abstract class ConfigurableElectricMachineBlockEntity extends BlockEntity
     public void idleEnergyDecrement(boolean off) {
         if (getEnergyUsagePerTick() > 0 && getEnergyUsagePerTick() / 20 > 0) {
             if (GalacticraftEnergy.Values.getTick() % ((75 * (getEnergyUsagePerTick() / 20)) * (off ? 2 : 1)) == 0) {
-                getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
+                getCapacitorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, 1, ActionType.PERFORM);
             }
         }
     }

@@ -41,21 +41,11 @@ import java.util.function.Predicate;
  */
 public class GalacticraftEnergy {
     public static final GalacticraftEnergyType GALACTICRAFT_JOULES = new GalacticraftEnergyType();
-    // GJ is worth LESS than TR Energy
-    public static final OxygenEnergyType GALACTICRAFT_OXYGEN = new OxygenEnergyType();
 
     public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = GalacticraftEnergy::isEnergyItem;
 
     public static void register() {
         Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
-        Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_OXYGEN), GALACTICRAFT_OXYGEN);
-
-//        ItemComponentCallback.event(GalacticraftItems.BATTERY).register((stack, container) -> container.put(UniversalComponents.CAPACITOR_COMPONENT, new ItemCapacitorComponent(BatteryItem.getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES)));
-//        ItemComponentCallback.event(GalacticraftItems.INFINITE_BATTERY).register((stack, container) -> {
-//            ItemCapacitorComponent capacitorComponent = new ItemCapacitorComponent(Integer.MAX_VALUE, GalacticraftEnergy.GALACTICRAFT_JOULES);
-//            capacitorComponent.copyFrom(GalacticraftEnergy.INFINITE_ENERGY_COMPONENT);
-//            container.put(UniversalComponents.CAPACITOR_COMPONENT, capacitorComponent);
-//        });
     }
 
     public static boolean isEnergyItem(ItemStack stack) {

@@ -119,7 +119,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
             }
         }
 
-        if (FUEL_MAP.containsKey(getInventory().getStack(0).getItem()) && getCapacitatorComponent().getCurrentEnergy() < getCapacitatorComponent().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
+        if (FUEL_MAP.containsKey(getInventory().getStack(0).getItem()) && getCapacitorComponent().getCurrentEnergy() < getCapacitorComponent().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
             this.status = CoalGeneratorStatus.WARMING;
 
             this.fuelTimeMax = FUEL_MAP.get(getInventory().getStack(0).getItem());
@@ -140,7 +140,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
 
         if (status == CoalGeneratorStatus.ACTIVE || this.status == CoalGeneratorStatus.WARMING) {
             fuelTimeCurrent++;
-            getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat), ActionType.PERFORM);
+            getCapacitorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat), ActionType.PERFORM);
 
             if (fuelTimeCurrent >= fuelTimeMax) {
                 this.status = CoalGeneratorStatus.IDLE;

@@ -112,7 +112,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (time > 1000.0D && time < 11000.0D) {
             status = BasicSolarPanelStatus.COLLECTING;
-            if (getCapacitatorComponent().getCurrentEnergy() >= getCapacitatorComponent().getMaxEnergy()) {
+            if (getCapacitorComponent().getCurrentEnergy() >= getCapacitorComponent().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.FULL;
             }
         } else {
@@ -132,7 +132,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (time > 6000) time -= 6000D;
 
-        this.getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier), ActionType.PERFORM);
+        this.getCapacitorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier), ActionType.PERFORM);
     }
 
     @Override

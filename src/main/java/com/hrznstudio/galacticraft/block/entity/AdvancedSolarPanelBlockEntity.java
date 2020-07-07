@@ -112,7 +112,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableElectricMachineBl
 
         if (time > 1000.0D && time < 11000.0D) {
             status = AdvancedSolarPanelStatus.COLLECTING;
-            if (getCapacitatorComponent().getCurrentEnergy() >= getCapacitatorComponent().getMaxEnergy()) {
+            if (getCapacitorComponent().getCurrentEnergy() >= getCapacitorComponent().getMaxEnergy()) {
                 status = AdvancedSolarPanelStatus.FULL;
                 return;
             }
@@ -136,7 +136,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableElectricMachineBl
             time = 6000D - (time - 6000D);
         }
 
-        this.getCapacitatorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) Math.min(Galacticraft.configManager.get().solarPanelEnergyProductionRate(), (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier) * 4), ActionType.PERFORM);
+        this.getCapacitorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) Math.min(Galacticraft.configManager.get().solarPanelEnergyProductionRate(), (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier) * 4), ActionType.PERFORM);
     }
 
     @Override
