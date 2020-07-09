@@ -4,8 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.SkyProperties;
 import net.minecraft.util.math.Vec3d;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class MoonSkyProperties extends SkyProperties {

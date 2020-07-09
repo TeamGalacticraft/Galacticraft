@@ -29,7 +29,7 @@ import net.minecraft.world.biome.BiomeEffects;
 public final class MoonMareValleyBiome extends MoonMareBiome {
     public MoonMareValleyBiome() {
         super(new Settings()
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MoonMareRocksBiome.MOON_MARE_ROCK_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER.method_30478(MoonMareRocksBiome.MOON_MARE_ROCK_CONFIG))
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(-0.5F)
@@ -45,8 +45,4 @@ public final class MoonMareValleyBiome extends MoonMareBiome {
         );
     }
 
-    @Override
-    protected String getBiomeName() {
-        return "valley";
-    }
 }

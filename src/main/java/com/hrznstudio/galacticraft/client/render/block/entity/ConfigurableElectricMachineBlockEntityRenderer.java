@@ -47,9 +47,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -226,8 +226,8 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
         matrices.pop();
     }
 
-    @Nonnull
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull T entity, @Nonnull Direction direction) {
+    @NotNull
+    public SpriteIdentifier getDefaultSpriteId(@NotNull T entity, @NotNull Direction direction) {
         switch (direction) {
             case NORTH:
             case SOUTH:

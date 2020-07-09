@@ -26,6 +26,7 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageStart;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
@@ -35,6 +36,11 @@ public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureCon
 
     public MoonVillageFeature(Codec<StructurePoolFeatureConfig> codec) {
         super(codec);
+    }
+
+    @Override
+    public GenerationStep.Feature getGenerationStep() {
+        return super.getGenerationStep();
     }
 
     @Override

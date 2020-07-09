@@ -42,7 +42,7 @@ import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
@@ -102,7 +102,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftDimensions.register();
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
-        GalacticraftFluidTags.register();
+        GalacticraftTags.register();
 
         AtmosphericGasRegistryCallback.EVENT.register(registry -> {
             Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);

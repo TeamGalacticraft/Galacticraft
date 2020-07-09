@@ -31,15 +31,7 @@ public enum MoonBiomeCraterLayer implements IdentitySamplingLayer {
 
 
     @Override
-    public int sample(LayerRandomnessSource context, int value) {
-        if (context.nextInt(6) == 2) {
-            if (value == MoonBiomeLayers.MOON_MARE_PLAINS_ID) {
-                return MoonBiomeLayers.MOON_MARE_CRATERS_ID;
-            }
-            if (value == MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID) {
-                return MoonBiomeLayers.MOON_HIGHLANDS_CRATERS_ID;
-            }
-        }
+    public int sample(LayerRandomnessSource context, int value) { //todo crater biomes
         return value;
     }
 }

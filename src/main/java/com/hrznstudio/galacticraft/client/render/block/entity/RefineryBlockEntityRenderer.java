@@ -30,8 +30,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,9 +40,9 @@ public class RefineryBlockEntityRenderer extends ConfigurableElectricMachineBloc
         super(dispatcher);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull RefineryBlockEntity entity, @Nonnull Direction direction) {
+    public SpriteIdentifier getDefaultSpriteId(@NotNull RefineryBlockEntity entity, @NotNull Direction direction) {
         switch (direction) {
             case NORTH:
                 return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/refinery_front"));

@@ -23,7 +23,6 @@
 
 package com.hrznstudio.galacticraft.structure.moon_village;
 
-import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructureManager;
@@ -33,11 +32,12 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 
 public class MoonVillagePiece extends PoolStructurePiece {
+
     public MoonVillagePiece(StructureManager structureManager, StructurePoolElement structurePoolElement, BlockPos blockPos, int i, BlockRotation blockRotation, BlockBox blockBox) {
-        super(GalacticraftStructurePieceTypes.MOON_VILLAGE, structureManager, structurePoolElement, blockPos, i, blockRotation, blockBox);
+        super(structureManager, structurePoolElement, blockPos, i, blockRotation, blockBox);
     }
 
-    public MoonVillagePiece(StructureManager structureManager, CompoundTag compoundTag) {
-        super(structureManager, compoundTag, GalacticraftStructurePieceTypes.MOON_VILLAGE);
+    public MoonVillagePiece(StructureManager manager, CompoundTag tag) {
+        super(manager, tag);
     }
 }

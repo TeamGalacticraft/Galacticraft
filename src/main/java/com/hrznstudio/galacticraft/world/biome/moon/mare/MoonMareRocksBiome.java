@@ -31,7 +31,6 @@ import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.decorator.ChanceDecoratorConfig;
 import net.minecraft.world.gen.decorator.Decorator;
 import net.minecraft.world.gen.feature.DecoratedFeature;
-import net.minecraft.world.gen.feature.ForestRockFeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 public final class MoonMareRocksBiome extends MoonMareBiome {
@@ -40,7 +39,7 @@ public final class MoonMareRocksBiome extends MoonMareBiome {
 
     public MoonMareRocksBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MOON_MARE_ROCK_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER.method_30478(MOON_MARE_ROCK_CONFIG))
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.65F)
@@ -53,11 +52,6 @@ public final class MoonMareRocksBiome extends MoonMareBiome {
                         .fogColor(0)
                         .build())
                 .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_HIGHLANDS_ROCKS));
-        this.addFeature(GenerationStep.Feature.TOP_LAYER_MODIFICATION, DecoratedFeature.FOREST_ROCK.configure(new ForestRockFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), 6)).createDecoratedFeature(Decorator.WATER_LAKE.configure(new ChanceDecoratorConfig(4))));
     }
 
-    @Override
-    protected String getBiomeName() {
-        return "rocks";
-    }
 }

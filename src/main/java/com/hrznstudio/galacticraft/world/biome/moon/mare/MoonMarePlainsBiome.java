@@ -33,7 +33,7 @@ public final class MoonMarePlainsBiome extends MoonMareBiome {
 
     public MoonMarePlainsBiome() {
         super((new Settings())
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MOON_MARE_BIOME_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER.method_30478(MOON_MARE_BIOME_CONFIG))
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(0.03F)
@@ -46,12 +46,8 @@ public final class MoonMarePlainsBiome extends MoonMareBiome {
                         .fogColor(0)
                         .build())
                 .parent(null));
-        this.flowerFeatures.clear();
+        this.getFlowerFeatures().clear();
         addMoonVillages();
     }
 
-    @Override
-    protected String getBiomeName() {
-        return "plains";
-    }
 }

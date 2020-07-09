@@ -39,8 +39,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -169,14 +168,14 @@ public class AdvancedSolarPanelBlockEntityRenderer extends ConfigurableElectricM
         matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F));
         matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
 
-        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(world.getSkyAngle(1.0F) * 360.0F));
+        matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(world.getSkyAngleRadians(1.0F)));
 
         this.renderPanel(matrices, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
     @Override
-    @Nonnull
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull AdvancedSolarPanelBlockEntity entity, @Nonnull Direction direction) {
+    @NotNull
+    public SpriteIdentifier getDefaultSpriteId(@NotNull AdvancedSolarPanelBlockEntity entity, @NotNull Direction direction) {
         switch (direction) {
             case NORTH:
                 return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/advanced_solar_panel"));

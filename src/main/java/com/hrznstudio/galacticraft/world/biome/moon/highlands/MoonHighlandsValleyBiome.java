@@ -29,7 +29,7 @@ import net.minecraft.world.biome.BiomeEffects;
 public final class MoonHighlandsValleyBiome extends MoonHighlandsBiome {
     public MoonHighlandsValleyBiome() {
         super(new Settings()
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MoonHighlandsRocksBiome.MOON_HIGHLANDS_ROCK_CONFIG)
+                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER.method_30478(MoonHighlandsRocksBiome.MOON_HIGHLANDS_ROCK_CONFIG))
                 .precipitation(Precipitation.NONE)
                 .category(Category.NONE)
                 .depth(-0.5F)
@@ -45,8 +45,4 @@ public final class MoonHighlandsValleyBiome extends MoonHighlandsBiome {
         );
     }
 
-    @Override
-    protected String getBiomeName() {
-        return "valley";
-    }
 }

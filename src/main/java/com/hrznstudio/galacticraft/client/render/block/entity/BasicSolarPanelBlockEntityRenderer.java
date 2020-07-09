@@ -38,8 +38,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -172,8 +171,8 @@ public class BasicSolarPanelBlockEntityRenderer extends ConfigurableElectricMach
     }
 
     @Override
-    @Nonnull
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull BasicSolarPanelBlockEntity entity, @Nonnull Direction direction) {
+    @NotNull
+    public SpriteIdentifier getDefaultSpriteId(@NotNull BasicSolarPanelBlockEntity entity, @NotNull Direction direction) {
         switch (direction) {
             case NORTH:
                 return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/basic_solar_panel"));

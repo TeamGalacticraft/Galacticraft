@@ -32,8 +32,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -48,9 +47,9 @@ public class CircuitFabricatorBlockEntityRenderer extends ConfigurableElectricMa
         super.render(blockEntity, tickDelta, matrices, vertexConsumers, light, overlay);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull CircuitFabricatorBlockEntity entity, @Nonnull Direction direction) {
+    public SpriteIdentifier getDefaultSpriteId(@NotNull CircuitFabricatorBlockEntity entity, @NotNull Direction direction) {
         if (direction == Direction.NORTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/circuit_fabricator"));
         }

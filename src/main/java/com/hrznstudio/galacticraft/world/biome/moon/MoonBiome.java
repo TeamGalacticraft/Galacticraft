@@ -50,12 +50,7 @@ public abstract class MoonBiome extends Biome implements SpaceBiome {
     }
 
     protected void addMoonVillages() {
-        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(MoonVillageData.BASE_POOL, 6)));
-    }
-
-    @Override
-    public String getTranslationKey() {
-        return "biome." + Constants.MOD_ID + ".moon." + getCategoryName() + "." + getBiomeName();
+        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
     }
 
     @Override
@@ -63,10 +58,6 @@ public abstract class MoonBiome extends Biome implements SpaceBiome {
     public Optional<MusicSound> method_27343() {
         return Optional.of(MOON_MUSIC);
     }
-
-    protected abstract String getCategoryName();
-
-    protected abstract String getBiomeName();
 
     @Override
     protected float computeTemperature(BlockPos blockPos) {

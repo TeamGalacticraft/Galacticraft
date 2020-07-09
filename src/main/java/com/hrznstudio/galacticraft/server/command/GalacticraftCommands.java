@@ -73,7 +73,7 @@ public class GalacticraftCommands {
                 return -1;
             }
 
-            context.getSource().getPlayer().changeDimension(serverWorld);
+            context.getSource().getPlayer().moveToWorld(serverWorld);
             context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
 
         } catch (CommandSyntaxException ignore) {
@@ -93,7 +93,7 @@ public class GalacticraftCommands {
 
             Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
             entities.forEach((Consumer<Entity>) entity -> {
-                entity.changeDimension(serverWorld);
+                entity.moveToWorld(serverWorld);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
             });
         } catch (CommandSyntaxException ignore) {

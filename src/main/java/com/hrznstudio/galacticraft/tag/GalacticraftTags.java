@@ -21,43 +21,26 @@
  *
  */
 
-package com.hrznstudio.galacticraft.world.biome.moon.mare;
+package com.hrznstudio.galacticraft.tag;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
-import net.minecraft.world.biome.BiomeEffects;
+import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.fluid.Fluid;
+import net.minecraft.tag.Tag;
+import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public final class MoonMareCratersBiome extends MoonMareBiome {
+public class GalacticraftTags {
+    public static final Tag<Fluid> OIL = TagRegistry.fluid(new Identifier(Constants.MOD_ID, "oil"));
+    public static final Tag<Fluid> FUEL = TagRegistry.fluid(new Identifier(Constants.MOD_ID, "fuel"));
+    public static final Tag<Fluid> OXYGEN = TagRegistry.fluid(new Identifier(Constants.MOD_ID, "oxygen"));
 
-    public MoonMareCratersBiome() {
-        super((new Settings())
-                .configureSurfaceBuilder(GalacticraftSurfaceBuilders.MOON_SURFACE_BUILDER, MOON_MARE_BIOME_CONFIG)
-                .precipitation(Precipitation.NONE)
-                .category(Category.NONE)
-                .depth(0.03F)
-                .scale(0.03F)
-                .temperature(-100F)
-                .downfall(0.005F)
-                .parent(Constants.MOD_ID + ":" + Constants.Biomes.MOON_MARE_PLAINS)
-                .effects(new BiomeEffects.Builder()
-                        .waterColor(9937330)
-                        .waterFogColor(11253183)
-                        .fogColor(0)
-                        .build())
-                .parent(null));
-        this.flowerFeatures.clear();
-    }
+    public static final Tag<Block> INFINIBURN_MOON = TagRegistry.block(new Identifier(Constants.MOD_ID, "infiniburn_moon"));
+    public static final Tag<Block> MOON_STONE = TagRegistry.block(new Identifier(Constants.MOD_ID, "moon_stone"));
 
-    @Override
-    public boolean forceSmallCraters() {
-        return true;
-    }
-
-    @Override
-    protected String getBiomeName() {
-        return "craters";
+    public static void register() {
     }
 }

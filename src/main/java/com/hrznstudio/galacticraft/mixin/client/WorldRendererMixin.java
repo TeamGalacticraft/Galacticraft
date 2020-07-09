@@ -112,7 +112,7 @@ public abstract class WorldRendererMixin {
 
             matricies.push();
             matricies.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(delta) * 360.0F));
+            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
             matricies.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
             RenderSystem.color4f(1.0F, 0.95F, 0.9F, starBrightness); //browner stars?
 
@@ -126,7 +126,7 @@ public abstract class WorldRendererMixin {
             matricies.push();
 
             matricies.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(delta) * 360.0F));
+            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
 
             RenderSystem.disableTexture();
 
@@ -152,7 +152,7 @@ public abstract class WorldRendererMixin {
             assert client.player != null;
             float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getZ()) * 0.01F;
             matricies.scale(0.6F, 0.6F, 0.6F);
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngle(delta) * 360.0F) * 0.001F));
+            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngleRadians(delta) * 360.0F) * 0.001F));
             matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
 
             client.getTextureManager().bindTexture(EARTH_TEXTURE);
@@ -188,7 +188,7 @@ public abstract class WorldRendererMixin {
 
     @Unique
     private float getStarBrightness(float delta) {
-        final float var2 = this.world.getSkyAngle(delta);
+        final float var2 = this.world.getSkyAngleRadians(delta);
         float var3 = 1.0F - (MathHelper.cos((float) (var2 * Math.PI * 2.0D) * 2.0F + 0.25F));
 
         if (var3 < 0.0F) {

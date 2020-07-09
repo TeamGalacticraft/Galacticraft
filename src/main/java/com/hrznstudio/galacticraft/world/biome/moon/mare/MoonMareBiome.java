@@ -45,9 +45,4 @@ public abstract class MoonMareBiome extends MoonBiome {
         super(settings);
     }
 
-    @Override
-    protected final String getCategoryName() {
-        return "mare";
-    }
-
 }

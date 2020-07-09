@@ -23,6 +23,9 @@
 
 package com.hrznstudio.galacticraft.structure.moon_village;
 
+import net.minecraft.class_5455;
+import net.minecraft.class_5468;
+import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
 import net.minecraft.structure.pool.*;
@@ -41,8 +44,10 @@ public class MoonVillageStart extends StructureStart<StructurePoolFeatureConfig>
     }
 
     @Override
-    public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome, StructurePoolFeatureConfig featureConfig) {
-        StructurePoolBasedGenerator.addPieces(featureConfig.startPool, featureConfig.size, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 0, z * 16), this.children, random, true, true);
+    public void init(class_5455 arg, ChunkGenerator chunkGenerator, StructureManager structureManager, int chunkX, int chunkZ, Biome biome, StructurePoolFeatureConfig featureConfig) {
+        BlockPos blockPos = new BlockPos(chunkX << 4, 0, chunkZ << 4);
+        MoonVillageData.init();
+        StructurePoolBasedGenerator.method_30419(arg, featureConfig, PoolStructurePiece::new, chunkGenerator, structureManager, blockPos, this.children, this.random, true, true);
         this.setBoundingBoxFromChildren();
     }
 

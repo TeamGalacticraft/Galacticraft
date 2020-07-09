@@ -34,9 +34,4 @@ public abstract class MoonHighlandsBiome extends MoonBiome {
         super(settings);
     }
 
-    @Override
-    protected final String getCategoryName() {
-        return "highlands";
-    }
-
 }

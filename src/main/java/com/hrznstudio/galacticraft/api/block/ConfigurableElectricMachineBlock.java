@@ -45,8 +45,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,7 +61,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         super(settings);
     }
 
-    public abstract Property<SideOption> getProperty(BlockFace direction);
+    public abstract Property<SideOption> getProperty(@NotNull BlockFace direction);
 
     public final SideOption getOption(BlockState state, BlockFace direction) {
         return state.get(getProperty(direction));
@@ -81,7 +81,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
     public abstract boolean generatesPower();
 
-    @Nonnull
+    @NotNull
     @Override
     public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         BlockState state = world.getBlockState(connectionTargetPos);
@@ -104,7 +104,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final void buildTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
+    public final void appendTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
         Text text = machineInfo(stack, view, context);
         if (text != null) {
             List<Text> info = new ArrayList<>();
@@ -179,7 +179,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         TOP,
         BOTTOM;
 
-        @Nonnull
+        @NotNull
         public static BlockFace toFace(Direction facing, Direction target) {
             assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
 
@@ -243,7 +243,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
             throw new RuntimeException();
         }
 
-        @Nonnull
+        @NotNull
         public Direction toDirection(Direction facing) {
             assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
 

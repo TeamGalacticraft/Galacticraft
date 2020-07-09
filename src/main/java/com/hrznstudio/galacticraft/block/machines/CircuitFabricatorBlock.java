@@ -53,8 +53,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -130,7 +129,7 @@ public class CircuitFabricatorBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
         switch (direction) {
             case FRONT:
                 return FRONT_SIDE_OPTION;

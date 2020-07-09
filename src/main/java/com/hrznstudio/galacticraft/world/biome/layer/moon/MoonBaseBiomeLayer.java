@@ -31,9 +31,6 @@ public enum MoonBaseBiomeLayer implements InitLayer {
 
     public int sample(LayerRandomnessSource context, int x, int y) {
         int i = context.nextInt(100000);
-        if (i == 12345) { // :)
-            return MoonBiomeLayers.MOON_CHEESE_FOREST_ID;
-        }
         if (i > 35000) {
             return MoonBiomeLayers.MOON_HIGHLANDS_PLAINS_ID;
         } else {

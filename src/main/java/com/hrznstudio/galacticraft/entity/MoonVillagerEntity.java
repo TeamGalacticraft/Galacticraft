@@ -26,6 +26,7 @@ package com.hrznstudio.galacticraft.entity;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -35,6 +36,8 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -42,9 +45,7 @@ import net.minecraft.village.VillagerData;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
-
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -125,27 +126,20 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     }
 
     @Override
-    public MoonVillagerEntity createChild(PassiveEntity passiveEntity) {
+    public MoonVillagerEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity) {
         double d = this.random.nextDouble();
         VillagerType villagerType3;
         if (d < 0.5D) {
-            villagerType3 = VillagerType.forBiome(this.world.getBiome(this.getBlockPos()));
+            villagerType3 = VillagerType.forBiome(serverWorld.getBiome(this.getBlockPos()));
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {
-            villagerType3 = ((MoonVillagerEntity) passiveEntity).getVillagerData().getType();
-        }
-        if (Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerType3) == null) {
-            if (this.random.nextBoolean() && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(this.getVillagerData().getType()) != null) {
-                villagerType3 = this.getVillagerData().getType();
-            } else {
-                villagerType3 = MOON_VILLAGER_TYPE;
-            }
+            villagerType3 = ((VillagerEntity)passiveEntity).getVillagerData().getType();
         }
 
-        MoonVillagerEntity villagerEntity = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, this.world, villagerType3);
-        villagerEntity.initialize(this.world, this.world.getLocalDifficulty(villagerEntity.getBlockPos()), SpawnReason.BREEDING, null, null);
-        return villagerEntity;
+        MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, serverWorld, villagerType3);
+        moonVillager.initialize(serverWorld, serverWorld.getLocalDifficulty(moonVillager.getBlockPos()), SpawnReason.BREEDING, null, null);
+        return moonVillager;
     }
 
     public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {

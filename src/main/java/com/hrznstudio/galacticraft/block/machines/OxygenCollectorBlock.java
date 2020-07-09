@@ -54,8 +54,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -103,7 +103,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
         switch (direction) {
             case FRONT:
                 return FRONT_SIDE_OPTION;

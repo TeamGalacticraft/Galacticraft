@@ -61,8 +61,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
         switch (direction) {
             case FRONT:
                 return FRONT_SIDE_OPTION;
