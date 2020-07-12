@@ -24,7 +24,6 @@
 package com.hrznstudio.galacticraft.structure.moon_village;
 
 import net.minecraft.class_5455;
-import net.minecraft.class_5468;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;

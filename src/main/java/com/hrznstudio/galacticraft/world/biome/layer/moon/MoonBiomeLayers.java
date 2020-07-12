@@ -36,13 +36,13 @@ import net.minecraft.world.biome.source.BiomeLayerSampler;
 import java.util.function.LongFunction;
 
 public class MoonBiomeLayers {
-    public static final int MOON_HIGHLANDS_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS);
-    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_ROCKS);
-    public static final int MOON_HIGHLANDS_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.MOON_HIGHLANDS_VALLEY);
+    public static final int MOON_HIGHLANDS_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
+    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
+    public static final int MOON_HIGHLANDS_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
 
-    public static final int MOON_MARE_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_PLAINS);
-    public static final int MOON_MARE_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_ROCKS);
-    public static final int MOON_MARE_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.MOON_MARE_VALLEY);
+    public static final int MOON_MARE_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
+    public static final int MOON_MARE_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
+    public static final int MOON_MARE_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, int riverSize, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = MoonBaseBiomeLayer.INSTANCE.create(contextProvider.apply(1L));
