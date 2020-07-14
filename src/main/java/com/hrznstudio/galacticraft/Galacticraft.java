@@ -41,7 +41,7 @@ import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
-import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
@@ -71,8 +71,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class Galacticraft implements ModInitializer {
 
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_prof")), Lifecycle.stable());
-    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_type")), Lifecycle.stable());
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
+    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
@@ -95,7 +95,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftCommands.register();
         GalacticraftBlockEntities.init();
         GalacticraftBlockStateProviderTypes.register();
-        GalacticraftStructurePieceTypes.register();
         GalacticraftFeatures.register();
         GalacticraftBiomes.register();
         GalacticraftBiomeSources.register();
@@ -103,6 +102,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();
         GalacticraftTags.register();
+        MoonVillageData.register();
 
         AtmosphericGasRegistryCallback.EVENT.register(registry -> {
             Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);

@@ -37,7 +37,7 @@ import java.util.function.LongFunction;
 
 public class MoonBiomeLayers {
     public static final int MOON_HIGHLANDS_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
-    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
+    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH); //todo
     public static final int MOON_HIGHLANDS_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
 
     public static final int MOON_MARE_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(Biomes.BEACH);
@@ -73,27 +73,5 @@ public class MoonBiomeLayers {
     public static BiomeLayerSampler build(long seed, int biomeSize, int riverSize) {
         LayerFactory<CachingLayerSampler> layerFactory = build(biomeSize, riverSize, (salt) -> new CachingLayerContext(25, seed, salt));
         return new BiomeLayerSampler(layerFactory);
-    }
-
-    public static boolean areSimilar(int id1, int id2) {
-        if (id1 == id2) {
-            return true;
-        } else {
-            Biome biome = BuiltinRegistries.BIOME.get(id1);
-            Biome biome2 = BuiltinRegistries.BIOME.get(id2);
-            if (biome != null && biome2 != null) {
-                if (biome != Biomes.WOODED_BADLANDS_PLATEAU && biome != Biomes.BADLANDS_PLATEAU) {
-                    if (biome.getCategory() != Biome.Category.NONE && biome2.getCategory() != Biome.Category.NONE && biome.getCategory() == biome2.getCategory()) {
-                        return true;
-                    } else {
-                        return biome == biome2;
-                    }
-                } else {
-                    return biome2 == Biomes.WOODED_BADLANDS_PLATEAU || biome2 == Biomes.BADLANDS_PLATEAU;
-                }
-            } else {
-                return false;
-            }
-        }
     }
 }

@@ -108,10 +108,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
         this(biomeSource, seed, new ChunkGeneratorType(
-                new StructuresConfig(Optional.empty(),
-                        ImmutableMap.<StructureFeature<?>, StructureConfig>builder()
-                                .put(GalacticraftFeatures.MOON_VILLAGE, new StructureConfig(32, 8, 8426492))
-                                .build()),
+                new StructuresConfig(false),
                 new NoiseConfig(
                         256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
                         new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),

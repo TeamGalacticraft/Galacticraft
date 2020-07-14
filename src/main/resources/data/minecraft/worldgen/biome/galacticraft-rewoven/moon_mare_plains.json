@@ -24,10 +24,9 @@
   "spawn_costs": {},
   "sky_color": 0,
   "surface_builder": "galacticraft-rewoven:moon_mare",
-  "__comment": "TODO: one day make crater gen a carver",
   "carvers": {
     "air": [
-      "minecraft:moon_cave"
+      "galacticraft-rewoven:moon_cave"
     ]
   },
   "features": [
@@ -38,10 +37,6 @@
     [],
     [],
     [
-      "galacticraft-rewoven:ore_tin_moon",
-      "galacticraft-rewoven:ore_copper_moon",
-      "galacticraft-rewoven:ore_cheese_moon",
-      "galacticraft-rewoven:moon_basalt_cluster"
     ],
     [],
     [],

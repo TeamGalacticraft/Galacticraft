@@ -25,8 +25,13 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 
 import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageStart;
 import com.mojang.serialization.Codec;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
@@ -39,17 +44,12 @@ public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureCon
     }
 
     @Override
-    public GenerationStep.Feature getGenerationStep() {
-        return super.getGenerationStep();
-    }
-
-    @Override
-    public List<Biome.SpawnEntry> getCreatureSpawns() {
-        return super.getCreatureSpawns();
-    }
-
-    @Override
     public StructureFeature.StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
         return MoonVillageStart::new;
+    }
+
+    @Override
+    protected boolean shouldStartAt(ChunkGenerator chunkGenerator, BiomeSource biomeSource, long worldSeed, ChunkRandom chunkRandom, int chunkX, int chunkZ, Biome biome, ChunkPos chunkPos, StructurePoolFeatureConfig featureConfig) {
+        return super.shouldStartAt(chunkGenerator, biomeSource, worldSeed, chunkRandom, chunkX, chunkZ, biome, chunkPos, featureConfig);
     }
 }
