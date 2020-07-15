@@ -76,12 +76,7 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
         BlockEntity partBE = world.getBlockEntity(partPos);
         MultiBlockPartBlockEntity be = (MultiBlockPartBlockEntity) partBE;
 
-        if (be == null) {
-            // Probably already been destroyed by the code in the base.
-            return;
-        }
-        if (be.basePos == BlockPos.ORIGIN) {
-            // There is no base! Probably created using /setblock
+        if (be == null || be.basePos == BlockPos.ORIGIN) {
             return;
         }
         BlockPos basePos = new BlockPos(be.basePos);
