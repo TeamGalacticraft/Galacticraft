@@ -21,7 +21,7 @@
  *
  */
 
-package com.hrznstudio.galacticraft.world.biome.layer;
+package com.hrznstudio.galacticraft.world.biome.layer.moon;
 
 import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareBiome;
 import net.minecraft.util.registry.Registry;

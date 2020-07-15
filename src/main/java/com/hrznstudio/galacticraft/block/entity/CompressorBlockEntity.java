@@ -67,7 +67,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    public SimpleCapacitorComponent getCapacitatorComponent() {
+    public SimpleCapacitorComponent getCapacitor() {
         return new SimpleCapacitorComponent(0, GalacticraftEnergy.GALACTICRAFT_JOULES) {
             @Override
             public boolean canExtractEnergy() {

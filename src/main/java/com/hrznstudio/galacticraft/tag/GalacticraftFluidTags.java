@@ -26,15 +26,18 @@ package com.hrznstudio.galacticraft.tag;
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.tag.FluidTags;
+import net.minecraft.tag.GlobalTagAccessor;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagContainers;
 import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftFluidTags {
-    public static final Tag<Fluid> OIL = FluidTags.getContainer().get(new Identifier(Constants.MOD_ID, "oil"));
-    public static final Tag<Fluid> FUEL = FluidTags.getContainer().get(new Identifier(Constants.MOD_ID, "fuel"));
+    public static final Tag.Identified<Fluid> OIL = FluidTags.ACCESSOR.get(new Identifier(Constants.MOD_ID, "oil").toString());
+    public static final Tag.Identified<Fluid> FUEL = FluidTags.ACCESSOR.get(new Identifier(Constants.MOD_ID, "fuel").toString());
+    public static final Tag.Identified<Fluid> OXYGEN = FluidTags.ACCESSOR.get(new Identifier(Constants.MOD_ID, "oxygen").toString());
 
     public static void register() {
     }

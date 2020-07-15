@@ -66,7 +66,6 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     @Override
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
             if (network == null) network = new WireNetwork(pos, ((ServerWorld) world));

@@ -24,6 +24,7 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareBiome;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -35,6 +36,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
@@ -43,6 +45,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -67,6 +70,9 @@ public abstract class WorldRendererMixin {
     @Final
     private VertexFormat skyVertexFormat;
 
+    @Shadow private double lastCameraX;
+    @Shadow private double lastCameraY;
+    @Shadow private double lastCameraZ;
     private VertexBuffer starBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")
@@ -170,6 +176,14 @@ public abstract class WorldRendererMixin {
             //noinspection UnnecessaryReturnStatement
             return;
         }
+    }
+
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/SkyProperties;useThickFog(II)Z"))
+    private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
+        if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
+            return client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ)) instanceof MoonMareBiome;
+        }
+        return skyProperties.useThickFog(camX, camY);
     }
 
     @Unique

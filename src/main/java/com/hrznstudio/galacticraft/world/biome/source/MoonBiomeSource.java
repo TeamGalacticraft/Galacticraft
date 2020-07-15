@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.world.biome.source;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
+import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

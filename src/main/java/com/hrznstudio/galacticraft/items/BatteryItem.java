@@ -23,6 +23,7 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import com.hrznstudio.galacticraft.energy.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
@@ -66,11 +67,11 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         int charge = stack.getOrCreateTag().getInt("Energy");
         if (stack.getMaxDamage() - stack.getDamage() < 3334) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (stack.getMaxDamage() - stack.getDamage() < 6667) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         }
         super.appendTooltip(stack, world, lines, context);
     }
@@ -79,11 +80,11 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(charged, MAX_ENERGY);
+            EnergyUtils.setEnergy(charged, MAX_ENERGY);
             groupStacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(depleted, 0);
+            EnergyUtils.setEnergy(depleted, 0);
             depleted.setDamage(depleted.getMaxDamage() - 1);
             groupStacks.add(depleted);
         }

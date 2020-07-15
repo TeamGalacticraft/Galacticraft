@@ -92,7 +92,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock {
             case BOTTOM:
                 return BOTTOM_SIDE_OPTION;
         }
-        throw new NullPointerException();
+        throw new AssertionError();
     }
 
     @Override

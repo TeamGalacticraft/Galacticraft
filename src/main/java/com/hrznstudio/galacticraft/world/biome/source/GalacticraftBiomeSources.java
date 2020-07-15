@@ -30,7 +30,7 @@ import net.minecraft.util.registry.Registry;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GalacticraftBiomeSourceTypes {
+public class GalacticraftBiomeSources {
 
     public static void register() {
         Registry.register(Registry.BIOME_SOURCE, new Identifier(Constants.MOD_ID, "moon"), MoonBiomeSource.CODEC);

@@ -69,7 +69,7 @@ import java.util.stream.IntStream;
 public class MoonChunkGenerator extends ChunkGenerator {
     public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.seed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
 
-    public static float[] field_16649 = Util.make(new float[13824], (array) -> {
+    public static final float[] field_16649 = Util.make(new float[13824], (array) -> {
         for (int i = 0; i < 24; ++i) {
             for (int j = 0; j < 24; ++j) {
                 for (int k = 0; k < 24; ++k) {
@@ -79,7 +79,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
         }
 
     });
-    public static float[] field_24775 = Util.make(new float[25], (fs) -> {
+    public static final float[] field_24775 = Util.make(new float[25], (fs) -> {
         for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
                 float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
@@ -88,23 +88,23 @@ public class MoonChunkGenerator extends ChunkGenerator {
         }
 
     });
-    public static BlockState AIR = Blocks.AIR.getDefaultState();
-    public int verticalNoiseResolution;
-    public int horizontalNoiseResolution;
-    public int noiseSizeX;
-    public int noiseSizeY;
-    public int noiseSizeZ;
-    public ChunkRandom random;
-    public OctavePerlinNoiseSampler lowerInterpolatedNoise;
-    public OctavePerlinNoiseSampler upperInterpolatedNoise;
-    public OctavePerlinNoiseSampler interpolationNoise;
-    public NoiseSampler surfaceDepthNoise;
-    public OctavePerlinNoiseSampler field_24776;
-    public BlockState defaultBlock;
-    public BlockState defaultFluid;
-    public long seed;
-    public ChunkGeneratorType chunkGeneratorType;
-    public int field_24779;
+    public static final BlockState AIR = Blocks.AIR.getDefaultState();
+    public final int verticalNoiseResolution;
+    public final int horizontalNoiseResolution;
+    public final int noiseSizeX;
+    public final int noiseSizeY;
+    public final int noiseSizeZ;
+    public final ChunkRandom random;
+    public final OctavePerlinNoiseSampler lowerInterpolatedNoise;
+    public final OctavePerlinNoiseSampler upperInterpolatedNoise;
+    public final OctavePerlinNoiseSampler interpolationNoise;
+    public final NoiseSampler surfaceDepthNoise;
+    public final OctavePerlinNoiseSampler field_24776;
+    public final BlockState defaultBlock;
+    public final BlockState defaultFluid;
+    public final long seed;
+    public final ChunkGeneratorType chunkGeneratorType;
+    public final int field_24779;
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
         this(biomeSource, seed, new ChunkGeneratorType(

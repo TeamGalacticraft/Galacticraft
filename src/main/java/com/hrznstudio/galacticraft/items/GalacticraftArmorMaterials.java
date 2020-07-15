@@ -68,7 +68,7 @@ public enum GalacticraftArmorMaterials implements ArmorMaterial {
         this.enchantability = enchantability;
         this.equipSound = soundEvent;
         this.toughness = toughness;
-        this.repairIngredient = new Lazy(repairIngredient);
+        this.repairIngredient = new Lazy<>(repairIngredient);
         this.knockbackResistance = knockbackResistance;
     }
 
