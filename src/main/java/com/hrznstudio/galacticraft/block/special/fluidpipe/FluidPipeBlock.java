@@ -51,6 +51,9 @@ import net.minecraft.world.WorldAccess;
 
 import java.util.ArrayList;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class FluidPipeBlock extends Block {
 
     private static final VoxelShape NORTH = createCuboidShape(8 - 2, 8 - 2, 0, 8 + 2, 8 + 2, 8 + 2);

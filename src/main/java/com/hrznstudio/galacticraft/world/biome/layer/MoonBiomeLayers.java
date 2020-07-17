@@ -36,9 +36,12 @@ import net.minecraft.world.biome.source.BiomeLayerSampler;
 
 import java.util.function.LongFunction;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonBiomeLayers {
     public static final int MOON_HIGHLANDS_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
-    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS); //todo
+    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
     public static final int MOON_HIGHLANDS_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
 
     public static final int MOON_MARE_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.MARE_PLAINS);

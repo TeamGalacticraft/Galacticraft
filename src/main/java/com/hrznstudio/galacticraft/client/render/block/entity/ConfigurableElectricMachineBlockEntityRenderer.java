@@ -53,6 +53,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends ConfigurableElectricMachineBlockEntity> extends BlockEntityRenderer<T> {
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();
     public static final SpriteIdentifier EMPTY = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/empty"));

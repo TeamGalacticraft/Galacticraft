@@ -32,6 +32,9 @@ import net.minecraft.client.gui.screen.Screen;
 
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Environment(EnvType.CLIENT)
 public class ModMenuApiImpl implements ModMenuApi {
 

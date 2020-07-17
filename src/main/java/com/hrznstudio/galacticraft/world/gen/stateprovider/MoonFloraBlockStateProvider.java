@@ -34,6 +34,9 @@ import net.minecraft.world.gen.stateprovider.BlockStateProviderType;
 
 import java.util.Random;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonFloraBlockStateProvider extends BlockStateProvider {
     public static final Codec<MoonFloraBlockStateProvider> CODEC = Codec.unit(() -> MoonFloraBlockStateProvider.INSTANCE);
     public static final MoonFloraBlockStateProvider INSTANCE = new MoonFloraBlockStateProvider();

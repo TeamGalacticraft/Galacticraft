@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.world.gen.stateprovider.MoonFloraBlockStatePr
 import net.minecraft.block.BlockState;
 import net.minecraft.structure.rule.RuleTest;
 import net.minecraft.structure.rule.RuleTestType;
+import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.biome.Biome;
@@ -51,17 +52,7 @@ public class GalacticraftFeatures {
     public static void register() {
         for (Biome biome : Biome.BIOMES) {
             if (!biome.getCategory().equals(Biome.Category.NETHER) && !biome.getCategory().equals(Biome.Category.THEEND)) {
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(new OreFeatureConfig(new RuleTest() {
-                    @Override
-                    public boolean test(BlockState state, Random random) {
-                        return state.isIn(BlockTags.BASE_STONE_OVERWORLD);
-                    }
-
-                    @Override
-                    protected RuleTestType<?> getType() {
-                        return RuleTestType.TAG_MATCH;
-                    }
-                }, GalacticraftBlocks.SILICON_ORE.getDefaultState(), 5)));
+                biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(BlockTags.BASE_STONE_OVERWORLD), GalacticraftBlocks.SILICON_ORE.getDefaultState(), 5)));
             }
         }
     }

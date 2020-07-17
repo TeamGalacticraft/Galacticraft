@@ -37,6 +37,9 @@ import net.minecraft.world.biome.source.BiomeSource;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonBiomeSource extends BiomeSource {
     public static final Codec<MoonBiomeSource> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.LONG.fieldOf("seed").stable().forGetter((moonBiomeSource) -> moonBiomeSource.seed), Codec.INT.optionalFieldOf("biome_size", 4, Lifecycle.stable()).forGetter((moonBiomeSource) -> moonBiomeSource.biomeSize)).apply(instance, instance.stable(MoonBiomeSource::new)));
 

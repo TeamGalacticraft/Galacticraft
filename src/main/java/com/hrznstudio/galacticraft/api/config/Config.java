@@ -23,6 +23,9 @@
 
 package com.hrznstudio.galacticraft.api.config;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public interface Config {
 
     static Config getInstance() {
