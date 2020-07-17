@@ -507,13 +507,14 @@ public class Constants {
     }
 
     public static class Biomes {
-        public static final String MOON_HIGHLANDS_PLAINS = "moon_highlands_plains";
-        public static final String MOON_HIGHLANDS_ROCKS = "moon_highlands_rocks";
+        public static class Moon {
+            public static final String HIGHLANDS_PLAINS = "moon_highlands_plains";
+            public static final String HIGHLANDS_ROCKS = "moon_highlands_rocks";
+            public static final String HIGHLANDS_VALLEY = "moon_highlands_valley";
+            public static final String MARE_PLAINS = "moon_mare_plains";
+            public static final String MARE_ROCKS = "moon_mare_rocks";
+            public static final String MARE_VALLEY = "moon_mare_valley";
+        }
 
-        public static final String MOON_MARE_PLAINS = "moon_mare_plains";
-        public static final String MOON_MARE_ROCKS = "moon_mare_rocks";
-
-        public static final String MOON_HIGHLANDS_VALLEY = "moon_highlands_valley";
-        public static final String MOON_MARE_VALLEY = "moon_mare_valley";
     }
 }

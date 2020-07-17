@@ -24,6 +24,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
 import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
@@ -73,6 +74,7 @@ public class Galacticraft implements ModInitializer {
 
     public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
     public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_type")), Lifecycle.stable());
+    public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 

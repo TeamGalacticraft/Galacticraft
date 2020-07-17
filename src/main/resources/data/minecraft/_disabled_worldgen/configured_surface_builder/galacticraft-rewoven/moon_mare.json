@@ -1,0 +1,14 @@
+{
+  "config": {
+    "top_material": {
+      "Name": "galacticraft-rewoven:moon_basalt"
+    },
+    "under_material": {
+      "Name": "galacticraft-rewoven:moon_basalt"
+    },
+    "underwater_material": {
+      "Name": "galacticraft-rewoven:moon_basalt"
+    }
+  },
+  "name": "minecraft:default"
+}

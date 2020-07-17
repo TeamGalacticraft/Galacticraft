@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.world.biome.source;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonBiomeLayers;
+import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -42,7 +42,7 @@ public class MoonBiomeSource extends BiomeSource {
 
     private final BiomeLayerSampler sampler;
     private final long seed;
-    private static final List<Biome> BIOMES = Lists.newArrayList(GalacticraftBiomes.MOON_BIOMES);
+    private static final List<Biome> BIOMES = Lists.newArrayList(GalacticraftBiomes.Moon.BIOMES);
     private final int biomeSize;
 
     public MoonBiomeSource(long seed, int biomeSize) {
@@ -50,7 +50,7 @@ public class MoonBiomeSource extends BiomeSource {
         this.biomeSize = biomeSize;
         this.seed = seed;
 
-        this.sampler = MoonBiomeLayers.build(seed, biomeSize, 0);
+        this.sampler = MoonBiomeLayers.build(seed, biomeSize);
     }
 
     @Override

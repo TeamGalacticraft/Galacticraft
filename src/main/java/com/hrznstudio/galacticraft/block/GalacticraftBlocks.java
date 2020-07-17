@@ -196,14 +196,16 @@ public class GalacticraftBlocks {
     }
 
     private static Block registerBlock(Block block, String id) {
-        Block registered = registerBlockWithoutItem(block, id);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(BLOCKS_GROUP)));
-        return registered;
+        return registerBlockItem(registerBlockWithoutItem(block, id), id, BLOCKS_GROUP);
+    }
+
+    public static Block registerBlockItem(Block block, String id, ItemGroup group) {
+        BlockItem item = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(block, new Item.Settings().group(group)));
+        item.appendBlocks(Item.BLOCK_ITEMS, item);
+        return block;
     }
 
     private static Block registerMachine(Block block, String id) {
-        Block registered = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
-        Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(registered, new Item.Settings().group(MACHINES_GROUP)));
-        return registered;
+        return registerBlockItem(registerBlockWithoutItem(block, id), id, MACHINES_GROUP);
     }
 }

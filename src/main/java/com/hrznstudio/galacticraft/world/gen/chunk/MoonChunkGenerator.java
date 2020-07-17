@@ -23,11 +23,10 @@
 
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
-import com.google.common.collect.ImmutableMap;
-import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
+import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -61,7 +60,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
@@ -353,7 +351,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
         this.buildBedrock(chunk, chunkRandom);
 
-        this.buildCraters(chunk, region);
+        this.addCraters(chunk, region);
     }
 
     public void buildBedrock(Chunk chunk, Random random) {
@@ -620,14 +618,16 @@ public class MoonChunkGenerator extends ChunkGenerator {
         return d;
     }
 
-    private void buildCraters(Chunk chunk, ChunkRegion region) {
+    private void addCraters(Chunk chunk, ChunkRegion region) {
         for (int cx = chunk.getPos().x - 2; cx <= chunk.getPos().x + 2; cx++) {
             for (int cz = chunk.getPos().z - 2; cz <= chunk.getPos().z + 2; cz++) {
                 Biome biome = region.getBiome(new BlockPos(chunk.getPos().x << 4 + 8, 0, chunk.getPos().z << 4));
-                if (biome instanceof SpaceBiome && ((SpaceBiome) biome).hasCraters()) {
+                GCBiomePropertyAccessor accessor = ((GCBiomePropertyAccessor) biome);
+                if (accessor.getProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME)
+                        && accessor.getProperty(GalacticraftBiomeProperties.HAS_CRATERS)) {
                     for (int x = 0; x < 16; x++) {
                         for (int z = 0; z < 16; z++) {
-                            if (Math.abs(this.randFromPoint(cx << 4 + x, (cz << 4 + z) * 1000)) < this.sampleDepthNoise(x << 4 + x, cz << 4 + z) / (((SpaceBiome) biome).getCraterChance())) {
+                            if (Math.abs(this.randFromPoint(cx << 4 + x, (cz << 4 + z) * 1000)) < this.sampleDepthNoise(x << 4 + x, cz << 4 + z) / accessor.getProperty(GalacticraftBiomeProperties.CRATER_CHANCE)) {
                                 Random random = new Random((cx << 4) + x + ((cz << 4) + z) * 102L);
                                 int size;
 
@@ -642,13 +642,6 @@ public class MoonChunkGenerator extends ChunkGenerator {
                                     size = random.nextInt(25 - 18) + 18;
                                 }
 
-                                if (((SpaceBiome) biome).forceSmallCraters()) {
-                                    size = random.nextInt(12 - 8) + 8;
-                                } else if (((SpaceBiome) biome).forceMediumCraters()) {
-                                    size = random.nextInt(25 - 18) + 18;
-                                } else if (((SpaceBiome) biome).forceLargeCraters()) {
-                                    size = random.nextInt(17 - 13) + 13;
-                                }
                                 this.makeCrater((cx << 4) + x, (cz << 4) + z, chunk.getPos().x << 4, chunk.getPos().z << 4, size, chunk);
                             }
                         }

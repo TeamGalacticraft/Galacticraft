@@ -29,7 +29,6 @@ import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 public enum MoonBiomeCraterLayer implements IdentitySamplingLayer {
     INSTANCE;
 
-
     @Override
     public int sample(LayerRandomnessSource context, int value) { //todo crater biomes
         return value;

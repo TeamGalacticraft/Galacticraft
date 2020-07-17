@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "BiomeMixin",
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
     "EntityAttributeInstanceAccessor",

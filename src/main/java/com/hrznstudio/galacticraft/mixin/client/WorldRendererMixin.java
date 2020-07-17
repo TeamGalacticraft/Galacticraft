@@ -24,7 +24,8 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareBiome;
+import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
+import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -181,7 +182,7 @@ public abstract class WorldRendererMixin {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/SkyProperties;useThickFog(II)Z"))
     private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
         if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
-            return client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ)) instanceof MoonMareBiome;
+            return ((GCBiomePropertyAccessor) client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ))).getProperty(GalacticraftBiomeProperties.IS_MARE);
         }
         return skyProperties.useThickFog(camX, camY);
     }
