@@ -27,7 +27,6 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
@@ -112,7 +111,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (time > 1000.0D && time < 11000.0D) {
             status = BasicSolarPanelStatus.COLLECTING;
-            if (getCapacitorComponent().getCurrentEnergy() >= getCapacitorComponent().getMaxEnergy()) {
+            if (getCapacitor().getCurrentEnergy() >= getCapacitor().getMaxEnergy()) {
                 status = BasicSolarPanelStatus.FULL;
             }
         } else {
@@ -132,7 +131,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableElectricMachineBlock
 
         if (time > 6000) time -= 6000D;
 
-        this.getCapacitorComponent().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier), ActionType.PERFORM);
+        this.getCapacitor().generateEnergy(world, pos, (int) (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier));
     }
 
     @Override

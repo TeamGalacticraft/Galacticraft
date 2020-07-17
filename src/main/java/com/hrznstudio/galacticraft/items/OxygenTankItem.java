@@ -89,7 +89,7 @@ public class OxygenTankItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
         super.appendTooltip(stack, world, lines, context);
     }
 

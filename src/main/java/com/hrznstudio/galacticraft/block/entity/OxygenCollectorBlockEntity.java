@@ -151,7 +151,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
         attemptChargeFromStack(BATTERY_SLOT);
         trySpreadEnergy();
 
-        if (this.getCapacitorComponent().getCurrentEnergy() > 0) {
+        if (this.getCapacitor().getCurrentEnergy() > 0) {
             this.status = OxygenCollectorStatus.COLLECTING;
         } else {
             this.status = OxygenCollectorStatus.INACTIVE;
@@ -171,7 +171,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
             // If the oxygen capacity isn't full, add collected oxygen.
             if (this.tank.getMaxCapacity(0).compareTo(this.tank.getContents(0).getAmount()) > 0) {
-                this.getCapacitorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
 
                 this.tank.insertFluid(0, new FluidVolume(this.tank.getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.tank.getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
             } else {

@@ -43,7 +43,7 @@ public class EnergyStorageModuleBlockEntityRenderer extends ConfigurableElectric
     @NotNull
     @Override
     public SpriteIdentifier getDefaultSpriteId(@NotNull EnergyStorageModuleBlockEntity entity, @NotNull Direction direction) {
-        int level = (int) (((float) entity.getCapacitorComponent().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
+        int level = (int) (((float) entity.getCapacitor().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + level));
         }
