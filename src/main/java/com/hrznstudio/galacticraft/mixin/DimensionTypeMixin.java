@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
-import net.minecraft.class_5455;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(DimensionType.class)
 public class DimensionTypeMixin {
     @Inject(method = "addRegistryDefaults", at = @At("RETURN"), cancellable = true)
-    private static void addGCDims(class_5455.class_5457 registryTracker, CallbackInfoReturnable<class_5455.class_5457> cir) {
+    private static void addGCDims(DynamicRegistryManager.Impl registryTracker, CallbackInfoReturnable<DynamicRegistryManager.Impl> cir) {
         GalacticraftDimensions.addGCDims(registryTracker);
         cir.setReturnValue(registryTracker);
     }

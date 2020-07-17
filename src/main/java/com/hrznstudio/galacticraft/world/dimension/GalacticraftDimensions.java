@@ -27,14 +27,10 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGenerator;
-import net.minecraft.class_5455;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.MutableRegistry;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.util.registry.SimpleRegistry;
+import net.minecraft.util.registry.*;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType;
 import net.minecraft.world.dimension.DimensionOptions;
@@ -61,8 +57,8 @@ public class GalacticraftDimensions {
 //        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
     }
 
-    public static void addGCDims(class_5455.class_5457 registryTracker) {
-        MutableRegistry<DimensionType> mutableRegistry = registryTracker.method_30530(Registry.DIMENSION_TYPE_KEY);
+    public static void addGCDims(DynamicRegistryManager.Impl registryTracker) {
+        MutableRegistry<DimensionType> mutableRegistry = registryTracker.get(Registry.DIMENSION_TYPE_KEY);
         mutableRegistry.add(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), MOON_TYPE);
     }
 
