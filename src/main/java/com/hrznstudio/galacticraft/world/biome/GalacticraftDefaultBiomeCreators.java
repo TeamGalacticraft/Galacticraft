@@ -42,7 +42,6 @@ import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
@@ -60,9 +59,9 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftDefaultBiomeCreators {
-    public static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> MOON_HIGHLANDS_CONFIGURED_SURFACE_BUILDER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon_highlands"), SurfaceBuilder.DEFAULT.method_30478(new TernarySurfaceConfig(GalacticraftBlocks.MOON_TURF.getDefaultState(), GalacticraftBlocks.MOON_DIRT.getDefaultState(), GalacticraftBlocks.MOON_TURF.getDefaultState())));
-    public static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon_highlands_rock"), SurfaceBuilder.DEFAULT.method_30478(new TernarySurfaceConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState())));
-    public static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> MOON_MARE_CONFIGURED_SURFACE_BUILDER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon_mare"), SurfaceBuilder.DEFAULT.method_30478(new MultiBlockSurfaceConfig(
+    public static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> MOON_HIGHLANDS_CONFIGURED_SURFACE_BUILDER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon_highlands"), GalacticraftSurfaceBuilders.MOON.method_30478(new TernarySurfaceConfig(GalacticraftBlocks.MOON_TURF.getDefaultState(), GalacticraftBlocks.MOON_DIRT.getDefaultState(), GalacticraftBlocks.MOON_TURF.getDefaultState())));
+    public static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon_highlands_rock"), GalacticraftSurfaceBuilders.MOON.method_30478(new TernarySurfaceConfig(GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState(), GalacticraftBlocks.MOON_ROCK.getDefaultState())));
+    public static final ConfiguredSurfaceBuilder<TernarySurfaceConfig> MOON_MARE_CONFIGURED_SURFACE_BUILDER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon_mare"), GalacticraftSurfaceBuilders.MOON.method_30478(new MultiBlockSurfaceConfig(
             new BlockStateWithChance[]{
                     new BlockStateWithChance(GalacticraftBlocks.MOON_BASALT.getDefaultState(), -1),
                     new BlockStateWithChance(GalacticraftBlocks.MOON_TURF.getDefaultState(), 100)
@@ -77,8 +76,8 @@ public class GalacticraftDefaultBiomeCreators {
             }
     )));
 
-    private static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE_FEATURE =  BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
-    private static final ConfiguredCarver<ProbabilityConfig> MOON_HIGHLANDS_CAVE_CARVER =  BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_highlands_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.1F)));
+    private static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
+    private static final ConfiguredCarver<ProbabilityConfig> MOON_HIGHLANDS_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_highlands_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.1F)));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_MARE_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_mare_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.15F)));
     private static final ConfiguredFeature<?, ?> MOON_BASALT_CLUSTER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_basalt_cluster"), Feature.DISK.configure(new DiskFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), UniformIntDistribution.of(2, 3), 2, ImmutableList.of(GalacticraftBlocks.MOON_ROCK.getDefaultState()))).decorate(ConfiguredFeatures.Decorators.field_26167));
     private static final ConfiguredFeature<?, ?> MOON_COPPER_ORE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_copper_ore"), Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(GalacticraftTags.MOON_STONE), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8)).method_30377(64).spreadHorizontally().repeat(12));
@@ -123,7 +122,7 @@ public class GalacticraftDefaultBiomeCreators {
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
-        ((GCBiomePropertyAccessor)biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
+        ((GCBiomePropertyAccessor) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         return biome;
     }
 
@@ -161,8 +160,8 @@ public class GalacticraftDefaultBiomeCreators {
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
-        ((GCBiomePropertyAccessor)biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
-        ((GCBiomePropertyAccessor)biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);
+        ((GCBiomePropertyAccessor) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
+        ((GCBiomePropertyAccessor) biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);
         return biome;
     }
 }

@@ -135,7 +135,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private boolean IS_REDSTONE_OPEN = false;
     private boolean IS_CONFIG_OPEN = false;
 
-    private final Map<BlockFace, SideOption> sideOptions = new HashMap<>(); //Front, Back, Right, Left, Up, Down
+    private final Map<BlockFace, SideOption> sideOptions = new EnumMap<>(BlockFace.class); //Front, Back, Right, Left, Up, Down
 
     public MachineHandledScreen(C screenHandler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
         super(screenHandler, playerInventory, textComponent);

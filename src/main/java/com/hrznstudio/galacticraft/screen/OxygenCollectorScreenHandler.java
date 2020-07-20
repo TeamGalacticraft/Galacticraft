@@ -30,7 +30,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.slot.Slot;
 
 /**

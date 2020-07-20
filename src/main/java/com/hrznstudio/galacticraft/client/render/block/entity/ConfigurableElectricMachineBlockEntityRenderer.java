@@ -147,7 +147,7 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
     }
 
     private static List<ModelElement> generateCube() {
-        Map<Direction, ModelElementFace> faces = new HashMap<>();
+        Map<Direction, ModelElementFace> faces = new EnumMap<>(Direction.class);
         for (Direction direction : Direction.values()) {
             faces.put(direction, new ModelElementFace(null, -1, direction.getName(), new ModelElementTexture(null, 0)));
         }

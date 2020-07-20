@@ -26,7 +26,6 @@ package com.hrznstudio.galacticraft.entity;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
-import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -36,7 +35,6 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -134,7 +132,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {
-            villagerType3 = ((VillagerEntity)passiveEntity).getVillagerData().getType();
+            villagerType3 = ((VillagerEntity) passiveEntity).getVillagerData().getType();
         }
 
         MoonVillagerEntity moonVillager = new MoonVillagerEntity(GalacticraftEntityTypes.MOON_VILLAGER, serverWorld, villagerType3);

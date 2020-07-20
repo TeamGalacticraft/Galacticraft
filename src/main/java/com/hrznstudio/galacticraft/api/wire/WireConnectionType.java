@@ -34,8 +34,7 @@ public enum WireConnectionType {
 
     /**
      * The wire is connected to another wiRE.
- *
- */
+     */
     WIRE,
 
     /**

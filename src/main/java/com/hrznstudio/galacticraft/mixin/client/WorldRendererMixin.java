@@ -71,9 +71,12 @@ public abstract class WorldRendererMixin {
     @Final
     private VertexFormat skyVertexFormat;
 
-    @Shadow private double lastCameraX;
-    @Shadow private double lastCameraY;
-    @Shadow private double lastCameraZ;
+    @Shadow
+    private double lastCameraX;
+    @Shadow
+    private double lastCameraY;
+    @Shadow
+    private double lastCameraZ;
     private VertexBuffer starBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")

@@ -24,7 +24,6 @@
 package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -47,7 +46,8 @@ public class GalacticraftBiomes {
 
         public static final Biome[] BIOMES = new Biome[]{HIGHLANDS_PLAINS, HIGHLANDS_ROCKS, HIGHLANDS_VALLEY, MARE_PLAINS, MARE_ROCKS, MARE_VALLEY};
 
-        private static void init() {}
+        private static void init() {
+        }
     }
 
     public static void register() {

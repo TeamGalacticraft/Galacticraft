@@ -45,13 +45,15 @@ import java.util.function.Supplier;
  */
 @Mixin(Biome.class)
 public class BiomeMixin implements GCBiomePropertyAccessor {
-    @Shadow @Final private Map<GenerationStep.Carver, List<Supplier<ConfiguredCarver<?>>>> carvers;
+    @Shadow
+    @Final
+    private Map<GenerationStep.Carver, List<Supplier<ConfiguredCarver<?>>>> carvers;
     @Unique
     private final Map<BiomePropertyType<?>, BiomeProperty<?>> properties = new HashMap<>();
 
     @Override
     public <T> T getProperty(@NotNull BiomePropertyType<T> type) {
-        return (T)properties.getOrDefault(type, type.create()).getValue();
+        return (T) properties.getOrDefault(type, type.create()).getValue();
     }
 
     @Override

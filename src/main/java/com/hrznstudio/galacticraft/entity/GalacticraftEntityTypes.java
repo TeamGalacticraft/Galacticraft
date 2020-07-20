@@ -24,7 +24,6 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -46,6 +45,5 @@ public class GalacticraftEntityTypes {
         FabricDefaultAttributeRegistry.register(MOON_VILLAGER, MoonVillagerEntity.createMoonVillagerAttributes());
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createZombieAttributes());
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createCreeperAttributes());
-        Galacticraft.logger.info("Registered entities!");
     }
 }

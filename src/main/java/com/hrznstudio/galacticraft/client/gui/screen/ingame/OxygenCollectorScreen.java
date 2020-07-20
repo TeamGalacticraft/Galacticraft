@@ -26,7 +26,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -106,7 +105,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     }
 
     private void drawOxygenBufferBar(MatrixStack stack) {
-        float currentOxygen = ((float)this.handler.oxygen.get());
+        float currentOxygen = ((float) this.handler.oxygen.get());
         float maxOxygen = OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F;
         float oxygenScale = (currentOxygen / maxOxygen);
 
@@ -121,7 +120,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
         if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
             List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float)this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
             toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)));
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }

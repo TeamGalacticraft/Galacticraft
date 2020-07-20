@@ -39,7 +39,9 @@ import java.util.List;
 @Mixin(StructureFeature.class)
 public class StructureFeatureMixin {
     @Mutable
-    @Shadow @Final public static List<StructureFeature<?>> field_24861 = addGCJigsawStructures();
+    @Shadow
+    @Final
+    public static List<StructureFeature<?>> field_24861 = addGCJigsawStructures();
 
     private static List<StructureFeature<?>> addGCJigsawStructures() {
         return ImmutableList.<StructureFeature<?>>builder().addAll(StructureFeature.field_24861).add(GalacticraftFeatures.MOON_VILLAGE).build();

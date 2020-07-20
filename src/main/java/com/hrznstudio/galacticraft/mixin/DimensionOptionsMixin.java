@@ -42,7 +42,9 @@ import java.util.LinkedHashSet;
  */
 @Mixin(DimensionOptions.class)
 public class DimensionOptionsMixin {
-    @Shadow @Final private static LinkedHashSet<RegistryKey<DimensionOptions>> BASE_DIMENSIONS;
+    @Shadow
+    @Final
+    private static LinkedHashSet<RegistryKey<DimensionOptions>> BASE_DIMENSIONS;
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At("RETURN"))

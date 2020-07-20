@@ -31,7 +31,6 @@ import io.github.cottonmc.component.energy.impl.WUEnergyType;
 import io.github.cottonmc.component.energy.type.EnergyType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -41,12 +40,11 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    public static final GalacticraftJoules GALACTICRAFT_JOULES = new GalacticraftJoules();
+    public static final GalacticraftJoules GALACTICRAFT_JOULES = Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), new GalacticraftJoules());
 
     public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = EnergyUtils::isEnergyItem;
 
     public static void register() {
-        Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
     }
 
     public static boolean isOxygenItem(ItemStack stack) {

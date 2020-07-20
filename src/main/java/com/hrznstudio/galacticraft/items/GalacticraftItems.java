@@ -25,8 +25,8 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.item.AxeItem;
-import com.hrznstudio.galacticraft.api.item.PickaxeItem;
 import com.hrznstudio.galacticraft.api.item.HoeItem;
+import com.hrznstudio.galacticraft.api.item.PickaxeItem;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -216,5 +216,6 @@ public class GalacticraftItems {
     public static final Item THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.THROWABLE_METEOR_CHUNK), new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.HOT_THROWABLE_METEOR_CHUNK), new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
 
-    public static void register() {}
+    public static void register() {
+    }
 }

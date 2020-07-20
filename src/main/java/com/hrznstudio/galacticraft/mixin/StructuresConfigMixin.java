@@ -41,7 +41,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(StructuresConfig.class)
 public class StructuresConfigMixin {
-    @Mutable @Shadow @Final public static ImmutableMap<StructureFeature<?>, StructureConfig> DEFAULT_STRUCTURES;
+    @Mutable
+    @Shadow
+    @Final
+    public static ImmutableMap<StructureFeature<?>, StructureConfig> DEFAULT_STRUCTURES;
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/util/registry/Registry;STRUCTURE_FEATURE:Lnet/minecraft/util/registry/Registry;"))
