@@ -77,16 +77,16 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
             EnergyUtils.setEnergy(charged, MAX_ENERGY);
-            groupStacks.add(charged);
+            stacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
             EnergyUtils.setEnergy(depleted, 0);
             depleted.setDamage(depleted.getMaxDamage() - 1);
-            groupStacks.add(depleted);
+            stacks.add(depleted);
         }
     }
 
@@ -109,6 +109,10 @@ public class BatteryItem extends Item implements ItemComponentCallback {
 
     @Override
     public void initComponents(ItemStack stack, ComponentContainer<CopyableComponent<?>> components) {
-        components.put(UniversalComponents.CAPACITOR_COMPONENT, new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES));
+        ItemCapacitorComponent component = new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+        components.put(UniversalComponents.CAPACITOR_COMPONENT, component);
+        component.listen(() -> {
+//            stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()); //todo
+        });
     }
 }

@@ -45,7 +45,7 @@ import net.minecraft.util.math.Vec3d;
  */
 public class GalacticraftPackets {
     public static void register() {
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buf) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
                 BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
@@ -55,7 +55,7 @@ public class GalacticraftPackets {
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buf) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
                 BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
@@ -75,7 +75,7 @@ public class GalacticraftPackets {
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buffer) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config"), ((context, buffer) -> {
             PacketByteBuf buf = new PacketByteBuf(buffer.copy());
             context.getTaskQueue().execute(() -> {
                 BlockPos pos = buf.readBlockPos();

@@ -79,11 +79,6 @@ public class CavernousVineBlock extends Block implements Waterloggable {
         onCollided((LivingEntity) entity);
     }
 
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
-    }
-
     public void onCollided(LivingEntity entity) {
         dragEntityUp(entity);
     }

@@ -165,7 +165,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void sendSecurityUpdate(ConfigurableElectricMachineBlockEntity entity) {
         if (this.playerInventory.player.getUuid().equals(entity.getSecurity().getOwner()) || !entity.getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"),
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(entity.getSecurity().getPublicity())
@@ -180,7 +180,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private void sendRedstoneUpdate(ConfigurableElectricMachineBlockEntity entity) {
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"),
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone"),
                 new PacketByteBuf(Unpooled.buffer())
                         .writeBlockPos(pos)
                         .writeEnumConstant(entity.getRedstoneState())
@@ -202,7 +202,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         assert this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock;
         assert SideOption.getApplicableValuesForMachine(this.world.getBlockState(pos).getBlock()).contains(option);
         if (this.playerInventory.player.getUuid().equals(((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().getOwner()) || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"),
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(direction)

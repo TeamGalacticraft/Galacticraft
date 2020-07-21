@@ -260,7 +260,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock im
 
     @Override
     public void onPlaced(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
-        BlockState defaultState = GalacticraftBlocks.GENERIC_MULTIBLOCK_PART.getDefaultState();
+        BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
         for (BlockPos otherPart : getOtherParts(state, basePos)) {
             world.setBlockState(otherPart, defaultState);
 
