@@ -28,6 +28,7 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
 import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
 import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
@@ -65,10 +66,10 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        int charge = stack.getOrCreateTag().getInt("Energy");
-        if (stack.getMaxDamage() - stack.getDamage() < 3334) {
+        int charge = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
+        if (charge < 3334) {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (stack.getMaxDamage() - stack.getDamage() < 6667) {
+        } else if (charge < 6667) {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
         } else {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
@@ -112,7 +113,7 @@ public class BatteryItem extends Item implements ItemComponentCallback {
         ItemCapacitorComponent component = new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
         components.put(UniversalComponents.CAPACITOR_COMPONENT, component);
         component.listen(() -> {
-//            stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()); //todo
+            stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy());
         });
     }
 }
