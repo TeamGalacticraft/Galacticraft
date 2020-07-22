@@ -60,10 +60,8 @@ public class Constants {
         public static final String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        public static final String ALUMINUM_ORE = "aluminum_ore";
         public static final String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
         public static final String MOON_CHEESE_ORE = "moon_cheese_ore";
-        public static final String COPPER_ORE = "copper_ore";
         public static final String MOON_COPPER_ORE = "moon_copper_ore";
         public static final String MARS_COPPER_ORE = "mars_copper_ore";
         public static final String DESH_ORE = "desh_ore";
@@ -71,7 +69,6 @@ public class Constants {
         public static final String MARS_IRON_ORE = "mars_iron_ore";
         public static final String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         public static final String SILICON_ORE = "silicon_ore";
-        public static final String TIN_ORE = "tin_ore";
         public static final String MOON_TIN_ORE = "moon_tin_ore";
         public static final String MARS_TIN_ORE = "mars_tin_ore";
         public static final String GALENA_ORE = "galena_ore";
@@ -298,17 +295,6 @@ public class Constants {
         public static final String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         public static final String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
         public static final String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
-        public static final String NOSE_CONE = "nose_cone";
-        public static final String HEAVY_NOSE_CONE = "heavy_nose_cone";
-        public static final String ROCKET_ENGINE = "engine_t1";
-        public static final String HEAVY_ROCKET_ENGINE = "engine_t2";
-        public static final String ROCKET_FIN = "rocket_fins";
-        public static final String HEAVY_ROCKET_FIN = "rocket_fins_t2";
-        public static final String TIER_1_BOOSTER = "engine_t1booster";
-        //BUGGY
-        public static final String BUGGY_SEAT = "buggy_seat";
-        public static final String BUGGY_STORAGE = "buggy_storage";
-        public static final String BUGGY_WHEEL = "buggy_wheel";
         //THROWABLE METEOR CHUNKS
         public static final String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
         public static final String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
@@ -433,10 +419,6 @@ public class Constants {
 
     public static class Energy {
         public static final String GALACTICRAFT_JOULES = "galacticraft_joules";
-        public static final String GALACTICRAFT_OXYGEN = "galacticraft_oxygen";
-        //30 Galacticraft Joules per one Cotton Energy Work Unit.
-        //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
-        public static final int WU_GJ_CONVERSION = 30;
     }
 
     public static class ScreenTextures {
@@ -516,5 +498,9 @@ public class Constants {
             public static final String MARE_VALLEY = "moon_mare_valley";
         }
 
+    }
+
+    public static class LootTables {
+        public static final String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
     }
 }

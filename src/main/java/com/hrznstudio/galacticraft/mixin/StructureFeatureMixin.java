@@ -24,7 +24,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftStructureFeatures;
+import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import net.minecraft.world.gen.feature.StructureFeature;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,6 +44,6 @@ public class StructureFeatureMixin {
     public static List<StructureFeature<?>> field_24861 = addGCJigsawStructures();
 
     private static List<StructureFeature<?>> addGCJigsawStructures() {
-        return ImmutableList.<StructureFeature<?>>builder().addAll(StructureFeature.field_24861).add(GalacticraftStructureFeatures.MOON_VILLAGE).build();
+        return ImmutableList.<StructureFeature<?>>builder().addAll(StructureFeature.field_24861).add(GalacticraftStructures.MOON_VILLAGE).build();
     }
 }

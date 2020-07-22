@@ -24,9 +24,6 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.item.AxeItem;
-import com.hrznstudio.galacticraft.api.item.HoeItem;
-import com.hrznstudio.galacticraft.api.item.PickaxeItem;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -121,17 +118,6 @@ public class GalacticraftItems {
     public static final Item TIER_1_HEAVY_DUTY_PLATE = registerItem(Constants.Items.TIER_1_HEAVY_DUTY_PLATE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_2_HEAVY_DUTY_PLATE = registerItem(Constants.Items.TIER_2_HEAVY_DUTY_PLATE, new Item(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TIER_3_HEAVY_DUTY_PLATE = registerItem(Constants.Items.TIER_3_HEAVY_DUTY_PLATE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item NOSE_CONE = registerItem(Constants.Items.NOSE_CONE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_NOSE_CONE = registerItem(Constants.Items.HEAVY_NOSE_CONE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ROCKET_ENGINE = registerItem(Constants.Items.ROCKET_ENGINE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_ROCKET_ENGINE = registerItem(Constants.Items.HEAVY_ROCKET_ENGINE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ROCKET_FIN = registerItem(Constants.Items.ROCKET_FIN, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_ROCKET_FIN = registerItem(Constants.Items.HEAVY_ROCKET_FIN, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TIER_1_BOOSTER = registerItem(Constants.Items.TIER_1_BOOSTER, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    //BUGGY PARTS
-    public static final Item BUGGY_SEAT = registerItem(Constants.Items.BUGGY_SEAT, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item BUGGY_STORAGE = registerItem(Constants.Items.BUGGY_STORAGE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item BUGGY_WHEEL = registerItem(Constants.Items.BUGGY_WHEEL, new Item(new Item.Settings().group(ITEMS_GROUP)));
     //ARMOR
     public static final Item HEAVY_DUTY_HELMET = registerItem(Constants.Items.HEAVY_DUTY_HELMET, new ArmorItem(GalacticraftArmorMaterials.HEAVY_DUTY, EquipmentSlot.HEAD, (new Item.Settings().group(ITEMS_GROUP))));
     public static final Item HEAVY_DUTY_CHESTPLATE = registerItem(Constants.Items.HEAVY_DUTY_CHESTPLATE, new ArmorItem(GalacticraftArmorMaterials.HEAVY_DUTY, EquipmentSlot.CHEST, (new Item.Settings().group(ITEMS_GROUP))));
@@ -151,7 +137,7 @@ public class GalacticraftItems {
         @Override
         public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
             //Stronger than vanilla
-            if (blockState.getHardness(null, blockPos) > 0.2001F) {
+            if (blockState.getHardness(world, blockPos) > 0.2001F) {
                 stack.damage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             return true;
@@ -160,17 +146,17 @@ public class GalacticraftItems {
     public static final Item HEAVY_DUTY_SHOVEL = registerItem(Constants.Items.HEAVY_DUTY_SHOVEL, new ShovelItem(GalacticraftToolMaterials.STEEL, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_PICKAXE = registerItem(Constants.Items.HEAVY_DUTY_PICKAXE, new PickaxeItem(GalacticraftToolMaterials.STEEL, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HEAVY_DUTY_AXE = registerItem(Constants.Items.HEAVY_DUTY_AXE, new AxeItem(GalacticraftToolMaterials.STEEL, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item HEAVY_DUTY_HOE = registerItem(Constants.Items.HEAVY_DUTY_HOE, new HoeItem(GalacticraftToolMaterials.STEEL, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item HEAVY_DUTY_HOE = registerItem(Constants.Items.HEAVY_DUTY_HOE, new HoeItem(GalacticraftToolMaterials.STEEL, -2, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_SWORD = registerItem(Constants.Items.DESH_SWORD, new SwordItem(GalacticraftToolMaterials.DESH, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_SHOVEL = registerItem(Constants.Items.DESH_SHOVEL, new ShovelItem(GalacticraftToolMaterials.DESH, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_PICKAXE = registerItem(Constants.Items.DESH_PICKAXE, new PickaxeItem(GalacticraftToolMaterials.DESH, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item DESH_AXE = registerItem(Constants.Items.DESH_AXE, new AxeItem(GalacticraftToolMaterials.DESH, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item DESH_HOE = registerItem(Constants.Items.DESH_HOE, new HoeItem(GalacticraftToolMaterials.DESH, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item DESH_HOE = registerItem(Constants.Items.DESH_HOE, new HoeItem(GalacticraftToolMaterials.DESH, -3, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_SWORD = registerItem(Constants.Items.TITANIUM_SWORD, new SwordItem(GalacticraftToolMaterials.TITANIUM, 3, -2.4F, new Item.Settings().group(ITEMS_GROUP)) {
         @Override
         public boolean postMine(ItemStack stack, World world, BlockState blockState, BlockPos blockPos, LivingEntity entityLiving) {
             //Stronger than vanilla
-            if (blockState.getHardness(null, blockPos) > 0.2001F) {
+            if (blockState.getHardness(world, blockPos) > 0.2001F) {
                 stack.damage(2, entityLiving, (livingEntity) -> livingEntity.sendEquipmentBreakStatus(EquipmentSlot.MAINHAND));
             }
             return true;
@@ -179,7 +165,7 @@ public class GalacticraftItems {
     public static final Item TITANIUM_SHOVEL = registerItem(Constants.Items.TITANIUM_SHOVEL, new ShovelItem(GalacticraftToolMaterials.TITANIUM, -1.5F, -3.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_PICKAXE = registerItem(Constants.Items.TITANIUM_PICKAXE, new PickaxeItem(GalacticraftToolMaterials.TITANIUM, 1, -2.8F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_AXE = registerItem(Constants.Items.TITANIUM_AXE, new AxeItem(GalacticraftToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item TITANIUM_HOE = registerItem(Constants.Items.TITANIUM_HOE, new HoeItem(GalacticraftToolMaterials.TITANIUM, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item TITANIUM_HOE = registerItem(Constants.Items.TITANIUM_HOE, new HoeItem(GalacticraftToolMaterials.TITANIUM, -3, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item STANDARD_WRENCH = registerItem(Constants.Items.STANDARD_WRENCH, new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item BATTERY = registerItem(Constants.Items.BATTERY, new BatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
     public static final Item INFINITE_BATTERY = registerItem(Constants.Items.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).rarity(Rarity.EPIC)));
@@ -225,107 +211,6 @@ public class GalacticraftItems {
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = registerItem(Constants.Items.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = registerItem(Constants.Items.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
-    
-    //BLOCK ITEMS
-    public static final Item WALKWAY = registerBlockItem(Constants.Blocks.WALKWAY, BLOCKS_GROUP);
-    public static final Item WIRE_WALKWAY = registerBlockItem(Constants.Blocks.PIPE_WALKWAY, BLOCKS_GROUP);
-    public static final Item PIPE_WALKWAY = registerBlockItem(Constants.Blocks.WIRE_WALKWAY, BLOCKS_GROUP);
-    public static final Item MOON_TURF = registerBlockItem(Constants.Blocks.MOON_TURF, BLOCKS_GROUP);
-    public static final Item MOON_ROCK = registerBlockItem(Constants.Blocks.MOON_ROCK, BLOCKS_GROUP);
-    public static final Item MOON_ROCK_WALL = registerBlockItem(Constants.Blocks.MOON_ROCK_WALL, BLOCKS_GROUP);
-    public static final Item MOON_BASALT = registerBlockItem(Constants.Blocks.MOON_BASALT, BLOCKS_GROUP);
-    public static final Item MOON_BASALT_SLAB = registerBlockItem(Constants.Blocks.MOON_BASALT_SLAB, BLOCKS_GROUP);
-    public static final Item MOON_BASALT_STAIRS = registerBlockItem(Constants.Blocks.MOON_BASALT_STAIRS, BLOCKS_GROUP);
-    public static final Item MOON_BASALT_WALL = registerBlockItem(Constants.Blocks.MOON_BASALT_WALL, BLOCKS_GROUP);
-    public static final Item MOON_BASALT_BRICKS = registerBlockItem(Constants.Blocks.MOON_BASALT_BRICKS, BLOCKS_GROUP);
-    public static final Item MOON_CHEESE_LEAVES = registerBlockItem(Constants.Blocks.MOON_CHEESE_LEAVES, BLOCKS_GROUP);
-    public static final Item MOON_CHEESE_LOG = registerBlockItem(Constants.Blocks.MOON_CHEESE_LOG, BLOCKS_GROUP);
-    public static final Item MOON_DIRT = registerBlockItem(Constants.Blocks.MOON_DIRT, BLOCKS_GROUP);
-    public static final Item MOON_DUNGEON_BRICKS = registerBlockItem(Constants.Blocks.MOON_DUNGEON_BRICK, BLOCKS_GROUP);
-    public static final Item MARS_SURFACE_ROCK = registerBlockItem(Constants.Blocks.MARS_SURFACE_ROCK, BLOCKS_GROUP);
-    public static final Item MARS_SUB_SURFACE_ROCK = registerBlockItem(Constants.Blocks.MARS_SUB_SURFACE_ROCK, BLOCKS_GROUP);
-    public static final Item MARS_STONE = registerBlockItem(Constants.Blocks.MARS_STONE, BLOCKS_GROUP);
-    public static final Item MARS_COBBLESTONE = registerBlockItem(Constants.Blocks.MARS_COBBLESTONE, BLOCKS_GROUP);
-    public static final Item MARS_DUNGEON_BRICKS = registerBlockItem(Constants.Blocks.MARS_DUNGEON_BRICK, BLOCKS_GROUP);
-    public static final Item ASTEROID_ROCK = registerBlockItem(Constants.Blocks.ASTEROID_ROCK, BLOCKS_GROUP);
-    public static final Item ASTEROID_ROCK_1 = registerBlockItem(Constants.Blocks.ASTEROID_ROCK_1, BLOCKS_GROUP);
-    public static final Item ASTEROID_ROCK_2 = registerBlockItem(Constants.Blocks.ASTEROID_ROCK_2, BLOCKS_GROUP);
-    public static final Item SOFT_VENUS_ROCK = registerBlockItem(Constants.Blocks.SOFT_VENUS_ROCK, BLOCKS_GROUP);
-    public static final Item HARD_VENUS_ROCK = registerBlockItem(Constants.Blocks.HARD_VENUS_ROCK, BLOCKS_GROUP);
-    public static final Item SCORCHED_VENUS_ROCK = registerBlockItem(Constants.Blocks.SCORCHED_VENUS_ROCK, BLOCKS_GROUP);
-    public static final Item VOLCANIC_ROCK = registerBlockItem(Constants.Blocks.VOLCANIC_ROCK, BLOCKS_GROUP);
-    public static final Item PUMICE = registerBlockItem(Constants.Blocks.PUMICE, BLOCKS_GROUP);
-    public static final Item VAPOR_SPOUT = registerBlockItem(Constants.Blocks.VAPOR_SPOUT, BLOCKS_GROUP);
-    public static final Item TIN_DECORATION_BLOCK = registerBlockItem(Constants.Blocks.TIN_DECORATION, BLOCKS_GROUP);
-    public static final Item DETAILED_TIN_DECORATION_BLOCK = registerBlockItem(Constants.Blocks.DETAILED_TIN_DECORATION, BLOCKS_GROUP);
-    public static final Item DARK_DECORATION_BLOCK = registerBlockItem(Constants.Blocks.DARK_DECORATION, BLOCKS_GROUP);
-    public static final Item GRATING = registerBlockItem(Constants.Blocks.GRATING, BLOCKS_GROUP);
-    public static final Item ALUMINUM_WIRE = registerBlockItem(Constants.Blocks.ALUMINUM_WIRE, BLOCKS_GROUP);
-    public static final Item SEALABLE_ALUMINUM_WIRE = registerBlockItem(Constants.Blocks.SEALABLE_ALUMINUM_WIRE, BLOCKS_GROUP);
-    public static final Item FLUID_PIPE = registerBlockItem(Constants.Blocks.FLUID_PIPE, BLOCKS_GROUP);
-    public static final Item SQUARE_LIGHT_PANEL = registerBlockItem(Constants.Blocks.SQUARE_LIGHT_PANEL, BLOCKS_GROUP);
-    public static final Item SPOTLIGHT_LIGHT_PANEL = registerBlockItem(Constants.Blocks.SPOTLIGHT_LIGHT_PANEL, BLOCKS_GROUP);
-    public static final Item LINEAR_LIGHT_PANEL = registerBlockItem(Constants.Blocks.LINEAR_LIGHT_PANEL, BLOCKS_GROUP);
-    public static final Item DASHED_LIGHT_PANEL = registerBlockItem(Constants.Blocks.DASHED_LIGHT_PANEL, BLOCKS_GROUP);
-    public static final Item DIAGONAL_LIGHT_PANEL = registerBlockItem(Constants.Blocks.DIAGONAL_LIGHT_PANEL, BLOCKS_GROUP);
-    public static final Item VACUUM_GLASS = registerBlockItem(Constants.Blocks.VACUUM_GLASS, BLOCKS_GROUP);
-    public static final Item CLEAR_VACUUM_GLASS = registerBlockItem(Constants.Blocks.CLEAR_VACUUM_GLASS, BLOCKS_GROUP);
-    public static final Item STRONG_VACUUM_GLASS = registerBlockItem(Constants.Blocks.STRONG_VACUUM_GLASS, BLOCKS_GROUP);
-    public static final Item TIN_DECORATION_SLAB = registerBlockItem(Constants.Blocks.TIN_DECORATION_SLAB, BLOCKS_GROUP);
-    public static final Item TIN_DECORATION_SLAB_1 = registerBlockItem(Constants.Blocks.DETAILED_TIN_DECORATION_SLAB, BLOCKS_GROUP);
-    public static final Item DARK_DECORATION_SLAB = registerBlockItem(Constants.Blocks.DARK_DECORATION_SLAB, BLOCKS_GROUP);
-    public static final Item MARS_COBBLESTONE_SLAB = registerBlockItem(Constants.Blocks.MARS_COBBLESTONE_SLAB, BLOCKS_GROUP);
-    public static final Item MARS_DUNGEON_BRICKS_SLAB = registerBlockItem(Constants.Blocks.MARS_DUNGEON_BRICK_SLAB, BLOCKS_GROUP);
-    public static final Item MOON_DUNGEON_BRICKS_SLAB = registerBlockItem(Constants.Blocks.MOON_DUNGEON_BRICK_SLAB, BLOCKS_GROUP);
-    public static final Item MOON_ROCK_SLAB = registerBlockItem(Constants.Blocks.MOON_ROCK_SLAB, BLOCKS_GROUP);
-    public static final Item MOON_ROCK_STAIRS = registerBlockItem(Constants.Blocks.MOON_ROCK_STAIRS, BLOCKS_GROUP);
-    public static final Item MOON_DUNGEON_BRICKS_STAIRS = registerBlockItem(Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS, BLOCKS_GROUP);
-    public static final Item TIN_DECORATION_STAIRS = registerBlockItem(Constants.Blocks.TIN_DECORATION_STAIRS, BLOCKS_GROUP);
-    public static final Item DETAILED_TIN_DECORATION_STAIRS = registerBlockItem(Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS, BLOCKS_GROUP);
-    public static final Item MARS_DUNGEON_BRICKS_STAIRS = registerBlockItem(Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS, BLOCKS_GROUP);
-    public static final Item MARS_COBBLESTONE_STAIRS = registerBlockItem(Constants.Blocks.MARS_COBBLESTONE_STAIRS, BLOCKS_GROUP);
-    public static final Item TIN_DECORATION_WALL = registerBlockItem(Constants.Blocks.TIN_DECORATION_WALL, BLOCKS_GROUP);
-    public static final Item DETAILED_TIN_DECORATION_WALL = registerBlockItem(Constants.Blocks.DETAILED_TIN_DECORATION_WALL, BLOCKS_GROUP);
-    public static final Item MOON_DUNGEON_BRICKS_WALL = registerBlockItem(Constants.Blocks.MOON_DUNGEON_BRICK_WALL, BLOCKS_GROUP);
-    public static final Item MARS_COBBLESTONE_WALL = registerBlockItem(Constants.Blocks.MARS_COBBLESTONE_WALL, BLOCKS_GROUP);
-    public static final Item MARS_DUNGEON_BRICKS_WALL = registerBlockItem(Constants.Blocks.MARS_DUNGEON_BRICK_WALL, BLOCKS_GROUP);
-    public static final Item SILICON_ORE = registerBlockItem(Constants.Blocks.SILICON_ORE, BLOCKS_GROUP);
-    public static final Item ASTEROID_ALUMINUM_ORE = registerBlockItem(Constants.Blocks.ASTEROID_ALUMINUM_ORE, BLOCKS_GROUP);
-    public static final Item MOON_CHEESE_ORE = registerBlockItem(Constants.Blocks.MOON_CHEESE_ORE, BLOCKS_GROUP);
-    public static final Item MOON_CHEESE_BLOCK = registerBlockItem(Constants.Blocks.MOON_CHEESE_BLOCK, BLOCKS_GROUP);
-    public static final Item MOON_COPPER_ORE = registerBlockItem(Constants.Blocks.MOON_COPPER_ORE, BLOCKS_GROUP);
-    public static final Item MARS_COPPER_ORE = registerBlockItem(Constants.Blocks.MARS_COPPER_ORE, BLOCKS_GROUP);
-    public static final Item DESH_ORE = registerBlockItem(Constants.Blocks.DESH_ORE, BLOCKS_GROUP);
-    public static final Item ILMENITE_ORE = registerBlockItem(Constants.Blocks.ILMENITE_ORE, BLOCKS_GROUP);
-    public static final Item MARS_IRON_ORE = registerBlockItem(Constants.Blocks.MARS_IRON_ORE, BLOCKS_GROUP);
-    public static final Item ASTEROID_IRON_ORE = registerBlockItem(Constants.Blocks.ASTEROID_IRON_ORE, BLOCKS_GROUP);
-    public static final Item MOON_TIN_ORE = registerBlockItem(Constants.Blocks.MOON_TIN_ORE, BLOCKS_GROUP);
-    public static final Item MARS_TIN_ORE = registerBlockItem(Constants.Blocks.MARS_TIN_ORE, BLOCKS_GROUP);
-    public static final Item GALENA_ORE = registerBlockItem(Constants.Blocks.GALENA_ORE, BLOCKS_GROUP);
-    public static final Item SILICON_BLOCK = registerBlockItem(Constants.Blocks.SILICON_BLOCK, BLOCKS_GROUP);
-    public static final Item SOLID_METEORIC_IRON_BLOCK = registerBlockItem(Constants.Blocks.SOLID_METEORIC_IRON_BLOCK, BLOCKS_GROUP);
-    public static final Item DESH_BLOCK = registerBlockItem(Constants.Blocks.DESH_BLOCK, BLOCKS_GROUP);
-    public static final Item TITANIUM_BLOCK = registerBlockItem(Constants.Blocks.TITANIUM_BLOCK, BLOCKS_GROUP);
-    public static final Item LEAD_BLOCK = registerBlockItem(Constants.Blocks.LEAD_BLOCK, BLOCKS_GROUP);
-    public static final Item LUNAR_SAPPHIRE_BLOCK = registerBlockItem(Constants.Blocks.LUNAR_SAPPHIRE_BLOCK, BLOCKS_GROUP);
-    public static final Item CAVERNOUS_VINE = registerBlockItem(Constants.Blocks.CAVERNOUS_VINE, BLOCKS_GROUP);
-    public static final Item POISONOUS_CAVERNOUS_VINE = registerBlockItem(Constants.Blocks.POISONOUS_CAVERNOUS_VINE, BLOCKS_GROUP);
-    public static final Item MOON_BERRY_BUSH = registerBlockItem(Constants.Blocks.MOON_BERRY_BUSH, BLOCKS_GROUP);
-    public static final Item CIRCUIT_FABRICATOR = registerBlockItem(Constants.Blocks.CIRCUIT_FABRICATOR, MACHINES_GROUP);
-    public static final Item COMPRESSOR = registerBlockItem(Constants.Blocks.COMPRESSOR, MACHINES_GROUP);
-    public static final Item ELECTRIC_COMPRESSOR = registerBlockItem(Constants.Blocks.ELECTRIC_COMPRESSOR, MACHINES_GROUP);
-    public static final Item COAL_GENERATOR = registerBlockItem(Constants.Blocks.COAL_GENERATOR, MACHINES_GROUP);
-    public static final Item BASIC_SOLAR_PANEL = registerBlockItem(Constants.Blocks.BASIC_SOLAR_PANEL, MACHINES_GROUP);
-    public static final Item ADVANCED_SOLAR_PANEL = registerBlockItem(Constants.Blocks.ADVANCED_SOLAR_PANEL, MACHINES_GROUP);
-    public static final Item ENERGY_STORAGE_MODULE = registerBlockItem(Constants.Blocks.ENERGY_STORAGE_MODULE, MACHINES_GROUP);
-    public static final Item OXYGEN_COLLECTOR = registerBlockItem(Constants.Blocks.OXYGEN_COLLECTOR, MACHINES_GROUP);
-    public static final Item REFINERY = registerBlockItem(Constants.Blocks.REFINERY, MACHINES_GROUP);
-
-    private static BlockItem registerBlockItem(String id, ItemGroup group) {
-        BlockItem item = new BlockItem(Registry.BLOCK.get(new Identifier(Constants.MOD_ID, id)), new Item.Settings().group(group));
-        item.appendBlocks(Item.BLOCK_ITEMS, item);
-        return Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), item);
-    }
 
     private static <T extends Item> T registerItem(String id, T item) {
         return Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), item);

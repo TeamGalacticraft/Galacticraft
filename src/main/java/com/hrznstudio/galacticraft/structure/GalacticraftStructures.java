@@ -21,15 +21,23 @@
  *
  */
 
-package com.hrznstudio.galacticraft.world.gen.feature;
+package com.hrznstudio.galacticraft.structure;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.world.gen.feature.MoonRuinsFeature;
+import com.hrznstudio.galacticraft.world.gen.feature.MoonVillageFeature;
+import net.minecraft.structure.StructurePieceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.feature.DefaultFeatureConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
-public class GalacticraftStructureFeatures {
+public class GalacticraftStructures {
     public static final StructureFeature<StructurePoolFeatureConfig> MOON_VILLAGE = StructureFeature.register(new Identifier(Constants.MOD_ID, "moon_village").toString(), new MoonVillageFeature(StructurePoolFeatureConfig.CODEC), GenerationStep.Feature.SURFACE_STRUCTURES);
+    public static final StructureFeature<DefaultFeatureConfig> MOON_RUINS = StructureFeature.register(new Identifier(Constants.MOD_ID, "moon_ruins").toString(), new MoonRuinsFeature(DefaultFeatureConfig.CODEC), GenerationStep.Feature.SURFACE_STRUCTURES);
+    public static final StructurePieceType MOON_RUINS_PIECE = StructurePieceType.register(MoonRuinsGenerator.Piece::new, "galacticraft-rewoven:moon_ruins_piece");
 
+    public static void register() {
+    }
 }

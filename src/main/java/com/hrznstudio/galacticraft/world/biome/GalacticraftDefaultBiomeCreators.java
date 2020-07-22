@@ -30,9 +30,9 @@ import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
+import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftStructureFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.BlockStateWithChance;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.MultiBlockSurfaceConfig;
@@ -40,9 +40,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.sound.MusicSound;
 import net.minecraft.structure.rule.TagMatchRuleTest;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
 import net.minecraft.world.gen.GenerationStep;
@@ -75,7 +73,8 @@ public class GalacticraftDefaultBiomeCreators {
             }
     )));
 
-    private static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), GalacticraftStructureFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
+    private static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), GalacticraftStructures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
+    private static final ConfiguredStructureFeature<DefaultFeatureConfig, ? extends StructureFeature<DefaultFeatureConfig>> MOON_RUINS_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_ruins"), GalacticraftStructures.MOON_RUINS.configure(DefaultFeatureConfig.INSTANCE));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_HIGHLANDS_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_highlands_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.1F)));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_MARE_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_mare_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.15F)));
     private static final ConfiguredFeature<?, ?> MOON_BASALT_CLUSTER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_basalt_cluster"), Feature.DISK.configure(new DiskFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), UniformIntDistribution.of(2, 3), 2, ImmutableList.of(GalacticraftBlocks.MOON_ROCK.getDefaultState()))).decorate(ConfiguredFeatures.Decorators.field_26167));
@@ -144,6 +143,7 @@ public class GalacticraftDefaultBiomeCreators {
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
+        biome.addStructureFeature(MOON_RUINS_FEATURE);
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);
         return biome;

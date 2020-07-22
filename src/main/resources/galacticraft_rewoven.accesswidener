@@ -15,3 +15,8 @@ accessible   method   net/minecraft/world/gen/chunk/ChunkGeneratorType          
 accessible   method   net/minecraft/structure/pool/LegacySinglePoolElement           <init>            (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
 accessible   method   net/minecraft/structure/pool/FeaturePoolElement                <init>            (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
 accessible   method   net/minecraft/world/gen/feature/StructureFeature               register          (Ljava/lang/String;Lnet/minecraft/world/gen/feature/StructureFeature;Lnet/minecraft/world/gen/GenerationStep$Feature;)Lnet/minecraft/world/gen/feature/StructureFeature;
+accessible   method   net/minecraft/loot/LootTables                                  registerLootTable (Lnet/minecraft/util/Identifier;)Lnet/minecraft/util/Identifier;
+
+accessible   method   net/minecraft/item/PickaxeItem                                 <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible   method   net/minecraft/item/AxeItem                                     <init>            (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
+accessible   method   net/minecraft/item/HoeItem                                     <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
