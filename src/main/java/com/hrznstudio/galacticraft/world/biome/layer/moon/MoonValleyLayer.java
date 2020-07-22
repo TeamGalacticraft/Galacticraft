@@ -37,16 +37,16 @@ public enum MoonValleyLayer implements CrossSamplingLayer {
     public int sample(LayerRandomnessSource context, int n, int e, int s, int w, int center) {
         if (n != s && e != w) {
             int mare = 0;
-            if (((GCBiomePropertyAccessor) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
-            if (((GCBiomePropertyAccessor) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
-            if (((GCBiomePropertyAccessor) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
-            if (((GCBiomePropertyAccessor) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
             if (mare == 2)

@@ -185,7 +185,7 @@ public abstract class WorldRendererMixin {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/SkyProperties;useThickFog(II)Z"))
     private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
         if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
-            return ((GCBiomePropertyAccessor) client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ))).getProperty(GalacticraftBiomeProperties.IS_MARE);
+            return ((GCBiomePropertyAccessor)(Object) client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ))).getProperty(GalacticraftBiomeProperties.IS_MARE);
         }
         return skyProperties.useThickFog(camX, camY);
     }

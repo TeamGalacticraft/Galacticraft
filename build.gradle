@@ -66,12 +66,12 @@ dependencies {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
     }
-    modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
-        exclude group: 'me.shedaniel.cloth'
-        exclude group: 'net.fabricmc.fabric-api'
-        exclude group: 'net.fabricmc'
-        exclude group: 'org.jetbrains'
-    }
+//    modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
+//        exclude group: 'me.shedaniel.cloth'
+//        exclude group: 'net.fabricmc.fabric-api'
+//        exclude group: 'net.fabricmc'
+//        exclude group: 'org.jetbrains'
+//    }
 
     modApi("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16.1") { transitive = false }
     modApi("io.github.cottonmc:UniversalComponents:${project.uc_version}") { transitive = false }

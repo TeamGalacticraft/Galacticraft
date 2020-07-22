@@ -39,6 +39,6 @@ public class DrawableUtils {
     }
 
     public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int color) {
-        textRenderer.draw(stack, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+        textRenderer.draw(stack, text.method_30937(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 }

@@ -57,6 +57,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -150,7 +152,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Style.EMPTY.withColor(Formatting.GRAY));
+        return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

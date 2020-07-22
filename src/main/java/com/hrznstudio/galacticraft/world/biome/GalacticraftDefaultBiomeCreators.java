@@ -98,7 +98,6 @@ public class GalacticraftDefaultBiomeCreators {
                         .category(Biome.Category.NONE)
                         .temperature(-173.0F)
                         .downfall(downfall)
-                        .method_30637(0)
                         .depth(depth)
                         .scale(scale)
                         .effects(new BiomeEffects.Builder()
@@ -106,13 +105,9 @@ public class GalacticraftDefaultBiomeCreators {
                                 .waterFogColor(4802890)
                                 .fogColor(1447446)
                                 .music(MOON_MUSIC)
+                                .method_30820(0)
                                 .build())
-        ) {
-            @Override
-            public boolean canSetSnow(WorldView world, BlockPos blockPos) {
-                return false;
-            }
-        };
+        );
         biome.addCarver(GenerationStep.Carver.AIR, MOON_HIGHLANDS_CAVE_CARVER);
         biome.addStructureFeature(MOON_VILLAGE_FEATURE);
         biome.addSpawn(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS);
@@ -121,7 +116,7 @@ public class GalacticraftDefaultBiomeCreators {
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
-        ((GCBiomePropertyAccessor) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
+        ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         return biome;
     }
 
@@ -133,7 +128,6 @@ public class GalacticraftDefaultBiomeCreators {
                         .category(Biome.Category.NONE)
                         .temperature(-173.0F)
                         .downfall(downfall)
-                        .method_30637(0)
                         .depth(depth)
                         .scale(scale)
                         .effects(new BiomeEffects.Builder()
@@ -141,26 +135,17 @@ public class GalacticraftDefaultBiomeCreators {
                                 .waterFogColor(2828843)
                                 .fogColor(1447446)
                                 .music(MOON_MUSIC)
+                                .method_30820(0)
                                 .build())
-        ) {
-            @Override
-            public boolean canSetSnow(WorldView world, BlockPos blockPos) {
-                return false;
-            }
-
-            @Override
-            protected float computeTemperature(BlockPos blockPos) {
-                return super.computeTemperature(blockPos);
-            }
-        };
+        );
         biome.addCarver(GenerationStep.Carver.AIR, MOON_MARE_CAVE_CARVER);
         biome.addSpawn(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS);
         biome.addSpawn(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
         biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
-        ((GCBiomePropertyAccessor) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
-        ((GCBiomePropertyAccessor) biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);
+        ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
+        ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);
         return biome;
     }
 }

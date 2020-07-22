@@ -639,7 +639,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         for (int cx = chunk.getPos().x - 2; cx <= chunk.getPos().x + 2; cx++) {
             for (int cz = chunk.getPos().z - 2; cz <= chunk.getPos().z + 2; cz++) {
                 Biome biome = region.getBiome(new BlockPos(chunk.getPos().x << 4 + 8, 0, chunk.getPos().z << 4));
-                GCBiomePropertyAccessor accessor = ((GCBiomePropertyAccessor) biome);
+                GCBiomePropertyAccessor accessor = ((GCBiomePropertyAccessor)(Object) biome);
                 if (accessor.getProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME)
                         && accessor.getProperty(GalacticraftBiomeProperties.HAS_CRATERS)) {
                     for (int x = 0; x < 16; x++) {

@@ -51,9 +51,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -219,8 +221,8 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     @Override
     public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
         List<BlockPos> parts = new LinkedList<>();
-        BlockPos rod = pos.up();
-        BlockPos mid = rod.up();
+        BlockPos rod = pos.method_30931();
+        BlockPos mid = rod.method_30931();
         BlockPos front = mid.north();
         BlockPos back = mid.south();
 
@@ -290,7 +292,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel");
+        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

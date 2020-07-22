@@ -50,9 +50,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -61,6 +63,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -186,7 +189,7 @@ public class CoalGeneratorBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.coal_generator");
+        return new TranslatableText("tooltip.galacticraft-rewoven.coal_generator").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

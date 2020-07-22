@@ -44,10 +44,7 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(Biome.class)
-public class BiomeMixin implements GCBiomePropertyAccessor {
-    @Shadow
-    @Final
-    private Map<GenerationStep.Carver, List<Supplier<ConfiguredCarver<?>>>> carvers;
+public abstract class BiomeMixin implements GCBiomePropertyAccessor {
     @Unique
     private final Map<BiomePropertyType<?>, BiomeProperty<?>> properties = new HashMap<>();
 

@@ -386,7 +386,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(stack, text.method_30937(), x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private int getYMargins() {
@@ -411,7 +411,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(stack, text.method_30937(), x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private enum Menu {

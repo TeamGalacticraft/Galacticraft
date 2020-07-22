@@ -46,9 +46,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -56,6 +58,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -128,7 +131,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector");
+        return new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override
