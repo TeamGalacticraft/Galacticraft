@@ -27,7 +27,10 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.FluidBlock;
 import com.hrznstudio.galacticraft.api.block.StairsBlock;
-import com.hrznstudio.galacticraft.block.decoration.*;
+import com.hrznstudio.galacticraft.block.decoration.GratingBlock;
+import com.hrznstudio.galacticraft.block.decoration.LightPanelBlock;
+import com.hrznstudio.galacticraft.block.decoration.MoonCheeseBlock;
+import com.hrznstudio.galacticraft.block.decoration.VacuumGlassBlock;
 import com.hrznstudio.galacticraft.block.environment.*;
 import com.hrznstudio.galacticraft.block.machines.*;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
@@ -41,13 +44,21 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
 import net.minecraft.block.*;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Contract;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBlocks {
+//    static {
+//        classloadTest();
+//    }
+//
+//    private static void classloadTest() {
+//        throw new RuntimeException();
+//    }
+
     // Special Blocks
     public static final Block GLOWSTONE_TORCH = registerBlock(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel((state) -> 15).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.GLOWSTONE_TORCH);
     public static final Block GLOWSTONE_WALL_TORCH = registerBlock(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)), Constants.Blocks.GLOWSTONE_WALL_TORCH);
@@ -56,11 +67,11 @@ public class GalacticraftBlocks {
     public static final Block SOLAR_PANEL_PART = registerBlock(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constants.Blocks.GENERIC_MULTIBLOCK_PART);
 
     // Liquids
-    public static final FluidBlock CRUDE_OIL = registerFlammableFluidBlock(new CrudeOilBlock(GalacticraftFluids.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
+    public static final FluidBlock CRUDE_OIL = registerFlammableBlock(new CrudeOilBlock(GalacticraftFluids.CRUDE_OIL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.BLACK)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(100.0F, 1000.0F).dropsNothing()), Constants.Blocks.CRUDE_OIL);
 
-    public static final FluidBlock FUEL = registerFlammableFluidBlock(new FluidBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
+    public static final FluidBlock FUEL = registerFlammableBlock(new FluidBlock(GalacticraftFluids.FUEL, FabricBlockSettings.of(new FabricMaterialBuilder(MaterialColor.YELLOW)
             .allowsMovement().destroyedByPiston().burnable().lightPassesThrough().notSolid().replaceable().liquid().build())
             .strength(50.0F, 50.0F).dropsNothing()), Constants.Blocks.FUEL);
 
@@ -78,7 +89,7 @@ public class GalacticraftBlocks {
     public static final Block MOON_BASALT_WALL = registerBlock(new WallBlock(FabricBlockSettings.copy(MOON_BASALT).strength(2.0F, 2.0F)), Constants.Blocks.MOON_BASALT_WALL);
     public static final Block MOON_BASALT_BRICKS = registerBlock(new Block(FabricBlockSettings.copy(MOON_BASALT).strength(2.0F, 2.0F)), Constants.Blocks.MOON_BASALT_BRICKS);
     public static final Block MOON_CHEESE_LEAVES = registerBlock(new LeavesBlock(FabricBlockSettings.of(Material.LEAVES).strength(0.2F, 0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()), Constants.Blocks.MOON_CHEESE_LEAVES);
-    public static final Block MOON_CHEESE_LOG = registerBlock(createLogBlock(MaterialColor.YELLOW, MaterialColor.YELLOW), Constants.Blocks.MOON_CHEESE_LOG);
+    public static final Block MOON_CHEESE_LOG = registerBlock(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.YELLOW).strength(2.0F).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.MOON_CHEESE_LOG);
     public static final Block MOON_DIRT = registerBlock(new Block(FabricBlockSettings.of(Material.SOIL, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F).sounds(BlockSoundGroup.GRAVEL)), Constants.Blocks.MOON_DIRT);
     public static final Block MOON_DUNGEON_BRICKS = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(4.0F, 40.0F)), Constants.Blocks.MOON_DUNGEON_BRICK);
     public static final Block MARS_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).hardness(2.2F)), Constants.Blocks.MARS_SURFACE_ROCK);
@@ -165,14 +176,10 @@ public class GalacticraftBlocks {
     public static void register() {
     }
 
-    private static <T extends net.minecraft.block.FluidBlock> T registerFlammableFluidBlock(T block, String id) {
+    private static <T extends Block> T registerFlammableBlock(T block, String id) {
         T registered = registerBlock(block, id);
         ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(registered, 80, 80);
         return registered;
-    }
-
-    private static PillarBlock createLogBlock(MaterialColor topMaterialColor, MaterialColor sideMaterialColor) {
-        return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
     }
 
     private static <T extends Block> T registerBlock(T block, String id) {

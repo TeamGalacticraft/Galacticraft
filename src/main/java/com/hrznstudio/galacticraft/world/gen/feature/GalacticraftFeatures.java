@@ -40,7 +40,6 @@ import net.minecraft.world.gen.stateprovider.PillarBlockStateProvider;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftFeatures {
-    public static final StructureFeature<StructurePoolFeatureConfig> MOON_VILLAGE = StructureFeature.register(new Identifier(Constants.MOD_ID, "moon_village").toString(), new MoonVillageFeature(StructurePoolFeatureConfig.CODEC), GenerationStep.Feature.SURFACE_STRUCTURES);
 
     public static final RandomPatchFeatureConfig MOON_FLOWER_CONFIG = new RandomPatchFeatureConfig.Builder(new MoonFloraBlockStateProvider(), new SimpleBlockPlacer()).tries(64).build();
     public static final BlockPileFeatureConfig CHEESE_LOG_PILE_CONFIG = new BlockPileFeatureConfig(new PillarBlockStateProvider(GalacticraftBlocks.MOON_CHEESE_LOG));

@@ -24,7 +24,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.google.common.collect.ImmutableMap;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftStructureFeatures;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.chunk.StructuresConfig;
 import net.minecraft.world.gen.feature.StructureFeature;
@@ -49,6 +49,6 @@ public class StructuresConfigMixin {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "<clinit>", at = @At(value = "FIELD", target = "Lnet/minecraft/util/registry/Registry;STRUCTURE_FEATURE:Lnet/minecraft/util/registry/Registry;"))
     private static void addGCStructures(CallbackInfo ci) {
-        DEFAULT_STRUCTURES = ImmutableMap.<StructureFeature<?>, StructureConfig>builder().putAll(DEFAULT_STRUCTURES).put(GalacticraftFeatures.MOON_VILLAGE, new StructureConfig(32, 8, 8426492)).build();
+        DEFAULT_STRUCTURES = ImmutableMap.<StructureFeature<?>, StructureConfig>builder().putAll(DEFAULT_STRUCTURES).put(GalacticraftStructureFeatures.MOON_VILLAGE, new StructureConfig(32, 8, 8426492)).build();
     }
 }

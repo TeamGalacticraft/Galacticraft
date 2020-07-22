@@ -21,29 +21,15 @@
  *
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftStructureFeatures;
+import com.hrznstudio.galacticraft.Constants;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.StructureFeature;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
-import java.util.List;
+public class GalacticraftStructureFeatures {
+    public static final StructureFeature<StructurePoolFeatureConfig> MOON_VILLAGE = StructureFeature.register(new Identifier(Constants.MOD_ID, "moon_village").toString(), new MoonVillageFeature(StructurePoolFeatureConfig.CODEC), GenerationStep.Feature.SURFACE_STRUCTURES);
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(StructureFeature.class)
-public class StructureFeatureMixin {
-    @Mutable
-    @Shadow
-    @Final
-    public static List<StructureFeature<?>> field_24861 = addGCJigsawStructures();
-
-    private static List<StructureFeature<?>> addGCJigsawStructures() {
-        return ImmutableList.<StructureFeature<?>>builder().addAll(StructureFeature.field_24861).add(GalacticraftStructureFeatures.MOON_VILLAGE).build();
-    }
 }

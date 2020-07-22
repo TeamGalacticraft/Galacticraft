@@ -32,7 +32,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftStructureFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.BlockStateWithChance;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.MultiBlockSurfaceConfig;
@@ -52,7 +52,6 @@ import net.minecraft.world.gen.carver.Carver;
 import net.minecraft.world.gen.carver.ConfiguredCarver;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.surfacebuilder.ConfiguredSurfaceBuilder;
-import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 /**
@@ -76,7 +75,7 @@ public class GalacticraftDefaultBiomeCreators {
             }
     )));
 
-    private static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
+    private static final ConfiguredStructureFeature<StructurePoolFeatureConfig, ? extends StructureFeature<StructurePoolFeatureConfig>> MOON_VILLAGE_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_village"), GalacticraftStructureFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6)));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_HIGHLANDS_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_highlands_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.1F)));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_MARE_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_mare_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.15F)));
     private static final ConfiguredFeature<?, ?> MOON_BASALT_CLUSTER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_basalt_cluster"), Feature.DISK.configure(new DiskFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), UniformIntDistribution.of(2, 3), 2, ImmutableList.of(GalacticraftBlocks.MOON_ROCK.getDefaultState()))).decorate(ConfiguredFeatures.Decorators.field_26167));
