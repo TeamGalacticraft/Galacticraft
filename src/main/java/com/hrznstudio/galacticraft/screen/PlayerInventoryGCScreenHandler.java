@@ -177,9 +177,12 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         if (slotFrom != null && slotFrom.hasStack()) {
             ItemStack stackFrom = slotFrom.getStack();
             stack = stackFrom.copy();
-            EquipmentSlot preferredEquipmentSlot = MobEntity.getPreferredEquipmentSlot(stack);
-            if ((index >= 0 && index < 8)) {
+            if (index >= 0 && index < 8) {
                 if (!this.insertItem(stackFrom, 9, 48, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 9 && index < 49) {
+                if (!this.insertItem(stackFrom, 0, 8, true)) {
                     return ItemStack.EMPTY;
                 }
             }
