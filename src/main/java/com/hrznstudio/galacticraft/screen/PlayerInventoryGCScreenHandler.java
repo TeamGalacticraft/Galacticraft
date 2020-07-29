@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.items.ThermalArmorItem;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -167,5 +168,42 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         public Pair<Identifier, Identifier> getBackgroundSprite() {
             return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
         }
+    }
+
+    public ItemStack transferSlot(PlayerEntity player, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slotFrom = (Slot)this.slots.get(index);
+        if (slotFrom != null && slotFrom.hasStack()) {
+            ItemStack stackFrom = slotFrom.getStack();
+            stack = stackFrom.copy();
+            if (index >= 0 && index < 8) {
+                if (!this.insertItem(stackFrom, 9, 48, true)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index >= 9 && index < 49) {
+                if (!this.insertItem(stackFrom, 0, 8, true)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            slotFrom.onStackChanged(stackFrom, stack);
+
+            if (stackFrom.isEmpty()) {
+                slotFrom.setStack(ItemStack.EMPTY);
+            } else {
+                slotFrom.markDirty();
+            }
+
+            if (stackFrom.getCount() == stack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            ItemStack itemStack3 = slotFrom.onTakeItem(player, stackFrom);
+            if (index == 0) {
+                player.dropItem(itemStack3, false);
+            }
+        }
+
+        return stack;
     }
 }
