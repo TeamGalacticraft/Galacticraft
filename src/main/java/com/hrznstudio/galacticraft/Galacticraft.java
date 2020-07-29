@@ -44,6 +44,8 @@ import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
+import com.hrznstudio.galacticraft.village.MoonVillagerType;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
@@ -51,6 +53,7 @@ import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
 import com.mojang.serialization.Lifecycle;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
@@ -62,7 +65,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -72,7 +74,6 @@ import org.apache.logging.log4j.Logger;
 public class Galacticraft implements ModInitializer {
 
     public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
-    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_type")), Lifecycle.stable());
     public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
@@ -102,7 +103,10 @@ public class Galacticraft implements ModInitializer {
         GalacticraftPackets.register();
         GalacticraftSounds.register();
         GalacticraftTags.register();
+        GalacticraftPointOfInterestType.register();
         MoonVillageData.register();
+        MoonVillagerType.register();
+        GalacticraftVillagerProfessions.register();
 
         AtmosphericGasRegistryCallback.EVENT.register(registry -> {
             Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);

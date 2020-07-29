@@ -23,9 +23,9 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
+import com.hrznstudio.galacticraft.village.MoonVillagerType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -37,10 +37,7 @@ import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerData;
-import net.minecraft.village.VillagerProfession;
 import net.minecraft.village.VillagerType;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +46,6 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity {
-    public static final EntityType.EntityFactory<MoonVillagerEntity> FACTORY = MoonVillagerEntity::new;
     public static final VillagerType MOON_VILLAGER_TYPE = new VillagerType() {
         @Override
         public String toString() {
@@ -58,21 +54,18 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     };
 
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
-        this(entityType, world, MOON_VILLAGER_TYPE);
+        this(entityType, world, MoonVillagerType.MOON_HIGHLANDS);
     }
 
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world, VillagerType type) {
         super(entityType, world, type);
         createLivingAttributes();
-        assert Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(type) != null;
         setHealth(20.0F);
-
     }
 
     @Override
     public void setVillagerData(VillagerData villagerData) {
-        if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null
-                && Galacticraft.MOON_VILLAGER_TYPE_REGISTRY.getId(villagerData.getType()) != null) {
+        if (villagerData != null && Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY.getId(villagerData.getProfession()) != null) {
             super.setVillagerData(villagerData);
         }
     }
@@ -142,11 +135,5 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
 
     public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {
         return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D);
-    }
-
-    static {
-        Registry.register(Galacticraft.MOON_VILLAGER_TYPE_REGISTRY, new Identifier(Constants.MOD_ID, "moon_villager"), Registry.register(Registry.VILLAGER_TYPE, new Identifier(Constants.MOD_ID, "moon_villager"), MOON_VILLAGER_TYPE));
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier("none"), VillagerProfession.NONE);
-        Registry.register(Galacticraft.MOON_VILLAGER_PROFESSION_REGISTRY, new Identifier("nitwit"), VillagerProfession.NITWIT);
     }
 }

@@ -25,13 +25,16 @@ package com.hrznstudio.galacticraft.structure.moon_village;
 
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.structure.pool.EmptyPoolElement;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.structure.pool.TemplatePools;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.feature.BlockPileFeatureConfig;
 import net.minecraft.world.gen.feature.ConfiguredFeatures;
+import net.minecraft.world.gen.feature.Feature;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -51,6 +54,7 @@ public class MoonVillageData {
     private static final Identifier VILLAGERS = new Identifier(Constants.MOD_ID, "moon_village/villagers");
     private static final Identifier ANIMALS = new Identifier(Constants.MOD_ID, "moon_village/animals");
     private static final Identifier IRON_GOLEM = new Identifier(Constants.MOD_ID, "moon_village/iron_golem");
+    private static final Identifier SAPLINGS = new Identifier(Constants.MOD_ID, "moon_village/misc/saplings");
 
     public static final Identifier STARTS = new Identifier(Constants.MOD_ID, "moon_village/starts");
 
@@ -58,6 +62,9 @@ public class MoonVillageData {
         BASE_POOL = TemplatePools.register(new StructurePool(STARTS,
                 EMPTY,
                 ImmutableList.of(
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "starts/start_1"), 3),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "starts/start_2"), 4),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "starts/start_3"), 5),
                         Pair.of((projection) -> EmptyPoolElement.INSTANCE, 1) //todo
                 ),
                 StructurePool.Projection.RIGID));
@@ -88,6 +95,7 @@ public class MoonVillageData {
                 TERMINATORS,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "houses/house_1"), 5),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "houses/greenhouse"), 1),
                         Pair.of((projection) -> EmptyPoolElement.INSTANCE, 1)
                 ),
                 StructurePool.Projection.RIGID));
@@ -109,11 +117,24 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.RIGID));
 
+        TemplatePools.register(new StructurePool(SAPLINGS,
+                EMPTY,
+                ImmutableList.of(
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/oak"), 2),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/birch"), 2),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/spruce"), 2),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/dark_oak"), 1),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/jungle"), 1),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/acacia"), 1),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/dead"), 2)
+                ),
+                StructurePool.Projection.RIGID));
+
         TemplatePools.register(new StructurePool(DECOR,
                 EMPTY,
                 ImmutableList.of(
-                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "lamp_1"), 2),
-                        Pair.of(StructurePoolElement.method_30421(ConfiguredFeatures.PILE_HAY), 1),
+                        Pair.of(StructurePoolElement.method_30425(BASE_ID + "lamp"), 2),
+                        Pair.of(StructurePoolElement.method_30421(Feature.BLOCK_PILE.configure(GalacticraftFeatures.CHEESE_LOG_PILE_CONFIG)), 1),
                         Pair.of(StructurePoolElement.method_30438(), 2)
                 ),
                 StructurePool.Projection.RIGID));

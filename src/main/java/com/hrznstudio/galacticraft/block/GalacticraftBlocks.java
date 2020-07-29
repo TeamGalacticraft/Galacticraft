@@ -27,10 +27,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.FluidBlock;
 import com.hrznstudio.galacticraft.api.block.StairsBlock;
-import com.hrznstudio.galacticraft.block.decoration.GratingBlock;
-import com.hrznstudio.galacticraft.block.decoration.LightPanelBlock;
-import com.hrznstudio.galacticraft.block.decoration.MoonCheeseBlock;
-import com.hrznstudio.galacticraft.block.decoration.VacuumGlassBlock;
+import com.hrznstudio.galacticraft.block.decoration.*;
 import com.hrznstudio.galacticraft.block.environment.*;
 import com.hrznstudio.galacticraft.block.machines.*;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
@@ -165,6 +162,7 @@ public class GalacticraftBlocks {
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constants.Blocks.CAVERNOUS_VINE, GalacticraftItems.BLOCKS_GROUP);
     public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE, GalacticraftItems.BLOCKS_GROUP);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly()), Constants.Blocks.MOON_BERRY_BUSH, GalacticraftItems.BLOCKS_GROUP);
+    public static final Block LUNAR_CARTOGRAPHY_TABLE = registerBlock(new LunarCartographyTableBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.LUNAR_CARTOGRAPHY_TABLE, GalacticraftItems.BLOCKS_GROUP);
 
     // Machines
     public static final ConfigurableElectricMachineBlock CIRCUIT_FABRICATOR = registerBlock(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.CIRCUIT_FABRICATOR, GalacticraftItems.MACHINES_GROUP);
