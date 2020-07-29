@@ -198,10 +198,6 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
         return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
-    public boolean canConnect(BlockState state) {
-        return state.getBlock() instanceof VacuumGlass;
-    }
-
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
@@ -240,11 +236,26 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
                     .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (!state.get(FLUID).equals(new Identifier("empty"))) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
-        return state.with(getPropForDir(facing), this.canConnect(neighborState));
+        return state.with(getPropForDir(facing), this.canConnect(state, pos, neighborState, neighborPos));
+    }
+
+    public boolean canConnect(BlockState state, BlockPos thisPos, BlockState neighborState, BlockPos neighborPos) {
+        if (neighborState.getBlock() instanceof VacuumGlass) {
+            if ((thisPos.down().equals(neighborPos)) || (thisPos.up().equals(neighborPos))) {
+                // special cases: allow us to introduce ourselves
+                return (state.get(NORTH).equals(neighborState.get(NORTH)) &&
+                        state.get(SOUTH).equals(neighborState.get(SOUTH)) &&
+                        state.get(EAST).equals(neighborState.get(EAST)) &&
+                        state.get(WEST).equals(neighborState.get(WEST)));
+            }
+            return true;
+        }
+        return false;
     }
 
     @Override
