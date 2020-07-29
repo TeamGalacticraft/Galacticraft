@@ -52,13 +52,6 @@ import org.jetbrains.annotations.Contract;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBlocks {
-//    static {
-//        classloadTest();
-//    }
-//
-//    private static void classloadTest() {
-//        throw new RuntimeException();
-//    }
 
     // Special Blocks
     public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel((state) -> 15).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.GLOWSTONE_TORCH);
