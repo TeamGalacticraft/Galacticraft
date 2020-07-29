@@ -99,34 +99,7 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
                 Block.createCuboidShape(5.0D,14.0D,0.0D,11.0D,15.0D,5.0D),
                 Block.createCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 1.0D, 4.0D),
                 Block.createCuboidShape(5.0D, 1.0D, 0.0D, 11.0D, 2.0D, 5.0D));
-        VoxelShape e_m = VoxelShapes.union(
-                Block.createCuboidShape(15.0D, 1.0D, 4.0D, 16.0D, 15.0D, 12.0D)
-                //TODO: Add rest of cubes
-        );
-        VoxelShape e_g;
-        VoxelShape s_m;
-        VoxelShape s_g;
-        VoxelShape w_m;
-        VoxelShape w_g;
-        VoxelShape ns_glass = Block.createCuboidShape(6.0D, 2.0D, 2.0D, 10.0D, 14.0D, 14.0D);
-        VoxelShape nw_glass;
-        VoxelShape nes_glass;
-        VoxelShape x_glass;
-        /*
-        if (north) {
-            core = VoxelShapes.union(core, n_g);
-        } else {
-            core = VoxelShapes.union(core, n_m);
-        }
-        if (south) {
 
-        }
-        if (east) {
-
-        }
-        if (west) {
-
-        }*/
         return core;
     }
 
@@ -248,10 +221,52 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
         if (neighborState.getBlock() instanceof VacuumGlass) {
             if ((thisPos.down().equals(neighborPos)) || (thisPos.up().equals(neighborPos))) {
                 // special cases: allow us to introduce ourselves
-                return (state.get(NORTH).equals(neighborState.get(NORTH)) &&
-                        state.get(SOUTH).equals(neighborState.get(SOUTH)) &&
-                        state.get(EAST).equals(neighborState.get(EAST)) &&
-                        state.get(WEST).equals(neighborState.get(WEST)));
+                boolean sn = state.get(NORTH);
+                boolean ss = state.get(SOUTH);
+                boolean se = state.get(EAST);
+                boolean sw = state.get(WEST);
+                boolean nn = neighborState.get(NORTH);
+                boolean ns = neighborState.get(SOUTH);
+                boolean ne = neighborState.get(EAST);
+                boolean nw = neighborState.get(WEST);
+
+                Direction sf = state.get(FACING);
+                Direction nf = neighborState.get(FACING);
+
+                if (sn || ss || se || sw || nn || ns || ne || nw) {
+                    // only connected on east-west
+                    if (!(sn || ss) && !(nn || ns)) {
+                        // if all east-west sides active, works
+                        if (se && sw && ne && nw) {
+                            return true;
+                        // if one of them is not connected to anything, it def. works
+                        } else if (!(se || sw) && (sf.equals(Direction.NORTH) || sf.equals(Direction.SOUTH)) ||
+                                   !(ne || nw) && (nf.equals(Direction.NORTH) || nf.equals(Direction.SOUTH))) {
+                            return true;
+                        // if one has one connection and one has two
+                        } else if ((se?1:0) + (sw?1:0) + (ne?1:0) + (nw?1:0) == 3) {
+                            return true;
+                        }
+                        return ((se == ne) && !sw && !nw) ||
+                               ((sw == nw) && !se && !ne);
+                    // only connected on north-south
+                    } else if (!(se || sw) && !(ne || nw)) {
+                        if (sn && nn && ss && ns) {
+                            return true;
+                        // if one of them is not connected to anything, it def. works
+                        } else if (!(sn || ss) && (sf.equals(Direction.EAST) || sf.equals(Direction.WEST)) ||
+                                   !(nn || ne) && (nf.equals(Direction.EAST) || nf.equals(Direction.WEST))) {
+                            return true;
+                        } else if ((sn?1:0) + (ss?1:0) + (nn?1:0) + (ns?1:0) == 3) {
+                            return true;
+                        }
+                        return ((sn == nn) && !ss && !ns) ||
+                               ((ss == ns) && !sn && !nn);
+                    } else {
+                        return (sn == nn) && (ss == ns) && (se == ne) && (sw == nw);
+                    }
+                }
+                return sf.equals(nf);
             }
             return true;
         }
