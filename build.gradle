@@ -73,7 +73,7 @@ dependencies {
 //        exclude group: 'org.jetbrains'
 //    }
 
-    modApi("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16.1") { transitive = false }
+    modApi("com.hrznstudio:GalacticraftAPI:${project.addon_version}") { transitive = false }
     modApi("io.github.cottonmc:UniversalComponents:${project.uc_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}") { transitive = false }
@@ -82,7 +82,7 @@ dependencies {
 //    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}") { transitive = false } //todo add back cotton-resources when it updates
 
     //include everything mandatory inside the jar
-    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+1.16.1")
+    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")
     include("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
     include("io.github.cottonmc:UniversalComponents:${project.uc_version}")

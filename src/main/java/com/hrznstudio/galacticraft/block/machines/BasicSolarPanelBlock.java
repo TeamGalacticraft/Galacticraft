@@ -221,8 +221,8 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     @Override
     public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
         List<BlockPos> parts = new LinkedList<>();
-        BlockPos rod = pos.method_30931();
-        BlockPos mid = rod.method_30931();
+        BlockPos rod = pos.up();
+        BlockPos mid = rod.up();
         BlockPos front = mid.north();
         BlockPos back = mid.south();
 

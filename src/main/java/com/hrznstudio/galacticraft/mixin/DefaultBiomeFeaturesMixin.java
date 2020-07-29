@@ -21,28 +21,34 @@
  *
  */
 
-package com.hrznstudio.galacticraft.world.gen;
+package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
+import net.minecraft.structure.rule.TagMatchRuleTest;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.LakeFeature;
-import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OilPoolGenerator {
+@Mixin(DefaultBiomeFeatures.class)
+public class DefaultBiomeFeaturesMixin {
+    @Inject(at = @At("RETURN"), method = "addDefaultOres")
+    private static void addOresGC(GenerationSettings.class_5495 arg, CallbackInfo ci) {
+//        arg.method_30992(GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(BlockTags.BASE_STONE_OVERWORLD), GalacticraftBlocks.SILICON_ORE.getDefaultState(), 5)));
+    }
 
-    public static void registerOilLake() {
-        for (Biome biome : Biome.BIOMES) {
-            if (!biome.getCategory().equals(Biomes.NETHER_WASTES.getCategory()) && !biome.getCategory().equals(Biomes.THE_END.getCategory())) {
-
-                biome.addFeature(GenerationStep.Feature.UNDERGROUND_DECORATION, new ConfiguredFeature<>((LakeFeature) Feature.LAKE, new SingleStateFeatureConfig(GalacticraftBlocks.CRUDE_OIL.getDefaultState())));
-            }
-        }
+    @Inject(at = @At("RETURN"), method = "addDefaultLakes")
+    private static void addOilLakesGC(GenerationSettings.class_5495 arg, CallbackInfo ci) {
+//        arg.method_30992(GenerationStep.Feature.LAKES, GalacticraftFeatures.OIL_LAKE);
     }
 }

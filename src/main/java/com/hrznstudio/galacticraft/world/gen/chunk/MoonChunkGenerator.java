@@ -26,6 +26,7 @@ import net.minecraft.util.math.noise.OctaveSimplexNoiseSampler;
 import net.minecraft.util.math.noise.PerlinNoiseSampler;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -104,7 +105,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         this.worldSeed = worldSeed;
         ChunkGeneratorType chunkGeneratorType = supplier.get();
         this.typeSupplier = supplier;
-        NoiseConfig noiseConfig = chunkGeneratorType.method_28559();
+        NoiseConfig noiseConfig = chunkGeneratorType.getNoiseConfig();
         this.field_24779 = noiseConfig.getHeight();
         this.verticalNoiseResolution = noiseConfig.getSizeVertical() * 4;
         this.horizontalNoiseResolution = noiseConfig.getSizeHorizontal() * 4;
@@ -147,7 +148,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> method_28506() {
+    protected Codec<? extends MoonChunkGenerator> getCodec() {
         return CODEC;
     }
 
@@ -202,7 +203,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     private void sampleNoiseColumn(double[] buffer, int x, int z) {
-        NoiseConfig noiseConfig = this.typeSupplier.get().method_28559();
+        NoiseConfig noiseConfig = this.typeSupplier.get().getNoiseConfig();
         double ac = 0;
         double ad;
         double ai;
@@ -597,8 +598,8 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public List<Biome.SpawnEntry> getEntitySpawnList(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
-        if (accessor.method_28388(pos, true, StructureFeature.SWAMP_HUT).hasChildren()) {
+    public List<SpawnSettings.SpawnEntry> getEntitySpawnList(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
+        if (accessor.getStructureAt(pos, true, StructureFeature.SWAMP_HUT).hasChildren()) {
             if (group == SpawnGroup.MONSTER) {
                 return StructureFeature.SWAMP_HUT.getMonsterSpawns();
             }
@@ -609,15 +610,15 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         }
 
         if (group == SpawnGroup.MONSTER) {
-            if (accessor.method_28388(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
+            if (accessor.getStructureAt(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
                 return StructureFeature.PILLAGER_OUTPOST.getMonsterSpawns();
             }
 
-            if (accessor.method_28388(pos, false, StructureFeature.MONUMENT).hasChildren()) {
+            if (accessor.getStructureAt(pos, false, StructureFeature.MONUMENT).hasChildren()) {
                 return StructureFeature.MONUMENT.getMonsterSpawns();
             }
 
-            if (accessor.method_28388(pos, true, StructureFeature.FORTRESS).hasChildren()) {
+            if (accessor.getStructureAt(pos, true, StructureFeature.FORTRESS).hasChildren()) {
                 return StructureFeature.FORTRESS.getMonsterSpawns();
             }
         }

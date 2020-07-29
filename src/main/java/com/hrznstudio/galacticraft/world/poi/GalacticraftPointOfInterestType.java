@@ -11,6 +11,5 @@ public class GalacticraftPointOfInterestType {
     public static final PointOfInterestType LUNAR_CARTOGRAPHER = PointOfInterestType.setup(Registry.register(Registry.POINT_OF_INTEREST_TYPE, new Identifier(Constants.MOD_ID, "lunar_cartographer"), new PointOfInterestType(new Identifier(Constants.MOD_ID, "lunar_cartographer").toString(), ImmutableSet.copyOf(GalacticraftBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateManager().getStates()),1, 1)));
 
     public static void register() {
-
     }
 }

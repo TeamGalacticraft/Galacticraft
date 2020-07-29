@@ -62,7 +62,6 @@ public class GalacticraftDimensions {
 
     public static SimpleRegistry<DimensionOptions> addGCDimOptions(long seed, SimpleRegistry<DimensionOptions> registry) {
         registry.add(RegistryKey.of(Registry.DIMENSION_OPTIONS, new Identifier(Constants.MOD_ID, "moon")), new DimensionOptions(() -> MOON_TYPE, new MoonChunkGenerator(new MoonBiomeSource(seed, 4), seed)));
-        registry.markLoaded(RegistryKey.of(Registry.DIMENSION_OPTIONS, new Identifier(Constants.MOD_ID, "moon")));
         return registry;
     }
 }

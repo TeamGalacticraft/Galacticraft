@@ -43,6 +43,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeEffects;
+import net.minecraft.world.biome.GenerationSettings;
+import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.ProbabilityConfig;
 import net.minecraft.world.gen.UniformIntDistribution;
@@ -77,23 +79,36 @@ public class GalacticraftDefaultBiomeCreators {
     private static final ConfiguredStructureFeature<DefaultFeatureConfig, ? extends StructureFeature<DefaultFeatureConfig>> MOON_RUINS_FEATURE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_STRUCTURE_FEATURE, new Identifier(Constants.MOD_ID, "moon_ruins"), GalacticraftStructures.MOON_RUINS.configure(DefaultFeatureConfig.INSTANCE));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_HIGHLANDS_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_highlands_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.1F)));
     private static final ConfiguredCarver<ProbabilityConfig> MOON_MARE_CAVE_CARVER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_CARVER, new Identifier(Constants.MOD_ID, "moon_mare_caves"), Carver.CAVE.method_28614(new ProbabilityConfig(0.15F)));
-    private static final ConfiguredFeature<?, ?> MOON_BASALT_CLUSTER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_basalt_cluster"), Feature.DISK.configure(new DiskFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), UniformIntDistribution.of(2, 3), 2, ImmutableList.of(GalacticraftBlocks.MOON_ROCK.getDefaultState()))).decorate(ConfiguredFeatures.Decorators.field_26167));
+    private static final ConfiguredFeature<?, ?> MOON_BASALT_CLUSTER = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_basalt_cluster"), Feature.DISK.configure(new DiskFeatureConfig(GalacticraftBlocks.MOON_BASALT.getDefaultState(), UniformIntDistribution.of(2, 3), 2, ImmutableList.of(GalacticraftBlocks.MOON_ROCK.getDefaultState()))).decorate(ConfiguredFeatures.Decorators.SQUARE_TOP_SOLID_HEIGHTMAP));
     private static final ConfiguredFeature<?, ?> MOON_COPPER_ORE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_copper_ore"), Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(GalacticraftTags.MOON_STONE), GalacticraftBlocks.MOON_COPPER_ORE.getDefaultState(), 8)).method_30377(64).spreadHorizontally().repeat(12));
     private static final ConfiguredFeature<?, ?> MOON_TIN_ORE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_tin_ore"), Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(GalacticraftTags.MOON_STONE), GalacticraftBlocks.MOON_TIN_ORE.getDefaultState(), 8)).method_30377(64).spreadHorizontally().repeat(26));
     private static final ConfiguredFeature<?, ?> MOON_CHEESE_ORE = BuiltinRegistries.add(BuiltinRegistries.CONFIGURED_FEATURE, new Identifier(Constants.MOD_ID, "moon_cheese_ore"), Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(GalacticraftTags.MOON_STONE), GalacticraftBlocks.MOON_CHEESE_ORE.getDefaultState(), 4)).method_30377(128).spreadHorizontally().repeat(12));
 
-    private static final Biome.SpawnEntry MOON_HIGHLANDS_ZOMBIE_SPAWNS = new Biome.SpawnEntry(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 100, 4, 5);
-    private static final Biome.SpawnEntry MOON_HIGHLANDS_CREEPER_SPAWNS = new Biome.SpawnEntry(GalacticraftEntityTypes.EVOLVED_CREEPER, 100, 4, 5);
-    private static final Biome.SpawnEntry MOON_MARE_ZOMBIE_SPAWNS = new Biome.SpawnEntry(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 100, 5, 6);
-    private static final Biome.SpawnEntry MOON_MARE_CREEPER_SPAWNS = new Biome.SpawnEntry(GalacticraftEntityTypes.EVOLVED_CREEPER, 100, 5, 6);
+    private static final SpawnSettings.SpawnEntry MOON_HIGHLANDS_ZOMBIE_SPAWNS = new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 100, 4, 5);
+    private static final SpawnSettings.SpawnEntry MOON_HIGHLANDS_CREEPER_SPAWNS = new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_CREEPER, 100, 4, 5);
+    private static final SpawnSettings.SpawnEntry MOON_MARE_ZOMBIE_SPAWNS = new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_ZOMBIE, 100, 5, 6);
+    private static final SpawnSettings.SpawnEntry MOON_MARE_CREEPER_SPAWNS = new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_CREEPER, 100, 5, 6);
 
     private static final MusicSound MOON_MUSIC = new MusicSound(GalacticraftSounds.MUSIC_MOON, 1200, 3600, true);
 
     public static Biome createMoonHighlandsBiome(ConfiguredSurfaceBuilder<?> surfaceBuilder, float depth, float scale, float downfall) {
-        Biome biome = new Biome(
-                new Biome.Settings()
+        Biome biome = new Biome.Settings()
                         .precipitation(Biome.Precipitation.NONE)
-                        .surfaceBuilder(surfaceBuilder)
+                        .method_30973(new GenerationSettings.class_5495()
+                                .method_30996(surfaceBuilder)
+                                .method_30991(GenerationStep.Carver.AIR, MOON_HIGHLANDS_CAVE_CARVER)
+                                .method_30995(MOON_VILLAGE_FEATURE)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_BASALT_CLUSTER)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE)
+                                .method_30987()
+                        )
+                        .method_30974(new SpawnSettings.class_5496()
+                                .method_31011(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS)
+                                .method_31011(SpawnGroup.MONSTER, MOON_HIGHLANDS_CREEPER_SPAWNS)
+                                .method_31007()
+                        )
                         .category(Biome.Category.NONE)
                         .temperature(-173.0F)
                         .downfall(downfall)
@@ -104,26 +119,30 @@ public class GalacticraftDefaultBiomeCreators {
                                 .waterFogColor(4802890)
                                 .fogColor(1447446)
                                 .music(MOON_MUSIC)
-                                .method_30820(0)
-                                .build())
-        );
-        biome.addCarver(GenerationStep.Carver.AIR, MOON_HIGHLANDS_CAVE_CARVER);
-        biome.addStructureFeature(MOON_VILLAGE_FEATURE);
-        biome.addSpawn(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS);
-        biome.addSpawn(SpawnGroup.MONSTER, MOON_HIGHLANDS_CREEPER_SPAWNS);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_BASALT_CLUSTER);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
+                                .skyColor(0)
+                                .build()).method_30972();
+
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         return biome;
     }
 
     public static Biome createMoonMareBiome(ConfiguredSurfaceBuilder<?> surfaceBuilder, float depth, float scale, float downfall) {
-        Biome biome = new Biome(
-                new Biome.Settings()
+        Biome biome = new Biome.Settings()
                         .precipitation(Biome.Precipitation.NONE)
-                        .surfaceBuilder(surfaceBuilder)
+                        .method_30973(new GenerationSettings.class_5495()
+                                .method_30996(surfaceBuilder)
+                                .method_30991(GenerationStep.Carver.AIR, MOON_MARE_CAVE_CARVER)
+                                .method_30995(MOON_RUINS_FEATURE)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE)
+                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE)
+                                .method_30987()
+                        )
+                        .method_30974(new SpawnSettings.class_5496()
+                                .method_31011(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS)
+                                .method_31011(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS)
+                                .method_31007()
+                        )
                         .category(Biome.Category.NONE)
                         .temperature(-173.0F)
                         .downfall(downfall)
@@ -134,16 +153,10 @@ public class GalacticraftDefaultBiomeCreators {
                                 .waterFogColor(2828843)
                                 .fogColor(1447446)
                                 .music(MOON_MUSIC)
-                                .method_30820(0)
+                                .skyColor(0)
                                 .build())
-        );
-        biome.addCarver(GenerationStep.Carver.AIR, MOON_MARE_CAVE_CARVER);
-        biome.addSpawn(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS);
-        biome.addSpawn(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE);
-        biome.addFeature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE);
-        biome.addStructureFeature(MOON_RUINS_FEATURE);
+                .method_30972();
+
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);
         return biome;

@@ -8,7 +8,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
-import net.minecraft.class_5425;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.fluid.FluidState;
@@ -26,6 +25,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
@@ -125,6 +125,7 @@ public class MoonRuinsGenerator {
          this.setStructureData(structure, this.pos, structurePlacementData);
       }
 
+      @Override
       protected void toNbt(CompoundTag tag) {
          super.toNbt(tag);
          tag.putString("Template", this.template.toString());
@@ -132,7 +133,8 @@ public class MoonRuinsGenerator {
          tag.putFloat("Integrity", this.integrity);
       }
 
-      protected void handleMetadata(String metadata, BlockPos pos, class_5425 arg, Random random, BlockBox boundingBox) {
+      @Override
+      protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess arg, Random random, BlockBox boundingBox) {
          if ("chest".equals(metadata)) {
             BlockEntity blockEntity = arg.getBlockEntity(pos.offset(Direction.DOWN));
             if (blockEntity instanceof ChestBlockEntity) {
@@ -142,20 +144,21 @@ public class MoonRuinsGenerator {
             MobEntity entity;
             int i = arg.getRandom().nextInt(2);
             if (i == 0) {
-               entity = GalacticraftEntityTypes.EVOLVED_ZOMBIE.create(arg.getWorld());
+               entity = GalacticraftEntityTypes.EVOLVED_ZOMBIE.create(arg.toServerWorld());
             } else {
-               entity = GalacticraftEntityTypes.EVOLVED_CREEPER.create(arg.getWorld());
+               entity = GalacticraftEntityTypes.EVOLVED_CREEPER.create(arg.toServerWorld());
             }
             assert entity != null;
             entity.setPersistent();
             entity.refreshPositionAndAngles(pos, 0.0F, 0.0F);
             entity.initialize(arg, arg.getLocalDifficulty(pos), SpawnReason.STRUCTURE, null, null);
-            arg.method_30771(entity);
+            arg.spawnEntityAndPassengers(entity);
             arg.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
          }
       }
 
-      public boolean generate(ServerWorldAccess serverWorldAccess, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
+      @Override
+      public boolean generate(StructureWorldAccess serverWorldAccess, StructureAccessor structureAccessor, ChunkGenerator chunkGenerator, Random random, BlockBox boundingBox, ChunkPos chunkPos, BlockPos blockPos) {
          this.placementData.clearProcessors().addProcessor(new BlockRotStructureProcessor(this.integrity)).addProcessor(BlockIgnoreStructureProcessor.IGNORE_AIR_AND_STRUCTURE_BLOCKS);
          int i = serverWorldAccess.getTopY(Heightmap.Type.WORLD_SURFACE_WG, this.pos.getX(), this.pos.getZ());
          this.pos = new BlockPos(this.pos.getX(), i, this.pos.getZ());
