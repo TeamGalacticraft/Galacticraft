@@ -26,12 +26,14 @@ import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.ChestType;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
@@ -48,12 +50,14 @@ import net.minecraft.world.WorldAccess;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class VacuumGlass extends Block implements FluidLoggableBlock {
-    public static final BooleanProperty NORTH = ConnectingBlock.NORTH;
-    public static final BooleanProperty EAST = ConnectingBlock.EAST;
-    public static final BooleanProperty SOUTH = ConnectingBlock.SOUTH;
-    public static final BooleanProperty WEST = ConnectingBlock.WEST;
-    public static final BooleanProperty UP = ConnectingBlock.UP;
-    public static final BooleanProperty DOWN = ConnectingBlock.DOWN;
+    public static final BooleanProperty NORTH;
+    public static final BooleanProperty EAST;
+    public static final BooleanProperty SOUTH;
+    public static final BooleanProperty WEST;
+    public static final BooleanProperty UP;
+    public static final BooleanProperty DOWN;
+    public static final DirectionProperty FACING;
+
     private static final VoxelShape[] shape = new VoxelShape[16];
     private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
@@ -67,6 +71,7 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
                 .with(WEST, false)
                 .with(UP, false)
                 .with(DOWN, false)
+                .with(FACING, Direction.NORTH)
                 .with(FLUID, new Identifier("empty"))
                 .with(FlowableFluid.LEVEL, 8));
     }
@@ -186,27 +191,11 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
     }
 
     public BlockState rotate(BlockState state, BlockRotation rotation) {
-        switch (rotation) {
-            case CLOCKWISE_180:
-                return state.with(NORTH, state.get(SOUTH)).with(EAST, state.get(WEST)).with(SOUTH, state.get(NORTH)).with(WEST, state.get(EAST));
-            case COUNTERCLOCKWISE_90:
-                return state.with(NORTH, state.get(EAST)).with(EAST, state.get(SOUTH)).with(SOUTH, state.get(WEST)).with(WEST, state.get(NORTH));
-            case CLOCKWISE_90:
-                return state.with(NORTH, state.get(WEST)).with(EAST, state.get(NORTH)).with(SOUTH, state.get(EAST)).with(WEST, state.get(SOUTH));
-            default:
-                return state;
-        }
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
 
     public BlockState mirror(BlockState state, BlockMirror mirror) {
-        switch (mirror) {
-            case LEFT_RIGHT:
-                return state.with(NORTH, state.get(SOUTH)).with(SOUTH, state.get(NORTH));
-            case FRONT_BACK:
-                return state.with(EAST, state.get(WEST)).with(WEST, state.get(EAST));
-            default:
-                return super.mirror(state, mirror);
-        }
+        return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 
     public boolean canConnect(BlockState state) {
@@ -214,7 +203,7 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
     }
 
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-        return true;
+        return false;
     }
 
     private BooleanProperty propFromDirection(Direction direction) {
@@ -246,8 +235,9 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
             }
         }
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        return state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
-                .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
+        return state.with(FACING, context.getPlayerFacing())
+                    .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
+                    .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
@@ -278,6 +268,16 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
 
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, FLUID, FlowableFluid.LEVEL);
+        stateBuilder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, FACING, FLUID, FlowableFluid.LEVEL);
+    }
+
+    static {
+        NORTH = Properties.NORTH;
+        EAST = Properties.EAST;
+        SOUTH = Properties.SOUTH;
+        WEST = Properties.WEST;
+        UP = Properties.UP;
+        DOWN = Properties.DOWN;
+        FACING = Properties.HORIZONTAL_FACING;
     }
 }
