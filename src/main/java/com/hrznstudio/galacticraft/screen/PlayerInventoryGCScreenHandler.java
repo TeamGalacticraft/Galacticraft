@@ -186,7 +186,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             // 8-11 (4): GC, slots without any required item;
             // 12-38 (27): MC, non-hotbar inventory slots;
             // 39-48 (9): MC, hotbar slots.
-            if (index >= 0 && index < 12) {
+            if (index < 12) {
                 if (!this.insertItem(stackFrom, 12, 48, false)) {
                     return ItemStack.EMPTY;
                 }
