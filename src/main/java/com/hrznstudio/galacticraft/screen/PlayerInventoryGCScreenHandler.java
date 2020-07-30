@@ -177,6 +177,15 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         if (slotFrom != null && slotFrom.hasStack()) {
             ItemStack stackFrom = slotFrom.getStack();
             stack = stackFrom.copy();
+
+            // Index of Indexes :)
+            // 0-3 (4): GC, armor slots;
+            // 4: GC, mask slot;
+            // 5: GC, oxygen gear;
+            // 6-7 (2): GC, oxygen tanks slots;
+            // 8-11 (4): GC, slots without any required item;
+            // 12-38 (27): MC, non-hotbar inventory slots;
+            // 39-48 (9): MC, hotbar slots.
             if (index >= 0 && index < 12) {
                 if (!this.insertItem(stackFrom, 12, 48, false)) {
                     return ItemStack.EMPTY;
