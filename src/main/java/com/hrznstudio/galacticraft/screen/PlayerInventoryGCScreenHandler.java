@@ -191,16 +191,14 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
                     return ItemStack.EMPTY;
                 }
             } else if (index < 39) {
-                if (!this.insertItem(stackFrom, 0, 8, true)) {
-                    if (!this.insertItem(stackFrom, 39, 48, false)) {
-                        return ItemStack.EMPTY;
-                    }
+                if (!this.insertItem(stackFrom, 0, 8, true) &&
+                    !this.insertItem(stackFrom, 39, 48, false)) {
+                    return ItemStack.EMPTY;
                 }
             } else if (index < 49) {
-                if (!this.insertItem(stackFrom, 0, 8, true)) {
-                    if (!this.insertItem(stackFrom, 12, 39, false)) {
-                        return ItemStack.EMPTY;
-                    }
+                if (!this.insertItem(stackFrom, 0, 8, true) &&
+                    !this.insertItem(stackFrom, 12, 39, false)) {
+                    return ItemStack.EMPTY;
                 }
             }
 
