@@ -177,13 +177,21 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         if (slotFrom != null && slotFrom.hasStack()) {
             ItemStack stackFrom = slotFrom.getStack();
             stack = stackFrom.copy();
-            if (index >= 0 && index < 8) {
-                if (!this.insertItem(stackFrom, 9, 48, true)) {
+            if (index >= 0 && index < 12) {
+                if (!this.insertItem(stackFrom, 12, 48, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= 9 && index < 49) {
+            } else if (index < 39) {
                 if (!this.insertItem(stackFrom, 0, 8, true)) {
-                    return ItemStack.EMPTY;
+                    if (!this.insertItem(stackFrom, 39, 48, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                }
+            } else if (index < 49) {
+                if (!this.insertItem(stackFrom, 0, 8, true)) {
+                    if (!this.insertItem(stackFrom, 12, 39, false)) {
+                        return ItemStack.EMPTY;
+                    }
                 }
             }
 
