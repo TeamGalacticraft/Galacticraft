@@ -60,7 +60,7 @@ public class UnlitTorchBlock extends TorchBlock {
 
 
     @Override
-    public void randomDisplayTick(BlockState blockState_1, World world_1, BlockPos blockPos_1, Random random_1) {
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         // stop particles from spawning
     }
 }

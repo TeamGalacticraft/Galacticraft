@@ -65,7 +65,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         SLOT_FILTERS[3] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[2];
         SLOT_FILTERS[4] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[3];
         SLOT_FILTERS[5] = stack -> true;// This is filled in by #getFilterForSlot
-        SLOT_FILTERS[6] = itemStack -> true;
+        SLOT_FILTERS[6] = stack -> true;
     }
 
     private final int maxProgress = 300;
@@ -137,7 +137,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
 
-        if (getCapacitatorComponent().getCurrentEnergy() <= 0) {
+        if (getCapacitor().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.NOT_ENOUGH_ENERGY;
         } else {
             status = CircuitFabricatorStatus.IDLE;
@@ -166,7 +166,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
-                this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             } else {
                 progress = 0;
 
@@ -205,8 +205,8 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
     }
 
-    private boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return canInsert(6, itemStack);
+    private boolean canPutStackInResultSlot(ItemStack stack) {
+        return canInsert(6, stack);
     }
 
     public int getProgress() {

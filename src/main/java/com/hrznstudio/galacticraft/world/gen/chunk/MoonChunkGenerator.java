@@ -23,8 +23,11 @@
 
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
+import com.google.common.collect.ImmutableMap;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
+import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -58,14 +61,15 @@ import net.minecraft.world.gen.feature.StructureFeature;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 public class MoonChunkGenerator extends ChunkGenerator {
-    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((surfaceChunkGenerator) -> surfaceChunkGenerator.seed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
+    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.seed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
 
-    public static float[] field_16649 = Util.make(new float[13824], (array) -> {
+    public static final float[] field_16649 = Util.make(new float[13824], (array) -> {
         for (int i = 0; i < 24; ++i) {
             for (int j = 0; j < 24; ++j) {
                 for (int k = 0; k < 24; ++k) {
@@ -75,7 +79,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
         }
 
     });
-    public static float[] field_24775 = Util.make(new float[25], (fs) -> {
+    public static final float[] field_24775 = Util.make(new float[25], (fs) -> {
         for (int i = -2; i <= 2; ++i) {
             for (int j = -2; j <= 2; ++j) {
                 float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
@@ -84,28 +88,42 @@ public class MoonChunkGenerator extends ChunkGenerator {
         }
 
     });
-    public static BlockState AIR;
-    public int verticalNoiseResolution;
-    public int horizontalNoiseResolution;
-    public int noiseSizeX;
-    public int noiseSizeY;
-    public int noiseSizeZ;
-    public ChunkRandom random;
-    public OctavePerlinNoiseSampler lowerInterpolatedNoise;
-    public OctavePerlinNoiseSampler upperInterpolatedNoise;
-    public OctavePerlinNoiseSampler interpolationNoise;
-    public NoiseSampler surfaceDepthNoise;
-    public OctavePerlinNoiseSampler field_24776;
-    public BlockState defaultBlock;
-    public BlockState defaultFluid;
-    public long seed;
-    public ChunkGeneratorType chunkGeneratorType;
-    public int field_24779;
+    public static final BlockState AIR = Blocks.AIR.getDefaultState();
+    public final int verticalNoiseResolution;
+    public final int horizontalNoiseResolution;
+    public final int noiseSizeX;
+    public final int noiseSizeY;
+    public final int noiseSizeZ;
+    public final ChunkRandom random;
+    public final OctavePerlinNoiseSampler lowerInterpolatedNoise;
+    public final OctavePerlinNoiseSampler upperInterpolatedNoise;
+    public final OctavePerlinNoiseSampler interpolationNoise;
+    public final NoiseSampler surfaceDepthNoise;
+    public final OctavePerlinNoiseSampler field_24776;
+    public final BlockState defaultBlock;
+    public final BlockState defaultFluid;
+    public final long seed;
+    public final ChunkGeneratorType chunkGeneratorType;
+    public final int field_24779;
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
-        super(biomeSource, biomeSource, new StructuresConfig(false), seed);
+        this(biomeSource, seed, new ChunkGeneratorType(
+                new StructuresConfig(Optional.empty(),
+                        ImmutableMap.<StructureFeature<?>, StructureConfig>builder()
+                                .put(GalacticraftFeatures.MOON_VILLAGE, new StructureConfig(32, 8, 8426492))
+                                .build()),
+                new NoiseConfig(
+                        256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
+                        new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
+                        1, 2, 1.0D, -0.46875D, true,
+                        true, false, false),
+                GalacticraftBlocks.MOON_ROCK.getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false));
+    }
+
+    public MoonChunkGenerator(MoonBiomeSource moonBiomeSource, long seed, ChunkGeneratorType chunkGeneratorType) {
+        super(moonBiomeSource, moonBiomeSource, chunkGeneratorType.getConfig(), seed);
         this.seed = seed;
-        this.chunkGeneratorType = new ChunkGeneratorType(new StructuresConfig(false), new NoiseConfig(256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D), new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0), 1, 2, 1.0D, -0.46875D, true, true, false, false), Blocks.STONE.getDefaultState(), Blocks.WATER.getDefaultState(), -10, 0, 63, false);
+        this.chunkGeneratorType = chunkGeneratorType;
         NoiseConfig noiseConfig = chunkGeneratorType.method_28559();
         this.field_24779 = noiseConfig.getHeight();
         this.verticalNoiseResolution = noiseConfig.getSizeVertical() * 4;
@@ -124,13 +142,15 @@ public class MoonChunkGenerator extends ChunkGenerator {
         this.field_24776 = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
     }
 
+    @Override
     protected Codec<? extends ChunkGenerator> method_28506() {
         return CODEC;
     }
 
     @Environment(EnvType.CLIENT)
+    @Override
     public ChunkGenerator withSeed(long seed) {
-        return new SurfaceChunkGenerator(this.biomeSource.withSeed(seed), seed, this.chunkGeneratorType);
+        return new MoonChunkGenerator((MoonBiomeSource) this.biomeSource.withSeed(seed), seed, this.chunkGeneratorType);
     }
 
     public double sampleNoise(int x, int y, int z, double horizontalScale, double verticalScale, double horizontalStretch, double verticalStretch) {
@@ -250,23 +270,12 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
     }
 
-    public double method_28553(int i, int j) {
-        double d = this.field_24776.sample(i * 200, 10.0D, j * 200, 1.0D, 0.0D, true);
-        double f;
-        if (d < 0.0D) {
-            f = -d * 0.3D;
-        } else {
-            f = d;
-        }
-
-        double g = f * 24.575625D - 2.0D;
-        return g < 0.0D ? g * 0.009486607142857142D : Math.min(g, 1.0D) * 0.006640625D;
-    }
-
+    @Override
     public int getHeight(int x, int z, Heightmap.Type heightmapType) {
         return this.sampleHeightmap(x, z, null, heightmapType.getBlockPredicate());
     }
 
+    @Override
     public BlockView getColumnSample(int x, int z) {
         BlockState[] blockStates = new BlockState[this.noiseSizeY * this.verticalNoiseResolution];
         this.sampleHeightmap(x, z, blockStates, null);
@@ -323,6 +332,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
         return blockState3;
     }
 
+    @Override
     public void buildSurface(ChunkRegion region, Chunk chunk) {
         ChunkPos chunkPos = chunk.getPos();
         int i = chunkPos.x;
@@ -346,7 +356,7 @@ public class MoonChunkGenerator extends ChunkGenerator {
 
         this.buildBedrock(chunk, chunkRandom);
 
-        buildCraters(chunk, region);
+        this.buildCraters(chunk, region);
     }
 
     public void buildBedrock(Chunk chunk, Random random) {
@@ -624,15 +634,15 @@ public class MoonChunkGenerator extends ChunkGenerator {
                                 Random random = new Random((cx << 4) + x + ((cz << 4) + z) * 102L);
                                 int size;
 
-                                int i = random.nextInt(14 + 8 + 2 + 1);
-                                if (i < 1) {
+                                int i = random.nextInt(14 + 10 + 5 + 2);
+                                if (i < 2) {
                                     size = random.nextInt(30 - 26) + 26;
-                                } else if (i < 2) {
+                                } else if (i < 5) {
                                     size = random.nextInt(17 - 13) + 13;
-                                } else if (i < 8) {
-                                    size = random.nextInt(25 - 18) + 18;
-                                } else {
+                                } else if (i < 10) {
                                     size = random.nextInt(12 - 8) + 8;
+                                } else {
+                                    size = random.nextInt(25 - 18) + 18;
                                 }
 
                                 if (((SpaceBiome) biome).forceSmallCraters()) {
@@ -686,9 +696,5 @@ public class MoonChunkGenerator extends ChunkGenerator {
     @Override
     public int getSeaLevel() {
         return 0;
-    }
-
-    static {
-        AIR = Blocks.AIR.getDefaultState();
     }
 }

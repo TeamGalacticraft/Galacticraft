@@ -73,7 +73,7 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void onCraft(ItemStack tank, World world_1, PlayerEntity playerEntity_1) {
+    public void onCraft(ItemStack tank, World world, PlayerEntity player) {
         applyDefaultTags(tank, 0);
     }
 
@@ -89,7 +89,7 @@ public class OxygenTankItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
         super.appendTooltip(stack, world, lines, context);
     }
 

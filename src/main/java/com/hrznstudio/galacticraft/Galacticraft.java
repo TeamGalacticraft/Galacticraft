@@ -44,7 +44,7 @@ import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
 import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
+import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
@@ -98,7 +98,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftStructurePieceTypes.register();
         GalacticraftFeatures.register();
         GalacticraftBiomes.register();
-        GalacticraftBiomeSourceTypes.register();
+        GalacticraftBiomeSources.register();
         GalacticraftDimensions.register();
         GalacticraftSurfaceBuilders.register();
         GalacticraftPackets.register();

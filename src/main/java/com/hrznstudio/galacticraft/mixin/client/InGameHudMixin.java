@@ -61,7 +61,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
     private MinecraftClient client;
 
     @Inject(method = "render", at = @At(value = "TAIL"))
-    private void draw(MatrixStack stack, float float_1, CallbackInfo ci) {
+    private void draw(MatrixStack stack, float delta, CallbackInfo ci) {
         if (CelestialBodyType.getByDimType(client.player.world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(client.player.world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             DiffuseLighting.enableGuiDepthLighting();
             client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY)));

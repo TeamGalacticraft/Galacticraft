@@ -203,7 +203,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
+    public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
 

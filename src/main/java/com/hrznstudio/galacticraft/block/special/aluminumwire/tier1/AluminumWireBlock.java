@@ -27,7 +27,7 @@ import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.util.WireConnectable;
+import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import io.github.cottonmc.component.UniversalComponents;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.fabricmc.api.EnvType;
@@ -191,19 +191,19 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction_1, BlockState blockState_2, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
-        return state.with(getPropForDirection(direction_1), (
-                !(blockState_2).isAir()
-                        && blockState_2.getBlock() instanceof WireConnectable
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
+        return state.with(getPropForDirection(dir), (
+                !(neighbor).isAir()
+                        && neighbor.getBlock() instanceof WireConnectable
                         // get opposite of direction so the WireConnectable can check from its perspective.
-                        && (((WireConnectable) blockState_2.getBlock()).canWireConnect(world, direction_1.getOpposite(), thisWire, otherConnectable) != WireConnectionType.NONE)
+                        && (((WireConnectable) neighbor.getBlock()).canWireConnect(world, dir.getOpposite(), thisWire, otherConnectable) != WireConnectionType.NONE)
         ));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> StateManager$Builder_1) {
-        super.appendProperties(StateManager$Builder_1);
-        StateManager$Builder_1.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(ATTACHED_NORTH, ATTACHED_EAST, ATTACHED_SOUTH, ATTACHED_WEST, ATTACHED_UP, ATTACHED_DOWN);
     }
 
     @Override
@@ -213,12 +213,12 @@ public class AluminumWireBlock extends WireBlock implements WireConnectable {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public float getAmbientOcclusionLightLevel(BlockState state, BlockView blockView_1, BlockPos pos) {
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView blockView_1, BlockPos pos) {
+    public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
         return true;
     }
 }

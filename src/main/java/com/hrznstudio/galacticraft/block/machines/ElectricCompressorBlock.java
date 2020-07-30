@@ -24,19 +24,13 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.screen.ElectricCompressorScreenHandler;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
-import com.hrznstudio.galacticraft.util.WireConnectable;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
@@ -59,19 +53,15 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock implements WireConnectable, MachineBlock {
+public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT);
@@ -104,8 +94,8 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext itemPlacementContext_1) {
-        return super.getPlacementState(itemPlacementContext_1).with(FACING, itemPlacementContext_1.getPlayerFacing().getOpposite()).with(FRONT_SIDE_OPTION, SideOption.DEFAULT)
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        return super.getPlacementState(context).with(FACING, context.getPlayerFacing().getOpposite()).with(FRONT_SIDE_OPTION, SideOption.DEFAULT)
                 .with(BACK_SIDE_OPTION, SideOption.DEFAULT)
                 .with(RIGHT_SIDE_OPTION, SideOption.DEFAULT)
                 .with(LEFT_SIDE_OPTION, SideOption.DEFAULT)
@@ -129,19 +119,19 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
             case BOTTOM:
                 return BOTTOM_SIDE_OPTION;
         }
-        throw new NullPointerException();
+        throw new AssertionError();
     }
 
     @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FACING);
+    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(FACING);
 
-        stateBuilder.add(FRONT_SIDE_OPTION);
-        stateBuilder.add(BACK_SIDE_OPTION);
-        stateBuilder.add(RIGHT_SIDE_OPTION);
-        stateBuilder.add(LEFT_SIDE_OPTION);
-        stateBuilder.add(TOP_SIDE_OPTION);
-        stateBuilder.add(BOTTOM_SIDE_OPTION);
+        builder.add(FRONT_SIDE_OPTION);
+        builder.add(BACK_SIDE_OPTION);
+        builder.add(RIGHT_SIDE_OPTION);
+        builder.add(LEFT_SIDE_OPTION);
+        builder.add(TOP_SIDE_OPTION);
+        builder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -160,25 +150,20 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+    public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
         return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Style.EMPTY.withColor(Formatting.GRAY));
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public final ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
 
-        playerEntity.openHandledScreen(new ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(blockPos);
+                buf.writeBlockPos(pos);
             }
 
             @Override
@@ -186,11 +171,10 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
                 return new TranslatableText("block.galacticraft-rewoven.electric_compressor");
             }
 
-            @Nullable
             @Override
             public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(blockPos); // idk why we have to do this again, might want to look into it
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
                 //TODO: Look into why we have to create a new PacketByteBuf.
                 return new ElectricCompressorScreenHandler(syncId, inv, buf);
             }
@@ -200,28 +184,23 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
 
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity != null) {
             if (blockEntity instanceof ElectricCompressorBlockEntity) {
                 ElectricCompressorBlockEntity be = (ElectricCompressorBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSize(); i++) {
-                    ItemStack itemStack = be.getInventory().getStack(i);
+                    ItemStack stack = be.getInventory().getStack(i);
 
-                    if (!itemStack.isEmpty()) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack.copy()));
+                    if (!stack.isEmpty()) {
+                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack.copy()));
                     }
                 }
             }
         }
-    }
-
-    @Override
-    public List<Direction> disabledSides() {
-        return new ArrayList<>();
     }
 }

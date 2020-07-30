@@ -23,23 +23,17 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelPartBlockEntity;
+import com.hrznstudio.galacticraft.block.entity.MultiBlockPartBlockEntity;
 import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
-import com.hrznstudio.galacticraft.util.MultiBlock;
-import com.hrznstudio.galacticraft.util.Rotatable;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
@@ -69,7 +63,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +70,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements Rotatable, MultiBlock, MachineBlock {
+public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock implements MultiBlockBase {
 
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
@@ -106,25 +99,20 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
             case BOTTOM:
                 return BOTTOM_SIDE_OPTION;
         }
-        throw new NullPointerException();
+        throw new AssertionError();
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
-    }
+    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(FACING);
 
-    @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        super.appendProperties(stateBuilder);
-        stateBuilder.add(FACING);
-
-        stateBuilder.add(FRONT_SIDE_OPTION);
-        stateBuilder.add(BACK_SIDE_OPTION);
-        stateBuilder.add(RIGHT_SIDE_OPTION);
-        stateBuilder.add(LEFT_SIDE_OPTION);
-        stateBuilder.add(TOP_SIDE_OPTION);
-        stateBuilder.add(BOTTOM_SIDE_OPTION);
+        builder.add(FRONT_SIDE_OPTION);
+        builder.add(BACK_SIDE_OPTION);
+        builder.add(RIGHT_SIDE_OPTION);
+        builder.add(LEFT_SIDE_OPTION);
+        builder.add(TOP_SIDE_OPTION);
+        builder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -174,12 +162,12 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) return ActionResult.SUCCESS;
-        playerEntity.openHandledScreen(new ExtendedScreenHandlerFactory() {
+        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
             @Override
             public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(blockPos);
+                buf.writeBlockPos(pos);
             }
 
             @Override
@@ -187,11 +175,10 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
                 return new TranslatableText("block.galacticraft-rewoven.basic_solar_panel");
             }
 
-            @Nullable
             @Override
             public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(blockPos); // idk why we have to do this again, might want to look into it
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
                 //TODO: Look into why we have to create a new PacketByteBuf.
                 return new BasicSolarPanelScreenHandler(syncId, inv, buf);
             }
@@ -200,29 +187,29 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
-        dropInventory(world, blockPos);
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        dropInventory(world, pos);
 
-        for (BlockPos otherPart : getOtherParts(blockState, blockPos)) {
+        for (BlockPos otherPart : getOtherParts(state, pos)) {
             world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
         }
 
-        super.onBroken(world, blockPos, blockState);
+        super.onBroken(world, pos, state);
     }
 
-    private void dropInventory(World world, BlockPos blockPos) {
-        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+    private void dropInventory(World world, BlockPos pos) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity != null) {
             if (blockEntity instanceof BasicSolarPanelBlockEntity) {
                 BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
 
                 for (int i = 0; i < basicSolarPanelBlockEntity.getInventory().getSize(); i++) {
-                    ItemStack itemStack = basicSolarPanelBlockEntity.getInventory().getStack(i);
+                    ItemStack stack = basicSolarPanelBlockEntity.getInventory().getStack(i);
 
-                    if (itemStack != null) {
-                        world.spawnEntity(new ItemEntity(world, blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), itemStack));
+                    if (stack != null) {
+                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
                     }
                 }
             }
@@ -262,43 +249,39 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public List<Direction> getDisabledConfigFaces() {
-        return Collections.singletonList(Direction.UP);
-    }
-
-    @Override
-    public boolean canPlaceAt(BlockState blockState_1, WorldView WorldView_1, BlockPos blockPos_1) {
-        for (BlockPos otherPart : getOtherParts(blockState_1, blockPos_1)) {
-            if (!WorldView_1.getBlockState(otherPart).getMaterial().isReplaceable()) {
+    public boolean canPlaceAt(BlockState state, WorldView WorldView, BlockPos pos) {
+        for (BlockPos otherPart : getOtherParts(state, pos)) {
+            if (!WorldView.getBlockState(otherPart).getMaterial().isReplaceable()) {
                 return false;
             }
         }
-        return super.canPlaceAt(blockState_1, WorldView_1, blockPos_1);
+        return super.canPlaceAt(state, WorldView, pos);
     }
 
     @Override
-    public void onPlaced(World world_1, BlockPos basePos, BlockState blockState_1, LivingEntity livingEntity_1, ItemStack itemStack_1) {
-        for (BlockPos otherPart : getOtherParts(blockState_1, basePos)) {
-            BlockState defaultState = GalacticraftBlocks.BASIC_SOLAR_PANEL_PART.getDefaultState();
-            world_1.setBlockState(otherPart, defaultState);
+    public void onPlaced(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
+        BlockState defaultState = GalacticraftBlocks.GENERIC_MULTIBLOCK_PART.getDefaultState();
+        for (BlockPos otherPart : getOtherParts(state, basePos)) {
+            world.setBlockState(otherPart, defaultState);
 
-            BlockEntity partEntity = world_1.getBlockEntity(otherPart);
+            BlockEntity partEntity = world.getBlockEntity(otherPart);
             assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
-            ((BasicSolarPanelPartBlockEntity) partEntity).setBasePos(basePos);
+            ((MultiBlockPartBlockEntity) partEntity).setBasePos(basePos);
             partEntity.markDirty();
         }
     }
 
     @Override
-    public PistonBehavior getPistonBehavior(BlockState blockState_1) {
+    public PistonBehavior getPistonBehavior(BlockState state) {
         return PistonBehavior.BLOCK;
     }
 
-    void onPartDestroyed(World world, BlockState partState, BlockPos partPos, BlockState baseState, BlockPos basePos, boolean dropBase) {
-        dropInventory(world, basePos);
-        world.breakBlock(basePos, dropBase);
+    @Override
+    public void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
+        dropInventory(world, pos);
+        world.breakBlock(pos, !player.isCreative());
 
-        for (BlockPos otherPart : getOtherParts(baseState, basePos)) {
+        for (BlockPos otherPart : getOtherParts(state, pos)) {
             if (!world.getBlockState(otherPart).isAir()) {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
             }
@@ -306,7 +289,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     }
 
     @Override
-    public Text machineInfo(ItemStack itemStack_1, BlockView blockView_1, TooltipContext tooltipContext_1) {
+    public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
         return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel");
     }
 
@@ -314,6 +297,4 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     public List<Direction> disabledSides() {
         return Collections.singletonList(Direction.UP);
     }
-
-
 }

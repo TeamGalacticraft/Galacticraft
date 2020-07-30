@@ -49,36 +49,36 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
 
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
-        ItemStack itemStack = ItemStack.EMPTY;
+        ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
 
         if (slot != null && slot.hasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
 
-            if (itemStack.isEmpty()) {
-                return itemStack;
+            if (stack.isEmpty()) {
+                return stack;
             }
 
             if (slotId < this.blockEntity.getInventory().getSize()) {
-                if (!this.insertItem(itemStack1, this.blockEntity.getInventory().getSize(), this.slots.size(), true)) {
+                if (!this.insertItem(stack1, this.blockEntity.getInventory().getSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.blockEntity.getInventory().getSize(), false)) {
+            } else if (!this.insertItem(stack1, 0, this.blockEntity.getInventory().getSize(), false)) {
                 return ItemStack.EMPTY;
             }
-            if (itemStack1.getCount() == 0) {
+            if (stack1.getCount() == 0) {
                 slot.setStack(ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }
         }
-        return itemStack;
+        return stack;
     }
 
     @Override
     public void sendContentUpdates() {
-        energy.set(blockEntity.getCapacitatorComponent().getCurrentEnergy());
+        energy.set(blockEntity.getCapacitor().getCurrentEnergy());
         super.sendContentUpdates();
     }
 

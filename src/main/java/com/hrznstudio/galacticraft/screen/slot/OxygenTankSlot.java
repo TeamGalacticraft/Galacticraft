@@ -42,7 +42,7 @@ public class OxygenTankSlot extends Slot {
     }
 
     @Override
-    public boolean canInsert(ItemStack itemStack) {
-        return GalacticraftEnergy.isOxygenItem(itemStack);
+    public boolean canInsert(ItemStack stack) {
+        return GalacticraftEnergy.isOxygenItem(stack);
     }
 }

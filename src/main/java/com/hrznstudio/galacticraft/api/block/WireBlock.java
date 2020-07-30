@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.util.WireConnectable;
+import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -66,7 +66,6 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     @Override
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
             if (network == null) network = new WireNetwork(pos, ((ServerWorld) world));

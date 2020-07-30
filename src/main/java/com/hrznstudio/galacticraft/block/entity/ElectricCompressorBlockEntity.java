@@ -124,7 +124,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         };
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
-        if (getCapacitatorComponent().getCurrentEnergy() < 1) {
+        if (getCapacitor().getCurrentEnergy() < 1) {
             status = ElectricCompressorStatus.IDLE;
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
             status = ElectricCompressorStatus.PROCESSING;
@@ -134,7 +134,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
 
         if (status == ElectricCompressorStatus.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
-            this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+            this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             this.progress++;
 
             if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
@@ -192,7 +192,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Energy", getCapacitatorComponent().getCurrentEnergy());
+        tag.putInt("Energy", getCapacitor().getCurrentEnergy());
 
         return tag;
     }
@@ -200,7 +200,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        getCapacitatorComponent().setCurrentEnergy(tag.getInt("Energy"));
+        getCapacitor().setCurrentEnergy(tag.getInt("Energy"));
     }
 
     @Override
@@ -232,8 +232,8 @@ public class ElectricCompressorBlockEntity extends ConfigurableElectricMachineBl
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
     }
 
-    protected boolean canPutStackInResultSlot(ItemStack itemStack) {
-        return canInsert(OUTPUT_SLOT, itemStack);
+    protected boolean canPutStackInResultSlot(ItemStack stack) {
+        return canInsert(OUTPUT_SLOT, stack);
     }
 
     public boolean isValidRecipe(Inventory input) {

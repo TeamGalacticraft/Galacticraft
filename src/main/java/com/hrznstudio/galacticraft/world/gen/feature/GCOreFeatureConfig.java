@@ -58,9 +58,9 @@ public class GCOreFeatureConfig implements FeatureConfig {
         });
 
         public static final Codec<GCOreFeatureConfig.Target> field_24898 = StringIdentifiable.method_28140(GCOreFeatureConfig.Target::values, GCOreFeatureConfig.Target::byName);
-        public static Map<String, GCOreFeatureConfig.Target> nameMap = Arrays.stream(values()).collect(Collectors.toMap(GCOreFeatureConfig.Target::getName, (target) -> target));
-        public String name;
-        public Predicate<BlockState> predicate;
+        public static final Map<String, GCOreFeatureConfig.Target> nameMap = Arrays.stream(values()).collect(Collectors.toMap(GCOreFeatureConfig.Target::getName, (target) -> target));
+        public final String name;
+        public final Predicate<BlockState> predicate;
 
         Target(String name, Predicate<BlockState> predicate) {
             this.name = name;

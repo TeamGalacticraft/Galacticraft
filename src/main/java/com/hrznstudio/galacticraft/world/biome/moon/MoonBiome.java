@@ -26,7 +26,7 @@ package com.hrznstudio.galacticraft.world.biome.moon;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.biome.SpaceBiome;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
-import com.hrznstudio.galacticraft.structure.MoonVillageStart;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,7 +50,7 @@ public abstract class MoonBiome extends Biome implements SpaceBiome {
     }
 
     protected void addMoonVillages() {
-        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(MoonVillageStart.BASE_POOL, 6)));
+        this.addStructureFeature(GalacticraftFeatures.MOON_VILLAGE.configure(new StructurePoolFeatureConfig(MoonVillageData.BASE_POOL, 6)));
     }
 
     @Override
