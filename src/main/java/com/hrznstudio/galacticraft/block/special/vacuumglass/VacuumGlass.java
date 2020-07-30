@@ -80,36 +80,66 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
         return 1 << dir.getHorizontal();
     }
 
-    private static VoxelShape createShape(boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
-        VoxelShape core = VoxelShapes.union(
+    private static VoxelShape createShape(boolean north, boolean south, boolean east, boolean west, boolean up, boolean down, Direction facing) {
+        VoxelShape core;
+
+        VoxelShape debug_empty = Block.createCuboidShape(7.0D, 7.0D, 7.0D, 9.0D, 9.0D, 9.0D);
+
+        VoxelShape u = VoxelShapes.union(
                 Block.createCuboidShape(4.0D, 15.0D, 4.0D, 12.0D, 16.0D, 12.0D),
-                Block.createCuboidShape(5.0D, 14.0D, 5.0D, 11.0D, 15.0D, 11.0D),
-                Block.createCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 1.0D, 12.0D),
-                Block.createCuboidShape(5.0D, 1.0D, 5.0D, 11.0D, 2.0D, 11.0D));
-        VoxelShape n_m = VoxelShapes.union(
+                Block.createCuboidShape(5.0D, 14.0D, 5.0D, 11.0D, 15.0D, 11.0D));
+        VoxelShape d = VoxelShapes.union(
+                    Block.createCuboidShape(4.0D, 0.0D, 4.0D, 12.0D, 1.0D, 12.0D),
+                    Block.createCuboidShape(5.0D, 1.0D, 5.0D, 11.0D, 2.0D, 11.0D));
+        VoxelShape n = VoxelShapes.union(
                 Block.createCuboidShape(4.0D, 1.0D, 0.0D, 12.0D, 15.0D, 1.0D),
                 Block.createCuboidShape(5.0D, 1.0D, 1.0D, 11.0D, 15.0D, 2.0D),
                 Block.createCuboidShape(4.0D, 15.0D, 0.0D, 12.0D, 16.0D, 4.0D),
                 Block.createCuboidShape(5.0D, 14.0D, 2.0D, 11.0D, 15.0D, 5.0D),
                 Block.createCuboidShape(5.0D, 1.0D, 2.0D, 11.0D, 2.0D, 5.0D),
                 Block.createCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 1.0D, 4.0D));
-        VoxelShape n_g = VoxelShapes.union(
+        VoxelShape ng = VoxelShapes.union(
                 Block.createCuboidShape(6.0D, 2.0D, 0.0D, 10.0D, 14.0D, 2.0D),
                 Block.createCuboidShape(4.0D, 15.0D, 0.0D, 12.0D,16.0D,4.0D),
                 Block.createCuboidShape(5.0D,14.0D,0.0D,11.0D,15.0D,5.0D),
                 Block.createCuboidShape(4.0D, 0.0D, 0.0D, 12.0D, 1.0D, 4.0D),
                 Block.createCuboidShape(5.0D, 1.0D, 0.0D, 11.0D, 2.0D, 5.0D));
+        VoxelShape nsg = Block.createCuboidShape(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
+        VoxelShape ewg = Block.createCuboidShape(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
+
+        core = debug_empty;
+
+        if (!(north || south || east || west)) {
+            if (facing.equals(Direction.NORTH) || facing.equals(Direction.SOUTH)) {
+                // e-w
+                core = ewg;
+            } else if (facing.equals(Direction.EAST) || facing.equals(Direction.WEST)) {
+                // n-s
+                core = nsg;
+            }
+        } else if (!(east || west)) {
+            // n-s
+            core = nsg;
+        } else if (!(north || south)){
+            // e-w
+            core = ewg;
+        } else if (north && south && east && !west) {
+            // |-
+        } else if (north && south && !east && west) {
+            // -|
+        } else if (!north && south && east && west) {
+            // T
+        } else if (north && !south && east && west) {
+            // upside down T
+        } else {
+            // x
+        }
 
         return core;
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getShape(state);
-    }
-
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         return getShape(state);
     }
 
@@ -123,7 +153,8 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
                 state.get(EAST),
                 state.get(WEST),
                 state.get(UP),
-                state.get(DOWN));
+                state.get(DOWN),
+                state.get(FACING));
     }
 
     protected int getShapeIndex(BlockState state) {
@@ -193,6 +224,8 @@ public class VacuumGlass extends Block implements FluidLoggableBlock {
                 return null;
         }
     }
+
+
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
