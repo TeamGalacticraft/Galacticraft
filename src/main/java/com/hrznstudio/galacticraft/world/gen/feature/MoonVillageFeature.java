@@ -38,7 +38,7 @@ public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureCon
     }
 
     @Override
-    public StructureFeature.StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
+    public StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
         return MoonVillageStart::new;
     }
 }

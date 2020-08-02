@@ -26,6 +26,7 @@ package com.hrznstudio.galacticraft.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipeSerializer.RecipeFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;

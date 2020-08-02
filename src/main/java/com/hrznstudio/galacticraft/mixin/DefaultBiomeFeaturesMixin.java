@@ -43,12 +43,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DefaultBiomeFeatures.class)
 public class DefaultBiomeFeaturesMixin {
     @Inject(at = @At("RETURN"), method = "addDefaultOres")
-    private static void addOresGC(GenerationSettings.class_5495 arg, CallbackInfo ci) {
+    private static void addOresGC(GenerationSettings.Builder arg, CallbackInfo ci) {
 //        arg.method_30992(GenerationStep.Feature.UNDERGROUND_ORES, Feature.ORE.configure(new OreFeatureConfig(new TagMatchRuleTest(BlockTags.BASE_STONE_OVERWORLD), GalacticraftBlocks.SILICON_ORE.getDefaultState(), 5)));
     }
 
     @Inject(at = @At("RETURN"), method = "addDefaultLakes")
-    private static void addOilLakesGC(GenerationSettings.class_5495 arg, CallbackInfo ci) {
+    private static void addOilLakesGC(GenerationSettings.Builder arg, CallbackInfo ci) {
 //        arg.method_30992(GenerationStep.Feature.LAKES, GalacticraftFeatures.OIL_LAKE);
     }
 }

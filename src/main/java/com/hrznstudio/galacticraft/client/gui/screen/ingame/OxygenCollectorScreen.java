@@ -30,10 +30,10 @@ import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.class_5481;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -99,7 +99,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.client.textRenderer.draw(stack, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
-        this.client.textRenderer.draw(stack, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().method_30937(), statusX + this.client.textRenderer.getWidth(statusText), statusY, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().getStyle().getColor().getRgb());
+        this.client.textRenderer.draw(stack, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().asOrderedText(), statusX + this.client.textRenderer.getWidth(statusText), statusY, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().getStyle().getColor().getRgb());
 
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.lastCollectAmount.get()).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
@@ -120,9 +120,9 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
         if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
-            List<class_5481> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).method_30937());
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)).method_30937());
+            List<OrderedText> toolTipLines = new ArrayList<>();
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)).asOrderedText());
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
     }

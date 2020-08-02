@@ -45,7 +45,7 @@ import java.util.Random;
  */
 public class UnlitWallTorchBlock extends WallTorchBlock {
 
-    public UnlitWallTorchBlock(Block.Settings settings) {
+    public UnlitWallTorchBlock(Settings settings) {
         super(settings, null);
     }
 

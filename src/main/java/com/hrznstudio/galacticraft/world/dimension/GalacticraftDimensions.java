@@ -43,7 +43,7 @@ public class GalacticraftDimensions {
     public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
     public static final DimensionType MOON_TYPE = new DimensionType(OptionalLong.empty(), true, false, false, true, false, false, false, false, false, true, 256, HorizontalVoronoiBiomeAccessType.INSTANCE, new Identifier(Constants.MOD_ID, "infiniburn_moon"), 0.1F) {
         @Override
-        public int method_28531(long l) { //todo calculate sky angle for the moon
+        public int getMoonPhase(long l) { //todo calculate sky angle for the moon
             double d = MathHelper.fractionalPart((double)l / 24000.0D - 0.25D);
             double e = 0.5D - Math.cos(d * 3.14159265358979323846D) / 2.0D;
             return (int) ((d * 2.0D + e) / 3.0D);

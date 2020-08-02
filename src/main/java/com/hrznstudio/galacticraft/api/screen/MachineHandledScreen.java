@@ -38,7 +38,6 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.class_5481;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -52,6 +51,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -226,7 +226,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
             lines.addAll(getEnergyTooltipLines());
 
-            this.renderTooltip(stack, Lists.transform(lines, Text::method_30937), mouseX, mouseY);
+            this.renderTooltip(stack, Lists.transform(lines, Text::asOrderedText), mouseX, mouseY);
         }
     }
 
@@ -582,27 +582,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
         } else {
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).method_30937(), new class_5481[]{this.sideOptions.get(BlockFace.FRONT).getFormattedName().method_30937()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.FRONT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {//Front, Back, Right, Left, Up, Down
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).method_30937(), new class_5481[]{this.sideOptions.get(BlockFace.BACK).getFormattedName().method_30937()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.BACK).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).method_30937(), new class_5481[]{this.sideOptions.get(BlockFace.RIGHT).getFormattedName().method_30937()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.RIGHT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).method_30937(), new class_5481[]{this.sideOptions.get(BlockFace.LEFT).getFormattedName().method_30937()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.LEFT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).method_30937(), new class_5481[]{this.sideOptions.get(BlockFace.TOP).getFormattedName().method_30937()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.TOP).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).method_30937(), new class_5481[]{this.sideOptions.get(BlockFace.BOTTOM).getFormattedName().method_30937()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.BOTTOM).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
         }
         if (!IS_SECURITY_OPEN) {

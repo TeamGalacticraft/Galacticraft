@@ -47,7 +47,7 @@ import java.util.Random;
  */
 public class GlowstoneWallTorchBlock extends WallTorchBlock {
 
-    public GlowstoneWallTorchBlock(Block.Settings settings) {
+    public GlowstoneWallTorchBlock(Settings settings) {
         super(settings, null);
     }
 

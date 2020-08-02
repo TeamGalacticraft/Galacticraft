@@ -92,9 +92,9 @@ public class MoonRuinsGenerator {
    }
 
    private static void method_14822(StructureManager manager, BlockPos pos, BlockRotation rotation, List<StructurePiece> pieces, Random random, DefaultFeatureConfig config) {
-      pieces.add(new MoonRuinsGenerator.Piece(manager, getPiece(random), pos, rotation, 0.8F));
-      pieces.add(new MoonRuinsGenerator.Piece(manager, getPiece(random), pos, rotation, 0.7F));
-      pieces.add(new MoonRuinsGenerator.Piece(manager, getPiece(random), pos, rotation, 0.65F));
+      pieces.add(new Piece(manager, getPiece(random), pos, rotation, 0.8F));
+      pieces.add(new Piece(manager, getPiece(random), pos, rotation, 0.7F));
+      pieces.add(new Piece(manager, getPiece(random), pos, rotation, 0.65F));
    }
 
    public static class Piece extends SimpleStructurePiece {

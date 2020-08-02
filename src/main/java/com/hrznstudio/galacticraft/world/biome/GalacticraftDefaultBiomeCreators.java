@@ -94,20 +94,20 @@ public class GalacticraftDefaultBiomeCreators {
     public static Biome createMoonHighlandsBiome(ConfiguredSurfaceBuilder<?> surfaceBuilder, float depth, float scale, float downfall) {
         Biome biome = new Biome.Settings()
                         .precipitation(Biome.Precipitation.NONE)
-                        .method_30973(new GenerationSettings.class_5495()
-                                .method_30996(surfaceBuilder)
-                                .method_30991(GenerationStep.Carver.AIR, MOON_HIGHLANDS_CAVE_CARVER)
-                                .method_30995(MOON_VILLAGE_FEATURE)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_BASALT_CLUSTER)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE)
-                                .method_30987()
+                        .generationSettings(new GenerationSettings.Builder()
+                                .surfaceBuilder(surfaceBuilder)
+                                .carver(GenerationStep.Carver.AIR, MOON_HIGHLANDS_CAVE_CARVER)
+                                .structureFeature(MOON_VILLAGE_FEATURE)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_BASALT_CLUSTER)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE)
+                                .build()
                         )
-                        .method_30974(new SpawnSettings.class_5496()
-                                .method_31011(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS)
-                                .method_31011(SpawnGroup.MONSTER, MOON_HIGHLANDS_CREEPER_SPAWNS)
-                                .method_31007()
+                        .spawnSettings(new SpawnSettings.Builder()
+                                .spawners(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS)
+                                .spawners(SpawnGroup.MONSTER, MOON_HIGHLANDS_CREEPER_SPAWNS)
+                                .build()
                         )
                         .category(Biome.Category.NONE)
                         .temperature(-173.0F)
@@ -120,7 +120,7 @@ public class GalacticraftDefaultBiomeCreators {
                                 .fogColor(1447446)
                                 .music(MOON_MUSIC)
                                 .skyColor(0)
-                                .build()).method_30972();
+                                .build()).build();
 
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         return biome;
@@ -129,19 +129,19 @@ public class GalacticraftDefaultBiomeCreators {
     public static Biome createMoonMareBiome(ConfiguredSurfaceBuilder<?> surfaceBuilder, float depth, float scale, float downfall) {
         Biome biome = new Biome.Settings()
                         .precipitation(Biome.Precipitation.NONE)
-                        .method_30973(new GenerationSettings.class_5495()
-                                .method_30996(surfaceBuilder)
-                                .method_30991(GenerationStep.Carver.AIR, MOON_MARE_CAVE_CARVER)
-                                .method_30995(MOON_RUINS_FEATURE)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE)
-                                .method_30992(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE)
-                                .method_30987()
+                        .generationSettings(new GenerationSettings.Builder()
+                                .surfaceBuilder(surfaceBuilder)
+                                .carver(GenerationStep.Carver.AIR, MOON_MARE_CAVE_CARVER)
+                                .structureFeature(MOON_RUINS_FEATURE)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_COPPER_ORE)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_TIN_ORE)
+                                .feature(GenerationStep.Feature.UNDERGROUND_ORES, MOON_CHEESE_ORE)
+                                .build()
                         )
-                        .method_30974(new SpawnSettings.class_5496()
-                                .method_31011(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS)
-                                .method_31011(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS)
-                                .method_31007()
+                        .spawnSettings(new SpawnSettings.Builder()
+                                .spawners(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS)
+                                .spawners(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS)
+                                .build()
                         )
                         .category(Biome.Category.NONE)
                         .temperature(-173.0F)
@@ -155,7 +155,7 @@ public class GalacticraftDefaultBiomeCreators {
                                 .music(MOON_MUSIC)
                                 .skyColor(0)
                                 .build())
-                .method_30972();
+                .build();
 
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_SPACE_BIOME, true);
         ((GCBiomePropertyAccessor)(Object) biome).setProperty(GalacticraftBiomeProperties.IS_MARE, true);

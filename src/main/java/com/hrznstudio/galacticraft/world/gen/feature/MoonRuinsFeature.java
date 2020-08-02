@@ -18,8 +18,8 @@ public class MoonRuinsFeature extends StructureFeature<DefaultFeatureConfig> {
       super(codec);
    }
 
-   public StructureFeature.StructureStartFactory<DefaultFeatureConfig> getStructureStartFactory() {
-      return MoonRuinsFeature.Start::new;
+   public StructureStartFactory<DefaultFeatureConfig> getStructureStartFactory() {
+      return Start::new;
    }
 
    public static class Start extends StructureStart<DefaultFeatureConfig> {
