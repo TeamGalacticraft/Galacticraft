@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,19 +18,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
 
@@ -39,20 +39,13 @@ import net.minecraft.screen.slot.Slot;
  */
 public class ElectricCompressorScreenHandler extends MachineScreenHandler<ElectricCompressorBlockEntity> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(ElectricCompressorBlockEntity.class, ElectricCompressorScreenHandler::new);
     public final Property status = Property.create();
     public final Property progress = Property.create();
     protected final Inventory inventory;
 
     public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
-
-        super(syncId, player, blockEntity);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return ElectricCompressorScreenHandler.this.canUse(player);
-            }
-        };
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER);
+        this.inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         addProperty(progress);
 
@@ -86,6 +79,10 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
         addSlot(new ChargeSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75));
     }
 
+    public ElectricCompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (ElectricCompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    }
+
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
@@ -96,7 +93,7 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = CompressorBlockEntity.CompressorStatus.get(status.get());
+        blockEntity.status = ElectricCompressorBlockEntity.ElectricCompressorStatus.get(status.get());
         blockEntity.progress = progress.get();
     }
 

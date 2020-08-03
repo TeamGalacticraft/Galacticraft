@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,19 +18,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,58 +40,45 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
     public final T blockEntity;
     public final Property energy = Property.create();
 
-    protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity) {
-        super(null, syncId);
+    protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
+        super(handlerType, syncId);
         this.playerEntity = playerEntity;
         this.blockEntity = blockEntity;
         addProperty(energy);
     }
 
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<ScreenHandler> createFactory(
-            Class<T> machineClass, MachineContainerConstructor<? extends ScreenHandler, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
-            }
-        };
-    }
-
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
-        ItemStack itemStack = ItemStack.EMPTY;
+        ItemStack stack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotId);
 
         if (slot != null && slot.hasStack()) {
-            ItemStack itemStack1 = slot.getStack();
-            itemStack = itemStack1.copy();
+            ItemStack stack1 = slot.getStack();
+            stack = stack1.copy();
 
-            if (itemStack.isEmpty()) {
-                return itemStack;
+            if (stack.isEmpty()) {
+                return stack;
             }
 
-            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
-                if (!this.insertItem(itemStack1, this.blockEntity.getInventory().getSlotCount(), this.slots.size(), true)) {
+            if (slotId < this.blockEntity.getInventory().getSize()) {
+                if (!this.insertItem(stack1, this.blockEntity.getInventory().getSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(itemStack1, 0, this.blockEntity.getInventory().getSlotCount(), false)) {
+            } else if (!this.insertItem(stack1, 0, this.blockEntity.getInventory().getSize(), false)) {
                 return ItemStack.EMPTY;
             }
-            if (itemStack1.getCount() == 0) {
+            if (stack1.getCount() == 0) {
                 slot.setStack(ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }
         }
-        return itemStack;
+        return stack;
     }
 
     @Override
     public void sendContentUpdates() {
-        energy.set(blockEntity.getEnergyAttribute().getCurrentEnergy());
+        energy.set(blockEntity.getCapacitor().getCurrentEnergy());
         super.sendContentUpdates();
     }
 

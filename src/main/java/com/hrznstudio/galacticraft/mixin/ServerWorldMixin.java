@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,40 +18,43 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.IOException;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin {
+public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
-    private boolean hasRunOnceForWorldReload = false;
+    @Shadow @Final private List<ServerPlayerEntity> players;
+    private final NetworkManager networkManager = new NetworkManager();
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
-        GalacticraftEnergy.Values.incrementTick();
-        if (!hasRunOnceForWorldReload) {
-            hasRunOnceForWorldReload = true;
-            NetworkManager.createManagerForWorld((ServerWorld) (Object) this);
-        }
-        NetworkManager.getManagerForWorld((ServerWorld) (Object) this).updateNetworks((ServerWorld) (Object) this);
+        EnergyUtils.Values.incrementTick();
+        this.networkManager.updateNetworks((ServerWorld) (Object) this);
     }
 
-    public void close() throws IOException {
-        NetworkManager.getManagerForWorld((ServerWorld) (Object) this).worldClose();
+    @Override
+    public NetworkManager getNetworkManager() {
+        return networkManager;
     }
 }

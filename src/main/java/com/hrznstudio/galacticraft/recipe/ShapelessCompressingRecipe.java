@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.recipe;
@@ -91,15 +92,15 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public boolean matches(Inventory inv, World world_1) {
+    public boolean matches(Inventory inv, World world) {
         RecipeFinder recipeFinder_1 = new RecipeFinder();
         int int_1 = 0;
 
         for (int int_2 = 0; int_2 < inv.size(); ++int_2) {
-            ItemStack itemStack_1 = inv.getStack(int_2);
-            if (!itemStack_1.isEmpty()) {
+            ItemStack stack = inv.getStack(int_2);
+            if (!stack.isEmpty()) {
                 ++int_1;
-                recipeFinder_1.addItem(itemStack_1);
+                recipeFinder_1.addItem(stack);
             }
         }
 
@@ -112,8 +113,8 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
     }
 
     @Environment(EnvType.CLIENT)
-    public boolean fits(int int_1, int int_2) {
-        return int_1 * int_2 >= this.input.size();
+    public boolean fits(int width, int height) {
+        return width * height >= this.input.size();
     }
 
     public DefaultedList<Ingredient> getInput() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,51 +18,63 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft;
 
+import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
+import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.entity.attribute.GalacticraftDefaultAttributes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
 import com.hrznstudio.galacticraft.network.GalacticraftPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
-import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
+import com.hrznstudio.galacticraft.village.MoonVillagerType;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSourceTypes;
+import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
+import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
+import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
+import com.mojang.serialization.Lifecycle;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
+import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.reborn.energy.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class Galacticraft implements ModInitializer {
 
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>();
-    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>();
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
+    public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
@@ -74,76 +86,41 @@ public class Galacticraft implements ModInitializer {
         logger.info("[Galacticraft] Starting initialization.");
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
-        GalacticraftItems.register();
-        GalacticraftParticles.register();
-        GalacticraftRecipes.register();
-        GalacticraftSounds.register();
-        GalacticraftEnergy.register();
-        GalacticraftEntityTypes.register();
-        GalacticraftDefaultAttributes.register();
-        GalacticraftScreenHandlers.register();
-        GalacticraftScreenHandlerTypes.register();
-        GalacticraftCommands.register();
         GalacticraftBlockEntities.init();
-        GalacticraftBlockStateProviderTypes.register();
-        GalacticraftStructurePieceTypes.register();
+        GalacticraftItems.register();
+        GalacticraftRecipes.register();
+        GalacticraftEntityTypes.register();
+        GalacticraftLootTables.register();
         GalacticraftFeatures.register();
-        GalacticraftBiomes.register();
-        GalacticraftBiomeSourceTypes.register();
-        GalacticraftDimensions.register();
         GalacticraftSurfaceBuilders.register();
+        GalacticraftBiomes.register();
+        GalacticraftBiomeSources.register();
+        GalacticraftDimensions.register();
+        GalacticraftScreenHandlerTypes.register();
+        GalacticraftParticles.register();
+        GalacticraftCommands.register();
+        GalacticraftEnergy.register();
         GalacticraftPackets.register();
-        GalacticraftFluidTags.register();
-        Energy.registerHolder(object -> { //we load before TR/RC so it's ok for now... Unless there's a mod that patches this with their own stuff that loads before us. TODO: make this a more 'safe' implementation
-            if (object instanceof ItemStack) {
-                return !((ItemStack) object).isEmpty() && ((ItemStack) object).getItem() instanceof EnergyHolder;
-            }
-            return false;
-        }, object -> {
-            final ItemStack stack = (ItemStack) object;
-            final EnergyHolder energyHolder = (EnergyHolder) stack.getItem();
-            return new EnergyStorage() {
-                @Override
-                public double getStored(EnergySide face) {
-                    validateNBT();
-                    return stack.getOrCreateTag().getDouble("energy");
-                }
+        GalacticraftSounds.register();
+        GalacticraftTags.register();
+        GalacticraftPointOfInterestType.register();
+        MoonVillageData.register();
+        MoonVillagerType.register();
+        GalacticraftVillagerProfessions.register();
 
-                @Override
-                public void setStored(double amount) {
-                    validateNBT();
-                    if (stack.getItem() instanceof EnergyHolderItem && stack.hasTag() && !stack.getTag().getBoolean("skipGC")) {
-                        if (!((EnergyHolderItem) stack.getItem()).isInfinite()) {
-                            if (amount == getMaxStoredPower()) { //5 off :/
-                                stack.getTag().putInt("Energy", ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack));
-                                stack.getTag().putInt("Damage", 0);
-                            } else {
-                                stack.getTag().putInt("Energy", Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
-                                stack.setDamage(stack.getMaxDamage() - Math.min(GalacticraftEnergy.convertFromTR(amount), ((EnergyHolderItem) stack.getItem()).getMaxEnergy(stack)));
-                            }
-                        } else {
-                            return;
-                        }
-                    }
-                    stack.getTag().putDouble("energy", amount);
-                }
+        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
+            Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
+            Registry.register(registry, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
+        });
 
-                @Override
-                public double getMaxStoredPower() {
-                    return energyHolder.getMaxStoredPower();
-                }
+        EntityComponentCallback.event(PlayerEntity.class).register((playerEntity, componentContainer) -> { //cant do it in a mixin
+            EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, playerEntity);
+            componentContainer.put(UniversalComponents.INVENTORY_COMPONENT, inventory);
+            ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
+        });
 
-                @Override
-                public EnergyTier getTier() {
-                    return energyHolder.getTier();
-                }
-
-                private void validateNBT() {
-                    if (!stack.hasTag()) {
-                        stack.getOrCreateTag().putDouble("energy", 0);
-                    }
-                }
-            };
+        CelestialBodyRegistryCallback.EVENT.register(registry -> {
+            Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
         });
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);

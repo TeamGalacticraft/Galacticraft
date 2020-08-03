@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.mixin.client;
@@ -26,6 +27,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -47,6 +50,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(InventoryScreen.class)
+@Environment(EnvType.CLIENT)
 public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> {
     public PlayerInventoryScreenMixin(PlayerScreenHandler screenHandler, PlayerInventory playerInventory, Text textComponent) {
         super(screenHandler, playerInventory, textComponent);
@@ -69,8 +73,8 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
     @Inject(method = "render", at = @At("TAIL"))
     public void render(MatrixStack stack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         DiffuseLighting.enable();
-        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
         DiffuseLighting.disable();
     }
 }

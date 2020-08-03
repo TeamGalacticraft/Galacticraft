@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.client.gui.widget.SpaceRaceButtonWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -35,9 +38,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(GameMenuScreen.class)
+@Environment(EnvType.CLIENT)
 public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(Text textComponent_1) {
-        super(textComponent_1);
+    protected PauseMenuScreenMixin(Text text) {
+        super(text);
     }
 
     @Inject(method = "init", at = @At("RETURN"))

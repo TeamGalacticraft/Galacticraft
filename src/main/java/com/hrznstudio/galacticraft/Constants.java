@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft;
@@ -47,7 +48,6 @@ public class Constants {
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
         public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
-        //public static final String DENSE_ICE = "dense_ice"; // Dense Ice has been replaced by Blue Ice
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -60,10 +60,8 @@ public class Constants {
         public static final String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        public static final String ALUMINUM_ORE = "aluminum_ore";
         public static final String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
-        public static final String CHEESE_ORE = "cheese_ore";
-        public static final String COPPER_ORE = "copper_ore";
+        public static final String MOON_CHEESE_ORE = "moon_cheese_ore";
         public static final String MOON_COPPER_ORE = "moon_copper_ore";
         public static final String MARS_COPPER_ORE = "mars_copper_ore";
         public static final String DESH_ORE = "desh_ore";
@@ -71,34 +69,30 @@ public class Constants {
         public static final String MARS_IRON_ORE = "mars_iron_ore";
         public static final String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         public static final String SILICON_ORE = "silicon_ore";
-        public static final String TIN_ORE = "tin_ore";
         public static final String MOON_TIN_ORE = "moon_tin_ore";
         public static final String MARS_TIN_ORE = "mars_tin_ore";
         public static final String GALENA_ORE = "galena_ore";
 
         // Solid Blocks
-        public static final String ALUMINUM_BLOCK = "aluminum_block";
-        public static final String COPPER_BLOCK = "copper_block";
-        public static final String TIN_BLOCK = "tin_block";
         public static final String SILICON_BLOCK = "silicon_block";
         public static final String SOLID_METEORIC_IRON_BLOCK = "solid_meteoric_iron";
         public static final String DESH_BLOCK = "desh_block";
         public static final String TITANIUM_BLOCK = "titanium_block";
         public static final String LEAD_BLOCK = "lead_block";
+        public static final String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
 
         // Decorative BLocks
         public static final String TIN_DECORATION = "tin_decoration";
         public static final String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
         public static final String DARK_DECORATION = "dark_decoration";
         public static final String GRATING = "grating";
-        public static final String SQUARE_LIGHTING_PANEL = "lighting_panel_block_square";
-        public static final String SPOTLIGHT_LIGHTING_PANEL = "lighting_panel_block_spotlight";
-        public static final String LINEAR_LIGHTING_PANEL = "lighting_panel_block_linear";
-        public static final String DARK_LIGHTING_PANEL = "lighting_panel_block_dark";
-        public static final String DARK_ANGLE_LIGHTING_PANEL = "lighting_panel_block_dark_angle";
+        public static final String SQUARE_LIGHT_PANEL = "square_light_panel";
+        public static final String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
+        public static final String LINEAR_LIGHT_PANEL = "linear_light_panel";
+        public static final String DASHED_LIGHT_PANEL = "dashed_light_panel";
+        public static final String DIAGONAL_LIGHT_PANEL = "diagonal_light_panel";
         public static final String VACUUM_GLASS = "vacuum_glass";
         public static final String CLEAR_VACUUM_GLASS = "vacuum_glass_clear";
-        public static final String TIN_VACUUM_GLASS = "vacuum_glass_tin";
         public static final String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         public static final String WALKWAY = "walkway";
         public static final String WIRE_WALKWAY = "wire_walkway";
@@ -122,8 +116,8 @@ public class Constants {
         public static final String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
         public static final String MOON_ROCK_WALL = "moon_rock_wall";
         public static final String MOON_BASALT_WALL = "moon_basalt_wall";
-        public static final String CHEESE_LEAVES = "cheese_leaves";
-        public static final String CHEESE_LOG = "cheese_log";
+        public static final String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
+        public static final String MOON_CHEESE_LOG = "moon_cheese_log";
 
         public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
@@ -148,7 +142,7 @@ public class Constants {
         public static final String TREASURE_CHEST_TIER_1 = "treasure_chest_tier_1";
         public static final String TREASURE_CHEST_TIER_2 = "treasure_chest_tier_2";
         public static final String TREASURE_CHEST_TIER_3 = "treasure_chest_tier_3";
-        public static final String CHEESE = "cheese_block";
+        public static final String MOON_CHEESE_BLOCK = "moon_cheese_block";
         public static final String CRASHED_PROBE_BLOCK = "crashed_probe";
 
         // Liquids
@@ -202,7 +196,7 @@ public class Constants {
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
-        public static final String BASIC_SOLAR_PANEL_PART = "basic_solar_panel_part";
+        public static final String GENERIC_MULTIBLOCK_PART = "generic_multiblock_part";
         public static final String ADVANCED_SOLAR_PANEL = "advanced_solar_panel";
         public static final String COAL_GENERATOR = "coal_generator";
         public static final String GEOTHERMAL_GENERATOR = "geothermal_generator";
@@ -217,7 +211,8 @@ public class Constants {
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
         public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
-        public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
+        public static final String MOON_BASALT_BRICKS = "moon_basalt_bricks";
+        public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
     }
 
     // Fluids
@@ -230,6 +225,7 @@ public class Constants {
         public static final String BACTERIAL_ACID_STILL = "bacterial_acid_still";
         public static final String SULFURIC_ACID_FLOWING = "sulfuric_acid_flowing";
         public static final String SULFURIC_ACID_STILL = "sulfuric_acid_still";
+        public static final String OXYGEN = "oxygen";
 
         public static Identifier getIdentifier(String s) {
             return new Identifier(Constants.MOD_ID, "block/" + s);
@@ -239,9 +235,6 @@ public class Constants {
     //Items
     public static class Items {
         public static final String ITEM_GROUP = "items";
-        public static final String ALUMINUM_INGOT = "aluminum_ingot";
-        public static final String COPPER_INGOT = "copper_ingot";
-        public static final String TIN_INGOT = "tin_ingot";
         public static final String LEAD_INGOT = "lead_ingot";
         public static final String RAW_SILICON = "raw_silicon";
         public static final String RAW_METEORIC_IRON = "raw_meteoric_iron";
@@ -304,17 +297,23 @@ public class Constants {
         public static final String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         public static final String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
         public static final String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
-        public static final String NOSE_CONE = "nose_cone";
-        public static final String HEAVY_NOSE_CONE = "heavy_nose_cone";
-        public static final String ROCKET_ENGINE = "engine_t1";
-        public static final String HEAVY_ROCKET_ENGINE = "engine_t2";
-        public static final String ROCKET_FIN = "rocket_fins";
-        public static final String HEAVY_ROCKET_FIN = "rocket_fins_t2";
-        public static final String TIER_1_BOOSTER = "engine_t1booster";
-        //BUGGY
-        public static final String BUGGY_SEAT = "buggy_seat";
-        public static final String BUGGY_STORAGE = "buggy_storage";
-        public static final String BUGGY_WHEEL = "buggy_wheel";
+        //THROWABLE METEOR CHUNKS
+        public static final String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
+        public static final String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
+        //ARMOR
+        public static final String HEAVY_DUTY_HELMET = "heavy_duty_helmet";
+        public static final String HEAVY_DUTY_CHESTPLATE = "heavy_duty_chestplate";
+        public static final String HEAVY_DUTY_LEGGINGS = "heavy_duty_leggings";
+        public static final String HEAVY_DUTY_BOOTS = "heavy_duty_boots";
+        public static final String DESH_HELMET = "desh_helmet";
+        public static final String DESH_CHESTPLATE = "desh_chestplate";
+        public static final String DESH_LEGGINGS = "desh_leggings";
+        public static final String DESH_BOOTS = "desh_boots";
+        public static final String TITANIUM_HELMET = "titanium_helmet";
+        public static final String TITANIUM_CHESTPLATE = "titanium_chestplate";
+        public static final String TITANIUM_LEGGINGS = "titanium_leggings";
+        public static final String TITANIUM_BOOTS = "titanium_boots";
+        public static final String SENSOR_GLASSES = "sensor_glasses";
         //TOOLS + WEAPONS
         public static final String HEAVY_DUTY_SWORD = "heavy_duty_sword";
         public static final String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";
@@ -422,15 +421,11 @@ public class Constants {
 
     public static class Energy {
         public static final String GALACTICRAFT_JOULES = "galacticraft_joules";
-        public static final String GALACTICRAFT_OXYGEN = "galacticraft_oxygen";
-        //30 Galacticraft Joules per one Cotton Energy Work Unit.
-        //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
-        public static final int WU_GJ_CONVERSION = 30;
     }
 
     public static class ScreenTextures {
         public static final String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
-        public static final String BASIC_SOLAR_PANEL_SCREEN = "gui/basic_solar_panel_screen";
+        public static final String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
@@ -487,6 +482,7 @@ public class Constants {
     public static class ScreenHandler {
         public static final String COAL_GENERATOR_SCREEN_HANDLER = "coal_generator_screen_handler";
         public static final String BASIC_SOLAR_SCREEN_HANDLER = "basic_solar_panel_screen_handler";
+        public static final String ADVANCED_SOLAR_SCREEN_HANDLER = "advanced_solar_panel_screen_handler";
         public static final String CIRCUIT_FABRICATOR_SCREEN_HANDLER = "circuit_fabricator_screen_handler";
         public static final String COMPRESSOR_SCREEN_HANDLER = "compressor_screen_handler";
         public static final String ELECTRIC_COMPRESSOR_SCREEN_HANDLER = "electric_compressor_screen_handler";
@@ -498,15 +494,18 @@ public class Constants {
     }
 
     public static class Biomes {
-        public static final String MOON_HIGHLANDS_PLAINS = "moon_highlands_plains";
-        public static final String MOON_HIGHLANDS_CRATERS = "moon_highlands_craters";
-        public static final String MOON_HIGHLANDS_ROCKS = "moon_highlands_rocks";
+        public static class Moon {
+            public static final String HIGHLANDS_PLAINS = "moon_highlands_plains";
+            public static final String HIGHLANDS_ROCKS = "moon_highlands_rocks";
+            public static final String HIGHLANDS_VALLEY = "moon_highlands_valley";
+            public static final String MARE_PLAINS = "moon_mare_plains";
+            public static final String MARE_ROCKS = "moon_mare_rocks";
+            public static final String MARE_VALLEY = "moon_mare_valley";
+        }
 
-        public static final String MOON_MARE_PLAINS = "moon_mare_plains";
-        public static final String MOON_MARE_CRATERS = "moon_mare_craters";
-        public static final String MOON_MARE_ROCKS = "moon_mare_rocks";
+    }
 
-        public static final String MOON_CHEESE_FOREST = "moon_cheese_forest";
-        public static final String MOON_VALLEY = "moon_valley";
+    public static class LootTables {
+        public static final String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
     }
 }

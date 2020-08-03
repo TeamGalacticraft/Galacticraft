@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.util;
@@ -26,6 +27,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -34,5 +36,9 @@ import net.minecraft.client.util.math.MatrixStack;
 public class DrawableUtils {
     public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, String text, int x, int y, int color) {
         textRenderer.draw(stack, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+    }
+
+    public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int color) {
+        textRenderer.draw(stack, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 }

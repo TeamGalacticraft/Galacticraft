@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.items;
 
-import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -43,7 +43,7 @@ public class OxygenGearItem extends Item {
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (((GCPlayerAccessor) user).getGearInventory().getStack(5).isEmpty()) {
-            ((GCPlayerAccessor) user).getGearInventory().setStack(5, user.getStackInHand(hand), Simulation.ACTION);
+            ((GCPlayerAccessor) user).getGearInventory().setStack(5, user.getStackInHand(hand));
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, user, hand);

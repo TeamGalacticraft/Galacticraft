@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.api.screen;
@@ -26,20 +27,19 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock.BlockFace;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler.MachineContainerConstructor;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -51,6 +51,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -61,9 +62,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -138,14 +137,15 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private boolean IS_REDSTONE_OPEN = false;
     private boolean IS_CONFIG_OPEN = false;
 
-    private SideOption[] sideOptions; //Front, Back, Right, Left, Up, Down
+    private final Map<BlockFace, SideOption> sideOptions = new EnumMap<>(BlockFace.class); //Front, Back, Right, Left, Up, Down
 
     public MachineHandledScreen(C screenHandler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
         super(screenHandler, playerInventory, textComponent);
+        assert isAllowed();
         this.pos = pos;
         this.world = world;
 
-        if (this.handler.blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+        if (this.handler.blockEntity != null) {
             ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
 
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
@@ -159,28 +159,15 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 sendSecurityUpdate(entity);
             }
 
-            this.sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
-        } else {
-            throw new IllegalStateException("This isn't a configurable be!");
-        }
-    }
-
-    public static <T extends ConfigurableElectricMachineBlockEntity> ContainerFactory<HandledScreen> createFactory(
-            Class<T> machineClass, MachineContainerConstructor<? extends MachineHandledScreen<?>, T> constructor) {
-        return (syncId, id, player, buffer) -> {
-            BlockPos pos = buffer.readBlockPos();
-            BlockEntity be = player.world.getBlockEntity(pos);
-            if (machineClass.isInstance(be)) {
-                return constructor.create(syncId, player, machineClass.cast(be));
-            } else {
-                return null;
+            for (BlockFace face : BlockFace.values()) {
+                sideOptions.put(face, ((ConfigurableElectricMachineBlock) world.getBlockState(pos).getBlock()).getOption(world.getBlockState(pos), face));
             }
-        };
+        }
     }
 
     private void sendSecurityUpdate(ConfigurableElectricMachineBlockEntity entity) {
         if (this.playerInventory.player.getUuid().equals(entity.getSecurity().getOwner()) || !entity.getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"),
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(entity.getSecurity().getPublicity())
@@ -195,7 +182,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private void sendRedstoneUpdate(ConfigurableElectricMachineBlockEntity entity) {
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"),
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone"),
                 new PacketByteBuf(Unpooled.buffer())
                         .writeBlockPos(pos)
                         .writeEnumConstant(entity.getRedstoneState())
@@ -217,7 +204,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         assert this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock;
         assert SideOption.getApplicableValuesForMachine(this.world.getBlockState(pos).getBlock()).contains(option);
         if (this.playerInventory.player.getUuid().equals(((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().getOwner()) || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"),
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(direction)
@@ -232,13 +219,14 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (check(mouseX, mouseY, energyX, energyY, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>();
             if (handler.blockEntity.getStatusForTooltip() != null) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status", this.handler.blockEntity.getStatusForTooltip().toString()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatusForTooltip().getText()));
             }
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
             lines.addAll(getEnergyTooltipLines());
 
-            this.renderTooltip(stack, lines, mouseX, mouseY);
+            this.renderTooltip(stack, Lists.transform(lines, Text::asOrderedText), mouseX, mouseY);
         }
     }
 
@@ -248,7 +236,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     public void drawConfigTabs(MatrixStack stack) {
-        if (this.handler.blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+        if (this.handler.blockEntity != null) {
             ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
 
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
@@ -256,8 +244,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (IS_REDSTONE_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
-                this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
+                drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
 
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
@@ -276,14 +264,14 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                         break;
                 }
 
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.GUNPOWDER), this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.GUNPOWDER), this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26);
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43, this.y + 23, REDSTONE_TORCH_OFF_X, REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE_TORCH), this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 25 - 2);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE_TORCH), this.x - REDSTONE_PANEL_WIDTH + 65, this.y + 25 - 2);
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_TAB_WIDTH, this.y + 3, REDSTONE_TAB_X, REDSTONE_TAB_Y, REDSTONE_TAB_WIDTH, REDSTONE_TAB_HEIGHT);
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(Items.REDSTONE), this.x - REDSTONE_TAB_WIDTH + 4, this.y + 6);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - REDSTONE_TAB_WIDTH + 4, this.y + 6);
             }
             if (IS_CONFIG_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -291,25 +279,25 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                 //Front, Back, Right, Left, top, bottom
 
-                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 3, getXForOption(sideOptions[4]), getYForOption(sideOptions[4]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //TOP - Top
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 3, getXForOption(sideOptions.get(BlockFace.TOP)), getYForOption(sideOptions.get(BlockFace.TOP)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //TOP - Top
 
-                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[2]), getYForOption(sideOptions[2]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT - right
-                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[0]), getYForOption(sideOptions[0]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT-CENTER - Front
-                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 65 - 6 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[3]), getYForOption(sideOptions[3]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE RIGHT-CENTER - left
-                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 87 - 9 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions[1]), getYForOption(sideOptions[1]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //RIGHT - Back
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions.get(BlockFace.RIGHT)), getYForOption(sideOptions.get(BlockFace.RIGHT)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT - right
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions.get(BlockFace.FRONT)), getYForOption(sideOptions.get(BlockFace.FRONT)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE LEFT-CENTER - Front
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 65 - 6 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions.get(BlockFace.LEFT)), getYForOption(sideOptions.get(BlockFace.LEFT)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //MIDDLE RIGHT-CENTER - left
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 87 - 9 - 5, this.y + 49 + 22 - 11 + 7 + 3, getXForOption(sideOptions.get(BlockFace.BACK)), getYForOption(sideOptions.get(BlockFace.BACK)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //RIGHT - Back
 
-                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions[5]), getYForOption(sideOptions[5]), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
+                this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions.get(BlockFace.BOTTOM)), getYForOption(sideOptions.get(BlockFace.BOTTOM)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
 
-                this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
+                this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
                 this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 if (!IS_REDSTONE_OPEN) {
                     this.drawTexture(stack, this.x - CONFIG_TAB_WIDTH, this.y + 26, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-                    this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 26 + 3);
+                    this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 26 + 3);
                 } else {
                     this.drawTexture(stack, this.x - CONFIG_TAB_WIDTH, this.y + 96, CONFIG_TAB_X, CONFIG_TAB_Y, CONFIG_TAB_WIDTH, CONFIG_TAB_HEIGHT);
-                    this.client.getItemRenderer().renderGuiItem(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 96 + 3);
+                    this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - CONFIG_TAB_WIDTH + 4, this.y + 96 + 3);
                 }
             }
             if (IS_SECURITY_OPEN) {
@@ -347,7 +335,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public boolean checkTabsClick(MatrixStack stack, double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (this.handler.blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+            if (this.handler.blockEntity != null) {
                 ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
                 if (!IS_REDSTONE_OPEN) {
                     if (mouseX >= this.x - REDSTONE_TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + REDSTONE_TAB_HEIGHT + 3) {
@@ -414,7 +402,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                             this.world.setBlockState(pos, newState);
                             sendSideConfigUpdate(Direction.NORTH, newState.get(prop));
-                            sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                            sideOptions.replace(BlockFace.FRONT, newState.get(prop));
                             playButtonSound();
                             return true;
                         }
@@ -428,7 +416,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                             this.world.setBlockState(pos, newState);
                             sendSideConfigUpdate(Direction.SOUTH, newState.get(prop));
-                            sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                            sideOptions.replace(BlockFace.BACK, newState.get(prop));
                             playButtonSound();
                             return true;
                         }
@@ -442,7 +430,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                             this.world.setBlockState(pos, newState);
                             sendSideConfigUpdate(Direction.EAST, newState.get(prop));
-                            sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                            sideOptions.replace(BlockFace.RIGHT, newState.get(prop));
                             playButtonSound();
                             return true;
                         }
@@ -456,7 +444,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                             this.world.setBlockState(pos, newState);
                             sendSideConfigUpdate(Direction.WEST, newState.get(prop));
-                            sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                            sideOptions.replace(BlockFace.LEFT, newState.get(prop));
                             playButtonSound();
                             return true;
                         }
@@ -470,7 +458,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                             this.world.setBlockState(pos, newState);
                             sendSideConfigUpdate(Direction.UP, newState.get(prop));
-                            sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                            sideOptions.replace(BlockFace.TOP, newState.get(prop));
                             playButtonSound();
                             return true;
                         }
@@ -484,7 +472,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                             this.world.setBlockState(pos, newState);
                             sendSideConfigUpdate(Direction.DOWN, newState.get(prop));
-                            sideOptions = ConfigurableElectricMachineBlock.optionsToArray(world.getBlockState(pos));
+                            sideOptions.replace(BlockFace.BOTTOM, newState.get(prop));
                             playButtonSound();
                             return true;
                         }
@@ -492,12 +480,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 }
 
                 if (!IS_SECURITY_OPEN) {
-                    if (mouseX >= this.x - SECURITY_TAB_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + SECURITY_TAB_HEIGHT + 3) {
+                    if (entity.getSecurity().isOwner(playerInventory.player) && mouseX >= this.x - SECURITY_TAB_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + SECURITY_TAB_HEIGHT + 3) {
                         IS_SECURITY_OPEN = true;
                         playButtonSound();
                         return true;
                     }
-                } else {
+                } else if (entity.getSecurity().isOwner(playerInventory.player)) {
                     ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
                     if (mouseX >= this.x - SECURITY_PANEL_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + SECURITY_TAB_HEIGHT + 3) {
                         IS_SECURITY_OPEN = false;
@@ -544,7 +532,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        if (this.handler.blockEntity != null && this.handler.blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
+        if (this.handler.blockEntity != null) {
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
             switch (security.getPublicity()) {
                 case PRIVATE:
@@ -594,27 +582,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
         } else {
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions[0].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.FRONT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
-            if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions[1].getFormattedName()}), mouseX, mouseY);
+            if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {//Front, Back, Right, Left, Up, Down
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.BACK).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions[2].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.RIGHT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions[3].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.LEFT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions[4].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.TOP).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions[5].getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.BOTTOM).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
         }
         if (!IS_SECURITY_OPEN) {
@@ -635,28 +623,16 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     public boolean isAllowed() {
-        if (this.handler.blockEntity != null && this.handler.blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-            ConfigurableElectricMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
-            switch (security.getPublicity()) {
-                case PRIVATE:
-                    if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        return false;
-                    }
-                case SPACE_RACE:
-                    if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        return false;
-                    }
-                default:
-                    return true;
-            }
+        if (this.handler.blockEntity != null) {
+            return handler.blockEntity.getSecurity().hasAccess(playerInventory.player);
         }
         return false;
     }
 
     @Override
-    public boolean mouseClicked(double double_1, double double_2, int int_1) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isAllowed()) {
-            return this.checkTabsClick(new MatrixStack(), double_1, double_2, int_1) || super.mouseClicked(double_1, double_2, int_1);
+            return this.checkTabsClick(new MatrixStack(), mouseX, mouseY, button) || super.mouseClicked(mouseX, mouseY, button);
         } else {
             return false;
         }
@@ -714,5 +690,10 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void playButtonSound() {
         this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+    }
+
+    @Override
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+
     }
 }

@@ -1,0 +1,20 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    " S ",
+    "HSH",
+    "H H"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "H": {
+      "item": "galacticraft-rewoven:heavy_plating"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:rocket_fins",
+    "count": 1
+  }
+}

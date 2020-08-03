@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,12 +18,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
+import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
+import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
+import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -38,65 +45,58 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergyTier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
+public class BatteryItem extends Item implements ItemComponentCallback {
     public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
         super(settings);
+        ItemComponentCallback.registerSelf(this);
     }
 
-    @Override
-    public int getMaxEnergy(ItemStack battery) {
-        if (battery.getItem() instanceof BatteryItem) {
-            return MAX_ENERGY;
-        }
-        throw new IllegalArgumentException(battery + "is not a GC battery!" + "(com.hrznstudio.galacticraft.items.BatteryItem)");
+    public static int getMaxEnergy() {
+        return MAX_ENERGY;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        int charge = stack.getOrCreateTag().getInt("Energy");
-        if (stack.getMaxDamage() - stack.getDamage() < 3334) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (stack.getMaxDamage() - stack.getDamage() < 6667) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+        int charge = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
+        if (charge < (MAX_ENERGY / 3)) {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+        } else if (charge < (MAX_ENERGY / 3) * 2) {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         }
         super.appendTooltip(stack, world, lines, context);
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(charged, MAX_ENERGY);
-            groupStacks.add(charged);
+            EnergyUtils.setEnergy(charged, MAX_ENERGY);
+            stacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(depleted, 0);
-            groupStacks.add(depleted);
+            EnergyUtils.setEnergy(depleted, 0);
+            depleted.setDamage(depleted.getMaxDamage() - 1);
+            stacks.add(depleted);
         }
     }
 
     @Override
-    public void onCraft(ItemStack battery, World world_1, PlayerEntity playerEntity_1) {
+    public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
         CompoundTag batteryTag = battery.getOrCreateTag();
-        batteryTag.putInt("Energy", 0);
-        batteryTag.putInt("MaxEnergy", BatteryItem.MAX_ENERGY);
-        batteryTag.putBoolean("skipGC", false);
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
-        GalacticraftEnergy.setEnergy(battery, 0);
     }
 
     @Override
@@ -105,18 +105,14 @@ public class BatteryItem extends Item implements EnergyHolderItem, EnergyHolder 
     }
 
     @Override
-    public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
+    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
         return false;
     }
 
     @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(BatteryItem.MAX_ENERGY);
+    public void initComponents(ItemStack stack, @NotNull ComponentContainer<CopyableComponent<?>> components) {
+        ItemCapacitorComponent component = new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+        components.put(UniversalComponents.CAPACITOR_COMPONENT, component);
+        component.listen(() -> stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()));
     }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.LOW;
-    }
-
 }

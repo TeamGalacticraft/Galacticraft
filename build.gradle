@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.2.7-SNAPSHOT'
+    id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -16,8 +16,8 @@ version = project.mod_version + "+build." + buildNum
 group = project.maven_group
 
 minecraft {
-    extractJars = true
 	refmapName = 'galacticraft-rewoven.refmap.json'
+    accessWidener "src/main/resources/galacticraft_rewoven.accesswidener"
 }
 
 allprojects {
@@ -25,11 +25,12 @@ allprojects {
         mavenLocal()
         jcenter() //Cloth
         maven { url "https://www.curseforge.com/api/maven" }
-        maven { url "https://server.bbkr.space/artifactory/libs-snapshot" }
+        maven { url "https://server.bbkr.space/artifactory/libs-release" }
         maven { url "https://maven.modmuss50.me" }
         maven { url "https://mod-buildcraft.com/maven" }
+        maven { url "https://dl.bintray.com/ladysnake/libs" }
+        maven { url "https://maven.abusedmaster.xyz/" }
         maven { url "https://cdn.hrzn.studio/maven" }
-        maven { url "https://maven.abusedmaster.xyz" }
     }
 }
 
@@ -38,47 +39,67 @@ dependencies {
     mappings("net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-    // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = true }
+    modImplementation fabricApi.module("fabric-api-base", project.fabric_version)
+    modImplementation fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-command-api-v1", project.fabric_version)
+//    modImplementation fabricApi.module("fabric-crash-report-info-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-item-groups-v0", project.fabric_version)
+    modCompileOnly fabricApi.module("fabric-models-v0", project.fabric_version) //FOML
+    modImplementation fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-networking-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-particles-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-registry-sync-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-renderer-registries-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version)
+    modImplementation fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-textures-v0", project.fabric_version)
+    modImplementation fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version)
 
-    // addon api
-    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
-
-    modImplementation("me.shedaniel.cloth:cloth-events:${project.cloth_version}") { transitive = false }
-    modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") { transitive = true }
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
-    modImplementation("io.github.cottonmc:cotton-energy:${project.energy_version}") { transitive = false }
-    modImplementation("com.github.OnyxStudios:FOML:${project.foml_version}") { transitive = true }
-    
-    modImplementation("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
-    modImplementation("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}") { transitive = false }
-    modImplementation("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}") { transitive = false }
-
+    modImplementation("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}") { transitive = false }
+    modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
+    }
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
+    }
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
-        exclude group: 'me.shedaniel.cloth', module: 'config-2'
-        exclude group: 'me.shedaniel.cloth', module: 'config-events'
-        //need autoconfig and nothing else
+        exclude group: 'me.shedaniel.cloth'
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
+        exclude group: 'org.jetbrains'
+    }
+    modImplementation("com.github.OnyxStudios:FOML:${project.foml_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
     }
 
-    modImplementation("teamreborn:energy:+") { transitive = false }
-    //modRuntime("TechReborn:TechReborn-1.16:${project.tech_reborn_version}") //Not necessary - For TR testing purposes only.
-    //modRuntime("RebornCore:RebornCore-1.16:${project.reborn_core_version}")
+    modApi("com.hrznstudio:GalacticraftAPI:${project.addon_version}") { transitive = false }
+    modApi("io.github.cottonmc:UniversalComponents:${project.uc_version}") { transitive = false }
+    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") { transitive = false }
+    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}") { transitive = false }
+    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}") { transitive = false }
+    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}") { transitive = false }
+//    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}") { transitive = false } //todo add back cotton-resources when it updates
 
     //include everything mandatory inside the jar
-    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}+20w20b")
-    include("me.shedaniel.cloth:cloth-events:${project.cloth_version}")
+    include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")
+    include("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
-    include("io.github.cottonmc:cotton-energy:${project.energy_version}")
-    include("alexiil.mc.lib:libblockattributes-core:${project.attributes_version}")
-    include("alexiil.mc.lib:libblockattributes-fluids:${project.attributes_version}")
-    include("alexiil.mc.lib:libblockattributes-items:${project.attributes_version}")
+    include("io.github.cottonmc:UniversalComponents:${project.uc_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
+    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}")
+    include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
     include("com.github.OnyxStudios:FOML:${project.foml_version}")
-    include("teamreborn:energy:+")
-	
-    // Needed for LBA in order for eclipse to work
-    compile "com.google.code.findbugs:jsr305:3.0.2"
-    //REI
-    modApi "blue.endless:jankson:1.2.0"
+    modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") {
+        exclude group: "net.fabricmc.fabric-api", module: "fabric-dimensions-v1" //todo
+    }
 }
 
 processResources {

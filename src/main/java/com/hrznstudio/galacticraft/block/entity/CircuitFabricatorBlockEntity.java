@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,14 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -33,41 +30,42 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
+import io.github.cottonmc.component.api.ActionType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.BasicInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
+import net.minecraft.util.math.Direction;
 
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable, EnergyStorage {
+public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
-    private static final ItemFilter[] SLOT_FILTERS;
+    private static final Predicate<ItemStack>[] SLOT_FILTERS;
 
     static {
-        SLOT_FILTERS = new ItemFilter[7];
+        SLOT_FILTERS = new Predicate[7];
         SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
-        SLOT_FILTERS[1] = new ExactItemFilter(mandatoryMaterials[0]);
-        SLOT_FILTERS[2] = new ExactItemFilter(mandatoryMaterials[1]);
-        SLOT_FILTERS[3] = new ExactItemFilter(mandatoryMaterials[2]);
-        SLOT_FILTERS[4] = new ExactItemFilter(mandatoryMaterials[3]);
-        SLOT_FILTERS[5] = null;// This is filled in by #getFilterForSlot
-        SLOT_FILTERS[6] = ConstantItemFilter.ANYTHING;
+        SLOT_FILTERS[1] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[0];
+        SLOT_FILTERS[2] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[1];
+        SLOT_FILTERS[3] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[2];
+        SLOT_FILTERS[4] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[3];
+        SLOT_FILTERS[5] = stack -> true;// This is filled in by #getFilterForSlot
+        SLOT_FILTERS[6] = stack -> true;
     }
 
     private final int maxProgress = 300;
@@ -76,9 +74,26 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
-        // Stop automation from inserting into the output or extracting from the inputs.
-        getLimitedInventory().getSubRule(1, 6).disallowExtraction();
-        getLimitedInventory().getRule(6).filterInserts(ConstantItemFilter.NOTHING);
+    }
+
+    @Override
+    protected boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return super.canExtract(slot, stack, dir) && slot == 6; // no hopper extract from input + battery slots
+    }
+
+    @Override
+    protected boolean canInsert(int slot, ItemStack stack, Direction dir) {
+        return super.canInsert(slot, stack, dir) && slot != 6;
+    }
+
+    @Override
+    protected boolean canExtractEnergy() {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertEnergy() {
+        return true;
     }
 
     @Override
@@ -88,12 +103,12 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     @Override
-    protected int getInvSize() {
+    protected int getInventorySize() {
         return 7;
     }
 
     @Override
-    protected ItemFilter getFilterForSlot(int slot) {
+    public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == 5) {
             return this::isValidRecipe;
         }
@@ -122,14 +137,14 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
 
-        if (getEnergyAttribute().getCurrentEnergy() <= 0) {
-            status = CircuitFabricatorStatus.NOT_ENOUGH_POWER;
+        if (getCapacitor().getCurrentEnergy() <= 0) {
+            status = CircuitFabricatorStatus.NOT_ENOUGH_ENERGY;
         } else {
             status = CircuitFabricatorStatus.IDLE;
         }
 
 
-        if (status == CircuitFabricatorStatus.NOT_ENOUGH_POWER) {
+        if (status == CircuitFabricatorStatus.NOT_ENOUGH_ENERGY) {
             if (progress > 0) {
                 this.progress--;
             }
@@ -142,7 +157,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 this.status = CircuitFabricatorStatus.PROCESSING;
             }
         } else {
-            if (this.status != CircuitFabricatorStatus.NOT_ENOUGH_POWER) {
+            if (this.status != CircuitFabricatorStatus.NOT_ENOUGH_ENERGY) {
                 this.status = CircuitFabricatorStatus.IDLE;
             }
         }
@@ -151,16 +166,27 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
-                this.getEnergyAttribute().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), Simulation.ACTION);
+                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             } else {
                 progress = 0;
 
-                getInventory().getSlot(1).extract(1);
-                getInventory().getSlot(2).extract(1);
-                getInventory().getSlot(3).extract(1);
-                getInventory().getSlot(4).extract(1);
-                getInventory().getSlot(5).extract(1);
-                getInventory().getSlot(6).insert(resultStack);
+                ItemStack stack = getInventory().getStack(1);
+                stack.decrement(1);
+                getInventory().setStack(1, stack);
+                stack = getInventory().getStack(2);
+                stack.decrement(1);
+                getInventory().setStack(2, stack);
+                stack = getInventory().getStack(3);
+                stack.decrement(1);
+                getInventory().setStack(3, stack);
+                stack = getInventory().getStack(4);
+                stack.decrement(1);
+                getInventory().setStack(4, stack);
+                stack = getInventory().getStack(5);
+                stack.decrement(1);
+                getInventory().setStack(5, stack);
+
+                getInventory().insertStack(6, resultStack, ActionType.PERFORM);
             }
         }
 
@@ -169,19 +195,18 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
 
     // This is just for testing purposes
     private ItemStack getResultFromRecipeStack() {
-        BasicInventory inv = new BasicInventory(getInventory().getStack(5));
+        SimpleInventory inv = new SimpleInventory(getInventory().getStack(5));
         // This should under no circumstances not be present. If it is, this method has been called before isValidRecipe and you should feel bad.
         FabricationRecipe recipe = getRecipe(inv).orElseThrow(() -> new IllegalStateException("Not a valid recipe."));
         return recipe.craft(inv);
     }
 
-    private Optional<FabricationRecipe> getRecipe(BasicInventory input) {
+    private Optional<FabricationRecipe> getRecipe(SimpleInventory input) {
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
     }
 
-    private boolean canPutStackInResultSlot(ItemStack itemStack) {
-        ItemStack leftover = getInventory().getSlot(6).attemptInsertion(itemStack, Simulation.SIMULATE);
-        return leftover.isEmpty();
+    private boolean canPutStackInResultSlot(ItemStack stack) {
+        return canInsert(6, stack);
     }
 
     public int getProgress() {
@@ -195,7 +220,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     // This is just for testing
     private boolean isValidRecipe(ItemStack input) {
         // TODO check up on this
-        return getRecipe(new BasicInventory(input)).isPresent() && hasMandatoryMaterials();
+        return getRecipe(new SimpleInventory(input)).isPresent() && hasMandatoryMaterials();
 //        return !input.isEmpty() && hasMandatoryMaterials();
     }
 
@@ -225,57 +250,35 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
     }
 
-    @Override
-    public double getStored(EnergySide face) {
-        /*if (world.getBlockState(pos).getBlock() instanceof WireConnectable) {
-            if (((WireConnectable) world.getBlockState(pos).getBlock()).canWireConnect(world, ConfigurableElectricMachineBlock.energySideToDirection(face),  pos.offset(ConfigurableElectricMachineBlock.energySideToDirection(face)), pos) != WireNetwork.WireConnectionType.NONE) {
-                return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-            }
-        }*/
-        return GalacticraftEnergy.convertToTR(this.getEnergyAttribute().getCurrentEnergy());
-    }
-
-    @Override
-    public void setStored(double amount) {
-        this.getEnergyAttribute().setCurrentEnergy(GalacticraftEnergy.convertFromTR(amount));
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return GalacticraftEnergy.convertToTR(getEnergyAttribute().getMaxEnergy());
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.MEDIUM;
-    }
-
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CircuitFabricatorStatus {
+    public enum CircuitFabricatorStatus implements MachineStatus {
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).getString()),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN),
+
         /**
          * Fabricator is not processing.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).getString()),
+        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
+
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_POWER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_power").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString()),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY),
+
         /**
          * The fabricator has been switched off.
          */
-        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).getString());
+        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off"), Formatting.RED);
 
 
-        private final String name;
+        private final Text text;
 
-        CircuitFabricatorStatus(String name) {
-            this.name = name;
+        CircuitFabricatorStatus(TranslatableText text, Formatting color) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         public static CircuitFabricatorStatus get(int index) {
@@ -287,13 +290,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
                 case 3:
                     return OFF;
                 default:
-                    return NOT_ENOUGH_POWER;
+                    return NOT_ENOUGH_ENERGY;
             }
         }
 
         @Override
-        public String toString() {
-            return name;
+        public Text getText() {
+            return text;
         }
     }
 }

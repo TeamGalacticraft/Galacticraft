@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.fluid.FluidProviderItem;
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 /**
@@ -39,25 +38,19 @@ import net.minecraft.screen.slot.Slot;
  */
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(RefineryBlockEntity.class, RefineryScreenHandler::new);
     private final Property status = Property.create();
     private final Inventory inventory;
 
     public RefineryScreenHandler(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
         addProperty(status);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return RefineryScreenHandler.this.canUse(player);
-            }
-        };
+        this.inventory = blockEntity.getInventory().asInventory();
         // Energy slot
         this.addSlot(new ChargeSlot(this.inventory, 0, 8, 79));
         this.addSlot(new Slot(this.inventory, 1, 8, 15) {
             @Override
-            public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() instanceof FluidProviderItem;
+            public boolean canInsert(ItemStack stack) {
+                return blockEntity.getFilterForSlot(1).test(stack);
             }
 
             @Override
@@ -67,8 +60,8 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
         });
         this.addSlot(new Slot(this.inventory, 2, 8 + (18 * 3), 79) {
             @Override
-            public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() instanceof FluidProviderItem;
+            public boolean canInsert(ItemStack stack) {
+                return blockEntity.getFilterForSlot(2).test(stack);
             }
 
             @Override
@@ -90,6 +83,10 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 168));
         }
 
+    }
+
+    public RefineryScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (RefineryBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     @Override

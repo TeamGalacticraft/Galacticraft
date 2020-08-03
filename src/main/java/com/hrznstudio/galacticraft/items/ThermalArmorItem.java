@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,13 +18,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.items;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -50,14 +50,14 @@ public class ThermalArmorItem extends Item {
     }
 
     @Override //should sync with server
-    public TypedActionResult<ItemStack> use(World world_1, PlayerEntity playerEntity_1, Hand hand_1) {
-        FullFixedItemInv inv = ((GCPlayerAccessor) playerEntity_1).getGearInventory();
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        SimpleInventoryComponent inv = ((GCPlayerAccessor) player).getGearInventory();
         ItemStack thermalPiece = inv.getStack(getSlotIdForType(getSlotType()));
         if (thermalPiece.isEmpty()) {
-            inv.setStack(getSlotIdForType(getSlotType()), playerEntity_1.getStackInHand(hand_1), Simulation.ACTION);
+            inv.setStack(getSlotIdForType(getSlotType()), player.getStackInHand(hand));
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
-        return super.use(world_1, playerEntity_1, hand_1);
+        return super.use(world, player, hand);
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft;
@@ -25,30 +26,34 @@ package com.hrznstudio.galacticraft;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
 import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
+import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.BubbleEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
 import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerEntityRenderer;
 import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
+import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screen.ScreenProviderRegistry;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.SkyProperties;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -69,9 +74,8 @@ public class GalacticraftClient implements ClientModInitializer {
         capeLoader.load();
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
-//        ClientSpriteRegistryCallback.EVENT.register((spriteAtlasTexture, registry) -> {
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.BASIC_SOLAR_PANEL_SCREEN));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_TABS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
             registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
@@ -125,25 +129,28 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(new Identifier(Constants.MOD_ID, "block/refinery_top"));
 
             registry.register(new Identifier(Constants.MOD_ID, "block/basic_solar_panel"));
+            registry.register(new Identifier(Constants.MOD_ID, "block/advanced_solar_panel"));
             registry.register(new Identifier(Constants.MOD_ID, "block/solar_panel"));
 
             registry.register(new Identifier(Constants.MOD_ID, "block/coal_generator"));
             registry.register(new Identifier(Constants.MOD_ID, "block/compressor"));
+
+            registry.register(new Identifier(Constants.MOD_ID, "block/empty"));
         });
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.PLAYER_INVENTORY_SCREEN_HANDLER, (syncId, identifier, playerEntity, packetByteBuf) -> new PlayerInventoryGCScreen(playerEntity));
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ADVANCED_SOLAR_PANEL_HANDLER, AdvancedSolarPanelScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.REFINERY_HANDLER, RefineryScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER, CompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER, OxygenCollectorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, PlayerInventoryGCScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
 
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.COAL_GENERATOR_SCREEN_HANDLER, CoalGeneratorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.BASIC_SOLAR_PANEL_SCREEN_HANDLER, BasicSolarPanelScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.CIRCUIT_FABRICATOR_SCREEN_HANDLER, CircuitFabricatorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.REFINERY_SCREEN_HANDLER, RefineryScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.COMPRESSOR_SCREEN_HANDLER, CompressorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ELECTRIC_COMPRESSOR_SCREEN_HANDLER, ElectricCompressorScreen.ELECTRIC_FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.ENERGY_STORAGE_MODULE_SCREEN_HANDLER, EnergyStorageModuleScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.OXYGEN_COLLECTOR_SCREEN_HANDLER, OxygenCollectorScreen.FACTORY);
-        ScreenProviderRegistry.INSTANCE.registerFactory(GalacticraftScreenHandlers.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER, BubbleDistributorScreen.FACTORY);
-
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerEntityRenderer(entityRenderDispatcher, context.getResourceManager()));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
@@ -164,7 +171,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
-
+        SkyProperties.BY_DIMENSION_TYPE.put(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), new MoonSkyProperties());
 
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

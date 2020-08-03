@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.recipe;
@@ -37,7 +38,7 @@ import net.minecraft.util.registry.Registry;
 public class FabricationRecipeSerializer<T extends FabricationRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> recipeFactory;
 
-    public FabricationRecipeSerializer(FabricationRecipeSerializer.RecipeFactory<T> factory) {
+    public FabricationRecipeSerializer(RecipeFactory<T> factory) {
         this.recipeFactory = factory;
     }
 
@@ -50,10 +51,10 @@ public class FabricationRecipeSerializer<T extends FabricationRecipe> implements
 
     @Override
     public T read(Identifier id, PacketByteBuf packet) {
-        String string_1 = packet.readString(32767);
-        Ingredient ingredient_1 = Ingredient.fromPacket(packet);
-        ItemStack itemStack_1 = packet.readItemStack();
-        return this.recipeFactory.create(id, string_1, ingredient_1, itemStack_1);
+        String group = packet.readString(32767);
+        Ingredient ingredient = Ingredient.fromPacket(packet);
+        ItemStack stack = packet.readItemStack();
+        return this.recipeFactory.create(id, group, ingredient, stack);
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,41 +18,39 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.mixin;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
-import com.mojang.authlib.GameProfile;
+import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Unique;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements GCPlayerAccessor {
-    private FullFixedItemInv gearInventory;
+    @Unique
+    private EntitySyncedInventoryComponent gearInventory;
 
-    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world_1) {
-        super(entityType_1, world_1);
+    public PlayerEntityMixin(EntityType<? extends LivingEntity> entityType_1, World world) {
+        super(entityType_1, world);
     }
 
     @Override
-    public FullFixedItemInv getGearInventory() {
+    public EntitySyncedInventoryComponent getGearInventory() {
         return gearInventory;
     }
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    public void init(World world, BlockPos blockPos, GameProfile gameProfile, CallbackInfo info) {
-        this.gearInventory = new FullFixedItemInv(12);
+    @Override
+    public void setGearInventory(EntitySyncedInventoryComponent gearInventory) {
+        this.gearInventory = gearInventory;
     }
 }

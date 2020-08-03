@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -25,15 +26,14 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergyType;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -48,7 +48,6 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorScreenHandler> {
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorScreen::new);
 
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
@@ -66,8 +65,8 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     private int oxygenDisplayX = 0;
     private int oxygenDisplayY = 0;
 
-    public OxygenCollectorScreen(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
-        super(new OxygenCollectorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.oxygen_collector.name"));
+    public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 181;
     }
 
@@ -100,18 +99,15 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.client.textRenderer.draw(stack, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
-        String status = this.handler.blockEntity.status == OxygenCollectorBlockEntity.OxygenCollectorStatus.COLLECTING ? "ui.galacticraft-rewoven.machinestatus.collecting"
-                : this.handler.blockEntity.status == OxygenCollectorBlockEntity.OxygenCollectorStatus.NOT_ENOUGH_LEAVES ? "ui.galacticraft-rewoven.machinestatus.not_enough_leaves"
-                : this.handler.blockEntity.status == OxygenCollectorBlockEntity.OxygenCollectorStatus.FULL ? "ui.galacticraft-rewoven.machinestatus.full" : "ui.galacticraft-rewoven.machinestatus.inactive";
-        this.client.textRenderer.draw(stack, new TranslatableText(status).getString(), statusX + this.client.textRenderer.getWidth(statusText), statusY, this.handler.blockEntity.status.getTextColor());
+        this.client.textRenderer.draw(stack, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().asOrderedText(), statusX + this.client.textRenderer.getWidth(statusText), statusY, OxygenCollectorBlockEntity.OxygenCollectorStatus.get(handler.status.get()).getText().getStyle().getColor().getRgb());
 
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.lastCollectAmount.get()).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
     private void drawOxygenBufferBar(MatrixStack stack) {
-        float currentOxygen = this.handler.oxygen.get();
-        float maxOxygen = OxygenCollectorBlockEntity.MAX_OXYGEN;
+        float currentOxygen = ((float) this.handler.oxygen.get());
+        float maxOxygen = OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F;
         float oxygenScale = (currentOxygen / maxOxygen);
 
         this.client.getTextureManager().bindTexture(OVERLAY);
@@ -124,9 +120,9 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
         if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
-            List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new GalacticraftEnergyType().getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new GalacticraftEnergyType().getDisplayAmount(this.handler.getMaxEnergy())).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            List<OrderedText> toolTipLines = new ArrayList<>();
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)).asOrderedText());
             this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
     }

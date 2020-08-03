@@ -11,9 +11,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -29,9 +28,9 @@ public class BubbleDistributorBlockEntityRenderer extends ConfigurableElectricMa
         super.render(blockEntity, tickDelta, matrices, consumers, light, overlay);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull BubbleDistributorBlockEntity entity, @Nullable Direction direction) {
+    public SpriteIdentifier getDefaultSpriteId(@NotNull BubbleDistributorBlockEntity entity, @Nullable Direction direction) {
         return direction != null ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/oxygen_bubble_distributor")) : super.getDefaultSpriteId(entity, null);
     }
 }

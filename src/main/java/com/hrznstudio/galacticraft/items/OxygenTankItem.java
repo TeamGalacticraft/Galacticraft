@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,12 +18,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.items;
 
-import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
+import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
+import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -45,64 +54,46 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenTankItem extends Item {
-    public static final String MAX_OXYGEN_NBT_KEY = "MaxOxygen";
-    public static final String OXYGEN_NBT_KEY = "Oxygen";
-
-    private final int maxOxygen;
-
+public class OxygenTankItem extends Item implements ItemComponentCallback{
     public OxygenTankItem(Settings settings) {
         super(settings);
-        this.maxOxygen = getMaxDamage();
-    }
-
-    public static int getOxygenCount(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(OXYGEN_NBT_KEY);
-    }
-
-    public static int getMaxOxygen(ItemStack stack) {
-        return stack.getOrCreateTag().getInt(MAX_OXYGEN_NBT_KEY);
+        ItemComponentCallback.registerSelf(this);
     }
 
     @Override
     public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> list) {
         if (this.isIn(itemGroup_1)) {
-            list.add(applyDefaultTags(new ItemStack(this), 0));
-            list.add(applyDefaultTags(new ItemStack(this), maxOxygen));
+            ItemStack stack = new ItemStack(this);
+            list.add(stack);
+            stack = stack.copy();
+            ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getMaxCapacity(0)));
+            list.add(stack);
         }
-    }
-
-    @Override
-    public void onCraft(ItemStack tank, World world_1, PlayerEntity playerEntity_1) {
-        applyDefaultTags(tank, 0);
-    }
-
-    private ItemStack applyDefaultTags(ItemStack item, int currentOxy) {
-        CompoundTag tag = item.getOrCreateTag();
-        tag.putInt(MAX_OXYGEN_NBT_KEY, this.maxOxygen);
-        tag.putInt(OXYGEN_NBT_KEY, currentOxy);
-        item.setDamage(getMaxDamage() - currentOxy);
-
-        return item;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen-remaining", getOxygenCount(stack) + "/" + this.maxOxygen));
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getAmount().doubleValue() * 100 + "/" + getMaxDamage()));
         super.appendTooltip(stack, world, lines, context);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
         if (((GCPlayerAccessor) player).getGearInventory().getStack(6).isEmpty()) {
-            ((GCPlayerAccessor) player).getGearInventory().setStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
+            ((GCPlayerAccessor) player).getGearInventory().setStack(6, player.getStackInHand(hand).copy());
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         } else if (((GCPlayerAccessor) player).getGearInventory().getStack(7).isEmpty()) {
-            ((GCPlayerAccessor) player).getGearInventory().setStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
+            ((GCPlayerAccessor) player).getGearInventory().setStack(7, player.getStackInHand(hand).copy());
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
     }
 
+    @Override
+    public void initComponents(ItemStack itemStack, ComponentContainer<CopyableComponent<?>> componentContainer) {
+        ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.ofWhole(getMaxDamage())));
+        component.listen(() -> itemStack.setDamage(getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 100)));
+        componentContainer.put(UniversalComponents.TANK_COMPONENT, component);
+    }
 }

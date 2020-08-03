@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.render.block.entity;
@@ -29,9 +30,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,10 +40,10 @@ public class EnergyStorageModuleBlockEntityRenderer extends ConfigurableElectric
         super(dispatcher);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull EnergyStorageModuleBlockEntity entity, @Nullable Direction direction) {
-        int level = (int) (((float) entity.getEnergyAttribute().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
+    public SpriteIdentifier getDefaultSpriteId(@NotNull EnergyStorageModuleBlockEntity entity, @NotNull Direction direction) {
+        int level = (int) (((float) entity.getCapacitor().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + level));
         }

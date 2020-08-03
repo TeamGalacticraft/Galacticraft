@@ -1,45 +1,44 @@
+/*
+ * Copyright (c) 2020 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.hrznstudio.galacticraft.structure.MoonVillageStart;
-import com.mojang.datafixers.Dynamic;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.ChunkGeneratorConfig;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageStart;
+import com.mojang.serialization.Codec;
 import net.minecraft.world.gen.feature.StructureFeature;
+import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
-import java.util.function.Function;
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
+public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureConfig> {
 
-public class MoonVillageFeature extends StructureFeature<DefaultFeatureConfig> {
-
-    public MoonVillageFeature(Function<Dynamic<?>, ? extends DefaultFeatureConfig> configFactory) {
-        super(configFactory);
-    }
-
-    protected int getSpacing(DimensionType dimensionType, ChunkGeneratorConfig chunkGeneratorConfig) {
-        return chunkGeneratorConfig.getVillageDistance();
-    }
-
-    protected int getSeparation(DimensionType dimensionType, ChunkGeneratorConfig chunkGenerationConfig) {
-        return chunkGenerationConfig.getVillageSeparation();
-    }
-
-    protected int getSeedModifier(ChunkGeneratorConfig chunkGeneratorConfig) {
-        return 312378912;
+    public MoonVillageFeature(Codec<StructurePoolFeatureConfig> codec) {
+        super(codec);
     }
 
     @Override
-    public StructureFeature.StructureStartFactory getStructureStartFactory() {
+    public StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
         return MoonVillageStart::new;
     }
-
-    @Override
-    public String getName() {
-        return "Moon_Village";
-    }
-
-    @Override
-    public int getRadius() {
-        return 8;
-    }
-
 }

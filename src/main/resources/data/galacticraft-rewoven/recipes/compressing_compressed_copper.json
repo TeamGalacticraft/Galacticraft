@@ -2,10 +2,10 @@
   "type": "galacticraft-rewoven:compressing_shapeless",
   "ingredients": [
     {
-      "tag": "c:copper_ingot"
+      "tag": "c:copper_ingots"
     },
     {
-      "tag": "c:copper_ingot"
+      "tag": "c:copper_ingots"
     }
   ],
   "result": {

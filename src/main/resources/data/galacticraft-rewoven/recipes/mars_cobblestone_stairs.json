@@ -1,0 +1,17 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "L  ",
+    "LL ",
+    "LLL"
+  ],
+  "key": {
+    "L": {
+      "item": "galacticraft-rewoven:mars_cobblestone"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:mars_cobblestone_stairs",
+    "count": 4
+  }
+}

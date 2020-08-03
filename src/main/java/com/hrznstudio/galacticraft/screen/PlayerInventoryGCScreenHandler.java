@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,11 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.items.ThermalArmorItem;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -40,8 +41,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -61,15 +61,10 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
     private final PlayerEntity player;
 
     public PlayerInventoryGCScreenHandler(PlayerInventory playerInventory, PlayerEntity playerEntity) {
-        super(null, 1);
+        super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
 
         this.player = playerEntity;
-        this.inventory = new InventoryFixedWrapper(((GCPlayerAccessor) player).getGearInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return player.getUuid() == PlayerInventoryGCScreenHandler.this.player.getUuid();
-            }
-        };
+        this.inventory = ((GCPlayerAccessor) player).getGearInventory().asInventory();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];
@@ -81,8 +76,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
                 }
 
                 @Override
-                public boolean canInsert(ItemStack itemStack_1) {
-                    return slot == getPreferredEquipmentSlot(itemStack_1);
+                public boolean canInsert(ItemStack stack) {
+                    return slot == getPreferredEquipmentSlot(stack);
                 }
 
                 @Override
@@ -143,8 +138,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
     }
 
-    private EquipmentSlot getPreferredEquipmentSlot(ItemStack itemStack_1) {
-        Item item_1 = itemStack_1.getItem();
+    private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {
+        Item item_1 = stack.getItem();
         return ((ThermalArmorItem) item_1).getSlotType();
     }
 
@@ -159,8 +154,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
 
         @Override
-        public boolean canInsert(ItemStack itemStack_1) {
-            return itemStack_1.getItem() instanceof OxygenTankItem;
+        public boolean canInsert(ItemStack stack) {
+            return stack.getItem() instanceof OxygenTankItem;
         }
 
         @Override
@@ -173,5 +168,57 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         public Pair<Identifier, Identifier> getBackgroundSprite() {
             return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
         }
+    }
+
+    public ItemStack transferSlot(PlayerEntity player, int index) {
+        ItemStack stack = ItemStack.EMPTY;
+        Slot slotFrom = (Slot)this.slots.get(index);
+        if (slotFrom != null && slotFrom.hasStack()) {
+            ItemStack stackFrom = slotFrom.getStack();
+            stack = stackFrom.copy();
+
+            // Index of Indexes :)
+            // 0-3 (4): GC, armor slots;
+            // 4: GC, mask slot;
+            // 5: GC, oxygen gear;
+            // 6-7 (2): GC, oxygen tanks slots;
+            // 8-11 (4): GC, slots without any required item;
+            // 12-38 (27): MC, non-hotbar inventory slots;
+            // 39-48 (9): MC, hotbar slots.
+            if (index < 12) {
+                if (!this.insertItem(stackFrom, 12, 48, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index < 39) {
+                if (!this.insertItem(stackFrom, 0, 8, true) &&
+                    !this.insertItem(stackFrom, 39, 48, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else if (index < 49) {
+                if (!this.insertItem(stackFrom, 0, 8, true) &&
+                    !this.insertItem(stackFrom, 12, 39, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            slotFrom.onStackChanged(stackFrom, stack);
+
+            if (stackFrom.isEmpty()) {
+                slotFrom.setStack(ItemStack.EMPTY);
+            } else {
+                slotFrom.markDirty();
+            }
+
+            if (stackFrom.getCount() == stack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            ItemStack itemStack3 = slotFrom.onTakeItem(player, stackFrom);
+            if (index == 0) {
+                player.dropItem(itemStack3, false);
+            }
+        }
+
+        return stack;
     }
 }

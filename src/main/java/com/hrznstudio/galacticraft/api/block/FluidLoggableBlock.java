@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.api.block;
@@ -30,7 +31,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.property.AbstractProperty;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -52,7 +52,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     String DASH_REP = "__89_00___"; // yes this is bad.... but who's gonna name a mod/fluid something like that
     String COLON_REP = "__2_211_23";
 
-     Property<Identifier> FLUID = new AbstractProperty<Identifier>("fluid", Identifier.class) {
+    Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
         private final List<Identifier> VALUES = new ArrayList<>();
 
         @Override

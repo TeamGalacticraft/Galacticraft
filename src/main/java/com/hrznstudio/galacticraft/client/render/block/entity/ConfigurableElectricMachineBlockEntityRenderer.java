@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,15 +18,14 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.render.block.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -44,20 +43,24 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends ConfigurableElectricMachineBlockEntity> extends BlockEntityRenderer<T> {
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();
-
-    private static final Map<String, BakedModel> MODEL_CACHE = new HashMap<>(); //YOU WILL HAVE TO ROTATE IT YOURSELF - (otherwise the cache would be x4 the size)
+    public static final SpriteIdentifier EMPTY = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/empty"));
+    protected static final List<ModelElement> element = generateCube();
+    private static final Map<String, BakedModel> MODEL_CACHE = new HashMap<>(); //Manual rotation required when rendering the models
 
     public ConfigurableElectricMachineBlockEntityRenderer(BlockEntityRenderDispatcher dispatcher) {
         super(dispatcher);
@@ -85,62 +88,6 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
             }
         }
 
-    }
-
-    public BakedModel getModelForState(T entity, BlockState state) {
-        SideOption[] options = ConfigurableElectricMachineBlock.optionsToArray(state);
-//        Direction dir = state.get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
-
-        StringBuilder builder = new StringBuilder();
-//        builder.append(dir.getId());
-        for (SideOption option : options) {
-            builder.append(option.asString());
-        }
-        if (!MODEL_CACHE.containsKey(builder.toString())) {
-            Map<Direction, ModelElementFace> faces = new HashMap<>();
-            for (Direction direction : Direction.values()) {
-                faces.put(direction, new ModelElementFace(null, -1, direction.getName(), new ModelElementTexture(null, 0)));
-            }
-            ModelElement modelElement = new ModelElement(new Vector3f(0, 0, 0), new Vector3f(16, 16, 16), faces, null, true);
-
-            Map<String, Either<SpriteIdentifier, String>> texMap = new HashMap<>();
-            texMap.put("particle", Either.left(getDefaultSpriteId(entity, null)));
-            for (Direction direction : Direction.values()) {
-                switch (options[getId(direction)]) {
-                    case DEFAULT:
-                        texMap.put(direction.getName(), Either.left(getDefaultSpriteId(entity, direction)));
-                        break;
-                    case POWER_INPUT:
-                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_input"))));
-                        break;
-                    case POWER_OUTPUT:
-                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_output"))));
-                        break;
-                    case OXYGEN_INPUT:
-                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_input"))));
-                        break;
-                    case OXYGEN_OUTPUT:
-                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_output"))));
-                        break;
-                    case FLUID_INPUT:
-                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_input"))));
-                        break;
-                    case FLUID_OUTPUT:
-                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_output"))));
-                        break;
-                }
-            }
-
-            BakedModel model = this.bakeModel(new JsonUnbakedModel(new Identifier("block/cube"), Collections.singletonList(modelElement), texMap, true,
-                            JsonUnbakedModel.GuiLight.field_21859, ModelTransformation.NONE, new ArrayList<>()),
-                    spriteIdentifier -> MinecraftClient.getInstance().getSpriteAtlas(spriteIdentifier.getAtlasId()).apply(spriteIdentifier.getTextureId()),
-                    ModelRotation.X0_Y0, new Identifier(Constants.MOD_ID, builder.toString()), true);
-            MODEL_CACHE.put(builder.toString(), model);
-
-            return model;
-        } else {
-            return MODEL_CACHE.get(builder.toString());
-        }
     }
 
     public int getId(Direction dir) {
@@ -192,45 +139,65 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
             case SOUTH:
                 return 180;
             case EAST:
-                return 90;
-            case WEST:
                 return 270;
+            case WEST:
+                return 90;
         }
         return 0;
     }
 
-    @Override
-    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int ignored, int overlay) {
-        int[] light = new int[Direction.values().length];
+    private static List<ModelElement> generateCube() {
+        Map<Direction, ModelElementFace> faces = new EnumMap<>(Direction.class);
         for (Direction direction : Direction.values()) {
-            light[getId(direction)] = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(direction));
+            faces.put(direction, new ModelElementFace(null, -1, direction.getName(), new ModelElementTexture(null, 0)));
         }
-        matrices.push();
-        Direction direction = blockEntity.getWorld().getBlockState(blockEntity.getPos()).get(DirectionProperty.of("facing", Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
-        matrices.translate(0.5F, 0.0F, 0.5F);
-        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(getDegrees(direction)));
-        matrices.translate(-0.5F, 0.0F, -0.5F);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        MinecraftClient.getInstance().getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-        render(matrices.peek(), vertexConsumers.getBuffer(RenderLayers.getEntityBlockLayer(blockEntity.getWorld().getBlockState(blockEntity.getPos()))), null, this.getModelForState(blockEntity, blockEntity.getWorld().getBlockState(blockEntity.getPos())), 1.0F, 1.0F, 1.0F, light, overlay);
-        matrices.pop();
+        return Collections.singletonList(new ModelElement(new Vector3f(0, 0, 0), new Vector3f(16, 16, 16), faces, null, true));
     }
 
-    @Nonnull
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull T entity, @Nullable Direction direction) {
-        if (direction == null)
-            return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")); // particle
-        switch (direction) {
-            case NORTH:
-            case SOUTH:
-            case EAST:
-            case WEST:
-                return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side"));
-            case UP:
-            case DOWN:
-                return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine"));
+    public BakedModel getModelForState(T entity, BlockState state) {
+        StringBuilder builder = new StringBuilder();
+        for (ConfigurableElectricMachineBlock.BlockFace face : ConfigurableElectricMachineBlock.BlockFace.values()) {
+            builder.append(((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, face).asString());
         }
-        return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine"));
+        if (!MODEL_CACHE.containsKey(builder.toString())) {
+            Map<String, Either<SpriteIdentifier, String>> texMap = new HashMap<>();
+            texMap.put("particle", Either.left(EMPTY));
+            for (Direction direction : Direction.values()) {
+                switch (((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(Direction.NORTH, direction))) { //north so that the model doesn't rotate
+                    case DEFAULT:
+                        texMap.put(direction.getName(), Either.left(getDefaultSpriteId(entity, direction)));
+                        break;
+                    case POWER_INPUT:
+                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_input"))));
+                        break;
+                    case POWER_OUTPUT:
+                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_output"))));
+                        break;
+                    case OXYGEN_INPUT:
+                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_input"))));
+                        break;
+                    case OXYGEN_OUTPUT:
+                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_output"))));
+                        break;
+                    case FLUID_INPUT:
+                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_input"))));
+                        break;
+                    case FLUID_OUTPUT:
+                        texMap.put(direction.getName(), Either.left(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_output"))));
+                        break;
+                }
+            }
+
+            BakedModel model = this.bakeModel(new JsonUnbakedModel(null, element, texMap, true,
+                            JsonUnbakedModel.GuiLight.field_21859, ModelTransformation.NONE, new ArrayList<>()),
+                    spriteIdentifier -> MinecraftClient.getInstance().getSpriteAtlas(spriteIdentifier.getAtlasId()).apply(spriteIdentifier.getTextureId()),
+                    ModelRotation.X0_Y0, new Identifier(Constants.MOD_ID, builder.toString()), true);
+            MODEL_CACHE.put(builder.toString(), model);
+
+            return model;
+        } else {
+            return MODEL_CACHE.get(builder.toString());
+        }
     }
 
     public void render(MatrixStack.Entry entry, VertexConsumer vertexConsumer, @Nullable BlockState blockState, BakedModel bakedModel, float red, float green, float blue, int[] light, int overlay) {
@@ -244,5 +211,36 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
 
         random.setSeed(42L);
         renderQuad(entry, vertexConsumer, red, green, blue, bakedModel.getQuads(blockState, null, random), light[getId(Direction.UP)], overlay);
+    }
+
+    @Override
+    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int ignored, int overlay) {
+        int[] light = new int[Direction.values().length];
+        for (Direction direction : Direction.values()) {
+            light[getId(direction)] = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().offset(direction));
+        }
+        matrices.push();
+        Direction direction = blockEntity.getWorld().getBlockState(blockEntity.getPos()).get(Properties.HORIZONTAL_FACING);
+        matrices.translate(0.5F, 0.0F, 0.5F);
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(getDegrees(direction)));
+        matrices.translate(-0.5F, 0.0F, -0.5F);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        render(matrices.peek(), vertexConsumers.getBuffer(RenderLayers.getEntityBlockLayer(blockEntity.getWorld().getBlockState(blockEntity.getPos()), true)), null, this.getModelForState(blockEntity, blockEntity.getWorld().getBlockState(blockEntity.getPos())), 1.0F, 1.0F, 1.0F, light, overlay);
+        matrices.pop();
+    }
+
+    @NotNull
+    public SpriteIdentifier getDefaultSpriteId(@NotNull T entity, @NotNull Direction direction) {
+        switch (direction) {
+            case NORTH:
+            case SOUTH:
+            case EAST:
+            case WEST:
+                return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side"));
+            case UP:
+            case DOWN:
+                return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine"));
+        }
+        return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine"));
     }
 }

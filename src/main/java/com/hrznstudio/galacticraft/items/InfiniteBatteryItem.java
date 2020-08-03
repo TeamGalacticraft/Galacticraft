@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,71 +18,69 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.api.item.EnergyHolderItem;
-import net.minecraft.entity.player.PlayerEntity;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import io.github.cottonmc.component.energy.type.EnergyType;
+import nerdhub.cardinal.components.api.component.ComponentContainer;
+import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
+import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyHolder;
-import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class InfiniteBatteryItem extends Item implements EnergyHolderItem, EnergyHolder {
+public class InfiniteBatteryItem extends Item implements ItemComponentCallback {
     public InfiniteBatteryItem(Settings settings) {
         super(settings);
+        ItemComponentCallback.registerSelf(this);
     }
 
     @Override
-    public boolean isInfinite() {
+    public boolean hasGlint(ItemStack stack) {
         return true;
     }
 
     @Override
-    public int getMaxEnergy(ItemStack battery) {
-        return Integer.MAX_VALUE;
-    }
-
-    @Override
-    public boolean hasEnchantmentGlint(ItemStack itemStack_1) {
-        return true;
-    }
-
-    @Override
-    public double getMaxStoredPower() {
-        return Double.MAX_VALUE;
-    }
-
-    @Override
-    public EnergyTier getTier() {
-        return EnergyTier.INFINITE;
-    }
-
-    @Override
-    public void onCraft(ItemStack itemStack_1, World world_1, PlayerEntity playerEntity_1) {
-        super.onCraft(itemStack_1, world_1, playerEntity_1);
-        Energy.of(itemStack_1).set(Double.MAX_VALUE);
-    }
-
-    @Override
-    public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> defaultedList_1) {
-        if (itemGroup_1 == GalacticraftItems.ITEMS_GROUP) {
-            ItemStack stack = new ItemStack(this);
-            Energy.of(stack).set(Double.MAX_VALUE);
-            defaultedList_1.add(stack);
-        }
-    }
-
-    @Override
-    public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
+    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
         return false;
+    }
+
+    @Override
+    public void initComponents(ItemStack stack, ComponentContainer<CopyableComponent<?>> components) {
+        components.put(UniversalComponents.CAPACITOR_COMPONENT, new ItemCapacitorComponent(Integer.MAX_VALUE, GalacticraftEnergy.GALACTICRAFT_JOULES) {
+            @Override
+            public boolean canInsertEnergy() {
+                return false;
+            }
+
+            @Override
+            public SimpleCapacitorComponent setCurrentEnergy(int amount) {
+                return this;
+            }
+
+            @Override
+            public int extractEnergy(EnergyType type, int amount, ActionType actionType) {
+                return amount;
+            }
+
+            @Override
+            public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
+                return amount;
+            }
+
+            @Override
+            public int getCurrentEnergy() {
+                return Integer.MAX_VALUE;
+            }
+        });
     }
 }

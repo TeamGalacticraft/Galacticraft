@@ -25,23 +25,16 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -52,8 +45,6 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistributorScreenHandler> {
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(BubbleDistributorBlockEntity.class, BubbleDistributorScreen::new);
-
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BUBBLE_DISTRIBUTOR_SCREEN));
     private static final int OVERLAY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
@@ -72,8 +63,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     private static final int ARROW_HEIGHT = 10;
     private final TextFieldWidget textField;
 
-    public BubbleDistributorScreen(int syncId, PlayerEntity playerEntity, BubbleDistributorBlockEntity blockEntity) {
-        super(new BubbleDistributorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.name"));
+    public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 53, 26, 20, new LiteralText(String.valueOf(handler.blockEntity.getSize())));
         textField.setChangedListener((s -> {
             try {
@@ -152,7 +143,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     private void drawOxygenBufferBar(MatrixStack matrices) {
         this.client.getTextureManager().bindTexture(OVERLAY);
         this.drawTexture(matrices, this.x + 33, this.y + 9, OXYGEN_DIMMED_X, OXYGEN_DIMMED_Y, OVERLAY_WIDTH, OVERLAY_HEIGHT);
-        this.drawTexture(matrices, this.x + 44, this.y + 48, OXYGEN_X, OXYGEN_Y, OVERLAY_WIDTH, (int) -((float) OVERLAY_HEIGHT * ((float) handler.oxygen.get() / (float) BubbleDistributorBlockEntity.MAX_OXYGEN)));
+        this.drawTexture(matrices, this.x + 44, this.y + 48, OXYGEN_X, OXYGEN_Y, OVERLAY_WIDTH, (int) -((float) OVERLAY_HEIGHT * (handler.oxygen.get() / (handler.blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100.0D))));
     }
 
     @Override
@@ -161,9 +152,9 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         this.drawEnergyTooltip(matrices, mouseX, mouseY, this.x + 10, this.y + 9);
 
         if (check(mouseX, mouseY, this.x + 33, this.y + 9, OVERLAY_WIDTH, OVERLAY_HEIGHT)) {
-            List<Text> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(handler.oxygen.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", GalacticraftEnergy.GALACTICRAFT_OXYGEN.getDisplayAmount(OxygenCollectorBlockEntity.MAX_OXYGEN)).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            List<OrderedText> toolTipLines = new ArrayList<>();
+            toolTipLines.addAll(client.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf(handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)), 10000));
+            toolTipLines.addAll(client.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(handler.blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100.0D))).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.RED)), 10000));
             this.renderTooltip(matrices, toolTipLines, mouseX, mouseY);
         }
     }

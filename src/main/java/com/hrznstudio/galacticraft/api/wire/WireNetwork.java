@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.api.wire;
 
+import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -37,21 +40,21 @@ public class WireNetwork {
     private final List<BlockPos> producers = new ArrayList<>();
     private final List<BlockPos> query = new ArrayList<>();
 
-    private final int dimId;
+    private final ServerWorld world;
 
-    public WireNetwork(BlockPos start, int dimId) {
-        this(dimId);
+    public WireNetwork(BlockPos start, ServerWorld world) {
+        this(world);
         addVertex(new BlockPos(start));
-        NetworkManager.getManagerForDimension(dimId).addWire(start, this);
+        ((ServerWorldAccessor) world).getNetworkManager().addWire(start, this);
     }
 
-    public WireNetwork(int dimId) {
-        this.dimId = dimId;
+    public WireNetwork(ServerWorld world) {
+        this.world = world;
     }
 
     public void addWire(BlockPos pos) {
         addVertex(pos);
-        NetworkManager.getManagerForDimension(dimId).addWire(pos, this);
+        ((ServerWorldAccessor) world).getNetworkManager().addWire(pos, this);
         for (Direction dir : Direction.values()) {
             if (adjacentVertices.containsKey(new BlockPos(pos.offset(dir)))) {
                 addEdge(pos, new BlockPos(pos.offset(dir)));
@@ -66,15 +69,15 @@ public class WireNetwork {
         List<BlockPos> adjacent = new ArrayList<>(adjacentVertices.get(blockPos));
         for (BlockPos pos : adjacent) {
             if (skip.contains(pos)) continue;
-            NetworkManager.getManagerForDimension(dimId).removeWire(pos);
-            WireNetwork g = new WireNetwork(pos, dimId);
+            ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
+            WireNetwork g = new WireNetwork(pos, world);
             Queue<BlockPos> queue = new LinkedList<>(adjacentVertices.get(pos));
             while (!queue.isEmpty()) {
                 BlockPos position = queue.poll();
                 if (visited.contains(position)) continue;
                 visited.add(position);
                 queue.addAll(adjacentVertices.get(new BlockPos(position)));
-                NetworkManager.getManagerForDimension(dimId).removeWire(position);
+                ((ServerWorldAccessor) world).getNetworkManager().removeWire(position);
                 g.addWire(position);
                 removeVertexNC(new BlockPos(position));
                 if (adjacent.contains(position)) {
@@ -86,8 +89,12 @@ public class WireNetwork {
     }
 
     private void addEdge(BlockPos value1, BlockPos value2) {
-        adjacentVertices.get(value1).add(value2);
-        adjacentVertices.get(value2).add(value1);
+        if (!adjacentVertices.get(value1).contains(value2)) {
+            adjacentVertices.get(value1).add(value2);
+        }
+        if (!adjacentVertices.get(value2).contains(value1)) {
+            adjacentVertices.get(value2).add(value1);
+        }
     }
 
     private void addVertex(BlockPos value) {
@@ -127,7 +134,7 @@ public class WireNetwork {
                 "adjacentVertices=" + adjacentVertices +
                 ", consumers=" + consumers +
                 ", producers=" + producers +
-                ", dimId=" + dimId +
+                ", dimId=" + world +
                 '}';
     }
 
@@ -147,7 +154,7 @@ public class WireNetwork {
     public WireNetwork merge(WireNetwork network) {
         if (this.adjacentVertices.size() < network.adjacentVertices.size()) {
             for (BlockPos pos : this.adjacentVertices.keySet()) {
-                NetworkManager.getManagerForDimension(dimId).removeWire(pos);
+                ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
                 network.addWire(pos);
             }
             network.producers.addAll(this.producers);
@@ -160,7 +167,7 @@ public class WireNetwork {
             return network;
         } else {
             for (BlockPos pos : network.adjacentVertices.keySet()) {
-                NetworkManager.getManagerForDimension(dimId).removeWire(pos);
+                ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
                 this.addWire(pos);
             }
             this.producers.addAll(network.producers);

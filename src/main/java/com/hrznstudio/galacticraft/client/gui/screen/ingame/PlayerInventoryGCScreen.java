@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -26,15 +27,16 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
+import com.hrznstudio.galacticraft.util.OxygenUtils;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 /**
@@ -46,9 +48,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     private float mouseX;
     private float mouseY;
 
-    public PlayerInventoryGCScreen(PlayerEntity player) {
-//        super(((GCPlayerAccessor) player).getGCContainer(), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
-        super(new PlayerInventoryGCScreenHandler(player.inventory, player), player.inventory, new TranslatableText(Constants.MOD_ID + ".player_inv_screen"));
+    public PlayerInventoryGCScreen(PlayerInventoryGCScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, title);
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -62,14 +63,14 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT);
-            int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
-            int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
+            int storedOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getOxygen(invStack).doubleValue() * 100);
+            int maxOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getMaxOxygen(invStack).doubleValue() * 100.0D);
             this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT);
-            int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
-            int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
+            int storedOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getOxygen(invStack).doubleValue() * 100);
+            int maxOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getMaxOxygen(invStack).doubleValue() * 100.0D);
             this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         }
         super.drawMouseoverTooltip(stack, x, y);
@@ -85,8 +86,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         this.mouseY = (float)/*y*/ this.client.getWindow().getScaledHeight() / 2;
 
         DiffuseLighting.enableGuiDepthLighting();
-        this.itemRenderer.renderGuiItem(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
     }
 
     @Override

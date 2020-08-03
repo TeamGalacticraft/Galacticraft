@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
@@ -32,8 +33,8 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftSurfaceBuilders {
-    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "multi_block_surface_builder"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig::deserialize));
-    public static final SurfaceBuilder<TernarySurfaceConfig> MOON_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon"), new MoonSurfaceBuilder(TernarySurfaceConfig::deserialize));
+    public static final SurfaceBuilder<MultiBlockSurfaceConfig> MULTI_BLOCK_SURFACE_BUILDER = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "multi_block"), new MultiBlockSurfaceBuilder(MultiBlockSurfaceConfig.CODEC));
+    public static final SurfaceBuilder<TernarySurfaceConfig> MOON = Registry.register(Registry.SURFACE_BUILDER, new Identifier(Constants.MOD_ID, "moon"), new MoonSurfaceBuilder<>(TernarySurfaceConfig.CODEC));
 
     public static void register() {
     }

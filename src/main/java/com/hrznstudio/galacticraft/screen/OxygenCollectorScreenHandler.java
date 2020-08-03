@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,37 +18,32 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(OxygenCollectorBlockEntity.class, OxygenCollectorScreenHandler::new);
     public final Property status = Property.create();
-    public final Property oxygen = Property.create();
+    public final Property oxygen = Property.create(); //loses some data (cant send a fraction)
     public final Property lastCollectAmount = Property.create();
 
     public OxygenCollectorScreenHandler(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
-        Inventory inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return OxygenCollectorScreenHandler.this.canUse(player);
-            }
-        };
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
+        Inventory inventory = blockEntity.getInventory().asInventory();
+
         addProperty(status);
         addProperty(oxygen);
         addProperty(lastCollectAmount);
@@ -71,10 +66,14 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
         }
     }
 
+    public OxygenCollectorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    }
+
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set(blockEntity.getOxygen().getCurrentEnergy());
+        oxygen.set((int) (blockEntity.getTank().getContents(0).getAmount().floatValue() * 100.0F));
         lastCollectAmount.set(blockEntity.collectionAmount);
         super.sendContentUpdates();
     }

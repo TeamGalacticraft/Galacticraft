@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,43 +18,39 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.world.biome;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsCratersBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsPlainsBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.highlands.MoonHighlandsRocksBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareCratersBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMarePlainsBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareRocksBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.misc.MoonCheeseForestBiome;
-import com.hrznstudio.galacticraft.world.biome.moon.misc.MoonValleyBiome;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
+
+import static com.hrznstudio.galacticraft.world.biome.GalacticraftDefaultBiomeCreators.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftBiomes {
 
+    public static class Moon {
+        public static final Biome HIGHLANDS_PLAINS = Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_PLAINS), createMoonHighlandsBiome(MOON_HIGHLANDS_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.04F, 0.01F));
+        public static final Biome HIGHLANDS_ROCKS = Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_ROCKS), createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, 0.6F, 0.007F, 0.0001F));
+        public static final Biome HIGHLANDS_VALLEY = Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_VALLEY), createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, -0.5F, 0.03F, 0.005F));
+        public static final Biome MARE_PLAINS = Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_PLAINS), createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.03F, 0.005F));
+        public static final Biome MARE_ROCKS = Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_ROCKS), createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.7F, 0.01F, 0.003F));
+        public static final Biome MARE_VALLEY = Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_VALLEY), createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, -0.6F, 0.03F, 0.004F));
 
-    public static final Biome MOON_VALLEY = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_VALLEY), new MoonValleyBiome());
+        public static final Biome[] BIOMES = new Biome[]{HIGHLANDS_PLAINS, HIGHLANDS_ROCKS, HIGHLANDS_VALLEY, MARE_PLAINS, MARE_ROCKS, MARE_VALLEY};
 
-    public static final Biome MOON_HIGHLANDS_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_PLAINS), new MoonHighlandsPlainsBiome());
-    public static final Biome MOON_HIGHLANDS_CRATERS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_CRATERS), new MoonHighlandsCratersBiome());
-    public static final Biome MOON_HIGHLANDS_ROCKS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_HIGHLANDS_ROCKS), new MoonHighlandsRocksBiome());
-
-    public static final Biome MOON_MARE_PLAINS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_PLAINS), new MoonMarePlainsBiome());
-    public static final Biome MOON_MARE_CRATERS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_CRATERS), new MoonMareCratersBiome());
-    public static final Biome MOON_MARE_ROCKS = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_MARE_ROCKS), new MoonMareRocksBiome());
-
-    public static final Biome MOON_CHEESE_FOREST = Registry.register(Registry.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.MOON_CHEESE_FOREST), new MoonCheeseForestBiome());
-
-    public static final Biome[] MOON_BIOMES = new Biome[]{MOON_VALLEY, MOON_MARE_CRATERS, MOON_MARE_PLAINS, MOON_MARE_ROCKS, MOON_HIGHLANDS_CRATERS, MOON_HIGHLANDS_ROCKS, MOON_HIGHLANDS_PLAINS, MOON_CHEESE_FOREST};
+        private static void init() {
+        }
+    }
 
     public static void register() {
+        Moon.init();
     }
 }

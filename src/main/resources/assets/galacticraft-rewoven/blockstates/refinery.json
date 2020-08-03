@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "block/barrier"
+      "model": "galacticraft-rewoven:block/invisible_machine"
     }
   }
 }

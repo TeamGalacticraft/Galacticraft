@@ -7,13 +7,13 @@
   ],
   "key": {
     "A": {
-      "tag": "c:aluminum_ingot"
+      "tag": "c:aluminum_ingots"
     },
     "N": {
       "item": "minecraft:anvil"
     },
     "C": {
-      "tag": "c:copper_ingot"
+      "tag": "c:copper_ingots"
     },
     "W": {
       "item": "galacticraft-rewoven:basic_wafer"

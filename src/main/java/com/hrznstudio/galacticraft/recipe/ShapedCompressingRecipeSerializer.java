@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.recipe;
@@ -45,15 +46,15 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
     }
 
     @Override
-    public T read(Identifier identifier_1, JsonObject jsonObject_1) {
-        String string_1 = JsonHelper.getString(jsonObject_1, "group", "");
-        Map<String, Ingredient> map_1 = ShapedCompressingRecipe.getComponents(JsonHelper.getObject(jsonObject_1, "key"));
-        String[] strings_1 = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(JsonHelper.getArray(jsonObject_1, "pattern")));
-        int int_1 = strings_1[0].length();
-        int int_2 = strings_1.length;
-        DefaultedList<Ingredient> defaultedList_1 = ShapedCompressingRecipe.getIngredients(strings_1, map_1, int_1, int_2);
-        ItemStack itemStack_1 = ShapedRecipe.getItemStack(JsonHelper.getObject(jsonObject_1, "result"));
-        return factory.create(identifier_1, string_1, int_1, int_2, defaultedList_1, itemStack_1);
+    public T read(Identifier id, JsonObject json) {
+        String string_1 = JsonHelper.getString(json, "group", "");
+        Map<String, Ingredient> ingredients = ShapedCompressingRecipe.getComponents(JsonHelper.getObject(json, "key"));
+        String[] pattern = ShapedCompressingRecipe.combinePattern(ShapedCompressingRecipe.getPattern(JsonHelper.getArray(json, "pattern")));
+        int int_1 = pattern[0].length();
+        int int_2 = pattern.length;
+        DefaultedList<Ingredient> list = ShapedCompressingRecipe.getIngredients(pattern, ingredients, int_1, int_2);
+        ItemStack stack = ShapedRecipe.getItemStack(JsonHelper.getObject(json, "result"));
+        return factory.create(id, string_1, int_1, int_2, list, stack);
     }
 
     @Override
@@ -67,8 +68,8 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
             defaultedList_1.set(int_3, Ingredient.fromPacket(packet));
         }
 
-        ItemStack itemStack_1 = packet.readItemStack();
-        return factory.create(identifier_1, group, int_1, int_2, defaultedList_1, itemStack_1);
+        ItemStack stack = packet.readItemStack();
+        return factory.create(identifier_1, group, int_1, int_2, defaultedList_1, stack);
     }
 
     @Override
@@ -77,8 +78,8 @@ public class ShapedCompressingRecipeSerializer<T extends ShapedCompressingRecipe
         packet.writeVarInt(recipe.getHeight());
         packet.writeString(recipe.group);
 
-        for (Ingredient ingredient_1 : recipe.getIngredients()) {
-            ingredient_1.write(packet);
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            ingredient.write(packet);
         }
 
         packet.writeItemStack(recipe.getOutput());

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,23 +18,50 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.Constants;
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensionType;
-import net.minecraft.block.pattern.BlockPattern;
+import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
+import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGenerator;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.*;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType;
+import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
+
+import java.util.OptionalLong;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftDimensions {
-    public static final DimensionType MOON = FabricDimensionType.builder().skyLight(true).desiredRawId(30).factory(MoonDimension::new).defaultPlacer((entity, serverWorld, direction, v, v1) -> new BlockPattern.TeleportTarget(new Vec3d(0, 100, 0), new Vec3d(0, 100, 0), 0)).buildAndRegister(new Identifier(Constants.MOD_ID, "moon"));
+    public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
+    public static final DimensionType MOON_TYPE = new DimensionType(OptionalLong.empty(), true, false, false, true, false, false, false, false, false, true, 256, HorizontalVoronoiBiomeAccessType.INSTANCE, new Identifier(Constants.MOD_ID, "infiniburn_moon"), 0.1F) {
+        @Override
+        public int getMoonPhase(long l) { //todo calculate sky angle for the moon
+            double d = MathHelper.fractionalPart((double)l / 24000.0D - 0.25D);
+            double e = 0.5D - Math.cos(d * 3.14159265358979323846D) / 2.0D;
+            return (int) ((d * 2.0D + e) / 3.0D);
+        }
+    };
 
     public static void register() {
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
+//        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
+    }
+
+    public static void addGCDims(DynamicRegistryManager.Impl registryTracker) {
+        MutableRegistry<DimensionType> mutableRegistry = registryTracker.get(Registry.DIMENSION_TYPE_KEY);
+        mutableRegistry.add(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), MOON_TYPE);
+    }
+
+    public static SimpleRegistry<DimensionOptions> addGCDimOptions(long seed, SimpleRegistry<DimensionOptions> registry) {
+        registry.add(RegistryKey.of(Registry.DIMENSION_OPTIONS, new Identifier(Constants.MOD_ID, "moon")), new DimensionOptions(() -> MOON_TYPE, new MoonChunkGenerator(new MoonBiomeSource(seed, 4), seed)));
+        return registry;
     }
 }

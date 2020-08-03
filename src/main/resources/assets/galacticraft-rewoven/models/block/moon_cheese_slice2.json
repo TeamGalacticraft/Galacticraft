@@ -1,0 +1,44 @@
+{
+  "textures": {
+    "particle": "galacticraft-rewoven:block/cheese_2",
+    "bottom": "galacticraft-rewoven:block/cheese_1",
+    "top": "galacticraft-rewoven:block/cheese_1",
+    "side": "galacticraft-rewoven:block/cheese_2",
+    "inside": "galacticraft-rewoven:block/cheese_3"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "down": {
+          "texture": "#bottom",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#top"
+        },
+        "north": {
+          "texture": "#side"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#inside"
+        },
+        "east": {
+          "texture": "#side"
+        }
+      }
+    }
+  ]
+}

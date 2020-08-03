@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.particle;
@@ -39,13 +40,10 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftParticles {
 
-    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = FabricParticleTypes.simple();
-    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = FabricParticleTypes.simple();
+    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
+    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
 
     public static void register() {
-        Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_CRUDE_OIL_PARTICLE), DRIPPING_FUEL_PARTICLE);
-        Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_FUEL_PARTICLE), DRIPPING_CRUDE_OIL_PARTICLE);
-        Galacticraft.logger.info("Registered particles!");
     }
 
     @Environment(EnvType.CLIENT)

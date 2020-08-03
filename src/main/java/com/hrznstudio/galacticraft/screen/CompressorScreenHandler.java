@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
 import net.minecraft.screen.slot.Slot;
 
@@ -40,20 +40,14 @@ import net.minecraft.screen.slot.Slot;
  */
 public class CompressorScreenHandler extends MachineScreenHandler<CompressorBlockEntity> {
 
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(CompressorBlockEntity.class, CompressorScreenHandler::new);
     public final Property status = Property.create();
     public final Property progress = Property.create();
     public final Property fuelTime = Property.create();
     protected final Inventory inventory;
 
     public CompressorScreenHandler(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
-            @Override
-            public boolean canPlayerUse(PlayerEntity player) {
-                return CompressorScreenHandler.this.canUse(player);
-            }
-        };
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
+        this.inventory = blockEntity.getInventory().asInventory();
         addProperty(status);
         addProperty(progress);
         addProperty(fuelTime);
@@ -86,6 +80,10 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
         }
 
+    }
+
+    public CompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (CompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
     }
 
     protected int[] getOutputSlotPos() {

@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "  S",
+    " IS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "galacticraft-rewoven:compressed_steel"
+    },
+    "I": {
+      "item": "galacticraft-rewoven:compressed_iron"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:buggy_seat"
+  }
+}

@@ -23,14 +23,12 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlers;
-import com.hrznstudio.galacticraft.util.Rotatable;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -39,31 +37,31 @@ import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock implements Rotatable, MachineBlock {
+public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
@@ -77,12 +75,49 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock imp
     }
 
     @Override
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
+        switch (direction) {
+            case FRONT:
+                return FRONT_SIDE_OPTION;
+            case TOP:
+                return TOP_SIDE_OPTION;
+            case BACK:
+                return BACK_SIDE_OPTION;
+            case LEFT:
+                return LEFT_SIDE_OPTION;
+            case RIGHT:
+                return RIGHT_SIDE_OPTION;
+            case BOTTOM:
+                return BOTTOM_SIDE_OPTION;
+        }
+        throw new AssertionError();
+    }
+
+    @Override
     public ActionResult onUse(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
 
-        ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlers.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER, player, packetByteBuf -> packetByteBuf.writeBlockPos(pos));
+        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                buf.writeBlockPos(pos);
+            }
+
+            @Override
+            public Text getDisplayName() {
+                return new TranslatableText("block.galacticraft-rewoven.bubble_distributor");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
+                //TODO: Look into why we have to create a new PacketByteBuf.
+                return new BubbleDistributorScreenHandler(syncId, inv, buf);
+            }
+        });
         return ActionResult.SUCCESS;
     }
 
@@ -110,7 +145,7 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock imp
             if (blockEntity instanceof BubbleDistributorBlockEntity) {
                 BubbleDistributorBlockEntity be = (BubbleDistributorBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.getInventory().getSlotCount(); i++) {
+                for (int i = 0; i < be.getInventory().getSize(); i++) {
                     ItemStack itemStack = be.getInventory().getStack(i);
 
                     if (itemStack != null) {
@@ -182,16 +217,5 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock imp
     @Override
     public boolean generatesFluids() {
         return false;
-    }
-
-    @Nonnull
-    @Override
-    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        return super.canWireConnect(world, opposite, connectionSourcePos, connectionTargetPos);
-    }
-
-    @Override
-    public List<Direction> disabledSides() {
-        return new ArrayList<>();
     }
 }

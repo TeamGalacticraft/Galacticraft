@@ -22,33 +22,38 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
-import net.fabricmc.fabric.api.container.ContainerFactory;
+import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
+import io.github.cottonmc.component.item.InventoryComponent;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
-    public static final ContainerFactory<ScreenHandler> FACTORY = createFactory(BubbleDistributorBlockEntity.class, BubbleDistributorScreenHandler::new);
     public final Property status = Property.create();
     public final Property oxygen = Property.create();
     private final Inventory inventory;
 
     public BubbleDistributorScreenHandler(int syncId, PlayerEntity playerEntity, BubbleDistributorBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity);
-        this.inventory = new InventoryFixedWrapper(blockEntity.getInventory()) {
+        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER);
+        this.inventory = new InventoryWrapper() {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return BubbleDistributorScreenHandler.this.canUse(player);
+            }
+
+            @Override
+            public InventoryComponent getComponent() {
+                return blockEntity.getInventory();
             }
         };
 
@@ -75,6 +80,10 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
         }
     }
 
+    public BubbleDistributorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
+        this(syncId, inv.player, (BubbleDistributorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    }
+
     @Override
     public ItemStack transferSlot(PlayerEntity playerEntity, int slotId) {
         ItemStack itemStack = ItemStack.EMPTY;
@@ -88,7 +97,7 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
                 return itemStack;
             }
 
-            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
+            if (slotId < this.blockEntity.getInventory().getSize()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
@@ -108,7 +117,7 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set(blockEntity.getOxygen().getCurrentEnergy());
+        oxygen.set((int) (blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100));
         super.sendContentUpdates();
     }
 

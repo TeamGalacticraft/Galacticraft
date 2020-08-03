@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.render.block.entity;
@@ -29,9 +30,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,11 +40,9 @@ public class RefineryBlockEntityRenderer extends ConfigurableElectricMachineBloc
         super(dispatcher);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull RefineryBlockEntity entity, @Nullable Direction direction) {
-        if (direction == null)
-            return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")); // particle
+    public SpriteIdentifier getDefaultSpriteId(@NotNull RefineryBlockEntity entity, @NotNull Direction direction) {
         switch (direction) {
             case NORTH:
                 return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/refinery_front"));

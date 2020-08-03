@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,6 +34,7 @@ import java.util.Objects;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BlockStateWithChance implements Comparable<BlockStateWithChance> {
+    public static final Codec<BlockStateWithChance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockState.CODEC.fieldOf("state").forGetter((bswc) -> bswc.state), Codec.INT.fieldOf("chance").forGetter((bswc) -> bswc.chance)).apply(instance, BlockStateWithChance::new));
     private final BlockState state;
     private final int chance;
 

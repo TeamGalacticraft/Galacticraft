@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,6 +18,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.render.block.entity;
@@ -29,9 +30,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,9 +40,9 @@ public class CoalGeneratorBlockEntityRenderer extends ConfigurableElectricMachin
         super(dispatcher);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull CoalGeneratorBlockEntity entity, @Nullable Direction direction) {
+    public SpriteIdentifier getDefaultSpriteId(@NotNull CoalGeneratorBlockEntity entity, @NotNull Direction direction) {
         if (direction == Direction.NORTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/coal_generator"));
         }

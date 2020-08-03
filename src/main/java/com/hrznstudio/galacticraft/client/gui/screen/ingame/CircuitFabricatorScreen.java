@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -18,21 +18,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import com.hrznstudio.galacticraft.screen.CircuitFabricatorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -42,8 +41,6 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorScreenHandler> {
-
-    public static final ContainerFactory<HandledScreen> FACTORY = createFactory(CircuitFabricatorBlockEntity.class, CircuitFabricatorScreen::new);
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
 
@@ -55,8 +52,8 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private int progressDisplayX;
     private int progressDisplayY;
 
-    public CircuitFabricatorScreen(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
-        super(new CircuitFabricatorScreenHandler(syncId, playerEntity, blockEntity), playerEntity.inventory, playerEntity.world, blockEntity.getPos(), new TranslatableText("ui.galacticraft-rewoven.circuit_fabricator.name"));
+    public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
+        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
     }
 
