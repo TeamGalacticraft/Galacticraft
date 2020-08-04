@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.hooks;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
+import io.github.prospector.modmenu.api.ConfigScreenFactory;
 import io.github.prospector.modmenu.api.ModMenuApi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,6 +33,9 @@ import net.minecraft.client.gui.screen.Screen;
 
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Environment(EnvType.CLIENT)
 public class ModMenuApiImpl implements ModMenuApi {
 

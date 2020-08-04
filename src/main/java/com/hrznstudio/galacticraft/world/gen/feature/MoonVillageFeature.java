@@ -23,11 +23,14 @@
 
 package com.hrznstudio.galacticraft.world.gen.feature;
 
-import com.hrznstudio.galacticraft.structure.MoonVillageStart;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageStart;
 import com.mojang.serialization.Codec;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureConfig> {
 
     public MoonVillageFeature(Codec<StructurePoolFeatureConfig> codec) {
@@ -35,7 +38,7 @@ public class MoonVillageFeature extends StructureFeature<StructurePoolFeatureCon
     }
 
     @Override
-    public StructureFeature.StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
+    public StructureStartFactory<StructurePoolFeatureConfig> getStructureStartFactory() {
         return MoonVillageStart::new;
     }
 }

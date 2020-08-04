@@ -41,5 +41,6 @@ public class GalacticraftBlockEntityRenderers {
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE, OxygenCollectorBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.REFINERY_TYPE, RefineryBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE, EnergyStorageModuleBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE, BubbleDistributorBlockEntityRenderer::new);
     }
 }

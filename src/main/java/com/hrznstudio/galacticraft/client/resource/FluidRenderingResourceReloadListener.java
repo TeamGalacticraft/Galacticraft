@@ -43,6 +43,9 @@ import net.minecraft.world.BlockRenderView;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 @Environment(EnvType.CLIENT)
 public class FluidRenderingResourceReloadListener implements SimpleSynchronousResourceReloadListener {
 

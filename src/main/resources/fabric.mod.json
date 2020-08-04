@@ -43,12 +43,27 @@
   ],
   "accessWidener": "galacticraft_rewoven.accesswidener",
   "depends": {
-    "fabricloader": ">=0.8.0",
-    "fabric": "*",
-    "minecraft": "1.16.1",
+    "fabricloader": ">=0.9.0",
+    "minecraft": "1.16.2-beta.1",
     "universalcomponents": "*",
-    "galacticraft-api": ">=0.2.5-alpha+1.16-pre5",
-    "cotton-resources": ">=1.7.0"
+    "galacticraft-api": ">=0.2.9-alpha+1.16.1",
+
+    "fabric-api-base": "*",
+    "fabric-blockrenderlayer-v1": "*",
+    "fabric-command-api-v1": "*",
+    "fabric-item-groups-v0": "*",
+    "fabric-networking-blockentity-v0": "*",
+    "fabric-networking-v0": "*",
+    "fabric-object-builder-api-v1": "*",
+    "fabric-particles-v1": "*",
+    "fabric-registry-sync-v0": "*",
+    "fabric-renderer-registries-v1": "*",
+    "fabric-rendering-fluids-v1": "*",
+    "fabric-resource-loader-v0": "*",
+    "fabric-screen-handler-api-v1": "*",
+    "fabric-tag-extensions-v0": "*",
+    "fabric-textures-v0": "*",
+    "fabric-tool-attribute-api-v1": "*"
   },
   "suggests": {
     "modmenu": "*"

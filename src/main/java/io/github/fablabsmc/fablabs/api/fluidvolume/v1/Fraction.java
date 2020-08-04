@@ -15,7 +15,7 @@ import static com.google.common.math.IntMath.gcd;
 /**
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
  *
- * This is a patched? version of the fluid API as it seems that deserialization and serialization doesn't work properly
+ * This is a patched version of the fluid API as it seems that deserialization and serialization doesn't work properly
  */
 public final class Fraction extends Number implements Comparable<Fraction> {
 	public static final Fraction ZERO = new Fraction(0, 1);

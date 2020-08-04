@@ -26,9 +26,9 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -42,9 +42,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -66,7 +65,6 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     @Override
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
-        super.onBlockAdded(state, world, pos, oldState, moved);
         if (!world.isClient) {
             WireNetwork network = ((ServerWorldAccessor) world).getNetworkManager().getNetwork(pos);
             if (network == null) network = new WireNetwork(pos, ((ServerWorld) world));
@@ -154,7 +152,7 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
     }
 
     @Override
-    @Nonnull
+    @NotNull
     public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         return WireConnectionType.WIRE;
     }

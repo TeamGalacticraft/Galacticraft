@@ -39,7 +39,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
@@ -50,6 +52,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -135,7 +138,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private boolean IS_REDSTONE_OPEN = false;
     private boolean IS_CONFIG_OPEN = false;
 
-    private final Map<BlockFace, SideOption> sideOptions = new HashMap<>(); //Front, Back, Right, Left, Up, Down
+    private final Map<BlockFace, SideOption> sideOptions = new EnumMap<>(BlockFace.class); //Front, Back, Right, Left, Up, Down
 
     public MachineHandledScreen(C screenHandler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
         super(screenHandler, playerInventory, textComponent);
@@ -165,7 +168,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void sendSecurityUpdate(ConfigurableElectricMachineBlockEntity entity) {
         if (this.playerInventory.player.getUuid().equals(entity.getSecurity().getOwner()) || !entity.getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security_update"),
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(entity.getSecurity().getPublicity())
@@ -175,12 +178,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }
     }
 
-    public static boolean check(int mouseX, int mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+    public static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
 
     private void sendRedstoneUpdate(ConfigurableElectricMachineBlockEntity entity) {
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone_update"),
+        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone"),
                 new PacketByteBuf(Unpooled.buffer())
                         .writeBlockPos(pos)
                         .writeEnumConstant(entity.getRedstoneState())
@@ -202,7 +205,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         assert this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock;
         assert SideOption.getApplicableValuesForMachine(this.world.getBlockState(pos).getBlock()).contains(option);
         if (this.playerInventory.player.getUuid().equals(((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().getOwner()) || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config_update"),
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(direction)
@@ -224,7 +227,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
             lines.addAll(getEnergyTooltipLines());
 
-            this.renderTooltip(stack, lines, mouseX, mouseY);
+            this.renderTooltip(stack, Lists.transform(lines, Text::asOrderedText), mouseX, mouseY);
         }
     }
 
@@ -238,12 +241,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
 
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
-
+            DiffuseLighting.disable();
             if (IS_REDSTONE_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 7);
-                this.drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
+                drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
 
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 21, this.y + 26, BUTTON_OFF_X, BUTTON_OFF_Y, BUTTONS_WIDTH, BUTTONS_HEIGHT);
@@ -580,27 +583,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
         } else {
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions.get(BlockFace.FRONT).getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.north").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.FRONT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {//Front, Back, Right, Left, Up, Down
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions.get(BlockFace.BACK).getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.south").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.BACK).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions.get(BlockFace.RIGHT).getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.west").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.RIGHT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions.get(BlockFace.LEFT).getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.east").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.LEFT).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions.get(BlockFace.TOP).getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.up").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.TOP).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
 
             if (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), new Text[]{this.sideOptions.get(BlockFace.BOTTOM).getFormattedName()}), mouseX, mouseY);
+                this.renderTooltip(stack, Lists.asList(new TranslatableText("ui.galacticraft-rewoven.tabs.side_config.down").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).asOrderedText(), new OrderedText[]{this.sideOptions.get(BlockFace.BOTTOM).getFormattedName().asOrderedText()}), mouseX, mouseY);
             }
         }
         if (!IS_SECURITY_OPEN) {

@@ -35,6 +35,9 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 import java.util.Random;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceBuilder<C> {
     public MoonSurfaceBuilder(Codec<C> codec) {
         super(codec);

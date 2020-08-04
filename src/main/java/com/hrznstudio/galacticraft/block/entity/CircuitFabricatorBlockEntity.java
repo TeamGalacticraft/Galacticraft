@@ -137,7 +137,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
 
-        if (getCapacitatorComponent().getCurrentEnergy() <= 0) {
+        if (getCapacitor().getCurrentEnergy() <= 0) {
             status = CircuitFabricatorStatus.NOT_ENOUGH_ENERGY;
         } else {
             status = CircuitFabricatorStatus.IDLE;
@@ -166,7 +166,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
-                this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             } else {
                 progress = 0;
 

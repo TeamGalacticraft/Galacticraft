@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.*;
@@ -43,7 +42,7 @@ import net.minecraft.util.registry.Registry;
 public class GalacticraftBlockEntities {
     public static final BlockEntityType<CoalGeneratorBlockEntity> COAL_GENERATOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR), BlockEntityType.Builder.create(CoalGeneratorBlockEntity::new, GalacticraftBlocks.COAL_GENERATOR).build(null));
     public static final BlockEntityType<BasicSolarPanelBlockEntity> BASIC_SOLAR_PANEL_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.BASIC_SOLAR_PANEL), BlockEntityType.Builder.create(BasicSolarPanelBlockEntity::new, GalacticraftBlocks.BASIC_SOLAR_PANEL).build(null));
-    public static final BlockEntityType<MultiBlockPartBlockEntity> GENERIC_MULTIBLOCK_PART_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.GENERIC_MULTIBLOCK_PART), BlockEntityType.Builder.create(MultiBlockPartBlockEntity::new, GalacticraftBlocks.GENERIC_MULTIBLOCK_PART).build(null));
+    public static final BlockEntityType<MultiBlockPartBlockEntity> GENERIC_MULTIBLOCK_PART_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.GENERIC_MULTIBLOCK_PART), BlockEntityType.Builder.create(MultiBlockPartBlockEntity::new, GalacticraftBlocks.SOLAR_PANEL_PART).build(null));
     public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.CIRCUIT_FABRICATOR), BlockEntityType.Builder.create(CircuitFabricatorBlockEntity::new, GalacticraftBlocks.CIRCUIT_FABRICATOR).build(null));
     public static final BlockEntityType<CompressorBlockEntity> COMPRESSOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.COMPRESSOR), BlockEntityType.Builder.create(CompressorBlockEntity::new, GalacticraftBlocks.COMPRESSOR).build(null));
     public static final BlockEntityType<ElectricCompressorBlockEntity> ELECTRIC_COMPRESSOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ELECTRIC_COMPRESSOR), BlockEntityType.Builder.create(ElectricCompressorBlockEntity::new, GalacticraftBlocks.ELECTRIC_COMPRESSOR).build(null));
@@ -61,6 +60,7 @@ public class GalacticraftBlockEntities {
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ADVANCED_SOLAR_PANEL), BlockEntityType.Builder.create(AdvancedSolarPanelBlockEntity::new, GalacticraftBlocks.ADVANCED_SOLAR_PANEL).build(null));
     public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_LAUNCH_PAD), BlockEntityType.Builder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlocks.ROCKET_LAUNCH_PAD).build(null));
     public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FUEL_LOADER), BlockEntityType.Builder.create(FuelLoaderBlockEntity::new, GalacticraftBlocks.FUEL_LOADER).build(null));
+    public static final BlockEntityType<BubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR), BlockEntityType.Builder.create(BubbleDistributorBlockEntity::new, GalacticraftBlocks.BUBBLE_DISTRIBUTOR).build(null));
 
     public static void init() {
     }

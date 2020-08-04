@@ -24,6 +24,8 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.client.gui.widget.SpaceRaceButtonWidget;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -36,6 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(GameMenuScreen.class)
+@Environment(EnvType.CLIENT)
 public abstract class PauseMenuScreenMixin extends Screen {
     protected PauseMenuScreenMixin(Text text) {
         super(text);

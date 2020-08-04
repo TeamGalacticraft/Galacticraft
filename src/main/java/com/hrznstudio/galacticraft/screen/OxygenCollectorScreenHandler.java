@@ -25,13 +25,11 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 /**
@@ -39,7 +37,7 @@ import net.minecraft.screen.slot.Slot;
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
     public final Property status = Property.create();
-    public final Property oxygen = Property.create();
+    public final Property oxygen = Property.create(); //loses some data (cant send a fraction)
     public final Property lastCollectAmount = Property.create();
 
     public OxygenCollectorScreenHandler(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
@@ -75,7 +73,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set(blockEntity.getOxygen().getCurrentEnergy());
+        oxygen.set((int) (blockEntity.getTank().getContents(0).getAmount().floatValue() * 100.0F));
         lastCollectAmount.set(blockEntity.collectionAmount);
         super.sendContentUpdates();
     }

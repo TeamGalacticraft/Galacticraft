@@ -25,6 +25,9 @@ package com.hrznstudio.galacticraft.accessor;
 
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public interface ServerWorldAccessor {
     NetworkManager getNetworkManager();
 }

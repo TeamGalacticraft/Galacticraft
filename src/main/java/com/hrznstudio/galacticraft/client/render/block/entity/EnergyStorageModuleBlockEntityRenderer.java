@@ -30,8 +30,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,10 +40,10 @@ public class EnergyStorageModuleBlockEntityRenderer extends ConfigurableElectric
         super(dispatcher);
     }
 
-    @Nonnull
+    @NotNull
     @Override
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull EnergyStorageModuleBlockEntity entity, @Nonnull Direction direction) {
-        int level = (int) (((float) entity.getCapacitatorComponent().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
+    public SpriteIdentifier getDefaultSpriteId(@NotNull EnergyStorageModuleBlockEntity entity, @NotNull Direction direction) {
+        int level = (int) (((float) entity.getCapacitor().getCurrentEnergy() / (float) entity.getMaxEnergy()) * 8F);
         if (direction == Direction.NORTH || direction == Direction.SOUTH) {
             return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + level));
         }

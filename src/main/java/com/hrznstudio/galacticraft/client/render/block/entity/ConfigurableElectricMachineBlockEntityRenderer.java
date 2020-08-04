@@ -47,12 +47,15 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends ConfigurableElectricMachineBlockEntity> extends BlockEntityRenderer<T> {
     private static final BakedQuadFactory QUAD_FACTORY = new BakedQuadFactory();
     public static final SpriteIdentifier EMPTY = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/empty"));
@@ -129,14 +132,6 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
         }
     }
 
-    private static List<ModelElement> generateCube() {
-        Map<Direction, ModelElementFace> faces = new HashMap<>();
-        for (Direction direction : Direction.values()) {
-            faces.put(direction, new ModelElementFace(null, -1, direction.getName(), new ModelElementTexture(null, 0)));
-        }
-        return Collections.singletonList(new ModelElement(new Vector3f(0, 0, 0), new Vector3f(16, 16, 16), faces, null, true));
-    }
-
     public float getDegrees(Direction dir) {
         switch (dir) {
             case NORTH:
@@ -149,6 +144,14 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
                 return 90;
         }
         return 0;
+    }
+
+    private static List<ModelElement> generateCube() {
+        Map<Direction, ModelElementFace> faces = new EnumMap<>(Direction.class);
+        for (Direction direction : Direction.values()) {
+            faces.put(direction, new ModelElementFace(null, -1, direction.getName(), new ModelElementTexture(null, 0)));
+        }
+        return Collections.singletonList(new ModelElement(new Vector3f(0, 0, 0), new Vector3f(16, 16, 16), faces, null, true));
     }
 
     public BakedModel getModelForState(T entity, BlockState state) {
@@ -226,8 +229,8 @@ public abstract class ConfigurableElectricMachineBlockEntityRenderer<T extends C
         matrices.pop();
     }
 
-    @Nonnull
-    public SpriteIdentifier getDefaultSpriteId(@Nonnull T entity, @Nonnull Direction direction) {
+    @NotNull
+    public SpriteIdentifier getDefaultSpriteId(@NotNull T entity, @NotNull Direction direction) {
         switch (direction) {
             case NORTH:
             case SOUTH:

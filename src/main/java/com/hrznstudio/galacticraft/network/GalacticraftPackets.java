@@ -36,7 +36,7 @@ import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -73,7 +73,8 @@ public class GalacticraftPackets {
                 player.changeDimension(destination);
             });
         }));
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone_update"), ((context, buf) -> {
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
                 BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
@@ -83,7 +84,7 @@ public class GalacticraftPackets {
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security_update"), ((context, buf) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
                 BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
@@ -103,7 +104,7 @@ public class GalacticraftPackets {
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config_update"), ((context, buffer) -> {
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config"), ((context, buffer) -> {
             PacketByteBuf buf = new PacketByteBuf(buffer.copy());
             context.getTaskQueue().execute(() -> {
                 BlockPos pos = buf.readBlockPos();
@@ -121,9 +122,39 @@ public class GalacticraftPackets {
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> {
-            context.getPlayer().openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, player) -> new PlayerInventoryGCScreenHandler(inv, player), new TranslatableText("")));
-        })));
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> context.getPlayer().openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, player) -> new PlayerInventoryGCScreenHandler(inv, player), new TranslatableText(""))))));
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_max"), (context, packetByteBuf) -> {
+            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    byte max = buf.readByte();
+                    BlockPos pos = buf.readBlockPos();
+                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (context.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
+                            if (max > 0) {
+                                ((BubbleDistributorBlockEntity) context.getPlayer().world.getBlockEntity(pos)).setTargetSize(max);
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_visible"), (context, packetByteBuf) -> {
+            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
+            if (context.getPlayer() instanceof ServerPlayerEntity) {
+                context.getPlayer().getServer().execute(() -> {
+                    boolean visible = buf.readBoolean();
+                    BlockPos pos = buf.readBlockPos();
+                    if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                        if (context.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
+                            ((BubbleDistributorBlockEntity) context.getPlayer().world.getBlockEntity(pos)).bubbleVisible = visible;
+                        }
+                    }
+                });
+            }
+        });
 
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "designer_red"), (packetContext, buff) -> {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());

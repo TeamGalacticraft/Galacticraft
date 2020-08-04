@@ -108,7 +108,7 @@ public class CrudeOilFluid extends FlowableFluid {
     @Override
     public void beforeBreakingBlock(WorldAccess iWorld, BlockPos blockPos, BlockState blockState) {
         BlockEntity blockEntity = blockState.getBlock().hasBlockEntity() ? iWorld.getBlockEntity(blockPos) : null;
-        Block.dropStacks(blockState, iWorld.getWorld(), blockPos, blockEntity);
+        Block.dropStacks(blockState, iWorld, blockPos, blockEntity);
     }
 
     @Override

@@ -23,6 +23,8 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
@@ -31,6 +33,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(HandledScreen.class)
+@Environment(EnvType.CLIENT)
 public interface HandledScreenHooks {
     @Accessor("x")
     int gc_getX();

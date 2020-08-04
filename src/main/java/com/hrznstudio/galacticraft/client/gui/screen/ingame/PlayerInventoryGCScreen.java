@@ -27,6 +27,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
+import com.hrznstudio.galacticraft.util.OxygenUtils;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -62,14 +63,14 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT);
-            int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
-            int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
+            int storedOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getOxygen(invStack).doubleValue() * 100);
+            int maxOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getMaxOxygen(invStack).doubleValue() * 100.0D);
             this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT);
-            int storedOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getOxygenCount(invStack);
-            int maxOxy = invStack.isEmpty() ? 0 : OxygenTankItem.getMaxOxygen(invStack);
+            int storedOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getOxygen(invStack).doubleValue() * 100);
+            int maxOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getMaxOxygen(invStack).doubleValue() * 100.0D);
             this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
         }
         super.drawMouseoverTooltip(stack, x, y);

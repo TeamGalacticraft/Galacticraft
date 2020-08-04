@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.world.biome.source;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
@@ -37,12 +37,15 @@ import net.minecraft.world.biome.source.BiomeSource;
 
 import java.util.List;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonBiomeSource extends BiomeSource {
-    private static final List<Biome> BIOMES = ImmutableList.of(GalacticraftBiomes.MOON_HIGHLANDS_PLAINS, GalacticraftBiomes.MOON_HIGHLANDS_CRATERS, GalacticraftBiomes.MOON_HIGHLANDS_ROCKS,
-            GalacticraftBiomes.MOON_MARE_PLAINS, GalacticraftBiomes.MOON_MARE_CRATERS, GalacticraftBiomes.MOON_MARE_ROCKS, GalacticraftBiomes.MOON_CHEESE_FOREST);
     public static final Codec<MoonBiomeSource> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.LONG.fieldOf("seed").stable().forGetter((moonBiomeSource) -> moonBiomeSource.seed), Codec.INT.optionalFieldOf("biome_size", 4, Lifecycle.stable()).forGetter((moonBiomeSource) -> moonBiomeSource.biomeSize)).apply(instance, instance.stable(MoonBiomeSource::new)));
+
     private final BiomeLayerSampler sampler;
     private final long seed;
+    private static final List<Biome> BIOMES = Lists.newArrayList(GalacticraftBiomes.Moon.BIOMES);
     private final int biomeSize;
 
     public MoonBiomeSource(long seed, int biomeSize) {
@@ -50,7 +53,7 @@ public class MoonBiomeSource extends BiomeSource {
         this.biomeSize = biomeSize;
         this.seed = seed;
 
-        this.sampler = MoonBiomeLayers.build(seed, biomeSize, 0);
+        this.sampler = MoonBiomeLayers.build(seed, biomeSize);
     }
 
     @Override
@@ -59,10 +62,12 @@ public class MoonBiomeSource extends BiomeSource {
     }
 
     @Environment(EnvType.CLIENT)
+    @Override
     public BiomeSource withSeed(long seed) {
         return new MoonBiomeSource(seed, this.biomeSize);
     }
 
+    @Override
     public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
         return this.sampler.sample(biomeX, biomeZ);
     }

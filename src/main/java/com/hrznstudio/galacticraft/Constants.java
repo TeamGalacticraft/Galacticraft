@@ -60,10 +60,8 @@ public class Constants {
         public static final String VAPOR_SPOUT = "vapor_spout";
 
         // Ore
-        public static final String ALUMINUM_ORE = "aluminum_ore";
         public static final String ASTEROID_ALUMINUM_ORE = "asteroid_aluminum_ore";
         public static final String MOON_CHEESE_ORE = "moon_cheese_ore";
-        public static final String COPPER_ORE = "copper_ore";
         public static final String MOON_COPPER_ORE = "moon_copper_ore";
         public static final String MARS_COPPER_ORE = "mars_copper_ore";
         public static final String DESH_ORE = "desh_ore";
@@ -71,7 +69,6 @@ public class Constants {
         public static final String MARS_IRON_ORE = "mars_iron_ore";
         public static final String ASTEROID_IRON_ORE = "asteroid_iron_ore";
         public static final String SILICON_ORE = "silicon_ore";
-        public static final String TIN_ORE = "tin_ore";
         public static final String MOON_TIN_ORE = "moon_tin_ore";
         public static final String MARS_TIN_ORE = "mars_tin_ore";
         public static final String GALENA_ORE = "galena_ore";
@@ -226,11 +223,13 @@ public class Constants {
         public static final String BEAM_REFLECTOR = "beam_reflector";
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
+        public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
         public static final String MOON_BASALT_BRICKS = "moon_basalt_bricks";
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
         public static final String EARTH_BLOCK = "earth_planet";
         public static final String MOON_BLOCK = "moon_planet";
         public static final String SUN_BLOCK = "sun_planet";
+        public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
     }
 
     // Fluids
@@ -243,6 +242,7 @@ public class Constants {
         public static final String BACTERIAL_ACID_STILL = "bacterial_acid_still";
         public static final String SULFURIC_ACID_FLOWING = "sulfuric_acid_flowing";
         public static final String SULFURIC_ACID_STILL = "sulfuric_acid_still";
+        public static final String OXYGEN = "oxygen";
 
         public static Identifier getIdentifier(String s) {
             return new Identifier(Constants.MOD_ID, "block/" + s);
@@ -314,10 +314,6 @@ public class Constants {
         public static final String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         public static final String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
         public static final String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
-        //BUGGY
-        public static final String BUGGY_SEAT = "buggy_seat";
-        public static final String BUGGY_STORAGE = "buggy_storage";
-        public static final String BUGGY_WHEEL = "buggy_wheel";
         //THROWABLE METEOR CHUNKS
         public static final String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
         public static final String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
@@ -447,10 +443,6 @@ public class Constants {
 
     public static class Energy {
         public static final String GALACTICRAFT_JOULES = "galacticraft_joules";
-        public static final String GALACTICRAFT_OXYGEN = "galacticraft_oxygen";
-        //30 Galacticraft Joules per one Cotton Energy Work Unit.
-        //Galacticraft generator = 6 GJ per fuel tick, United Manufacturing generator = 1 WU per 5 fuel ticks
-        public static final int WU_GJ_CONVERSION = 30;
     }
 
     public static class ScreenTextures {
@@ -475,6 +467,7 @@ public class Constants {
         public static final String PLANET_ICONS = "gui/planet_icons";
         public static final String RESEARCH_PANELS = "gui/research_panels";
         public static final String FUEL_LOADER_SCREEN = "gui/fuel_loader_screen";
+        public static final String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -496,6 +489,7 @@ public class Constants {
         public static final String EVOLVED_ZOMBIE = "evolved_zombie";
         public static final String EVOLVED_CREEPER = "evolved_creeper";
         public static final String ROCKET = "rocket";
+        public static final String BUBBLE = "bubble";
     }
 
     public static class TextureCoordinates {
@@ -522,22 +516,25 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_SCREEN_HANDLER = "energy_storage_module_screen_handler";
         public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
+        public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
         public static final String ROCKET_DESIGNER_SCREEN_HANDLER = "rocket_designer_screen_handler";
         public static final String ROCKET_ASSEMBLER_SCREEN_HANDLER = "rocket_assembler_screen_handler";
         public static final String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
     }
 
     public static class Biomes {
-        public static final String MOON_HIGHLANDS_PLAINS = "moon_highlands_plains";
-        public static final String MOON_HIGHLANDS_CRATERS = "moon_highlands_craters";
-        public static final String MOON_HIGHLANDS_ROCKS = "moon_highlands_rocks";
+        public static class Moon {
+            public static final String HIGHLANDS_PLAINS = "moon_highlands_plains";
+            public static final String HIGHLANDS_ROCKS = "moon_highlands_rocks";
+            public static final String HIGHLANDS_VALLEY = "moon_highlands_valley";
+            public static final String MARE_PLAINS = "moon_mare_plains";
+            public static final String MARE_ROCKS = "moon_mare_rocks";
+            public static final String MARE_VALLEY = "moon_mare_valley";
+        }
 
-        public static final String MOON_MARE_PLAINS = "moon_mare_plains";
-        public static final String MOON_MARE_CRATERS = "moon_mare_craters";
-        public static final String MOON_MARE_ROCKS = "moon_mare_rocks";
+    }
 
-        public static final String MOON_CHEESE_FOREST = "moon_cheese_forest";
-        public static final String MOON_HIGHLANDS_VALLEY = "moon_highlands_valley";
-        public static final String MOON_MARE_VALLEY = "moon_mare_valley";
+    public static class LootTables {
+        public static final String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
     }
 }

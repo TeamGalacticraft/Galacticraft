@@ -5,6 +5,10 @@
   "mixins": [
     "AbstractCriterionMixin",
     "BaseFluidMixin",
+    "BiomeMixin",
+    "DefaultBiomeFeaturesMixin",
+    "DimensionOptionsMixin",
+    "DimensionTypeMixin",
     "EntityAttributeInstanceAccessor",
     "FireBlockAccessor",
     "ItemStackMixin",
@@ -17,7 +21,9 @@
     "ServerPlayerEntityMixin",
     "ServerResourceManagerMixin",
     "ServerWorldMixin",
+    "StructureFeatureMixin",
     "StructurePoolGeneratorMixin",
+    "StructuresConfigMixin",
     "TorchBlockMixin",
     "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],

@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
@@ -143,7 +144,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
             }
         }
 
-        if (getCapacitatorComponent().getCurrentEnergy() <= 0) {
+        if (getCapacitor().getCurrentEnergy() <= 0) {
             status = RefineryStatus.NOT_ENOUGH_ENERGY;
             return;
         }
@@ -158,7 +159,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
         }
 
         if (status == RefineryStatus.ACTIVE) {
-            this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().refineryEnergyConsumptionRate(), ActionType.PERFORM); //x2 an average machine
+            this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().refineryEnergyConsumptionRate(), ActionType.PERFORM); //x2 an average machine
 
 
             FluidVolume extracted = this.tank.takeFluid(0, Fraction.of(1, 1000), ActionType.PERFORM);
@@ -181,7 +182,7 @@ public class RefineryBlockEntity extends ConfigurableElectricMachineBlockEntity 
 
     @Override
     public int getEnergyUsagePerTick() {
-        return GalacticraftEnergy.Values.T2_MACHINE_ENERGY_USAGE;
+        return EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     }
 
     /**

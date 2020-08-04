@@ -29,6 +29,8 @@ import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -46,6 +48,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(InGameHud.class)
+@Environment(EnvType.CLIENT)
 public abstract class InGameHudMixin extends DrawableHelper {
 
     private static final int OXYGEN_X = 0;

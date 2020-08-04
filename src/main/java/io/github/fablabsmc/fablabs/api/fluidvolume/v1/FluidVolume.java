@@ -12,7 +12,7 @@ import net.minecraft.util.registry.Registry;
 /**
  * DISCLAIMER: ALL CODE HERE NOT FINAL, MAY ENCOUNTER BREAKING CHANGES REGULARLY
  *
- * This is a patched? version of the fluid API as it seems that deserialization and serialization doesn't work properly
+ * This is a patched version of the fluid API as it seems that deserialization and serialization doesn't work properly
  */
 public final class FluidVolume {
 	public static final FluidVolume EMPTY = new FluidVolume(Fluids.EMPTY);

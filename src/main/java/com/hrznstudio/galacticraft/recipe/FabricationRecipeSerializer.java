@@ -38,7 +38,7 @@ import net.minecraft.util.registry.Registry;
 public class FabricationRecipeSerializer<T extends FabricationRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> recipeFactory;
 
-    public FabricationRecipeSerializer(FabricationRecipeSerializer.RecipeFactory<T> factory) {
+    public FabricationRecipeSerializer(RecipeFactory<T> factory) {
         this.recipeFactory = factory;
     }
 

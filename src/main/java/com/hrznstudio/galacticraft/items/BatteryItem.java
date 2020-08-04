@@ -23,6 +23,7 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
@@ -44,6 +45,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -66,32 +68,32 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         int charge = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
-        if (MAX_ENERGY - charge < MAX_ENERGY / 3) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (MAX_ENERGY - charge < (MAX_ENERGY / 3) * 2) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+        if (charge < (MAX_ENERGY / 3)) {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+        } else if (charge < (MAX_ENERGY / 3) * 2) {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy-remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         }
         super.appendTooltip(stack, world, lines, context);
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> groupStacks) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(charged, MAX_ENERGY);
-            groupStacks.add(charged);
+            EnergyUtils.setEnergy(charged, MAX_ENERGY);
+            stacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
-            GalacticraftEnergy.setEnergy(depleted, 0);
+            EnergyUtils.setEnergy(depleted, 0);
             depleted.setDamage(depleted.getMaxDamage() - 1);
-            groupStacks.add(depleted);
+            stacks.add(depleted);
         }
     }
 
     @Override
-    public void onCraft(ItemStack battery, World world, PlayerEntity player) {
+    public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
         CompoundTag batteryTag = battery.getOrCreateTag();
         battery.setDamage(BatteryItem.MAX_ENERGY);
         battery.setTag(batteryTag);
@@ -108,11 +110,9 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public void initComponents(ItemStack stack, ComponentContainer<CopyableComponent<?>> components) {
-        ItemCapacitorComponent itemCapacitor = new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
-        itemCapacitor.listen(() -> {
-            stack.setDamage(MAX_ENERGY - itemCapacitor.getCurrentEnergy());
-        });
-        components.put(UniversalComponents.CAPACITOR_COMPONENT, itemCapacitor);
+    public void initComponents(ItemStack stack, @NotNull ComponentContainer<CopyableComponent<?>> components) {
+        ItemCapacitorComponent component = new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+        components.put(UniversalComponents.CAPACITOR_COMPONENT, component);
+        component.listen(() -> stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()));
     }
 }

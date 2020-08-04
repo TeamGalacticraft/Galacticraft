@@ -78,13 +78,18 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
 
     @Override
     public void sendContentUpdates() {
-        energy.set(blockEntity.getCapacitatorComponent().getCurrentEnergy());
+        energy.set(blockEntity.getCapacitor().getCurrentEnergy());
         super.sendContentUpdates();
     }
 
     @Override
-    public boolean canUse(PlayerEntity playerEntity) {
-        return this.blockEntity.canUse(playerEntity);
+    public boolean canUse(PlayerEntity player) {
+        return blockEntity.getSecurity().getPublicity() == ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
+                || !blockEntity.getSecurity().hasOwner()
+                || blockEntity.getSecurity().getOwner().equals(player.getUuid())
+                || (blockEntity.getSecurity().hasTeam() && blockEntity.getSecurity().getPublicity() == ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
+//        && blockEntity.getSecurity().getTeam() == player
+        );
     }
 
     public int getMaxEnergy() {

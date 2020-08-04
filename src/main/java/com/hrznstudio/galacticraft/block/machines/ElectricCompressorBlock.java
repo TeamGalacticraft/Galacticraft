@@ -55,8 +55,9 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
+import java.util.Collections;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -104,7 +105,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
         switch (direction) {
             case FRONT:
                 return FRONT_SIDE_OPTION;
@@ -119,7 +120,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock {
             case BOTTOM:
                 return BOTTOM_SIDE_OPTION;
         }
-        throw new NullPointerException();
+        throw new AssertionError();
     }
 
     @Override
@@ -151,7 +152,7 @@ public class ElectricCompressorBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Style.EMPTY.withColor(Formatting.GRAY));
+        return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

@@ -51,9 +51,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -61,8 +63,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,7 +86,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock im
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
         switch (direction) {
             case FRONT:
                 return FRONT_SIDE_OPTION;
@@ -99,7 +101,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock im
             case BOTTOM:
                 return BOTTOM_SIDE_OPTION;
         }
-        throw new NullPointerException();
+        throw new AssertionError();
     }
 
     @Override
@@ -260,7 +262,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock im
 
     @Override
     public void onPlaced(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
-        BlockState defaultState = GalacticraftBlocks.GENERIC_MULTIBLOCK_PART.getDefaultState();
+        BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
         for (BlockPos otherPart : getOtherParts(state, basePos)) {
             world.setBlockState(otherPart, defaultState);
 
@@ -290,7 +292,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock im
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.advanced_solar_panel");
+        return new TranslatableText("tooltip.galacticraft-rewoven.advanced_solar_panel").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

@@ -24,7 +24,6 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
