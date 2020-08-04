@@ -74,7 +74,7 @@ public class OxygenTankItem extends Item implements ItemComponentCallback{
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getAmount().doubleValue() * 100 + "/" + getMaxDamage()));
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ((int)(ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getAmount().doubleValue() * 100)) + "/" + getMaxDamage()));
         super.appendTooltip(stack, world, lines, context);
     }
 
@@ -93,7 +93,7 @@ public class OxygenTankItem extends Item implements ItemComponentCallback{
     @Override
     public void initComponents(ItemStack itemStack, ComponentContainer<CopyableComponent<?>> componentContainer) {
         ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.ofWhole(getMaxDamage())));
-        component.listen(() -> itemStack.setDamage(getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 100)));
+        component.listen(() -> itemStack.setDamage(getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 100.0D)));
         componentContainer.put(UniversalComponents.TANK_COMPONENT, component);
     }
 }

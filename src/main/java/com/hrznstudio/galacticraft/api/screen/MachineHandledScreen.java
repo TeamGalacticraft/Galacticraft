@@ -41,6 +41,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.math.MatrixStack;
@@ -240,7 +241,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
 
             ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
-
+            DiffuseLighting.disable();
             if (IS_REDSTONE_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH, this.y + 3, REDSTONE_PANEL_X, REDSTONE_PANEL_Y, REDSTONE_PANEL_WIDTH, REDSTONE_PANEL_HEIGHT);

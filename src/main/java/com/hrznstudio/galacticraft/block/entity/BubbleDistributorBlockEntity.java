@@ -30,7 +30,6 @@ import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
@@ -79,9 +78,10 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
     public BubbleDistributorStatus status = BubbleDistributorStatus.OFF;
     public boolean bubbleVisible = true;
     private double size = 0;
-    private byte maxSize = 1;
+    private byte targetSize = 1;
     private int players = 0;
     private int bubbleId = -1;
+    private double prevSize;
 
     public BubbleDistributorBlockEntity() {
         super(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE);
@@ -125,11 +125,15 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
             return;
         }
 
+        if (this.size > this.targetSize) {
+            setSize(Math.max(size - 0.1F, targetSize));
+        }
+
         attemptChargeFromStack(BATTERY_SLOT);
         drainOxygenFromStack(1);
         trySpreadEnergy();
 
-        if (this.getCapacitor().getCurrentEnergy() > 0 && this.tank.getContents(0).getAmount().doubleValue() >= 0) {
+        if (this.getCapacitor().getCurrentEnergy() > 0 && this.tank.getContents(0).getAmount().doubleValue() > 0) {
             this.status = BubbleDistributorStatus.DISTRIBUTING;
         } else {
             this.status = BubbleDistributorStatus.OFF;
@@ -162,17 +166,9 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
 
             Fraction amount = this.tank.takeFluid(0, Fraction.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), ActionType.PERFORM).getAmount();
             if (!world.isClient()) {
-                if (size < maxSize) {
+                if (size < targetSize) {
                     setSize(size + 0.05D);
-                    for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size))));
-                    }
-                } else if (players != world.getPlayers().size()) {
-                    for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                        player.networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size))));
-                    }
                 }
-                players = world.getPlayers().size();
             }
         } else {
             if (size > 0) {
@@ -188,21 +184,29 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
                 this.bubbleId = -1;
             }
         }
+
+        if (prevSize != size || players != world.getPlayers().size()) {
+            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
+                player.networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size))));
+            }
+        }
+        this.players = world.getPlayers().size();
+        this.prevSize = this.size;
     }
 
-    public byte getMaxSize() {
-        return maxSize;
+    public byte getTargetSize() {
+        return targetSize;
     }
 
-    public void setMaxSize(byte maxSize) {
-        this.maxSize = maxSize;
+    public void setTargetSize(byte targetSize) {
+        this.targetSize = targetSize;
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         tank.toTag(tag);
-        tag.putByte("MaxSize", maxSize);
+        tag.putByte("MaxSize", targetSize);
         tag.putDouble("Size", size);
         return tag;
     }
@@ -213,8 +217,8 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
         tank.fromTag(tag);
         this.size = tag.getDouble("Size");
         if (size < 0) size = 0;
-        this.maxSize = tag.getByte("MaxSize");
-        if (maxSize < 1) maxSize = 1;
+        this.targetSize = tag.getByte("MaxSize");
+        if (targetSize < 1) targetSize = 1;
     }
 
     @Override
@@ -245,7 +249,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) < 0) {
+        if (tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) >= 0) {
             return;
         }
         ItemStack stack = getInventory().getStack(slot).copy();

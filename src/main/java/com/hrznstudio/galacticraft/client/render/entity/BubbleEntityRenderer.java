@@ -27,21 +27,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     }
 
     public static RenderLayer getBubbleLayer() {
-        RenderLayer.MultiPhaseParameters multiPhaseParameters = RenderLayer.MultiPhaseParameters.builder()
-                .texture(new RenderPhase.Texture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, false, false))
-                .transparency(new RenderPhase.Transparency("translucent_transparency", () -> {
-                    RenderSystem.enableBlend();
-                    RenderSystem.defaultBlendFunc();
-                }, RenderSystem::disableBlend))
-                .diffuseLighting(new RenderPhase.DiffuseLighting(true))
-                .alpha(new RenderPhase.Alpha(0.003921569F))
-                .lightmap(new RenderPhase.Lightmap(true))
-                .cull(new RenderPhase.Cull(false))
-                .depthTest(new RenderPhase.DepthTest("bubble_depth", 519)) //THIS MAKES THE TEXTURE NOT GLITCHY (bad shading or smth). HOWEVER it causes really weird effects when viewed from far away (https://imgur.com/a/eUqc8Pt). SO THIS IS A TENPORARY FIX - I've spent to much time tweaking this dumb render layer. If you can - try and fix this :) -marcus8448
-                .shadeModel(new RenderPhase.ShadeModel(true))
-                .overlay(new RenderPhase.Overlay(true))
-                .build(true);
-        return RenderLayer.of("entity_translucent", VertexFormats.POSITION_COLOR_TEXTURE_OVERLAY_LIGHT_NORMAL, 7, 256, true, true, multiPhaseParameters);
+        return TexturedRenderLayers.getEntityTranslucentCull();
     }
 
     @Override
@@ -64,8 +50,6 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
         matrices.push();
         matrices.translate(0.5F, 1.0F, 0.5F);
         matrices.scale((float) size, (float) size, (float) size);
-        RenderSystem.color4f(0.08235294f, 0.32941177f, 0.64705884f, 0.1F);
-        RenderSystem.disableCull();
         MinecraftClient.getInstance().getBlockRenderManager().getModelRenderer().render(blockEntity.getWorld(), model,
                 GalacticraftBlocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK.getDefaultState(), new BlockPos(0, 0, 0),
                 matrices,
@@ -73,9 +57,9 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
                 false,
                 random,
                 seed,
-                OverlayTexture.DEFAULT_UV);
+                OverlayTexture.DEFAULT_UV
+        );
         matrices.pop();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     @Override

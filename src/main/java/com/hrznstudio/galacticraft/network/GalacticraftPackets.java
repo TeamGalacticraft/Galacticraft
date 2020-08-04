@@ -105,7 +105,7 @@ public class GalacticraftPackets {
                     if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                         if (context.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
                             if (max > 0) {
-                                ((BubbleDistributorBlockEntity) context.getPlayer().world.getBlockEntity(pos)).setMaxSize(max);
+                                ((BubbleDistributorBlockEntity) context.getPlayer().world.getBlockEntity(pos)).setTargetSize(max);
                             }
                         }
                     }

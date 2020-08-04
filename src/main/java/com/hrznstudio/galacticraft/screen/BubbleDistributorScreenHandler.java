@@ -117,7 +117,7 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100));
+        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().doubleValue() * 100));
         super.sendContentUpdates();
     }
 
