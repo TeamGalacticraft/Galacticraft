@@ -1,11 +1,13 @@
 {
   "schemaVersion": 1,
+  
   "id": "galacticraft-rewoven",
   "version": "$version",
   "name": "Galacticraft: Rewoven",
   "icon": "assets/galacticraft-rewoven/icon.png",
   "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
   "licence": "MIT",
+
   "contact": {
     "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven",
     "homepage": "https://hrznstudio.com",
@@ -112,25 +114,17 @@
       }
     }
   ],
+
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "com.hrznstudio.galacticraft.Galacticraft"
-    ],
-    "client": [
-      "com.hrznstudio.galacticraft.GalacticraftClient"
-    ],
-    "rei_plugins": [
-      "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin"
-    ],
-    "modmenu": [
-      "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl"
-    ]
+    "main": [ "com.hrznstudio.galacticraft.Galacticraft" ],
+    "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
+    "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
+    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ]
   },
-  "mixins": [
-    "galacticraft-rewoven.mixins.json"
-  ],
+  "mixins": [ "galacticraft-rewoven.mixins.json" ],
   "accessWidener": "galacticraft_rewoven.accesswidener",
+
   "depends": {
     "fabricloader": ">=0.8.0",
     "fabric": "*",
