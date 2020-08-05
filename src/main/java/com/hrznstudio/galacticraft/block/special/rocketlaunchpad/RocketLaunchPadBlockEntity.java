@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.block.special.rocketlaunchpad;
 
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
@@ -38,7 +39,7 @@ public class RocketLaunchPadBlockEntity extends BlockEntity implements BlockEnti
         super.fromTag(state, tag);
         if (tag.contains("rocketUuid")) {
             this.rocketEntityUUID = tag.getUuid("rocketUuid");
-            for (Entity entity : world.getEntities(null, new Box(-3, -2, -3, 3, 9, 3))) {
+            for (Entity entity : world.getEntitiesByType(GalacticraftEntityTypes.ROCKET, new Box(-3, -2, -3, 3, 9, 3), rocketEntity -> true)) {
                 if (entity instanceof RocketEntity) {
                     if (entity.getUuid() == this.rocketEntityUUID) {
                         this.rocketEntityId = entity.getEntityId();

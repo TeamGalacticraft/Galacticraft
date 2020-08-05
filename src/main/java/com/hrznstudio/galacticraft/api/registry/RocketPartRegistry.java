@@ -39,6 +39,7 @@ import net.minecraft.util.registry.SimpleRegistry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -46,6 +47,7 @@ import java.util.List;
 public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
 
     private final HashMap<RocketPartType, List<RocketPart>> parts = new HashMap<>();
+    private static List<RocketPart> allParts = null;
 
     public RocketPartRegistry(RegistryKey<Registry<RocketPart>> registryKey, Lifecycle lifecycle) {
         super(registryKey, lifecycle);
@@ -78,11 +80,11 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
     @Environment(EnvType.CLIENT)
     public List<RocketPart> getAllValidParts(PlayerEntity player) {
         if (player instanceof ClientPlayerEntity) {
-            List<RocketPart> all = new ArrayList<>(entriesById.values());
+
             List<RocketPart> valid = new ArrayList<>();
             ClientResearchManager manager = ((ClientPlayNetworkHandlerAccessor) ((ClientPlayerEntity) player).networkHandler).getClientResearchManager();
-            for (RocketPart part : all) {
-                if (manager.isUnlocked(Galacticraft.ROCKET_PARTS.getId(part))) {
+            for (RocketPart part : getAllEntries()) {
+                if (manager.isUnlocked(getId(part))) {
                     valid.add(part);
                 }
             }
@@ -92,6 +94,13 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
     }
 
     public List<RocketPart> getAllEntries() {
-        return new ArrayList<>(entriesById.values());
+        if (allParts == null || allParts.size() != getEntries().size()) {
+            allParts = new ArrayList<>();
+            for (Map.Entry<RegistryKey<RocketPart>, RocketPart> registryKeyRocketPartEntry : getEntries()) {
+                allParts.add(registryKeyRocketPartEntry.getValue());
+            }
+        }
+
+        return allParts;
     }
 }

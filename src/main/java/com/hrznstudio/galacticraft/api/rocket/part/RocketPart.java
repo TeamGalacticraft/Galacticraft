@@ -5,8 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Text;
-
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class RocketPart {
@@ -17,7 +16,7 @@ public class RocketPart {
     private final TierSupplier tier;
     private final boolean hasRecipe;
 
-    private RocketPart(@Nonnull RocketPartType partType, @Nonnull Text name, @Nonnull BlockState renderState, @Nonnull ItemStack renderStack, TierSupplier tier, boolean hasRecipe) {
+    private RocketPart(@NotNull RocketPartType partType, @NotNull Text name, @NotNull BlockState renderState, @NotNull ItemStack renderStack, TierSupplier tier, boolean hasRecipe) {
         this.partType = partType;
         this.name = name;
         this.renderState = renderState;

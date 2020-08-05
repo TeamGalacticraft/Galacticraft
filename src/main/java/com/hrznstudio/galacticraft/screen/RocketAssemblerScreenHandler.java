@@ -25,12 +25,10 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
-import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
+import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
-import net.fabricmc.fabric.api.container.ContainerFactory;
-import net.minecraft.block.entity.BlockEntity;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -40,7 +38,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -94,7 +91,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 156, 72) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return GalacticraftEnergy.isEnergyItem(itemStack_1) && this.getStack().isEmpty();
+                return EnergyUtils.isEnergyItem(itemStack_1) && this.getStack().isEmpty();
             }
 
             @Override

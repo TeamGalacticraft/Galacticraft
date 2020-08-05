@@ -68,9 +68,7 @@ public class GalacticraftPackets {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "dimension_teleport"), ((context, buf) -> {
             RegistryKey<World> dimension = RegistryKey.of(Registry.DIMENSION, buf.readIdentifier());
             context.getTaskQueue().execute(() -> {
-                PlayerEntity player = context.getPlayer();
-                ServerWorld destination = player.getServer().getWorld(dimension);
-                player.changeDimension(destination);
+                context.getPlayer().setWorld(context.getPlayer().getServer().getWorld(dimension));
             });
         }));
 
@@ -346,10 +344,5 @@ public class GalacticraftPackets {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
             packetContext.getTaskQueue().execute(() -> ((ServerPlayerEntityAccessor) packetContext.getPlayer()).setResearchScroll(buf.readDouble(), buf.readDouble()));
         }));
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "open_gc_inv"), ((context, buf) -> context.getTaskQueue().execute(() -> {
-            ContainerProviderRegistry.INSTANCE.openContainer(GalacticraftScreenHandlerTypes.PLAYER_INVENTORY_HANDLER_ID, context.getPlayer(), packetByteBuf -> {
-            });
-            context.getPlayer().openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, player) -> new PlayerInventoryGCScreenHandler(inv, player), new TranslatableText("")));
-        })));
     }
 }

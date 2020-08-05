@@ -68,13 +68,12 @@ public class RocketDesignerBlock extends AbstractHorizontalDirectionalBlock impl
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public final void buildTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
-        super.buildTooltip(stack, view, lines, context);
+    public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
         if (Screen.hasShiftDown()) {
-            lines.add(new TranslatableText(getTooltipKey()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText(getTooltipKey()).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
     }
 

@@ -537,4 +537,8 @@ public class Constants {
     public static class LootTables {
         public static final String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
     }
+
+    public static class Compatibility {
+        public static final String COMMON_MOD_ID = "c";
+    }
 }

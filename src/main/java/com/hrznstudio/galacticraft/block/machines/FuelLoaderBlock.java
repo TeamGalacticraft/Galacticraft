@@ -54,7 +54,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -143,7 +143,7 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
         switch (direction) {
             case FRONT:
                 return FRONT_SIDE_OPTION;

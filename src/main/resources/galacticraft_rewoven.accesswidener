@@ -9,6 +9,7 @@ accessible   field    net/minecraft/world/World                                 
 mutable      field    net/minecraft/world/World                                            dimension            Lnet/minecraft/world/dimension/DimensionType;
 accessible   field    net/minecraft/client/render/SkyProperties                            BY_DIMENSION_TYPE    Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
 accessible   field    net/minecraft/world/gen/chunk/SurfaceChunkGenerator                  field_24774          Lnet/minecraft/world/gen/chunk/ChunkGeneratorType;
+accessible   field    net/minecraft/item/BucketItem                                        fluid                Lnet/minecraft/fluid/Fluid;
 
 accessible   method   net/minecraft/world/dimension/DimensionType                          <init>               (Ljava/util/OptionalLong;ZZZZZZZZZZILnet/minecraft/world/biome/source/BiomeAccessType;Lnet/minecraft/util/Identifier;F)V
 accessible   method   net/minecraft/world/gen/stateprovider/BlockStateProviderType         register             (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/gen/stateprovider/BlockStateProviderType;

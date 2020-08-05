@@ -51,7 +51,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -69,12 +69,12 @@ public class RocketAssemblerBlock extends AbstractHorizontalDirectionalBlock imp
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public final void buildTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
+    public void appendTooltip(ItemStack stack, BlockView world, List<Text> tooltip, TooltipContext options) {
+        super.appendTooltip(stack, world, tooltip, options);
         if (Screen.hasShiftDown()) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.rocket_assembler").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.rocket_assembler").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         }
     }
 

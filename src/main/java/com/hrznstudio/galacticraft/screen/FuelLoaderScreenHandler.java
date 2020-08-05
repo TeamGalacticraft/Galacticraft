@@ -23,12 +23,9 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import io.github.cottonmc.component.UniversalComponents;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -36,7 +33,6 @@ import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 /**

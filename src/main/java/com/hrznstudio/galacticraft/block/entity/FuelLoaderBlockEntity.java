@@ -31,7 +31,8 @@ import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPad
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
@@ -59,7 +60,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -95,7 +96,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     @Override
     public int getEnergyUsagePerTick() {
-        return GalacticraftEnergy.Values.T1_MACHINE_ENERGY_USAGE;
+        return EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     }
 
     @Override
@@ -150,7 +151,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
         if (this.getTank().getContents(0).getAmount().doubleValue() + 1.0D <= tank.getMaxCapacity(0).doubleValue()) {
             ItemStack bucket = getInventory().getStack(1);
             if (bucket.getItem() instanceof BucketItem) {
-                if (((BucketItem) bucket.getItem()).fluid.isIn(GalacticraftFluidTags.FUEL)) {
+                if (((BucketItem) bucket.getItem()).fluid.isIn(GalacticraftTags.FUEL)) {
                     getInventory().setStack(1, new ItemStack(Items.BUCKET));
                     this.tank.insertFluid(0, new FluidVolume(((BucketItem) bucket.getItem()).fluid, Fraction.ONE), ActionType.PERFORM);
                 }
@@ -159,7 +160,7 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
         if (this.getTank().getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) < 0) {
             if (ComponentProvider.fromItemStack(getInventory().getStack(1)).hasComponent(UniversalComponents.TANK_COMPONENT)) {
                 TankComponent component = ComponentProvider.fromItemStack(getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
-                if (component.getContents(0).getFluid().isIn(GalacticraftFluidTags.FUEL)) {
+                if (component.getContents(0).getFluid().isIn(GalacticraftTags.FUEL)) {
                     tank.insertFluid(0, component.takeFluid(0, Fraction.of(1, 20), ActionType.PERFORM), ActionType.PERFORM);
                 }
             }
@@ -170,13 +171,13 @@ public class FuelLoaderBlockEntity extends ConfigurableElectricMachineBlockEntit
             if (be instanceof RocketLaunchPadBlockEntity) {
                 if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
                     if (!tank.getContents(0).isEmpty()) {
-                        if (this.getCapacitatorComponent().getCurrentEnergy() > 0) {
+                        if (this.getCapacitor().getCurrentEnergy() > 0) {
                             RocketEntity rocketEntity = (RocketEntity) world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                             TankComponent tank = rocketEntity.getComponent(UniversalComponents.TANK_COMPONENT);
                             if (tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) < 0) {
                                 if ((tank.getContents(0).isEmpty() || tank.getContents(0).getFluid().equals(this.tank.getContents(0).getFluid()))) {
                                     tank.insertFluid(0, this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM), ActionType.PERFORM);
-                                    this.getCapacitatorComponent().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+                                    this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
                                     status = FuelLoaderStatus.LOADING;
                                 }
                             } else {

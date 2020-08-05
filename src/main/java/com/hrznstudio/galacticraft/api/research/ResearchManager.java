@@ -6,8 +6,8 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 
@@ -37,11 +37,13 @@ public class ResearchManager {
                         iterator.remove();
                         if (node.getParents() == null || node.getParents().length == 0) {
                             this.roots.add(node);
+                            if (Galacticraft.configManager.get().isDebugLogEnabled()) Galacticraft.logger.info("Loaded root node: " + node.getId());
                             for (Listener listener : listeners) {
                                 listener.onRootAdded(node);
                             }
                         } else {
                             this.dependants.add(node);
+                            if (Galacticraft.configManager.get().isDebugLogEnabled()) Galacticraft.logger.info("Loaded child node: " + node.getId());
                             for (Listener listener : listeners) {
                                 listener.onDependentAdded(node);
                             }
@@ -57,8 +59,8 @@ public class ResearchManager {
                     Map.Entry<Identifier, ResearchNode.Builder> entry = iterator.next();
                     Galacticraft.logger.error("Couldn't load research node {}: {}", entry.getKey(), entry.getValue());
                 }
-                if (System.currentTimeMillis() > time + 30000) {
-                    throw new RuntimeException("Research has taken over 30 seconds to load! This isn't supposed to happen! You might have invalid custom nodes.");
+                if (System.currentTimeMillis() > time + 60000) {
+                    throw new RuntimeException("Research has taken over a minute to load! This isn't supposed to happen! You might have invalid custom nodes.");
                 }
             }
         }

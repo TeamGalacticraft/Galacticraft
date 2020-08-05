@@ -33,14 +33,11 @@ import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.fabricmc.fabric.api.container.ContainerFactory;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.text.*;
@@ -145,31 +142,30 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
-        List<MutableText> list = new ArrayList<>();
+        List<OrderedText> list = new ArrayList<>();
         if (check(mouseX, mouseY, x + 69, y + 9, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
             if (blockEntity.getTank().getContents(0).isEmpty()) {
-                list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid"));
+                list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             } else {
                 Fraction fraction = blockEntity.getTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
                 if (fraction.getDenominator() == 1) {
-                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()));
+                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                 } else {
                     if (!Screen.hasShiftDown()) {
                         if (fraction.doubleValue() > 1.0D) {
                             int whole = (int) (fraction.doubleValue() - (fraction.doubleValue() % 1));
                             int numerator = fraction.getNumerator() % fraction.getDenominator();
-                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.getDenominator()));
+                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                         } else {
-                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()));
+                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                         }
                     } else {
-                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()));
+                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                     }
                 }
                 if (Screen.hasControlDown()) {
-                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(blockEntity.getTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))));
+                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(blockEntity.getTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                 }
-                list.get(0).setStyle(Style.EMPTY.withColor(Formatting.GOLD));
             }
             this.renderTooltip(stack, list, mouseX, mouseY);
         }
@@ -183,28 +179,27 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                         Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity) {
                             if (((RocketEntity) entity).getFuelTank().isEmpty()) {
-                                list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid"));
+                                list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                             } else {
                                 Fraction fraction = ((RocketEntity) entity).getFuelTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
                                 if (fraction.getDenominator() == 1) {
-                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()));
+                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                 } else {
                                     if (!Screen.hasShiftDown()) {
                                         if (fraction.doubleValue() > 1.0D) {
                                             int whole = (int) (fraction.doubleValue() - (fraction.doubleValue() % 1));
                                             int numerator = fraction.getNumerator() % fraction.getDenominator();
-                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.getDenominator()));
+                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                         } else {
-                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()));
+                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                         }
                                     } else {
-                                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()));
+                                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                     }
                                 }
                                 if (Screen.hasControlDown()) {
-                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(((RocketEntity) entity).getFuelTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))));
+                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(((RocketEntity) entity).getFuelTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                                 }
-                                list.get(0).setStyle(Style.EMPTY.withColor(Formatting.GOLD));
                             }
                         }
                     }

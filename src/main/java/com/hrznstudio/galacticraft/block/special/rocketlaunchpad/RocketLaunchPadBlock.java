@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class RocketLaunchPadBlock extends BlockWithEntity {
     public static final EnumProperty<Part> PART = EnumProperty.of("part", Part.class);
@@ -340,7 +340,7 @@ public class RocketLaunchPadBlock extends BlockWithEntity {
                             double v = s * j + dx;
                             double w = t * k + e;
                             double x = u * l + f;
-                            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer()).writeVarInt(Block.STATE_IDS.getId(this.getDefaultState()));
+                            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer()).writeVarInt(Block.STATE_IDS.getRawId(this.getDefaultState()));
                             world.addParticle(BlockStateParticleEffect.PARAMETERS_FACTORY.read(ParticleTypes.BLOCK, buf), (double) pos.getX() + v, (double) pos.getY() + w, (double) pos.getZ() + x, s - 0.5D, t - 0.5D, u - 0.5D);
                         }
                     }

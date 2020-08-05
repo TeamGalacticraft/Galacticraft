@@ -35,6 +35,7 @@ import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.RocketAssemblerRecipe;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
@@ -72,7 +73,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             if (slot == SCHEMATIC_INPUT_SLOT) {
                 return (itemStack -> itemStack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC);
             } else if (slot == ENERGY_INPUT_SLOT) {
-                return (GalacticraftEnergy::isEnergyItem);
+                return (EnergyUtils::isEnergyItem);
             } else {
                 return (stack) -> stack.getItem() == GalacticraftItems.ROCKET;
             }
@@ -366,8 +367,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
         ItemStack stack = inventory.getStack(ENERGY_INPUT_SLOT).copy();
         int neededEnergy = Math.min(50, getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy());
-        if (GalacticraftEnergy.isEnergyItem(stack)) {
-            int amountFailedToExtract = GalacticraftEnergy.extractEnergy(stack, neededEnergy, ActionType.PERFORM);
+        if (EnergyUtils.isEnergyItem(stack)) {
+            int amountFailedToExtract = EnergyUtils.extractEnergy(stack, neededEnergy, ActionType.PERFORM);
             this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, ActionType.PERFORM);
             inventory.setStack(ENERGY_INPUT_SLOT, stack);
         }

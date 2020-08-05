@@ -162,7 +162,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         matrixStack.multiply(quaternion);
         entity.yaw = 180.0F;
         entity.pitch = -20.0F;
-        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderManager();
+        EntityRenderDispatcher entityRenderDispatcher = MinecraftClient.getInstance().getEntityRenderDispatcher();
         quaternion2.conjugate();
         entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);

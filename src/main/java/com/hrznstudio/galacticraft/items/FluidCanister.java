@@ -57,7 +57,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RayTraceContext;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**

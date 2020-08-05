@@ -32,8 +32,9 @@ import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
+import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.impl.EntitySyncedTankComponent;
@@ -46,11 +47,12 @@ import nerdhub.cardinal.components.api.component.ComponentProvider;
 import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.container.ContainerProviderRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
@@ -60,12 +62,14 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
@@ -80,8 +84,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -505,7 +509,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.tank.isEmpty() || !this.tank.getContents(0).getFluid().isIn(GalacticraftFluidTags.FUEL))) {
+                if (!debugMode && (this.tank.isEmpty() || !this.tank.getContents(0).getFluid().isIn(GalacticraftTags.FUEL))) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
                     this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
@@ -541,22 +545,8 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
                 if (this.getPos().getY() >= 1200.0F) {
                     for (Entity entity : getPassengerList()) {
                         if (entity instanceof ServerPlayerEntity) {
-                            ContainerProviderRegistry.INSTANCE.openContainer(new Identifier(Constants.MOD_ID, "map"), ((ServerPlayerEntity) entity), (buf) -> {
-                                CompoundTag tag = new CompoundTag();
-                                tag.putFloat("tier", getTier());
-                                tag.putFloat("red", getColor()[0]);
-                                tag.putFloat("green", getColor()[1]);
-                                tag.putFloat("blue", getColor()[2]);
-                                tag.putFloat("alpha", getColor()[3]);
-                                tag.putString("cone", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.CONE))).toString()); //NOTHING should be null at this point
-                                tag.putString("body", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BODY))).toString());
-                                tag.putString("fin", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.FIN))).toString());
-                                tag.putString("booster", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOOSTER))).toString());
-                                tag.putString("bottom", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.BOTTOM))).toString());
-                                tag.putString("upgrade", (Galacticraft.ROCKET_PARTS.getId(this.getPartForType(RocketPartType.UPGRADE))).toString());
-
-                                buf.writeCompoundTag(tag);
-                            });
+                            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen());
+                            break;
                         }
                     }
                 }

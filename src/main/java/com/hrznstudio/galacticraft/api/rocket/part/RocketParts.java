@@ -10,7 +10,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
 
 public class RocketParts {
     public static final RocketPart DEFAULT_CONE = Registry.register(Galacticraft.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), RocketPart.Builder.create()
@@ -88,7 +88,7 @@ public class RocketParts {
     public static void register() {
     }
 
-    @Nonnull
+    @NotNull
     public static RocketPart getDefaultPartForType(RocketPartType type) {
         switch (type) {
             case BODY:
@@ -108,7 +108,7 @@ public class RocketParts {
         }
     }
 
-    @Nonnull
+    @NotNull
     public static RocketPart getPartToRenderForType(RocketPartType type) {
         switch (type) {
             case BODY:

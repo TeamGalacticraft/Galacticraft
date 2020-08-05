@@ -81,7 +81,7 @@ public class GalacticraftBlocks {
     public static final Block WALKWAY = registerBlock(new Walkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WALKWAY, BLOCKS_GROUP);
     public static final Block WIRE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.PIPE_WALKWAY, BLOCKS_GROUP);
     public static final Block PIPE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WIRE_WALKWAY, BLOCKS_GROUP);
-    public static final Block ROCKET_LAUNCH_PAD = registerBlock(new RocketLaunchPadBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.ROCKET_LAUNCH_PAD);
+    public static final Block ROCKET_LAUNCH_PAD = registerBlock(new RocketLaunchPadBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.ROCKET_LAUNCH_PAD, BLOCKS_GROUP);
 
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.SOLID_ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F)), Constants.Blocks.MOON_TURF, BLOCKS_GROUP);
 
@@ -169,19 +169,19 @@ public class GalacticraftBlocks {
     public static final Block OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.AIR)), Constants.Blocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK);
 
     //PLANNET BLOCKS - REQUIRED FOR 3D PLANET SCELECTION
-    public static final Block SUN_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.SUN_BLOCK);
-    public static final Block MOON_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.MOON_BLOCK);
-    public static final Block EARTH_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.EARTH_BLOCK);
+    public static final Block SUN_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.SUN_BLOCK);
+    public static final Block MOON_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.MOON_BLOCK);
+    public static final Block EARTH_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.EARTH_BLOCK);
 
     //DUMMY BLOCKS - REQUIRED FOR ENTITY .OBJ FILE RENDERING
-    public static final Block ROCKET_BODY_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BODY);
-    public static final Block ROCKET_CONE_BASIC_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_BASIC);
-    public static final Block ROCKET_CONE_ADVANCED_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_ADVANCED);
-    public static final Block ROCKET_CONE_SLOPED_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_SLOPED);
-    public static final Block ROCKET_BOTTOM_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOTTOM);
-    public static final Block ROCKET_FINS_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_FINS);
-    public static final Block ROCKET_BOOSTER_TIER_1_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_1);
-    public static final Block ROCKET_BOOSTER_TIER_2_RENDER_BLOCK = registerDummyBlock(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_2);
+    public static final Block ROCKET_BODY_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BODY);
+    public static final Block ROCKET_CONE_BASIC_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_BASIC);
+    public static final Block ROCKET_CONE_ADVANCED_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_ADVANCED);
+    public static final Block ROCKET_CONE_SLOPED_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_SLOPED);
+    public static final Block ROCKET_BOTTOM_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOTTOM);
+    public static final Block ROCKET_FINS_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_FINS);
+    public static final Block ROCKET_BOOSTER_TIER_1_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_1);
+    public static final Block ROCKET_BOOSTER_TIER_2_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_2);
 
     // Machines
     public static final ConfigurableElectricMachineBlock CIRCUIT_FABRICATOR = registerBlock(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.CIRCUIT_FABRICATOR, MACHINES_GROUP);
@@ -195,9 +195,9 @@ public class GalacticraftBlocks {
     public static final ConfigurableElectricMachineBlock OXYGEN_COLLECTOR = registerBlock(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR, MACHINES_GROUP);
     public static final ConfigurableElectricMachineBlock REFINERY = registerBlock(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY, MACHINES_GROUP);
     public static final ConfigurableElectricMachineBlock BUBBLE_DISTRIBUTOR = registerBlock(new BubbleDistributorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR, MACHINES_GROUP);
-    public static final Block ROCKET_DESIGNER = registerMachine(new RocketDesignerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_DESIGNER);
-    public static final Block ROCKET_ASSEMBLER = registerMachine(new RocketAssemblerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_ASSEMBLER);
-    public static final Block FUEL_LOADER = registerMachine(new FuelLoaderBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.FUEL_LOADER);
+    public static final Block ROCKET_DESIGNER = registerBlock(new RocketDesignerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_DESIGNER, MACHINES_GROUP);
+    public static final Block ROCKET_ASSEMBLER = registerBlock(new RocketAssemblerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ROCKET_ASSEMBLER, MACHINES_GROUP);
+    public static final Block FUEL_LOADER = registerBlock(new FuelLoaderBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.FUEL_LOADER, MACHINES_GROUP);
 
     public static void register() {
         ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(FUEL, 80, 80);

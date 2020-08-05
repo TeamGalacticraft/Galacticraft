@@ -297,6 +297,7 @@ public class ResearchNode {
                     if (node != null) {
                         this.parents.add(node);
                     } else {
+                        if (Galacticraft.configManager.get().isDebugLogEnabled()) Galacticraft.logger.info("Failed to load node! Reason: parent not loaded - " + id);
                         allgood = false;
                     }
                 }
@@ -382,5 +383,18 @@ public class ResearchNode {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ResearchNode{" +
+                "parents=" + Arrays.toString(parents) +
+                ", children=" + children +
+                ", id=" + id +
+                ", rewards=" + rewards +
+                ", info=" + info +
+                ", criteria=" + criteria +
+                ", requirements=" + Arrays.toString(requirements) +
+                '}';
     }
 }
