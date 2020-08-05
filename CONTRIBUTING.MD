@@ -15,4 +15,6 @@ Contributing
         * 2 Spaces indent (NO TABS)
         * Keep arrays on the same line (do not wrap)
         * Spaces after `,` and `:`
+    * Commits
+        * Use the [Conventional Commits](https://www.conventionalcommits.org/) specification when creating commits.
 * Name all variables correctly
