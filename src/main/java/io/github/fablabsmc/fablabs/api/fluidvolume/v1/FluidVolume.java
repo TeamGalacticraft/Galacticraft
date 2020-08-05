@@ -2,10 +2,10 @@ package io.github.fablabsmc.fablabs.api.fluidvolume.v1;
 
 import io.github.cottonmc.component.UniversalComponents;
 import net.fabricmc.fabric.api.util.NbtType;
-import net.minecraft.datafixer.NbtOps;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
