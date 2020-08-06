@@ -23,8 +23,6 @@
 
 package com.hrznstudio.galacticraft.world.biome.source;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
@@ -33,13 +31,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.DefaultedRegistry;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
-
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
