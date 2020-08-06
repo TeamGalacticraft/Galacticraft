@@ -23,6 +23,7 @@
 
 package com.hrznstudio.galacticraft.world.biome.source;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
@@ -31,6 +32,9 @@ import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.DefaultedRegistry;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -45,11 +49,10 @@ public class MoonBiomeSource extends BiomeSource {
 
     private final BiomeLayerSampler sampler;
     private final long seed;
-    private static final List<Biome> BIOMES = Lists.newArrayList(GalacticraftBiomes.Moon.BIOMES);
     private final int biomeSize;
 
     public MoonBiomeSource(long seed, int biomeSize) {
-        super(BIOMES);
+        super(GalacticraftBiomes.Moon.getBiomes());
         this.biomeSize = biomeSize;
         this.seed = seed;
 
@@ -69,6 +72,6 @@ public class MoonBiomeSource extends BiomeSource {
 
     @Override
     public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
-        return this.sampler.sample(biomeX, biomeZ);
+        return this.sampler.sample(BuiltinRegistries.BIOME, biomeX, biomeZ);
     }
 }

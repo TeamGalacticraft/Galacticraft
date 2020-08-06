@@ -40,13 +40,13 @@ import java.util.function.LongFunction;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonBiomeLayers {
-    public static final int MOON_HIGHLANDS_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
-    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
-    public static final int MOON_HIGHLANDS_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
+    public static final int MOON_HIGHLANDS_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS));
+    public static final int MOON_HIGHLANDS_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS));
+    public static final int MOON_HIGHLANDS_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY));
 
-    public static final int MOON_MARE_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.MARE_PLAINS);
-    public static final int MOON_MARE_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.MARE_ROCKS);
-    public static final int MOON_MARE_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(GalacticraftBiomes.Moon.MARE_VALLEY);
+    public static final int MOON_MARE_PLAINS_ID = BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(GalacticraftBiomes.Moon.MARE_PLAINS));
+    public static final int MOON_MARE_ROCKS_ID = BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(GalacticraftBiomes.Moon.MARE_ROCKS));
+    public static final int MOON_MARE_VALLEY_ID = BuiltinRegistries.BIOME.getRawId(BuiltinRegistries.BIOME.get(GalacticraftBiomes.Moon.MARE_VALLEY));
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, LongFunction<C> contextProvider) {
         LayerFactory<T> layerFactory = MoonBaseBiomeLayer.INSTANCE.create(contextProvider.apply(1L));

@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -71,7 +72,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     protected final ChunkRandom random;
     protected final BlockState defaultBlock;
     protected final BlockState defaultFluid;
-    protected final Supplier<ChunkGeneratorType> typeSupplier;
+    protected final Supplier<ChunkGeneratorSettings> settingsSupplier;
     private final int verticalNoiseResolution;
     private final int horizontalNoiseResolution;
     private final int noiseSizeX;
@@ -86,9 +87,9 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     private final int field_24779;
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
-        this(biomeSource, seed, () -> new ChunkGeneratorType(
+        this(biomeSource, seed, () -> new ChunkGeneratorSettings(
                 new StructuresConfig(false),
-                new NoiseConfig(
+                new GenerationShapeConfig(
                         256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
                         new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
                         1, 2, 1.0D, -0.46875D, true,
@@ -96,29 +97,29 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 GalacticraftBlocks.MOON_ROCK.getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false));
     }
 
-    public MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorType> supplier) {
+    public MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> supplier) {
         this(biomeSource, biomeSource, seed, supplier);
     }
 
-    private MoonChunkGenerator(BiomeSource biomeSource, BiomeSource biomeSource2, long worldSeed, @NotNull Supplier<ChunkGeneratorType> supplier) {
-        super(biomeSource, biomeSource2, supplier.get().getConfig(), worldSeed);
+    private MoonChunkGenerator(BiomeSource biomeSource, BiomeSource biomeSource2, long worldSeed, @NotNull Supplier<ChunkGeneratorSettings> supplier) {
+        super(biomeSource, biomeSource2, supplier.get().getStructuresConfig(), worldSeed);
         this.worldSeed = worldSeed;
-        ChunkGeneratorType chunkGeneratorType = supplier.get();
-        this.typeSupplier = supplier;
-        NoiseConfig noiseConfig = chunkGeneratorType.getNoiseConfig();
-        this.field_24779 = noiseConfig.getHeight();
-        this.verticalNoiseResolution = noiseConfig.getSizeVertical() * 4;
-        this.horizontalNoiseResolution = noiseConfig.getSizeHorizontal() * 4;
-        this.defaultBlock = chunkGeneratorType.getDefaultBlock();
-        this.defaultFluid = chunkGeneratorType.getDefaultFluid();
+        ChunkGeneratorSettings ChunkGeneratorSettings = supplier.get();
+        this.settingsSupplier = supplier;
+        GenerationShapeConfig generationShapeConfig = ChunkGeneratorSettings.getGenerationShapeConfig();
+        this.field_24779 = generationShapeConfig.getHeight();
+        this.verticalNoiseResolution = generationShapeConfig.getSizeVertical() * 4;
+        this.horizontalNoiseResolution = generationShapeConfig.getSizeHorizontal() * 4;
+        this.defaultBlock = ChunkGeneratorSettings.getDefaultBlock();
+        this.defaultFluid = ChunkGeneratorSettings.getDefaultFluid();
         this.noiseSizeX = 16 / this.horizontalNoiseResolution;
-        this.noiseSizeY = noiseConfig.getHeight() / this.verticalNoiseResolution;
+        this.noiseSizeY = generationShapeConfig.getHeight() / this.verticalNoiseResolution;
         this.noiseSizeZ = 16 / this.horizontalNoiseResolution;
         this.random = new ChunkRandom(worldSeed);
         this.lowerInterpolatedNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.upperInterpolatedNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.interpolationNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-7, 0));
-        this.surfaceDepthNoise = noiseConfig.hasSimplexSurfaceNoise() ? new OctaveSimplexNoiseSampler(this.random, IntStream.rangeClosed(-3, 0)) : new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-3, 0));
+        this.surfaceDepthNoise = generationShapeConfig.hasSimplexSurfaceNoise() ? new OctaveSimplexNoiseSampler(this.random, IntStream.rangeClosed(-3, 0)) : new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-3, 0));
         this.random.consume(2620);
         this.field_24776 = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
     }
@@ -155,11 +156,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     @Override
     @Environment(EnvType.CLIENT)
     public ChunkGenerator withSeed(long seed) {
-        return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.typeSupplier);
-    }
-
-    public boolean method_28548(long l, ChunkGeneratorType chunkGeneratorType) {
-        return this.worldSeed == l && this.typeSupplier.get().method_28555(chunkGeneratorType);
+        return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.settingsSupplier);
     }
 
     private double sampleNoise(int x, int y, int z, double horizontalScale, double verticalScale, double horizontalStretch, double verticalStretch) {
@@ -203,7 +200,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     private void sampleNoiseColumn(double[] buffer, int x, int z) {
-        NoiseConfig noiseConfig = this.typeSupplier.get().getNoiseConfig();
+        GenerationShapeConfig genShapeConfig = this.settingsSupplier.get().getGenerationShapeConfig();
         double ac = 0;
         double ad;
         double ai;
@@ -221,7 +218,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 float p = biome.getScale();
                 float s;
                 float t;
-                if (noiseConfig.isAmplified() && o > 0.0F) {
+                if (genShapeConfig.isAmplified() && o > 0.0F) {
                     s = 1.0F + o * 2.0F;
                     t = 1.0F + p * 4.0F;
                 } else {
@@ -244,19 +241,19 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         ac = ai * 0.265625D;
         ad = 96.0D / aj;
 
-        double ae = 684.412D * noiseConfig.getSampling().getXZScale();
-        double af = 684.412D * noiseConfig.getSampling().getYScale();
-        double ag = ae / noiseConfig.getSampling().getXZFactor();
-        double ah = af / noiseConfig.getSampling().getYFactor();
-        ai = noiseConfig.getTopSlide().getTarget();
-        aj = noiseConfig.getTopSlide().getSize();
-        double ak = noiseConfig.getTopSlide().getOffset();
-        double al = noiseConfig.getBottomSlide().getTarget();
-        double am = noiseConfig.getBottomSlide().getSize();
-        double an = noiseConfig.getBottomSlide().getOffset();
-        double ao = noiseConfig.hasRandomDensityOffset() ? this.method_28553(x, z) : 0.0D;
-        double ap = noiseConfig.getDensityFactor();
-        double aq = noiseConfig.getDensityOffset();
+        double ae = 684.412D * genShapeConfig.getSampling().getXZScale();
+        double af = 684.412D * genShapeConfig.getSampling().getYScale();
+        double ag = ae / genShapeConfig.getSampling().getXZFactor();
+        double ah = af / genShapeConfig.getSampling().getYFactor();
+        ai = genShapeConfig.getTopSlide().getTarget();
+        aj = genShapeConfig.getTopSlide().getSize();
+        double ak = genShapeConfig.getTopSlide().getOffset();
+        double al = genShapeConfig.getBottomSlide().getTarget();
+        double am = genShapeConfig.getBottomSlide().getSize();
+        double an = genShapeConfig.getBottomSlide().getOffset();
+        double ao = genShapeConfig.hasRandomDensityOffset() ? this.method_28553(x, z) : 0.0D;
+        double ap = genShapeConfig.getDensityFactor();
+        double aq = genShapeConfig.getDensityOffset();
 
         for (int ar = 0; ar <= this.noiseSizeY; ++ar) {
             double as = this.sampleNoise(x, ar, z, ae, af, ag, ah);
@@ -389,9 +386,9 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         int i = chunk.getPos().getStartX();
         int j = chunk.getPos().getStartZ();
-        ChunkGeneratorType chunkGeneratorType = this.typeSupplier.get();
-        int k = chunkGeneratorType.getBedrockFloorY();
-        int l = this.field_24779 - 1 - chunkGeneratorType.getBedrockCeilingY();
+        ChunkGeneratorSettings ChunkGeneratorSettings = this.settingsSupplier.get();
+        int k = ChunkGeneratorSettings.getBedrockFloorY();
+        int l = this.field_24779 - 1 - ChunkGeneratorSettings.getBedrockCeilingY();
         boolean bl = l + 4 >= 0 && l < this.field_24779;
         boolean bl2 = k + 4 >= 0 && k < this.field_24779;
         if (bl || bl2) {

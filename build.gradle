@@ -42,9 +42,8 @@ dependencies {
     modImplementation fabricApi.module("fabric-api-base", project.fabric_version)
     modImplementation fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)
     modImplementation fabricApi.module("fabric-command-api-v1", project.fabric_version)
-//    modImplementation fabricApi.module("fabric-crash-report-info-v1", project.fabric_version)
     modImplementation fabricApi.module("fabric-item-groups-v0", project.fabric_version)
-    modCompileOnly fabricApi.module("fabric-models-v0", project.fabric_version) //FOML
+    modImplementation fabricApi.module("fabric-models-v0", project.fabric_version) //FOML
     modImplementation fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)
     modImplementation fabricApi.module("fabric-networking-v0", project.fabric_version)
     modImplementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
@@ -98,7 +97,8 @@ dependencies {
     include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
     include("com.github.OnyxStudios:FOML:${project.foml_version}")
     modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-dimensions-v1" //todo
+//        exclude group: "net.fabricmc.fabric-api", module: "fabric-dimensions-v1" //todo
+        transitive = false
     }
 }
 
