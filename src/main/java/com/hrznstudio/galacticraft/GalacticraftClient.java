@@ -23,8 +23,10 @@
 
 package com.hrznstudio.galacticraft;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
+import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
 import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
@@ -38,22 +40,35 @@ import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
+import com.mojang.datafixers.util.Pair;
 import nerdhub.foml.obj.OBJLoader;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.SkyProperties;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -96,46 +111,6 @@ public class GalacticraftClient implements ClientModInitializer {
             registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_FLOWING));
             registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.FUEL_STILL));
             registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.FUEL_FLOWING));
-
-            //FOR CONFIG. SIDES W/O JSON
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_side"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_power_input"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_power_output"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_oxygen_input"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_oxygen_output"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_fluid_input"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/machine_fluid_output"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_0"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_1"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_2"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_3"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_4"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_5"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_6"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_7"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_8"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/electric_compressor"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/electric_compressor_off"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/electric_compressor_on"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_collector"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/refinery_front"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/refinery_side"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/refinery_top"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/basic_solar_panel"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/advanced_solar_panel"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/solar_panel"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/coal_generator"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/compressor"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/empty"));
         });
 
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -158,6 +133,7 @@ public class GalacticraftClient implements ClientModInitializer {
         GalacticraftBlockEntityRenderers.register();
         GalacticraftParticles.registerClient();
         GalacticraftClientPackets.register();
+        GCGeneratedMachineModels.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.FLUID_PIPE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
@@ -169,6 +145,38 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK, RenderLayer.getTranslucent());
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
+
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
+            if (resourceId.equals(GCGeneratedMachineModels.MACHINE_MARKER)) {
+                return new UnbakedModel() {
+                    @Override
+                    public Collection<Identifier> getModelDependencies() {
+                        return Collections.emptyList();
+                    }
+
+                    @Override
+                    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+                        ImmutableList.Builder<SpriteIdentifier> builder = ImmutableList.builder();
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_input")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_output")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_input")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_output")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_input")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_output")));
+                        return builder.build();
+                    }
+
+                    @Override
+                    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+                        Galacticraft.logger.info("Generating model for: {}", modelId);
+                        return GCGeneratedMachineModels.INSTANCE;
+                    }
+                };
+            }
+            return null;
+        });
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
         SkyProperties.BY_DIMENSION_TYPE.put(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), new MoonSkyProperties());

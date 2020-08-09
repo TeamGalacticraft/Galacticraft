@@ -220,11 +220,11 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
                         case EAST:
                             return FRONT;
                         case NORTH:
-                            return RIGHT;
+                            return LEFT;
                         case WEST:
                             return BACK;
                         case SOUTH:
-                            return LEFT;
+                            return RIGHT;
                     }
                     break;
                 case SOUTH:
@@ -244,11 +244,11 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
                         case WEST:
                             return FRONT;
                         case SOUTH:
-                            return RIGHT;
+                            return LEFT;
                         case EAST:
                             return BACK;
                         case NORTH:
-                            return LEFT;
+                            return RIGHT;
                     }
                     break;
             }

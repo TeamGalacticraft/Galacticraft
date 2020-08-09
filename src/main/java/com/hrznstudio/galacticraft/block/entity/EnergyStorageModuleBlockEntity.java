@@ -25,9 +25,12 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
 import java.util.function.Predicate;
@@ -38,6 +41,7 @@ import java.util.function.Predicate;
 public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
+    private int prevEnergy = 0;
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
@@ -81,6 +85,18 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);
         attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
         trySpreadEnergy();
+
+        if (prevEnergy != getCapacitor().getCurrentEnergy()) {
+            int level = (int) (((double) getCapacitor().getCurrentEnergy() / (double) getMaxEnergy()) * 8.0D);
+            world.setBlockState(pos, world.getBlockState(pos).with(EnergyStorageModuleBlock.ENERGY_LEVEL, level), 0);
+            prevEnergy = getCapacitor().getCurrentEnergy();
+        }
+    }
+
+    @Override
+    public void fromTag(BlockState state, CompoundTag tag) {
+        super.fromTag(state, tag);
+        prevEnergy = getCapacitor().getCurrentEnergy();
     }
 
     @Override

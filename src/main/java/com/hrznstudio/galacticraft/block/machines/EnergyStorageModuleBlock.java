@@ -23,6 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
@@ -57,12 +58,33 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock {
+    public static final Property<Integer> ENERGY_LEVEL = new Property<Integer>("energy_level", Integer.class) {
+        @Override
+        public Collection<Integer> getValues() {
+            return ImmutableList.of(0, 1, 2, 3, 4, 5, 6, 7, 8);
+        }
+
+        @Override
+        public String name(Integer value) {
+            return value.toString();
+        }
+
+        @Override
+        public Optional<Integer> parse(String name) {
+            try {
+                return Optional.of(Integer.valueOf(name));
+            } catch (NumberFormatException ignored) {
+            }
+            return Optional.empty();
+        }
+    };
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
@@ -157,6 +179,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock {
         builder.add(LEFT_SIDE_OPTION);
         builder.add(TOP_SIDE_OPTION);
         builder.add(BOTTOM_SIDE_OPTION);
+        builder.add(ENERGY_LEVEL);
     }
 
     @Override

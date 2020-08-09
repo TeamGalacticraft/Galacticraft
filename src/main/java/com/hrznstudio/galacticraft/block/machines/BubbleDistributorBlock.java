@@ -132,11 +132,6 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState blockState_1) {
-        return BlockRenderType.MODEL;
-    }
-
-    @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
         BlockEntity blockEntity = world.getBlockEntity(pos);
