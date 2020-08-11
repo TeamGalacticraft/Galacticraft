@@ -54,7 +54,7 @@ public class MoonBiomeSource extends BiomeSource {
     }
 
     @Override
-    protected Codec<? extends BiomeSource> method_28442() {
+    protected Codec<? extends BiomeSource> getCodec() {
         return CODEC;
     }
 

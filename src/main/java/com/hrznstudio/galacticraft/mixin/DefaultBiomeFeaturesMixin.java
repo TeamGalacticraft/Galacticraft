@@ -23,15 +23,8 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import net.minecraft.structure.rule.TagMatchRuleTest;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.world.biome.GenerationSettings;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.DefaultBiomeFeatures;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

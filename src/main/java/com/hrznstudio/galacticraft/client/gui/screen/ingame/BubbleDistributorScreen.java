@@ -178,6 +178,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             if (check(mouseX, mouseY, this.x + 156, this.y + 16, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 handler.blockEntity.bubbleVisible = !handler.blockEntity.bubbleVisible;
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.blockEntity.bubbleVisible)).writeBlockPos(this.handler.blockEntity.getPos())));
+                return true;
             }
 
             if (check(mouseX, mouseY, this.x + 158, this.y + 53, ARROW_WIDTH, ARROW_HEIGHT)) {
@@ -185,6 +186,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                     handler.blockEntity.setTargetSize((byte) (handler.blockEntity.getTargetSize() + 1));
                     textField.setText(handler.blockEntity.getTargetSize() + "");
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.blockEntity.getTargetSize())).writeBlockPos(this.handler.blockEntity.getPos())));
+                    return true;
                 }
             }
 
@@ -193,6 +195,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                     handler.blockEntity.setTargetSize((byte) (handler.blockEntity.getTargetSize() - 1));
                     textField.setText(handler.blockEntity.getTargetSize() + "");
                     MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.blockEntity.getTargetSize())).writeBlockPos(this.handler.blockEntity.getPos())));
+                    return true;
                 }
             }
         }

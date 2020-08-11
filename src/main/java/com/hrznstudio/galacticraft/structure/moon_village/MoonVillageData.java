@@ -32,8 +32,6 @@ import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.structure.pool.StructurePools;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.feature.BlockPileFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.feature.Feature;
 
 /**

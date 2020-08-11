@@ -52,13 +52,13 @@ public class TypeAwareBuyForOneEmeraldFactoryMixin {
     @Final
     private Map<VillagerType, Item> map;
 
-    @SuppressWarnings("UnnecessaryQualifiedMemberReference")
+    @SuppressWarnings({"UnnecessaryQualifiedMemberReference", "SpellCheckingInspection"})
     @Redirect(method = "Lnet/minecraft/village/TradeOffers$TypeAwareBuyForOneEmeraldFactory;<init>(IIILjava/util/Map;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/registry/DefaultedRegistry;stream()Ljava/util/stream/Stream;"))
     private Stream<VillagerType> skipCheck(DefaultedRegistry<VillagerType> defaultedRegistry) {
         return Stream.empty(); //skip check
     }
 
-    @SuppressWarnings("UnnecessaryQualifiedMemberReference")
+    @SuppressWarnings({"UnnecessaryQualifiedMemberReference", "SpellCheckingInspection"})
     @Inject(method = "Lnet/minecraft/village/TradeOffers$TypeAwareBuyForOneEmeraldFactory;<init>(IIILjava/util/Map;)V", at = @At(value = "RETURN"))
     private void addMoonVillagerTrades(int i, int j, int experience, Map<VillagerType, Item> map, CallbackInfo ci) {
         this.map = new HashMap<>(this.map);

@@ -50,7 +50,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -63,7 +62,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -82,26 +80,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableElectricMachineBlock im
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
 
     public AdvancedSolarPanelBlock(Settings settings) {
-        super(settings);
-    }
-
-    @Override
-    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
-        switch (direction) {
-            case FRONT:
-                return FRONT_SIDE_OPTION;
-            case RIGHT:
-                return RIGHT_SIDE_OPTION;
-            case LEFT:
-                return LEFT_SIDE_OPTION;
-            case BACK:
-                return BACK_SIDE_OPTION;
-            case TOP:
-                return TOP_SIDE_OPTION;
-            case BOTTOM:
-                return BOTTOM_SIDE_OPTION;
-        }
-        throw new AssertionError();
+        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
     @Override

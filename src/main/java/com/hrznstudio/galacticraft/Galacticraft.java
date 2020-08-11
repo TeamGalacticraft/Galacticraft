@@ -119,9 +119,7 @@ public class Galacticraft implements ModInitializer {
             ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
         });
 
-        CelestialBodyRegistryCallback.EVENT.register(registry -> {
-            Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
-        });
+        CelestialBodyRegistryCallback.EVENT.register(registry -> Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON));
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

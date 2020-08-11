@@ -46,7 +46,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -58,12 +57,40 @@ import java.util.List;
  */
 public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements WireConnectable {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    private final Property<SideOption> front;
+    private final Property<SideOption> back;
+    private final Property<SideOption> left;
+    private final Property<SideOption> right;
+    private final Property<SideOption> top;
+    private final Property<SideOption> bottom;
 
-    public ConfigurableElectricMachineBlock(Settings settings) {
+    public ConfigurableElectricMachineBlock(Settings settings, Property<SideOption> front, Property<SideOption> back, Property<SideOption> right, Property<SideOption> left, Property<SideOption> top, Property<SideOption> bottom) {
         super(settings);
+        this.front = front;
+        this.back = back;
+        this.left = left;
+        this.right = right;
+        this.top = top;
+        this.bottom = bottom;
     }
 
-    public abstract Property<SideOption> getProperty(@NotNull BlockFace direction);
+    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
+        switch (direction) {
+            case FRONT:
+                return front;
+            case RIGHT:
+                return right;
+            case LEFT:
+                return left;
+            case BACK:
+                return back;
+            case TOP:
+                return top;
+            case BOTTOM:
+                return bottom;
+        }
+        throw new AssertionError();
+    }
 
     public final SideOption getOption(BlockState state, BlockFace direction) {
         return state.get(getProperty(direction));
@@ -112,11 +139,11 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
             List<Text> info = new ArrayList<>();
             char[] line = text instanceof TranslatableText ? I18n.translate(((TranslatableText) text).getKey()).toCharArray() : text.getString().toCharArray();
             int len = 0;
-            final int maxlen = 175;
+            final int maxLength = 175;
             StringBuilder builder = new StringBuilder();
             for (char c : line) {
                 len += MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(c));
-                if (c == ' ' && len >= maxlen) {
+                if (c == ' ' && len >= maxLength) {
                     len = 0;
                     info.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
                     builder = new StringBuilder();
@@ -220,11 +247,11 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
                         case EAST:
                             return FRONT;
                         case NORTH:
-                            return RIGHT;
+                            return LEFT;
                         case WEST:
                             return BACK;
                         case SOUTH:
-                            return LEFT;
+                            return RIGHT;
                     }
                     break;
                 case SOUTH:
@@ -244,11 +271,11 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
                         case WEST:
                             return FRONT;
                         case SOUTH:
-                            return RIGHT;
+                            return LEFT;
                         case EAST:
                             return BACK;
                         case NORTH:
-                            return LEFT;
+                            return RIGHT;
                     }
                     break;
             }

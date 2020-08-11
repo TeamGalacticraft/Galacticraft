@@ -3,7 +3,6 @@ package com.hrznstudio.galacticraft.client.render.entity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.entity.BubbleEntity;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;

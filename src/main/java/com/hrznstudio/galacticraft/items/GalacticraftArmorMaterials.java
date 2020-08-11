@@ -54,7 +54,7 @@ public enum GalacticraftArmorMaterials implements ArmorMaterial {
     private static final int[] baseDurability = {462, 672, 630, 546};
     private final String name;
     private final int durabilityMultiplier;
-    private final int[] protValues;
+    private final int[] protectionValues;
     private final int enchantability;
     private final SoundEvent equipSound;
     private final float toughness;
@@ -64,7 +64,7 @@ public enum GalacticraftArmorMaterials implements ArmorMaterial {
     GalacticraftArmorMaterials(String name, int durabilityMultiplier, int[] armorValueArr, int enchantability, SoundEvent soundEvent, float toughness, Supplier<Ingredient> repairIngredient, float knockbackResistance) {
         this.name = name;
         this.durabilityMultiplier = durabilityMultiplier;
-        this.protValues = armorValueArr;
+        this.protectionValues = armorValueArr;
         this.enchantability = enchantability;
         this.equipSound = soundEvent;
         this.toughness = toughness;
@@ -77,7 +77,7 @@ public enum GalacticraftArmorMaterials implements ArmorMaterial {
     }
 
     public int getProtectionAmount(EquipmentSlot equipmentSlot_1) {
-        return this.protValues[equipmentSlot_1.getEntitySlotId()];
+        return this.protectionValues[equipmentSlot_1.getEntitySlotId()];
     }
 
     public int getEnchantability() {

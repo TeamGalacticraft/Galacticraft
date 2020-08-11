@@ -40,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -72,7 +71,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     protected final ChunkRandom random;
     protected final BlockState defaultBlock;
     protected final BlockState defaultFluid;
-    protected final Supplier<ChunkGeneratorSettings> settingsSupplier;
+    protected final Supplier<ChunkGeneratorSettings> typeSupplier;
     private final int verticalNoiseResolution;
     private final int horizontalNoiseResolution;
     private final int noiseSizeX;
@@ -105,21 +104,21 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         super(biomeSource, biomeSource2, supplier.get().getStructuresConfig(), worldSeed);
         this.worldSeed = worldSeed;
         ChunkGeneratorSettings ChunkGeneratorSettings = supplier.get();
-        this.settingsSupplier = supplier;
-        GenerationShapeConfig generationShapeConfig = ChunkGeneratorSettings.getGenerationShapeConfig();
-        this.field_24779 = generationShapeConfig.getHeight();
-        this.verticalNoiseResolution = generationShapeConfig.getSizeVertical() * 4;
-        this.horizontalNoiseResolution = generationShapeConfig.getSizeHorizontal() * 4;
+        this.typeSupplier = supplier;
+        GenerationShapeConfig noiseConfig = ChunkGeneratorSettings.getGenerationShapeConfig();
+        this.field_24779 = noiseConfig.getHeight();
+        this.verticalNoiseResolution = noiseConfig.getSizeVertical() * 4;
+        this.horizontalNoiseResolution = noiseConfig.getSizeHorizontal() * 4;
         this.defaultBlock = ChunkGeneratorSettings.getDefaultBlock();
         this.defaultFluid = ChunkGeneratorSettings.getDefaultFluid();
         this.noiseSizeX = 16 / this.horizontalNoiseResolution;
-        this.noiseSizeY = generationShapeConfig.getHeight() / this.verticalNoiseResolution;
+        this.noiseSizeY = noiseConfig.getHeight() / this.verticalNoiseResolution;
         this.noiseSizeZ = 16 / this.horizontalNoiseResolution;
         this.random = new ChunkRandom(worldSeed);
         this.lowerInterpolatedNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.upperInterpolatedNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
         this.interpolationNoise = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-7, 0));
-        this.surfaceDepthNoise = generationShapeConfig.hasSimplexSurfaceNoise() ? new OctaveSimplexNoiseSampler(this.random, IntStream.rangeClosed(-3, 0)) : new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-3, 0));
+        this.surfaceDepthNoise = noiseConfig.hasSimplexSurfaceNoise() ? new OctaveSimplexNoiseSampler(this.random, IntStream.rangeClosed(-3, 0)) : new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-3, 0));
         this.random.consume(2620);
         this.field_24776 = new OctavePerlinNoiseSampler(this.random, IntStream.rangeClosed(-15, 0));
     }
@@ -156,7 +155,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     @Override
     @Environment(EnvType.CLIENT)
     public ChunkGenerator withSeed(long seed) {
-        return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.settingsSupplier);
+        return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.typeSupplier);
     }
 
     private double sampleNoise(int x, int y, int z, double horizontalScale, double verticalScale, double horizontalStretch, double verticalStretch) {
@@ -200,8 +199,8 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     private void sampleNoiseColumn(double[] buffer, int x, int z) {
-        GenerationShapeConfig genShapeConfig = this.settingsSupplier.get().getGenerationShapeConfig();
-        double ac = 0;
+        GenerationShapeConfig noiseConfig = this.typeSupplier.get().getGenerationShapeConfig();
+        double ac;
         double ad;
         double ai;
         double aj;
@@ -218,7 +217,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 float p = biome.getScale();
                 float s;
                 float t;
-                if (genShapeConfig.isAmplified() && o > 0.0F) {
+                if (noiseConfig.isAmplified() && o > 0.0F) {
                     s = 1.0F + o * 2.0F;
                     t = 1.0F + p * 4.0F;
                 } else {
@@ -241,19 +240,19 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         ac = ai * 0.265625D;
         ad = 96.0D / aj;
 
-        double ae = 684.412D * genShapeConfig.getSampling().getXZScale();
-        double af = 684.412D * genShapeConfig.getSampling().getYScale();
-        double ag = ae / genShapeConfig.getSampling().getXZFactor();
-        double ah = af / genShapeConfig.getSampling().getYFactor();
-        ai = genShapeConfig.getTopSlide().getTarget();
-        aj = genShapeConfig.getTopSlide().getSize();
-        double ak = genShapeConfig.getTopSlide().getOffset();
-        double al = genShapeConfig.getBottomSlide().getTarget();
-        double am = genShapeConfig.getBottomSlide().getSize();
-        double an = genShapeConfig.getBottomSlide().getOffset();
-        double ao = genShapeConfig.hasRandomDensityOffset() ? this.method_28553(x, z) : 0.0D;
-        double ap = genShapeConfig.getDensityFactor();
-        double aq = genShapeConfig.getDensityOffset();
+        double ae = 684.412D * noiseConfig.getSampling().getXZScale();
+        double af = 684.412D * noiseConfig.getSampling().getYScale();
+        double ag = ae / noiseConfig.getSampling().getXZFactor();
+        double ah = af / noiseConfig.getSampling().getYFactor();
+        ai = noiseConfig.getTopSlide().getTarget();
+        aj = noiseConfig.getTopSlide().getSize();
+        final double ak = noiseConfig.getTopSlide().getOffset();
+        final double al = noiseConfig.getBottomSlide().getTarget();
+        final double am = noiseConfig.getBottomSlide().getSize();
+        final double an = noiseConfig.getBottomSlide().getOffset();
+        final double ao = noiseConfig.hasRandomDensityOffset() ? this.method_28553(x, z) : 0.0D;
+        final double ap = noiseConfig.getDensityFactor();
+        final double aq = noiseConfig.getDensityOffset();
 
         for (int ar = 0; ar <= this.noiseSizeY; ++ar) {
             double as = this.sampleNoise(x, ar, z, ae, af, ag, ah);
@@ -386,7 +385,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         int i = chunk.getPos().getStartX();
         int j = chunk.getPos().getStartZ();
-        ChunkGeneratorSettings ChunkGeneratorSettings = this.settingsSupplier.get();
+        ChunkGeneratorSettings ChunkGeneratorSettings = this.typeSupplier.get();
         int k = ChunkGeneratorSettings.getBedrockFloorY();
         int l = this.field_24779 - 1 - ChunkGeneratorSettings.getBedrockCeilingY();
         boolean bl = l + 4 >= 0 && l < this.field_24779;
@@ -436,36 +435,31 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 Iterator<StructurePiece> var6 = start.getChildren().iterator();
 
                 while (true) {
-                    while (true) {
-                        StructurePiece structurePiece;
-                        do {
-                            if (!var6.hasNext()) {
-                                return;
-                            }
-
-                            structurePiece = var6.next();
-                        } while (!structurePiece.intersectsChunk(chunkPos, 12));
-
-                        if (structurePiece instanceof PoolStructurePiece) {
-                            PoolStructurePiece poolStructurePiece = (PoolStructurePiece) structurePiece;
-                            StructurePool.Projection projection = poolStructurePiece.getPoolElement().getProjection();
-                            if (projection == StructurePool.Projection.RIGID) {
-                                objectList.add(poolStructurePiece);
-                            }
-
-                            Iterator var10 = poolStructurePiece.getJunctions().iterator();
-
-                            while (var10.hasNext()) {
-                                JigsawJunction jigsawJunction = (JigsawJunction) var10.next();
-                                int kx = jigsawJunction.getSourceX();
-                                int lx = jigsawJunction.getSourceZ();
-                                if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
-                                    objectList2.add(jigsawJunction);
-                                }
-                            }
-                        } else {
-                            objectList.add(structurePiece);
+                    StructurePiece structurePiece;
+                    do {
+                        if (!var6.hasNext()) {
+                            return;
                         }
+
+                        structurePiece = var6.next();
+                    } while (!structurePiece.intersectsChunk(chunkPos, 12));
+
+                    if (structurePiece instanceof PoolStructurePiece) {
+                        PoolStructurePiece poolStructurePiece = (PoolStructurePiece) structurePiece;
+                        StructurePool.Projection projection = poolStructurePiece.getPoolElement().getProjection();
+                        if (projection == StructurePool.Projection.RIGID) {
+                            objectList.add(poolStructurePiece);
+                        }
+
+                        for (JigsawJunction jigsawJunction : poolStructurePiece.getJunctions()) {
+                            int kx = jigsawJunction.getSourceX();
+                            int lx = jigsawJunction.getSourceZ();
+                            if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
+                                objectList2.add(jigsawJunction);
+                            }
+                        }
+                    } else {
+                        objectList.add(structurePiece);
                     }
                 }
             });

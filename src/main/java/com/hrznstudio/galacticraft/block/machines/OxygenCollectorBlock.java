@@ -45,7 +45,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -56,9 +55,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -73,7 +70,7 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
 
     public OxygenCollectorBlock(Settings settings) {
-        super(settings);
+        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -103,25 +100,6 @@ public class OxygenCollectorBlock extends ConfigurableElectricMachineBlock {
         });
 
         return ActionResult.SUCCESS;
-    }
-
-    @Override
-    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
-        switch (direction) {
-            case FRONT:
-                return FRONT_SIDE_OPTION;
-            case RIGHT:
-                return RIGHT_SIDE_OPTION;
-            case LEFT:
-                return LEFT_SIDE_OPTION;
-            case BACK:
-                return BACK_SIDE_OPTION;
-            case TOP:
-                return TOP_SIDE_OPTION;
-            case BOTTOM:
-                return BOTTOM_SIDE_OPTION;
-        }
-        throw new AssertionError();
     }
 
     @Override
