@@ -153,7 +153,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             List<OrderedText> toolTipLines = new ArrayList<>();
             toolTipLines.addAll(client.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf(handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)), 10000));
             toolTipLines.addAll(client.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(handler.blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100.0D))).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.RED)), 10000));
-            this.renderTooltip(matrices, toolTipLines, mouseX, mouseY);
+            this.renderOrderedTooltip(matrices, toolTipLines, mouseX, mouseY);
         }
     }
 

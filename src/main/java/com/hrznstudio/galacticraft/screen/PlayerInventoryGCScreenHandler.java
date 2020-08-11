@@ -71,7 +71,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             int finalSlotY = slotY;
             this.addSlot(new Slot(this.inventory, finalSlotY, 8, 8 + slotY * 18) {
                 @Override
-                public int getMaxStackAmount() {
+                public int getMaxItemCount() {
                     return 1;
                 }
 
@@ -159,7 +159,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
 
         @Override
-        public int getMaxStackAmount() {
+        public int getMaxItemCount() {
             return 1;
         }
 

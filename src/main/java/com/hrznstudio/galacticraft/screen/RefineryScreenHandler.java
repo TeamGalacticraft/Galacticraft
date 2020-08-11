@@ -54,7 +54,7 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
             }
 
             @Override
-            public int getMaxStackAmount() {
+            public int getMaxItemCount() {
                 return 1;
             }
         });
@@ -65,7 +65,7 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
             }
 
             @Override
-            public int getMaxStackAmount() {
+            public int getMaxItemCount() {
                 return 1;
             }
         });

@@ -123,7 +123,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
             List<OrderedText> toolTipLines = new ArrayList<>();
             toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)).asOrderedText());
-            this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
+            this.renderOrderedTooltip(stack, toolTipLines, mouseX, mouseY);
         }
     }
 }
