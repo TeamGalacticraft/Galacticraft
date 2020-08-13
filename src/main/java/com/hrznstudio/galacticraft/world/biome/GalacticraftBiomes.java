@@ -25,11 +25,13 @@ package com.hrznstudio.galacticraft.world.biome;
 
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 
 import java.util.List;
 import java.util.Objects;
@@ -61,12 +63,12 @@ public class GalacticraftBiomes {
         }
 
         private static void init() {
-            Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_PLAINS), createMoonHighlandsBiome(MOON_HIGHLANDS_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.04F, 0.01F));
-            Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_ROCKS), createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, 0.6F, 0.007F, 0.0001F));
-            Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_VALLEY), createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, -0.5F, 0.03F, 0.005F));
-            Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_PLAINS), createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.03F, 0.005F));
-            Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_ROCKS), createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.7F, 0.01F, 0.003F));
-            Registry.register(BuiltinRegistries.BIOME, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_VALLEY), createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, -0.6F, 0.03F, 0.004F));
+            Biomes.register(70, HIGHLANDS_PLAINS, createMoonHighlandsBiome(MOON_HIGHLANDS_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.04F, 0.01F));
+            Biomes.register(71, HIGHLANDS_ROCKS, createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, 0.6F, 0.007F, 0.0001F));
+            Biomes.register(72, HIGHLANDS_VALLEY, createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, -0.5F, 0.03F, 0.005F));
+            Biomes.register(73, MARE_PLAINS, createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.03F, 0.005F));
+            Biomes.register(74, MARE_ROCKS, createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.7F, 0.01F, 0.003F));
+            Biomes.register(75, MARE_VALLEY, createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, -0.6F, 0.03F, 0.004F));
         }
     }
 

@@ -24,22 +24,29 @@
 package com.hrznstudio.galacticraft.tag;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.fabricmc.fabric.api.tag.TagRegistry;
+import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftTags {
-    public static final Tag<Fluid> OIL = TagRegistry.fluid(new Identifier(Constants.MOD_ID, "oil"));
-    public static final Tag<Fluid> FUEL = TagRegistry.fluid(new Identifier(Constants.MOD_ID, "fuel"));
-    public static final Tag<Fluid> OXYGEN = TagRegistry.fluid(new Identifier(Constants.MOD_ID, "oxygen"));
+    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(Constants.MOD_ID, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(Constants.MOD_ID, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> OXYGEN = TagRegistry.create(new Identifier(Constants.MOD_ID, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
 
-    public static final Tag<Block> INFINIBURN_MOON = TagRegistry.block(new Identifier(Constants.MOD_ID, "infiniburn_moon"));
-    public static final Tag<Block> MOON_STONE = TagRegistry.block(new Identifier(Constants.MOD_ID, "moon_stone"));
+    public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
+    public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constants.MOD_ID, "moon_stone"), BlockTags::getTagGroup);
 
     public static void register() {
     }

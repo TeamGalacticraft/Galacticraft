@@ -430,7 +430,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         int k = i << 4;
         int l = j << 4;
 
-        for (StructureFeature<?> feature : StructureFeature.field_24861) {
+        for (StructureFeature<?> feature : StructureFeature.JIGSAW_STRUCTURES) {
             accessor.getStructuresWithChildren(ChunkSectionPos.from(chunkPos, 0), feature).forEach((start) -> {
                 Iterator<StructurePiece> var6 = start.getChildren().iterator();
 

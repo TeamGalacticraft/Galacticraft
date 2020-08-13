@@ -41,9 +41,9 @@ public class StructureFeatureMixin {
     @Mutable
     @Shadow
     @Final
-    public static List<StructureFeature<?>> field_24861 = addGCJigsawStructures();
+    public static List<StructureFeature<?>> JIGSAW_STRUCTURES = addGCJigsawStructures();
 
     private static List<StructureFeature<?>> addGCJigsawStructures() {
-        return ImmutableList.<StructureFeature<?>>builder().addAll(StructureFeature.field_24861).add(GalacticraftStructures.MOON_VILLAGE).build();
+        return ImmutableList.<StructureFeature<?>>builder().addAll(StructureFeature.JIGSAW_STRUCTURES).add(GalacticraftStructures.MOON_VILLAGE).build();
     }
 }

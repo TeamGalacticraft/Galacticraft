@@ -88,6 +88,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBlocks.register();
         GalacticraftBlockEntities.init();
         GalacticraftItems.register();
+        GalacticraftTags.register();
         GalacticraftRecipes.register();
         GalacticraftEntityTypes.register();
         GalacticraftLootTables.register();
@@ -102,7 +103,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftEnergy.register();
         GalacticraftPackets.register();
         GalacticraftSounds.register();
-        GalacticraftTags.register();
+
         GalacticraftPointOfInterestType.register();
         MoonVillageData.register();
         MoonVillagerType.register();
