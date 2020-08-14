@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.block.environment;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.WallTorchBlock;
 import net.minecraft.client.gui.screen.Screen;
@@ -47,7 +46,7 @@ import java.util.Random;
  */
 public class GlowstoneWallTorchBlock extends WallTorchBlock {
 
-    public GlowstoneWallTorchBlock(Block.Settings settings) {
+    public GlowstoneWallTorchBlock(Settings settings) {
         super(settings, null);
     }
 
@@ -58,7 +57,7 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public void buildTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
             list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_torch").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
         } else {

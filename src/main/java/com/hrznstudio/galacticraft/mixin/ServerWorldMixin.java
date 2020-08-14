@@ -25,13 +25,17 @@ package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
 import com.hrznstudio.galacticraft.api.wire.NetworkManager;
-import com.hrznstudio.galacticraft.energy.EnergyUtils;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -40,6 +44,7 @@ import java.util.function.BooleanSupplier;
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin implements ServerWorldAccessor {
 
+    @Shadow @Final private List<ServerPlayerEntity> players;
     private final NetworkManager networkManager = new NetworkManager();
 
     @Inject(method = "tick", at = @At("TAIL"))

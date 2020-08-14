@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.block.environment;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.WallTorchBlock;
@@ -45,7 +44,7 @@ import java.util.Random;
  */
 public class UnlitWallTorchBlock extends WallTorchBlock {
 
-    public UnlitWallTorchBlock(Block.Settings settings) {
+    public UnlitWallTorchBlock(Settings settings) {
         super(settings, null);
     }
 

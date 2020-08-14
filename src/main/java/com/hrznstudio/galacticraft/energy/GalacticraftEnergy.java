@@ -24,14 +24,15 @@
 package com.hrznstudio.galacticraft.energy;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
+import io.github.cottonmc.component.fluid.TankComponent;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ElectricalEnergyType;
 import io.github.cottonmc.component.energy.impl.WUEnergyType;
 import io.github.cottonmc.component.energy.type.EnergyType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -41,21 +42,22 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    public static final GalacticraftJoules GALACTICRAFT_JOULES = new GalacticraftJoules();
+    public static final GalacticraftJoules GALACTICRAFT_JOULES = Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), new GalacticraftJoules());
 
     public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = EnergyUtils::isEnergyItem;
 
     public static void register() {
-        Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), GALACTICRAFT_JOULES);
     }
 
     public static boolean isOxygenItem(ItemStack stack) {
-        if (!stack.hasTag()) {
-            return false;
+        ComponentProvider provider = ComponentProvider.fromItemStack(stack);
+        if (provider.hasComponent(UniversalComponents.TANK_COMPONENT)) {
+            TankComponent component = provider.getComponent(UniversalComponents.TANK_COMPONENT);
+            if (component != null) {
+                return component.contains(GalacticraftFluids.OXYGEN);
+            }
         }
-
-        CompoundTag tag = stack.getTag() == null ? new CompoundTag() : stack.getTag();
-        return tag.contains(OxygenTankItem.OXYGEN_NBT_KEY) && tag.contains(OxygenTankItem.MAX_OXYGEN_NBT_KEY);
+        return false;
     }
 
     /**

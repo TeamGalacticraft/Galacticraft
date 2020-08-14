@@ -28,8 +28,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.minecraft.command.arguments.DimensionArgumentType;
-import net.minecraft.command.arguments.EntityArgumentType;
+import net.minecraft.command.argument.DimensionArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -66,40 +66,43 @@ public class GalacticraftCommands {
     }
 
     private static int teleport(CommandContext<ServerCommandSource> context) {
-        try {
-            ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
-            if (serverWorld == null) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-                return -1;
+        context.getSource().getMinecraftServer().execute(() -> {
+            try {
+                ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                if (serverWorld == null) {
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                    return;
+                }
+
+                context.getSource().getPlayer().moveToWorld(serverWorld);
+                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
+
+            } catch (CommandSyntaxException ignore) {
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
             }
-
-            context.getSource().getPlayer().changeDimension(serverWorld);
-            context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
-
-        } catch (CommandSyntaxException ignore) {
-            context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-            return -1;
-        }
+        });
         return -1;
     }
 
     private static int teleportMultiple(CommandContext<ServerCommandSource> context) {
-        try {
-            ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
-            if (serverWorld == null) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-                return -1;
-            }
+        context.getSource().getMinecraftServer().execute(() -> {
 
-            Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
-            entities.forEach((Consumer<Entity>) entity -> {
-                entity.changeDimension(serverWorld);
-                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
-            });
-        } catch (CommandSyntaxException ignore) {
-            context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-            return -1;
-        }
+            try {
+                ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                if (serverWorld == null) {
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                    return;
+                }
+
+                Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
+                entities.forEach((Consumer<Entity>) entity -> {
+                    entity.moveToWorld(serverWorld);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
+                });
+            } catch (CommandSyntaxException ignore) {
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            }
+        });
         return -1;
     }
 }

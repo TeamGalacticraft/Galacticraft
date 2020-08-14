@@ -23,6 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
@@ -56,12 +57,33 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock {
+    public static final Property<Integer> ENERGY_LEVEL = new Property<Integer>("energy_level", Integer.class) {
+        @Override
+        public Collection<Integer> getValues() {
+            return ImmutableList.of(0, 1, 2, 3, 4, 5, 6, 7, 8);
+        }
+
+        @Override
+        public String name(Integer value) {
+            return value.toString();
+        }
+
+        @Override
+        public Optional<Integer> parse(String name) {
+            try {
+                return Optional.of(Integer.valueOf(name));
+            } catch (NumberFormatException ignored) {
+            }
+            return Optional.empty();
+        }
+    };
     private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
     private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
@@ -70,7 +92,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.POWER_INPUT);
 
     public EnergyStorageModuleBlock(Settings settings) {
-        super(settings);
+        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -103,27 +125,8 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
-        switch (direction) {
-            case FRONT:
-                return FRONT_SIDE_OPTION;
-            case RIGHT:
-                return RIGHT_SIDE_OPTION;
-            case LEFT:
-                return LEFT_SIDE_OPTION;
-            case BACK:
-                return BACK_SIDE_OPTION;
-            case TOP:
-                return TOP_SIDE_OPTION;
-            case BOTTOM:
-                return BOTTOM_SIDE_OPTION;
-        }
-        throw new AssertionError();
-    }
-
-    @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(Style.EMPTY.withColor(Formatting.GRAY));
+        return new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override
@@ -156,6 +159,7 @@ public class EnergyStorageModuleBlock extends ConfigurableElectricMachineBlock {
         builder.add(LEFT_SIDE_OPTION);
         builder.add(TOP_SIDE_OPTION);
         builder.add(BOTTOM_SIDE_OPTION);
+        builder.add(ENERGY_LEVEL);
     }
 
     @Override

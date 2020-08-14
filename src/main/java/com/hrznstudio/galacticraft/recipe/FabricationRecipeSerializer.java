@@ -24,6 +24,7 @@
 package com.hrznstudio.galacticraft.recipe;
 
 import com.google.gson.JsonObject;
+import com.hrznstudio.galacticraft.recipe.FabricationRecipeSerializer.RecipeFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;
@@ -38,7 +39,7 @@ import net.minecraft.util.registry.Registry;
 public class FabricationRecipeSerializer<T extends FabricationRecipe> implements RecipeSerializer<T> {
     private final RecipeFactory<T> recipeFactory;
 
-    public FabricationRecipeSerializer(FabricationRecipeSerializer.RecipeFactory<T> factory) {
+    public FabricationRecipeSerializer(RecipeFactory<T> factory) {
         this.recipeFactory = factory;
     }
 

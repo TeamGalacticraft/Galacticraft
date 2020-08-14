@@ -49,7 +49,7 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
         addProperty(status);
         addProperty(progress);
 
-        // 3x3 comprerssor input grid
+        // 3x3 compressor input grid
         int slot = 0;
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {

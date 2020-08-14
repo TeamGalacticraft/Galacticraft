@@ -10,7 +10,6 @@ Contributing
         * Generally you should explicitly use `this`.
         * Generally you should use braces { } following `if ()` and `for ()` statements, even if it is only one line.
         * Interfaces - do not put the prefix 'I' on the file name (example `Rotatable`, not `IRotatable`)
-        * For everyone's sake _**PLEASE**_ use `@Override`.
     * JSON
         * 2 Spaces indent (NO TABS)
         * Keep arrays on the same line (do not wrap)

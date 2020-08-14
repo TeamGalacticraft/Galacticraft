@@ -23,43 +23,42 @@
 
 package com.hrznstudio.galacticraft.structure.moon_village;
 
+import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructureManager;
 import net.minecraft.structure.StructureStart;
-import net.minecraft.structure.pool.*;
+import net.minecraft.structure.pool.StructurePoolBasedGenerator;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public class MoonVillageStart extends StructureStart<StructurePoolFeatureConfig> {
-
 
     public MoonVillageStart(StructureFeature<StructurePoolFeatureConfig> structureFeature, int chunkX, int chunkZ, BlockBox blockBox, int i, long l) {
         super(structureFeature, chunkX, chunkZ, blockBox, i, l);
     }
 
     @Override
-    public void init(ChunkGenerator chunkGenerator, StructureManager structureManager, int x, int z, Biome biome, StructurePoolFeatureConfig featureConfig) {
-        StructurePoolBasedGenerator.addPieces(featureConfig.startPool, featureConfig.size, MoonVillagePiece::new, chunkGenerator, structureManager, new BlockPos(x * 16, 0, z * 16), this.children, random, true, true);
+    public void init(DynamicRegistryManager manager, ChunkGenerator chunkGenerator, StructureManager structureManager, int chunkX, int chunkZ, Biome biome, StructurePoolFeatureConfig featureConfig) {
+        BlockPos blockPos = new BlockPos(chunkX << 4, 0, chunkZ << 4);
+        StructurePoolBasedGenerator.method_30419(manager, featureConfig, PoolStructurePiece::new, chunkGenerator, structureManager, blockPos, this.children, this.random, true, true);
         this.setBoundingBoxFromChildren();
     }
 
     @Override
     protected void setBoundingBoxFromChildren() {
         super.setBoundingBoxFromChildren();
-        BlockBox box = this.boundingBox;
-        box.minX -= 12;
-        box = this.boundingBox;
-        box.minY -= 12;
-        box = this.boundingBox;
-        box.minZ -= 12;
-        box = this.boundingBox;
-        box.maxX += 12;
-        box = this.boundingBox;
-        box.maxY += 12;
-        box = this.boundingBox;
-        box.maxZ += 12;
+        this.boundingBox.minX -= 12;
+        this.boundingBox.minY -= 12;
+        this.boundingBox.minZ -= 12;
+        this.boundingBox.maxX += 12;
+        this.boundingBox.maxY += 12;
+        this.boundingBox.maxZ += 12;
     }
 }

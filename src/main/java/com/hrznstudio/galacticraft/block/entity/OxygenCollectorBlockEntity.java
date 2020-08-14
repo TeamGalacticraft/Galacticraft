@@ -30,7 +30,7 @@ import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
@@ -60,7 +60,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
     private final SimpleTankComponent tank = new SimpleTankComponent(1, MAX_OXYGEN) {
         @Override
         public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftFluidTags.OXYGEN)) {
+            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
                 return super.insertFluid(tank, fluid, action);
             } else {
                 return fluid;
@@ -69,7 +69,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
         @Override
         public void setFluid(int slot, FluidVolume stack) {
-            if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftFluidTags.OXYGEN)) {
+            if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftTags.OXYGEN)) {
                 super.setFluid(slot, stack);
             }
         }

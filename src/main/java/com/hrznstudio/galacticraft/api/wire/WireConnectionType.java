@@ -23,6 +23,9 @@
 
 package com.hrznstudio.galacticraft.api.wire;
 
+/**
+ * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
+ */
 public enum WireConnectionType {
     /**
      * The wire is not connected to anything.

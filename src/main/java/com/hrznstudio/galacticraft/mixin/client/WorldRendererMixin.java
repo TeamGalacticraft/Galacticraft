@@ -24,7 +24,8 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.biome.moon.mare.MoonMareBiome;
+import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
+import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
@@ -70,9 +71,12 @@ public abstract class WorldRendererMixin {
     @Final
     private VertexFormat skyVertexFormat;
 
-    @Shadow private double lastCameraX;
-    @Shadow private double lastCameraY;
-    @Shadow private double lastCameraZ;
+    @Shadow
+    private double lastCameraX;
+    @Shadow
+    private double lastCameraY;
+    @Shadow
+    private double lastCameraZ;
     private VertexBuffer starBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")
@@ -91,7 +95,7 @@ public abstract class WorldRendererMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
-    private void renderSkyGC(MatrixStack matricies, float delta, CallbackInfo ci) {
+    private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
             RenderSystem.disableTexture();
             RenderSystem.disableFog();
@@ -106,31 +110,31 @@ public abstract class WorldRendererMixin {
 
 //            this.lightSkyBufferMoon.bind();
 //            this.skyVertexFormat.startDrawing(0L);
-//            this.lightSkyBufferMoon.draw(matricies.peek().getModel(), 7);
+//            this.lightSkyBufferMoon.draw(matrices.peek().getModel(), 7);
 //            VertexBuffer.unbind();
 //            this.skyVertexFormat.endDrawing();
 
-            matricies.push();
-            matricies.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(delta) * 360.0F));
-            matricies.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
+            matrices.push();
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-19.0F));
             RenderSystem.color4f(1.0F, 0.95F, 0.9F, starBrightness); //browner stars?
 
             this.starBufferMoon.bind();
             this.skyVertexFormat.startDrawing(0L);
-            this.starBufferMoon.draw(matricies.peek().getModel(), 7);
+            this.starBufferMoon.draw(matrices.peek().getModel(), 7);
             VertexBuffer.unbind();
             this.skyVertexFormat.endDrawing();
 
-            matricies.pop();
-            matricies.push();
+            matrices.pop();
+            matrices.push();
 
-            matricies.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngle(delta) * 360.0F));
+            matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(this.world.getSkyAngleRadians(delta) * 360.0F));
 
             RenderSystem.disableTexture();
 
-            Matrix4f matrix = matricies.peek().getModel();
+            Matrix4f matrix = matrices.peek().getModel();
             RenderSystem.enableTexture();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             float size = 15.0F;
@@ -143,17 +147,17 @@ public abstract class WorldRendererMixin {
             buffer.end();
             BufferRenderer.draw(buffer);
 
-            matricies.pop();
+            matrices.pop();
 
-            matricies.push();
-            matrix = matricies.peek().getModel();
+            matrices.push();
+            matrix = matrices.peek().getModel();
 
             size = 10.0F;
             assert client.player != null;
             float earthRotation = (float) (this.world.getSpawnPos().getZ() - client.player.getZ()) * 0.01F;
-            matricies.scale(0.6F, 0.6F, 0.6F);
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngle(delta) * 360.0F) * 0.001F));
-            matricies.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
+            matrices.scale(0.6F, 0.6F, 0.6F);
+            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion((this.world.getSkyAngleRadians(delta) * 360.0F) * 0.001F));
+            matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(earthRotation + 200.0F));
 
             client.getTextureManager().bindTexture(EARTH_TEXTURE);
 
@@ -165,7 +169,7 @@ public abstract class WorldRendererMixin {
             buffer.end();
             BufferRenderer.draw(buffer);
 
-            matricies.pop();
+            matrices.pop();
 
             RenderSystem.enableRescaleNormal();
             RenderSystem.disableTexture();
@@ -181,14 +185,15 @@ public abstract class WorldRendererMixin {
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/SkyProperties;useThickFog(II)Z"))
     private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
         if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
-            return client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ)) instanceof MoonMareBiome;
+            //noinspection ConstantConditions
+            return ((GCBiomePropertyAccessor)(Object) client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ))).getProperty(GalacticraftBiomeProperties.IS_MARE);
         }
         return skyProperties.useThickFog(camX, camY);
     }
 
     @Unique
     private float getStarBrightness(float delta) {
-        final float var2 = this.world.getSkyAngle(delta);
+        final float var2 = this.world.getSkyAngleRadians(delta);
         float var3 = 1.0F - (MathHelper.cos((float) (var2 * Math.PI * 2.0D) * 2.0F + 0.25F));
 
         if (var3 < 0.0F) {

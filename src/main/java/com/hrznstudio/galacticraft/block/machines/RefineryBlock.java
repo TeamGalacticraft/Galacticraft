@@ -44,17 +44,16 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-
-import javax.annotation.Nonnull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -68,31 +67,12 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock {
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
 
     public RefineryBlock(Settings settings) {
-        super(settings);
+        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
     @Override
     public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new RefineryBlockEntity();
-    }
-
-    @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
-        switch (direction) {
-            case FRONT:
-                return FRONT_SIDE_OPTION;
-            case RIGHT:
-                return RIGHT_SIDE_OPTION;
-            case LEFT:
-                return LEFT_SIDE_OPTION;
-            case BACK:
-                return BACK_SIDE_OPTION;
-            case TOP:
-                return TOP_SIDE_OPTION;
-            case BOTTOM:
-                return BOTTOM_SIDE_OPTION;
-        }
-        throw new AssertionError();
     }
 
     @Override
@@ -179,7 +159,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.refinery");
+        return new TranslatableText("tooltip.galacticraft-rewoven.refinery").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

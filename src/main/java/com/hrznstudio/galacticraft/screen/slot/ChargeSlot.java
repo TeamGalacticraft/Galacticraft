@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.screen.slot;
 
-import com.hrznstudio.galacticraft.energy.EnergyUtils;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -37,7 +37,7 @@ public class ChargeSlot extends Slot {
     }
 
     @Override
-    public int getMaxStackAmount() {
+    public int getMaxItemCount() {
         return 1;
     }
 

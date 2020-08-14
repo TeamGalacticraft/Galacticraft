@@ -24,6 +24,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
 import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
@@ -32,25 +33,28 @@ import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.entity.attribute.GalacticraftDefaultAttributes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
+import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
 import com.hrznstudio.galacticraft.network.GalacticraftPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
-import com.hrznstudio.galacticraft.structure.GalacticraftStructurePieceTypes;
-import com.hrznstudio.galacticraft.tag.GalacticraftFluidTags;
+import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
+import com.hrznstudio.galacticraft.village.MoonVillagerType;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
-import com.hrznstudio.galacticraft.world.gen.stateprovider.GalacticraftBlockStateProviderTypes;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
+import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
 import com.mojang.serialization.Lifecycle;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
@@ -62,7 +66,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.village.VillagerProfession;
-import net.minecraft.village.VillagerType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -71,8 +74,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class Galacticraft implements ModInitializer {
 
-    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_prof")), Lifecycle.stable());
-    public static final Registry<VillagerType> MOON_VILLAGER_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_type")), Lifecycle.stable());
+    public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
+    public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
@@ -84,25 +87,28 @@ public class Galacticraft implements ModInitializer {
         logger.info("[Galacticraft] Starting initialization.");
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
-        GalacticraftItems.register();
-        GalacticraftParticles.register();
-        GalacticraftRecipes.register();
-        GalacticraftSounds.register();
-        GalacticraftEnergy.register();
-        GalacticraftEntityTypes.register();
-        GalacticraftDefaultAttributes.register();
-        GalacticraftScreenHandlerTypes.register();
-        GalacticraftCommands.register();
         GalacticraftBlockEntities.init();
-        GalacticraftBlockStateProviderTypes.register();
-        GalacticraftStructurePieceTypes.register();
+        GalacticraftItems.register();
+        GalacticraftTags.register();
+        GalacticraftRecipes.register();
+        GalacticraftEntityTypes.register();
+        GalacticraftLootTables.register();
         GalacticraftFeatures.register();
+        GalacticraftSurfaceBuilders.register();
         GalacticraftBiomes.register();
         GalacticraftBiomeSources.register();
         GalacticraftDimensions.register();
-        GalacticraftSurfaceBuilders.register();
+        GalacticraftScreenHandlerTypes.register();
+        GalacticraftParticles.register();
+        GalacticraftCommands.register();
+        GalacticraftEnergy.register();
         GalacticraftPackets.register();
-        GalacticraftFluidTags.register();
+        GalacticraftSounds.register();
+        GalacticraftBannerPatterns.register();
+        GalacticraftPointOfInterestType.register();
+        MoonVillageData.register();
+        MoonVillagerType.register();
+        GalacticraftVillagerProfessions.register();
 
         AtmosphericGasRegistryCallback.EVENT.register(registry -> {
             Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
@@ -115,9 +121,7 @@ public class Galacticraft implements ModInitializer {
             ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
         });
 
-        CelestialBodyRegistryCallback.EVENT.register(registry -> {
-            Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
-        });
+        CelestialBodyRegistryCallback.EVENT.register(registry -> Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON));
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

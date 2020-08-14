@@ -50,10 +50,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Property;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -62,7 +63,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 
-import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,26 +80,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
     private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT);
 
     public BasicSolarPanelBlock(Settings settings) {
-        super(settings);
-    }
-
-    @Override
-    public Property<SideOption> getProperty(@Nonnull BlockFace direction) {
-        switch (direction) {
-            case FRONT:
-                return FRONT_SIDE_OPTION;
-            case RIGHT:
-                return RIGHT_SIDE_OPTION;
-            case LEFT:
-                return LEFT_SIDE_OPTION;
-            case BACK:
-                return BACK_SIDE_OPTION;
-            case TOP:
-                return TOP_SIDE_OPTION;
-            case BOTTOM:
-                return BOTTOM_SIDE_OPTION;
-        }
-        throw new AssertionError();
+        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -260,7 +241,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public void onPlaced(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
-        BlockState defaultState = GalacticraftBlocks.GENERIC_MULTIBLOCK_PART.getDefaultState();
+        BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
         for (BlockPos otherPart : getOtherParts(state, basePos)) {
             world.setBlockState(otherPart, defaultState);
 
@@ -290,7 +271,7 @@ public class BasicSolarPanelBlock extends ConfigurableElectricMachineBlock imple
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel");
+        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override

@@ -4,15 +4,20 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
+    "BiomeMixin",
+    "DefaultBiomeFeaturesMixin",
     "DimensionOptionsMixin",
     "DimensionTypeMixin",
     "EntityAttributeInstanceAccessor",
+    "EntityMixin",
     "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerWorldMixin",
+    "StructureFeatureMixin",
     "StructurePoolGeneratorMixin",
+    "StructuresConfigMixin",
     "TorchBlockMixin",
     "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],
@@ -24,7 +29,7 @@
     "client.PlayerInventoryScreenMixin",
     "client.WorldRendererMixin"
   ],
-  "minVersion": "0.1.0",
+  "minVersion": "0.8.0",
   "injectors": {
     "defaultRequire": 1
   }

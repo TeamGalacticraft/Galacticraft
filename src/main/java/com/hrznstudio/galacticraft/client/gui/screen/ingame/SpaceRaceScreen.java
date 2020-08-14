@@ -257,7 +257,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack stack, int x, int y, float dleta) {
+    public void render(MatrixStack stack, int x, int y, float delta) {
         this.renderBackground(stack);
 
         if (this.isAnimationComplete()) {
@@ -265,7 +265,7 @@ public class SpaceRaceScreen extends Screen {
             this.drawMouseoverTooltip(stack, x, y);
         }
 
-        super.render(stack, x, y, dleta);
+        super.render(stack, x, y, delta);
 
 //        this.mouseX = (float) x;
 //        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
@@ -386,7 +386,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(stack, text.asOrderedText(), x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private int getYMargins() {
@@ -411,7 +411,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(stack, text.asOrderedText(), x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private enum Menu {

@@ -36,15 +36,15 @@ public class GalacticraftScreenHandlerTypes {
     public static final Identifier BASIC_SOLAR_PANEL_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BASIC_SOLAR_SCREEN_HANDLER);
     public static final ScreenHandlerType<BasicSolarPanelScreenHandler> BASIC_SOLAR_PANEL_HANDLER =
             ScreenHandlerRegistry.registerExtended(
-                BASIC_SOLAR_PANEL_HANDLER_ID,
-                BasicSolarPanelScreenHandler::new
+                    BASIC_SOLAR_PANEL_HANDLER_ID,
+                    BasicSolarPanelScreenHandler::new
             );
 
     public static final Identifier ADVANCED_SOLAR_PANEL_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ADVANCED_SOLAR_SCREEN_HANDLER);
     public static final ScreenHandlerType<AdvancedSolarPanelScreenHandler> ADVANCED_SOLAR_PANEL_HANDLER =
             ScreenHandlerRegistry.registerExtended(
-                ADVANCED_SOLAR_PANEL_HANDLER_ID,
-                AdvancedSolarPanelScreenHandler::new
+                    ADVANCED_SOLAR_PANEL_HANDLER_ID,
+                    AdvancedSolarPanelScreenHandler::new
             );
 
     public static final Identifier CIRCUIT_FABRICATOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.CIRCUIT_FABRICATOR_SCREEN_HANDLER);
@@ -102,6 +102,13 @@ public class GalacticraftScreenHandlerTypes {
                     REFINERY_HANDLER_ID,
                     RefineryScreenHandler::new
             );
+    public static final Identifier BUBBLE_DISTRIBUTOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
+    public static final ScreenHandlerType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    BUBBLE_DISTRIBUTOR_HANDLER_ID,
+                    BubbleDistributorScreenHandler::new
+            );
 
-    public static void register() {}
+    public static void register() {
+    }
 }
