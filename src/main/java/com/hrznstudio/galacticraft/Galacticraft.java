@@ -36,6 +36,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
+import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
 import com.hrznstudio.galacticraft.network.GalacticraftPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
@@ -103,7 +104,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftEnergy.register();
         GalacticraftPackets.register();
         GalacticraftSounds.register();
-
+        GalacticraftBannerPatterns.register();
         GalacticraftPointOfInterestType.register();
         MoonVillageData.register();
         MoonVillagerType.register();
