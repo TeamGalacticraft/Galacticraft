@@ -96,6 +96,13 @@ public class GalacticraftScreenHandlerTypes {
                     OxygenCompressorScreenHandler::new
             );
 
+    public static final Identifier OXYGEN_DECOMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenDecompressorScreenHandler> OXYGEN_DECOMPRESSOR_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_DECOMPRESSOR_HANDLER_ID,
+                    OxygenDecompressorScreenHandler::new
+            );
+
     public static final Identifier PLAYER_INVENTORY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
     public static final ScreenHandlerType<PlayerInventoryGCScreenHandler> PLAYER_INV_GC_HANDLER =
             ScreenHandlerRegistry.registerSimple(
@@ -109,6 +116,7 @@ public class GalacticraftScreenHandlerTypes {
                     REFINERY_HANDLER_ID,
                     RefineryScreenHandler::new
             );
+
     public static final Identifier BUBBLE_DISTRIBUTOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(

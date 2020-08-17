@@ -411,12 +411,14 @@ public class Constants {
         public static final String MACHINES = "config.galacticraft-rewoven.energy.machines";
         public static final String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate";
         public static final String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate";
-        public static final String CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
-        public static final String ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
-        public static final String OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
-        public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
+        public static final String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
+        public static final String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
+        public static final String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
         public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
         public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
+        public static final String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_compressor_energy_consumption_rate";
+        public static final String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_decompressor_energy_consumption_rate";
     }
 
     public static class Energy {
@@ -493,6 +495,7 @@ public class Constants {
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
         public static final String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
+        public static final String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
     }
 
     public static class Biomes {

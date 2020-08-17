@@ -79,4 +79,8 @@ public interface Config {
     int oxygenCompressorEnergyConsumptionRate();
 
     void setOxygenCompressorEnergyConsumptionRate(int amount);
+
+    int oxygenDecompressorEnergyConsumptionRate();
+
+    void setOxygenDecompressorEnergyConsumptionRate(int amount);
 }

@@ -123,6 +123,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER, OxygenCollectorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_COMPRESSOR_HANDLER, OxygenCompressorScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_DECOMPRESSOR_HANDLER, OxygenDecompressorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, PlayerInventoryGCScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
 

@@ -55,6 +55,8 @@ public class ConfigImpl implements Config {
     private int machineEnergyStorageSize = 30_000;
     @Expose
     private int oxygenCompressorEnergyConsumptionRate = 15;
+    @Expose
+    private int oxygenDecompressorEnergyConsumptionRate = 15;
 
     @Override
     public boolean isDebugLogEnabled() {
@@ -174,5 +176,15 @@ public class ConfigImpl implements Config {
     @Override
     public void setOxygenCompressorEnergyConsumptionRate(int amount) {
         this.oxygenCompressorEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public int oxygenDecompressorEnergyConsumptionRate() {
+        return oxygenDecompressorEnergyConsumptionRate;
+    }
+
+    @Override
+    public void setOxygenDecompressorEnergyConsumptionRate(int amount) {
+        this.oxygenDecompressorEnergyConsumptionRate = amount;
     }
 }

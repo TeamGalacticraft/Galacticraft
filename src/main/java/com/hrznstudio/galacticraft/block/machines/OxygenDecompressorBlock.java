@@ -26,8 +26,8 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.OxygenCompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.OxygenCompressorScreenHandler;
+import com.hrznstudio.galacticraft.block.entity.OxygenDecompressorBlockEntity;
+import com.hrznstudio.galacticraft.screen.OxygenDecompressorScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.Block;
@@ -58,15 +58,15 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCompressorBlock extends ConfigurableElectricMachineBlock {
-    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
+public class OxygenDecompressorBlock extends ConfigurableElectricMachineBlock {
+    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
+    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_OUTPUT);
 
-    public OxygenCompressorBlock(Settings settings) {
+    public OxygenDecompressorBlock(Settings settings) {
         super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
@@ -84,7 +84,7 @@ public class OxygenCompressorBlock extends ConfigurableElectricMachineBlock {
 
             @Override
             public Text getDisplayName() {
-                return new TranslatableText("block.galacticraft-rewoven.oxygen_compressor");
+                return new TranslatableText("block.galacticraft-rewoven.oxygen_decompressor");
             }
 
             @Override
@@ -92,7 +92,7 @@ public class OxygenCompressorBlock extends ConfigurableElectricMachineBlock {
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                 buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
                 //TODO: Look into why we have to create a new PacketByteBuf.
-                return new OxygenCompressorScreenHandler(syncId, inv, buf);
+                return new OxygenDecompressorScreenHandler(syncId, inv, buf);
             }
         });
 
@@ -106,7 +106,7 @@ public class OxygenCompressorBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.oxygen_compressor").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+        return new TranslatableText("tooltip.galacticraft-rewoven.oxygen_decompressor").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
     }
 
     @Override
@@ -115,8 +115,8 @@ public class OxygenCompressorBlock extends ConfigurableElectricMachineBlock {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity != null) {
-            if (blockEntity instanceof OxygenCompressorBlockEntity) {
-                OxygenCompressorBlockEntity be = (OxygenCompressorBlockEntity) blockEntity;
+            if (blockEntity instanceof OxygenDecompressorBlockEntity) {
+                OxygenDecompressorBlockEntity be = (OxygenDecompressorBlockEntity) blockEntity;
 
                 for (int i = 0; i < be.getInventory().getSize(); i++) {
                     ItemStack stack = be.getInventory().getStack(i);
@@ -173,7 +173,7 @@ public class OxygenCompressorBlock extends ConfigurableElectricMachineBlock {
 
     @Override
     public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
-        return new OxygenCompressorBlockEntity();
+        return new OxygenDecompressorBlockEntity();
     }
 
     @Override
