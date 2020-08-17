@@ -75,4 +75,8 @@ public interface Config {
     int machineEnergyStorageSize();
 
     void setMachineEnergyStorageSize(int amount);
+
+    int oxygenCompressorEnergyConsumptionRate();
+
+    void setOxygenCompressorEnergyConsumptionRate(int amount);
 }

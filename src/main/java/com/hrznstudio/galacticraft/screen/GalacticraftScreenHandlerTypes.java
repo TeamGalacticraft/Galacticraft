@@ -89,6 +89,13 @@ public class GalacticraftScreenHandlerTypes {
                     OxygenCollectorScreenHandler::new
             );
 
+    public static final Identifier OXYGEN_COMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenCompressorScreenHandler> OXYGEN_COMPRESSOR_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_COMPRESSOR_HANDLER_ID,
+                    OxygenCompressorScreenHandler::new
+            );
+
     public static final Identifier PLAYER_INVENTORY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
     public static final ScreenHandlerType<PlayerInventoryGCScreenHandler> PLAYER_INV_GC_HANDLER =
             ScreenHandlerRegistry.registerSimple(

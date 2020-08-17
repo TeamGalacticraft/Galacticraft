@@ -442,6 +442,7 @@ public class Constants {
         public static final String MAP_SCREEN = "gui/map";
         public static final String PLANET_ICONS = "gui/planet_icons";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
+        public static final String OXYGEN_COMPRESSOR_SCREEN = "gui/oxygen_compressor_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -491,6 +492,7 @@ public class Constants {
         public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
+        public static final String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
     }
 
     public static class Biomes {
