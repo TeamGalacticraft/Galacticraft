@@ -124,6 +124,13 @@ public class GalacticraftScreenHandlerTypes {
                     BubbleDistributorScreenHandler::new
             );
 
+    public static final Identifier OXYGEN_STORAGE_MODULE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenStorageModuleScreenHandler> OXYGEN_STORAGE_MODULE_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_STORAGE_MODULE_HANDLER_ID,
+                    OxygenStorageModuleScreenHandler::new
+            );
+
     public static void register() {
     }
 }
