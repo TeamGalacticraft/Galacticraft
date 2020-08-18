@@ -5,6 +5,7 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
+import com.hrznstudio.galacticraft.block.machines.OxygenStorageModuleBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -104,6 +105,44 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
         });
 
         register(GalacticraftBlocks.OXYGEN_COLLECTOR, (face, spriteFunction, view, state, pos) -> spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_collector")));
+
+        register(GalacticraftBlocks.OXYGEN_COMPRESSOR, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor"));
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"));
+                case LEFT:
+                case RIGHT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine_side"));
+                default:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
+            }
+        });
+
+        register(GalacticraftBlocks.OXYGEN_DECOMPRESSOR, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_decompressor"));
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"));
+                case LEFT:
+                case RIGHT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine_side"));
+                default:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
+            }
+        });
+
+        register(GalacticraftBlocks.OXYGEN_STORAGE_MODULE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + state.get(OxygenStorageModuleBlock.OXYGEN_LEVEL)));
+                default:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
+            }
+        });
 
         register(GalacticraftBlocks.REFINERY, (face, spriteFunction, view, state, pos) -> {
             switch (face) {
