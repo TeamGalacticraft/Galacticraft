@@ -23,14 +23,20 @@
 
 package com.hrznstudio.galacticraft.world.biome.layer.moon;
 
-import net.minecraft.world.biome.layer.type.IdentitySamplingLayer;
+import net.minecraft.world.biome.layer.type.MergingLayer;
+import net.minecraft.world.biome.layer.util.IdentityCoordinateTransformer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
+import net.minecraft.world.biome.layer.util.LayerSampler;
 
-public enum MoonBiomeCraterLayer implements IdentitySamplingLayer {
+public enum MoonMergeLayer implements MergingLayer, IdentityCoordinateTransformer {
     INSTANCE;
 
     @Override
-    public int sample(LayerRandomnessSource context, int value) { //todo crater biomes
-        return value;
+    public int sample(LayerRandomnessSource context, LayerSampler sampler1, LayerSampler sampler2, int x, int z) {
+        int id1 = sampler1.sample(this.transformX(x), this.transformZ(z));
+        int id2 = sampler2.sample(this.transformX(x), this.transformZ(z));
+
+        return context.nextInt(10) <= 2 ? id2 : id1;
+
     }
 }
