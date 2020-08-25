@@ -26,7 +26,6 @@ package com.hrznstudio.galacticraft.world.biome.layer.moon;
 import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
 import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
-import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.world.biome.layer.type.CrossSamplingLayer;
 import net.minecraft.world.biome.layer.util.LayerRandomnessSource;
 
@@ -37,16 +36,16 @@ public enum MoonValleyLayer implements CrossSamplingLayer {
     public int sample(LayerRandomnessSource context, int n, int e, int s, int w, int center) {
         if (n != s && e != w) {
             int mare = 0;
-            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) MoonBiomeLayers.registry.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
-            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) MoonBiomeLayers.registry.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
-            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) MoonBiomeLayers.registry.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
-            if (((GCBiomePropertyAccessor)(Object) BuiltinRegistries.BIOME.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
+            if (((GCBiomePropertyAccessor)(Object) MoonBiomeLayers.registry.get(n)).getProperty(GalacticraftBiomeProperties.IS_MARE)) {
                 mare++;
             }
             if (mare == 2)
