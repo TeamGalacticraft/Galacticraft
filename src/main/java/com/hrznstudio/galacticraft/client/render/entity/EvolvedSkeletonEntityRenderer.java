@@ -12,7 +12,7 @@ public class EvolvedSkeletonEntityRenderer extends SkeletonEntityRenderer {
                     stack.translate(0.0D, -0.4D, 0.0D);
                     stack.scale(0.9f, 0.9f, 0.9f);
                 },
-                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}, 0.0F, 6.0F, 0.0F)
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {})
         );
     }
 }

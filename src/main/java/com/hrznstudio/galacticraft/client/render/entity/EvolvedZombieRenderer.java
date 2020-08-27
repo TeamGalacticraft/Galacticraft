@@ -26,8 +26,6 @@ package com.hrznstudio.galacticraft.client.render.entity;
 import com.hrznstudio.galacticraft.client.render.entity.feature.SpaceGearFeatureRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.ZombieEntityRenderer;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.util.math.Quaternion;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -37,9 +35,7 @@ public class EvolvedZombieRenderer extends ZombieEntityRenderer {
         super(entityRenderDispatcher);
         this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
             stack.translate(0.0D, -0.4D, 0.0D);
-            stack.multiply(new Quaternion(Vector3f.POSITIVE_X, 90.0F, true));
         }, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
-            stack.multiply(new Quaternion(Vector3f.NEGATIVE_Z, 90.0F, true));
-        }, 0.0F, 15.0F, -3.0F));
+        }));
     }
 }

@@ -22,18 +22,18 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
     private final ModelPart oxygenMask;
     private final ModelPart oxygenTank;
 
-    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms, float pivotX, float pivotY, float pivotZ) {
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extra, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms) {
         super(context);
         this.maskTransforms = maskTransforms;
         this.tankTransforms = tankTransforms;
 
-        this.oxygenMask = new ModelPart(context.getModel(), 0, 10);
-        this.oxygenMask.setPivot(pivotX, pivotY, pivotZ);
+        this.oxygenMask = new ModelPart(64, 32, 0, 10);
+        this.oxygenMask.setPivot(0.0F, 6.0F, 0.0F);
         this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extra);
-        this.oxygenTank = new ModelPart(context.getModel(), 0, 0);
+        this.oxygenTank = new ModelPart(64, 32, 0, 0);
         this.oxygenTank.setPivot(0.0F, 6.0F, 0.0F);
         this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extra);
-        ModelPart oxygenPipe = new ModelPart(context.getModel(), 40, 17);
+        ModelPart oxygenPipe = new ModelPart(64, 32, 40, 17);
         oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
         oxygenPipe.addCuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, extra);
         this.oxygenTank.addChild(oxygenPipe);
