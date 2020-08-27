@@ -28,6 +28,7 @@ import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
 import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -110,10 +111,10 @@ public class Galacticraft implements ModInitializer {
         MoonVillagerType.register();
         GalacticraftVillagerProfessions.register();
 
-        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
-            Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
-            Registry.register(registry, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
-        });
+//        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
+            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
+            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
+//        });
 
         EntityComponentCallback.event(PlayerEntity.class).register((playerEntity, componentContainer) -> { //cant do it in a mixin
             EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, playerEntity);
@@ -121,7 +122,9 @@ public class Galacticraft implements ModInitializer {
             ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
         });
 
-        CelestialBodyRegistryCallback.EVENT.register(registry -> Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON));
+//        CelestialBodyRegistryCallback.EVENT.register(registry -> {
+            Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
+//        });
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

@@ -464,6 +464,8 @@ public class Constants {
         public static final String EVOLVED_CREEPER = "evolved_creeper";
         public static final String T1_ROCKET = "t1_rocket";
         public static final String BUBBLE = "bubble";
+        public static final String EVOLVED_SKELETON = "evolved_skeleton";
+        public static final String EVOLVED_SPIDER = "evolved_spider";
     }
 
     public static class TextureCoordinates {
