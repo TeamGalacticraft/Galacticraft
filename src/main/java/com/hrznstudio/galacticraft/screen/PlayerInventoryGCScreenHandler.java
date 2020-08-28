@@ -31,7 +31,6 @@ import com.hrznstudio.galacticraft.items.ThermalArmorItem;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -71,7 +70,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             int finalSlotY = slotY;
             this.addSlot(new Slot(this.inventory, finalSlotY, 8, 8 + slotY * 18) {
                 @Override
-                public int getMaxStackAmount() {
+                public int getMaxItemCount() {
                     return 1;
                 }
 
@@ -159,7 +158,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
 
         @Override
-        public int getMaxStackAmount() {
+        public int getMaxItemCount() {
             return 1;
         }
 
@@ -172,7 +171,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
     public ItemStack transferSlot(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot slotFrom = (Slot)this.slots.get(index);
+        Slot slotFrom = this.slots.get(index);
         if (slotFrom != null && slotFrom.hasStack()) {
             ItemStack stackFrom = slotFrom.getStack();
             stack = stackFrom.copy();

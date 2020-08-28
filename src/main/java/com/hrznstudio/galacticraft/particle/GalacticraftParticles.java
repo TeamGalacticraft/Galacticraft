@@ -24,7 +24,6 @@
 package com.hrznstudio.galacticraft.particle;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.particle.fluid.DrippingCrudeOilParticle;
 import com.hrznstudio.galacticraft.particle.fluid.DrippingFuelParticle;
 import net.fabricmc.api.EnvType;

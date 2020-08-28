@@ -24,6 +24,7 @@
 package com.hrznstudio.galacticraft.recipe;
 
 import com.google.gson.JsonObject;
+import com.hrznstudio.galacticraft.recipe.FabricationRecipeSerializer.RecipeFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Ingredient;

@@ -23,11 +23,9 @@ minecraft {
 allprojects {
     repositories {
         mavenLocal()
-        jcenter() //Cloth
         maven { url "https://www.curseforge.com/api/maven" }
         maven { url "https://server.bbkr.space/artifactory/libs-release" }
         maven { url "https://maven.modmuss50.me" }
-        maven { url "https://mod-buildcraft.com/maven" }
         maven { url "https://dl.bintray.com/ladysnake/libs" }
         maven { url "https://maven.abusedmaster.xyz/" }
         maven { url "https://cdn.hrzn.studio/maven" }
@@ -39,34 +37,38 @@ dependencies {
     mappings("net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-    modImplementation fabricApi.module("fabric-api-base", project.fabric_version)
-    modImplementation fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-command-api-v1", project.fabric_version)
-//    modImplementation fabricApi.module("fabric-crash-report-info-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-item-groups-v0", project.fabric_version)
-    modCompileOnly fabricApi.module("fabric-models-v0", project.fabric_version) //FOML
-    modImplementation fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)
-    modImplementation fabricApi.module("fabric-networking-v0", project.fabric_version)
-    modImplementation fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-particles-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-registry-sync-v0", project.fabric_version)
-    modImplementation fabricApi.module("fabric-renderer-registries-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
-    modImplementation fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version)
-    modImplementation fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)
-    modImplementation fabricApi.module("fabric-textures-v0", project.fabric_version)
-    modImplementation fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version)
+    modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-crash-report-info-v1", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-events-lifecycle-v0", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-item-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-item-groups-v0", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-models-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-networking-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-particles-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-registry-sync-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-renderer-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-renderer-indigo", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-renderer-registries-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-tag-extensions-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-textures-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version))
 
     modImplementation("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
     }
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") {
-        exclude group: 'net.fabricmc.fabric-api'
-        exclude group: 'net.fabricmc'
-    }
+    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { transitive = false }
+    modImplementation("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
+
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
         exclude group: 'me.shedaniel.cloth'
         exclude group: 'net.fabricmc.fabric-api'
@@ -97,9 +99,8 @@ dependencies {
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}")
     include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
     include("com.github.OnyxStudios:FOML:${project.foml_version}")
-    modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") {
-        exclude group: "net.fabricmc.fabric-api", module: "fabric-dimensions-v1" //todo
-    }
+    include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
+    modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = false } //to satisfy mods that depend on the full FAPI
 }
 
 processResources {

@@ -46,12 +46,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity {
-    public static final VillagerType MOON_VILLAGER_TYPE = new VillagerType() {
-        @Override
-        public String toString() {
-            return "Galacticraft: Rewoven - Moon Villager";
-        }
-    };
+    public static final VillagerType MOON_VILLAGER_TYPE = new VillagerType("Galacticraft: Rewoven - Moon Villager");
 
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
         this(entityType, world, MoonVillagerType.MOON_HIGHLANDS);
@@ -121,7 +116,7 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
         double d = this.random.nextDouble();
         VillagerType villagerType3;
         if (d < 0.5D) {
-            villagerType3 = VillagerType.forBiome(serverWorld.getBiome(this.getBlockPos()));
+            villagerType3 = VillagerType.forBiome(serverWorld.method_31081(this.getBlockPos()));
         } else if (d < 0.75D) {
             villagerType3 = this.getVillagerData().getType();
         } else {

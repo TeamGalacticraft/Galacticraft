@@ -49,8 +49,9 @@ import java.util.function.Predicate;
  */
 public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
-    public static final Map<Item, Integer> FUEL_MAP = new HashMap<>(ImmutableMap.of(Items.COAL_BLOCK, 320 * 10, Items.COAL, 320, Items.CHARCOAL, 310));
+    @SuppressWarnings("unchecked")
     private static final Predicate<ItemStack>[] SLOT_FILTERS = new Predicate[2];
+    public static final Map<Item, Integer> FUEL_MAP = new HashMap<>(ImmutableMap.of(Items.COAL_BLOCK, 320 * 10, Items.COAL, 320, Items.CHARCOAL, 310));
 
     static {
         SLOT_FILTERS[0] = stack -> FUEL_MAP.containsKey(stack.getItem());

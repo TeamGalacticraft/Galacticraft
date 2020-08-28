@@ -71,7 +71,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     protected final ChunkRandom random;
     protected final BlockState defaultBlock;
     protected final BlockState defaultFluid;
-    protected final Supplier<ChunkGeneratorType> typeSupplier;
+    protected final Supplier<ChunkGeneratorSettings> typeSupplier;
     private final int verticalNoiseResolution;
     private final int horizontalNoiseResolution;
     private final int noiseSizeX;
@@ -86,9 +86,9 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     private final int field_24779;
 
     public MoonChunkGenerator(MoonBiomeSource biomeSource, long seed) {
-        this(biomeSource, seed, () -> new ChunkGeneratorType(
+        this(biomeSource, seed, () -> new ChunkGeneratorSettings(
                 new StructuresConfig(false),
-                new NoiseConfig(
+                new GenerationShapeConfig(
                         256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
                         new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
                         1, 2, 1.0D, -0.46875D, true,
@@ -96,21 +96,21 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 GalacticraftBlocks.MOON_ROCK.getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false));
     }
 
-    public MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorType> supplier) {
+    public MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> supplier) {
         this(biomeSource, biomeSource, seed, supplier);
     }
 
-    private MoonChunkGenerator(BiomeSource biomeSource, BiomeSource biomeSource2, long worldSeed, @NotNull Supplier<ChunkGeneratorType> supplier) {
-        super(biomeSource, biomeSource2, supplier.get().getConfig(), worldSeed);
+    private MoonChunkGenerator(BiomeSource biomeSource, BiomeSource biomeSource2, long worldSeed, @NotNull Supplier<ChunkGeneratorSettings> supplier) {
+        super(biomeSource, biomeSource2, supplier.get().getStructuresConfig(), worldSeed);
         this.worldSeed = worldSeed;
-        ChunkGeneratorType chunkGeneratorType = supplier.get();
+        ChunkGeneratorSettings ChunkGeneratorSettings = supplier.get();
         this.typeSupplier = supplier;
-        NoiseConfig noiseConfig = chunkGeneratorType.getNoiseConfig();
+        GenerationShapeConfig noiseConfig = ChunkGeneratorSettings.getGenerationShapeConfig();
         this.field_24779 = noiseConfig.getHeight();
         this.verticalNoiseResolution = noiseConfig.getSizeVertical() * 4;
         this.horizontalNoiseResolution = noiseConfig.getSizeHorizontal() * 4;
-        this.defaultBlock = chunkGeneratorType.getDefaultBlock();
-        this.defaultFluid = chunkGeneratorType.getDefaultFluid();
+        this.defaultBlock = ChunkGeneratorSettings.getDefaultBlock();
+        this.defaultFluid = ChunkGeneratorSettings.getDefaultFluid();
         this.noiseSizeX = 16 / this.horizontalNoiseResolution;
         this.noiseSizeY = noiseConfig.getHeight() / this.verticalNoiseResolution;
         this.noiseSizeZ = 16 / this.horizontalNoiseResolution;
@@ -158,10 +158,6 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         return new MoonChunkGenerator(this.biomeSource.withSeed(seed), seed, this.typeSupplier);
     }
 
-    public boolean method_28548(long l, ChunkGeneratorType chunkGeneratorType) {
-        return this.worldSeed == l && this.typeSupplier.get().method_28555(chunkGeneratorType);
-    }
-
     private double sampleNoise(int x, int y, int z, double horizontalScale, double verticalScale, double horizontalStretch, double verticalStretch) {
         double d = 0.0D;
         double e = 0.0D;
@@ -203,8 +199,8 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     private void sampleNoiseColumn(double[] buffer, int x, int z) {
-        NoiseConfig noiseConfig = this.typeSupplier.get().getNoiseConfig();
-        double ac = 0;
+        GenerationShapeConfig noiseConfig = this.typeSupplier.get().getGenerationShapeConfig();
+        double ac;
         double ad;
         double ai;
         double aj;
@@ -250,13 +246,13 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         double ah = af / noiseConfig.getSampling().getYFactor();
         ai = noiseConfig.getTopSlide().getTarget();
         aj = noiseConfig.getTopSlide().getSize();
-        double ak = noiseConfig.getTopSlide().getOffset();
-        double al = noiseConfig.getBottomSlide().getTarget();
-        double am = noiseConfig.getBottomSlide().getSize();
-        double an = noiseConfig.getBottomSlide().getOffset();
-        double ao = noiseConfig.hasRandomDensityOffset() ? this.method_28553(x, z) : 0.0D;
-        double ap = noiseConfig.getDensityFactor();
-        double aq = noiseConfig.getDensityOffset();
+        final double ak = noiseConfig.getTopSlide().getOffset();
+        final double al = noiseConfig.getBottomSlide().getTarget();
+        final double am = noiseConfig.getBottomSlide().getSize();
+        final double an = noiseConfig.getBottomSlide().getOffset();
+        final double ao = noiseConfig.hasRandomDensityOffset() ? this.method_28553(x, z) : 0.0D;
+        final double ap = noiseConfig.getDensityFactor();
+        final double aq = noiseConfig.getDensityOffset();
 
         for (int ar = 0; ar <= this.noiseSizeY; ++ar) {
             double as = this.sampleNoise(x, ar, z, ae, af, ag, ah);
@@ -389,9 +385,9 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         int i = chunk.getPos().getStartX();
         int j = chunk.getPos().getStartZ();
-        ChunkGeneratorType chunkGeneratorType = this.typeSupplier.get();
-        int k = chunkGeneratorType.getBedrockFloorY();
-        int l = this.field_24779 - 1 - chunkGeneratorType.getBedrockCeilingY();
+        ChunkGeneratorSettings ChunkGeneratorSettings = this.typeSupplier.get();
+        int k = ChunkGeneratorSettings.getBedrockFloorY();
+        int l = this.field_24779 - 1 - ChunkGeneratorSettings.getBedrockCeilingY();
         boolean bl = l + 4 >= 0 && l < this.field_24779;
         boolean bl2 = k + 4 >= 0 && k < this.field_24779;
         if (bl || bl2) {
@@ -434,41 +430,36 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         int k = i << 4;
         int l = j << 4;
 
-        for (StructureFeature<?> feature : StructureFeature.field_24861) {
+        for (StructureFeature<?> feature : StructureFeature.JIGSAW_STRUCTURES) {
             accessor.getStructuresWithChildren(ChunkSectionPos.from(chunkPos, 0), feature).forEach((start) -> {
                 Iterator<StructurePiece> var6 = start.getChildren().iterator();
 
                 while (true) {
-                    while (true) {
-                        StructurePiece structurePiece;
-                        do {
-                            if (!var6.hasNext()) {
-                                return;
-                            }
-
-                            structurePiece = var6.next();
-                        } while (!structurePiece.intersectsChunk(chunkPos, 12));
-
-                        if (structurePiece instanceof PoolStructurePiece) {
-                            PoolStructurePiece poolStructurePiece = (PoolStructurePiece) structurePiece;
-                            StructurePool.Projection projection = poolStructurePiece.getPoolElement().getProjection();
-                            if (projection == StructurePool.Projection.RIGID) {
-                                objectList.add(poolStructurePiece);
-                            }
-
-                            Iterator var10 = poolStructurePiece.getJunctions().iterator();
-
-                            while (var10.hasNext()) {
-                                JigsawJunction jigsawJunction = (JigsawJunction) var10.next();
-                                int kx = jigsawJunction.getSourceX();
-                                int lx = jigsawJunction.getSourceZ();
-                                if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
-                                    objectList2.add(jigsawJunction);
-                                }
-                            }
-                        } else {
-                            objectList.add(structurePiece);
+                    StructurePiece structurePiece;
+                    do {
+                        if (!var6.hasNext()) {
+                            return;
                         }
+
+                        structurePiece = var6.next();
+                    } while (!structurePiece.intersectsChunk(chunkPos, 12));
+
+                    if (structurePiece instanceof PoolStructurePiece) {
+                        PoolStructurePiece poolStructurePiece = (PoolStructurePiece) structurePiece;
+                        StructurePool.Projection projection = poolStructurePiece.getPoolElement().getProjection();
+                        if (projection == StructurePool.Projection.RIGID) {
+                            objectList.add(poolStructurePiece);
+                        }
+
+                        for (JigsawJunction jigsawJunction : poolStructurePiece.getJunctions()) {
+                            int kx = jigsawJunction.getSourceX();
+                            int lx = jigsawJunction.getSourceZ();
+                            if (kx > k - 12 && lx > l - 12 && kx < k + 15 + 12 && lx < l + 15 + 12) {
+                                objectList2.add(jigsawJunction);
+                            }
+                        }
+                    } else {
+                        objectList.add(structurePiece);
                     }
                 }
             });

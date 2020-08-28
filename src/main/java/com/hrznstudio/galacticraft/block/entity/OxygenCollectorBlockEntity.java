@@ -116,7 +116,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableElectricMachineBlock
 
                 float leafBlocks = 0;
 
-                for (BlockPos pos : BlockPos.iterate(minX, maxX, minY, maxY, minZ, maxZ)) {
+                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
                     BlockState blockState = world.getBlockState(pos);
                     if (blockState.isAir()) {
                         continue;

@@ -55,10 +55,10 @@ import java.util.function.Predicate;
 public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
-    private static final Predicate<ItemStack>[] SLOT_FILTERS;
+    @SuppressWarnings("unchecked")
+    private static final Predicate<ItemStack>[] SLOT_FILTERS = new Predicate[7];
 
     static {
-        SLOT_FILTERS = new Predicate[7];
         SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         SLOT_FILTERS[1] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[0];
         SLOT_FILTERS[2] = stack -> !stack.isEmpty() && stack.getItem() == mandatoryMaterials[1];

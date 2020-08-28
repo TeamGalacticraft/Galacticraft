@@ -86,7 +86,7 @@ public class NetworkManager {
             for (BlockPos pos : network.getQuery()) {
                 BlockEntity entity = world.getBlockEntity(pos);
                 if (entity instanceof ComponentProvider && ((ComponentProvider) entity).hasComponent(UniversalComponents.CAPACITOR_COMPONENT)) {
-                    world.getBlockState(pos).method_30101(world, pos, 10); //updateNeighbors
+                    world.getBlockState(pos).updateNeighbors(world, pos, 10); //updateNeighbors
                 }
             }
             network.clearQuery();

@@ -61,7 +61,7 @@ public class ResearchRewards {
 
     public void apply(ServerPlayerEntity player, PlayerResearchTracker tracker) {
         player.addExperience(this.experience);
-        LootContext lootContext = (new LootContext.Builder(player.getServerWorld())).parameter(LootContextParameters.THIS_ENTITY, player).parameter(LootContextParameters.POSITION, player.getBlockPos()).random(player.getRandom()).build(LootContextTypes.ADVANCEMENT_REWARD);
+        LootContext lootContext = (new LootContext.Builder(player.getServerWorld())).parameter(LootContextParameters.THIS_ENTITY, player).parameter(LootContextParameters.ORIGIN, player.getPos()).random(player.getRandom()).build(LootContextTypes.ADVANCEMENT_REWARD);
         boolean stackAdded = false;
 
         for (Identifier identifier : this.loot) {

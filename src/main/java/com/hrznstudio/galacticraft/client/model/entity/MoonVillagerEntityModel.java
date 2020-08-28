@@ -1,7 +1,6 @@
 package com.hrznstudio.galacticraft.client.model.entity;
 
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Streams;
 import com.hrznstudio.galacticraft.entity.MoonVillagerEntity;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.VillagerResemblingModel;

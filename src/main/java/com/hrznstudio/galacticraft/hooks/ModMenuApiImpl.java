@@ -40,7 +40,7 @@ import java.util.function.Function;
 public class ModMenuApiImpl implements ModMenuApi {
 
     @Override
-    public Function<Screen, ? extends Screen> getConfigScreenFactory() {
+    public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> ConfigManager.getInstance().getScreen(parent);
     }
 

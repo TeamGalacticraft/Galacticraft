@@ -38,6 +38,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
+import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
 import com.hrznstudio.galacticraft.network.GalacticraftPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
@@ -92,6 +93,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftBlocks.register();
         GalacticraftBlockEntities.init();
         GalacticraftItems.register();
+        GalacticraftTags.register();
         GalacticraftRecipes.register();
         GalacticraftEntityTypes.register();
         GalacticraftLootTables.register();
@@ -106,7 +108,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftEnergy.register();
         GalacticraftPackets.register();
         GalacticraftSounds.register();
-        GalacticraftTags.register();
+        GalacticraftBannerPatterns.register();
         GalacticraftPointOfInterestType.register();
         MoonVillageData.register();
         MoonVillagerType.register();
@@ -124,9 +126,7 @@ public class Galacticraft implements ModInitializer {
             ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
         });
 
-        CelestialBodyRegistryCallback.EVENT.register(registry -> {
-            Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
-        });
+        CelestialBodyRegistryCallback.EVENT.register(registry -> Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON));
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

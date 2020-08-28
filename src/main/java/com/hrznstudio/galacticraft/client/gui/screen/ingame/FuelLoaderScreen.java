@@ -167,7 +167,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                     list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(blockEntity.getTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                 }
             }
-            this.renderTooltip(stack, list, mouseX, mouseY);
+            this.renderOrderedTooltip(stack, list, mouseX, mouseY);
         }
         list.clear();
 
@@ -206,7 +206,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                 }
             }
             if (!list.isEmpty()) {
-                this.renderTooltip(stack, list, mouseX, mouseY);
+                this.renderOrderedTooltip(stack, list, mouseX, mouseY);
             }
         }
     }

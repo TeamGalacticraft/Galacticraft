@@ -24,15 +24,20 @@
 package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGenerator;
+import com.mojang.serialization.Lifecycle;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.*;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.gen.chunk.*;
 
 import java.util.OptionalLong;
 
@@ -41,7 +46,7 @@ import java.util.OptionalLong;
  */
 public class GalacticraftDimensions {
     public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
-    public static final DimensionType MOON_TYPE = new DimensionType(OptionalLong.empty(), true, false, false, true, false, false, false, false, false, true, 256, HorizontalVoronoiBiomeAccessType.INSTANCE, new Identifier(Constants.MOD_ID, "infiniburn_moon"), 0.1F) {
+    public static final DimensionType MOON_TYPE = new DimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, false, false, true, 256, HorizontalVoronoiBiomeAccessType.INSTANCE, new Identifier(Constants.MOD_ID, "infiniburn_moon"), new Identifier(Constants.MOD_ID, "moon"), 0.1F) {
         @Override
         public int getMoonPhase(long l) { //todo calculate sky angle for the moon
             double d = MathHelper.fractionalPart((double)l / 24000.0D - 0.25D);
@@ -51,17 +56,27 @@ public class GalacticraftDimensions {
     };
 
     public static void register() {
+        BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, new Identifier(Constants.MOD_ID, "moon"), new ChunkGeneratorSettings(
+                new StructuresConfig(false),
+                new GenerationShapeConfig(
+                        256, new NoiseSamplingConfig(0.9999999814507745D, 0.9999999814507745D, 80.0D, 160.0D),
+                        new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
+                        1, 2, 1.0D, -0.46875D, true,
+                        true, false, false),
+                GalacticraftBlocks.MOON_ROCK.getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false)
+        );
+
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
 //        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
     }
 
     public static void addGCDims(DynamicRegistryManager.Impl registryTracker) {
         MutableRegistry<DimensionType> mutableRegistry = registryTracker.get(Registry.DIMENSION_TYPE_KEY);
-        mutableRegistry.add(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), MOON_TYPE);
+        mutableRegistry.add(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), MOON_TYPE, Lifecycle.stable());
     }
 
-    public static SimpleRegistry<DimensionOptions> addGCDimOptions(long seed, SimpleRegistry<DimensionOptions> registry) {
-        registry.add(RegistryKey.of(Registry.DIMENSION_OPTIONS, new Identifier(Constants.MOD_ID, "moon")), new DimensionOptions(() -> MOON_TYPE, new MoonChunkGenerator(new MoonBiomeSource(seed, 4), seed)));
+    public static SimpleRegistry<DimensionOptions> addGCDimOptions(long seed, SimpleRegistry<DimensionOptions> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3) {
+        registry.add(RegistryKey.of(Registry.DIMENSION_OPTIONS, new Identifier(Constants.MOD_ID, "moon")), new DimensionOptions(() -> MOON_TYPE, new MoonChunkGenerator(new MoonBiomeSource(seed, 4, registry2), seed, () -> registry3.get(RegistryKey.of(Registry.NOISE_SETTINGS_WORLDGEN, new Identifier(Constants.MOD_ID, "moon"))))), Lifecycle.stable());
         return registry;
     }
 }

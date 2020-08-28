@@ -30,10 +30,8 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.structure.pool.EmptyPoolElement;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
-import net.minecraft.structure.pool.TemplatePools;
+import net.minecraft.structure.pool.StructurePools;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.gen.feature.BlockPileFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.feature.Feature;
 
 /**
@@ -59,7 +57,7 @@ public class MoonVillageData {
     public static final Identifier STARTS = new Identifier(Constants.MOD_ID, "moon_village/starts");
 
     static {
-        BASE_POOL = TemplatePools.register(new StructurePool(STARTS,
+        BASE_POOL = StructurePools.register(new StructurePool(STARTS,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "starts/start_1"), 3),
@@ -69,7 +67,7 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(STREETS,
+        StructurePools.register(new StructurePool(STREETS,
                 TERMINATORS,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "streets/corner_01"), 2),
@@ -91,7 +89,7 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.TERRAIN_MATCHING));
 
-        TemplatePools.register(new StructurePool(HOUSES,
+        StructurePools.register(new StructurePool(HOUSES,
                 TERMINATORS,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "houses/house_1"), 5),
@@ -100,7 +98,7 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(TERMINATORS,
+        StructurePools.register(new StructurePool(TERMINATORS,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "terminators/terminator_01"), 1),
@@ -110,14 +108,14 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.TERRAIN_MATCHING));
 
-        TemplatePools.register(new StructurePool(TREES,
+        StructurePools.register(new StructurePool(TREES,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of((projection) -> EmptyPoolElement.INSTANCE, 10) //todo
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(SAPLINGS,
+        StructurePools.register(new StructurePool(SAPLINGS,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/oak"), 2),
@@ -130,7 +128,7 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(DECOR,
+        StructurePools.register(new StructurePool(DECOR,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "lamp"), 2),
@@ -139,7 +137,7 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(VILLAGERS,
+        StructurePools.register(new StructurePool(VILLAGERS,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "villagers/nitwit"), 1),
@@ -148,14 +146,14 @@ public class MoonVillageData {
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(ANIMALS,
+        StructurePools.register(new StructurePool(ANIMALS,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of((projection) -> EmptyPoolElement.INSTANCE, 5) //todo
                 ),
                 StructurePool.Projection.RIGID));
 
-        TemplatePools.register(new StructurePool(IRON_GOLEM,
+        StructurePools.register(new StructurePool(IRON_GOLEM,
                 EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "iron_golem"), 1)

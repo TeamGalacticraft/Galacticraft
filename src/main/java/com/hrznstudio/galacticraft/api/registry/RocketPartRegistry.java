@@ -57,9 +57,9 @@ public class RocketPartRegistry extends SimpleRegistry<RocketPart> {
     }
 
     @Override
-    public <V extends RocketPart> V set(int rawId, RegistryKey<RocketPart> key, V entry) {
+    public <V extends RocketPart> V set(int rawId, RegistryKey<RocketPart> key, V entry, Lifecycle lifecycle) {
         parts.get(entry.getType()).add(entry);
-        return super.set(rawId, key, entry);
+        return super.set(rawId, key, entry, lifecycle);
     }
 
     @Environment(EnvType.CLIENT)

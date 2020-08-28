@@ -71,7 +71,7 @@ public class FuelLoaderBlock extends ConfigurableElectricMachineBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.of("connected");
 
     public FuelLoaderBlock(Settings settings) {
-        super(settings);
+        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
         setDefaultState(getStateManager().getDefaultState().with(CONNECTED, false));
     }
 

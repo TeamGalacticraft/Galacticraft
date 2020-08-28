@@ -37,7 +37,7 @@ public class ChargeSlot extends Slot {
     }
 
     @Override
-    public int getMaxStackAmount() {
+    public int getMaxItemCount() {
         return 1;
     }
 

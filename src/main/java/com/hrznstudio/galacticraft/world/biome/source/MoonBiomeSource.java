@@ -23,7 +23,6 @@
 
 package com.hrznstudio.galacticraft.world.biome.source;
 
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
 import com.hrznstudio.galacticraft.world.biome.layer.MoonBiomeLayers;
 import com.mojang.serialization.Codec;
@@ -31,44 +30,46 @@ import com.mojang.serialization.Lifecycle;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryLookupCodec;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
-
-import java.util.List;
+import net.minecraft.world.gen.chunk.ChunkGeneratorSettings;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonBiomeSource extends BiomeSource {
-    public static final Codec<MoonBiomeSource> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.LONG.fieldOf("seed").stable().forGetter((moonBiomeSource) -> moonBiomeSource.seed), Codec.INT.optionalFieldOf("biome_size", 4, Lifecycle.stable()).forGetter((moonBiomeSource) -> moonBiomeSource.biomeSize)).apply(instance, instance.stable(MoonBiomeSource::new)));
+    public static final Codec<MoonBiomeSource> CODEC = RecordCodecBuilder.create((instance) -> instance.group(Codec.LONG.fieldOf("seed").stable().forGetter((moonBiomeSource) -> moonBiomeSource.seed), Codec.INT.optionalFieldOf("biome_size", 4, Lifecycle.stable()).forGetter((moonBiomeSource) -> moonBiomeSource.biomeSize), RegistryLookupCodec.of(Registry.BIOME_KEY).forGetter((source) -> source.registry)).apply(instance, instance.stable(MoonBiomeSource::new)));
 
     private final BiomeLayerSampler sampler;
     private final long seed;
-    private static final List<Biome> BIOMES = Lists.newArrayList(GalacticraftBiomes.Moon.BIOMES);
     private final int biomeSize;
+    private final Registry<Biome> registry;
 
-    public MoonBiomeSource(long seed, int biomeSize) {
-        super(BIOMES);
+    public MoonBiomeSource(long seed, int biomeSize, Registry<Biome> registry) {
+        super(GalacticraftBiomes.Moon.getBiomes());
         this.biomeSize = biomeSize;
         this.seed = seed;
-
+        this.registry = registry;
         this.sampler = MoonBiomeLayers.build(seed, biomeSize);
     }
 
     @Override
-    protected Codec<? extends BiomeSource> method_28442() {
+    protected Codec<? extends BiomeSource> getCodec() {
         return CODEC;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public BiomeSource withSeed(long seed) {
-        return new MoonBiomeSource(seed, this.biomeSize);
+        return new MoonBiomeSource(seed, this.biomeSize, registry);
     }
 
     @Override
     public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
-        return this.sampler.sample(biomeX, biomeZ);
+        return this.sampler.sample(registry, biomeX, biomeZ);
     }
 }

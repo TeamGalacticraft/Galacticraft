@@ -27,18 +27,12 @@ import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
 import com.hrznstudio.galacticraft.api.biome.BiomeProperty;
 import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.carver.ConfiguredCarver;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

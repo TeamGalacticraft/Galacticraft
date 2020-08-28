@@ -92,7 +92,7 @@ public class GalacticraftDefaultBiomeCreators {
     private static final MusicSound MOON_MUSIC = new MusicSound(GalacticraftSounds.MUSIC_MOON, 1200, 3600, true);
 
     public static Biome createMoonHighlandsBiome(ConfiguredSurfaceBuilder<?> surfaceBuilder, float depth, float scale, float downfall) {
-        Biome biome = new Biome.Settings()
+        Biome biome = new Biome.Builder()
                         .precipitation(Biome.Precipitation.NONE)
                         .generationSettings(new GenerationSettings.Builder()
                                 .surfaceBuilder(surfaceBuilder)
@@ -105,8 +105,8 @@ public class GalacticraftDefaultBiomeCreators {
                                 .build()
                         )
                         .spawnSettings(new SpawnSettings.Builder()
-                                .spawners(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS)
-                                .spawners(SpawnGroup.MONSTER, MOON_HIGHLANDS_CREEPER_SPAWNS)
+                                .spawn(SpawnGroup.MONSTER, MOON_HIGHLANDS_ZOMBIE_SPAWNS)
+                                .spawn(SpawnGroup.MONSTER, MOON_HIGHLANDS_CREEPER_SPAWNS)
                                 .build()
                         )
                         .category(Biome.Category.NONE)
@@ -127,7 +127,7 @@ public class GalacticraftDefaultBiomeCreators {
     }
 
     public static Biome createMoonMareBiome(ConfiguredSurfaceBuilder<?> surfaceBuilder, float depth, float scale, float downfall) {
-        Biome biome = new Biome.Settings()
+        Biome biome = new Biome.Builder()
                         .precipitation(Biome.Precipitation.NONE)
                         .generationSettings(new GenerationSettings.Builder()
                                 .surfaceBuilder(surfaceBuilder)
@@ -139,8 +139,8 @@ public class GalacticraftDefaultBiomeCreators {
                                 .build()
                         )
                         .spawnSettings(new SpawnSettings.Builder()
-                                .spawners(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS)
-                                .spawners(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS)
+                                .spawn(SpawnGroup.MONSTER, MOON_MARE_ZOMBIE_SPAWNS)
+                                .spawn(SpawnGroup.MONSTER, MOON_MARE_CREEPER_SPAWNS)
                                 .build()
                         )
                         .category(Biome.Category.NONE)
