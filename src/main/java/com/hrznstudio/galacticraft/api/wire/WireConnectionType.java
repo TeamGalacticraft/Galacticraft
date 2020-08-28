@@ -23,10 +23,12 @@
 
 package com.hrznstudio.galacticraft.api.wire;
 
+import net.minecraft.util.StringIdentifiable;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public enum WireConnectionType {
+public enum WireConnectionType implements StringIdentifiable {
     /**
      * The wire is not connected to anything.
      */
@@ -45,5 +47,10 @@ public enum WireConnectionType {
     /**
      * The wire is connected to some sort of energy generating block.
      */
-    ENERGY_OUTPUT
+    ENERGY_OUTPUT;
+
+    @Override
+    public String asString() {
+        return name().toLowerCase();
+    }
 }

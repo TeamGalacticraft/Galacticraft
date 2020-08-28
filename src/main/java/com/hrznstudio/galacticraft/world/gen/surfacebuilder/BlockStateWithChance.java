@@ -34,7 +34,7 @@ import java.util.Objects;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BlockStateWithChance implements Comparable<BlockStateWithChance> {
-    public static final Codec<BlockStateWithChance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockState.CODEC.fieldOf("state").forGetter((bswc) -> bswc.state), Codec.INT.fieldOf("chance").forGetter((bswc) -> bswc.chance)).apply(instance, BlockStateWithChance::new));
+    public static final Codec<BlockStateWithChance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BlockState.CODEC.fieldOf("state").forGetter((stateWithChance) -> stateWithChance.state), Codec.INT.fieldOf("chance").forGetter((stateWithChance) -> stateWithChance.chance)).apply(instance, BlockStateWithChance::new));
     private final BlockState state;
     private final int chance;
 

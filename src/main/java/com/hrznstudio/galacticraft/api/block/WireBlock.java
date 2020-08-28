@@ -29,6 +29,8 @@ import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -48,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class WireBlock extends BlockWithEntity implements WireConnectable {
+public class WireBlock extends Block implements WireConnectable, BlockEntityProvider {
     public WireBlock(Settings settings) {
         super(settings);
     }

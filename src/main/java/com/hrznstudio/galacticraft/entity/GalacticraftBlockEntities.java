@@ -24,10 +24,12 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.FluidPipe;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.*;
+import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -52,6 +54,12 @@ public class GalacticraftBlockEntities {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof WireBlock; //bad stuff
+        }
+    }).build(null));
+    public static final BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof FluidPipe; //bad stuff
         }
     }).build(null));
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ADVANCED_SOLAR_PANEL), BlockEntityType.Builder.create(AdvancedSolarPanelBlockEntity::new, GalacticraftBlocks.ADVANCED_SOLAR_PANEL).build(null));

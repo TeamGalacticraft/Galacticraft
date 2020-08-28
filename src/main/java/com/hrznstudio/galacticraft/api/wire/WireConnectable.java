@@ -31,8 +31,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
+@FunctionalInterface
 public interface WireConnectable {
-
-    @NotNull
-    WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos);
+    @NotNull WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos);
 }

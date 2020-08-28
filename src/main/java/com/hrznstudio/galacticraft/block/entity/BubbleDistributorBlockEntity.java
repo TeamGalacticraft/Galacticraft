@@ -130,7 +130,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
         }
 
         attemptChargeFromStack(BATTERY_SLOT);
-        drainOxygenFromStack(1);
+        drainOxygenFromStack();
         trySpreadEnergy();
 
         if (this.getCapacitor().getCurrentEnergy() > 0 && this.tank.getContents(0).getAmount().doubleValue() > 0) {
@@ -248,11 +248,11 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
         this.size = size;
     }
 
-    protected void drainOxygenFromStack(int slot) {
+    protected void drainOxygenFromStack() {
         if (tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) >= 0) {
             return;
         }
-        ItemStack stack = getInventory().getStack(slot).copy();
+        ItemStack stack = getInventory().getStack(1).copy();
         if (GalacticraftEnergy.isOxygenItem(stack)) {
             TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
             for (int i = 0; i < component.getTanks(); i++) {
