@@ -53,6 +53,7 @@ import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
+import com.hrznstudio.galacticraft.world.gen.carver.GalacticraftCarvers;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
@@ -97,6 +98,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftStructures.register();
         GalacticraftFeatures.register();
         GalacticraftSurfaceBuilders.register();
+        GalacticraftCarvers.register();
         GalacticraftBiomes.register();
         GalacticraftBiomeSources.register();
         GalacticraftDimensions.register();

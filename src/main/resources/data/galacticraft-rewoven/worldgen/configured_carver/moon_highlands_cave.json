@@ -2,5 +2,5 @@
   "config": {
     "probability": 0.1
   },
-  "type": "minecraft:cave"
+  "type": "galacticraft-rewoven:lunar_cave"
 }
