@@ -23,7 +23,6 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import com.hrznstudio.galacticraft.mixin.EntityAttributeInstanceAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -31,11 +30,15 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -43,7 +46,7 @@ import java.util.UUID;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity {
+public class EvolvedCreeperEntity extends CreeperEntity {
     private static final TrackedData<Boolean> BABY = DataTracker.registerData(EvolvedCreeperEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private static final UUID BABY_SPEED_ID = UUID.fromString("B9766B59-9566-4402-BC1F-2EE2A276D836");
     private static final EntityAttributeModifier BABY_SPEED_BONUS = new EntityAttributeModifier(BABY_SPEED_ID, "Baby speed boost", 0.8D, EntityAttributeModifier.Operation.MULTIPLY_BASE);
@@ -58,18 +61,29 @@ public class EvolvedCreeperEntity extends CreeperEntity implements EvolvedEntity
         this.dataTracker.startTracking(BABY, false);
     }
 
+    public void tick() {
+        super.tick();
+    }
+
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
         this.setBaby(tag.getBoolean("baby"));
-        tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 3)); //overwrite
+        tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4)); //overwrite
+        tag.putShort("Fuse", (short) 37); //overwrite
         super.readCustomDataFromTag(tag);
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return null;
     }
 
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
         super.writeCustomDataToTag(tag);
         tag.putBoolean("baby", isBaby());
-        tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 3));
+        tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4));
+        tag.putShort("Fuse", (short) 37); //overwrite
     }
 
     @Override

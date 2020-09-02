@@ -24,7 +24,7 @@
 package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
+import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
 import com.hrznstudio.galacticraft.village.MoonVillagerType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity {
+public class MoonVillagerEntity extends VillagerEntity {
     public static final VillagerType MOON_VILLAGER_TYPE = new VillagerType("Galacticraft: Rewoven - Moon Villager");
 
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
@@ -129,6 +129,6 @@ public class MoonVillagerEntity extends VillagerEntity implements EvolvedEntity 
     }
 
     public static DefaultAttributeContainer.Builder createMoonVillagerAttributes() {
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5D).add(EntityAttributes.GENERIC_FOLLOW_RANGE, 48.0D).add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D);
     }
 }

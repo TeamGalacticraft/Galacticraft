@@ -30,10 +30,7 @@ import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
 import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
-import com.hrznstudio.galacticraft.client.render.entity.BubbleEntityRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.EvolvedCreeperEntityRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.EvolvedZombieRenderer;
-import com.hrznstudio.galacticraft.client.render.entity.MoonVillagerEntityRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.*;
 import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
@@ -128,6 +125,8 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerEntityRenderer(entityRenderDispatcher, context.getResourceManager()));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (entityRenderDispatcher, context) -> new EvolvedSkeletonEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (entityRenderDispatcher, context) -> new EvolvedSpiderEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();
