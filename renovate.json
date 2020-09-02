@@ -15,7 +15,7 @@
   "regexManagers": [
     {
       "datasourceTemplate": "docker",
-      "fileMatch": ["^cloudbuild.yaml$"],
+      "fileMatch": ["^cloudbuild\.yaml$"],
       "matchStrings": [
         "name: (?<depName>.*):(?<currentValue>.*)\n"
       ],
