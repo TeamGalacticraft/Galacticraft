@@ -46,14 +46,6 @@ import java.util.OptionalLong;
  */
 public class GalacticraftDimensions {
     public static final RegistryKey<World> MOON = RegistryKey.of(Registry.DIMENSION, new Identifier(Constants.MOD_ID, "moon"));
-    public static final DimensionType MOON_TYPE = new DimensionType(OptionalLong.empty(), true, false, false, true, 1.0D, false, false, false, false, true, 256, HorizontalVoronoiBiomeAccessType.INSTANCE, new Identifier(Constants.MOD_ID, "infiniburn_moon"), new Identifier(Constants.MOD_ID, "moon"), 0.1F) {
-        @Override
-        public int getMoonPhase(long l) { //todo calculate sky angle for the moon
-            double d = MathHelper.fractionalPart((double)l / 24000.0D - 0.25D);
-            double e = 0.5D - Math.cos(d * 3.14159265358979323846D) / 2.0D;
-            return (int) ((d * 2.0D + e) / 3.0D);
-        }
-    };
 
     public static void register() {
         BuiltinRegistries.add(BuiltinRegistries.CHUNK_GENERATOR_SETTINGS, new Identifier(Constants.MOD_ID, "moon"), new ChunkGeneratorSettings(
@@ -68,15 +60,5 @@ public class GalacticraftDimensions {
 
         Registry.register(Registry.CHUNK_GENERATOR, new Identifier(Constants.MOD_ID, "moon"), MoonChunkGenerator.CODEC);
 //        FabricDimensions.registerDefaultPlacer(MOON, GalacticraftDimensions::placeEntity);
-    }
-
-    public static void addGCDims(DynamicRegistryManager.Impl registryTracker) {
-        MutableRegistry<DimensionType> mutableRegistry = registryTracker.get(Registry.DIMENSION_TYPE_KEY);
-        mutableRegistry.add(RegistryKey.of(Registry.DIMENSION_TYPE_KEY, new Identifier(Constants.MOD_ID, "moon")), MOON_TYPE, Lifecycle.stable());
-    }
-
-    public static SimpleRegistry<DimensionOptions> addGCDimOptions(long seed, SimpleRegistry<DimensionOptions> registry, Registry<Biome> registry2, Registry<ChunkGeneratorSettings> registry3) {
-        registry.add(RegistryKey.of(Registry.DIMENSION_OPTIONS, new Identifier(Constants.MOD_ID, "moon")), new DimensionOptions(() -> MOON_TYPE, new MoonChunkGenerator(new MoonBiomeSource(seed, 4, registry2), seed, () -> registry3.get(RegistryKey.of(Registry.NOISE_SETTINGS_WORLDGEN, new Identifier(Constants.MOD_ID, "moon"))))), Lifecycle.stable());
-        return registry;
     }
 }
