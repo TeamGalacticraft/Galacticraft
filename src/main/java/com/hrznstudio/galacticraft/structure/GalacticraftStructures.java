@@ -24,37 +24,30 @@
 package com.hrznstudio.galacticraft.structure;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.world.gen.feature.MoonRuinsFeature;
 import com.hrznstudio.galacticraft.world.gen.feature.MoonVillageFeature;
 import net.fabricmc.fabric.api.structure.v1.FabricStructureBuilder;
 import net.minecraft.structure.StructurePieceType;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
 public class GalacticraftStructures {
     public static final MoonVillageFeature MOON_VILLAGE = new MoonVillageFeature(StructurePoolFeatureConfig.CODEC);
-    public static final ConfiguredStructureFeature<StructurePoolFeatureConfig, MoonVillageFeature> CONFIGURED_MOON_VILLAGE = new ConfiguredStructureFeature<>(MOON_VILLAGE, new StructurePoolFeatureConfig(() -> MoonVillageData.BASE_POOL, 6));
-
     public static final MoonRuinsFeature MOON_RUINS = new MoonRuinsFeature(DefaultFeatureConfig.CODEC);
-    public static final ConfiguredStructureFeature<DefaultFeatureConfig, MoonRuinsFeature> CONFIGURED_MOON_RUINS = new ConfiguredStructureFeature<>(MOON_RUINS, DefaultFeatureConfig.INSTANCE);
-    public static final StructurePieceType MOON_RUINS_PIECE = StructurePieceType.register(MoonRuinsGenerator.Piece::new, "galacticraft-rewoven:moon_ruins_piece");
+
+    public static final StructurePieceType MOON_RUINS_PIECE = StructurePieceType.register(MoonRuinsGenerator.Piece::new, Constants.MOD_ID + ":moon_ruins_piece");
 
     public static void register() {
         FabricStructureBuilder.create(new Identifier(Constants.MOD_ID, "moon_village"), MOON_VILLAGE)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(32, 8, 1278983)
-                .superflatFeature(CONFIGURED_MOON_VILLAGE)
                 .register();
 
         FabricStructureBuilder.create(new Identifier(Constants.MOD_ID, "moon_ruins"), MOON_RUINS)
                 .step(GenerationStep.Feature.SURFACE_STRUCTURES)
                 .defaultConfig(24, 8, 1903453)
-                .superflatFeature(CONFIGURED_MOON_RUINS)
                 .register();
     }
 }

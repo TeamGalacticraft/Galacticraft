@@ -45,7 +45,6 @@ import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
-import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
 import com.hrznstudio.galacticraft.village.MoonVillagerType;
@@ -111,7 +110,6 @@ public class Galacticraft implements ModInitializer {
         GalacticraftSounds.register();
         GalacticraftBannerPatterns.register();
         GalacticraftPointOfInterestType.register();
-        MoonVillageData.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfessions.register();
 

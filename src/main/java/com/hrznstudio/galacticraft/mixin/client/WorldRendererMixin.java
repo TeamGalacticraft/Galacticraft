@@ -97,6 +97,7 @@ public abstract class WorldRendererMixin {
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
     private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
+            this.client.getProfiler().push("gc-r_sky_render");
             RenderSystem.disableTexture();
             RenderSystem.disableFog();
             RenderSystem.disableRescaleNormal();
@@ -176,6 +177,7 @@ public abstract class WorldRendererMixin {
             RenderSystem.depthMask(true);
             RenderSystem.enableColorMaterial();
             RenderSystem.enableFog();
+            this.client.getProfiler().pop();
             ci.cancel();
             //noinspection UnnecessaryReturnStatement
             return;
