@@ -5,6 +5,7 @@
   "mixins": [
     "BaseFluidMixin",
     "BiomeMixin",
+    "DimensionTypeMixin",
     "EntityAttributeInstanceAccessor",
     "EntityMixin",
     "FireBlockAccessor",

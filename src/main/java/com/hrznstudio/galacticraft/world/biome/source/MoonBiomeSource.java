@@ -37,7 +37,7 @@ import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
 
-import java.util.Collections;
+import java.util.ArrayList;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -49,21 +49,15 @@ public class MoonBiomeSource extends BiomeSource {
     private final long seed;
     private final int biomeSize;
     private final Registry<Biome> registry;
+    private boolean initialized = false;
 
     public MoonBiomeSource(long seed, int biomeSize, Registry<Biome> registry) {
-        super(Collections.emptyList());
+        super(new ArrayList<>()); // its a mutable list, as we want to add biomes in later
+                                  // for /locate and other things to work. Will be set in #getBiomeForNoiseGen
         this.biomeSize = biomeSize;
         this.seed = seed;
         this.registry = registry;
         this.sampler = MoonBiomeLayers.build(seed, biomeSize, registry);
-        if (!BuiltinBiomes.BY_RAW_ID.containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)), GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS)), GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY)), GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_PLAINS)), GalacticraftBiomes.Moon.MARE_PLAINS);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS)), GalacticraftBiomes.Moon.MARE_ROCKS);
-            BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE)), GalacticraftBiomes.Moon.MARE_EDGE);
-        }
     }
 
     @Override
@@ -79,6 +73,29 @@ public class MoonBiomeSource extends BiomeSource {
 
     @Override
     public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
+        if (!this.initialized) {
+            if (!BuiltinBiomes.BY_RAW_ID.containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
+                if (registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) != -1) {
+                    this.initialized = true;
+                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)), GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
+                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS)), GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
+                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY)), GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
+                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_PLAINS)), GalacticraftBiomes.Moon.MARE_PLAINS);
+                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS)), GalacticraftBiomes.Moon.MARE_ROCKS);
+                    BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.MARE_EDGE)), GalacticraftBiomes.Moon.MARE_EDGE);
+
+                    this.biomes.clear();
+                    this.biomes.add(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS));
+                    this.biomes.add(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS));
+                    this.biomes.add(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY));
+                    this.biomes.add(registry.get(GalacticraftBiomes.Moon.MARE_PLAINS));
+                    this.biomes.add(registry.get(GalacticraftBiomes.Moon.MARE_ROCKS));
+                    this.biomes.add(registry.get(GalacticraftBiomes.Moon.MARE_EDGE));
+                    this.structureFeatures.clear();
+                    this.topMaterials.clear();
+                }
+            }
+        }
         return this.sampler.sample(registry, biomeX, biomeZ);
     }
 }

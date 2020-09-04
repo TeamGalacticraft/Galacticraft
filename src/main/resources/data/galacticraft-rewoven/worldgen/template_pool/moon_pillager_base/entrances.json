@@ -1,6 +1,6 @@
 {
   "name": "galacticraft-rewoven:moon_pillager_base/entrances",
-  "fallback": "minecraft:empty",
+  "fallback": "galacticraft-rewoven:moon_pillager_base/base",
   "elements": [
     {
       "weight": 7,
