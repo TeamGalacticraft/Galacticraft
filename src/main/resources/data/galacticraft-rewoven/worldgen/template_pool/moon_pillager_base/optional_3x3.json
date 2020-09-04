@@ -5,7 +5,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_d1",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/decentloot_1",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -14,7 +14,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_d2",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/decentloot_2",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -23,16 +23,7 @@
     {
       "weight": 1,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_d3",
-        "processors": "minecraft:empty",
-        "projection": "rigid",
-        "element_type": "minecraft:legacy_single_pool_element"
-      }
-    },
-    {
-      "weight": 1,
-      "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_d4",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/decentloot_3",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -41,7 +32,7 @@
     {
       "weight": 2,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_b1",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/basicloot_1",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -50,7 +41,7 @@
     {
       "weight": 2,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_b2",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/basicloot_2",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -59,7 +50,7 @@
     {
       "weight": 3,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_cartography",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/cartography",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -68,7 +59,7 @@
     {
       "weight": 4,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_desk",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/desk",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -77,7 +68,16 @@
     {
       "weight": 2,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_exam",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/exam_tab",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:legacy_single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/computer",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
@@ -86,7 +86,7 @@
     {
       "weight": 4,
       "element": {
-        "location": "galacticraft-rewoven:moon_pillager_base/optional/optional_seating",
+        "location": "galacticraft-rewoven:moon_pillager_base/optional/seat",
         "processors": "minecraft:empty",
         "projection": "rigid",
         "element_type": "minecraft:legacy_single_pool_element"
