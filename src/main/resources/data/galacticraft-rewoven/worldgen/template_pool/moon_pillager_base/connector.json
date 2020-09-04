@@ -1,0 +1,33 @@
+{
+  "name": "galacticraft-rewoven:moon_pillager_base/connector",
+  "fallback": "galacticraft-rewoven:moon_pillager_base/connector_terminators",
+  "elements": [
+    {
+      "weight": 3,
+      "element": {
+        "location": "galacticraft-rewoven:moon_pillager_base/terminator/terminator_connector_1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:legacy_single_pool_element"
+      }
+    },
+    {
+      "weight": 4,
+      "element": {
+        "location": "galacticraft-rewoven:moon_pillager_base/terminator/terminator_connector_2",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:legacy_single_pool_element"
+      }
+    },
+    {
+      "weight": 3,
+      "element": {
+        "location": "galacticraft-rewoven:moon_pillager_base/terminator/terminator_connector_3",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:legacy_single_pool_element"
+      }
+    }
+  ]
+}
