@@ -568,7 +568,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     public void populateEntities(ChunkRegion region) {
         int i = region.getCenterChunkX();
         int j = region.getCenterChunkZ();
-        Biome biome = region.getBiome((new ChunkPos(i, j)).getCenterBlockPos());
+        Biome biome = region.getBiome(new ChunkPos(i, j).getStartPos());
         ChunkRandom chunkRandom = new ChunkRandom();
         chunkRandom.setPopulationSeed(region.getSeed(), i << 4, j << 4);
         SpawnHelper.populateEntities(region, biome, i, j, chunkRandom);
