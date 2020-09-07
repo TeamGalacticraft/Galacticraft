@@ -57,6 +57,7 @@ dependencies {
     modImplementation(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-structure-api-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-tag-extensions-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-textures-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version))
@@ -75,7 +76,7 @@ dependencies {
         exclude group: 'net.fabricmc'
         exclude group: 'org.jetbrains'
     }
-    modImplementation("com.github.OnyxStudios:FOML:${project.foml_version}") {
+    modImplementation("dev.onyxstudios:FOML:${project.foml_version}") {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
     }
@@ -98,7 +99,7 @@ dependencies {
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}")
     include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
-    include("com.github.OnyxStudios:FOML:${project.foml_version}")
+    include("dev.onyxstudios:FOML:${project.foml_version}")
     include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
     modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = false } //to satisfy mods that depend on the full FAPI
 }

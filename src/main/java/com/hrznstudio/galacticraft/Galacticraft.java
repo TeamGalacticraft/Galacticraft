@@ -30,6 +30,7 @@ import com.hrznstudio.galacticraft.api.event.AtmosphericGasRegistryCallback;
 import com.hrznstudio.galacticraft.api.event.CelestialBodyRegistryCallback;
 import com.hrznstudio.galacticraft.api.registry.RocketPartRegistry;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -45,6 +46,7 @@ import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
+import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
@@ -54,6 +56,7 @@ import com.hrznstudio.galacticraft.world.biome.source.GalacticraftBiomeSources;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftCelestialBodyTypes;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftGases;
+import com.hrznstudio.galacticraft.world.gen.carver.GalacticraftCarvers;
 import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
@@ -97,8 +100,10 @@ public class Galacticraft implements ModInitializer {
         GalacticraftRecipes.register();
         GalacticraftEntityTypes.register();
         GalacticraftLootTables.register();
+        GalacticraftStructures.register();
         GalacticraftFeatures.register();
         GalacticraftSurfaceBuilders.register();
+        GalacticraftCarvers.register();
         GalacticraftBiomes.register();
         GalacticraftBiomeSources.register();
         GalacticraftDimensions.register();
@@ -115,10 +120,10 @@ public class Galacticraft implements ModInitializer {
         GalacticraftVillagerProfessions.register();
         RocketParts.register();
 
-        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
-            Registry.register(registry, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
-            Registry.register(registry, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
-        });
+//        AtmosphericGasRegistryCallback.EVENT.register(registry -> {
+            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
+            Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
+//        });
 
         EntityComponentCallback.event(PlayerEntity.class).register((playerEntity, componentContainer) -> { //cant do it in a mixin
             EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, playerEntity);
@@ -126,7 +131,9 @@ public class Galacticraft implements ModInitializer {
             ((GCPlayerAccessor) playerEntity).setGearInventory(inventory);
         });
 
-        CelestialBodyRegistryCallback.EVENT.register(registry -> Registry.register(registry, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON));
+//        CelestialBodyRegistryCallback.EVENT.register(registry -> {
+            Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
+//        });
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

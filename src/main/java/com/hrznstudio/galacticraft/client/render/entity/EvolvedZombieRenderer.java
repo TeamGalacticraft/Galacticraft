@@ -23,23 +23,19 @@
 
 package com.hrznstudio.galacticraft.client.render.entity;
 
-import com.hrznstudio.galacticraft.client.model.entity.EvolvedZombieModel;
-import com.hrznstudio.galacticraft.entity.EvolvedZombieEntity;
-import net.minecraft.client.render.entity.BipedEntityRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.feature.SpaceGearFeatureRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.render.entity.ZombieEntityRenderer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieRenderer extends BipedEntityRenderer<EvolvedZombieEntity, EvolvedZombieModel> {
-
-    public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher_1) {
-        super(entityRenderDispatcher_1, new EvolvedZombieModel(1, 64, 64), 0.5F);
-    }
-
-    @Override
-    public Identifier getTexture(EvolvedZombieEntity evolvedZombieEntity) {
-        return new Identifier("galacticraft-rewoven:textures/entity/evolved_zombie/evolved_zombie.png");
+public class EvolvedZombieRenderer extends ZombieEntityRenderer {
+    public EvolvedZombieRenderer(EntityRenderDispatcher entityRenderDispatcher) {
+        super(entityRenderDispatcher);
+        this.addFeature(new SpaceGearFeatureRenderer<>(this, 0.0F, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
+            stack.translate(0.0D, -0.4D, 0.0D);
+        }, (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
+        }));
     }
 }

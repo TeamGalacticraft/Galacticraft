@@ -39,6 +39,7 @@ public class Constants {
 
         // Natural
         public static final String MOON_TURF = "moon_turf";
+        public static final String MOON_SURFACE_ROCK = "moon_surface_rock";
         public static final String MOON_ROCK = "moon_rock";
         public static final String MOON_BASALT = "moon_basalt";
         public static final String MOON_DIRT = "moon_dirt";
@@ -490,6 +491,8 @@ public class Constants {
         public static final String EVOLVED_CREEPER = "evolved_creeper";
         public static final String ROCKET = "rocket";
         public static final String BUBBLE = "bubble";
+        public static final String EVOLVED_SKELETON = "evolved_skeleton";
+        public static final String EVOLVED_SPIDER = "evolved_spider";
     }
 
     public static class TextureCoordinates {
@@ -529,7 +532,7 @@ public class Constants {
             public static final String HIGHLANDS_VALLEY = "moon_highlands_valley";
             public static final String MARE_PLAINS = "moon_mare_plains";
             public static final String MARE_ROCKS = "moon_mare_rocks";
-            public static final String MARE_VALLEY = "moon_mare_valley";
+            public static final String MARE_EDGE = "moon_mare_edge";
         }
 
     }

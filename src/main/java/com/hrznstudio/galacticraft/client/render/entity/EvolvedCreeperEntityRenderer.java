@@ -38,7 +38,7 @@ import net.minecraft.util.math.MathHelper;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreeperEntity, EvolvedCreeperEntityModel> {
-    private static final Identifier SKIN = new Identifier(Constants.MOD_ID, "textures/entity/evolved/creeper/creeper.png");
+    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/evolved/creeper.png");
 
     public EvolvedCreeperEntityRenderer(EntityRenderDispatcher dispatcher) {
         super(dispatcher, new EvolvedCreeperEntityModel(0.0F), 0.5F);
@@ -71,6 +71,6 @@ public class EvolvedCreeperEntityRenderer extends MobEntityRenderer<EvolvedCreep
 
     @Override
     public Identifier getTexture(EvolvedCreeperEntity entity) {
-        return SKIN;
+        return TEXTURE;
     }
 }

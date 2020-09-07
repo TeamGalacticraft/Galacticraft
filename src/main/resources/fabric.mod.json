@@ -144,6 +144,7 @@
     "fabric-rendering-fluids-v1": "*",
     "fabric-resource-loader-v0": "*",
     "fabric-screen-handler-api-v1": "*",
+    "fabric-structure-api-v1": "*",
     "fabric-tag-extensions-v0": "*",
     "fabric-textures-v0": "*",
     "fabric-tool-attribute-api-v1": "*"

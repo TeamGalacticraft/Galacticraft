@@ -23,7 +23,6 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import com.hrznstudio.galacticraft.api.entity.EvolvedEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.brain.Activity;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -36,32 +35,8 @@ import java.util.HashSet;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EvolvedZombieEntity extends ZombieEntity implements EvolvedEntity {
-
+public class EvolvedZombieEntity extends ZombieEntity {
     public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, World world) {
         super(entityType, world);
-        this.setHealth(20);
-        this.initGoals();
-        this.setCanPickUpLoot(true);
-        this.brain.setDefaultActivity(Activity.CORE);
-        HashSet<Activity> otherActivities = new HashSet<>();
-        otherActivities.add(Activity.IDLE);
-        this.brain.setCoreActivities(otherActivities);
-    }
-
-    @Override
-    public Arm getMainArm() {
-        return Arm.RIGHT;
-    }
-
-    @Override
-    public boolean canImmediatelyDespawn(double distanceSquared) {
-        return false;
-    }
-
-    @Override
-    protected void initAttributes() {
-        super.initAttributes();
-        this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5d);
     }
 }
