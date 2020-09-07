@@ -37,7 +37,6 @@ import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
-import nerdhub.foml.obj.OBJLoader;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.mojang.datafixers.util.Pair;
 import dev.onyxstudios.foml.obj.OBJLoader;
