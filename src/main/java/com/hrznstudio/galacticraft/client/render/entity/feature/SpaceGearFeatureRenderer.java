@@ -39,6 +39,23 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
         this.oxygenTank.addChild(oxygenPipe);
     }
 
+    public SpaceGearFeatureRenderer(FeatureRendererContext<T, M> context, float extraHelmet, float extraTank, float pivotX, float pivotY, float pivotZ, ModelTransformer<T> maskTransforms, ModelTransformer<T> tankTransforms) {
+        super(context);
+        this.maskTransforms = maskTransforms;
+        this.tankTransforms = tankTransforms;
+
+        this.oxygenMask = new ModelPart(64, 32, 0, 10);
+        this.oxygenMask.setPivot(pivotX, pivotY, pivotZ);
+        this.oxygenMask.addCuboid(-5.0F, -9.0F, -5.0F, 10, 10, 10, extraHelmet);
+        this.oxygenTank = new ModelPart(64, 32, 0, 0);
+        this.oxygenTank.setPivot(0.0F, 6.0F, 0.0F);
+        this.oxygenTank.addCuboid(-4.0F, 1.0F, 2.0F, 8, 6, 4, extraTank);
+        ModelPart oxygenPipe = new ModelPart(64, 32, 40, 17);
+        oxygenPipe.setPivot(0.0F, 2.0F, 0.0F);
+        oxygenPipe.addCuboid(-2.0F, -3.0F, 0.0F, 4, 5, 8, extraTank);
+        this.oxygenTank.addChild(oxygenPipe);
+    }
+
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(getTexture(entity), true));

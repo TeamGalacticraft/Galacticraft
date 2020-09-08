@@ -63,7 +63,6 @@ public class MoonBiomeLayers {
         baseLayer = ValleyCrossSamplingLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer); //add valleys (separators, like rivers)
         baseLayer = ScaleLayer.FUZZY.create(contextProvider.apply(9277L), baseLayer);
 
-        baseLayer = stack(5271L, ScaleLayer.NORMAL, baseLayer, 2, contextProvider);
         return baseLayer;
     }
 
