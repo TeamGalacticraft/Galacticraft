@@ -36,6 +36,7 @@ import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.StructureConfig;
 import net.minecraft.world.gen.feature.JigsawFeature;
+import net.minecraft.world.gen.feature.StructureFeature;
 import net.minecraft.world.gen.feature.StructurePoolFeatureConfig;
 
 import java.util.List;
@@ -64,11 +65,11 @@ public class MoonPillagerBaseFeature extends JigsawFeature {
     }
 
     private boolean ensureNoVillage(ChunkGenerator chunkGenerator, long l, ChunkRandom chunkRandom, int i, int j) {
-        StructureConfig structureConfig = chunkGenerator.getStructuresConfig().getForType(GalacticraftStructures.MOON_VILLAGE);
+        StructureConfig structureConfig = chunkGenerator.getStructuresConfig().getForType(StructureFeature.VILLAGE);
         if (structureConfig != null) {
             for (int k = i - 10; k <= i + 10; ++k) {
                 for (int m = j - 10; m <= j + 10; ++m) {
-                    ChunkPos chunkPos = GalacticraftStructures.MOON_VILLAGE.getStartChunk(structureConfig, l, chunkRandom, k, m);
+                    ChunkPos chunkPos = StructureFeature.VILLAGE.getStartChunk(structureConfig, l, chunkRandom, k, m);
                     if (k == chunkPos.x && m == chunkPos.z) {
                         return true;
                     }
