@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,7 +16,6 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.structure.JigsawJunction;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructurePiece;
-import net.minecraft.structure.StructureStart;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.*;
@@ -30,7 +30,6 @@ import net.minecraft.world.biome.source.BiomeAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
-import net.minecraft.world.chunk.ChunkStatus;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.GenerationStep;
@@ -46,30 +45,10 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public final class MoonChunkGenerator extends ChunkGenerator {
     public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.worldSeed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
 
-    private static final float[] field_16649 = Util.make(new float[13824], (array) -> {
-        for (int i = 0; i < 24; ++i) {
-            for (int j = 0; j < 24; ++j) {
-                for (int k = 0; k < 24; ++k) {
-                    array[i * 24 * 24 + j * 24 + k] = (float) method_16571(j - 12, k - 12, i - 12);
-                }
-            }
-        }
-    });
-
-    private static final float[] field_24775 = Util.make(new float[25], (fs) -> {
-        for (int i = -2; i <= 2; ++i) {
-            for (int j = -2; j <= 2; ++j) {
-                float f = 10.0F / MathHelper.sqrt((float) (i * i + j * j) + 0.2F);
-                fs[i + 2 + (j + 2) * 5] = f;
-            }
-        }
-
-    });
     private static final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
     private static final BlockState AIR = Blocks.AIR.getDefaultState();
     protected final ChunkRandom random;
@@ -127,22 +106,13 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         int n = k + 12;
         if (l >= 0 && l < 24) {
             if (m >= 0 && m < 24) {
-                return n >= 0 && n < 24 ? (double) field_16649[n * 24 * 24 + l * 24 + m] : 0.0D;
+                return n >= 0 && n < 24 ? (double) NoiseChunkGenerator.NOISE_WEIGHT_TABLE[n * 24 * 24 + l * 24 + m] : 0.0D;
             } else {
                 return 0.0D;
             }
         } else {
             return 0.0D;
         }
-    }
-
-    private static double method_16571(int i, int j, int k) {
-        double d = i * i + k * k;
-        double e = (double) j + 0.5D;
-        double f = e * e;
-        double g = Math.pow(2.718281828459045D, -(f / 16.0D + d / 16.0D));
-        double h = -e * MathHelper.fastInverseSqrt(f / 2.0D + d / 2.0D) / 2.0D;
-        return h * g;
     }
 
     @Override
@@ -213,7 +183,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 Biome biome = this.biomeSource.getBiomeForNoiseGen(x + m, k, z + n);
                 float o = biome.getDepth();
                 float u = o > l ? 0.5F : 1.0F;
-                float v = u * field_24775[m + 2 + (n + 2) * 5] / (o + 2.0F);
+                float v = u * NoiseChunkGenerator.BIOME_WEIGHT_TABLE[m + 2 + (n + 2) * 5] / (o + 2.0F);
                 g += biome.getScale() * v;
                 h += o * v;
                 i += v;
@@ -353,37 +323,16 @@ public final class MoonChunkGenerator extends ChunkGenerator {
 
     private void buildBedrock(Chunk chunk, Random random) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
-        int i = chunk.getPos().getStartX();
-        int j = chunk.getPos().getStartZ();
+        int startX = chunk.getPos().getStartX();
+        int startZ = chunk.getPos().getStartZ();
         ChunkGeneratorSettings chunkGeneratorSettings = settingsSupplier.get();
-        int k = chunkGeneratorSettings.getBedrockFloorY();
-        int l = this.height - 1 - chunkGeneratorSettings.getBedrockCeilingY();
-        boolean bl = l + 4 >= 0 && l < this.height;
-        boolean bl2 = k + 4 >= 0 && k < this.height;
-        if (bl || bl2) {
-            Iterator<BlockPos> var12 = BlockPos.iterate(i, 0, j, i + 15, 0, j + 15).iterator();
-
-            while(true) {
-                BlockPos blockPos;
-                int o;
-                do {
-                    if (!var12.hasNext()) {
-                        return;
-                    }
-
-                    blockPos = var12.next();
-                    if (bl) {
-                        for(o = 0; o < 5; ++o) {
-                            if (o <= random.nextInt(5)) {
-                                chunk.setBlockState(mutable.set(blockPos.getX(), l - o, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
-                            }
-                        }
-                    }
-                } while(!bl2);
-
-                for(o = 4; o >= 0; --o) {
+        int y = chunkGeneratorSettings.getBedrockFloorY();
+        boolean bl2 = y + 4 >= 0 && y < this.height;
+        if (bl2) {
+            for (BlockPos pos : BlockPos.iterate(startX, 0, startZ, startX + 15, 0, startZ + 15)) {
+                for(int o = 4; o >= 0; --o) {
                     if (o <= random.nextInt(5)) {
-                        chunk.setBlockState(mutable.set(blockPos.getX(), k + o, blockPos.getZ()), Blocks.BEDROCK.getDefaultState(), false);
+                        chunk.setBlockState(mutable.set(pos.getX(), y + o, pos.getZ()), BEDROCK, false);
                     }
                 }
             }
@@ -565,27 +514,13 @@ public final class MoonChunkGenerator extends ChunkGenerator {
 
     @Override
     public List<SpawnSettings.SpawnEntry> getEntitySpawnList(Biome biome, StructureAccessor accessor, SpawnGroup group, BlockPos pos) {
-        if (accessor.getStructureAt(pos, true, StructureFeature.SWAMP_HUT).hasChildren()) {
-            if (group == SpawnGroup.MONSTER) {
-                return StructureFeature.SWAMP_HUT.getMonsterSpawns();
-            }
-
-            if (group == SpawnGroup.CREATURE) {
-                return StructureFeature.SWAMP_HUT.getCreatureSpawns();
-            }
-        }
-
         if (group == SpawnGroup.MONSTER) {
-            if (accessor.getStructureAt(pos, false, StructureFeature.PILLAGER_OUTPOST).hasChildren()) {
-                return StructureFeature.PILLAGER_OUTPOST.getMonsterSpawns();
+            if (accessor.getStructureAt(pos, false, GalacticraftStructures.MOON_PILLAGER_BASE_FEATURE).hasChildren()) {
+                return GalacticraftStructures.MOON_PILLAGER_BASE_FEATURE.getMonsterSpawns();
             }
 
-            if (accessor.getStructureAt(pos, false, StructureFeature.MONUMENT).hasChildren()) {
-                return StructureFeature.MONUMENT.getMonsterSpawns();
-            }
-
-            if (accessor.getStructureAt(pos, true, StructureFeature.FORTRESS).hasChildren()) {
-                return StructureFeature.FORTRESS.getMonsterSpawns();
+            if (accessor.getStructureAt(pos, false, GalacticraftStructures.MOON_RUINS).hasChildren()) {
+                return GalacticraftStructures.MOON_RUINS.getMonsterSpawns();
             }
         }
 

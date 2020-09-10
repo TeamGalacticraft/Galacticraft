@@ -32,3 +32,5 @@ accessible      class    net/minecraft/village/TradeOffers$SellMapFactory
 accessible      field    net/minecraft/world/biome/BuiltinBiomes                              BY_RAW_ID         Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
 mutable         field    net/minecraft/client/render/entity/model/VillagerResemblingModel     field_17142       Lnet/minecraft/client/model/ModelPart;
 accessible      field    net/minecraft/village/VillagerType                                   BIOME_TO_TYPE     Ljava/util/Map;
+accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    NOISE_WEIGHT_TABLE [F
+accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
