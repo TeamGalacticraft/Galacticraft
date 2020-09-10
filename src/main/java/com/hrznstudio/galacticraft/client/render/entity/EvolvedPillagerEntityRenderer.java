@@ -1,23 +1,20 @@
 package com.hrznstudio.galacticraft.client.render.entity;
 
-import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.client.model.entity.EvolvedPillagerEntityModel;
-import com.hrznstudio.galacticraft.entity.EvolvedPillagerEntity;
+import com.hrznstudio.galacticraft.client.render.entity.feature.SpaceGearFeatureRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
-import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.render.entity.PillagerEntityRenderer;
 
-public class EvolvedPillagerEntityRenderer extends MobEntityRenderer<EvolvedPillagerEntity, EvolvedPillagerEntityModel> {
-    private static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, "textures/entity/evolved/pillager.png");
-
+public class EvolvedPillagerEntityRenderer extends PillagerEntityRenderer {
     public EvolvedPillagerEntityRenderer(EntityRenderDispatcher entityRenderDispatcher) {
-        super(entityRenderDispatcher, new EvolvedPillagerEntityModel(), 0.5F);
-        this.addFeature(new HeldItemFeatureRenderer<>(this));
+        super(entityRenderDispatcher);
+        this.addFeature(new SpaceGearFeatureRenderer<>(this, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {
+                    stack.translate(0.0F, -0.1F, 0.0F);
+//                    stack.scale(0.0F, 1.1F, 0.0F);
+                },
+                (stack, entity, limbAngle, limbDistance, tickDelta, animationProgress, headYaw, headPitch) -> {}
+                )
+        );
     }
 
-    @Override
-    public Identifier getTexture(EvolvedPillagerEntity pillagerEntity) {
-        return TEXTURE;
-    }
 }
