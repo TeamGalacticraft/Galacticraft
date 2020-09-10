@@ -50,18 +50,16 @@ public class MoonBiomeLayers {
 
     private static <T extends LayerSampler, C extends LayerSampleContext<T>> LayerFactory<T> build(int biomeSize, LongFunction<C> contextProvider, Registry<Biome> registry) {
         LayerFactory<T> baseLayer = MoonHighlandsBiomeLayer.INSTANCE.create(contextProvider.apply(4415L));
-        LayerFactory<T> mareLayer = MoonMareBiomeLayer.INSTANCE.create(contextProvider.apply(6521L));
 
-        baseLayer = MoonMergeLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer, mareLayer); //layer merge
+        baseLayer = MoonMergeLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer, MoonMareBiomeLayer.INSTANCE.create(contextProvider.apply(6521L))); //layer merge
 
-        baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(5803L), baseLayer);
-
-        for (int i = 1; i < biomeSize; ++i) {
+        for (int i = 1; i < biomeSize / 2; ++i) {
             baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(2557L + i * 3), baseLayer);
         }
 
         baseLayer = ValleyCrossSamplingLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer); //add valleys (separators, like rivers)
         baseLayer = ScaleLayer.FUZZY.create(contextProvider.apply(9277L), baseLayer);
+        baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(7893L), baseLayer);
 
         return baseLayer;
     }
@@ -77,7 +75,7 @@ public class MoonBiomeLayers {
     }
 
     public static BiomeLayerSampler build(long seed, int biomeSize, Registry<Biome> registry) {
-        if (MOON_HIGHLANDS_PLAINS_ID == -1) {
+        if (MOON_HIGHLANDS_PLAINS_ID == -1 || MOON_HIGHLANDS_PLAINS_ID != registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS))) {
             MOON_HIGHLANDS_PLAINS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS));
             MOON_HIGHLANDS_ROCKS_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS));
             MOON_HIGHLANDS_VALLEY_ID = registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY));
