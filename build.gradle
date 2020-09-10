@@ -40,11 +40,13 @@ dependencies {
     modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-commands-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-crash-report-info-v1", project.fabric_version))
     modRuntime(fabricApi.module("fabric-events-lifecycle-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-item-api-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-item-groups-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-mining-levels-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-models-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-networking-v0", project.fabric_version))
@@ -87,7 +89,7 @@ dependencies {
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}") { transitive = false }
-//    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}") { transitive = false } //todo add back cotton-resources when it updates
+    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}") { transitive = false }
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")
