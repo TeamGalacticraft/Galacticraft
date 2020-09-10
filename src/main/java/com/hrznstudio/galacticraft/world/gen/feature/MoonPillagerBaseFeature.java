@@ -24,8 +24,10 @@
 package com.hrznstudio.galacticraft.world.gen.feature;
 
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import com.mojang.serialization.Codec;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;
@@ -42,7 +44,7 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonPillagerBaseFeature extends JigsawFeature {
-    private static final List<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = ImmutableList.<SpawnSettings.SpawnEntry>builder().build();
+    private static final List<SpawnSettings.SpawnEntry> MONSTER_SPAWNS = ImmutableList.<SpawnSettings.SpawnEntry>builder().add(new SpawnSettings.SpawnEntry(GalacticraftEntityTypes.EVOLVED_PILLAGER, 1, 1, 2)).build();
 
     public MoonPillagerBaseFeature(Codec<StructurePoolFeatureConfig> codec) {
         super(codec, 0, true, true);
