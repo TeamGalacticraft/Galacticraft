@@ -92,7 +92,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                         new SlideConfig(-10, 3, 0), new SlideConfig(-30, 0, 0),
                         1, 2, 1.0D, -0.46875D, true,
                         true, false, false),
-                GalacticraftBlocks.MOON_ROCK.getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false));
+                GalacticraftBlocks.MOON_ROCKS[0].getDefaultState(), Blocks.AIR.getDefaultState(), -10, 0, 63, false));
     }
 
     public MoonChunkGenerator(BiomeSource biomeSource, long seed, @NotNull Supplier<ChunkGeneratorSettings> supplier) {

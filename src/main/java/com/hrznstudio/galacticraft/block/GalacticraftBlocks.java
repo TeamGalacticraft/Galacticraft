@@ -80,11 +80,10 @@ public class GalacticraftBlocks {
     public static final Block WALKWAY = registerBlock(new Walkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WALKWAY, BLOCKS_GROUP);
     public static final Block WIRE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.PIPE_WALKWAY, BLOCKS_GROUP);
     public static final Block PIPE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WIRE_WALKWAY, BLOCKS_GROUP);
-
+    public static final Block[] MOON_ROCKS = createDecorationBlocks(Constants.Blocks.MOON_ROCK, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).requiresTool().strength(2.0F, 5.0F), false);
+    public static final Block[] COBBLED_MOON_ROCKS = createDecorationBlocks(Constants.Blocks.COBBLED_MOON_ROCK, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).requiresTool().strength(2.0F, 5.0F), false);
     public static final Block MOON_TURF = registerBlock(new Block(FabricBlockSettings.of(Material.SOLID_ORGANIC, MaterialColor.LIGHT_GRAY).strength(0.5F, 0.5F)), Constants.Blocks.MOON_TURF, BLOCKS_GROUP);
     public static final Block MOON_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.MOON_SURFACE_ROCK, BLOCKS_GROUP);
-    public static final Block MOON_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.MOON_ROCK, BLOCKS_GROUP);
-    public static final Block MOON_ROCK_WALL = registerBlock(new WallBlock(FabricBlockSettings.copy(MOON_ROCK).strength(2.0F, 2.0F)), Constants.Blocks.MOON_ROCK_WALL, BLOCKS_GROUP);
     public static final Block MOON_BASALT = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(1.5F, 6.0F)), Constants.Blocks.MOON_BASALT, BLOCKS_GROUP);
     public static final Block MOON_BASALT_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_BASALT_SLAB, BLOCKS_GROUP);
     public static final Block MOON_BASALT_STAIRS = registerBlock(new StairsBlock(MOON_BASALT.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_BASALT_STAIRS, BLOCKS_GROUP);
@@ -133,8 +132,6 @@ public class GalacticraftBlocks {
     public static final Block MARS_COBBLESTONE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.MARS_COBBLESTONE_SLAB, BLOCKS_GROUP);
     public static final Block MARS_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MARS_DUNGEON_BRICK_SLAB, BLOCKS_GROUP);
     public static final Block MOON_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_DUNGEON_BRICK_SLAB, BLOCKS_GROUP);
-    public static final Block MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_ROCK_SLAB, BLOCKS_GROUP);
-    public static final Block MOON_ROCK_STAIRS = registerBlock(new StairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_ROCK_STAIRS, BLOCKS_GROUP);
     public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new StairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f)), Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS, BLOCKS_GROUP);
     public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new StairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f)), Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS, BLOCKS_GROUP);
     public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new StairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f)), Constants.Blocks.MARS_COBBLESTONE_STAIRS, BLOCKS_GROUP);
@@ -197,25 +194,28 @@ public class GalacticraftBlocks {
      */
     private static Block[] createDecorationBlocks(String baseId, Block baseBlock, boolean detailedVariant) {
         Block[] blocks = new Block[detailedVariant ? 8 : 4];
-        blocks[0] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId), baseBlock);
-        blocks[1] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId + "_slab"), new SlabBlock(FabricBlockSettings.copyOf(baseBlock)));
-        blocks[2] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId + "_stairs"), new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)));
-        blocks[3] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId + "_wall"), new WallBlock(FabricBlockSettings.copyOf(baseBlock)));
+        blocks[0] = registerBlock(baseBlock, baseId);
+        blocks[1] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), baseId + "_slab");
+        blocks[2] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), baseId + "_stairs");
+        blocks[3] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), baseId + "_wall");
+
         if (detailedVariant) {
-            blocks[0] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId), new Block(FabricBlockSettings.copyOf(baseBlock)));
-            blocks[1] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId + "_slab"), new SlabBlock(FabricBlockSettings.copyOf(baseBlock)));
-            blocks[2] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId + "_stairs"), new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)));
-            blocks[3] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId + "_wall"), new WallBlock(FabricBlockSettings.copyOf(baseBlock)));
-        }
-        for (Block block : blocks) {
-            Registry.register(Registry.ITEM, Registry.BLOCK.getId(block), new BlockItem(block,  new Item.Settings().group(BLOCKS_GROUP)));
+            blocks[4] = registerBlock(new Block(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId);
+            blocks[5] = registerBlock(new SlabBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_slab");
+            blocks[6] = registerBlock(new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_stairs");
+            blocks[7] = registerBlock(new WallBlock(FabricBlockSettings.copyOf(baseBlock)), "detailed_" + baseId + "_wall");
         }
         return blocks;
     }
 
+    private static <T extends Block> T registerBlock(T block, String id) {
+        return registerBlock(block, id, BLOCKS_GROUP);
+    }
+
     private static <T extends Block> T registerBlock(T block, String id, ItemGroup group) {
-        Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, id), block);
-        BlockItem item = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), new BlockItem(Registry.BLOCK.get(new Identifier(Constants.MOD_ID, id)), new Item.Settings().group(group)));
+        Identifier identifier = new Identifier(Constants.MOD_ID, id);
+        Registry.register(Registry.BLOCK, identifier, block);
+        BlockItem item = Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(group)));
         item.appendBlocks(Item.BLOCK_ITEMS, item);
         return block;
     }
