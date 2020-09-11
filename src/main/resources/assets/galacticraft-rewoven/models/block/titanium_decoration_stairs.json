@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "galacticraft-rewoven:block/titanium_decoration",
+    "top": "galacticraft-rewoven:block/titanium_decoration",
+    "side": "galacticraft-rewoven:block/titanium_decoration"
+  }
+}

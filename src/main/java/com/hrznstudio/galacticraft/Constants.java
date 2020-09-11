@@ -83,8 +83,14 @@ public class Constants {
         public static final String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
 
         // Decorative BLocks
+        public static final String ALUMINUM_DECORATION = "aluminum_decoration";
+        public static final String BRONZE_DECORATION = "bronze_decoration";
+        public static final String COPPER_DECORATION = "copper_decoration";
+        public static final String IRON_DECORATION = "iron_decoration";
+        public static final String METEORIC_IRON_DECORATION = "meteoric_iron_decoration";
+        public static final String STEEL_DECORATION = "steel_decoration";
         public static final String TIN_DECORATION = "tin_decoration";
-        public static final String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
+        public static final String TITANIUM_DECORATION = "titanium_decoration";
         public static final String DARK_DECORATION = "dark_decoration";
         public static final String GRATING = "grating";
         public static final String SQUARE_LIGHT_PANEL = "square_light_panel";
@@ -98,8 +104,6 @@ public class Constants {
         public static final String WALKWAY = "walkway";
         public static final String WIRE_WALKWAY = "wire_walkway";
         public static final String PIPE_WALKWAY = "pipe_walkway";
-        public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
-        public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
         public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
         public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
@@ -109,12 +113,8 @@ public class Constants {
         public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
         public static final String MOON_BASALT_STAIRS = "moon_basalt_stairs";
         public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
-        public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
-        public static final String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
         public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
         public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
-        public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
-        public static final String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
         public static final String MOON_ROCK_WALL = "moon_rock_wall";
         public static final String MOON_BASALT_WALL = "moon_basalt_wall";
         public static final String MOON_CHEESE_LEAVES = "moon_cheese_leaves";

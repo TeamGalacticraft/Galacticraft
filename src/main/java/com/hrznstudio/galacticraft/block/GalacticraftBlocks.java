@@ -108,12 +108,18 @@ public class GalacticraftBlocks {
     public static final Block VOLCANIC_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(2.2F, 0.5F)), Constants.Blocks.VOLCANIC_ROCK, BLOCKS_GROUP);
     public static final Block PUMICE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F)), Constants.Blocks.PUMICE, BLOCKS_GROUP);
     public static final Block VAPOR_SPOUT = registerBlock(new VaporSpoutBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).dropsNothing().strength(1.5F, 2.0F)), Constants.Blocks.VAPOR_SPOUT, BLOCKS_GROUP);
-    public static final Block TIN_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.TIN_DECORATION, BLOCKS_GROUP);
-    public static final Block DETAILED_TIN_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.DETAILED_TIN_DECORATION, BLOCKS_GROUP);
+    public static final Block[] ALUMINUM_DECORATIONS = createDecorationBlocks(Constants.Blocks.ALUMINUM_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] BRONZE_DECORATIONS = createDecorationBlocks(Constants.Blocks.BRONZE_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] COPPER_DECORATIONS = createDecorationBlocks(Constants.Blocks.COPPER_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] IRON_DECORATIONS = createDecorationBlocks(Constants.Blocks.IRON_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] METEORIC_IRON_DECORATIONS = createDecorationBlocks(Constants.Blocks.METEORIC_IRON_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] STEEL_DECORATIONS = createDecorationBlocks(Constants.Blocks.STEEL_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] TIN_DECORATIONS = createDecorationBlocks(Constants.Blocks.TIN_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
+    public static final Block[] TITANIUM_DECORATIONS = createDecorationBlocks(Constants.Blocks.TITANIUM_DECORATION, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F), true);
     public static final Block DARK_DECORATION_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK).strength(2.0F, 2.0F)), Constants.Blocks.DARK_DECORATION, BLOCKS_GROUP);
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.GRATING, BLOCKS_GROUP);
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constants.Blocks.ALUMINUM_WIRE, BLOCKS_GROUP);
-    public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATION_BLOCK)), Constants.Blocks.SEALABLE_ALUMINUM_WIRE, BLOCKS_GROUP);
+    public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constants.Blocks.SEALABLE_ALUMINUM_WIRE, BLOCKS_GROUP);
     public static final Block FLUID_PIPE = registerBlock(new FluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.FLUID_PIPE, BLOCKS_GROUP);
     public static final Block SQUARE_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL)), Constants.Blocks.SQUARE_LIGHT_PANEL, BLOCKS_GROUP);
     public static final Block SPOTLIGHT_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 3.0f), Constants.Blocks.SPOTLIGHT_LIGHT_PANEL, BLOCKS_GROUP);
@@ -123,8 +129,6 @@ public class GalacticraftBlocks {
     public static final Block VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.VACUUM_GLASS, BLOCKS_GROUP);
     public static final Block CLEAR_VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.CLEAR_VACUUM_GLASS, BLOCKS_GROUP);
     public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.STRONG_VACUUM_GLASS, BLOCKS_GROUP);
-    public static final Block TIN_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.TIN_DECORATION_SLAB, BLOCKS_GROUP);
-    public static final Block TIN_DECORATION_SLAB_1 = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.DETAILED_TIN_DECORATION_SLAB, BLOCKS_GROUP);
     public static final Block DARK_DECORATION_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.DARK_DECORATION_SLAB, BLOCKS_GROUP);
     public static final Block MARS_COBBLESTONE_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.MARS_COBBLESTONE_SLAB, BLOCKS_GROUP);
     public static final Block MARS_DUNGEON_BRICKS_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MARS_DUNGEON_BRICK_SLAB, BLOCKS_GROUP);
@@ -132,12 +136,8 @@ public class GalacticraftBlocks {
     public static final Block MOON_ROCK_SLAB = registerBlock(new SlabBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_ROCK_SLAB, BLOCKS_GROUP);
     public static final Block MOON_ROCK_STAIRS = registerBlock(new StairsBlock(MOON_ROCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(5.0f, 5.0f)), Constants.Blocks.MOON_ROCK_STAIRS, BLOCKS_GROUP);
     public static final Block MOON_DUNGEON_BRICKS_STAIRS = registerBlock(new StairsBlock(MOON_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0f, 5.0f)), Constants.Blocks.MOON_DUNGEON_BRICK_STAIRS, BLOCKS_GROUP);
-    public static final Block TIN_DECORATION_STAIRS = registerBlock(new StairsBlock(TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.TIN_DECORATION_STAIRS, BLOCKS_GROUP);
-    public static final Block DETAILED_TIN_DECORATION_STAIRS = registerBlock(new StairsBlock(DETAILED_TIN_DECORATION_BLOCK.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0f, 2.0f)), Constants.Blocks.DETAILED_TIN_DECORATION_STAIRS, BLOCKS_GROUP);
     public static final Block MARS_DUNGEON_BRICKS_STAIRS = registerBlock(new StairsBlock(MARS_DUNGEON_BRICKS.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0f, 5.0f)), Constants.Blocks.MARS_DUNGEON_BRICK_STAIRS, BLOCKS_GROUP);
     public static final Block MARS_COBBLESTONE_STAIRS = registerBlock(new StairsBlock(MARS_COBBLESTONE.getDefaultState(), FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8f)), Constants.Blocks.MARS_COBBLESTONE_STAIRS, BLOCKS_GROUP);
-    public static final Block TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F)), Constants.Blocks.TIN_DECORATION_WALL, BLOCKS_GROUP);
-    public static final Block DETAILED_TIN_DECORATION_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE).strength(2.0F, 2.0F)), Constants.Blocks.DETAILED_TIN_DECORATION_WALL, BLOCKS_GROUP);
     public static final Block MOON_DUNGEON_BRICKS_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GRAY).strength(5.0F, 5.0F)), Constants.Blocks.MOON_DUNGEON_BRICK_WALL, BLOCKS_GROUP);
     public static final Block MARS_COBBLESTONE_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).strength(2.0F, 2.0F)), Constants.Blocks.MARS_COBBLESTONE_WALL, BLOCKS_GROUP);
     public static final Block MARS_DUNGEON_BRICKS_WALL = registerBlock(new WallBlock(FabricBlockSettings.of(Material.STONE, MaterialColor.GREEN).strength(5.0F, 5.0F)), Constants.Blocks.MARS_DUNGEON_BRICK_WALL, BLOCKS_GROUP);
@@ -182,6 +182,35 @@ public class GalacticraftBlocks {
     public static void register() {
         ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(FUEL, 80, 80);
         ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(CRUDE_OIL, 80, 80);
+    }
+
+    private static Block[] createDecorationBlocks(String baseId, AbstractBlock.Settings settings, boolean detailedVariant) {
+        return createDecorationBlocks(baseId, new Block(settings), detailedVariant);
+    }
+
+    /**
+     * Generates a stair, slab and wall block for the given block.
+     * @param baseId The base registry id for all the blocks.
+     * @param baseBlock The block to model the variants on.
+     * @param detailedVariant Whether to create 4 additional 'detailed' blocks.
+     * @return An array of different variants of the same block.
+     */
+    private static Block[] createDecorationBlocks(String baseId, Block baseBlock, boolean detailedVariant) {
+        Block[] blocks = new Block[detailedVariant ? 8 : 4];
+        blocks[0] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId), baseBlock);
+        blocks[1] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId + "_slab"), new SlabBlock(FabricBlockSettings.copyOf(baseBlock)));
+        blocks[2] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId + "_stairs"), new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)));
+        blocks[3] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, baseId + "_wall"), new WallBlock(FabricBlockSettings.copyOf(baseBlock)));
+        if (detailedVariant) {
+            blocks[0] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId), new Block(FabricBlockSettings.copyOf(baseBlock)));
+            blocks[1] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId + "_slab"), new SlabBlock(FabricBlockSettings.copyOf(baseBlock)));
+            blocks[2] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId + "_stairs"), new StairsBlock(baseBlock.getDefaultState(), FabricBlockSettings.copyOf(baseBlock)));
+            blocks[3] = Registry.register(Registry.BLOCK, new Identifier(Constants.MOD_ID, "detailed_" + baseId + "_wall"), new WallBlock(FabricBlockSettings.copyOf(baseBlock)));
+        }
+        for (Block block : blocks) {
+            Registry.register(Registry.ITEM, Registry.BLOCK.getId(block), new BlockItem(block,  new Item.Settings().group(BLOCKS_GROUP)));
+        }
+        return blocks;
     }
 
     private static <T extends Block> T registerBlock(T block, String id, ItemGroup group) {
