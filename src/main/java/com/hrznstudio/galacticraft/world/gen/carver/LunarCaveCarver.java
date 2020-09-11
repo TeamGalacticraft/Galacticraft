@@ -24,7 +24,7 @@ public class LunarCaveCarver extends CaveCarver {
                 .add(GalacticraftBlocks.MOON_ROCKS[0])
                 .add(GalacticraftBlocks.MOON_SURFACE_ROCK)
                 .add(GalacticraftBlocks.MOON_TURF)
-                .add(GalacticraftBlocks.MOON_BASALT)
+                .add(GalacticraftBlocks.MOON_BASALTS[0])
                 .add(GalacticraftBlocks.MOON_DIRT)
                 .build();
     }
@@ -53,7 +53,7 @@ public class LunarCaveCarver extends CaveCarver {
             mutable.set(x, y, z);
             BlockState blockState = chunk.getBlockState(mutable);
             BlockState blockState2 = chunk.getBlockState(mutable2.set(mutable, Direction.UP));
-            if (blockState.isOf(GalacticraftBlocks.MOON_BASALT) || blockState.isOf(GalacticraftBlocks.MOON_ROCKS[0])) {
+            if (blockState.isOf(GalacticraftBlocks.MOON_BASALTS[0]) || blockState.isOf(GalacticraftBlocks.MOON_ROCKS[0])) {
                 mutableBoolean.setTrue();
             }
 

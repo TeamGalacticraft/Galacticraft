@@ -77,7 +77,7 @@ public class Constants {
 
         // Solid Blocks
         public static final String SILICON_BLOCK = "silicon_block";
-        public static final String SOLID_METEORIC_IRON_BLOCK = "solid_meteoric_iron";
+        public static final String METEORIC_IRON_BLOCK = "meteoric_iron_block";
         public static final String DESH_BLOCK = "desh_block";
         public static final String TITANIUM_BLOCK = "titanium_block";
         public static final String LEAD_BLOCK = "lead_block";
@@ -94,6 +94,7 @@ public class Constants {
         public static final String TITANIUM_DECORATION = "titanium_decoration";
         public static final String DARK_DECORATION = "dark_decoration";
         public static final String GRATING = "grating";
+        public static final String TIN_LADDER = "tin_ladder";
         public static final String SQUARE_LIGHT_PANEL = "square_light_panel";
         public static final String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
         public static final String LINEAR_LIGHT_PANEL = "linear_light_panel";
@@ -106,20 +107,14 @@ public class Constants {
         public static final String WIRE_WALKWAY = "wire_walkway";
         public static final String PIPE_WALKWAY = "pipe_walkway";
         public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
-        public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
         public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
         public static final String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
-        public static final String MOON_BASALT_SLAB = "moon_basalt_slab";
-        public static final String MOON_BASALT_STAIRS = "moon_basalt_stairs";
         public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
-        public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
-        public static final String MOON_BASALT_WALL = "moon_basalt_wall";
         public static final String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
         public static final String MOON_CHEESE_LOG = "moon_cheese_log";
 
         public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
-        public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
         public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
@@ -210,7 +205,7 @@ public class Constants {
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
         public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
-        public static final String MOON_BASALT_BRICKS = "moon_basalt_bricks";
+        public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
         public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
     }
 
