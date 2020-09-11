@@ -23,7 +23,9 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.google.common.collect.Lists;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
@@ -32,6 +34,7 @@ import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -47,13 +50,14 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
@@ -64,21 +68,6 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     public CompressorBlockEntity() {
         super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
-    }
-
-    @Override
-    public SimpleCapacitorComponent getCapacitor() {
-        return new SimpleCapacitorComponent(0, GalacticraftEnergy.GALACTICRAFT_JOULES) {
-            @Override
-            public boolean canExtractEnergy() {
-                return false;
-            }
-
-            @Override
-            public boolean canInsertEnergy() {
-                return false;
-            }
-        };
     }
 
     @Override
@@ -100,6 +89,21 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     @Override
     protected int getInventorySize() {
         return 11;
+    }
+
+    @Override
+    protected int getOxygenTankSize() {
+        return 0;
+    }
+
+    @Override
+    protected int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return Lists.asList(SideOption.DEFAULT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
     }
 
     @Override
@@ -243,6 +247,41 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    protected boolean canHopperExtractItems(int slot) {
+        return slot == OUTPUT_SLOT;
+    }
+
+    @Override
+    protected boolean canHopperInsertItems(int slot) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     /**

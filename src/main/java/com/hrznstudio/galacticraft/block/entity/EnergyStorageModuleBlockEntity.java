@@ -23,22 +23,27 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
     private int prevEnergy = 0;
@@ -66,6 +71,20 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
     protected int getInventorySize() {
         return 2;
     }
+
+    @Override
+    protected int getOxygenTankSize() {
+        return 0;
+    }
+
+    @Override
+    protected int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT}); }
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
@@ -102,5 +121,40 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
     @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    protected boolean canHopperExtractItems(int slot) {
+        return true;
+    }
+
+    @Override
+    protected boolean canHopperInsertItems(int slot) {
+        return true;
+    }
+
+    @Override
+    protected boolean canExtractOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 }

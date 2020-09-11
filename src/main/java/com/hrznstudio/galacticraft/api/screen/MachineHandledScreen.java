@@ -26,10 +26,10 @@ package com.hrznstudio.galacticraft.api.screen;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock.BlockFace;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock.BlockFace;
 import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
@@ -39,6 +39,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
@@ -49,12 +50,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.EnumProperty;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.state.property.Property;
+import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -68,7 +68,7 @@ import java.util.*;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends ConfigurableElectricMachineBlockEntity>> extends HandledScreen<C> {
+public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> extends HandledScreen<C> {
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
     public static final int SECURITY_PANEL_WIDTH = 99;
@@ -146,12 +146,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.world = world;
 
         if (this.handler.blockEntity != null) {
-            ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
+            ConfigurableMachineBlockEntity entity = this.handler.blockEntity;
 
-            ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
+            ConfigurableMachineBlockEntity.SecurityInfo security = entity.getSecurity();
             if (!security.hasOwner()) {
                 security.setOwner(this.playerInventory.player);
-                security.setPublicity(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
+                security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
                 sendSecurityUpdate(entity);
             } else if (security.getOwner().equals(playerInventory.player.getUuid())
                     && !security.getUsername().equals(playerInventory.player.getEntityName())) {
@@ -160,12 +160,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
 
             for (BlockFace face : BlockFace.values()) {
-                sideOptions.put(face, ((ConfigurableElectricMachineBlock) world.getBlockState(pos).getBlock()).getOption(world.getBlockState(pos), face));
+                sideOptions.put(face, ((ConfigurableMachineBlock) world.getBlockState(pos).getBlock()).getOption(world.getBlockState(pos), face));
             }
         }
     }
 
-    private void sendSecurityUpdate(ConfigurableElectricMachineBlockEntity entity) {
+    private void sendSecurityUpdate(ConfigurableMachineBlockEntity entity) {
         if (this.playerInventory.player.getUuid().equals(entity.getSecurity().getOwner()) || !entity.getSecurity().hasOwner()) {
             MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security"),
                     new PacketByteBuf(Unpooled.buffer())
@@ -181,7 +181,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
     }
 
-    private void sendRedstoneUpdate(ConfigurableElectricMachineBlockEntity entity) {
+    private void sendRedstoneUpdate(ConfigurableMachineBlockEntity entity) {
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone"),
                 new PacketByteBuf(Unpooled.buffer())
                         .writeBlockPos(pos)
@@ -200,18 +200,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.drawTexture(stack, energyX, (int) ((energyY - (height * energyScale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * energyScale));
     }
 
-    private void sendSideConfigUpdate(Direction direction, SideOption option) {
-        assert this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock;
-        assert SideOption.getApplicableValuesForMachine(this.world.getBlockState(pos).getBlock()).contains(option);
-        if (this.playerInventory.player.getUuid().equals(((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().getOwner()) || !((ConfigurableElectricMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().hasOwner()) {
+    private void sendSideConfigUpdate(BlockFace face, SideOption option, boolean numChange, boolean positive) {
+        assert this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock;
+        assert this.handler.blockEntity.validSideOptions().contains(option);
+        if (((ConfigurableMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().hasAccess(playerInventory.player)) {
             MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"),
-                    new PacketByteBuf(Unpooled.buffer())
+                    new PacketByteBuf(new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
-                            .writeEnumConstant(direction)
+                            .writeEnumConstant(face.toDirection(Direction.NORTH))
                             .writeEnumConstant(option)
+                            .writeBoolean(numChange).writeBoolean(positive))
             ));
         } else {
-            Galacticraft.logger.error("Tried to send security update when not the owner!");
+            Galacticraft.logger.error("Tried to send side update when not trusted!");
         }
     }
 
@@ -235,11 +236,11 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return new ArrayList<>();
     }
 
-    public void drawConfigTabs(MatrixStack stack) {
+    public void drawConfigTabs(MatrixStack stack, int mouseX, int mouseY) {
         if (this.handler.blockEntity != null) {
-            ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
+            ConfigurableMachineBlockEntity entity = this.handler.blockEntity;
 
-            ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
+            ConfigurableMachineBlockEntity.SecurityInfo security = entity.getSecurity();
             DiffuseLighting.disable();
             if (IS_REDSTONE_OPEN) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -288,6 +289,44 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
                 this.drawTexture(stack, this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5, this.y + 49 + 36 + 3, getXForOption(sideOptions.get(BlockFace.BOTTOM)), getYForOption(sideOptions.get(BlockFace.BOTTOM)), BUTTONS_WIDTH, BUTTONS_HEIGHT); //BOTTOM - BOTTOM
 
+                //TODO
+                if (hasShiftDown()) {
+                    if ((mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.FRONT).isItem())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.BACK).isItem())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.LEFT).isItem())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.RIGHT).isItem())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68 && sideOptions.get(BlockFace.TOP).isItem())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18 && sideOptions.get(BlockFace.BOTTOM).isItem())) {
+
+                        for (Slot slot : handler.slots) {
+                            if (slot.inventory != playerInventory) {
+                                this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x, this.y + slot.y, Formatting.BLUE.getColorValue());
+                            }
+                        }
+                    } else if ((mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.FRONT).isFluid())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.BACK).isFluid())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.LEFT).isFluid())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.RIGHT).isFluid())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68 && sideOptions.get(BlockFace.TOP).isFluid())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18 && sideOptions.get(BlockFace.BOTTOM).isFluid())) {
+                        //todo
+                    } else if ((mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.FRONT).isOxygen())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.BACK).isOxygen())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.LEFT).isOxygen())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.RIGHT).isOxygen())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68 && sideOptions.get(BlockFace.TOP).isOxygen())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18 && sideOptions.get(BlockFace.BOTTOM).isOxygen())) {
+                        //todo
+                    } else if ((mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.FRONT).isEnergy())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 + 19 && mouseX + 48 - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.BACK).isEnergy())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.LEFT).isEnergy())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18 && sideOptions.get(BlockFace.RIGHT).isEnergy())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68 && sideOptions.get(BlockFace.TOP).isEnergy())
+                            || (mouseX >= this.x - REDSTONE_PANEL_WIDTH + 43 - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18 && sideOptions.get(BlockFace.BOTTOM).isEnergy())) {
+                        //todo
+                    }
+                }
+
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(GalacticraftItems.STANDARD_WRENCH), this.x - REDSTONE_PANEL_WIDTH + 6, this.y + 29);
                 drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.side_config"), this.x - REDSTONE_PANEL_WIDTH + 23, this.y + 33, Formatting.GRAY.getColorValue());
             } else {
@@ -333,10 +372,33 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }
     }
 
+    private void updateSides(int btn, BlockState state, Property<SideOption> prop, BlockFace face) {
+        if (!Screen.hasShiftDown()) {
+            SideOption next;
+            if (btn == 1) {
+                next = state.get(prop).prevValidOption(handler.blockEntity);
+            } else {
+                next = state.get(prop).nextValidOption(handler.blockEntity);
+            }
+            this.world.setBlockState(pos, state.with(prop, next));
+            sendSideConfigUpdate(face, next, false, false);
+            handler.blockEntity.getSideConfigInfo().setFrontOption(next);
+        } else {
+            if (btn != 1) {
+                handler.blockEntity.getSideConfigInfo().increment(face);
+                sendSideConfigUpdate(face, state.get(prop), true, true);
+            } else {
+                handler.blockEntity.getSideConfigInfo().decrement(face);
+                sendSideConfigUpdate(face, state.get(prop), true, false);
+            }
+        }
+        playButtonSound();
+    }
+
     public boolean checkTabsClick(MatrixStack stack, double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (button != 3) {
             if (this.handler.blockEntity != null) {
-                ConfigurableElectricMachineBlockEntity entity = this.handler.blockEntity;
+                ConfigurableMachineBlockEntity entity = this.handler.blockEntity;
                 if (!IS_REDSTONE_OPEN) {
                     if (mouseX >= this.x - REDSTONE_TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + REDSTONE_TAB_HEIGHT + 3) {
                         IS_REDSTONE_OPEN = true;
@@ -352,19 +414,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
 
                     if (mouseX >= this.x - 78 && mouseX <= this.x - 78 + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstoneState(ConfigurableElectricMachineBlockEntity.RedstoneState.DISABLED);
+                        entity.setRedstoneState(ConfigurableMachineBlockEntity.RedstoneState.DISABLED);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
                     }
                     if (mouseX >= this.x - 78 + 22 && mouseX <= this.x - 78 + 41 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstoneState(ConfigurableElectricMachineBlockEntity.RedstoneState.OFF);
+                        entity.setRedstoneState(ConfigurableMachineBlockEntity.RedstoneState.OFF);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
                     }
                     if (mouseX >= this.x - 78 + 44 && mouseX <= this.x - 78 + 63 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstoneState(ConfigurableElectricMachineBlockEntity.RedstoneState.ON);
+                        entity.setRedstoneState(ConfigurableMachineBlockEntity.RedstoneState.ON);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
@@ -395,85 +457,49 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock && !((ConfigurableElectricMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.NORTH)) {
-                            BlockState state = this.world.getBlockState(pos);
-                            EnumProperty<SideOption> prop = EnumProperty.of("north", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()));
-                            BlockState newState = state.with(prop, state.get(prop).nextValidOption(state.getBlock()));
-
-                            this.world.setBlockState(pos, newState);
-                            sendSideConfigUpdate(Direction.NORTH, newState.get(prop));
-                            sideOptions.replace(BlockFace.FRONT, newState.get(prop));
-                            playButtonSound();
+                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.NORTH)) {
+                            EnumProperty<SideOption> prop = EnumProperty.of("north", SideOption.class, handler.blockEntity.validSideOptions());
+                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.FRONT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 + 19 + 19 && (mouseX + 48) - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock && !((ConfigurableElectricMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.SOUTH)) {
-                            BlockState state = this.world.getBlockState(pos);
-                            EnumProperty<SideOption> prop = EnumProperty.of("south", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()));
-                            BlockState newState = state.with(prop, state.get(prop).nextValidOption(state.getBlock()));
-
-                            this.world.setBlockState(pos, newState);
-                            sendSideConfigUpdate(Direction.SOUTH, newState.get(prop));
-                            sideOptions.replace(BlockFace.BACK, newState.get(prop));
-                            playButtonSound();
+                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.SOUTH)) {
+                            EnumProperty<SideOption> prop = EnumProperty.of("south", SideOption.class, handler.blockEntity.validSideOptions());
+                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.BACK);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock && !((ConfigurableElectricMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.EAST)) {
-                            BlockState state = this.world.getBlockState(pos);
-                            EnumProperty<SideOption> prop = EnumProperty.of("east", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()));
-                            BlockState newState = state.with(prop, state.get(prop).nextValidOption(state.getBlock()));
-
-                            this.world.setBlockState(pos, newState);
-                            sendSideConfigUpdate(Direction.EAST, newState.get(prop));
-                            sideOptions.replace(BlockFace.RIGHT, newState.get(prop));
-                            playButtonSound();
+                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.EAST)) {
+                            EnumProperty<SideOption> prop = EnumProperty.of("east", SideOption.class, handler.blockEntity.validSideOptions());
+                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.RIGHT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock && !((ConfigurableElectricMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.WEST)) {
-                            BlockState state = this.world.getBlockState(pos);
-                            EnumProperty<SideOption> prop = EnumProperty.of("west", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()));
-                            BlockState newState = state.with(prop, state.get(prop).nextValidOption(state.getBlock()));
-
-                            this.world.setBlockState(pos, newState);
-                            sendSideConfigUpdate(Direction.WEST, newState.get(prop));
-                            sideOptions.replace(BlockFace.LEFT, newState.get(prop));
-                            playButtonSound();
+                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.WEST)) {
+                            EnumProperty<SideOption> prop = EnumProperty.of("west", SideOption.class, handler.blockEntity.validSideOptions());
+                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.LEFT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock && !((ConfigurableElectricMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.UP)) {
-                            BlockState state = this.world.getBlockState(pos);
-                            EnumProperty<SideOption> prop = EnumProperty.of("up", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()));
-                            BlockState newState = state.with(prop, state.get(prop).nextValidOption(state.getBlock()));
-
-                            this.world.setBlockState(pos, newState);
-                            sendSideConfigUpdate(Direction.UP, newState.get(prop));
-                            sideOptions.replace(BlockFace.TOP, newState.get(prop));
-                            playButtonSound();
+                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.UP)) {
+                            EnumProperty<SideOption> prop = EnumProperty.of("up", SideOption.class, handler.blockEntity.validSideOptions());
+                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.TOP);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableElectricMachineBlock && !((ConfigurableElectricMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.DOWN)) {
-                            BlockState state = this.world.getBlockState(pos);
-                            EnumProperty<SideOption> prop = EnumProperty.of("down", SideOption.class, SideOption.getApplicableValuesForMachine(state.getBlock()));
-                            BlockState newState = state.with(prop, state.get(prop).nextValidOption(state.getBlock()));
-
-                            this.world.setBlockState(pos, newState);
-                            sendSideConfigUpdate(Direction.DOWN, newState.get(prop));
-                            sideOptions.replace(BlockFace.BOTTOM, newState.get(prop));
-                            playButtonSound();
+                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.DOWN)) {
+                            EnumProperty<SideOption> prop = EnumProperty.of("down", SideOption.class, handler.blockEntity.validSideOptions());
+                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.BOTTOM);
                             return true;
                         }
                     }
@@ -486,7 +512,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                         return true;
                     }
                 } else if (entity.getSecurity().isOwner(playerInventory.player)) {
-                    ConfigurableElectricMachineBlockEntity.SecurityInfo security = entity.getSecurity();
+                    ConfigurableMachineBlockEntity.SecurityInfo security = entity.getSecurity();
                     if (mouseX >= this.x - SECURITY_PANEL_WIDTH + 176 + 21 && mouseX <= this.x + 176 + 21 && mouseY >= this.y + 3 && mouseY <= this.y + SECURITY_TAB_HEIGHT + 3) {
                         IS_SECURITY_OPEN = false;
                         playButtonSound();
@@ -500,7 +526,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     if (mouseX >= this.x - 78 + 273 && mouseX <= this.x - 78 + 19 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
                         if (security.getOwner().equals(this.playerInventory.player.getUuid())) {
                             security.setUsername(this.playerInventory.player.getName().asString());
-                            security.setPublicity(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
+                            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
                             sendSecurityUpdate(entity);
                             playButtonSound();
                             return true;
@@ -509,7 +535,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     if (mouseX >= (this.x - 78) + 22 + 273 && mouseX <= (this.x - 78) + 41 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
                         if (security.getOwner().equals(this.playerInventory.player.getUuid())) {
                             security.setUsername(this.playerInventory.player.getName().asString());
-                            security.setPublicity(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE);
+                            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE);
                             sendSecurityUpdate(entity);
                             playButtonSound();
                             return true;
@@ -518,7 +544,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     if (mouseX >= this.x - 78 + 44 + 273 && mouseX <= this.x - 78 + 63 + 273 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
                         if (security.getOwner().equals(this.playerInventory.player.getUuid())) {
                             security.setUsername(this.playerInventory.player.getName().asString());
-                            security.setPublicity(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.PUBLIC);
+                            security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC);
                             sendSecurityUpdate(entity);
                             playButtonSound();
                             return true;
@@ -533,7 +559,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         if (this.handler.blockEntity != null) {
-            ConfigurableElectricMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
+            ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
             switch (security.getPublicity()) {
                 case PRIVATE:
                     if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
@@ -550,7 +576,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
         }
 
-        this.drawConfigTabs(stack);
+        this.drawConfigTabs(stack, mouseX, mouseY);
         super.render(stack, mouseX, mouseY, delta);
     }
 
@@ -639,24 +665,17 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private int getXForOption(SideOption option) {
-        switch (option) {
-            case DEFAULT:
-                return 224; //240
-            case POWER_INPUT:
-                return 206; //0
-            case POWER_OUTPUT:
-                return 206; //17
-            case OXYGEN_INPUT:
-                return 240; //0
-            case OXYGEN_OUTPUT:
-                return 240; //17 223,0
-            case FLUID_INPUT:
-                return 223; //0
-            case FLUID_OUTPUT:
-                return 223; //17
-            default:
-                return 0;
+        if (option == SideOption.DEFAULT) return 224;
+        if (option.isEnergy()) {
+            return 206;
         }
+        if (option.isOxygen() || option.isItem()) {
+            return 240;
+        }
+        if (option.isFluid()) {
+            return 223;
+        }
+        return 0;
     }
 
     private int getYForOption(SideOption option) {
@@ -675,6 +694,10 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 return 0; //223
             case FLUID_OUTPUT:
                 return 17; //223
+            case ITEM_OUTPUT:
+                return 68;
+            case ITEM_INPUT:
+                return 51;
             default:
                 return 0;
         }

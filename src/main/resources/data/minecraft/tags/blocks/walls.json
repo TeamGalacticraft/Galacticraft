@@ -19,12 +19,11 @@
     "galacticraft-rewoven:detailed_aluminum_decoration_wall",
     "galacticraft-rewoven:detailed_meteoric_iron_decoration_wall",
 
-    "galacticraft-rewoven:mars_dungeon_brick_wall",
     "galacticraft-rewoven:mars_cobblestone_wall",
-    "galacticraft-rewoven:moon_dungeon_brick_wall",
     "galacticraft-rewoven:moon_rock_wall",
     "galacticraft-rewoven:cobbled_moon_rock_wall",
     "galacticraft-rewoven:moon_basalt_wall",
-    "galacticraft-rewoven:moon_basalt_brick_wall"
+    "galacticraft-rewoven:moon_basalt_brick_wall",
+    "galacticraft-rewoven:cracked_moon_basalt_brick_wall"
   ]
 }

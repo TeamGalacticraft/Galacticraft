@@ -23,9 +23,9 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -34,7 +34,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -58,20 +57,20 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlock extends ConfigurableElectricMachineBlock {
-    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
-    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+public class RefineryBlock extends ConfigurableMachineBlock {
+    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
 
     public RefineryBlock(Settings settings) {
         super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
     }
 
     @Override
-    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new RefineryBlockEntity();
     }
 
@@ -83,18 +82,6 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock {
     @Override
     public boolean generatesFluids() {
         return true;
-    }
-
-    @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(FACING);
-        builder.add(FRONT_SIDE_OPTION);
-        builder.add(BACK_SIDE_OPTION);
-        builder.add(RIGHT_SIDE_OPTION);
-        builder.add(LEFT_SIDE_OPTION);
-        builder.add(TOP_SIDE_OPTION);
-        builder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -115,6 +102,18 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock {
     @Override
     public boolean generatesPower() {
         return false;
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+
+        builder.add(FRONT_SIDE_OPTION);
+        builder.add(BACK_SIDE_OPTION);
+        builder.add(RIGHT_SIDE_OPTION);
+        builder.add(LEFT_SIDE_OPTION);
+        builder.add(TOP_SIDE_OPTION);
+        builder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -172,13 +171,7 @@ public class RefineryBlock extends ConfigurableElectricMachineBlock {
             if (blockEntity instanceof RefineryBlockEntity) {
                 RefineryBlockEntity refineryBlockEntity = (RefineryBlockEntity) blockEntity;
 
-                for (int i = 0; i < refineryBlockEntity.getInventory().getSize(); i++) {
-                    ItemStack stack = refineryBlockEntity.getInventory().getStack(i);
-
-                    if (stack != null) {
-                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
-                    }
-                }
+                ConfigurableMachineBlock.dropItems(world, pos, refineryBlockEntity.getInventory(), refineryBlockEntity);
             }
         }
     }

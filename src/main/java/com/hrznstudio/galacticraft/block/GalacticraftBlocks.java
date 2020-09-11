@@ -24,7 +24,7 @@
 package com.hrznstudio.galacticraft.block;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.FluidBlock;
 import com.hrznstudio.galacticraft.block.decoration.*;
 import com.hrznstudio.galacticraft.block.environment.*;
@@ -95,7 +95,7 @@ public class GalacticraftBlocks {
     public static final Block[] COBBLED_MOON_ROCKS = createDecorationBlocks(Constants.Blocks.COBBLED_MOON_ROCK, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).requiresTool().strength(2.0F, 5.0F), false);
     public static final Block[] MOON_BASALTS = createDecorationBlocks(Constants.Blocks.MOON_BASALT, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
     public static final Block[] MOON_BASALT_BRICKS = createDecorationBlocks(Constants.Blocks.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
-    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constants.Blocks.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
+    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constants.Blocks.CRACKED_MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).hardness(2.2F)), Constants.Blocks.MARS_SURFACE_ROCK);
@@ -178,16 +178,16 @@ public class GalacticraftBlocks {
     public static final Block SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constants.Blocks.GENERIC_MULTIBLOCK_PART);
 
     // MACHINES
-    public static final ConfigurableElectricMachineBlock CIRCUIT_FABRICATOR = registerBlock(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.CIRCUIT_FABRICATOR, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock CIRCUIT_FABRICATOR = registerBlock(new CircuitFabricatorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.CIRCUIT_FABRICATOR, MACHINES_GROUP);
     public static final CompressorBlock COMPRESSOR = registerBlock(new CompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.COMPRESSOR, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock ELECTRIC_COMPRESSOR = registerBlock(new ElectricCompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ELECTRIC_COMPRESSOR, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock COAL_GENERATOR = registerBlock(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.COAL_GENERATOR, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock BASIC_SOLAR_PANEL = registerBlock(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.BASIC_SOLAR_PANEL, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock ADVANCED_SOLAR_PANEL = registerBlock(new AdvancedSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ADVANCED_SOLAR_PANEL, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock ENERGY_STORAGE_MODULE = registerBlock(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ENERGY_STORAGE_MODULE, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock OXYGEN_COLLECTOR = registerBlock(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock REFINERY = registerBlock(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY, MACHINES_GROUP);
-    public static final ConfigurableElectricMachineBlock BUBBLE_DISTRIBUTOR = registerBlock(new BubbleDistributorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock ELECTRIC_COMPRESSOR = registerBlock(new ElectricCompressorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ELECTRIC_COMPRESSOR, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock COAL_GENERATOR = registerBlock(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.COAL_GENERATOR, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock BASIC_SOLAR_PANEL = registerBlock(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.BASIC_SOLAR_PANEL, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock ADVANCED_SOLAR_PANEL = registerBlock(new AdvancedSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ADVANCED_SOLAR_PANEL, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock ENERGY_STORAGE_MODULE = registerBlock(new EnergyStorageModuleBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ENERGY_STORAGE_MODULE, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock OXYGEN_COLLECTOR = registerBlock(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock REFINERY = registerBlock(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY, MACHINES_GROUP);
+    public static final ConfigurableMachineBlock BUBBLE_DISTRIBUTOR = registerBlock(new BubbleDistributorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR, MACHINES_GROUP);
 
     public static void register() {
         ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(FUEL, 80, 80);

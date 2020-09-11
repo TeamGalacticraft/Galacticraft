@@ -23,10 +23,13 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
@@ -36,12 +39,13 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class AdvancedSolarPanelBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
 
     public double multiplier;
 
@@ -57,8 +61,58 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
+    protected int getOxygenTankSize() {
+        return 0;
+    }
+
+    @Override
+    protected int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_OUTPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+    }
+
+    @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    protected boolean canHopperExtractItems(int slot) {
+        return false;
+    }
+
+    @Override
+    protected boolean canHopperInsertItems(int slot) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     @Override

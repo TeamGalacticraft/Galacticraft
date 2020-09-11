@@ -1,7 +1,7 @@
 package com.hrznstudio.galacticraft.client.model;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
@@ -130,10 +130,10 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         }
         context.pushTransform(quad -> { //?IT WORKS
-            SideOption option = ((ConfigurableElectricMachineBlock) state.getBlock()).getOption(state, ConfigurableElectricMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()));
+            SideOption option = ((ConfigurableMachineBlock) state.getBlock()).getOption(state, ConfigurableMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()));
             switch (option) {
                 case DEFAULT:
-                    quad.spriteBake(0, textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(ConfigurableElectricMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos), MutableQuadView.BAKE_LOCK_UV);
+                    quad.spriteBake(0, textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(ConfigurableMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos), MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_INPUT:
                     quad.spriteBake(0, atlas.apply(new Identifier(Constants.MOD_ID, "block/machine_fluid_input")), MutableQuadView.BAKE_LOCK_UV);
@@ -152,6 +152,12 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                     break;
                 case OXYGEN_OUTPUT:
                     quad.spriteBake(0, atlas.apply(new Identifier(Constants.MOD_ID, "block/machine_oxygen_output")), MutableQuadView.BAKE_LOCK_UV);
+                    break;
+                case ITEM_INPUT:
+                    quad.spriteBake(0, atlas.apply(new Identifier(Constants.MOD_ID, "block/machine_item_input")), MutableQuadView.BAKE_LOCK_UV);
+                    break;
+                case ITEM_OUTPUT:
+                    quad.spriteBake(0, atlas.apply(new Identifier(Constants.MOD_ID, "block/machine_item_output")), MutableQuadView.BAKE_LOCK_UV);
                     break;
             }
             quad.spriteColor(0, 16777215, 16777215, 16777215, 16777215);
@@ -220,6 +226,6 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
         ModelTextureProvider DEFAULT = (dir, func, view, state, pos) -> func.apply(new Identifier(Constants.MOD_ID, "block/machine"));
 
         @NotNull
-        Sprite getSpritesForState(@NotNull ConfigurableElectricMachineBlock.BlockFace face, @NotNull Function<Identifier, Sprite> spriteFunction, BlockRenderView view, @NotNull BlockState state, BlockPos pos);
+        Sprite getSpritesForState(@NotNull ConfigurableMachineBlock.BlockFace face, @NotNull Function<Identifier, Sprite> spriteFunction, BlockRenderView view, @NotNull BlockState state, BlockPos pos);
     }
 }

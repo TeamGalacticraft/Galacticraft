@@ -22,9 +22,9 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
-import com.hrznstudio.galacticraft.api.block.ConfigurableElectricMachineBlock;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -34,7 +34,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -58,13 +57,13 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock {
-    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
-    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT);
+public class BubbleDistributorBlock extends ConfigurableMachineBlock {
+    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.OXYGEN_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     private static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public BubbleDistributorBlock(Settings settings) {
@@ -100,6 +99,18 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+
+        builder.add(FRONT_SIDE_OPTION);
+        builder.add(BACK_SIDE_OPTION);
+        builder.add(RIGHT_SIDE_OPTION);
+        builder.add(LEFT_SIDE_OPTION);
+        builder.add(TOP_SIDE_OPTION);
+        builder.add(BOTTOM_SIDE_OPTION);
+    }
+
+    @Override
     public boolean isTranslucent(BlockState blockState_1, BlockView blockView_1, BlockPos blockPos_1) {
         return false;
     }
@@ -118,27 +129,9 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock {
             if (blockEntity instanceof BubbleDistributorBlockEntity) {
                 BubbleDistributorBlockEntity be = (BubbleDistributorBlockEntity) blockEntity;
 
-                for (int i = 0; i < be.getInventory().getSize(); i++) {
-                    ItemStack itemStack = be.getInventory().getStack(i);
-
-                    if (itemStack != null) {
-                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), itemStack));
-                    }
-                }
+                ConfigurableMachineBlock.dropItems(world, pos, be.getInventory(), be);
             }
         }
-    }
-
-    @Override
-    public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(FACING);
-
-        stateBuilder.add(FRONT_SIDE_OPTION);
-        stateBuilder.add(BACK_SIDE_OPTION);
-        stateBuilder.add(RIGHT_SIDE_OPTION);
-        stateBuilder.add(LEFT_SIDE_OPTION);
-        stateBuilder.add(TOP_SIDE_OPTION);
-        stateBuilder.add(BOTTOM_SIDE_OPTION);
     }
 
     @Override
@@ -178,7 +171,7 @@ public class BubbleDistributorBlock extends ConfigurableElectricMachineBlock {
     }
 
     @Override
-    public ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new BubbleDistributorBlockEntity();
     }
 

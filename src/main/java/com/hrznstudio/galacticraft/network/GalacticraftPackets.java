@@ -25,8 +25,9 @@ package com.hrznstudio.galacticraft.network;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
@@ -50,8 +51,8 @@ public class GalacticraftPackets {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
                 BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
-                if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                    ((ConfigurableElectricMachineBlockEntity) blockEntity).setRedstoneState(buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.RedstoneState.class));
+                if (blockEntity instanceof ConfigurableMachineBlockEntity) {
+                    ((ConfigurableMachineBlockEntity) blockEntity).setRedstoneState(buffer.readEnumConstant(ConfigurableMachineBlockEntity.RedstoneState.class));
                 }
             });
         }));
@@ -59,19 +60,26 @@ public class GalacticraftPackets {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
-                BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
-                if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                    if (context.getPlayer().getPos().distanceTo(Vec3d.ofCenter(blockEntity.getPos())) < 12.0D) { //Make sure a player isn't just sending packets to insta-claim any machine placed down.
-                        if (!((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
-                                ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().isOwner(context.getPlayer())) {
-                            ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.class);
+                BlockPos pos = buffer.readBlockPos();
+                if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                    BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
+                    if (blockEntity instanceof ConfigurableMachineBlockEntity) {
+                        if (context.getPlayer().getPos().distanceTo(Vec3d.ofCenter(blockEntity.getPos())) < 12.0D) { //Make sure a player isn't just sending packets to insta-claim any machine placed down.
+                            if (!((ConfigurableMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
+                                    ((ConfigurableMachineBlockEntity) blockEntity).getSecurity().isOwner(context.getPlayer())) {
+                                ConfigurableMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.class);
 
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setOwner(context.getPlayer());
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setPublicity(publicity);
+                                ((ConfigurableMachineBlockEntity) blockEntity).getSecurity().setOwner(context.getPlayer());
+                                ((ConfigurableMachineBlockEntity) blockEntity).getSecurity().setPublicity(publicity);
+                            } else {
+                                Galacticraft.logger.error("Received invalid (spoofed?) security packet from: " + context.getPlayer().getEntityName());
+                            }
                         } else {
-                            Galacticraft.logger.error("Received invalid security packet from: " + context.getPlayer().getEntityName());
+                            Galacticraft.logger.warn(context.getPlayer() + " sent a machine packet while not being in range of the machine!");
                         }
                     }
+                } else {
+                    Galacticraft.logger.warn(context.getPlayer() + " sent a machine packet pointing outside of loaded chunks!");
                 }
             });
         }));
@@ -82,14 +90,24 @@ public class GalacticraftPackets {
                 BlockPos pos = buf.readBlockPos();
                 if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                        if (!((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
-                                ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().getOwner().equals(context.getPlayer().getUuid())) {
-                            EnumProperty<SideOption> prop = EnumProperty.of(buf.readEnumConstant(Direction.class).getName(), SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock()));
+                    if (blockEntity instanceof ConfigurableMachineBlockEntity) {
+                        if (((ConfigurableMachineBlockEntity) blockEntity).getSecurity().hasAccess(context.getPlayer())) {
+                            EnumProperty<SideOption> prop = EnumProperty.of(buf.readEnumConstant(Direction.class).getName(), SideOption.class, ((ConfigurableMachineBlockEntity) blockEntity).validSideOptions());
                             context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
                                     .with(prop, buf.readEnumConstant(SideOption.class)));
+                            if (buf.readBoolean()) {
+                                if (buf.readBoolean()) {
+                                    ((ConfigurableMachineBlockEntity) blockEntity).getSideConfigInfo().increment(ConfigurableMachineBlock.BlockFace.toFace(Direction.NORTH, Direction.byName(prop.getName())));
+                                } else {
+                                    ((ConfigurableMachineBlockEntity) blockEntity).getSideConfigInfo().decrement(ConfigurableMachineBlock.BlockFace.toFace(Direction.NORTH, Direction.byName(prop.getName())));
+                                }
+                            }
+                        } else {
+                            Galacticraft.logger.warn(context.getPlayer() + " sent a machine packet without the proper rights!");
                         }
                     }
+                } else {
+                    Galacticraft.logger.warn(context.getPlayer() + " sent a machine packet pointing outside of loaded chunks!");
                 }
             });
         }));

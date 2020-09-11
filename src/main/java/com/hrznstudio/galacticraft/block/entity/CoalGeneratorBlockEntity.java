@@ -24,10 +24,13 @@
 package com.hrznstudio.galacticraft.block.entity;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
@@ -41,13 +44,14 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
 
     @SuppressWarnings("unchecked")
     private static final Predicate<ItemStack>[] SLOT_FILTERS = new Predicate[2];
@@ -75,11 +79,6 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     }
 
     @Override
-    protected boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return super.canExtract(slot, stack, dir) && slot != 0;
-    }
-
-    @Override
     protected boolean canExtractEnergy() {
         return true;
     }
@@ -98,6 +97,21 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     @Override
     protected int getInventorySize() {
         return 2;
+    }
+
+    @Override
+    protected int getOxygenTankSize() {
+        return 0;
+    }
+
+    @Override
+    protected int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_OUTPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
     }
 
     @Override
@@ -155,6 +169,41 @@ public class CoalGeneratorBlockEntity extends ConfigurableElectricMachineBlockEn
     @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    protected boolean canHopperExtractItems(int slot) {
+        return false;
+    }
+
+    @Override
+    protected boolean canHopperInsertItems(int slot) {
+        return true;
+    }
+
+    @Override
+    protected boolean canExtractOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     /**

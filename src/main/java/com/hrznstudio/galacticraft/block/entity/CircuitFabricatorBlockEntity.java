@@ -23,14 +23,18 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -46,13 +50,14 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
 
     private static final Item[] mandatoryMaterials = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     @SuppressWarnings("unchecked")
@@ -77,12 +82,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     @Override
-    protected boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return super.canExtract(slot, stack, dir) && slot == 6; // no hopper extract from input + battery slots
-    }
-
-    @Override
-    protected boolean canInsert(int slot, ItemStack stack, Direction dir) {
+    public boolean canInsert(int slot, ItemStack stack, Direction dir) {
         return super.canInsert(slot, stack, dir) && slot != 6;
     }
 
@@ -105,6 +105,21 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     @Override
     protected int getInventorySize() {
         return 7;
+    }
+
+    @Override
+    protected int getOxygenTankSize() {
+        return 0;
+    }
+
+    @Override
+    protected int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
     }
 
     @Override
@@ -248,6 +263,41 @@ public class CircuitFabricatorBlockEntity extends ConfigurableElectricMachineBlo
     @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
+    }
+
+    @Override
+    protected boolean canHopperExtractItems(int slot) {
+        return slot == 6;
+    }
+
+    @Override
+    protected boolean canHopperInsertItems(int slot) {
+        return slot != 6;
+    }
+
+    @Override
+    protected boolean canExtractOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     /**

@@ -23,11 +23,14 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
+import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -35,8 +38,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.resource.language.I18n;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
@@ -45,6 +50,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +61,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity implements WireConnectable {
+public abstract class ConfigurableMachineBlock extends BlockWithEntity implements WireConnectable {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     private final Property<SideOption> front;
     private final Property<SideOption> back;
@@ -64,7 +70,7 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
     private final Property<SideOption> top;
     private final Property<SideOption> bottom;
 
-    public ConfigurableElectricMachineBlock(Settings settings, Property<SideOption> front, Property<SideOption> back, Property<SideOption> right, Property<SideOption> left, Property<SideOption> top, Property<SideOption> bottom) {
+    public ConfigurableMachineBlock(Settings settings, Property<SideOption> front, Property<SideOption> back, Property<SideOption> right, Property<SideOption> left, Property<SideOption> top, Property<SideOption> bottom) {
         super(settings);
         this.front = front;
         this.back = back;
@@ -72,6 +78,16 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         this.right = right;
         this.top = top;
         this.bottom = bottom;
+    }
+
+    public static void dropItems(World world, BlockPos pos, SimpleInventoryComponent inventory, ConfigurableMachineBlockEntity be) {
+        for (int i = 0; i < inventory.getSize(); i++) {
+            ItemStack stack = inventory.getStack(i);
+
+            if (stack != null) {
+                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
+            }
+        }
     }
 
     public Property<SideOption> getProperty(@NotNull BlockFace direction) {
@@ -96,7 +112,13 @@ public abstract class ConfigurableElectricMachineBlock extends BlockWithEntity i
         return state.get(getProperty(direction));
     }
 
-    public abstract ConfigurableElectricMachineBlockEntity createBlockEntity(BlockView var1);
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(FACING);
+    }
+
+    public abstract ConfigurableMachineBlockEntity createBlockEntity(BlockView var1);
 
     public abstract boolean consumesFluids();
 
