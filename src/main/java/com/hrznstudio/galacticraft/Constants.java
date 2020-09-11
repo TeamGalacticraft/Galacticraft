@@ -197,6 +197,7 @@ public class Constants {
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
         public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
+        public static final String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
     }
 
