@@ -104,7 +104,6 @@ public class Constants {
         public static final String WALKWAY = "walkway";
         public static final String WIRE_WALKWAY = "wire_walkway";
         public static final String PIPE_WALKWAY = "pipe_walkway";
-        public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
         public static final String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
         public static final String MOON_CHEESE_LOG = "moon_cheese_log";
 
