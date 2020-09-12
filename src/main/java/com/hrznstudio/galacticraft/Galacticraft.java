@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -78,7 +79,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Galacticraft implements ModInitializer, EntityComponentInitializer, BlockComponentInitializer {
+public class Galacticraft implements ModInitializer {
 
     public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
     public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
@@ -91,6 +92,7 @@ public class Galacticraft implements ModInitializer, EntityComponentInitializer,
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         logger.info("[Galacticraft] Starting initialization.");
+        GalacticraftComponents.register();
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftBlockEntities.init();
@@ -128,56 +130,5 @@ public class Galacticraft implements ModInitializer, EntityComponentInitializer,
 //        });
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
-    }
-
-    @Override
-    public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(UniversalComponents.INVENTORY_COMPONENT, player -> {
-            EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, player);
-            ((GCPlayerAccessor) player).setGearInventory(inventory);
-            return inventory;
-        }, RespawnCopyStrategy.INVENTORY);
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    @Override
-    public void registerBlockComponentFactories(BlockComponentFactoryRegistry registry) {
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.CAPACITOR_COMPONENT, ConfigurableMachineBlockEntity::getCapacitor);
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.INVENTORY_COMPONENT, ConfigurableMachineBlockEntity::getInventory);
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.TANK_COMPONENT, ConfigurableMachineBlockEntity::getFluidTank);
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.TANK_COMPONENT, ConfigurableMachineBlockEntity::getOxygenTank);
-
-        registry.registerFor(new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR), UniversalComponents.CAPACITOR_COMPONENT, (state, world, pos, side) -> {
-            BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ConfigurableMachineBlockEntity) {
-                return ((ConfigurableMachineBlockEntity) entity).accessCapacitor(state, side);
-            }
-            return null;
-        });
-
-        registry.registerFor(new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR), UniversalComponents.INVENTORY_COMPONENT, (state, world, pos, side) -> {
-            BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ConfigurableMachineBlockEntity) {
-                return ((ConfigurableMachineBlockEntity) entity).accessInventory(state, side);
-            }
-            return null;
-        });
-
-        registry.registerFor(new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR), UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> {
-            BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ConfigurableMachineBlockEntity) {
-                return ((ConfigurableMachineBlockEntity) entity).accessFluidTank(state, side);
-            }
-            return null;
-        });
-
-        registry.registerFor(new Identifier(Constants.MOD_ID, Constants.Blocks.COAL_GENERATOR), UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> {
-            BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ConfigurableMachineBlockEntity) {
-                return ((ConfigurableMachineBlockEntity) entity).accessOxygenTank(state, side);
-            }
-            return null;
-        });
-
     }
 }

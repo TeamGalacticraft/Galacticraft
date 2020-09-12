@@ -76,27 +76,27 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 3;
     }
 
     @Override
-    protected int getOxygenTankSize() {
+    public int getOxygenTankSize() {
         return 0;
     }
 
     @Override
-    protected int getFluidTankSize() {
+    public int getFluidTankSize() {
         return 2;
     }
 
     @Override
-    protected Fraction getOxygenTankMaxCapacity() {
+    public Fraction getOxygenTankMaxCapacity() {
         return null;
     }
 
     @Override
-    protected Fraction getFluidTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return Fraction.ofWhole(10);
     }
 
@@ -111,12 +111,12 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return true;
     }
 
@@ -189,37 +189,37 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    protected boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtractItems(int slot) {
         return false;
     }
 
     @Override
-    protected boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsertItems(int slot) {
         return false;
     }
 
     @Override
-    protected boolean canExtractOxygen(int tank) {
+    public boolean canExtractOxygen(int tank) {
         return false;
     }
 
     @Override
-    protected boolean canInsertOxygen(int tank) {
+    public boolean canInsertOxygen(int tank) {
         return false;
     }
 
     @Override
-    protected boolean canExtractFluid(int tank) {
+    public boolean canExtractFluid(int tank) {
         return tank == 1;
     }
 
     @Override
-    protected boolean canInsertFluid(int tank) {
+    public boolean canInsertFluid(int tank) {
         return tank == 0;
     }
 
     @Override
-    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
         return (tank == 0 && volume.getFluid().isIn(GalacticraftTags.OIL)) || (tank == 1 && volume.getFluid().isIn(GalacticraftTags.FUEL));
     }
 

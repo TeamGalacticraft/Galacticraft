@@ -120,7 +120,13 @@
     "main": [ "com.hrznstudio.galacticraft.Galacticraft" ],
     "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
     "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ]
+    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ],
+    "cardinal-components-block": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ]
+  },
+  "custom": {
+    "cardinal-components": [
+      "galacticraft-rewoven:oxygen_tank"
+    ]
   },
   "mixins": [ "galacticraft-rewoven.mixins.json" ],
   "accessWidener": "galacticraft_rewoven.accesswidener",

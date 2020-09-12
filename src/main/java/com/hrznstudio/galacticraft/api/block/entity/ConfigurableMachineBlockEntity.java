@@ -29,19 +29,22 @@ import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
+import com.hrznstudio.galacticraft.component.impl.SimpleOxygenTankComponent;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
+import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import nerdhub.cardinal.components.api.ComponentType;
+import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import nerdhub.cardinal.components.api.component.Component;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -56,7 +59,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,122 +72,9 @@ import java.util.stream.IntStream;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory {
-    private final SimpleInventoryComponent inventory = new SimpleInventoryComponent(getInventorySize()) {
-        @Override
-        public boolean isAcceptableStack(int slot, ItemStack stack) {
-            return ConfigurableMachineBlockEntity.this.getFilterForSlot(slot).test(stack) || stack.isEmpty();
-        }
-
-        @Override
-        public boolean canExtract(int slot) {
-            return ConfigurableMachineBlockEntity.this.canHopperExtractItems(slot);
-        }
-
-        @Override
-        public boolean canInsert(int slot) {
-            return ConfigurableMachineBlockEntity.this.canHopperInsertItems(slot);
-        }
-    };
+public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, BlockComponentProvider {
     private final InventoryWrapper wrapper = InventoryWrapper.of(getInventory());
-
-    private final SimpleTankComponent fluidTank = new SimpleTankComponent(getFluidTankSize(), getFluidTankMaxCapacity()) {
-        @Override
-        public boolean canExtract(int slot) {
-            return ConfigurableMachineBlockEntity.this.canExtractFluid(slot);
-        }
-
-        @Override
-        public boolean canInsert(int slot) {
-            return ConfigurableMachineBlockEntity.this.canInsertFluid(slot);
-        }
-
-        @Override
-        public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-            for (int i = 0; i < contents.size(); i++) {
-                if (isAcceptableFluid(i, fluid)) {
-                    fluid = insertFluid(i, fluid, action);
-                    if (fluid.isEmpty()) return fluid;
-                }
-            }
-
-            return fluid;
-        }
-
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (isAcceptableFluid(tank, fluid)) {
-                return super.insertFluid(tank, fluid, action);
-            }
-            return fluid;
-        }
-
-        public boolean isAcceptableFluid(int tank, FluidVolume volume) { //how are you supposed to check if its acceptable if you *only* get the tank and no fluid?!
-            return ConfigurableMachineBlockEntity.this.isAcceptableFluid(tank, volume);
-        }
-
-        @Override
-        public boolean isAcceptableFluid(int tank) {
-            return false;
-        }
-    };
-
-    private final SimpleTankComponent oxygenTank = new SimpleTankComponent(getFluidTankSize(), getOxygenTankMaxCapacity()) {
-        @Override
-        public boolean canExtract(int slot) {
-            return ConfigurableMachineBlockEntity.this.canExtractOxygen(slot);
-        }
-
-        @Override
-        public boolean canInsert(int slot) {
-            return ConfigurableMachineBlockEntity.this.canInsertOxygen(slot);
-        }
-
-        @Override
-        public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                for (int i = 0; i < contents.size(); i++) {
-                    fluid = insertFluid(i, fluid, action);
-                    if (fluid.isEmpty()) return fluid;
-                }
-            }
-
-            return fluid;
-        }
-
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                return super.insertFluid(tank, fluid, action);
-            }
-            return fluid;
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-            if (stack.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                super.setFluid(slot, stack);
-            }
-        }
-
-        @Override
-        public boolean isAcceptableFluid(int tank) { //how are you supposed to check if its acceptable if you *only* get the tank and no fluid?!
-            return false;
-        }
-    };
-
-    private final SimpleCapacitorComponent capacitor = new SimpleCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
-        @Override
-        public boolean canExtractEnergy() {
-            return ConfigurableMachineBlockEntity.this.canExtractEnergy();
-        }
-
-        @Override
-        public boolean canInsertEnergy() {
-            return ConfigurableMachineBlockEntity.this.canInsertEnergy();
-        }
-    };
-
+    
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, getInventorySize(), getFluidTankSize(), getOxygenTankSize());
 
@@ -194,37 +86,37 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getInventory().getListeners().add(this::markDirty);
     }
 
-    protected abstract boolean canExtractEnergy();
+    public abstract boolean canExtractEnergy();
 
-    protected abstract boolean canInsertEnergy();
+    public abstract boolean canInsertEnergy();
 
     protected abstract int getEnergyUsagePerTick();
 
-    protected abstract boolean canHopperExtractItems(int slot);
+    public abstract boolean canHopperExtractItems(int slot);
 
-    protected abstract boolean canHopperInsertItems(int slot);
+    public abstract boolean canHopperInsertItems(int slot);
 
-    protected abstract boolean canExtractOxygen(int tank);
+    public abstract boolean canExtractOxygen(int tank);
 
-    protected abstract boolean canInsertOxygen(int tank);
+    public abstract boolean canInsertOxygen(int tank);
 
-    protected abstract boolean canExtractFluid(int tank);
+    public abstract boolean canExtractFluid(int tank);
 
-    protected abstract boolean canInsertFluid(int tank);
+    public abstract boolean canInsertFluid(int tank);
 
-    protected abstract boolean isAcceptableFluid(int tank, FluidVolume volume);
+    public abstract boolean isAcceptableFluid(int tank, FluidVolume volume);
 
-    protected abstract int getInventorySize();
+    public abstract int getInventorySize();
 
-    protected abstract int getOxygenTankSize();
+    public abstract int getOxygenTankSize();
 
-    protected abstract int getFluidTankSize();
+    public abstract int getFluidTankSize();
 
-    protected Fraction getOxygenTankMaxCapacity() {
+    public Fraction getOxygenTankMaxCapacity() {
         return Fraction.ZERO;
     }
 
-    protected Fraction getFluidTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return Fraction.ZERO;
     }
 
@@ -268,20 +160,88 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return 50;
     }
 
-    public final @NotNull SimpleCapacitorComponent getCapacitor() {
-        return capacitor;
+    public final @NotNull CapacitorComponent getCapacitor() {
+        return ((ComponentProvider)this).getComponent(UniversalComponents.CAPACITOR_COMPONENT);
     }
 
-    public final @NotNull SimpleInventoryComponent getInventory() {
-        return inventory;
+    public final @NotNull InventoryComponent getInventory() {
+        return ((ComponentProvider)this).getComponent(UniversalComponents.INVENTORY_COMPONENT);
     }
 
-    public final @NotNull SimpleTankComponent getOxygenTank() {
-        return oxygenTank;
+    public final @NotNull TankComponent getFluidTank() {
+        return ((ComponentProvider)this).getComponent(UniversalComponents.TANK_COMPONENT);
     }
 
-    public final @NotNull SimpleTankComponent getFluidTank() {
-        return fluidTank;
+    public final @NotNull SimpleOxygenTankComponent getOxygenTank() {
+        return GalacticraftComponents.OXYGEN_COMPONENT.get(this);
+    }
+
+    public final @Nullable CapacitorComponent getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isEnergy())
+            return getCapacitor();
+        return null;
+    }
+
+    public final @Nullable InventoryComponent getInventory(@NotNull BlockState state, @Nullable Direction direction) {
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isItem())
+            return getInventory();
+        return null;
+    }
+
+    public final @Nullable TankComponent getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isFluid())
+            return getFluidTank();
+        return null;
+    }
+
+    public final @Nullable SimpleOxygenTankComponent getOxygenTank(@NotNull BlockState state, @Nullable Direction direction) {
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isOxygen())
+            return getOxygenTank();
+        return null;
+    }
+
+    @Override
+    public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
+        if (type == UniversalComponents.CAPACITOR_COMPONENT) {
+            return getCapacitor(blockView.getBlockState(pos), side) != null;
+        } else if (type == UniversalComponents.INVENTORY_COMPONENT) {
+            return getInventory(blockView.getBlockState(pos), side) != null;
+        } else if (type == UniversalComponents.TANK_COMPONENT) {
+            return getFluidTank(blockView.getBlockState(pos), side) != null;
+        } else if (type == GalacticraftComponents.OXYGEN_COMPONENT) {
+            return getOxygenTank(blockView.getBlockState(pos), side) != null;
+        }
+
+        return ((ComponentProvider)this).hasComponent(type);
+    }
+
+    @Override
+    public <T extends Component> T getComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
+        if (type == UniversalComponents.CAPACITOR_COMPONENT) {
+            return (T) getCapacitor(blockView.getBlockState(pos), side);
+        } else if (type == UniversalComponents.INVENTORY_COMPONENT) {
+            return (T) getInventory(blockView.getBlockState(pos), side);
+        } else if (type == UniversalComponents.TANK_COMPONENT) {
+            return (T) getFluidTank(blockView.getBlockState(pos), side);
+        } else if (type == GalacticraftComponents.OXYGEN_COMPONENT) {
+            return (T) getOxygenTank(blockView.getBlockState(pos), side);
+        }
+
+        return ((ComponentProvider)this).getComponent(type);
+    }
+
+    @Override
+    public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos pos, Direction side) {
+        Set<ComponentType<?>> set = new LinkedHashSet<>(((ComponentProvider) this).getComponentTypes());
+        if (getCapacitor(blockView.getBlockState(pos), side) == null)
+            set.remove(UniversalComponents.CAPACITOR_COMPONENT);
+        if (getInventory(blockView.getBlockState(pos), side) != null)
+            set.remove(UniversalComponents.INVENTORY_COMPONENT);
+        if (getFluidTank(blockView.getBlockState(pos), side) != null)
+            set.remove(UniversalComponents.TANK_COMPONENT);
+        if (getOxygenTank(blockView.getBlockState(pos), side) != null)
+            set.remove(GalacticraftComponents.OXYGEN_COMPONENT);
+        return set;
     }
 
     public final @NotNull SecurityInfo getSecurity() {
@@ -320,11 +280,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         tag.putString("Redstone", redstoneState.asString());
-        this.capacitor.toTag(tag);
-        this.inventory.toTag(tag);
+        this.getCapacitor().toTag(tag);
+        this.getInventory().toTag(tag);
         this.security.toTag(tag);
-        this.fluidTank.toTag(tag);
-        this.oxygenTank.toTag(tag);
+        this.getFluidTank().toTag(tag);
+        this.getOxygenTank().toTag(tag);
         this.sideConfigInfo.toTag(tag);
         return tag;
     }
@@ -333,11 +293,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         this.redstoneState = RedstoneState.fromString(tag.getString("Redstone"));
-        this.capacitor.fromTag(tag);
-        this.inventory.fromTag(tag);
+        this.getCapacitor().fromTag(tag);
+        this.getInventory().fromTag(tag);
         this.security.fromTag(tag);
-        this.fluidTank.fromTag(tag);
-        this.oxygenTank.fromTag(tag);
+        this.getFluidTank().fromTag(tag);
+        this.getOxygenTank().fromTag(tag);
         this.sideConfigInfo.fromTag(tag);
     }
 
@@ -368,7 +328,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public @Nullable CapacitorComponent accessCapacitor(@NotNull BlockState state, @Nullable Direction side) {
         ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isEnergy()) {
-            return capacitor;
+            return getCapacitor();
         }
         return null;
     }
@@ -376,7 +336,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public @Nullable InventoryComponent accessInventory(@NotNull BlockState state, @Nullable Direction side) {
         ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isItem()) {
-            return inventory;
+            return getInventory();
         }
         return null;
     }
@@ -384,7 +344,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public @Nullable TankComponent accessFluidTank(@NotNull BlockState state, @Nullable Direction side) {
         ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isFluid()) {
-            return fluidTank;
+            return getFluidTank();
         }
         return null;
     }
@@ -392,7 +352,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public @Nullable TankComponent accessOxygenTank(@NotNull BlockState state, @Nullable Direction side) {
         ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isOxygen()) {
-            return oxygenTank;
+            return getOxygenTank();
         }
         return null;
     }
@@ -416,11 +376,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (getCapacitor().getCurrentEnergy() >= getCapacitor().getMaxEnergy()) {
             return;
         }
-        ItemStack stack = inventory.getStack(slot);
+        ItemStack stack = getInventory().getStack(slot);
         int neededEnergy = Math.min(getBatteryTransferRate(), getCapacitor().getMaxEnergy() - getCapacitor().getCurrentEnergy());
         if (EnergyUtils.isEnergyItem(stack)) {
             this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, EnergyUtils.extractEnergy(stack, neededEnergy, ActionType.PERFORM), ActionType.PERFORM);
-            inventory.setStack(slot, stack);
+            getInventory().setStack(slot, stack);
         }
     }
 
@@ -434,12 +394,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (available <= 0) {
             return;
         }
-        ItemStack stack = inventory.getStack(slot);
+        ItemStack stack = getInventory().getStack(slot);
         if (EnergyUtils.isEnergyItem(stack)) {
             if (EnergyUtils.getEnergy(stack) < EnergyUtils.getMaxEnergy(stack)) {
                 int i = EnergyUtils.insertEnergy(stack, available, ActionType.PERFORM);
                 this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, ActionType.PERFORM);
-                inventory.setStack(slot, stack);
+                getInventory().setStack(slot, stack);
             }
         }
     }
@@ -462,7 +422,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             }
         }
 
-        return accessible && getInventory().canExtract(slot) && inventory.getStack(slot).isItemEqual(stack);
+        return accessible && getInventory().canExtract(slot) && getInventory().getStack(slot).isItemEqual(stack);
     }
 
     @Override

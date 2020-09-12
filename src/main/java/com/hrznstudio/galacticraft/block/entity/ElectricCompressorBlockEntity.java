@@ -70,17 +70,17 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 12;
     }
 
     @Override
-    protected int getOxygenTankSize() {
+    public int getOxygenTankSize() {
         return 0;
     }
 
     @Override
-    protected int getFluidTankSize() {
+    public int getFluidTankSize() {
         return 0;
     }
 
@@ -107,12 +107,12 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return true;
     }
 
@@ -209,20 +209,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
-        tag.putInt("Energy", getCapacitor().getCurrentEnergy());
-
-        return tag;
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        getCapacitor().setCurrentEnergy(tag.getInt("Energy"));
-    }
-
-    @Override
     public void fromClientTag(CompoundTag tag) {
         this.fromTag(this.getCachedState(), tag);
     }
@@ -268,37 +254,37 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    protected boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtractItems(int slot) {
         return slot == OUTPUT_SLOT;
     }
 
     @Override
-    protected boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsertItems(int slot) {
         return false;
     }
 
     @Override
-    protected boolean canExtractOxygen(int tank) {
+    public boolean canExtractOxygen(int tank) {
         return false;
     }
 
     @Override
-    protected boolean canInsertOxygen(int tank) {
+    public boolean canInsertOxygen(int tank) {
         return false;
     }
 
     @Override
-    protected boolean canExtractFluid(int tank) {
+    public boolean canExtractFluid(int tank) {
         return false;
     }
 
     @Override
-    protected boolean canInsertFluid(int tank) {
+    public boolean canInsertFluid(int tank) {
         return false;
     }
 
     @Override
-    protected boolean isAcceptableFluid(int tank, FluidVolume volume) {
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
         return false;
     }
 
