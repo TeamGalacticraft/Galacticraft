@@ -95,7 +95,7 @@ public class GalacticraftBlocks {
     public static final Block[] COBBLED_MOON_ROCKS = createDecorationBlocks(Constants.Blocks.COBBLED_MOON_ROCK, FabricBlockSettings.of(Material.STONE, MaterialColor.STONE).requiresTool().strength(2.0F, 5.0F), false);
     public static final Block[] MOON_BASALTS = createDecorationBlocks(Constants.Blocks.MOON_BASALT, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
     public static final Block[] MOON_BASALT_BRICKS = createDecorationBlocks(Constants.Blocks.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
-    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constants.Blocks.MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
+    public static final Block[] CRACKED_MOON_BASALT_BRICKS = createDecorationBlocks(Constants.Blocks.CRACKED_MOON_BASALT_BRICK, FabricBlockSettings.of(Material.STONE, MaterialColor.BLACK_TERRACOTTA).strength(2.0F, 6.0F), false);
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.DIRT).hardness(2.2F)), Constants.Blocks.MARS_SURFACE_ROCK);
