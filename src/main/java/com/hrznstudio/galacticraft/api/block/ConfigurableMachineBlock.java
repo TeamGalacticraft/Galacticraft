@@ -24,9 +24,9 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
-import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -34,17 +34,20 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
@@ -63,53 +66,9 @@ import java.util.List;
  */
 public abstract class ConfigurableMachineBlock extends BlockWithEntity implements WireConnectable {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    private final Property<SideOption> front;
-    private final Property<SideOption> back;
-    private final Property<SideOption> left;
-    private final Property<SideOption> right;
-    private final Property<SideOption> top;
-    private final Property<SideOption> bottom;
 
-    public ConfigurableMachineBlock(Settings settings, Property<SideOption> front, Property<SideOption> back, Property<SideOption> right, Property<SideOption> left, Property<SideOption> top, Property<SideOption> bottom) {
+    public ConfigurableMachineBlock(Settings settings) {
         super(settings);
-        this.front = front;
-        this.back = back;
-        this.left = left;
-        this.right = right;
-        this.top = top;
-        this.bottom = bottom;
-    }
-
-    public static void dropItems(World world, BlockPos pos, SimpleInventoryComponent inventory, ConfigurableMachineBlockEntity be) {
-        for (int i = 0; i < inventory.getSize(); i++) {
-            ItemStack stack = inventory.getStack(i);
-
-            if (stack != null) {
-                world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
-            }
-        }
-    }
-
-    public Property<SideOption> getProperty(@NotNull BlockFace direction) {
-        switch (direction) {
-            case FRONT:
-                return front;
-            case RIGHT:
-                return right;
-            case LEFT:
-                return left;
-            case BACK:
-                return back;
-            case TOP:
-                return top;
-            case BOTTOM:
-                return bottom;
-        }
-        throw new AssertionError();
-    }
-
-    public final SideOption getOption(BlockState state, BlockFace direction) {
-        return state.get(getProperty(direction));
     }
 
     @Override
@@ -120,24 +79,16 @@ public abstract class ConfigurableMachineBlock extends BlockWithEntity implement
 
     public abstract ConfigurableMachineBlockEntity createBlockEntity(BlockView var1);
 
-    public abstract boolean consumesFluids();
-
-    public abstract boolean generatesFluids();
-
-    public abstract boolean consumesOxygen();
-
-    public abstract boolean generatesOxygen();
-
-    public abstract boolean consumesPower();
-
-    public abstract boolean generatesPower();
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+    }
 
     @NotNull
     @Override
     public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         BlockState state = world.getBlockState(connectionTargetPos);
-
-        SideOption option = getOption(state, BlockFace.toFace(state.get(FACING), opposite));
+        SideOption option = ((ConfigurableMachineBlockEntity) world.getBlockEntity(connectionTargetPos)).getSideConfigInfo().get(BlockFace.toFace(state.get(FACING), opposite)).getOption();
 
         if (option == SideOption.POWER_INPUT) {
             return WireConnectionType.ENERGY_INPUT;
@@ -215,6 +166,25 @@ public abstract class ConfigurableMachineBlock extends BlockWithEntity implement
     }
 
     @Override
+    public PistonBehavior getPistonBehavior(BlockState state) {
+        return PistonBehavior.BLOCK;
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (entity instanceof ConfigurableMachineBlockEntity) {
+            for (ItemStack stack : ((ConfigurableMachineBlockEntity) entity).getInventory().getStacks()) {
+                if (stack != null) {
+                    world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
+                }
+            }
+            ((ConfigurableMachineBlockEntity) entity).getInventory().clear();
+        }
+    }
+
+    @Override
     @Environment(EnvType.CLIENT)
     public ItemStack getPickStack(BlockView view, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(view, pos, state);
@@ -228,163 +198,4 @@ public abstract class ConfigurableMachineBlock extends BlockWithEntity implement
     }
 
     public abstract Text machineInfo(ItemStack stack, BlockView view, TooltipContext context);
-
-    public List<Direction> disabledSides() {
-        return Collections.emptyList();
-    }
-
-    public enum BlockFace {
-        FRONT,
-        RIGHT,
-        BACK,
-        LEFT,
-        TOP,
-        BOTTOM;
-
-        @NotNull
-        public static BlockFace toFace(Direction facing, Direction target) {
-            assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
-
-            if (target == Direction.DOWN) {
-                return BOTTOM;
-            } else if (target == Direction.UP) {
-                return TOP;
-            }
-
-            switch (facing) {
-                case NORTH:
-                    switch (target) {
-                        case NORTH:
-                            return FRONT;
-                        case EAST:
-                            return RIGHT;
-                        case SOUTH:
-                            return BACK;
-                        case WEST:
-                            return LEFT;
-                    }
-                    break;
-                case EAST:
-                    switch (target) {
-                        case EAST:
-                            return FRONT;
-                        case NORTH:
-                            return LEFT;
-                        case WEST:
-                            return BACK;
-                        case SOUTH:
-                            return RIGHT;
-                    }
-                    break;
-                case SOUTH:
-                    switch (target) {
-                        case SOUTH:
-                            return FRONT;
-                        case WEST:
-                            return RIGHT;
-                        case NORTH:
-                            return BACK;
-                        case EAST:
-                            return LEFT;
-                    }
-                    break;
-                case WEST:
-                    switch (target) {
-                        case WEST:
-                            return FRONT;
-                        case SOUTH:
-                            return LEFT;
-                        case EAST:
-                            return BACK;
-                        case NORTH:
-                            return RIGHT;
-                    }
-                    break;
-            }
-
-            throw new RuntimeException();
-        }
-
-        @NotNull
-        public Direction toDirection(Direction facing) {
-            assert facing == Direction.NORTH || facing == Direction.SOUTH || facing == Direction.EAST || facing == Direction.WEST;
-
-            if (this == BOTTOM) {
-                return Direction.DOWN;
-            } else if (this == TOP) {
-                return Direction.UP;
-            }
-
-            switch (facing) {
-                case NORTH:
-                    switch (this) {
-                        case FRONT:
-                            return Direction.NORTH;
-                        case RIGHT:
-                            return Direction.EAST;
-                        case BACK:
-                            return Direction.SOUTH;
-                        case LEFT:
-                            return Direction.WEST;
-                    }
-                    break;
-                case EAST:
-                    switch (this) {
-                        case RIGHT:
-                            return Direction.NORTH;
-                        case FRONT:
-                            return Direction.EAST;
-                        case LEFT:
-                            return Direction.SOUTH;
-                        case BACK:
-                            return Direction.WEST;
-                    }
-                    break;
-                case SOUTH:
-                    switch (this) {
-                        case BACK:
-                            return Direction.NORTH;
-                        case LEFT:
-                            return Direction.EAST;
-                        case FRONT:
-                            return Direction.SOUTH;
-                        case RIGHT:
-                            return Direction.WEST;
-                    }
-                    break;
-                case WEST:
-                    switch (this) {
-                        case LEFT:
-                            return Direction.NORTH;
-                        case BACK:
-                            return Direction.EAST;
-                        case RIGHT:
-                            return Direction.SOUTH;
-                        case FRONT:
-                            return Direction.WEST;
-                    }
-                    break;
-            }
-
-            throw new RuntimeException();
-        }
-
-        public BlockFace getOpposite() {
-            switch (this) {
-                case BOTTOM:
-                    return TOP;
-                case TOP:
-                    return BOTTOM;
-                case BACK:
-                    return FRONT;
-                case LEFT:
-                    return RIGHT;
-                case RIGHT:
-                    return LEFT;
-                case FRONT:
-                    return BACK;
-            }
-            throw new RuntimeException();
-        }
-    }
 }

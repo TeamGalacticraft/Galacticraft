@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
@@ -40,6 +41,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -192,6 +194,11 @@ public class BasicSolarPanelBlockEntity extends ConfigurableMachineBlockEntity i
     @Override
     protected int getBatteryTransferRate() {
         return 10;
+    }
+    
+    @Override
+    public List<BlockFace> getNonConfigurableSides() {
+        return Collections.singletonList(BlockFace.TOP);
     }
 
     /**

@@ -24,26 +24,21 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
-import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.ElectricCompressorScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -59,72 +54,13 @@ import net.minecraft.world.World;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ElectricCompressorBlock extends ConfigurableMachineBlock {
-    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-
     public ElectricCompressorBlock(Settings settings) {
-        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
-    }
-
-    @Override
-    public boolean consumesOxygen() {
-        return false;
-    }
-
-    @Override
-    public boolean generatesOxygen() {
-        return false;
-    }
-
-    @Override
-    public boolean consumesPower() {
-        return true;
-    }
-
-    @Override
-    public boolean generatesPower() {
-        return false;
-    }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return super.getPlacementState(context).with(FACING, context.getPlayerFacing().getOpposite()).with(FRONT_SIDE_OPTION, SideOption.DEFAULT)
-                .with(BACK_SIDE_OPTION, SideOption.DEFAULT)
-                .with(RIGHT_SIDE_OPTION, SideOption.DEFAULT)
-                .with(LEFT_SIDE_OPTION, SideOption.DEFAULT)
-                .with(TOP_SIDE_OPTION, SideOption.DEFAULT)
-                .with(BOTTOM_SIDE_OPTION, SideOption.DEFAULT);
+        super(settings);
     }
 
     @Override
     public ConfigurableMachineBlockEntity createBlockEntity(BlockView var1) {
         return new ElectricCompressorBlockEntity();
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-
-        builder.add(FRONT_SIDE_OPTION);
-        builder.add(BACK_SIDE_OPTION);
-        builder.add(RIGHT_SIDE_OPTION);
-        builder.add(LEFT_SIDE_OPTION);
-        builder.add(TOP_SIDE_OPTION);
-        builder.add(BOTTOM_SIDE_OPTION);
-    }
-
-    @Override
-    public boolean consumesFluids() {
-        return false;
-    }
-
-    @Override
-    public boolean generatesFluids() {
-        return false;
     }
 
     @Override

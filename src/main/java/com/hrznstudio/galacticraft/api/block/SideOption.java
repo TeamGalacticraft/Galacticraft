@@ -37,27 +37,23 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public enum SideOption implements StringIdentifiable, Comparable<SideOption> {
+public enum SideOption implements Comparable<SideOption> {
+    DEFAULT(false, false, false, false),
+    POWER_INPUT(true, false, false, false),
+    POWER_OUTPUT(true, false, false, false),
+    OXYGEN_INPUT(false, false, false, true),
+    OXYGEN_OUTPUT(false, false, false, true),
+    FLUID_INPUT(false, true, false, false),
+    FLUID_OUTPUT(false, true, false, false),
+    ITEM_INPUT(false, false, true, false),
+    ITEM_OUTPUT(false, false, true, false);
 
-    DEFAULT("d", false, false, false, false),
-    POWER_INPUT("pi", true, false, false, false),
-    POWER_OUTPUT("po", true, false, false, false),
-    OXYGEN_INPUT("oi", false, false, false, true),
-    OXYGEN_OUTPUT("oo", false, false, false, true),
-    FLUID_INPUT("fi", false, true, false, false),
-    FLUID_OUTPUT("fo", false, true, false, false),
-    ITEM_INPUT("ii", false, false, true, false),
-    ITEM_OUTPUT("io", false, false, true, false);
-
-    private final String name;
     private final boolean energy;
     private final boolean fluid;
     private final boolean item;
     private final boolean oxygen;
 
-    SideOption(String name, boolean energy, boolean fluid, boolean item, boolean oxygen) {
-        this.name = name;
-
+    SideOption(boolean energy, boolean fluid, boolean item, boolean oxygen) {
         this.energy = energy;
         this.fluid = fluid;
         this.item = item;
@@ -78,38 +74,6 @@ public enum SideOption implements StringIdentifiable, Comparable<SideOption> {
 
     public boolean isFluid() {
         return fluid;
-    }
-
-    public static List<SideOption> getApplicableValuesForMachine(Block block) {
-        if (block instanceof ConfigurableMachineBlock) {
-            List<SideOption> options = new ArrayList<>();
-            options.add(DEFAULT);
-            if (((ConfigurableMachineBlock) block).consumesOxygen()) {
-                options.add(OXYGEN_INPUT);
-            }
-            if (((ConfigurableMachineBlock) block).generatesOxygen()) {
-                options.add(OXYGEN_OUTPUT);
-            }
-            if (((ConfigurableMachineBlock) block).consumesPower()) {
-                options.add(POWER_INPUT);
-            }
-            if (((ConfigurableMachineBlock) block).generatesPower()) {
-                options.add(POWER_OUTPUT);
-            }
-            if (((ConfigurableMachineBlock) block).consumesFluids()) {
-                options.add(FLUID_INPUT);
-            }
-            if (((ConfigurableMachineBlock) block).generatesFluids()) {
-                options.add(FLUID_OUTPUT);
-            }
-            return options;
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public String asString() {
-        return this.name;
     }
 
     public SideOption nextValidOption(ConfigurableMachineBlockEntity blockEntity) {
@@ -139,17 +103,19 @@ public enum SideOption implements StringIdentifiable, Comparable<SideOption> {
             case OXYGEN_INPUT:
                 return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
             case OXYGEN_OUTPUT:
-                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
             case POWER_INPUT:
-                return new LiteralText("Power").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+                return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
             case POWER_OUTPUT:
-                return new LiteralText("Power").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+                return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
             case FLUID_INPUT:
-                return new LiteralText("Fluid").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+                return new LiteralText("Fluids").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
             case FLUID_OUTPUT:
-                return new LiteralText("Fluid").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-            case ITEM_OUTPUT:
+                return new LiteralText("Fluids").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
             case ITEM_INPUT:
+                return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            case ITEM_OUTPUT:
+                return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         }
         return new LiteralText("");
     }

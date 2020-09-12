@@ -46,7 +46,6 @@ import java.util.function.Predicate;
 public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
-    private int prevEnergy = 0;
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
@@ -104,18 +103,6 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);
         attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
         trySpreadEnergy();
-
-        if (prevEnergy != getCapacitor().getCurrentEnergy()) {
-            int level = (int) (((double) getCapacitor().getCurrentEnergy() / (double) getMaxEnergy()) * 8.0D);
-            world.setBlockState(pos, world.getBlockState(pos).with(EnergyStorageModuleBlock.ENERGY_LEVEL, level), 0);
-            prevEnergy = getCapacitor().getCurrentEnergy();
-        }
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        prevEnergy = getCapacitor().getCurrentEnergy();
     }
 
     @Override

@@ -24,9 +24,11 @@
 package com.hrznstudio.galacticraft.api.block.entity;
 
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
@@ -46,6 +48,7 @@ import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
@@ -126,7 +129,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
     };
 
-    private final SimpleTankComponent oxygenTank = new SimpleTankComponent(getFluidTankSize(), getFluidTankMaxCapacity()) {
+    private final SimpleTankComponent oxygenTank = new SimpleTankComponent(getFluidTankSize(), getOxygenTankMaxCapacity()) {
         @Override
         public boolean canExtract(int slot) {
             return ConfigurableMachineBlockEntity.this.canExtractOxygen(slot);
@@ -183,7 +186,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     };
 
     private final SecurityInfo security = new SecurityInfo();
-    private final SideConfigInfo sideConfigInfo = new SideConfigInfo(validSideOptions(), 1, getInventorySize(), getFluidTankSize(), getOxygenTankSize());
+    private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, getInventorySize(), getFluidTankSize(), getOxygenTankSize());
 
     private RedstoneState redstoneState = RedstoneState.DISABLED;
 
@@ -355,6 +358,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public void fromClientTag(CompoundTag tag) {
         this.fromTag(this.getCachedState(), tag);
+
+        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
     }
 
     @Override
@@ -363,7 +368,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public @Nullable CapacitorComponent accessCapacitor(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(ConfigurableMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
+        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isEnergy()) {
             return capacitor;
         }
@@ -371,7 +376,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public @Nullable InventoryComponent accessInventory(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(ConfigurableMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
+        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isItem()) {
             return inventory;
         }
@@ -379,7 +384,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public @Nullable TankComponent accessFluidTank(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(ConfigurableMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
+        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isFluid()) {
             return fluidTank;
         }
@@ -387,7 +392,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public @Nullable TankComponent accessOxygenTank(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(ConfigurableMachineBlock.BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
+        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
         if (option.getOption().isOxygen()) {
             return oxygenTank;
         }
@@ -395,30 +400,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public void trySpreadEnergy() { //TODO: actually use components properly
-        BlockState state = world.getBlockState(pos);
-        for (ConfigurableMachineBlock.BlockFace face : ConfigurableMachineBlock.BlockFace.values()) {
-            SideOption option = state.get(((ConfigurableMachineBlock) state.getBlock()).getProperty(face));
-            if (option == SideOption.POWER_INPUT || option == SideOption.POWER_OUTPUT) {
-                Direction direction = face.toDirection(state.get(Properties.HORIZONTAL_FACING));
-                BlockState other = world.getBlockState(pos.offset(direction));
 
-                CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, pos.offset(direction), direction.getOpposite(), "gcr:spread"); //
-
-                if (component != null) {
-                    if (option == SideOption.POWER_INPUT && ((ConfigurableMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_OUTPUT) {
-                        if (component.canExtractEnergy() && component.getPreferredType().isCompatibleWith(getCapacitor().getPreferredType())) {
-                            int extracted = component.extractEnergy(getCapacitor().getPreferredType(), Math.min(256, getCapacitor().getMaxEnergy() - getCapacitor().getCurrentEnergy()), ActionType.PERFORM);
-                            getCapacitor().insertEnergy(getCapacitor().getPreferredType(), extracted, ActionType.PERFORM);
-                        }
-                    } else {
-                        if (component.canInsertEnergy() && component.getPreferredType().isCompatibleWith(getCapacitor().getPreferredType()) && ((ConfigurableMachineBlock) other.getBlock()).getOption(other, face.getOpposite()) == SideOption.POWER_INPUT) {
-                            int extracted = getCapacitor().extractEnergy(getCapacitor().getPreferredType(), Math.min(256, component.getMaxEnergy() - component.getCurrentEnergy()), ActionType.PERFORM);
-                            component.insertEnergy(getCapacitor().getPreferredType(), extracted, ActionType.PERFORM);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public void idleEnergyDecrement(boolean off) {
@@ -466,7 +448,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        ConfiguredSideOption configuredSideOption = this.getSideConfigInfo().get(ConfigurableMachineBlock.BlockFace.toFace(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), side));
+        ConfiguredSideOption configuredSideOption = this.getSideConfigInfo().get(BlockFace.toFace(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), side));
         if (configuredSideOption.isWildcard()) return IntStream.range(0, getInventorySize()).toArray(); //todo - account for #canHopperExtract
         else return new int[]{configuredSideOption.getValue()};
     }
@@ -497,6 +479,10 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
 
         return accessible && getInventory().insertStack(stack, ActionType.TEST).isEmpty() && canInsert(slot, stack);
+    }
+
+    public List<BlockFace> getNonConfigurableSides() {
+        return Collections.emptyList();
     }
 
     @Override
@@ -736,8 +722,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         private final int invSize;
         private final int tanks;
         private final int oxygenTanks;
+        private final ConfigurableMachineBlockEntity blockEntity;
 
-        public SideConfigInfo(List<SideOption> values, int capacitors, int invSize, int tanks, int oxygenTanks) {
+        public SideConfigInfo(ConfigurableMachineBlockEntity blockEntity, List<SideOption> values, int capacitors, int invSize, int tanks, int oxygenTanks) {
             if (!values.contains(SideOption.DEFAULT)) throw new RuntimeException();
             this.values = new ArrayList<>(values);
             this.values.sort(Enum::compareTo);
@@ -745,13 +732,14 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             this.invSize = invSize;
             this.tanks = tanks;
             this.oxygenTanks = oxygenTanks;
+            this.blockEntity = blockEntity;
 
-            this.front = ConfiguredSideOption.DEFAULT;
-            this.back = ConfiguredSideOption.DEFAULT;
-            this.left = ConfiguredSideOption.DEFAULT;
-            this.right = ConfiguredSideOption.DEFAULT;
-            this.top = ConfiguredSideOption.DEFAULT;
-            this.bottom = ConfiguredSideOption.DEFAULT;
+            this.front = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
+            this.back = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
+            this.left = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
+            this.right = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
+            this.top = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
+            this.bottom = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
         }
 
         public SideOption getFrontOption() {
@@ -780,26 +768,32 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
         public void setFrontOption(SideOption option) {
             front.setOption(option, getMax(option));
+            if (!blockEntity.world.isClient()) blockEntity.sync();
         }
 
         public void setBackOption(SideOption option) {
             back.setOption(option, getMax(option));
+            if (!blockEntity.world.isClient()) blockEntity.sync();
         }
 
         public void setLeftOption(SideOption option) {
             left.setOption(option, getMax(option));
+            if (!blockEntity.world.isClient()) blockEntity.sync();
         }
 
         public void setRightOption(SideOption option) {
             right.setOption(option, getMax(option));
+            if (!blockEntity.world.isClient()) blockEntity.sync();
         }
 
         public void setTopOption(SideOption option) {
             top.setOption(option, getMax(option));
+            if (!blockEntity.world.isClient()) blockEntity.sync();
         }
 
         public void setBottomOption(SideOption option) {
             bottom.setOption(option, getMax(option));
+            if (!blockEntity.world.isClient()) blockEntity.sync();
         }
 
         public int getFrontValue() {
@@ -906,7 +900,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
          * @param face the block face to pull the option from
          * @return a {@link ConfiguredSideOption} assignd to the given face.
          */
-        public ConfiguredSideOption get(@NotNull ConfigurableMachineBlock.BlockFace face) {
+        public ConfiguredSideOption get(@NotNull BlockFace face) {
             switch (face) {
                 case FRONT:
                     return front;
@@ -924,7 +918,32 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             throw new RuntimeException();
         }
 
-        public void increment(@NotNull ConfigurableMachineBlock.BlockFace face) {
+        public void set(@NotNull BlockFace face, SideOption option) {
+            switch (face) {
+                case FRONT:
+                    setFrontOption(option);
+                    break;
+                case TOP:
+                    setTopOption(option);
+                    break;
+                case BACK:
+                    setBackOption(option);
+                    break;
+                case RIGHT:
+                    setRightOption(option);
+                    break;
+                case LEFT:
+                    setLeftOption(option);
+                    break;
+                case BOTTOM:
+                    setBottomOption(option);
+                    break;
+                default:
+                    throw new RuntimeException();
+            }
+        }
+
+        public void increment(@NotNull BlockFace face) {
             switch (face) {
                 case FRONT:
                     front.increment();
@@ -946,7 +965,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                     break;
             }
         }
-        public void decrement(@NotNull ConfigurableMachineBlock.BlockFace face) {
+        public void decrement(@NotNull BlockFace face) {
             switch (face) {
                 case FRONT:
                     front.decrement();

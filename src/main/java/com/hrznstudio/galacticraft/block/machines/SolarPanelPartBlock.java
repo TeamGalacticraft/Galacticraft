@@ -118,7 +118,6 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
         return true;
     }
 
-
     @Override
     public boolean canMobSpawnInside() {
         return false;

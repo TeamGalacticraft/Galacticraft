@@ -25,30 +25,21 @@ package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
-import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.MultiBlockPartBlockEntity;
 import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -61,6 +52,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -70,62 +63,13 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
-
-    private static final EnumProperty<SideOption> FRONT_SIDE_OPTION = EnumProperty.of("north", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> BACK_SIDE_OPTION = EnumProperty.of("south", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> RIGHT_SIDE_OPTION = EnumProperty.of("east", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> LEFT_SIDE_OPTION = EnumProperty.of("west", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> TOP_SIDE_OPTION = EnumProperty.of("up", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-    private static final EnumProperty<SideOption> BOTTOM_SIDE_OPTION = EnumProperty.of("down", SideOption.class, SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
-
     public BasicSolarPanelBlock(Settings settings) {
-        super(settings, FRONT_SIDE_OPTION, BACK_SIDE_OPTION, RIGHT_SIDE_OPTION, LEFT_SIDE_OPTION, TOP_SIDE_OPTION, BOTTOM_SIDE_OPTION);
-    }
-
-    @Override
-    public boolean consumesOxygen() {
-        return false;
-    }
-
-    @Override
-    public boolean generatesOxygen() {
-        return false;
-    }
-
-    @Override
-    public boolean consumesPower() {
-        return false;
-    }
-
-    @Override
-    public boolean generatesPower() {
-        return true;
-    }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite())
-                .with(FRONT_SIDE_OPTION, SideOption.DEFAULT)
-                .with(BACK_SIDE_OPTION, SideOption.DEFAULT)
-                .with(RIGHT_SIDE_OPTION, SideOption.DEFAULT)
-                .with(LEFT_SIDE_OPTION, SideOption.DEFAULT)
-                .with(TOP_SIDE_OPTION, SideOption.DEFAULT)
-                .with(BOTTOM_SIDE_OPTION, SideOption.DEFAULT);
+        super(settings);
     }
 
     @Override
     public ConfigurableMachineBlockEntity createBlockEntity(BlockView blockView) {
         return new BasicSolarPanelBlockEntity();
-    }
-
-    @Override
-    public boolean consumesFluids() {
-        return false;
-    }
-
-    @Override
-    public boolean generatesFluids() {
-        return false;
     }
 
     @Override
@@ -156,41 +100,19 @@ public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements Mu
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
-        dropInventory(world, pos);
 
         for (BlockPos otherPart : getOtherParts(state, pos)) {
             world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
-        }
-
-        super.onBroken(world, pos, state);
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-
-        builder.add(FRONT_SIDE_OPTION);
-        builder.add(BACK_SIDE_OPTION);
-        builder.add(RIGHT_SIDE_OPTION);
-        builder.add(LEFT_SIDE_OPTION);
-        builder.add(TOP_SIDE_OPTION);
-        builder.add(BOTTOM_SIDE_OPTION);
-    }
-
-    private void dropInventory(World world, BlockPos pos) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-
-        if (blockEntity != null) {
-            if (blockEntity instanceof BasicSolarPanelBlockEntity) {
-                BasicSolarPanelBlockEntity basicSolarPanelBlockEntity = (BasicSolarPanelBlockEntity) blockEntity;
-
-                ConfigurableMachineBlock.dropItems(world, pos, basicSolarPanelBlockEntity.getInventory(), basicSolarPanelBlockEntity);
-            }
         }
     }
 
     @Override
     public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
+        return genPartList(pos);
+    }
+
+    @NotNull
+    protected static List<BlockPos> genPartList(BlockPos pos) {
         List<BlockPos> parts = new LinkedList<>();
         BlockPos rod = pos.up();
         BlockPos mid = rod.up();
@@ -232,26 +154,13 @@ public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements Mu
     }
 
     @Override
-    public void onPlaced(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
-        BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
-        for (BlockPos otherPart : getOtherParts(state, basePos)) {
-            world.setBlockState(otherPart, defaultState);
-
-            BlockEntity partEntity = world.getBlockEntity(otherPart);
-            assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
-            ((MultiBlockPartBlockEntity) partEntity).setBasePos(basePos);
-            partEntity.markDirty();
-        }
-    }
-
-    @Override
-    public PistonBehavior getPistonBehavior(BlockState state) {
-        return PistonBehavior.BLOCK;
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        super.onPlaced(world, pos, state, placer, itemStack);
+        onPlacedMB(world, pos, state, placer, itemStack);
     }
 
     @Override
     public void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
-        dropInventory(world, pos);
         world.breakBlock(pos, !player.isCreative());
 
         for (BlockPos otherPart : getOtherParts(state, pos)) {
@@ -264,10 +173,5 @@ public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements Mu
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
         return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
-    }
-
-    @Override
-    public List<Direction> disabledSides() {
-        return Collections.singletonList(Direction.UP);
     }
 }

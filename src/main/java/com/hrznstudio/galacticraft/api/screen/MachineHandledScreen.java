@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock.BlockFace;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -60,7 +60,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -160,7 +162,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
 
             for (BlockFace face : BlockFace.values()) {
-                sideOptions.put(face, ((ConfigurableMachineBlock) world.getBlockState(pos).getBlock()).getOption(world.getBlockState(pos), face));
+                sideOptions.put(face, screenHandler.blockEntity.getSideConfigInfo().get(face).getOption());
             }
         }
     }
@@ -200,17 +202,20 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.drawTexture(stack, energyX, (int) ((energyY - (height * energyScale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * energyScale));
     }
 
-    private void sendSideConfigUpdate(BlockFace face, SideOption option, boolean numChange, boolean positive) {
-        assert this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock;
-        assert this.handler.blockEntity.validSideOptions().contains(option);
-        if (((ConfigurableMachineBlockEntity) this.world.getBlockEntity(pos)).getSecurity().hasAccess(playerInventory.player)) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"),
-                    new PacketByteBuf(new PacketByteBuf(Unpooled.buffer())
-                            .writeBlockPos(pos)
-                            .writeEnumConstant(face.toDirection(Direction.NORTH))
-                            .writeEnumConstant(option)
-                            .writeBoolean(numChange).writeBoolean(positive))
-            ));
+    @Contract("_, true, null, _ -> fail;")
+    private void sendSideConfigUpdate(@NotNull BlockFace face, boolean optionChange, @Nullable SideOption option, boolean positive) {
+        if (handler.blockEntity.getSecurity().hasAccess(playerInventory.player)) {
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeBlockPos(handler.blockEntity.getPos());
+            buf.writeBoolean(optionChange);
+            if (optionChange) {
+                buf.writeEnumConstant(face);
+                buf.writeEnumConstant(option);
+            } else {
+                buf.writeBoolean(positive);
+                buf.writeEnumConstant(face);
+            }
+            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"), buf));
         } else {
             Galacticraft.logger.error("Tried to send side update when not trusted!");
         }
@@ -372,24 +377,24 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }
     }
 
-    private void updateSides(int btn, BlockState state, Property<SideOption> prop, BlockFace face) {
+    private void updateSides(int btn, BlockFace face) {
         if (!Screen.hasShiftDown()) {
             SideOption next;
             if (btn == 1) {
-                next = state.get(prop).prevValidOption(handler.blockEntity);
+                next = handler.blockEntity.getSideConfigInfo().get(face).getOption().prevValidOption(handler.blockEntity);
             } else {
-                next = state.get(prop).nextValidOption(handler.blockEntity);
+                next = handler.blockEntity.getSideConfigInfo().get(face).getOption().nextValidOption(handler.blockEntity);
             }
-            this.world.setBlockState(pos, state.with(prop, next));
-            sendSideConfigUpdate(face, next, false, false);
-            handler.blockEntity.getSideConfigInfo().setFrontOption(next);
+            handler.blockEntity.getSideConfigInfo().set(face, next);
+            sendSideConfigUpdate(face, true, next, false);
+            sideOptions.replace(face, next);
         } else {
             if (btn != 1) {
                 handler.blockEntity.getSideConfigInfo().increment(face);
-                sendSideConfigUpdate(face, state.get(prop), true, true);
+                sendSideConfigUpdate(face, false, null, true);
             } else {
                 handler.blockEntity.getSideConfigInfo().decrement(face);
-                sendSideConfigUpdate(face, state.get(prop), true, false);
+                sendSideConfigUpdate(face, false ,null, false);
             }
         }
         playButtonSound();
@@ -457,49 +462,43 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.NORTH)) {
-                            EnumProperty<SideOption> prop = EnumProperty.of("north", SideOption.class, handler.blockEntity.validSideOptions());
-                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.FRONT);
+                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.FRONT)) {
+                            updateSides(button, BlockFace.FRONT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 + 19 + 19 && (mouseX + 48) - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.SOUTH)) {
-                            EnumProperty<SideOption> prop = EnumProperty.of("south", SideOption.class, handler.blockEntity.validSideOptions());
-                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.BACK);
+                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.BACK)) {
+                            updateSides(button, BlockFace.BACK);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.EAST)) {
-                            EnumProperty<SideOption> prop = EnumProperty.of("east", SideOption.class, handler.blockEntity.validSideOptions());
-                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.RIGHT);
+                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.RIGHT)) {
+                            updateSides(button, BlockFace.RIGHT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.WEST)) {
-                            EnumProperty<SideOption> prop = EnumProperty.of("west", SideOption.class, handler.blockEntity.validSideOptions());
-                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.LEFT);
+                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.LEFT)) {
+                            updateSides(button, BlockFace.LEFT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.UP)) {
-                            EnumProperty<SideOption> prop = EnumProperty.of("up", SideOption.class, handler.blockEntity.validSideOptions());
-                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.TOP);
+                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.TOP)) {
+                            updateSides(button, BlockFace.TOP);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - REDSTONE_PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                        if (this.world.getBlockState(pos).getBlock() instanceof ConfigurableMachineBlock && !((ConfigurableMachineBlock) this.world.getBlockState(pos).getBlock()).disabledSides().contains(Direction.DOWN)) {
-                            EnumProperty<SideOption> prop = EnumProperty.of("down", SideOption.class, handler.blockEntity.validSideOptions());
-                            updateSides(button, this.world.getBlockState(pos), prop, BlockFace.BOTTOM);
+                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.BOTTOM)) {
+                            updateSides(button, BlockFace.BOTTOM);
                             return true;
                         }
                     }

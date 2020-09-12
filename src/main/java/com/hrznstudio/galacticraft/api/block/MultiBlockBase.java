@@ -23,8 +23,13 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.block.entity.MultiBlockPartBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -37,4 +42,16 @@ public interface MultiBlockBase {
     void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos);
 
     List<BlockPos> getOtherParts(BlockState state, BlockPos pos);
+
+    default void onPlacedMB(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
+        BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
+        for (BlockPos otherPart : getOtherParts(state, basePos)) {
+            world.setBlockState(otherPart, defaultState);
+
+            BlockEntity partEntity = world.getBlockEntity(otherPart);
+            assert partEntity != null; // This will never be null because world.setBlockState will put a blockentity there.
+            ((MultiBlockPartBlockEntity) partEntity).setBasePos(basePos);
+            partEntity.markDirty();
+        }
+    }
 }

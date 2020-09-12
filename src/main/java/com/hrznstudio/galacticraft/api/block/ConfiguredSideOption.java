@@ -6,18 +6,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class ConfiguredSideOption {
-    public static final ConfiguredSideOption DEFAULT = new ConfiguredSideOption();
-
     @NotNull
     private SideOption option;
     private int value;
     private int size;
-
-    private ConfiguredSideOption() {
-        this.option = SideOption.DEFAULT;
-        this.value = 0;
-        this.size = 1;
-    }
 
     public ConfiguredSideOption(@NotNull SideOption option, int size) {
         this(option, -1, size);
