@@ -42,6 +42,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -61,39 +62,12 @@ import java.util.Random;
  */
 public class CoalGeneratorBlock extends ConfigurableMachineBlock {
     public CoalGeneratorBlock(Settings settings) {
-        super(settings);
+        super(settings, CoalGeneratorScreenHandler::new);
     }
 
     @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
         return new CoalGeneratorBlockEntity();
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) return ActionResult.SUCCESS;
-
-        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-            @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(pos);
-            }
-
-            @Override
-            public Text getDisplayName() {
-                return new TranslatableText("block.galacticraft-rewoven.coal_generator");
-            }
-
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
-                //TODO: Look into why we have to create a new PacketByteBuf.
-                return new CoalGeneratorScreenHandler(syncId, inv, buf);
-            }
-        });
-
-        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -112,7 +86,7 @@ public class CoalGeneratorBlock extends ConfigurableMachineBlock {
                 world.playSound(x, y, z, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
             }
 
-            Direction direction = state.get(FACING);
+            Direction direction = state.get(Properties.HORIZONTAL_FACING);
             Direction.Axis axis = direction.getAxis();
             double d = rand.nextDouble() * 0.6D - 0.3D;
             double xo = axis == Direction.Axis.X ? (double) direction.getOffsetX() * 0.52D : d;

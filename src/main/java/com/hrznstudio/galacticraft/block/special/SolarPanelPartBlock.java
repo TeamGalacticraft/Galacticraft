@@ -21,7 +21,7 @@
  *
  */
 
-package com.hrznstudio.galacticraft.block.machines;
+package com.hrznstudio.galacticraft.block.special;
 
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;

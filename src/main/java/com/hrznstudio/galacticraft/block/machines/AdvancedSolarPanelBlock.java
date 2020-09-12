@@ -28,33 +28,22 @@ import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -62,37 +51,12 @@ import java.util.List;
  */
 public class AdvancedSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
     public AdvancedSolarPanelBlock(Settings settings) {
-        super(settings);
+        super(settings, AdvancedSolarPanelScreenHandler::new);
     }
 
     @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
         return new AdvancedSolarPanelBlockEntity();
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) return ActionResult.SUCCESS;
-        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-            @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(pos);
-            }
-
-            @Override
-            public Text getDisplayName() {
-                return new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel");
-            }
-
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
-                //TODO: Look into why we have to create a new PacketByteBuf.
-                return new AdvancedSolarPanelScreenHandler(syncId, inv, buf);
-            }
-        });
-        return ActionResult.SUCCESS;
     }
 
     @Override
@@ -106,7 +70,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableMachineBlock implements
 
     @Override
     public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
-        return BasicSolarPanelBlock.genPartList(pos);
+        return MultiBlockBase.genPartList(pos);
     }
 
     @Override
@@ -133,7 +97,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableMachineBlock implements
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        onPlacedMB(world, pos, state, placer, itemStack);
+        onMultiblockPlaced(world, pos, state);
     }
 
     @Override

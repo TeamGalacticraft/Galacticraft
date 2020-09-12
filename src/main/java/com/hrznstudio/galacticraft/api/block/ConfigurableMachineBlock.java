@@ -27,9 +27,13 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
+import com.hrznstudio.galacticraft.misc.TriFunction;
+import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -42,14 +46,21 @@ import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.*;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -58,37 +69,50 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlock extends BlockWithEntity implements WireConnectable {
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+public class ConfigurableMachineBlock extends BlockWithEntity implements WireConnectable {
+    private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
+    private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> beFunction;
+    private final TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo;
 
-    public ConfigurableMachineBlock(Settings settings) {
+    protected ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory) {
+        this(settings, factory, (view) -> null, (itemStack, blockView, context) -> new LiteralText(""));
+    }
+
+    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Function<BlockView, ? extends ConfigurableMachineBlockEntity> beFunction, TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo) {
         super(settings);
+        this.factory = factory;
+        this.beFunction = beFunction;
+        this.machineInfo = machineInfo;
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(FACING);
+        builder.add(Properties.HORIZONTAL_FACING);
     }
 
-    public abstract ConfigurableMachineBlockEntity createBlockEntity(BlockView var1);
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view){
+        return beFunction.apply(view);
+    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite());
     }
 
     @NotNull
     @Override
     public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
         BlockState state = world.getBlockState(connectionTargetPos);
-        SideOption option = ((ConfigurableMachineBlockEntity) world.getBlockEntity(connectionTargetPos)).getSideConfigInfo().get(BlockFace.toFace(state.get(FACING), opposite)).getOption();
+        SideOption option = ((ConfigurableMachineBlockEntity) world.getBlockEntity(connectionTargetPos)).getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), opposite)).getOption();
 
         if (option == SideOption.POWER_INPUT) {
             return WireConnectionType.ENERGY_INPUT;
@@ -109,24 +133,22 @@ public abstract class ConfigurableMachineBlock extends BlockWithEntity implement
     public final void appendTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
         Text text = machineInfo(stack, view, context);
         if (text != null) {
-            List<Text> info = new ArrayList<>();
-            char[] line = text instanceof TranslatableText ? I18n.translate(((TranslatableText) text).getKey()).toCharArray() : text.getString().toCharArray();
-            int len = 0;
-            final int maxLength = 175;
-            StringBuilder builder = new StringBuilder();
-            for (char c : line) {
-                len += MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(c));
-                if (c == ' ' && len >= maxLength) {
-                    len = 0;
-                    info.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
-                    builder = new StringBuilder();
-                    continue;
-                }
-                builder.append(c);
-            }
-            info.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
             if (Screen.hasShiftDown()) {
-                lines.addAll(info);
+                char[] line = text instanceof TranslatableText ? I18n.translate(((TranslatableText) text).getKey()).toCharArray() : text.getString().toCharArray();
+                int len = 0;
+                final int maxLength = 175;
+                StringBuilder builder = new StringBuilder();
+                for (char c : line) {
+                    len += MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(c));
+                    if (c == ' ' && len >= maxLength) {
+                        len = 0;
+                        lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
+                        builder = new StringBuilder();
+                        continue;
+                    }
+                    builder.append(c);
+                }
+                lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
             } else {
                 lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)));
             }
@@ -171,6 +193,31 @@ public abstract class ConfigurableMachineBlock extends BlockWithEntity implement
     }
 
     @Override
+    public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!world.isClient) player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+            @Override
+            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                buf.writeBlockPos(pos);
+            }
+
+            @Override
+            public Text getDisplayName() {
+                return new LiteralText("");
+            }
+
+            @Override
+            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
+                //TODO: Look into why we have to create a new PacketByteBuf.
+                return factory.create(syncId, inv, buf);
+            }
+        });
+
+        return ActionResult.SUCCESS;
+    }
+
+    @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
@@ -197,5 +244,7 @@ public abstract class ConfigurableMachineBlock extends BlockWithEntity implement
         return stack;
     }
 
-    public abstract Text machineInfo(ItemStack stack, BlockView view, TooltipContext context);
+    public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
+        return machineInfo.apply(stack, view, context);
+    }
 }

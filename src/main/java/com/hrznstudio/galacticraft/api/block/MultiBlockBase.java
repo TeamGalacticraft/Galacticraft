@@ -32,20 +32,54 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public interface MultiBlockBase {
+    @NotNull
+    static List<BlockPos> genPartList(BlockPos pos) {
+        List<BlockPos> parts = new LinkedList<>();
+        BlockPos rod = pos.up();
+        BlockPos mid = rod.up();
+        BlockPos front = mid.north();
+        BlockPos back = mid.south();
+
+        BlockPos right = mid.east();
+        BlockPos left = mid.west();
+
+        BlockPos frontLeft = front.east();
+        BlockPos frontRight = front.west();
+        BlockPos backLeft = back.east();
+        BlockPos backRight = back.west();
+
+        parts.add(rod);
+        parts.add(mid);
+        parts.add(front);
+        parts.add(back);
+
+        parts.add(right);
+        parts.add(left);
+
+        parts.add(frontLeft);
+        parts.add(frontRight);
+        parts.add(backLeft);
+        parts.add(backRight);
+
+        return parts;
+    }
+
     void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos);
 
     List<BlockPos> getOtherParts(BlockState state, BlockPos pos);
 
-    default void onPlacedMB(World world, BlockPos basePos, BlockState state, LivingEntity entity, ItemStack stack) {
+    default void onMultiblockPlaced(World world, BlockPos basePos, BlockState state) {
         BlockState defaultState = GalacticraftBlocks.SOLAR_PANEL_PART.getDefaultState();
-        for (BlockPos otherPart : getOtherParts(state, basePos)) {
+        for (BlockPos otherPart : this.getOtherParts(state, basePos)) {
             world.setBlockState(otherPart, defaultState);
 
             BlockEntity partEntity = world.getBlockEntity(otherPart);

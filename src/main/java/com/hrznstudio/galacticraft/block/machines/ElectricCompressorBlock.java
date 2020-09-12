@@ -55,66 +55,16 @@ import net.minecraft.world.World;
  */
 public class ElectricCompressorBlock extends ConfigurableMachineBlock {
     public ElectricCompressorBlock(Settings settings) {
-        super(settings);
+        super(settings, ElectricCompressorScreenHandler::new);
     }
 
     @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView var1) {
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
         return new ElectricCompressorBlockEntity();
     }
 
     @Override
     public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
         return new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
-    }
-
-    @Override
-    public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
-        }
-
-        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-            @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(pos);
-            }
-
-            @Override
-            public Text getDisplayName() {
-                return new TranslatableText("block.galacticraft-rewoven.electric_compressor");
-            }
-
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
-                //TODO: Look into why we have to create a new PacketByteBuf.
-                return new ElectricCompressorScreenHandler(syncId, inv, buf);
-            }
-        });
-
-        return ActionResult.SUCCESS;
-    }
-
-    @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-
-        if (blockEntity != null) {
-            if (blockEntity instanceof ElectricCompressorBlockEntity) {
-                ElectricCompressorBlockEntity be = (ElectricCompressorBlockEntity) blockEntity;
-
-                for (int i = 0; i < be.getInventory().getSize(); i++) {
-                    ItemStack stack = be.getInventory().getStack(i);
-
-                    if (!stack.isEmpty()) {
-                        world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack.copy()));
-                    }
-                }
-            }
-        }
     }
 }

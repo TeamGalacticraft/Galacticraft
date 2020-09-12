@@ -27,26 +27,13 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.EnergyStorageModuleBlockEntity;
 import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -54,36 +41,7 @@ import net.minecraft.world.World;
 public class EnergyStorageModuleBlock extends ConfigurableMachineBlock {
 
     public EnergyStorageModuleBlock(Settings settings) {
-        super(settings);
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
-        }
-
-        player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-            @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(pos);
-            }
-
-            @Override
-            public Text getDisplayName() {
-                return new TranslatableText("block.galacticraft-rewoven.energy_storage_module");
-            }
-
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
-                //TODO: Look into why we have to create a new PacketByteBuf.
-                return new EnergyStorageModuleScreenHandler(syncId, inv, buf);
-            }
-        });
-
-        return ActionResult.SUCCESS;
+        super(settings, EnergyStorageModuleScreenHandler::new);
     }
 
     @Override
@@ -92,7 +50,7 @@ public class EnergyStorageModuleBlock extends ConfigurableMachineBlock {
     }
 
     @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView blockView) {
+    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
         return new EnergyStorageModuleBlockEntity();
     }
 }
