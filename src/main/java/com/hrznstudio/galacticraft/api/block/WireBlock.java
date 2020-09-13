@@ -32,6 +32,7 @@ import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
@@ -149,6 +150,11 @@ public class WireBlock extends BlockWithEntity implements WireConnectable {
                 }
             }
         }
+    }
+
+    @Override
+    public PistonBehavior getPistonBehavior(BlockState state) {
+        return PistonBehavior.BLOCK;
     }
 
     @Override

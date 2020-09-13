@@ -36,11 +36,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,7 +53,7 @@ public class GalacticraftPackets {
             context.getTaskQueue().execute(() -> {
                 ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), context, false);
                 if (blockEntity != null) {
-                    blockEntity.setRedstoneState(buffer.readEnumConstant(ConfigurableMachineBlockEntity.RedstoneState.class));
+                    blockEntity.setRedstone(buffer.readEnumConstant(ConfigurableMachineBlockEntity.RedstoneState.class));
                 }
             });
         }));

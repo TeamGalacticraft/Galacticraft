@@ -1,6 +1,5 @@
 package com.hrznstudio.galacticraft.api.block.util;
 
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
@@ -102,11 +101,11 @@ public enum BlockFace {
             case EAST:
                 switch (this) {
                     case RIGHT:
-                        return Direction.NORTH;
+                        return Direction.SOUTH;
                     case FRONT:
                         return Direction.EAST;
                     case LEFT:
-                        return Direction.SOUTH;
+                        return Direction.NORTH;
                     case BACK:
                         return Direction.WEST;
                 }
@@ -126,11 +125,11 @@ public enum BlockFace {
             case WEST:
                 switch (this) {
                     case LEFT:
-                        return Direction.NORTH;
+                        return Direction.SOUTH;
                     case BACK:
                         return Direction.EAST;
                     case RIGHT:
-                        return Direction.SOUTH;
+                        return Direction.NORTH;
                     case FRONT:
                         return Direction.WEST;
                 }

@@ -176,7 +176,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(stack, this.x - PANEL_WIDTH + 21 + 22, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
                 this.drawTexture(stack, this.x - PANEL_WIDTH + 21 + 44, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
 
-                switch (entity.getRedstoneState()) {
+                switch (entity.getRedstone()) {
                     case DISABLED:
                         this.drawTexture(stack, this.x - PANEL_WIDTH + 21, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
                         break;
@@ -329,19 +329,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
 
                     if (mouseX >= this.x - 78 && mouseX <= this.x - 78 + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstoneState(ConfigurableMachineBlockEntity.RedstoneState.DISABLED);
+                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.DISABLED);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
                     }
                     if (mouseX >= this.x - 78 + 22 && mouseX <= this.x - 78 + 41 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstoneState(ConfigurableMachineBlockEntity.RedstoneState.OFF);
+                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.OFF);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
                     }
                     if (mouseX >= this.x - 78 + 44 && mouseX <= this.x - 78 + 63 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstoneState(ConfigurableMachineBlockEntity.RedstoneState.ON);
+                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.ON);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
@@ -614,7 +614,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone"),
                 new PacketByteBuf(Unpooled.buffer())
                         .writeBlockPos(pos)
-                        .writeEnumConstant(entity.getRedstoneState())
+                        .writeEnumConstant(entity.getRedstone())
         ));
     }
 

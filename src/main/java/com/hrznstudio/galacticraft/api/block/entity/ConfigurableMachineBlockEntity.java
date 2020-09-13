@@ -57,8 +57,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
@@ -72,13 +74,14 @@ import java.util.stream.IntStream;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, BlockComponentProvider {
+public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, BlockComponentProvider, Tickable {
     private final InventoryWrapper wrapper = InventoryWrapper.of(getInventory());
     
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, getInventorySize(), getFluidTankSize(), getOxygenTankSize());
 
-    private RedstoneState redstoneState = RedstoneState.DISABLED;
+    private RedstoneState redstone = RedstoneState.DISABLED;
+
 
     public ConfigurableMachineBlockEntity(BlockEntityType<? extends ConfigurableMachineBlockEntity> blockEntityType) {
         super(blockEntityType);
@@ -122,18 +125,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public abstract List<SideOption> validSideOptions();
 
-    public void setRedstoneState(@NotNull RedstoneState redstoneState) {
-        this.redstoneState = redstoneState;
+    public void setRedstone(@NotNull RedstoneState redstone) {
+        this.redstone = redstone;
     }
 
     public MachineStatus getStatusForTooltip() {
         return null;
-    }
-
-    protected void decrement(int slot, int amount) {
-        ItemStack stack = getInventory().getStack(slot);
-        stack.decrement(amount);
-        getInventory().setStack(slot, stack);
     }
 
     /**
@@ -248,8 +245,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return security;
     }
 
-    public final @NotNull RedstoneState getRedstoneState() {
-        return redstoneState;
+    public final @NotNull RedstoneState getRedstone() {
+        return redstone;
     }
 
     public final @NotNull SideConfigInfo getSideConfigInfo() {
@@ -260,13 +257,19 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.getSecurity().hasAccess(player);
     }
 
+    protected void decrement(int slot, int amount) {
+        ItemStack stack = getInventory().getStack(slot);
+        stack.decrement(amount);
+        getInventory().setStack(slot, stack);
+    }
+
     /**
      * Whether the current machine is enabled
      *
      * @return The state of the machine
      */
     public boolean disabled() {
-        switch (this.redstoneState) {
+        switch (this.redstone) {
             case OFF:
                 return this.getWorld().isReceivingRedstonePower(pos);
             case ON:
@@ -276,29 +279,40 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
     }
 
+//    @Override
+//    public void tick() {
+//        if (disabled()) {
+//
+//        }
+//
+//        machineTick();
+//    }
+
+//    public abstract void machineTick();
+
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putString("Redstone", redstoneState.asString());
         this.getCapacitor().toTag(tag);
         this.getInventory().toTag(tag);
-        this.security.toTag(tag);
         this.getFluidTank().toTag(tag);
         this.getOxygenTank().toTag(tag);
+        this.security.toTag(tag);
         this.sideConfigInfo.toTag(tag);
+        this.redstone.toTag(tag);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.redstoneState = RedstoneState.fromString(tag.getString("Redstone"));
         this.getCapacitor().fromTag(tag);
         this.getInventory().fromTag(tag);
-        this.security.fromTag(tag);
         this.getFluidTank().fromTag(tag);
         this.getOxygenTank().fromTag(tag);
+        this.security.fromTag(tag);
         this.sideConfigInfo.fromTag(tag);
+        this.redstone = RedstoneState.fromTag(tag);
     }
 
     public boolean canInsert(int slot, ItemStack stack) {
@@ -325,40 +339,24 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.toTag(tag);
     }
 
-    public @Nullable CapacitorComponent accessCapacitor(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
-        if (option.getOption().isEnergy()) {
-            return getCapacitor();
+    public void trySpreadEnergy() {
+        if (this.getCapacitor().canExtractEnergy()) {
+            for (BlockFace face : BlockFace.values()) {
+                ConfiguredSideOption option = this.getSideConfigInfo().get(face);
+                if (option.getOption().isEnergy()) {
+                    Direction dir = face.toDirection(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
+                    CapacitorComponent component = ((BlockComponentProvider) world.getBlockState(pos).getBlock()).getComponent(world, pos.offset(dir), UniversalComponents.CAPACITOR_COMPONENT, dir.getOpposite());
+                    if (component != null) {
+                        if (component.canInsertEnergy()) {
+                            int i = this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.getMaxEnergy() - component.getCurrentEnergy(), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
+                            if (i != 0) {
+                                Galacticraft.logger.debug( i + "gJ wasted?!");
+                            }
+                        }
+                    }
+                }
+            }
         }
-        return null;
-    }
-
-    public @Nullable InventoryComponent accessInventory(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
-        if (option.getOption().isItem()) {
-            return getInventory();
-        }
-        return null;
-    }
-
-    public @Nullable TankComponent accessFluidTank(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
-        if (option.getOption().isFluid()) {
-            return getFluidTank();
-        }
-        return null;
-    }
-
-    public @Nullable TankComponent accessOxygenTank(@NotNull BlockState state, @Nullable Direction side) {
-        ConfiguredSideOption option = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), side));
-        if (option.getOption().isOxygen()) {
-            return getOxygenTank();
-        }
-        return null;
-    }
-
-    public void trySpreadEnergy() { //TODO: actually use components properly
-
     }
 
     public void idleEnergyDecrement(boolean off) {
@@ -542,9 +540,19 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         public String asString() {
             return this.name().toLowerCase();
         }
+
+        public void toTag(CompoundTag tag) {
+            tag.putString("Redstone", this.asString());
+        }
+
+        public static RedstoneState fromTag(CompoundTag tag) {
+            return fromString(tag.getString("Redstone"));
+        }
     }
 
     public interface MachineStatus {
+        MachineStatus OFF = () -> new TranslatableText("ui.galacticraft-rewoven.machinestatus.off");
+
         Text getText();
     }
 
