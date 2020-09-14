@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:moon_rock"
+          "name": "galacticraft-rewoven:cobbled_moon_rock"
         }
       ],
       "conditions": [

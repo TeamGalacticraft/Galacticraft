@@ -66,7 +66,7 @@ public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<Oxyge
 
     @Override
     public void sendContentUpdates() {
-        oxygen.set((int) (blockEntity.getTank().getContents(0).getAmount().floatValue() * 100.0D));
+        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().floatValue() * 100.0D));
         super.sendContentUpdates();
     }
 

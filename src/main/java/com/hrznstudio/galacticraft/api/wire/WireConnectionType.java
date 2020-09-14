@@ -40,14 +40,19 @@ public enum WireConnectionType implements StringIdentifiable {
     WIRE,
 
     /**
-     * The wire is connected to some sort of energy consuming block.
+     * The wire is connected to an output face of a energy holding block.
      */
     ENERGY_INPUT,
 
     /**
-     * The wire is connected to some sort of energy generating block.
+     * The wire is connected to an input face of a energy holding block.
      */
-    ENERGY_OUTPUT;
+    ENERGY_OUTPUT,
+
+    /**
+     * The wire is connected to an directionless energy face of a energy holding block.
+     */
+    ENERGY_IO;
 
     @Override
     public String asString() {

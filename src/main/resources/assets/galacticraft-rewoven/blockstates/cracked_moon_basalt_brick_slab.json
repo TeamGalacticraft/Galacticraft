@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraft-rewoven:block/cracked_moon_basalt_brick_slab"
+    },
+    "type=top": {
+      "model": "galacticraft-rewoven:block/cracked_moon_basalt_brick_slab_top"
+    },
+    "type=double": {
+      "model": "galacticraft-rewoven:block/cracked_moon_basalt_brick"
+    }
+  }
+}

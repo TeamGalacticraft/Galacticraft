@@ -5,9 +5,6 @@
   "mixins": [
     "BaseFluidMixin",
     "BiomeMixin",
-    "DefaultBiomeFeaturesMixin",
-    "DimensionOptionsMixin",
-    "DimensionTypeMixin",
     "EntityAttributeInstanceAccessor",
     "EntityMixin",
     "FireBlockAccessor",
@@ -15,9 +12,7 @@
     "LivingEntityMixin",
     "PlayerEntityMixin",
     "ServerWorldMixin",
-    "StructureFeatureMixin",
     "StructurePoolGeneratorMixin",
-    "StructuresConfigMixin",
     "TorchBlockMixin",
     "TypeAwareBuyForOneEmeraldFactoryMixin"
   ],

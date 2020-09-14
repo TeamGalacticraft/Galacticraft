@@ -23,8 +23,10 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
@@ -45,12 +47,13 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenDecompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
     public static final int BATTERY_SLOT = 0;
 
@@ -80,17 +83,37 @@ public class OxygenDecompressorBlockEntity extends ConfigurableElectricMachineBl
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 2;
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public int getOxygenTankSize() {
+        return 1;
+    }
+
+    @Override
+    public Fraction getOxygenTankMaxCapacity() {
+        return MAX_OXYGEN;
+    }
+
+    @Override
+    public int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.OXYGEN_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return true;
     }
 
@@ -140,7 +163,6 @@ public class OxygenDecompressorBlockEntity extends ConfigurableElectricMachineBl
             component.insertFluid(0, getTank().insertFluid(0, component.takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
         }
-        status = OxygenDecompressorStatus.DECOMPRESSING;
     }
 
     @Override
@@ -157,16 +179,6 @@ public class OxygenDecompressorBlockEntity extends ConfigurableElectricMachineBl
         tank.fromTag(tag);
     }
 
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
-    }
-
     public SimpleTankComponent getTank() {
         return this.tank;
     }
@@ -174,6 +186,41 @@ public class OxygenDecompressorBlockEntity extends ConfigurableElectricMachineBl
     @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().oxygenDecompressorEnergyConsumptionRate();
+    }
+
+    @Override
+    public boolean canHopperExtractItems(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean canHopperInsertItems(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractOxygen(int tank) {
+        return true;
+    }
+
+    @Override
+    public boolean canInsertOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     /**

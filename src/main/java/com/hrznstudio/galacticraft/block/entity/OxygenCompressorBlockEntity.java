@@ -23,11 +23,13 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.UniversalComponents;
@@ -46,32 +48,16 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
     public static final int BATTERY_SLOT = 0;
-
-    private final SimpleTankComponent tank = new SimpleTankComponent(1, MAX_OXYGEN) {
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                return super.insertFluid(tank, fluid, action);
-            } else {
-                return fluid;
-            }
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-            if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                super.setFluid(slot, stack);
-            }
-        }
-    };
 
     public int collectionAmount = 0;
     public OxygenCompressorStatus status = OxygenCompressorStatus.INACTIVE;
@@ -81,17 +67,37 @@ public class OxygenCompressorBlockEntity extends ConfigurableElectricMachineBloc
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 2;
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public int getOxygenTankSize() {
+        return 1;
+    }
+
+    @Override
+    public Fraction getOxygenTankMaxCapacity() {
+        return MAX_OXYGEN;
+    }
+
+    @Override
+    public int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.OXYGEN_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return true;
     }
 
@@ -121,7 +127,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableElectricMachineBloc
         trySpreadEnergy();
         if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
             status = OxygenCompressorStatus.NOT_ENOUGH_ENERGY;
-        } else if (this.getTank().isEmpty()) {
+        } else if (this.getOxygenTank().isEmpty()) {
             status = OxygenCompressorStatus.NOT_ENOUGH_OXYGEN;
         } else {
             TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
@@ -138,42 +144,49 @@ public class OxygenCompressorBlockEntity extends ConfigurableElectricMachineBloc
 
         if (status == OxygenCompressorStatus.COMPRESSING) {
             TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
-            getTank().insertFluid(0, component.insertFluid(0, getTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
+            getOxygenTank().insertFluid(0, component.insertFluid(0, getOxygenTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
         }
     }
-
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
-        tank.toTag(tag);
-
-        return tag;
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        tank.fromTag(tag);
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
-    }
-
-    public SimpleTankComponent getTank() {
-        return this.tank;
-    }
-
+    
     @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
+    }
+
+    @Override
+    public boolean canHopperExtractItems(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean canHopperInsertItems(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractOxygen(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertOxygen(int tank) {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     /**

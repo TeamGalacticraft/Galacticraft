@@ -23,64 +23,58 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.machines.OxygenStorageModuleBlock;
+import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
-    private final TankComponent tank = new SimpleTankComponent(1, Fraction.of(1, 100).multiply(Fraction.ofWhole(30_000))) {
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                return super.insertFluid(tank, fluid, action);
-            } else {
-                return fluid;
-            }
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-            if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                super.setFluid(slot, stack);
-            }
-        }
-    };
-
-    private Fraction prevOxygen = Fraction.ZERO;
-
+public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEntity {
     public OxygenStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);
     }
 
     @Override
-    protected int getInventorySize() {
+    public Fraction getOxygenTankMaxCapacity() {
+        return Fraction.of(1, 100).multiply(Fraction.ofWhole(30_000));
+    }
+
+    @Override
+    public int getInventorySize() {
         return 0;
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public int getOxygenTankSize() {
+        return 1;
+    }
+
+    @Override
+    public int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.OXYGEN_INPUT, SideOption.OXYGEN_OUTPUT);
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return false;
     }
 
@@ -95,43 +89,52 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableElectricMachineB
     }
 
     @Override
+    public void tick() {
+        //todo spread oxygen
+    }
+
+    @Override
     public int getMaxEnergy() {
         return 0;
-    }
-
-    public TankComponent getTank() {
-        return tank;
-    }
-
-    @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            return;
-        }
-
-        if (prevOxygen.compareTo(getTank().getContents(0).getAmount()) != 0) {
-            int level = (int) ((getTank().getContents(0).getAmount().doubleValue() / getTank().getMaxCapacity(0).doubleValue()) * 8.0D);
-            world.setBlockState(pos, world.getBlockState(pos).with(OxygenStorageModuleBlock.OXYGEN_LEVEL, level), 0);
-            prevOxygen = getTank().getContents(0).getAmount();
-        }
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        getTank().fromTag(tag);
-        prevOxygen = getTank().getContents(0).getAmount();
-    }
-
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
-        getTank().toTag(tag);
-        return tag;
     }
 
     @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    public boolean canHopperExtractItems(int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean canHopperInsertItems(int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractOxygen(int tank) {
+        return true;
+    }
+
+    @Override
+    public boolean canInsertOxygen(int tank) {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 }

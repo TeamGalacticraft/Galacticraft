@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/template_wall_side_tall",
+  "textures": {
+    "wall": "galacticraft-rewoven:block/detailed_meteoric_iron_decoration_side",
+    "wall_bot": "galacticraft-rewoven:block/detailed_meteoric_iron_decoration_top",
+    "wall_top": "galacticraft-rewoven:block/meteoric_iron_decoration"
+  }
+}

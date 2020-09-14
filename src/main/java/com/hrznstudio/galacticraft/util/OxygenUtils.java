@@ -39,6 +39,10 @@ public class OxygenUtils {
         return Fraction.ZERO;
     }
 
+    public static boolean isOxygen(FluidVolume volume) {
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    }
+
     /**
      * @param stack  The battery/energy item to insert energy into
      * @param amount The amount of energy, in Galacticraft Joules, to inset into the battery

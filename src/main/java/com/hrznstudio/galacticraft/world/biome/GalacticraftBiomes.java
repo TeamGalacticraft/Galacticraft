@@ -23,20 +23,11 @@
 
 package com.hrznstudio.galacticraft.world.biome;
 
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
-
-import java.util.List;
-import java.util.Objects;
-
-import static com.hrznstudio.galacticraft.world.biome.GalacticraftDefaultBiomeCreators.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -49,26 +40,9 @@ public class GalacticraftBiomes {
         public static final RegistryKey<Biome> HIGHLANDS_VALLEY = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.HIGHLANDS_VALLEY));
         public static final RegistryKey<Biome> MARE_PLAINS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_PLAINS));
         public static final RegistryKey<Biome> MARE_ROCKS = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_ROCKS));
-        public static final RegistryKey<Biome> MARE_VALLEY = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_VALLEY));
-
-        public static List<Biome> getBiomes() {
-            ImmutableList.Builder<Biome> builder = ImmutableList.builder();
-            builder.add(Objects.requireNonNull(BuiltinRegistries.BIOME.get(HIGHLANDS_PLAINS)));
-            builder.add(Objects.requireNonNull(BuiltinRegistries.BIOME.get(HIGHLANDS_ROCKS)));
-            builder.add(Objects.requireNonNull(BuiltinRegistries.BIOME.get(HIGHLANDS_VALLEY)));
-            builder.add(Objects.requireNonNull(BuiltinRegistries.BIOME.get(MARE_PLAINS)));
-            builder.add(Objects.requireNonNull(BuiltinRegistries.BIOME.get(MARE_ROCKS)));
-            builder.add(Objects.requireNonNull(BuiltinRegistries.BIOME.get(MARE_VALLEY)));
-            return builder.build();
-        }
+        public static final RegistryKey<Biome> MARE_EDGE = RegistryKey.of(Registry.BIOME_KEY, new Identifier(Constants.MOD_ID, Constants.Biomes.Moon.MARE_EDGE));
 
         private static void init() {
-            Biomes.register(70, HIGHLANDS_PLAINS, createMoonHighlandsBiome(MOON_HIGHLANDS_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.04F, 0.01F));
-            Biomes.register(71, HIGHLANDS_ROCKS, createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, 0.6F, 0.007F, 0.0001F));
-            Biomes.register(72, HIGHLANDS_VALLEY, createMoonHighlandsBiome(MOON_HIGHLANDS_ROCK_CONFIGURED_SURFACE_BUILDER, -0.5F, 0.03F, 0.005F));
-            Biomes.register(73, MARE_PLAINS, createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.03F, 0.03F, 0.005F));
-            Biomes.register(74, MARE_ROCKS, createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, 0.7F, 0.01F, 0.003F));
-            Biomes.register(75, MARE_VALLEY, createMoonMareBiome(MOON_MARE_CONFIGURED_SURFACE_BUILDER, -0.6F, 0.03F, 0.004F));
         }
     }
 

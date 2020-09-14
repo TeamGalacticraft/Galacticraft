@@ -1,0 +1,8 @@
+{
+  "parent": "block/stairs",
+  "textures": {
+    "bottom": "galacticraft-rewoven:block/dark_decoration",
+    "top": "galacticraft-rewoven:block/dark_decoration",
+    "side": "galacticraft-rewoven:block/dark_decoration"
+  }
+}
