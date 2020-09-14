@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
-import com.hrznstudio.galacticraft.api.wire.WireConnectable;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.misc.TriFunction;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
@@ -77,7 +76,7 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ConfigurableMachineBlock extends BlockWithEntity implements WireConnectable {
+public class ConfigurableMachineBlock extends BlockWithEntity {
     private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
     private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> beFunction;
     private final TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo;
@@ -106,21 +105,6 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements WireCon
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite());
-    }
-
-    @NotNull
-    @Override
-    public WireConnectionType canWireConnect(WorldAccess world, Direction opposite, BlockPos connectionSourcePos, BlockPos connectionTargetPos) {
-        BlockState state = world.getBlockState(connectionTargetPos);
-        SideOption option = ((ConfigurableMachineBlockEntity) world.getBlockEntity(connectionTargetPos)).getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), opposite)).getOption();
-
-        if (option == SideOption.POWER_INPUT) {
-            return WireConnectionType.ENERGY_INPUT;
-        } else if (option == SideOption.POWER_OUTPUT) {
-            return WireConnectionType.ENERGY_OUTPUT;
-        }
-
-        return WireConnectionType.NONE;
     }
 
     @Override

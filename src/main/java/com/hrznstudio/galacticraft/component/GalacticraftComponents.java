@@ -154,12 +154,12 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             }
         });
 
-//        for (Identifier id : MACHINE_BLOCKS) {
-//            registry.registerFor(id, UniversalComponents.INVENTORY_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getInventory(state, side));
-//            registry.registerFor(id, UniversalComponents.CAPACITOR_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getCapacitor(state, side));
-//            registry.registerFor(id, UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getFluidTank(state, side));
-//            registry.registerFor(id, GalacticraftComponents.OXYGEN_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getOxygenTank(state, side));
-//        }
+        for (Identifier id : MACHINE_BLOCKS) { //CC API v3
+            registry.registerFor(id, UniversalComponents.INVENTORY_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getInventory(state, side));
+            registry.registerFor(id, UniversalComponents.CAPACITOR_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getCapacitor(state, side));
+            registry.registerFor(id, UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getFluidTank(state, side));
+            registry.registerFor(id, GalacticraftComponents.OXYGEN_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getOxygenTank(state, side));
+        }
 
         MACHINE_BLOCKS.clear();
     }

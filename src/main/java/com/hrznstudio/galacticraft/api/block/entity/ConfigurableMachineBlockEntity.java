@@ -509,6 +509,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         wrapper.clear();
     }
 
+    @Override
+    public void sync() {
+        BlockEntityClientSerializable.super.sync();
+        this.world.updateNeighbors(pos, this.getCachedState().getBlock());
+    }
+
     public enum RedstoneState implements StringIdentifiable {
         /**
          * Ignores redstone entirely.
