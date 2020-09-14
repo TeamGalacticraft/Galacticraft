@@ -35,7 +35,6 @@ import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWire
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.EnergyStorageModuleScreen;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.mixin.FireBlockAccessor;
