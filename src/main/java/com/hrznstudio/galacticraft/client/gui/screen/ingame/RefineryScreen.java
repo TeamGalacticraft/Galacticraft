@@ -61,7 +61,7 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight + 26);
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 35);
 
-        this.drawConfigTabs(stack);
+        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

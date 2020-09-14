@@ -21,7 +21,7 @@
  *
  */
 
-package com.hrznstudio.galacticraft.block.machines;
+package com.hrznstudio.galacticraft.block.special;
 
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
@@ -117,7 +117,6 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
     public boolean isTranslucent(BlockState state, BlockView blockView, BlockPos pos) {
         return true;
     }
-
 
     @Override
     public boolean canMobSpawnInside() {

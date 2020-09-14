@@ -1,6 +1,7 @@
 package com.hrznstudio.galacticraft.util;
 
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
@@ -40,6 +41,10 @@ public class OxygenUtils {
             }
         }
         return total;
+    }
+
+    public static boolean isOxygen(FluidVolume volume) {
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
     }
 
     /**
