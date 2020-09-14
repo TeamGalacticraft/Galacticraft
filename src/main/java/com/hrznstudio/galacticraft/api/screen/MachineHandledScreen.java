@@ -217,49 +217,67 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 if (hasShiftDown()) {
                     if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y - 18, ICONS_WIDTH, ICONS_HEIGHT)) {
                         if (config.get(BlockFace.TOP).isItem()) {
+                            if (handler.blockEntity.getSideConfigInfo().getTopValue() != -1) {
+                                textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getTopValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y - 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                            }
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 12, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
+                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
                                 }
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y + 18, ICONS_WIDTH, ICONS_HEIGHT)) {
+                        if (handler.blockEntity.getSideConfigInfo().getBottomValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getBottomValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y + 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        }
                         if (config.get(BlockFace.BOTTOM).isItem()) {
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 8, this.y + slot.y + 12, Formatting.GOLD.getColorValue());
+                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
                                 }
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
+                        if (handler.blockEntity.getSideConfigInfo().getFrontValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getFrontValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        }
                         if (config.get(BlockFace.FRONT).isItem()) {
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 8, this.y + slot.y + 12, Formatting.GOLD.getColorValue());
+                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
                                 }
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
+                        if (handler.blockEntity.getSideConfigInfo().getLeftValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getLeftValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        }
                         if (config.get(BlockFace.LEFT).isItem()) {
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 8, this.y + slot.y + 12, Formatting.GOLD.getColorValue());
+                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
                                 }
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
+                        if (handler.blockEntity.getSideConfigInfo().getBackValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getBackValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        }
                         if (config.get(BlockFace.BACK).isItem()) {
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 8, this.y + slot.y + 12, Formatting.GOLD.getColorValue());
+                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
                                 }
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
+                        if (handler.blockEntity.getSideConfigInfo().getRightValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getRightValue()), this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        }
                         if (config.get(BlockFace.RIGHT).isItem()) {
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
-                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 8, this.y + slot.y + 12, Formatting.GOLD.getColorValue());
+                                    this.textRenderer.draw(stack, new LiteralText(String.valueOf(slot.id)), this.x + slot.x + 10, this.y + slot.y + 8, Formatting.GOLD.getColorValue());
                                 }
                             }
                         }

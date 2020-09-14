@@ -405,8 +405,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public int[] getAvailableSlots(Direction side) {
         ConfiguredSideOption configuredSideOption = this.getSideConfigInfo().get(BlockFace.toFace(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), side));
-        if (configuredSideOption.isWildcard()) return IntStream.range(0, getInventorySize()).toArray(); //todo - account for #canHopperExtract
-        else return new int[]{configuredSideOption.getValue()};
+        if (configuredSideOption.isWildcard()) {
+            return IntStream.range(0, getInventorySize()).toArray();
+        } else {
+            return new int[]{configuredSideOption.getValue()};
+        }
     }
 
     @Override
@@ -784,11 +787,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return right.getValue();
         }
 
-        public int getUpValue() {
+        public int getTopValue() {
             return top.getValue();
         }
 
-        public int getDownValue() {
+        public int getBottomValue() {
             return bottom.getValue();
         }
 
