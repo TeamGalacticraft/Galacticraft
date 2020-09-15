@@ -149,7 +149,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getOxygenTank().getContents(0).getAmount().divide(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getOxygenTank().getMaxCapacity(0)).doubleValue() * 8.0D)));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getContents(0).getAmount().divide(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxCapacity(0)).doubleValue() * 8.0D)));
                 default:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
             }
@@ -193,18 +193,18 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 case POWER_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_POWER_IN), MutableQuadView.BAKE_LOCK_UV);
                     break;
-                case OXYGEN_INPUT:
-                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_IN), MutableQuadView.BAKE_LOCK_UV);
-                    break;
+//                case OXYGEN_INPUT:
+//                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_IN), MutableQuadView.BAKE_LOCK_UV);
+//                    break;
                 case POWER_OUTPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_POWER_OUT), MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_OUTPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_FLUID_OUT), MutableQuadView.BAKE_LOCK_UV);
                     break;
-                case OXYGEN_OUTPUT:
-                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_OUT), MutableQuadView.BAKE_LOCK_UV);
-                    break;
+//                case OXYGEN_OUTPUT:
+//                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_OUT), MutableQuadView.BAKE_LOCK_UV);
+//                    break;
                 case ITEM_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_ITEM_IN), MutableQuadView.BAKE_LOCK_UV);
                     break;

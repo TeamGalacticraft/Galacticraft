@@ -62,7 +62,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
         this.drawOxygenBufferBar(stack);
 
         DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", this.handler.oxygen.get()), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 100.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
 
     private void drawOxygenBufferBar(MatrixStack stack) {
         double currentOxygen = this.handler.oxygen.get();
-        double maxOxygen = handler.blockEntity.getOxygenTank().getMaxCapacity(0).doubleValue() * 100.D;
+        double maxOxygen = handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 100.D;
         double oxygenScale = (currentOxygen / maxOxygen);
 
         this.client.getTextureManager().bindTexture(BACKGROUND);

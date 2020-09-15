@@ -81,18 +81,8 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 2;
-    }
-
-    @Override
-    public Fraction getOxygenTankMaxCapacity() {
-        return null;
     }
 
     @Override
@@ -195,16 +185,6 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
         return false;
     }
 

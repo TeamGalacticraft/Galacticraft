@@ -72,23 +72,18 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 1;
-    }
-
-    @Override
-    public Fraction getOxygenTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return MAX_OXYGEN;
     }
 
     @Override
     public int getFluidTankSize() {
-        return 0;
+        return 1;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.OXYGEN_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.FLUID_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
     }
 
     @Override
@@ -127,7 +122,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
         trySpreadEnergy();
         if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
             status = OxygenCompressorStatus.NOT_ENOUGH_ENERGY;
-        } else if (this.getOxygenTank().isEmpty()) {
+        } else if (this.getFluidTank().isEmpty()) {
             status = OxygenCompressorStatus.NOT_ENOUGH_OXYGEN;
         } else {
             TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
@@ -144,7 +139,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
 
         if (status == OxygenCompressorStatus.COMPRESSING) {
             TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
-            getOxygenTank().insertFluid(0, component.insertFluid(0, getOxygenTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
+            getFluidTank().insertFluid(0, component.insertFluid(0, getFluidTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
         }
     }
@@ -165,28 +160,18 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return true;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
         return false;
     }
 
     @Override
     public boolean canInsertFluid(int tank) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
     }
 
     /**

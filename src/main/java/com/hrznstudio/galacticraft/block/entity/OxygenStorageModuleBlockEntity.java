@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
@@ -44,7 +45,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public Fraction getOxygenTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return Fraction.of(1, 100).multiply(Fraction.ofWhole(30_000));
     }
 
@@ -54,18 +55,13 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getOxygenTankSize() {
+    public int getFluidTankSize() {
         return 1;
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
     public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.OXYGEN_INPUT, SideOption.OXYGEN_OUTPUT);
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
     }
 
     @Override
@@ -90,7 +86,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public void tick() {
-        //todo spread oxygen
+        if (!world.isClient()) trySpreadFluids(0);
     }
 
     @Override
@@ -114,27 +110,17 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return true;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return true;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean canInsertFluid(int tank) {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
     }
 }

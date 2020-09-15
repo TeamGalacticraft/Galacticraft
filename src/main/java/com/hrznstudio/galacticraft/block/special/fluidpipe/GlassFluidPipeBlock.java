@@ -24,13 +24,17 @@
 package com.hrznstudio.galacticraft.block.special.fluidpipe;
 
 import com.hrznstudio.galacticraft.api.block.FluidPipe;
+import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.StandardWrenchItem;
 import com.hrznstudio.galacticraft.util.ConnectingBlockUtils;
+import io.github.cottonmc.component.UniversalComponents;
+import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -49,11 +53,12 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FluidPipeBlock extends FluidPipe {
+public class GlassFluidPipeBlock extends FluidPipe {
 
     private static final VoxelShape NORTH = createCuboidShape(8 - 2, 8 - 2, 0, 8 + 2, 8 + 2, 8 + 2);
     private static final VoxelShape EAST = createCuboidShape(8 - 2, 8 - 2, 8 - 2, 16, 8 + 2, 8 + 2);
@@ -66,7 +71,7 @@ public class FluidPipeBlock extends FluidPipe {
     private static final BooleanProperty PULL = BooleanProperty.of("pull"); //todo pull state (what would that mean for conf. sides that are different?)
     private static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
 
-    public FluidPipeBlock(Settings settings) {
+    public GlassFluidPipeBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtils.ATTACHED_NORTH, false).with(ConnectingBlockUtils.ATTACHED_EAST, false).with(ConnectingBlockUtils.ATTACHED_SOUTH, false).with(ConnectingBlockUtils.ATTACHED_WEST, false).with(ConnectingBlockUtils.ATTACHED_UP, false).with(ConnectingBlockUtils.ATTACHED_DOWN, false));
     }
@@ -74,12 +79,19 @@ public class FluidPipeBlock extends FluidPipe {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
+        BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Direction.values()) {
-            Block block = context.getWorld().getBlockState(context.getBlockPos().offset(direction)).getBlock();
-            if (block instanceof FluidPipeBlock)
-                state = state.with(propFromDirection(direction), true);
+            Block block = context.getWorld().getBlockState(pos.offset(direction)).getBlock();
+            if (block instanceof FluidPipe || ((BlockComponentProvider) block).hasComponent(context.getWorld(), pos.offset(direction), UniversalComponents.TANK_COMPONENT, direction.getOpposite())) state = state.with(propFromDirection(direction), true);
         }
         return state;
+    }
+
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+        Direction direction = Direction.fromVector(pos.getX() - fromPos.getX(), pos.getY() - fromPos.getY(), pos.getZ() - fromPos.getZ());
+        world.setBlockState(pos, getStateForNeighborUpdate(state, direction.getOpposite(), world.getBlockState(fromPos), world, pos, fromPos));
     }
 
     @Override
@@ -105,7 +117,7 @@ public class FluidPipeBlock extends FluidPipe {
                 return ActionResult.SUCCESS;
             }
         }
-        return ActionResult.PASS;
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 
     @Override
@@ -114,14 +126,16 @@ public class FluidPipeBlock extends FluidPipe {
     }
 
     private BooleanProperty getPropForDirection(Direction dir) {
-        return ConnectingBlockUtils.getBooleanProperty(dir, ConnectingBlockUtils.ATTACHED_SOUTH, ConnectingBlockUtils.ATTACHED_EAST, ConnectingBlockUtils.ATTACHED_WEST, ConnectingBlockUtils.ATTACHED_NORTH, ConnectingBlockUtils.ATTACHED_UP, ConnectingBlockUtils.ATTACHED_DOWN);
+        return ConnectingBlockUtils.getBooleanProperty(dir);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction_1, BlockState blockState_2, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
-        return state.with(getPropForDirection(direction_1), (
-                !(blockState_2).isAir()
-                        && blockState_2.getBlock() instanceof FluidPipeBlock //todo fluid things (network etc.)
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState other, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
+        return state.with(getPropForDirection(direction), (
+                !other.isAir()
+                        && ((other.getBlock() instanceof FluidPipe && other.get(COLOR) == state.get(COLOR))
+                        || ((BlockComponentProvider)other.getBlock()).hasComponent(world, otherConnectable, UniversalComponents.TANK_COMPONENT, direction.getOpposite())
+                )
         ));
     }
 
@@ -137,7 +151,12 @@ public class FluidPipeBlock extends FluidPipe {
     }
 
     private BooleanProperty propFromDirection(Direction direction) {
-        return ConnectingBlockUtils.getBooleanProperty(direction, ConnectingBlockUtils.ATTACHED_NORTH, ConnectingBlockUtils.ATTACHED_SOUTH, ConnectingBlockUtils.ATTACHED_EAST, ConnectingBlockUtils.ATTACHED_WEST, ConnectingBlockUtils.ATTACHED_UP, ConnectingBlockUtils.ATTACHED_DOWN);
+        return ConnectingBlockUtils.getBooleanProperty(direction);
+    }
+
+    @Override
+    public @Nullable FluidPipeBlockEntity createBlockEntity(BlockView world) {
+        return new FluidPipeBlockEntity(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE);
     }
 
     @Override

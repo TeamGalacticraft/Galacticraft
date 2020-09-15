@@ -6,7 +6,8 @@ public enum PipeConnectionType implements StringIdentifiable {
     NONE,
     PIPE,
     FLUID_INPUT,
-    FLUID_OUTPUT;
+    FLUID_OUTPUT,
+    FLUID_IO;
 
     @Override
     public String asString() {

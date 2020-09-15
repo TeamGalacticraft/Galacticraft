@@ -73,7 +73,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().floatValue() * 100.0F));
+        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().floatValue() * 100.0F));
         lastCollectAmount.set(blockEntity.collectionAmount);
         super.sendContentUpdates();
     }

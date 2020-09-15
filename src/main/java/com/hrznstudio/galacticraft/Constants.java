@@ -145,7 +145,7 @@ public class Constants {
         public static final String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
         public static final String OXYGEN_DETECTOR = "oxygen_detector";
         public static final String OXYGEN_SEALER = "oxygen_sealer";
-        public static final String FLUID_PIPE = "fluid_pipe";
+        public static final String GLASS_FLUID_PIPE = "glass_fluid_pipe";
         public static final String REFINERY = "refinery";
         public static final String TERRAFORMER = "terraformer";
         public static final String DECONSTRUCTOR = "deconstructor";

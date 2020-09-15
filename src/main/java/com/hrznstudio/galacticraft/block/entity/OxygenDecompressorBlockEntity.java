@@ -88,23 +88,18 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 1;
-    }
-
-    @Override
-    public Fraction getOxygenTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return MAX_OXYGEN;
     }
 
     @Override
     public int getFluidTankSize() {
-        return 0;
+        return 1;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.OXYGEN_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     @Override
@@ -139,8 +134,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
             }
             return;
         }
+        trySpreadFluids(0);
         attemptChargeFromStack(BATTERY_SLOT);
-        trySpreadEnergy();
         if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
             status = OxygenDecompressorStatus.NOT_ENOUGH_ENERGY;
         } else if (this.getTank().getContents(0).getAmount().compareTo(this.getTank().getMaxCapacity(0)) == 0) {
@@ -199,18 +194,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return true;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
-        return false;
+        return true;
     }
 
     @Override
@@ -220,7 +205,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
     }
 
     /**

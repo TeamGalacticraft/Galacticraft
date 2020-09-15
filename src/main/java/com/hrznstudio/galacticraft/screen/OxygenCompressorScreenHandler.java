@@ -73,7 +73,7 @@ public class OxygenCompressorScreenHandler extends MachineScreenHandler<OxygenCo
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().floatValue() * 100.0D));
+        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().floatValue() * 100.0D));
         super.sendContentUpdates();
     }
 

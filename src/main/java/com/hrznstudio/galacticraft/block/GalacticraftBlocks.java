@@ -33,7 +33,7 @@ import com.hrznstudio.galacticraft.block.machines.*;
 import com.hrznstudio.galacticraft.block.special.SolarPanelPartBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
-import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlock;
+import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
@@ -133,7 +133,7 @@ public class GalacticraftBlocks {
     // SPECIAL
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constants.Blocks.ALUMINUM_WIRE);
     public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constants.Blocks.SEALABLE_ALUMINUM_WIRE);
-    public static final Block FLUID_PIPE = registerBlock(new FluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.FLUID_PIPE);
+    public static final Block GLASS_FLUID_PIPE = registerBlock(new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.GLASS_FLUID_PIPE);
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL)), Constants.Blocks.SQUARE_LIGHT_PANEL);

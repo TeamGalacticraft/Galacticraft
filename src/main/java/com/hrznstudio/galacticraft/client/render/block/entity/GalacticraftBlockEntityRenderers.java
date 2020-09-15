@@ -33,5 +33,6 @@ public class GalacticraftBlockEntityRenderers {
     public static void register() {
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.ADVANCED_SOLAR_PANEL_TYPE, AdvancedSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE, FluidPipeBlockEntityRenderer::new);
     }
 }

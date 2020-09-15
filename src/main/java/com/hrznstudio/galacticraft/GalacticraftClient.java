@@ -59,8 +59,6 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -154,7 +152,7 @@ public class GalacticraftClient implements ClientModInitializer {
         GCGeneratedMachineModels.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.FLUID_PIPE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.WALKWAY, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.MOON_BERRY_BUSH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_TORCH, RenderLayer.getCutout());

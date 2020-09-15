@@ -1,14 +1,11 @@
 package com.hrznstudio.galacticraft.util;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
-
-import java.util.ArrayList;
 
 public class ConnectingBlockUtils {
     private ConnectingBlockUtils() {
@@ -21,20 +18,20 @@ public class ConnectingBlockUtils {
     public static final BooleanProperty ATTACHED_UP = BooleanProperty.of("attached_up");
     public static final BooleanProperty ATTACHED_DOWN = BooleanProperty.of("attached_down");
 
-    public static BooleanProperty getBooleanProperty(Direction dir, BooleanProperty attachedSouth, BooleanProperty attachedEast, BooleanProperty attachedWest, BooleanProperty attachedNorth, BooleanProperty attachedUp, BooleanProperty attachedDown) {
+    public static BooleanProperty getBooleanProperty(Direction dir) {
         switch (dir) {
             case SOUTH:
-                return attachedSouth;
+                return ATTACHED_SOUTH;
             case EAST:
-                return attachedEast;
+                return ATTACHED_EAST;
             case WEST:
-                return attachedWest;
+                return ATTACHED_WEST;
             case NORTH:
-                return attachedNorth;
+                return ATTACHED_NORTH;
             case UP:
-                return attachedUp;
+                return ATTACHED_UP;
             case DOWN:
-                return attachedDown;
+                return ATTACHED_DOWN;
             default:
                 throw new IllegalArgumentException("cannot be null");
         }
