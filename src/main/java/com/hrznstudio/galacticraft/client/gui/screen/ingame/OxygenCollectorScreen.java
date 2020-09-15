@@ -84,7 +84,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawEnergyBufferBar(stack, this.x + 11, this.y + 18);
         this.drawOxygenBufferBar(stack);
-        this.drawConfigTabs(stack);
+        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

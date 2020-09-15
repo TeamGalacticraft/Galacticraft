@@ -24,14 +24,10 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
-import com.hrznstudio.galacticraft.api.wire.NetworkManager;
-import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -50,31 +46,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.function.BooleanSupplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements ServerWorldAccessor {
+public abstract class ServerWorldMixin {
     @Shadow @Final @Mutable private List<Spawner> spawners;
-    private final NetworkManager networkManager = new NetworkManager();
-
-    @Inject(method = "tick", at = @At("TAIL"))
-    private void tick(BooleanSupplier booleanSupplier_1, CallbackInfo ci) {
-        EnergyUtils.Values.incrementTick();
-        this.networkManager.updateNetworks((ServerWorld) (Object) this);
-    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> registryKey, DimensionType dimensionType, WorldGenerationProgressListener worldGenerationProgressListener, ChunkGenerator chunkGenerator, boolean debugWorld, long l, List<Spawner> list, boolean bl, CallbackInfo ci) {
         if (registryKey.equals(GalacticraftDimensions.MOON)) {
             this.spawners = ImmutableList.<Spawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
-    }
-
-    @Override
-    public NetworkManager getNetworkManager() {
-        return networkManager;
     }
 }

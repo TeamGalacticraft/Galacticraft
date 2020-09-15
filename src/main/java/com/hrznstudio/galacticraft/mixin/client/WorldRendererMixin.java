@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
+import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
 import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -33,6 +34,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.VertexBuffer;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.chunk.ChunkBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.world.ClientWorld;
@@ -50,13 +52,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
+import java.util.Set;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(WorldRenderer.class)
 @Environment(EnvType.CLIENT)
-public abstract class WorldRendererMixin {
+public abstract class WorldRendererMixin implements WorldRendererAccessor {
     private static final Identifier EARTH_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/earth.png");
     private static final Identifier SUN_TEXTURE = new Identifier(Constants.MOD_ID, "textures/gui/celestialbodies/sun.png");
 
@@ -77,6 +80,8 @@ public abstract class WorldRendererMixin {
     private double lastCameraY;
     @Shadow
     private double lastCameraZ;
+    @Shadow private Set<ChunkBuilder.BuiltChunk> chunksToRebuild;
+    @Shadow private BuiltChunkStorage chunks;
     private VertexBuffer starBufferMoon;
 
     @Inject(at = @At("RETURN"), method = "<init>")
@@ -258,4 +263,8 @@ public abstract class WorldRendererMixin {
         starBufferMoon.upload(buffer);
     }
 
+    @Override
+    public void addChunkToRebuild(int x, int y, int z) {
+        this.chunks.scheduleRebuild(x, y, z, true);
+    }
 }

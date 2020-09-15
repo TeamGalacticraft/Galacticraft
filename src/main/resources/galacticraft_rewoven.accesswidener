@@ -19,6 +19,9 @@ accessible      method   net/minecraft/loot/LootTables                          
 accessible      method   net/minecraft/item/PickaxeItem                                       <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/item/AxeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/item/HoeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible      method   net/minecraft/block/LadderBlock                                      <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible      method   net/minecraft/block/StairsBlock                                      <init>            (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
+accessible      method   net/minecraft/block/FluidBlock                                       <init>            (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
 
 accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)V
 accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;II)V
