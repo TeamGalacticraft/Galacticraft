@@ -30,6 +30,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,10 +75,5 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
     @Override
     public List<EntryStack> getOutputEntries() {
         return output;
-    }
-
-    @Override
-    public Identifier getRecipeCategory() {
-        return GalacticraftREIPlugin.COMPRESSING;
     }
 }

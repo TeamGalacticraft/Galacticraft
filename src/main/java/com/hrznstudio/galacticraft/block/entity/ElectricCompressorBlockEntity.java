@@ -29,16 +29,14 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
-import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -144,7 +142,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
         if (getCapacitor().getCurrentEnergy() < 1) {
-            status = ElectricCompressorStatus.IDLE;
+            status = ElectricCompressorStatus.NOT_ENOUGH_ENERGY;
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
             status = ElectricCompressorStatus.PROCESSING;
         } else {
@@ -221,20 +219,11 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     public ItemStack getResultFromRecipeStack(Inventory inv) {
         // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
-
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(inv);
-        if (shapelessRecipe.isPresent()) {
-            return shapelessRecipe.get().craft(inv);
-        }
-        return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
+        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("A recipe was not present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
     }
 
-    private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-    }
-
-    private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
+    private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 
     protected boolean canPutStackInResultSlot(ItemStack stack) {
@@ -242,10 +231,9 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     public boolean isValidRecipe(Inventory input) {
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(input);
-        Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
+        Optional<CompressingRecipe> reciper = getRecipe(input);
 
-        return shapelessRecipe.isPresent() || shapedRecipe.isPresent();
+        return reciper.isPresent();
     }
 
     @Override
@@ -255,12 +243,12 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public boolean canHopperExtractItems(int slot) {
-        return slot == OUTPUT_SLOT;
+        return slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT;
     }
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
+        return !(slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT);
     }
 
     @Override
