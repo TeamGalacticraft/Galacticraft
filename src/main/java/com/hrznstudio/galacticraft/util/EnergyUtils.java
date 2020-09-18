@@ -3,18 +3,19 @@ package com.hrznstudio.galacticraft.util;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.item.ItemStack;
 
 public class EnergyUtils {
     public static boolean isEnergyItem(ItemStack stack) {
-        return ComponentProvider.fromItemStack(stack).hasComponent(UniversalComponents.CAPACITOR_COMPONENT);
+        return CapacitorComponentHelper.INSTANCE.hasComponent(stack);
     }
 
     public static int getEnergy(ItemStack stack) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).getCurrentEnergy();
     }
 
     /**
@@ -25,7 +26,7 @@ public class EnergyUtils {
      */
     public static int extractEnergy(ItemStack stack, int amount, ActionType action) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
     }
 
     /**
@@ -36,7 +37,7 @@ public class EnergyUtils {
      */
     public static int insertEnergy(ItemStack stack, int amount, ActionType action) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
     }
 
     /**
@@ -45,12 +46,12 @@ public class EnergyUtils {
      */
     public static int getMaxEnergy(ItemStack stack) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getMaxEnergy();
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).getMaxEnergy();
     }
 
     public static void setEnergy(ItemStack stack, int amount) {
         assert isEnergyItem(stack);
-        ((SimpleCapacitorComponent) ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT)).setCurrentEnergy(amount);
+        ((SimpleCapacitorComponent) CapacitorComponentHelper.INSTANCE.getComponent(stack)).setCurrentEnergy(amount);
     }
 
     public static class Values {

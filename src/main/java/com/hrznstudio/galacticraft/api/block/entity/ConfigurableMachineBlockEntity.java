@@ -158,15 +158,15 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public final @NotNull CapacitorComponent getCapacitor() {
-        return ((ComponentProvider)this).getComponent(UniversalComponents.CAPACITOR_COMPONENT);
+        return UniversalComponents.CAPACITOR_COMPONENT.get(this);
     }
 
     public final @NotNull InventoryComponent getInventory() {
-        return ((ComponentProvider)this).getComponent(UniversalComponents.INVENTORY_COMPONENT);
+        return UniversalComponents.INVENTORY_COMPONENT.get(this);
     }
 
     public final @NotNull TankComponent getFluidTank() {
-        return ((ComponentProvider)this).getComponent(UniversalComponents.TANK_COMPONENT);
+        return UniversalComponents.TANK_COMPONENT.get(this);
     }
 
     public final @NotNull SimpleOxygenTankComponent getOxygenTank() {

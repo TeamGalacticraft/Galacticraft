@@ -26,7 +26,9 @@ package com.hrznstudio.galacticraft.energy;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ElectricalEnergyType;
@@ -50,13 +52,11 @@ public class GalacticraftEnergy {
     }
 
     public static boolean isOxygenItem(ItemStack stack) {
-        ComponentProvider provider = ComponentProvider.fromItemStack(stack);
-        if (provider.hasComponent(UniversalComponents.TANK_COMPONENT)) {
-            TankComponent component = provider.getComponent(UniversalComponents.TANK_COMPONENT);
-            if (component != null) {
-                return component.contains(GalacticraftFluids.OXYGEN);
-            }
+        TankComponent component = TankComponentHelper.INSTANCE.getComponent(stack);
+        if (component != null) {
+            return component.contains(GalacticraftFluids.OXYGEN);
         }
+
         return false;
     }
 

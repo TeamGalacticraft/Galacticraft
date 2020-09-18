@@ -36,6 +36,7 @@ import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
@@ -289,7 +290,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         }
         ItemStack stack = getInventory().getStack(slot).copy();
         if (GalacticraftEnergy.isOxygenItem(stack)) {
-            TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(stack, "oxy-drain-bubble");
             for (int i = 0; i < component.getTanks(); i++) {
                 if (component.getContents(i).getFluid().equals(GalacticraftFluids.OXYGEN)) {
                     this.getOxygenTank().insertFluid(component.takeFluid(i, this.getOxygenTank().getMaxCapacity(0).subtract(this.getOxygenTank().getContents(0).getAmount()), ActionType.PERFORM), ActionType.PERFORM);
