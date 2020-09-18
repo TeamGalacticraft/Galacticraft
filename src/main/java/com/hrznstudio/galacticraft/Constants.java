@@ -464,6 +464,10 @@ public class Constants {
         public static final int OXYGEN_DARK_Y = 40;
         public static final int OXYGEN_LIGHT_X = 12;
         public static final int OXYGEN_LIGHT_Y = 40;
+        public static final int LARGE_TANK_OVERLAY_X = 54; //8 bucket tank
+        public static final int LARGE_TANK_OVERLAY_Y = 80;
+        public static final int LARGE_TANK_OVERLAY_WIDTH = 18;
+        public static final int LARGE_TANK_OVERLAY_HEIGHT = 49;
     }
 
     public static class ScreenHandler {

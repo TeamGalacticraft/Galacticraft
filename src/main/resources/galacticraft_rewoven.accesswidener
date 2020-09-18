@@ -19,6 +19,7 @@ accessible      method   net/minecraft/loot/LootTables                          
 accessible      method   net/minecraft/item/PickaxeItem                                       <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/item/AxeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/item/HoeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
+accessible      field    net/minecraft/item/BucketItem                                        fluid             Lnet/minecraft/fluid/Fluid;
 accessible      method   net/minecraft/block/LadderBlock                                      <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible      method   net/minecraft/block/StairsBlock                                      <init>            (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible      method   net/minecraft/block/FluidBlock                                       <init>            (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
