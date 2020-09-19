@@ -44,7 +44,6 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
 
-
     public RefineryScreen(RefineryScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;

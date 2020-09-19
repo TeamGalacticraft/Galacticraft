@@ -102,6 +102,14 @@ public class GalacticraftScreenHandlerTypes {
                     REFINERY_HANDLER_ID,
                     RefineryScreenHandler::new
             );
+
+    public static final Identifier ELECTRIC_FURNACE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ELECTRIC_FURNACE_SCREEN_HANDLER);
+    public static final ScreenHandlerType<ElectricFurnaceScreenHandler> ELECTRIC_FURNACE_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    ELECTRIC_FURNACE_HANDLER_ID,
+                    ElectricFurnaceScreenHandler::new
+            );
+
     public static final Identifier BUBBLE_DISTRIBUTOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(

@@ -400,6 +400,7 @@ public class Constants {
         public static final String ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
         public static final String OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
         public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String ELECTRIC_FURNACE_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_furnace_energy_consumption_rate";
         public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
         public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
     }
@@ -413,6 +414,7 @@ public class Constants {
         public static final String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
+        public static final String ELECTRIC_FURNACE_SCREEN = "gui/electric_furnace_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
@@ -476,6 +478,7 @@ public class Constants {
         public static final String PLAYER_INVENTORY_SCREEN_HANDLER = "player_inventory_screen_handler";
         public static final String ENERGY_STORAGE_MODULE_SCREEN_HANDLER = "energy_storage_module_screen_handler";
         public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
+        public static final String ELECTRIC_FURNACE_SCREEN_HANDLER = "electric_furnace_screen_handler";
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
     }

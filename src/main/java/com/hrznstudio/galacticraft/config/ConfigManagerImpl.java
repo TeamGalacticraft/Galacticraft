@@ -185,6 +185,15 @@ public class ConfigManagerImpl implements ConfigManager {
 
         machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.REFINERY_ENERGY_PRODUCTION_RATE),
+                this.config.electricFurnaceEnergyConsumptionRate())
+                .setSaveConsumer(this.config::setElectricFurnaceEnergyConsumptionRate)
+                .setDefaultValue(20)
+                .build()
+        );
+
+        machines.add(new IntFieldBuilder(
+                new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                 this.config.energyStorageModuleStorageSize())
                 .setSaveConsumer(this.config::setEnergyStorageModuleStorageSize)

@@ -68,6 +68,10 @@ public interface Config {
 
     void setRefineryEnergyConsumptionRate(int amount);
 
+    int electricFurnaceEnergyConsumptionRate();
+
+    void setElectricFurnaceEnergyConsumptionRate(int amount);
+
     int energyStorageModuleStorageSize();
 
     void setEnergyStorageModuleStorageSize(int amount);

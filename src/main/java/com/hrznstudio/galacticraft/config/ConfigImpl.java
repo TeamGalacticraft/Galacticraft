@@ -50,6 +50,8 @@ public class ConfigImpl implements Config {
     @Expose
     private int refineryEnergyConsumptionRate = 60;
     @Expose
+    private int electricFurnaceEnergyConsumptionRate = 60;
+    @Expose
     private int energyStorageModuleStorageSize = 500_000;
     @Expose
     private int machineEnergyStorageSize = 30_000;
@@ -142,6 +144,16 @@ public class ConfigImpl implements Config {
     @Override
     public void setRefineryEnergyConsumptionRate(int amount) {
         this.refineryEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public int electricFurnaceEnergyConsumptionRate() {
+        return electricFurnaceEnergyConsumptionRate;
+    }
+
+    @Override
+    public void setElectricFurnaceEnergyConsumptionRate(int amount) {
+        this.electricFurnaceEnergyConsumptionRate = amount;
     }
 
     @Override

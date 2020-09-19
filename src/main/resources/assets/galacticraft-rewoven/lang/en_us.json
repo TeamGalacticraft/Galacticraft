@@ -358,6 +358,7 @@
   "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate": "Electric Compressor Energy Consumption Rate/t",
   "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate": "Oxygen Collector Energy Consumption Rate/t",
   "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate": "Refinery Energy Consumption Rate/t",
+  "config.galacticraft-rewoven.energy.machines.electric_furnace_energy_consumption_rate": "Electric Furnace Energy Consumption Rate/t",
   "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
   "config.galacticraft-rewoven.energy.machines.energy_storage_size": "Default Machine Energy Storage Size"
 }
