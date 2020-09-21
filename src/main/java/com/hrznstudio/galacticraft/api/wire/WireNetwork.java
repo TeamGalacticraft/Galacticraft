@@ -54,9 +54,9 @@ public class WireNetwork {
 
     private final ServerWorld world;
 
-    public WireNetwork(BlockPos pos, ServerWorld world) {
+    public WireNetwork(BlockPos pos, ServerWorld world, WireBlockEntity be) {
         this.world = world;
-        node(new BlockPos(pos));
+        addWire(pos.toImmutable(), be);
     }
 
     private WireNetwork(Set<BlockPos> set, ServerWorld world) {

@@ -12,12 +12,14 @@ import net.minecraft.item.ItemStack;
 
 public class OxygenUtils {
     public static boolean isOxygenItem(ItemStack stack) {
-        return ComponentProvider.fromItemStack(stack).hasComponent(UniversalComponents.TANK_COMPONENT) && ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).contains(GalacticraftFluids.OXYGEN);
+        return ComponentProvider.fromItemStack(stack).hasComponent(UniversalComponents.TANK_COMPONENT)
+                && (ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getFluid().isIn(GalacticraftTags.OXYGEN)
+                || ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).isEmpty());
     }
 
     public static Fraction getOxygen(ItemStack stack) {
         assert isOxygenItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).amountOf(GalacticraftFluids.OXYGEN);
+        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getFluid().isIn(GalacticraftTags.OXYGEN) ? ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getAmount() : Fraction.ZERO;
     }
 
     /**
@@ -29,18 +31,12 @@ public class OxygenUtils {
     public static Fraction extractOxygen(ItemStack stack, Fraction amount, ActionType action) {
         assert isOxygenItem(stack);
         TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
-        Fraction total = Fraction.ZERO;
-        for (int i = 0; i < component.getTanks(); i++) {
-            if (component.getContents(i).getFluid().equals(GalacticraftFluids.OXYGEN)) {
-                Fraction taken = component.takeFluid(i, amount, ActionType.PERFORM).getAmount();
-                amount = amount.subtract(taken);
-                total = total.add(taken);
-                if (amount.equals(Fraction.ZERO) || amount.intValue() == 0) {
-                    break;
-                }
+        if (component.canExtract(0)) {
+            if (component.getContents(0).getFluid().isIn(GalacticraftTags.OXYGEN)) {
+                return component.takeFluid(0, amount, action).getAmount();
             }
         }
-        return total;
+        return Fraction.ZERO;
     }
 
     public static boolean isOxygen(FluidVolume volume) {
@@ -56,25 +52,16 @@ public class OxygenUtils {
     public static Fraction insertOxygen(ItemStack stack, Fraction amount, ActionType action) {
         assert isOxygenItem(stack);
         TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
-        for (int i = 0; i < component.getTanks(); i++) {
-            if (component.getContents(i).getFluid().equals(GalacticraftFluids.OXYGEN) || component.getContents(i).isEmpty()) {
-                amount = component.insertFluid(i, new FluidVolume(GalacticraftFluids.OXYGEN, amount), ActionType.PERFORM).getAmount();
-                if (amount.equals(Fraction.ZERO) || amount.intValue() == 0) {
-                    break;
-                }
+        if (component.canInsert(0)) {
+            if (component.getContents(0).isEmpty() || component.getContents(0).getFluid().isIn(GalacticraftTags.OXYGEN)) {
+                return component.insertFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, amount), action).getAmount();
             }
         }
         return amount;
     }
 
     public static Fraction getMaxOxygen(ItemStack stack) {
-        TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
-        Fraction cap = Fraction.ZERO;
-        for (int i = 0; i < component.getTanks(); i++) {
-            if (component.canInsert(i)) {
-                cap.add(component.getMaxCapacity(i));
-            }
-        }
-        return cap;
+        assert isOxygenItem(stack);
+        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getMaxCapacity(0);
     }
 }

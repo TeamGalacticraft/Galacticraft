@@ -43,7 +43,7 @@ import net.minecraft.world.WorldView;
 public class OxygenFluid extends Fluid {
     @Override
     public Item getBucketItem() {
-        return Items.AIR; //todo
+        return Items.BUCKET;
     }
 
     @Override
