@@ -23,12 +23,14 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
+import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.component.ComponentContainer;
@@ -81,11 +83,12 @@ public class OxygenTankItem extends Item implements ItemComponentCallback{
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
-        if (((GCPlayerAccessor) player).getGearInventory().getStack(6).isEmpty()) {
-            ((GCPlayerAccessor) player).getGearInventory().setStack(6, player.getStackInHand(hand).copy());
+        InventoryComponent component = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player);
+        if (component.getStack(6).isEmpty()) {
+            component.setStack(6, player.getStackInHand(hand).copy());
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        } else if (((GCPlayerAccessor) player).getGearInventory().getStack(7).isEmpty()) {
-            ((GCPlayerAccessor) player).getGearInventory().setStack(7, player.getStackInHand(hand).copy());
+        } else if (component.getStack(7).isEmpty()) {
+            component.setStack(7, player.getStackInHand(hand).copy());
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
@@ -93,7 +96,28 @@ public class OxygenTankItem extends Item implements ItemComponentCallback{
 
     @Override
     public void initComponents(ItemStack itemStack, ComponentContainer<CopyableComponent<?>> componentContainer) {
-        ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.ofWhole(getMaxDamage())));
+        ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.ofWhole(getMaxDamage()))) {
+            @Override
+            public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
+                if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN) || fluid.isEmpty()) {
+                    return super.insertFluid(tank, fluid, action);
+                } else {
+                    return fluid;
+                }
+            }
+
+            @Override
+            public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
+                return insertFluid(0, fluid, action);
+            }
+
+            @Override
+            public void setFluid(int slot, FluidVolume stack) {
+                if (stack.getFluid().isIn(GalacticraftTags.OXYGEN) || stack.isEmpty()) {
+                    super.setFluid(slot, stack);
+                }
+            }
+        };
         component.listen(() -> itemStack.setDamage(getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 100.0D)));
         componentContainer.put(UniversalComponents.TANK_COMPONENT, component);
     }

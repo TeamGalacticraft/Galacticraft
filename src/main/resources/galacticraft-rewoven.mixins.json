@@ -10,7 +10,6 @@
     "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "PlayerEntityMixin",
     "ServerWorldMixin",
     "StructurePoolGeneratorMixin",
     "TorchBlockMixin",
