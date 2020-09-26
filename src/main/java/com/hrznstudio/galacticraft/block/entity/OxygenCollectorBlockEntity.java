@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -82,7 +82,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.FLUID_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_OUTPUT);
     }
 
     @Override

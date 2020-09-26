@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -95,7 +95,7 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     @Override

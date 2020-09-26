@@ -23,18 +23,14 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
 import java.util.List;
@@ -78,7 +74,8 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT}); }
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.POWER_OUTPUT);
+    }
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {

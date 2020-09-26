@@ -99,7 +99,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT);
     }
 
     @Override
