@@ -146,6 +146,7 @@ public class Constants {
         public static final String OXYGEN_DETECTOR = "oxygen_detector";
         public static final String OXYGEN_SEALER = "oxygen_sealer";
         public static final String FLUID_PIPE = "fluid_pipe";
+        public static final String GLASS_FLUID_PIPE = "glass_fluid_pipe";
         public static final String REFINERY = "refinery";
         public static final String TERRAFORMER = "terraformer";
         public static final String DECONSTRUCTOR = "deconstructor";
@@ -198,6 +199,7 @@ public class Constants {
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
         public static final String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
+        public static final String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
     }
 
     // Fluids
@@ -396,12 +398,14 @@ public class Constants {
         public static final String MACHINES = "config.galacticraft-rewoven.energy.machines";
         public static final String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate";
         public static final String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate";
-        public static final String CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
-        public static final String ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
-        public static final String OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
-        public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
+        public static final String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
+        public static final String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
+        public static final String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
         public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
         public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
+        public static final String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_compressor_energy_consumption_rate";
+        public static final String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_decompressor_energy_consumption_rate";
     }
 
     public static class Energy {
@@ -427,6 +431,8 @@ public class Constants {
         public static final String MAP_SCREEN = "gui/map";
         public static final String PLANET_ICONS = "gui/planet_icons";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
+        public static final String OXYGEN_COMPRESSOR_SCREEN = "gui/oxygen_compressor_screen";
+        public static final String OXYGEN_STORAGE_MODULE_SCREEN = "gui/oxygen_storage_module_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -482,6 +488,9 @@ public class Constants {
         public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
+        public static final String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
+        public static final String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
+        public static final String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
     }
 
     public static class Biomes {

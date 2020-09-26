@@ -41,8 +41,8 @@ public enum SideOption implements Comparable<SideOption> {
     DEFAULT(false, false, false, false),
     POWER_INPUT(true, false, false, false),
     POWER_OUTPUT(true, false, false, false),
-    OXYGEN_INPUT(false, false, false, true),
-    OXYGEN_OUTPUT(false, false, false, true),
+//    OXYGEN_INPUT(false, false, false, true),
+//    OXYGEN_OUTPUT(false, false, false, true),
     FLUID_INPUT(false, true, false, false),
     FLUID_OUTPUT(false, true, false, false),
     ITEM_INPUT(false, false, true, false),
@@ -69,7 +69,7 @@ public enum SideOption implements Comparable<SideOption> {
     }
 
     public boolean isOxygen() {
-        return oxygen;
+        return fluid; //todo gas api maybe?
     }
 
     public boolean isFluid() {
@@ -100,10 +100,10 @@ public enum SideOption implements Comparable<SideOption> {
         switch (this) {
             case DEFAULT:
                 return new LiteralText("Blank").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
-            case OXYGEN_INPUT:
-                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-            case OXYGEN_OUTPUT:
-                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+//            case OXYGEN_INPUT:
+//                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+//            case OXYGEN_OUTPUT:
+//                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
             case POWER_INPUT:
                 return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
             case POWER_OUTPUT:

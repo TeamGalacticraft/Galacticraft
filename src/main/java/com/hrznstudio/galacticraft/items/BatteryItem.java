@@ -26,6 +26,7 @@ package com.hrznstudio.galacticraft.items;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
 import nerdhub.cardinal.components.api.component.ComponentContainer;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
@@ -67,7 +68,7 @@ public class BatteryItem extends Item implements ItemComponentCallback {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        int charge = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
+        int charge = CapacitorComponentHelper.INSTANCE.getComponent(stack).getCurrentEnergy();
         if (charge < (MAX_ENERGY / 3)) {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (charge < (MAX_ENERGY / 3) * 2) {

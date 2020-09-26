@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
@@ -63,18 +63,13 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_OUTPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     }
 
     @Override
@@ -89,16 +84,6 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
         return false;
     }
 

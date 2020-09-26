@@ -23,16 +23,13 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
-import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.api.EnvType;
@@ -92,18 +89,13 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     @Override
@@ -188,20 +180,11 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
 
     private ItemStack getResultFromRecipeStack(Inventory inv) {
         // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
-
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(inv);
-        if (shapelessRecipe.isPresent()) {
-            return shapelessRecipe.get().craft(inv);
-        }
-        return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
+        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("A recipe was not present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
     }
 
-    private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-    }
-
-    private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
+    private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 
     protected boolean canPutStackInResultSlot(ItemStack stack) {
@@ -217,10 +200,7 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
     }
 
     public boolean isValidRecipe(Inventory input) {
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(input);
-        Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
-
-        return shapelessRecipe.isPresent() || shapedRecipe.isPresent();
+        return getRecipe(input).isPresent();
     }
 
     @Override
@@ -256,16 +236,6 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
         return false;
     }
 

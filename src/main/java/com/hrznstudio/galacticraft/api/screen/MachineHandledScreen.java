@@ -734,10 +734,10 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 return 0; //206
             case POWER_OUTPUT:
                 return 17; //206
-            case OXYGEN_INPUT:
-                return 0; //240
-            case OXYGEN_OUTPUT:
-                return 17; //240
+//            case OXYGEN_INPUT:
+//                return 0; //240
+//            case OXYGEN_OUTPUT:
+//                return 17; //240
             case FLUID_INPUT:
                 return 0; //223
             case FLUID_OUTPUT:

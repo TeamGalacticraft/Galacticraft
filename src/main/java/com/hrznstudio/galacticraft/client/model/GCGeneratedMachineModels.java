@@ -1,12 +1,10 @@
 package com.hrznstudio.galacticraft.client.model;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -47,9 +45,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_FLUID_OUT = new Identifier(Constants.MOD_ID, "block/machine_fluid_output");
     public static final Identifier MACHINE_ITEM_IN = new Identifier(Constants.MOD_ID, "block/machine_item_input");
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constants.MOD_ID, "block/machine_item_output");
-    public static final Identifier MACHINE_OXYGEN_IN = new Identifier(Constants.MOD_ID, "block/machine_oxygen_input");
-    public static final Identifier MACHINE_OXYGEN_OUT = new Identifier(Constants.MOD_ID, "block/machine_oxygen_output");
-    
+
     private static Function<Identifier, Sprite> atlas;
     private static final Map<Block, ModelTextureProvider> textureProviders = new HashMap<>();
 
@@ -119,14 +115,53 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
 
         register(GalacticraftBlocks.OXYGEN_COLLECTOR, (face, spriteFunction, view, state, pos) -> spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_collector")));
 
+        register(GalacticraftBlocks.OXYGEN_COMPRESSOR, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor"));
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"));
+                case LEFT:
+                case RIGHT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine_side"));
+                default:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
+            }
+        });
+
+        register(GalacticraftBlocks.OXYGEN_DECOMPRESSOR, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_decompressor"));
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"));
+                case LEFT:
+                case RIGHT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine_side"));
+                default:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
+            }
+        });
+
+        register(GalacticraftBlocks.OXYGEN_STORAGE_MODULE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getContents(0).getAmount().divide(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxCapacity(0)).doubleValue() * 8.0D)));
+                default:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
+            }
+        });
+
         register(GalacticraftBlocks.REFINERY, (face, spriteFunction, view, state, pos) -> {
             switch (face) {
                 case FRONT:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/refinery"));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/refinery_front"));
                 case LEFT:
                 case RIGHT:
-                case BACK:
                     return spriteFunction.apply(MACHINE_SIDE);
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/refinery_back"));
                 default:
                     return spriteFunction.apply(MACHINE);
             }
@@ -157,18 +192,18 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 case POWER_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_POWER_IN), MutableQuadView.BAKE_LOCK_UV);
                     break;
-                case OXYGEN_INPUT:
-                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_IN), MutableQuadView.BAKE_LOCK_UV);
-                    break;
+//                case OXYGEN_INPUT:
+//                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_IN), MutableQuadView.BAKE_LOCK_UV);
+//                    break;
                 case POWER_OUTPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_POWER_OUT), MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_OUTPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_FLUID_OUT), MutableQuadView.BAKE_LOCK_UV);
                     break;
-                case OXYGEN_OUTPUT:
-                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_OUT), MutableQuadView.BAKE_LOCK_UV);
-                    break;
+//                case OXYGEN_OUTPUT:
+//                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_OUT), MutableQuadView.BAKE_LOCK_UV);
+//                    break;
                 case ITEM_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_ITEM_IN), MutableQuadView.BAKE_LOCK_UV);
                     break;

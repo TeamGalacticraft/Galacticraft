@@ -27,26 +27,20 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import io.github.cottonmc.component.UniversalComponents;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
-import net.minecraft.block.BlockState;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -60,7 +54,6 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-
     private static final Predicate<ItemStack>[] SLOT_FILTERS;
 
     static {
@@ -94,18 +87,8 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 2;
-    }
-
-    @Override
-    public Fraction getOxygenTankMaxCapacity() {
-        return null;
     }
 
     @Override
@@ -115,7 +98,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT});
+        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT});
     }
 
     @Override
@@ -226,16 +209,6 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
         return false;
     }
 

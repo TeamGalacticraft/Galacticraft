@@ -24,10 +24,11 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -73,7 +74,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
             this.drawTexture(stack, this.scaledWidth - 34, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
 
             if (!client.player.isCreative()) {
-                SimpleInventoryComponent gearInventory = ((GCPlayerAccessor) this.client.player).getGearInventory();
+                InventoryComponent gearInventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(this.client.player);
                 if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem) {
                     this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getStack(6).getMaxDamage() - (double) gearInventory.getStack(6).getDamage()) / (double) gearInventory.getStack(6).getMaxDamage()))));
                 } else if (client.player.isCreative()) {

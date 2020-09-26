@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,8 +42,8 @@ public class OxygenGearItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (((GCPlayerAccessor) user).getGearInventory().getStack(5).isEmpty()) {
-            ((GCPlayerAccessor) user).getGearInventory().setStack(5, user.getStackInHand(hand));
+        if (GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(user).getStack(5).isEmpty()) {
+            GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(user).setStack(5, user.getStackInHand(hand));
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, user, hand);

@@ -1,13 +1,10 @@
 package com.hrznstudio.galacticraft.component;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.component.impl.SimpleOxygenTankComponent;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
@@ -16,12 +13,13 @@ import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import nerdhub.cardinal.components.api.ComponentRegistry;
+import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -30,19 +28,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer, ItemComponentInitializer {
-    public static final ComponentKey<SimpleOxygenTankComponent> OXYGEN_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(Constants.MOD_ID, "oxygen_tank"), SimpleOxygenTankComponent.class);
     public static final List<Identifier> MACHINE_BLOCKS = new LinkedList<>();
+    public static final ComponentType<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
 
     public static void register() {
     }
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(UniversalComponents.INVENTORY_COMPONENT, player -> {
-            EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, player);
-            ((GCPlayerAccessor) player).setGearInventory(inventory);
-            return inventory;
-        }, RespawnCopyStrategy.INVENTORY);
+        entityComponentFactoryRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new EntitySyncedInventoryComponent(12, player), RespawnCopyStrategy.INVENTORY);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -121,13 +115,18 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
                 return fluid;
             }
 
-            public boolean isAcceptableFluid(int tank, FluidVolume volume) { //how are you supposed to check if its acceptable if you *only* get the tank and no fluid?!
+            public boolean isAcceptableFluid(int tank, FluidVolume volume) {
                 return be.isAcceptableFluid(tank, volume);
             }
 
             @Override
-            public boolean isAcceptableFluid(int tank) {
-                return false;
+            public void setFluid(int slot, FluidVolume stack) {
+                if (isAcceptableFluid(slot, stack)) super.setFluid(slot, stack);
+            }
+
+            @Override
+            public boolean isAcceptableFluid(int tank) {//how are you supposed to check if its acceptable if you *only* get the tank and no fluid?! also currently unused?
+                return canInsert(tank);
             }
 
             @Override
@@ -138,30 +137,10 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             }
         });
 
-        registry.registerFor(ConfigurableMachineBlockEntity.class, GalacticraftComponents.OXYGEN_COMPONENT, be -> new SimpleOxygenTankComponent(be.getOxygenTankSize(), be.getOxygenTankMaxCapacity()) {
-            @Override
-            public boolean canExtract(int slot) {
-                return be.canExtractOxygen(slot);
-            }
-
-            @Override
-            public boolean canInsert(int slot) {
-                return be.canInsertOxygen(slot);
-            }
-
-            @Override
-            public void fromTag(CompoundTag tag) {
-                this.clear();
-                if (getTanks() == 0) return;
-                super.fromTag(tag);
-            }
-        });
-
         for (Identifier id : MACHINE_BLOCKS) { //CC API v3
             registry.registerFor(id, UniversalComponents.INVENTORY_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getInventory(state, side));
             registry.registerFor(id, UniversalComponents.CAPACITOR_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getCapacitor(state, side));
             registry.registerFor(id, UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getFluidTank(state, side));
-            registry.registerFor(id, GalacticraftComponents.OXYGEN_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getOxygenTank(state, side));
         }
 
         MACHINE_BLOCKS.clear();
@@ -169,5 +148,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
 
     @Override
     public void registerItemComponentFactories(ItemComponentFactoryRegistry itemComponentFactoryRegistry) {
+
     }
 }

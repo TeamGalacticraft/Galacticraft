@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
@@ -34,7 +34,6 @@ import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -108,18 +107,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     @Override
@@ -273,16 +267,6 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public boolean canHopperInsertItems(int slot) {
         return slot != 6;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
     }
 
     @Override

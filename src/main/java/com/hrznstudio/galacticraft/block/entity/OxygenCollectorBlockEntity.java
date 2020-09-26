@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -34,14 +34,12 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -73,23 +71,18 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public int getOxygenTankSize() {
+    public int getFluidTankSize() {
         return 1;
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
-    public Fraction getOxygenTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return MAX_OXYGEN;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.OXYGEN_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_OUTPUT);
     }
 
     @Override
@@ -154,7 +147,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
             return;
         }
         attemptChargeFromStack(BATTERY_SLOT);
-        trySpreadEnergy();
+        trySpreadFluids(0);
 
         if (this.getCapacitor().getCurrentEnergy() > 0) {
             this.status = OxygenCollectorStatus.COLLECTING;
@@ -175,10 +168,10 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
             }
 
             // If the oxygen capacity isn't full, add collected oxygen.
-            if (this.getOxygenTank().getMaxCapacity(0).compareTo(this.getOxygenTank().getContents(0).getAmount()) > 0) {
+            if (this.getFluidTank().getMaxCapacity(0).compareTo(this.getFluidTank().getContents(0).getAmount()) > 0) {
                 this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
 
-                this.getOxygenTank().insertFluid(0, new FluidVolume(this.getOxygenTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getOxygenTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
+                this.getFluidTank().insertFluid(0, new FluidVolume(this.getFluidTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getFluidTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
             } else {
                 status = OxygenCollectorStatus.FULL;
             }
@@ -203,18 +196,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return true;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
-        return false;
+        return true;
     }
 
     @Override
@@ -224,7 +207,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
     }
 
     /**

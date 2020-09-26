@@ -27,13 +27,14 @@ import me.shedaniel.rei.api.RecipeDisplay;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public interface DefaultCompressingDisplay extends RecipeDisplay {
-    default Identifier getRecipeCategory() {
+    default @NotNull Identifier getRecipeCategory() {
         return GalacticraftREIPlugin.COMPRESSING;
     }
 
