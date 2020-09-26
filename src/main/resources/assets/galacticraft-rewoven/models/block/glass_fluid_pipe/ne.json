@@ -1,7 +1,7 @@
 {
   "textures": {
-    "particle": "galacticraft-rewoven:block/fluid_pipe/white",
-    "tex": "galacticraft-rewoven:block/fluid_pipe/white"
+    "particle": "galacticraft-rewoven:block/glass_fluid_pipe/white",
+    "tex": "galacticraft-rewoven:block/glass_fluid_pipe/white"
   },
   "elements": [
     {

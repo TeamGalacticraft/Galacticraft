@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.component;
 
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
@@ -11,9 +11,12 @@ import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import nerdhub.cardinal.components.api.ComponentRegistry;
+import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -24,17 +27,14 @@ import java.util.List;
 
 public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer {
     public static final List<Identifier> MACHINE_BLOCKS = new LinkedList<>();
+    public static final ComponentType<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
 
     public static void register() {
     }
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(UniversalComponents.INVENTORY_COMPONENT, player -> {
-            EntitySyncedInventoryComponent inventory = new EntitySyncedInventoryComponent(12, player);
-            ((GCPlayerAccessor) player).setGearInventory(inventory);
-            return inventory;
-        }, RespawnCopyStrategy.INVENTORY);
+        entityComponentFactoryRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new EntitySyncedInventoryComponent(12, player), RespawnCopyStrategy.INVENTORY);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -113,7 +113,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
                 return fluid;
             }
 
-            public boolean isAcceptableFluid(int tank, FluidVolume volume) { //how are you supposed to check if its acceptable if you *only* get the tank and no fluid?!
+            public boolean isAcceptableFluid(int tank, FluidVolume volume) {
                 return be.isAcceptableFluid(tank, volume);
             }
 
@@ -123,8 +123,8 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             }
 
             @Override
-            public boolean isAcceptableFluid(int tank) {
-                return false;
+            public boolean isAcceptableFluid(int tank) {//how are you supposed to check if its acceptable if you *only* get the tank and no fluid?! also currently unused?
+                return canInsert(tank);
             }
 
             @Override

@@ -36,6 +36,7 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
@@ -147,15 +148,15 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public final @NotNull CapacitorComponent getCapacitor() {
-        return Objects.requireNonNull(((ComponentProvider) this).getComponent(UniversalComponents.CAPACITOR_COMPONENT));
+        return UniversalComponents.CAPACITOR_COMPONENT.get(this);
     }
 
     public final @NotNull InventoryComponent getInventory() {
-        return Objects.requireNonNull(((ComponentProvider) this).getComponent(UniversalComponents.INVENTORY_COMPONENT));
+        return UniversalComponents.INVENTORY_COMPONENT.get(this);
     }
 
     public final @NotNull TankComponent getFluidTank() {
-        return Objects.requireNonNull(((ComponentProvider) this).getComponent(UniversalComponents.TANK_COMPONENT));
+        return UniversalComponents.TANK_COMPONENT.get(this);
     }
 
     public final @Nullable CapacitorComponent getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
@@ -186,7 +187,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return getFluidTank(blockView.getBlockState(pos), side) != null;
         }
 
-        return ((ComponentProvider)this).hasComponent(type);
+        return type.getNullable(this) != null;
     }
 
     @Override
@@ -199,7 +200,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return (T) getFluidTank(blockView.getBlockState(pos), side);
         }
 
-        return ((ComponentProvider)this).getComponent(type);
+        return type.get(this);
     }
 
     @Override
@@ -336,7 +337,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                 ConfiguredSideOption option = this.getSideConfigInfo().get(face);
                 if (option.getOption() == SideOption.FLUID_OUTPUT) {
                     Direction dir = face.toDirection(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
-                    TankComponent component = ((BlockComponentProvider) world.getBlockState(pos.offset(dir)).getBlock()).getComponent(world, pos.offset(dir), UniversalComponents.TANK_COMPONENT, dir.getOpposite());
+                    TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos.offset(dir), dir.getOpposite());
                     if (component != null) {
                         for (int i = 0; i < component.getTanks(); i++) {
                             if (component.canInsert(i)) {

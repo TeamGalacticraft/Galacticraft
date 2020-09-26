@@ -32,6 +32,7 @@ import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import nerdhub.cardinal.components.api.component.BlockComponentProvider;
 import net.minecraft.block.BlockState;
@@ -81,14 +82,18 @@ public class PipeNetwork {
             BlockState state = world.getBlockState(cap);
             if (state.getBlock() instanceof FluidPipe) {
                 FluidPipeBlockEntity entity = (FluidPipeBlockEntity)world.getBlockEntity(cap);
-                if (entity.getNetwork() != this) {
-                    this.addPipe(cap, entity);
+                if (entity != null) {
+                    if (entity.getNetwork() != this) {
+                        this.addPipe(cap, entity);
+                    } else {
+                        edge(pos, cap, PipeConnectionType.PIPE);
+                        edge(cap, pos, PipeConnectionType.PIPE);
+                    }
                 } else {
-                    edge(pos, cap, PipeConnectionType.PIPE);
-                    edge(cap, pos, PipeConnectionType.PIPE);
+                    throw new RuntimeException("Pipe without BE");
                 }
             } else {
-                TankComponent component = ((BlockComponentProvider) state.getBlock()).getComponent(world, cap, UniversalComponents.TANK_COMPONENT, direction.getOpposite());
+                TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, cap, direction.getOpposite());
                 if (component != null) {
                     if (component.canInsert(0)) {
                         node(cap);
@@ -124,7 +129,7 @@ public class PipeNetwork {
     }
 
     public void removePipe(BlockPos blockPos) {
-        Set<BlockPos> set = graph.adjacentNodes(blockPos);
+        Set<BlockPos> set = new LinkedHashSet<>(graph.adjacentNodes(blockPos));
         Deque<BlockPos> pipes = new LinkedList<>();
         for (BlockPos pos : set) {
             PipeConnectionType type = graph.edgeValue(blockPos, pos);
@@ -227,68 +232,73 @@ public class PipeNetwork {
         this.modCount++;
     }
 
-    public void updateConnections(BlockPos nextToUpdated, BlockPos updated) {
-        BlockState blockState = world.getBlockState(updated);
+    public void updateConnections(BlockPos updatedBlock, BlockPos thisPipePos) {
+        BlockState blockState = world.getBlockState(updatedBlock);
 
-        if (this.graph.nodes().contains(updated)) {
-            Set<BlockPos> conn = this.graph.adjacentNodes(updated);
-            boolean isPipe = false;
-            for (BlockPos pos1 : conn) {
-                if (this.graph.edgeValue(updated, pos1) == PipeConnectionType.PIPE) {
-                    isPipe = true;
-                    break;
-                }
-            }
-            if (isPipe) {
-                if (!(blockState.getBlock() instanceof FluidPipe)) {
-                    removePipe(updated);
-                } else {
-                    this.graph.putEdgeValue(nextToUpdated, updated, PipeConnectionType.PIPE);
-                    this.graph.putEdgeValue(updated, nextToUpdated, PipeConnectionType.PIPE);
-                }
-            } else {
-                test(updated, blockState);
-            }
-        } else {
-            if (blockState.getBlock() instanceof FluidPipe) {
-                if (world.getBlockEntity(updated) instanceof FluidPipeBlockEntity) {
-                    if (((FluidPipeBlockEntity) world.getBlockEntity(updated)).getNetwork() != this)
-                        throw new RuntimeException();
-                }
-            } else if (!blockState.isAir()) {
-                test(updated, blockState);
-            }
-        }
-    }
-
-    protected void test(BlockPos updated, BlockState blockState) {
-        remove(updated);
-        capList.remove(updated);
-        for (Direction direction : Direction.values()) {
-            BlockPos from = updated.offset(direction);
-            BlockEntity entity = world.getBlockEntity(from);
-            if (entity instanceof FluidPipeBlockEntity) {
-                if (((FluidPipeBlockEntity) entity).getNetwork() == this) {
-                    TankComponent component = ((BlockComponentProvider)blockState.getBlock()).getComponent(world, updated, UniversalComponents.TANK_COMPONENT, direction);
-                    if (component != null) {
-                        PipeConnectionType type = null;
-                        if (component.canInsert(0) && component.canExtract(0)) {
-                            type = PipeConnectionType.FLUID_IO;
-                        } else if (component.canInsert(0)) {
-                            type = PipeConnectionType.FLUID_INPUT;
-                        } else if (component.canExtract(0)) {
-                            type = PipeConnectionType.FLUID_OUTPUT;
-                        } else {
-                            continue;
-                        }
-                        this.capList.putIfAbsent(updated, component);
-                        this.node(updated);
-                        this.edge(from, updated, type);
+        if (this.graph.nodes().contains(updatedBlock)) {
+            this.graph.removeEdge(thisPipePos, updatedBlock);
+            this.graph.removeEdge(updatedBlock, thisPipePos);
+            for (Direction direction : Direction.values()) {
+                if (this.graph.edgeValueOrDefault(updatedBlock, updatedBlock.offset(direction), null) != null) {
+                    if (!(blockState.getBlock() instanceof FluidPipe)) {
+                        this.removePipe(updatedBlock);
+                        return;
                     }
                 }
             }
         }
+            if (blockState.getBlock() instanceof FluidPipe) {
+                edge(thisPipePos, updatedBlock, PipeConnectionType.PIPE);
+                edge(updatedBlock, thisPipePos, PipeConnectionType.PIPE);
+                return;
+            }
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, updatedBlock, Direction.fromVector(thisPipePos.getX() - updatedBlock.getX(), thisPipePos.getY() - updatedBlock.getY(), thisPipePos.getZ() - updatedBlock.getZ()));
+            if (component != null) {
+                PipeConnectionType type = null;
+                if (component.canInsert(0) && component.canExtract(0)) {
+                    type = PipeConnectionType.FLUID_IO;
+                } else if (component.canInsert(0)) {
+                    type = PipeConnectionType.FLUID_INPUT;
+                } else if (component.canExtract(0)) {
+                    type = PipeConnectionType.FLUID_OUTPUT;
+                }
+                if (type != null) {
+                    edge(thisPipePos, updatedBlock, type);
+                    this.capList.put(updatedBlock, component);
+                }
+            }
+        if (this.graph.nodes().contains(updatedBlock) && this.graph.adjacentNodes(updatedBlock).isEmpty()) this.remove(updatedBlock);
     }
+
+//    protected void test(BlockPos updated, BlockState blockState) {
+//        remove(updated);
+//        capList.remove(updated);
+//        BlockEntity entity = world.getBlockEntity(updated);
+//        if (entity instanceof FluidPipeBlockEntity) {
+//            addPipe(updated, (FluidPipeBlockEntity) entity);
+//            return;
+//        }
+//
+//        for (Direction direction : Direction.values()) {
+//            BlockPos from = updated.offset(direction);
+//            TankComponent component = ((BlockComponentProvider) blockState.getBlock()).getComponent(world, updated, UniversalComponents.TANK_COMPONENT, direction);
+//            if (component != null) {
+//                PipeConnectionType type;
+//                if (component.canInsert(0) && component.canExtract(0)) {
+//                    type = PipeConnectionType.FLUID_IO;
+//                } else if (component.canInsert(0)) {
+//                    type = PipeConnectionType.FLUID_INPUT;
+//                } else if (component.canExtract(0)) {
+//                    type = PipeConnectionType.FLUID_OUTPUT;
+//                } else {
+//                    continue;
+//                }
+//                this.capList.putIfAbsent(updated, component);
+//                this.node(updated);
+//                this.edge(from, updated, type);
+//            }
+//        }
+//    }
 
     public long getModCount() {
         return modCount;
@@ -318,7 +328,7 @@ public class PipeNetwork {
     }
 
     public FluidPipeBlockEntity.FluidData spreadFluid(BlockPos pos, FluidVolume amount, ActionType actionType) {
-        if (!graph.nodes().contains(pos)) throw new RuntimeException();
+        if (!graph.nodes().contains(pos)) throw new RuntimeException(pos + " fluid: " + amount);
 
         return successor(pos, Util.make(new LinkedHashSet<>(), (l) -> l.add(pos)), new LinkedList<>(), amount, actionType);
     }

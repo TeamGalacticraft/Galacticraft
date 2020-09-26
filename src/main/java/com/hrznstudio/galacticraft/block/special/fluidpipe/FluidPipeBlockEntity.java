@@ -6,6 +6,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
@@ -129,12 +130,14 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
+        this.data.toTag(tag);
         return super.toTag(tag);
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
+        this.data = FluidData.fromTag(tag);
     }
 
     @Override
@@ -191,8 +194,9 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
                             if (dat != null) {
                                 this.data = dat;
                             }
+                            return;
                         }
-                        TankComponent component = ((BlockComponentProvider) world.getBlockState(pos).getBlock()).getComponent(world, pos, UniversalComponents.TANK_COMPONENT, this.data.getEndDir());
+                        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.data.getEndDir().getOpposite());
                         if (component != null) {
                             FluidVolume volume = component.insertFluid(data.getFluid(), ActionType.PERFORM);
                             if (!volume.isEmpty()) {
@@ -214,7 +218,10 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
                         }
                     }
                 } else {
-
+                    FluidData dat = network.spreadFluid(this.pos, this.data.fluid, ActionType.PERFORM);
+                    if (dat != null) {
+                        this.data = dat;
+                    }
                 }
             }
         }
@@ -251,6 +258,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
         }
 
         public static FluidData fromTag(CompoundTag compoundTag) {
+            if (compoundTag.getBoolean("empty")) return EMPTY;
             long[] longs = compoundTag.getLongArray("path");
             Deque<BlockPos> queue = new ArrayDeque<>(longs.length);
             for (long l : longs) {
@@ -264,6 +272,12 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
         }
 
         public CompoundTag toTag(CompoundTag compoundTag) {
+            if (this == EMPTY) {
+                compoundTag.putBoolean("empty", true);
+                return compoundTag;
+            }
+            compoundTag.putBoolean("empty", false);
+
             this.fluid.toTag(compoundTag);
             compoundTag.putLong("source", this.source.asLong());
             List<Long> list = new ArrayList<>(this.path.size());

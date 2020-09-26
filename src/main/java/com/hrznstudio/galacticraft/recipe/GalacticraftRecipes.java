@@ -35,9 +35,7 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftRecipes {
     public static RecipeType<FabricationRecipe> FABRICATION_TYPE;
-    public static RecipeType<ShapelessCompressingRecipe> SHAPELESS_COMPRESSING_TYPE;
-    public static RecipeType<ShapedCompressingRecipe> SHAPED_COMPRESSING_TYPE;
-
+    public static RecipeType<CompressingRecipe> COMPRESSING_TYPE;
     static FabricationRecipeSerializer<FabricationRecipe> FABRICATION_SERIALIZER;
     static ShapelessCompressingRecipeSerializer<ShapelessCompressingRecipe> SHAPELESS_COMPRESSING_SERIALIZER;
     static ShapedCompressingRecipeSerializer<ShapedCompressingRecipe> SHAPED_COMPRESSING_SERIALIZER;
@@ -47,10 +45,8 @@ public class GalacticraftRecipes {
         FABRICATION_TYPE = registerType("circuit_fabricator");
         FABRICATION_SERIALIZER = registerSerializer("circuit_fabricator", new FabricationRecipeSerializer<>(FabricationRecipe::new));
 
-        SHAPELESS_COMPRESSING_TYPE = registerType("compressing_shapeless");
+        COMPRESSING_TYPE = registerType("compressing");
         SHAPELESS_COMPRESSING_SERIALIZER = registerSerializer("compressing_shapeless", new ShapelessCompressingRecipeSerializer<>(ShapelessCompressingRecipe::new));
-
-        SHAPED_COMPRESSING_TYPE = registerType("compressing_shaped");
         SHAPED_COMPRESSING_SERIALIZER = registerSerializer("compressing_shaped", new ShapedCompressingRecipeSerializer<>(ShapedCompressingRecipe::new));
     }
 

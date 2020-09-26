@@ -56,7 +56,7 @@ public class GalacticraftBlockEntities {
             return obj instanceof WireBlock; //bad stuff
         }
     }).build(null));
-    public static final BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.GLASS_FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
+    public static final BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof FluidPipe; //bad stuff

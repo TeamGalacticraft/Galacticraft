@@ -84,30 +84,10 @@ public class GalacticraftClient implements ClientModInitializer {
         capeLoader.load();
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_TABS));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.MAP_SCREEN));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_0"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_1"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_2"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_3"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_4"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_5"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_6"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_7"));
-
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_0"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_1"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_2"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_3"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_4"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_5"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_6"));
-            registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_7"));
+            for (int i = 0; i < 8; i++) {
+                registry.register(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + i));
+                registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
+            }
 
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_HEAD));
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_CHEST));
@@ -182,6 +162,8 @@ public class GalacticraftClient implements ClientModInitializer {
                         builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_output")));
                         builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_input")));
                         builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_output")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_item_input")));
+                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_item_output")));
                         return builder.build();
                     }
 

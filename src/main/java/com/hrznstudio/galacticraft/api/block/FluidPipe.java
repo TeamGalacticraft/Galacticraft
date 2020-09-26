@@ -45,12 +45,12 @@ public class FluidPipe extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+    public void neighborUpdate(BlockState state, World world, BlockPos thePosOThisPipe, Block block, BlockPos updatedBlockPos, boolean notify) {
+        super.neighborUpdate(state, world, thePosOThisPipe, block, updatedBlockPos, notify);
         if (!world.isClient()) {
-            PipeNetwork network = ((FluidPipeBlockEntity) world.getBlockEntity(pos)).getNetwork();
+            PipeNetwork network = ((FluidPipeBlockEntity) world.getBlockEntity(thePosOThisPipe)).getNetwork();
             if (network != null) {
-                network.updateConnections(fromPos, pos);
+                network.updateConnections(updatedBlockPos, thePosOThisPipe);
             }
         }
     }

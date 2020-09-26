@@ -41,16 +41,14 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ShapelessCompressingRecipe implements Recipe<Inventory> {
+public class ShapelessCompressingRecipe implements CompressingRecipe {
     private final Identifier id;
 
-    //    private final String group;
     private final ItemStack output;
     private final DefaultedList<Ingredient> input;
 
-    public ShapelessCompressingRecipe(Identifier id, /*String group, */ItemStack output, DefaultedList<Ingredient> input) {
+    public ShapelessCompressingRecipe(Identifier id, ItemStack output, DefaultedList<Ingredient> input) {
         this.id = id;
-//        this.group = group;
         this.output = output;
         this.input = input;
     }
@@ -72,13 +70,8 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<? extends ShapelessCompressingRecipe> getSerializer() {
         return GalacticraftRecipes.SHAPELESS_COMPRESSING_SERIALIZER;
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE;
     }
 
     @Override
@@ -93,18 +86,18 @@ public class ShapelessCompressingRecipe implements Recipe<Inventory> {
 
     @Override
     public boolean matches(Inventory inv, World world) {
-        RecipeFinder recipeFinder_1 = new RecipeFinder();
+        RecipeFinder finder = new RecipeFinder();
         int int_1 = 0;
 
-        for (int int_2 = 0; int_2 < inv.size(); ++int_2) {
-            ItemStack stack = inv.getStack(int_2);
+        for (int i = 0; i < inv.size(); ++i) {
+            ItemStack stack = inv.getStack(i);
             if (!stack.isEmpty()) {
                 ++int_1;
-                recipeFinder_1.addItem(stack);
+                finder.addItem(stack);
             }
         }
 
-        return int_1 == this.input.size() && recipeFinder_1.findRecipe(this, null);
+        return int_1 == this.input.size() && finder.findRecipe(this, null);
     }
 
     @Override

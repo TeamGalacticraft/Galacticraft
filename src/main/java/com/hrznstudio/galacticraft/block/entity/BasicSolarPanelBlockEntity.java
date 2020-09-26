@@ -23,7 +23,7 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
@@ -31,7 +31,6 @@ import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
@@ -70,7 +69,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_OUTPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.POWER_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     }
 
     @Override
@@ -180,7 +179,7 @@ public class BasicSolarPanelBlockEntity extends ConfigurableMachineBlockEntity i
     protected int getBatteryTransferRate() {
         return 10;
     }
-    
+
     @Override
     public List<BlockFace> getNonConfigurableSides() {
         return Collections.singletonList(BlockFace.TOP);
