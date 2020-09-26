@@ -33,7 +33,7 @@ import com.hrznstudio.galacticraft.block.machines.*;
 import com.hrznstudio.galacticraft.block.special.SolarPanelPartBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
-import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlock;
+import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
@@ -109,12 +109,12 @@ public class GalacticraftBlocks {
     public static final Block MARS_SUB_SURFACE_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.6F)), Constants.Blocks.MARS_SUB_SURFACE_ROCK);
     public static final Block MARS_STONE = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(3.0F)), Constants.Blocks.MARS_STONE);
     public static final Block[] MARS_COBBLESTONES = createDecorationBlocks(Constants.Blocks.MARS_COBBLESTONE, FabricBlockSettings.of(Material.STONE, MaterialColor.RED).hardness(2.8F), false);
-    
+
     // ASTEROID NATURAL
     public static final Block ASTEROID_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F)), Constants.Blocks.ASTEROID_ROCK);
     public static final Block ASTEROID_ROCK_1 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F)), Constants.Blocks.ASTEROID_ROCK_1);
     public static final Block ASTEROID_ROCK_2 = registerBlock(new Block(FabricBlockSettings.of(Material.STONE, MaterialColor.BROWN).hardness(3.0F)), Constants.Blocks.ASTEROID_ROCK_2);
-    
+
     // VENUS NATURAL
     public static final Block SOFT_VENUS_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F)), Constants.Blocks.SOFT_VENUS_ROCK);
     public static final Block HARD_VENUS_ROCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F, 6.0F)), Constants.Blocks.HARD_VENUS_ROCK);
@@ -133,7 +133,7 @@ public class GalacticraftBlocks {
     // SPECIAL
     public static final Block ALUMINUM_WIRE = registerBlock(new AluminumWireBlock(FabricBlockSettings.copy(Blocks.WHITE_WOOL)), Constants.Blocks.ALUMINUM_WIRE);
     public static final Block SEALABLE_ALUMINUM_WIRE = registerBlock(new SealableAluminumWireBlock(FabricBlockSettings.copy(TIN_DECORATIONS[0])), Constants.Blocks.SEALABLE_ALUMINUM_WIRE);
-    public static final Block FLUID_PIPE = registerBlock(new FluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.FLUID_PIPE);
+    public static final Block GLASS_FLUID_PIPE = registerBlock(new GlassFluidPipeBlock(FabricBlockSettings.of(Material.GLASS).breakByHand(true).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.GLASS_FLUID_PIPE);
 
     // LIGHT PANELS
     public static final Block SQUARE_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL)), Constants.Blocks.SQUARE_LIGHT_PANEL);
@@ -141,12 +141,12 @@ public class GalacticraftBlocks {
     public static final Block LINEAR_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 5.0f), Constants.Blocks.LINEAR_LIGHT_PANEL);
     public static final Block DASHED_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 1.0f), Constants.Blocks.DASHED_LIGHT_PANEL);
     public static final Block DIAGONAL_LIGHT_PANEL = registerBlock(new LightPanelBlock(FabricBlockSettings.of(Material.METAL), 1.0f), Constants.Blocks.DIAGONAL_LIGHT_PANEL);
-    
+
     // VACUUM GLASS
     public static final Block VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.VACUUM_GLASS);
     public static final Block CLEAR_VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.CLEAR_VACUUM_GLASS);
     public static final Block STRONG_VACUUM_GLASS = registerBlock(new VacuumGlassBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS)), Constants.Blocks.STRONG_VACUUM_GLASS);
-    
+
     // ORES
     public static final Block SILICON_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constants.Blocks.SILICON_ORE);
     public static final Block ASTEROID_ALUMINUM_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constants.Blocks.ASTEROID_ALUMINUM_ORE);
@@ -161,7 +161,7 @@ public class GalacticraftBlocks {
     public static final Block MOON_TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constants.Blocks.MOON_TIN_ORE);
     public static final Block MARS_TIN_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constants.Blocks.MARS_TIN_ORE);
     public static final Block GALENA_ORE = registerBlock(new OreBlock(FabricBlockSettings.of(Material.STONE).strength(5.0F, 3.0F)), Constants.Blocks.GALENA_ORE);
-    
+
     // COMPACT MINERAL BLOCKS
     public static final Block SILICON_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.SILICON_BLOCK);
     public static final Block METEORIC_IRON_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.METEORIC_IRON_BLOCK);
@@ -169,7 +169,7 @@ public class GalacticraftBlocks {
     public static final Block TITANIUM_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.TITANIUM_BLOCK);
     public static final Block LEAD_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.LEAD_BLOCK);
     public static final Block LUNAR_SAPPHIRE_BLOCK = registerBlock(new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F, 6.0F).sounds(BlockSoundGroup.STONE)), Constants.Blocks.LUNAR_SAPPHIRE_BLOCK);
-    
+
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = registerBlock(new LunarCartographyTableBlock(FabricBlockSettings.of(Material.WOOD).strength(2.5F).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.LUNAR_CARTOGRAPHY_TABLE);
 
@@ -201,6 +201,12 @@ public class GalacticraftBlocks {
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY);
     public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), BubbleDistributorScreenHandler::new, blockView -> new BubbleDistributorBlockEntity(),
             (itemStack, blockView, tooltipContext) -> new TranslatableText("tooltip.galacticraft-rewoven.oxygen_bubble_distributor").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR);
+    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), OxygenDecompressorScreenHandler::new, blockView -> new OxygenDecompressorBlockEntity(),
+            (itemStack, blockView, tooltipContext) -> new TranslatableText("tooltip.galacticraft-rewoven.oxygen_decompressor").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))), Constants.Blocks.OXYGEN_DECOMPRESSOR);
+    public static final Block OXYGEN_COMPRESSOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), OxygenCompressorScreenHandler::new, blockView -> new OxygenCompressorBlockEntity(),
+            (itemStack, blockView, tooltipContext) -> new TranslatableText("tooltip.galacticraft-rewoven.oxygen_compressor").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))), Constants.Blocks.OXYGEN_COMPRESSOR);
+    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), OxygenStorageModuleScreenHandler::new, blockView -> new OxygenStorageModuleBlockEntity(),
+            (itemStack, blockView, tooltipContext) -> new TranslatableText("tooltip.galacticraft-rewoven.oxygen_storage_module").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))), Constants.Blocks.OXYGEN_STORAGE_MODULE);
 
     public static void register() {
         ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(FUEL, 80, 80);

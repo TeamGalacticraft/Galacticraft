@@ -89,11 +89,6 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
@@ -241,16 +236,6 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implem
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
         return false;
     }
 

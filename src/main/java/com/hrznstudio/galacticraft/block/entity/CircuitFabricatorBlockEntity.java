@@ -108,11 +108,6 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
@@ -273,16 +268,6 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public boolean canHopperInsertItems(int slot) {
         return slot != 6;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
     }
 
     @Override

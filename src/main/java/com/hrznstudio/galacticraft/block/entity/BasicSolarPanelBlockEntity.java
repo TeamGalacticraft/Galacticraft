@@ -64,11 +64,6 @@ public class BasicSolarPanelBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
@@ -91,16 +86,6 @@ public class BasicSolarPanelBlockEntity extends ConfigurableMachineBlockEntity i
     @Override
     public boolean canHopperInsertItems(int slot) {
         return true;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
     }
 
     @Override

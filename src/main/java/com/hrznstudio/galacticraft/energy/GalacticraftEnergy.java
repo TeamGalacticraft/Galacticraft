@@ -44,26 +44,17 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    public static final GalacticraftJoules GALACTICRAFT_JOULES = Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), new GalacticraftJoules());
+    public static final EnergyType GALACTICRAFT_JOULES = Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), new GalacticraftJoules());
 
     public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = EnergyUtils::isEnergyItem;
 
     public static void register() {
     }
 
-    public static boolean isOxygenItem(ItemStack stack) {
-        TankComponent component = TankComponentHelper.INSTANCE.getComponent(stack);
-        if (component != null) {
-            return component.contains(GalacticraftFluids.OXYGEN);
-        }
-
-        return false;
-    }
-
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public static class GalacticraftJoules extends ElectricalEnergyType {
+    private static final class GalacticraftJoules extends ElectricalEnergyType {
 
         @Override
         public int getMaximumTransferSize() {

@@ -25,7 +25,9 @@ package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
@@ -73,7 +75,7 @@ public class OxygenTankItem extends Item implements ItemComponentCallback{
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ((int)(ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getContents(0).getAmount().doubleValue() * 100)) + "/" + getMaxDamage()));
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ((int)(OxygenUtils.getOxygen(stack).doubleValue() * 100.0D) + "/" + (int)(OxygenUtils.getMaxOxygen(stack).doubleValue() * 100.0D))));
         super.appendTooltip(stack, world, lines, context);
     }
 

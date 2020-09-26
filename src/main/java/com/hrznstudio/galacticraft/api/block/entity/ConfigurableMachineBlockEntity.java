@@ -29,8 +29,6 @@ import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
-import com.hrznstudio.galacticraft.component.impl.SimpleOxygenTankComponent;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import io.github.cottonmc.component.UniversalComponents;
@@ -38,6 +36,7 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
@@ -63,6 +62,7 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -78,7 +78,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     private final InventoryWrapper wrapper = InventoryWrapper.of(getInventory());
     
     private final SecurityInfo security = new SecurityInfo();
-    private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, getInventorySize(), getFluidTankSize(), getOxygenTankSize());
+    private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, getInventorySize(), getFluidTankSize());
 
     private RedstoneState redstone = RedstoneState.DISABLED;
 
@@ -99,10 +99,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public abstract boolean canHopperInsertItems(int slot);
 
-    public abstract boolean canExtractOxygen(int tank);
-
-    public abstract boolean canInsertOxygen(int tank);
-
     public abstract boolean canExtractFluid(int tank);
 
     public abstract boolean canInsertFluid(int tank);
@@ -111,13 +107,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public abstract int getInventorySize();
 
-    public abstract int getOxygenTankSize();
-
     public abstract int getFluidTankSize();
-
-    public Fraction getOxygenTankMaxCapacity() {
-        return Fraction.ZERO;
-    }
 
     public Fraction getFluidTankMaxCapacity() {
         return Fraction.ZERO;
@@ -169,10 +159,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return UniversalComponents.TANK_COMPONENT.get(this);
     }
 
-    public final @NotNull SimpleOxygenTankComponent getOxygenTank() {
-        return GalacticraftComponents.OXYGEN_COMPONENT.get(this);
-    }
-
     public final @Nullable CapacitorComponent getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isEnergy())
             return getCapacitor();
@@ -191,12 +177,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return null;
     }
 
-    public final @Nullable SimpleOxygenTankComponent getOxygenTank(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isOxygen())
-            return getOxygenTank();
-        return null;
-    }
-
     @Override
     public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
         if (type == UniversalComponents.CAPACITOR_COMPONENT) {
@@ -205,11 +185,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return getInventory(blockView.getBlockState(pos), side) != null;
         } else if (type == UniversalComponents.TANK_COMPONENT) {
             return getFluidTank(blockView.getBlockState(pos), side) != null;
-        } else if (type == GalacticraftComponents.OXYGEN_COMPONENT) {
-            return getOxygenTank(blockView.getBlockState(pos), side) != null;
         }
 
-        return ((ComponentProvider)this).hasComponent(type);
+        return type.getNullable(this) != null;
     }
 
     @Override
@@ -220,11 +198,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             return (T) getInventory(blockView.getBlockState(pos), side);
         } else if (type == UniversalComponents.TANK_COMPONENT) {
             return (T) getFluidTank(blockView.getBlockState(pos), side);
-        } else if (type == GalacticraftComponents.OXYGEN_COMPONENT) {
-            return (T) getOxygenTank(blockView.getBlockState(pos), side);
         }
 
-        return ((ComponentProvider)this).getComponent(type);
+        return type.get(this);
     }
 
     @Override
@@ -232,12 +208,10 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         Set<ComponentType<?>> set = new LinkedHashSet<>(((ComponentProvider) this).getComponentTypes());
         if (getCapacitor(blockView.getBlockState(pos), side) == null)
             set.remove(UniversalComponents.CAPACITOR_COMPONENT);
-        if (getInventory(blockView.getBlockState(pos), side) != null)
+        if (getInventory(blockView.getBlockState(pos), side) == null)
             set.remove(UniversalComponents.INVENTORY_COMPONENT);
-        if (getFluidTank(blockView.getBlockState(pos), side) != null)
+        if (getFluidTank(blockView.getBlockState(pos), side) == null)
             set.remove(UniversalComponents.TANK_COMPONENT);
-        if (getOxygenTank(blockView.getBlockState(pos), side) != null)
-            set.remove(GalacticraftComponents.OXYGEN_COMPONENT);
         return set;
     }
 
@@ -296,7 +270,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getCapacitor().toTag(tag);
         this.getInventory().toTag(tag);
         this.getFluidTank().toTag(tag);
-        this.getOxygenTank().toTag(tag);
         this.security.toTag(tag);
         this.sideConfigInfo.toTag(tag);
         this.redstone.toTag(tag);
@@ -309,7 +282,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getCapacitor().fromTag(tag);
         this.getInventory().fromTag(tag);
         this.getFluidTank().fromTag(tag);
-        this.getOxygenTank().fromTag(tag);
         this.security.fromTag(tag);
         this.sideConfigInfo.fromTag(tag);
         this.redstone = RedstoneState.fromTag(tag);
@@ -343,7 +315,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (this.getCapacitor().canExtractEnergy()) {
             for (BlockFace face : BlockFace.values()) {
                 ConfiguredSideOption option = this.getSideConfigInfo().get(face);
-                if (option.getOption().isEnergy()) {
+                if (option.getOption() == SideOption.POWER_OUTPUT) {
                     Direction dir = face.toDirection(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
                     CapacitorComponent component = ((BlockComponentProvider) world.getBlockState(pos).getBlock()).getComponent(world, pos.offset(dir), UniversalComponents.CAPACITOR_COMPONENT, dir.getOpposite());
                     if (component != null) {
@@ -351,6 +323,29 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                             int i = this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.getMaxEnergy() - component.getCurrentEnergy(), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
                             if (i != 0) {
                                 Galacticraft.logger.debug( i + "gJ wasted?!");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void trySpreadFluids(int tank) {
+        if (this.getFluidTank().getTanks() > tank && tank >= 0 && this.canExtractFluid(tank) && !this.getFluidTank().getContents(tank).isEmpty()) {
+            for (BlockFace face : BlockFace.values()) {
+                ConfiguredSideOption option = this.getSideConfigInfo().get(face);
+                if (option.getOption() == SideOption.FLUID_OUTPUT) {
+                    Direction dir = face.toDirection(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
+                    TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos.offset(dir), dir.getOpposite());
+                    if (component != null) {
+                        for (int i = 0; i < component.getTanks(); i++) {
+                            if (component.canInsert(i)) {
+                                FluidVolume a = this.getFluidTank().insertFluid(tank, component.insertFluid(this.getFluidTank().takeFluid(tank, component.getMaxCapacity(i).subtract(component.getContents(i).getAmount()), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
+                                if (!a.isEmpty()) {
+                                    Galacticraft.logger.debug(a.getAmount().toString() + " " + Registry.FLUID.getId(a.getFluid()) + " wasted?!");
+                                }
+                                if (this.getFluidTank().getContents(tank).isEmpty()) return;
                             }
                         }
                     }
@@ -696,17 +691,15 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         private final int capacitors;
         private final int invSize;
         private final int tanks;
-        private final int oxygenTanks;
         private final ConfigurableMachineBlockEntity blockEntity;
 
-        public SideConfigInfo(ConfigurableMachineBlockEntity blockEntity, List<SideOption> values, int capacitors, int invSize, int tanks, int oxygenTanks) {
+        public SideConfigInfo(ConfigurableMachineBlockEntity blockEntity, List<SideOption> values, int capacitors, int invSize, int tanks) {
             if (!values.contains(SideOption.DEFAULT)) throw new RuntimeException();
             this.values = new ArrayList<>(values);
             this.values.sort(Enum::compareTo);
             this.capacitors = capacitors;
             this.invSize = invSize;
             this.tanks = tanks;
-            this.oxygenTanks = oxygenTanks;
             this.blockEntity = blockEntity;
 
             this.front = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
@@ -846,7 +839,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         private int getMax(SideOption option) {
             if (option.isEnergy()) return capacitors;
             if (option.isFluid()) return tanks;
-            if (option.isOxygen()) return oxygenTanks;
             if (option.isItem()) return invSize;
             return 1;
         }

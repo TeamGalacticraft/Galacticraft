@@ -131,7 +131,7 @@ public class WireBlockEntity extends BlockEntity implements BlockEntityClientSer
                     }
                 }
                 if (this.network == null) {
-                    this.network = new WireNetwork(pos, (ServerWorld)world);
+                    this.network = new WireNetwork(pos, (ServerWorld)world, this);
                 }
             }
         }
