@@ -45,9 +45,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_FLUID_OUT = new Identifier(Constants.MOD_ID, "block/machine_fluid_output");
     public static final Identifier MACHINE_ITEM_IN = new Identifier(Constants.MOD_ID, "block/machine_item_input");
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constants.MOD_ID, "block/machine_item_output");
-    public static final Identifier MACHINE_OXYGEN_IN = new Identifier(Constants.MOD_ID, "block/machine_oxygen_input");
-    public static final Identifier MACHINE_OXYGEN_OUT = new Identifier(Constants.MOD_ID, "block/machine_oxygen_output");
-    
+
     private static Function<Identifier, Sprite> atlas;
     private static final Map<Block, ModelTextureProvider> textureProviders = new HashMap<>();
 
@@ -158,11 +156,12 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
         register(GalacticraftBlocks.REFINERY, (face, spriteFunction, view, state, pos) -> {
             switch (face) {
                 case FRONT:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/refinery"));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/refinery_front"));
                 case LEFT:
                 case RIGHT:
-                case BACK:
                     return spriteFunction.apply(MACHINE_SIDE);
+                case BACK:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/refinery_back"));
                 default:
                     return spriteFunction.apply(MACHINE);
             }

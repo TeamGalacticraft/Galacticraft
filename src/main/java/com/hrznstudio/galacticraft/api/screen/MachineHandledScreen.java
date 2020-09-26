@@ -34,14 +34,18 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.block.FluidRenderer;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -68,7 +72,7 @@ import java.util.*;
 public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> extends HandledScreen<C> {
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
+    protected static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     public static final int PANEL_WIDTH = 99;
     public static final int PANEL_HEIGHT = 91;
@@ -653,6 +657,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.client.getTextureManager().bindTexture(OVERLAY);
         this.drawTexture(stack, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
         this.drawTexture(stack, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
+    }
+
+    protected void drawFluidTankBufferBar(MatrixStack stack, int tank, int tankX, int tankY) {
+        FluidVolume content = this.handler.blockEntity.getFluidTank().getContents(tank);
+        if (content.isEmpty()) return;
+        stack.push();
+        double scale = content.getAmount().divide(this.handler.blockEntity.getFluidTankMaxCapacity()).doubleValue();
+        Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getFluid()).getFluidSprites(world, pos, content.getFluid().getDefaultState())[0];
+        this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
+        drawSprite(stack, tankX + 1, ((tankY + 1) - (int)(Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT * scale)) + Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT, 0, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_WIDTH - 2, (int)(Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT * scale) - 2, sprite);
+        stack.pop();
+        this.client.getTextureManager().bindTexture(OVERLAY);
+        this.drawTexture(stack, tankX, tankY, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_X, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_Y, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_WIDTH, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT);
     }
 
     protected void drawEnergyTooltip(MatrixStack stack, int mouseX, int mouseY, int energyX, int energyY) {

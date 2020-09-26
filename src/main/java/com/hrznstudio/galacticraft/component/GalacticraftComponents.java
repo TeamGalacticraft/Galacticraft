@@ -7,6 +7,8 @@ import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
+import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
@@ -25,7 +27,7 @@ import net.minecraft.util.Identifier;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer {
+public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer, ItemComponentInitializer {
     public static final List<Identifier> MACHINE_BLOCKS = new LinkedList<>();
     public static final ComponentType<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
 
@@ -142,5 +144,10 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
         }
 
         MACHINE_BLOCKS.clear();
+    }
+
+    @Override
+    public void registerItemComponentFactories(ItemComponentFactoryRegistry itemComponentFactoryRegistry) {
+
     }
 }

@@ -121,8 +121,9 @@
     "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
     "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
     "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ],
+    "cardinal-components-entity": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ],
     "cardinal-components-block": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ],
-    "cardinal-components-entity": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ]
+    "cardinal-components-item": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ]
   },
   "custom": {
     "cardinal-components": [
