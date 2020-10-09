@@ -1,5 +1,6 @@
 package com.hrznstudio.galacticraft.client.render.block.entity;
 
+import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -13,7 +14,7 @@ public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<FluidPipeB
 
     @Override
     public void render(FluidPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getData() != FluidPipeBlockEntity.FluidData.EMPTY) {
+        if (entity.getFluid() != Pipe.FluidData.EMPTY) {
 //            entity.getData().getPath().pLast(); //todo
         }
     }
