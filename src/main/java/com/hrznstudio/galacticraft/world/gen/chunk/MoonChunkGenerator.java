@@ -1,9 +1,11 @@
 package com.hrznstudio.galacticraft.world.gen.chunk;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.mixin.ChunkGeneratorAccessor;
 import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import de.javagl.obj.Obj;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
@@ -46,7 +48,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 public final class MoonChunkGenerator extends ChunkGenerator {
-    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((moonChunkGenerator) -> (MoonBiomeSource) moonChunkGenerator.biomeSource), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.worldSeed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
+    public static final Codec<MoonChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(MoonBiomeSource.CODEC.fieldOf("biome_source").forGetter((chunkGen) -> (MoonBiomeSource) ((ChunkGeneratorAccessor)(Object)chunkGen).getBiomeSource()), Codec.LONG.fieldOf("seed").stable().forGetter((moonChunkGenerator) -> moonChunkGenerator.worldSeed)).apply(instance, instance.stable(MoonChunkGenerator::new)));
 
     private static final float[] field_16649 = Util.make(new float[13824], (array) -> {
         for (int i = 0; i < 24; ++i) {

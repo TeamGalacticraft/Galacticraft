@@ -271,8 +271,8 @@ public class SpaceRaceScreen extends Screen {
 //        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
 //
 //        DiffuseLighting.enableForItems();
-//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getStackForRender(), this.x + 6, this.y - 20);
-//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getStackForRender(), this.x + 35, this.y - 20);
+//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.x + 6, this.y - 20);
+//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
     private void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {

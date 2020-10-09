@@ -13,8 +13,6 @@ public class MoonVillagerEntityModel extends VillagerResemblingModel<MoonVillage
     public MoonVillagerEntityModel(float scale, int textureWidth, int textureHeight) {
         super(scale, textureWidth, textureHeight);
         this.field_17141.visible = false; // set invisible
-        this.field_17142.visible = false;
-        this.field_17142 = new ModelPart(this);
         this.field_17141 = new ModelPart(this);
 
         this.brain = new ModelPart(this).setTextureSize(textureWidth, textureHeight);

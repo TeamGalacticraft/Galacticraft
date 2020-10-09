@@ -61,7 +61,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     @Override
     @Environment(EnvType.CLIENT)
     public EntryStack getLogo() {
-        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
+        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
     }
 
     @Environment(EnvType.CLIENT)

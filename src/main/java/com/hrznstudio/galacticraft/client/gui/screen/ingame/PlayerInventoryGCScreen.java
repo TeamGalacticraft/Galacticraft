@@ -81,8 +81,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
 
         DiffuseLighting.enableGuiDepthLighting();
-        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
     public void drawOxygenBufferBar(MatrixStack stack, float currentOxygen, float maxOxygen, int oxygenDisplayX, int oxygenDisplayY) {

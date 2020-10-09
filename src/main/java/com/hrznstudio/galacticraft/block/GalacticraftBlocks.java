@@ -69,9 +69,9 @@ public class GalacticraftBlocks {
             .icon(() -> new ItemStack(GalacticraftBlocks.COAL_GENERATOR)).build();
 
     // TORCHES
-    public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel((state) -> 15).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.GLOWSTONE_TORCH);
+    public static final Block GLOWSTONE_TORCH = registerBlockWithoutItem(new GlowstoneTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).luminance((state) -> 15).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.GLOWSTONE_TORCH);
     public static final Block GLOWSTONE_WALL_TORCH = registerBlockWithoutItem(new GlowstoneWallTorchBlock(FabricBlockSettings.copy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)), Constants.Blocks.GLOWSTONE_WALL_TORCH);
-    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).lightLevel((state) -> 0)), Constants.Blocks.UNLIT_TORCH);
+    public static final Block UNLIT_TORCH = registerBlockWithoutItem(new UnlitTorchBlock(FabricBlockSettings.copy(Blocks.TORCH).luminance((state) -> 0)), Constants.Blocks.UNLIT_TORCH);
     public static final Block UNLIT_WALL_TORCH = registerBlockWithoutItem(new UnlitWallTorchBlock(FabricBlockSettings.copy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)), Constants.Blocks.UNLIT_WALL_TORCH);
 
     // LIQUIDS

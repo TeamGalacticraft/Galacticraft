@@ -35,6 +35,7 @@ import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadL
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
+import com.hrznstudio.galacticraft.mixin.SkyPropertiesAccessor;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.mojang.datafixers.util.Pair;
@@ -49,7 +50,6 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.SkyProperties;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -178,7 +178,7 @@ public class GalacticraftClient implements ClientModInitializer {
         });
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);
-        SkyProperties.BY_IDENTIFIER.put(new Identifier(Constants.MOD_ID, "moon"), new MoonSkyProperties());
+        SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constants.MOD_ID, "moon"), new MoonSkyProperties());
 
         Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

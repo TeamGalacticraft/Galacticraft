@@ -46,8 +46,6 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonVillagerEntity extends VillagerEntity {
-    public static final VillagerType MOON_VILLAGER_TYPE = new VillagerType("Galacticraft: Rewoven - Moon Villager");
-
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
         this(entityType, world, MoonVillagerType.MOON_HIGHLANDS);
     }

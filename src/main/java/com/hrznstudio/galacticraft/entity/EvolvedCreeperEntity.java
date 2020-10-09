@@ -23,7 +23,6 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import com.hrznstudio.galacticraft.mixin.EntityAttributeInstanceAccessor;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -35,10 +34,8 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.CreeperEntity;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -97,7 +94,7 @@ public class EvolvedCreeperEntity extends CreeperEntity {
             EntityAttributeInstance entityAttributeInstance = this.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
             entityAttributeInstance.removeModifier(BABY_SPEED_BONUS);
             if (baby) {
-                ((EntityAttributeInstanceAccessor) entityAttributeInstance).callAddModifier(BABY_SPEED_BONUS);
+                entityAttributeInstance.addTemporaryModifier(BABY_SPEED_BONUS);
             }
         }
     }
