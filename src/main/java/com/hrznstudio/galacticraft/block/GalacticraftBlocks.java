@@ -37,11 +37,11 @@ import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.mixin.FireBlockAccessor;
 import com.hrznstudio.galacticraft.screen.*;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -209,8 +209,8 @@ public class GalacticraftBlocks {
             (itemStack, blockView, tooltipContext) -> new TranslatableText("tooltip.galacticraft-rewoven.oxygen_storage_module").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))), Constants.Blocks.OXYGEN_STORAGE_MODULE);
 
     public static void register() {
-        ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(FUEL, 80, 80);
-        ((FireBlockAccessor) Blocks.FIRE).callRegisterFlammableBlock(CRUDE_OIL, 80, 80);
+        FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);
+        FlammableBlockRegistry.getDefaultInstance().add(CRUDE_OIL, 60, 100);
     }
 
     private static Block[] createDecorationBlocks(String baseId, AbstractBlock.Settings settings, boolean detailedVariant) {

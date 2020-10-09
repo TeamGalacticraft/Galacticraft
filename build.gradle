@@ -40,7 +40,8 @@ dependencies {
     modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version))
-    modImplementation(fabricApi.module("fabric-commands-v0", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-commands-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-content-registries-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-crash-report-info-v1", project.fabric_version))
     modRuntime(fabricApi.module("fabric-events-lifecycle-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-item-api-v1", project.fabric_version))

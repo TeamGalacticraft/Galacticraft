@@ -1,9 +1,7 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
