@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -545,7 +545,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
                 if (this.getPos().getY() >= 1200.0F) {
                     for (Entity entity : getPassengerList()) {
                         if (entity instanceof ServerPlayerEntity) {
-                            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen());
+                            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen(this.getTier()));
                             break;
                         }
                     }

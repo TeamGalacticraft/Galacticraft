@@ -59,16 +59,17 @@ public class PlanetSelectScreen extends Screen {
 
     public CelestialBodyDisplay currentPlanet = null;
     private float earthRotation = 0;
+    private final int tier;
 
-    public PlanetSelectScreen() {
+    public PlanetSelectScreen(int tier) {
         super(new TranslatableText("yes.yes.yes"));
+        this.tier = tier;
     }
 
     @Override
     public void tick() {
         super.tick();
         earthRotation = earthRotation + 2F;
-
     }
 
     @Override
@@ -92,9 +93,12 @@ public class PlanetSelectScreen extends Screen {
     public void renderPlanet(int x, int y, MatrixStack matrices, BlockState planet) {
         MinecraftClient.getInstance().getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         MinecraftClient.getInstance().getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).setFilter(false, false);
-        matrices.translate((float) x, (float) y, 100.0F);
+        matrices.translate((float) x, (float) y, 1.0F);
         matrices.scale(1.0F, -1.0F, 1.0F);
         matrices.scale(16.0F, 16.0F, 16.0F);
+        matrices.translate(0.5, 0.5, 0.5);
+        matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(earthRotation));
+        matrices.translate(-0.5, -0.5, -0.5);
 
         VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
         MinecraftClient.getInstance().getBlockRenderManager().renderBlockAsEntity(planet, matrices, immediate, 10000, OverlayTexture.DEFAULT_UV);
@@ -108,10 +112,8 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public void renderPlanets(MatrixStack matrices) {
-
         for (CelestialBodyDisplay planet : celestialBodyDisplays) {
             matrices.push();
-            rotate(matrices, earthRotation, planet.x, planet.y);
             renderPlanet(planet.x, planet.y, matrices, planet.planetModel.getDefaultState());
             matrices.pop();
         }

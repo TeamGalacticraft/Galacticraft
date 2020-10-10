@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.server.command;
@@ -33,11 +32,13 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
@@ -60,10 +61,11 @@ public class GalacticraftCommands {
             commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .executes(context -> {
-                        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
-                            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-                            ClientSidePacketRegistry.INSTANCE.sendToServer(new Identifier(Constants.MOD_ID, "planet_menu_open"), passedData);                        }
-                        return 1;
+                        if (context.getSource().getPlayer() != null) {
+                            context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
+                            return 1;
+                        }
+                        return 0;
                     })
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                             .executes(GalacticraftCommands::teleport)

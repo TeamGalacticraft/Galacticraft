@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.network;
@@ -76,7 +75,7 @@ public class GalacticraftClientPackets {
         });
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "planet_menu_open"), ((context, buf) -> {
-            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen());
+            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen(buf.readInt()));
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_scroll"), ((context, buf) -> {
