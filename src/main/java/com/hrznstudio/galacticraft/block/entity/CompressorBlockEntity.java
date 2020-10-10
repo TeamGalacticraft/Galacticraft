@@ -18,20 +18,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
-import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -47,13 +46,14 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class CompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final int FUEL_INPUT_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
@@ -67,27 +67,12 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    public SimpleCapacitorComponent getCapacitor() {
-        return new SimpleCapacitorComponent(0, GalacticraftEnergy.GALACTICRAFT_JOULES) {
-            @Override
-            public boolean canExtractEnergy() {
-                return false;
-            }
-
-            @Override
-            public boolean canInsertEnergy() {
-                return false;
-            }
-        };
-    }
-
-    @Override
-    protected boolean canExtractEnergy() {
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return false;
     }
 
@@ -98,8 +83,18 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 11;
+    }
+
+    @Override
+    public int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     @Override
@@ -184,20 +179,11 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
 
     private ItemStack getResultFromRecipeStack(Inventory inv) {
         // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
-
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(inv);
-        if (shapelessRecipe.isPresent()) {
-            return shapelessRecipe.get().craft(inv);
-        }
-        return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
+        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("A recipe was not present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
     }
 
-    private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-    }
-
-    private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
+    private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 
     protected boolean canPutStackInResultSlot(ItemStack stack) {
@@ -213,10 +199,7 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     }
 
     public boolean isValidRecipe(Inventory input) {
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(input);
-        Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
-
-        return shapelessRecipe.isPresent() || shapedRecipe.isPresent();
+        return getRecipe(input).isPresent();
     }
 
     @Override
@@ -243,6 +226,31 @@ public class CompressorBlockEntity extends ConfigurableElectricMachineBlockEntit
     @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    public boolean canHopperExtractItems(int slot) {
+        return slot == OUTPUT_SLOT;
+    }
+
+    @Override
+    public boolean canHopperInsertItems(int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     /**

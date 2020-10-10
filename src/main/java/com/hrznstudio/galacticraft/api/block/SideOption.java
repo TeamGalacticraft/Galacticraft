@@ -18,11 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -36,79 +36,85 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public enum SideOption implements StringIdentifiable {
+public enum SideOption implements Comparable<SideOption> {
+    DEFAULT(false, false, false, false),
+    POWER_INPUT(true, false, false, false),
+    POWER_OUTPUT(true, false, false, false),
+//    OXYGEN_INPUT(false, false, false, true),
+//    OXYGEN_OUTPUT(false, false, false, true),
+    FLUID_INPUT(false, true, false, false),
+    FLUID_OUTPUT(false, true, false, false),
+    ITEM_INPUT(false, false, true, false),
+    ITEM_OUTPUT(false, false, true, false);
 
-    DEFAULT("d"),
-    POWER_INPUT("pi"),
-    POWER_OUTPUT("po"),
-    OXYGEN_INPUT("oi"),
-    OXYGEN_OUTPUT("oo"),
-    FLUID_INPUT("fi"),
-    FLUID_OUTPUT("fo");
+    private final boolean energy;
+    private final boolean fluid;
+    private final boolean item;
+    private final boolean oxygen;
 
-    private final String name;
-
-    SideOption(String name) {
-        this.name = name;
+    SideOption(boolean energy, boolean fluid, boolean item, boolean oxygen) {
+        this.energy = energy;
+        this.fluid = fluid;
+        this.item = item;
+        this.oxygen = oxygen;
     }
 
-    public static List<SideOption> getApplicableValuesForMachine(Block block) {
-        if (block instanceof ConfigurableElectricMachineBlock) {
-            List<SideOption> options = new ArrayList<>();
-            options.add(DEFAULT);
-            if (((ConfigurableElectricMachineBlock) block).consumesOxygen()) {
-                options.add(OXYGEN_INPUT);
-            }
-            if (((ConfigurableElectricMachineBlock) block).generatesOxygen()) {
-                options.add(OXYGEN_OUTPUT);
-            }
-            if (((ConfigurableElectricMachineBlock) block).consumesPower()) {
-                options.add(POWER_INPUT);
-            }
-            if (((ConfigurableElectricMachineBlock) block).generatesPower()) {
-                options.add(POWER_OUTPUT);
-            }
-            if (((ConfigurableElectricMachineBlock) block).consumesFluids()) {
-                options.add(FLUID_INPUT);
-            }
-            if (((ConfigurableElectricMachineBlock) block).generatesFluids()) {
-                options.add(FLUID_OUTPUT);
-            }
-            return options;
-        }
-        return new ArrayList<>();
+    public boolean isEnergy() {
+        return energy;
     }
 
-    @Override
-    public String asString() {
-        return this.name;
+    public boolean isItem() {
+        return item;
     }
 
-    public SideOption nextValidOption(Block block) {
-        List<SideOption> values = new ArrayList<>(getApplicableValuesForMachine(block));
+    public boolean isOxygen() {
+        return fluid; //todo gas api maybe?
+    }
+
+    public boolean isFluid() {
+        return fluid;
+    }
+
+    public SideOption nextValidOption(ConfigurableMachineBlockEntity blockEntity) {
+        List<SideOption> values = new ArrayList<>(blockEntity.validSideOptions());
         int i = values.indexOf(this);
-        if (i + 1 >= values.size()) {
+        if (++i == values.size()) {
             return values.get(0);
         } else {
-            return values.get(i + 1);
+            return values.get(i);
+        }
+    }
+
+    public SideOption prevValidOption(ConfigurableMachineBlockEntity blockEntity) {
+        List<SideOption> values = new ArrayList<>(blockEntity.validSideOptions());
+        int i = values.indexOf(this);
+        if (i-- == 0) {
+            return values.get(values.size() - 1);
+        } else {
+            return values.get(i);
         }
     }
 
     public Text getFormattedName() {
-        if (this == SideOption.DEFAULT) {
-            return new LiteralText("Blank").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
-        } else if (this == SideOption.OXYGEN_INPUT) {
-            return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-        } else if (this == SideOption.OXYGEN_OUTPUT) {
-            return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (this == SideOption.POWER_INPUT) {
-            return new LiteralText("Power").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-        } else if (this == SideOption.POWER_OUTPUT) {
-            return new LiteralText("Power").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (this == FLUID_INPUT) {
-            return new LiteralText("Fluid").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (this == FLUID_OUTPUT) {
-            return new LiteralText("Fluid").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+        switch (this) {
+            case DEFAULT:
+                return new LiteralText("Blank").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+//            case OXYGEN_INPUT:
+//                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+//            case OXYGEN_OUTPUT:
+//                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+            case POWER_INPUT:
+                return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            case POWER_OUTPUT:
+                return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+            case FLUID_INPUT:
+                return new LiteralText("Fluids").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            case FLUID_OUTPUT:
+                return new LiteralText("Fluids").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+            case ITEM_INPUT:
+                return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            case ITEM_OUTPUT:
+                return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         }
         return new LiteralText("");
     }

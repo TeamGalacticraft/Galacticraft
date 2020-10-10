@@ -1,20 +1,43 @@
+/*
+ * Copyright (c) 2020 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.util;
 
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.item.ItemStack;
 
 public class EnergyUtils {
     public static boolean isEnergyItem(ItemStack stack) {
-        return ComponentProvider.fromItemStack(stack).hasComponent(UniversalComponents.CAPACITOR_COMPONENT);
+        return CapacitorComponentHelper.INSTANCE.hasComponent(stack);
     }
 
     public static int getEnergy(ItemStack stack) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).getCurrentEnergy();
     }
 
     /**
@@ -25,7 +48,7 @@ public class EnergyUtils {
      */
     public static int extractEnergy(ItemStack stack, int amount, ActionType action) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
     }
 
     /**
@@ -36,7 +59,7 @@ public class EnergyUtils {
      */
     public static int insertEnergy(ItemStack stack, int amount, ActionType action) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
     }
 
     /**
@@ -45,12 +68,12 @@ public class EnergyUtils {
      */
     public static int getMaxEnergy(ItemStack stack) {
         assert isEnergyItem(stack);
-        return ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getMaxEnergy();
+        return CapacitorComponentHelper.INSTANCE.getComponent(stack).getMaxEnergy();
     }
 
     public static void setEnergy(ItemStack stack, int amount) {
         assert isEnergyItem(stack);
-        ((SimpleCapacitorComponent) ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT)).setCurrentEnergy(amount);
+        ((SimpleCapacitorComponent) CapacitorComponentHelper.INSTANCE.getComponent(stack)).setCurrentEnergy(amount);
     }
 
     public static class Values {

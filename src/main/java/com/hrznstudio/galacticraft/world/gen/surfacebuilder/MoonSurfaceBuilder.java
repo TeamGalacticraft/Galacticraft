@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.world.gen.surfacebuilder;
@@ -39,6 +38,7 @@ import java.util.Random;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceBuilder<C> {
+    private static final BlockState MOON_ROCK = GalacticraftBlocks.MOON_ROCKS[0].getDefaultState();
     public MoonSurfaceBuilder(Codec<C> codec) {
         super(codec);
     }
@@ -92,7 +92,7 @@ public class MoonSurfaceBuilder<C extends TernarySurfaceConfig> extends SurfaceB
                     chunk.setBlockState(mutable, blockState2, false);
                     if (i == 0 && blockState2.isOf(GalacticraftBlocks.MOON_TURF) && j > 1) {
                         i = random.nextInt(4) + Math.max(0, m - 63);
-                        blockState2 = GalacticraftBlocks.MOON_ROCK.getDefaultState();
+                        blockState2 = MOON_ROCK;
                     }
                 }
             }

@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2020 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 plugins {
     id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'maven-publish'
@@ -40,11 +62,13 @@ dependencies {
     modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-commands-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-crash-report-info-v1", project.fabric_version))
     modRuntime(fabricApi.module("fabric-events-lifecycle-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-item-api-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-item-groups-v0", project.fabric_version))
     modRuntime(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version))
+    modRuntime(fabricApi.module("fabric-mining-levels-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-models-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-networking-v0", project.fabric_version))
@@ -87,7 +111,7 @@ dependencies {
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}") { transitive = false }
-//    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}") { transitive = false } //todo add back cotton-resources when it updates
+    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}") { transitive = false }
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,23 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import io.github.cottonmc.component.UniversalComponents;
+import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -50,31 +50,15 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
     public static final int BATTERY_SLOT = 0;
-    private final SimpleTankComponent tank = new SimpleTankComponent(1, MAX_OXYGEN) {
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                return super.insertFluid(tank, fluid, action);
-            } else {
-                return fluid;
-            }
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-            if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                super.setFluid(slot, stack);
-            }
-        }
-    };
     public BubbleDistributorStatus status = BubbleDistributorStatus.OFF;
     public boolean bubbleVisible = true;
     private double size = 0;
@@ -88,17 +72,32 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 2;
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public List<SideOption> validSideOptions() {
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT);
+    }
+
+    @Override
+    public int getFluidTankSize() {
+        return 1;
+    }
+
+    @Override
+    public Fraction getFluidTankMaxCapacity() {
+        return MAX_OXYGEN;
+    }
+
+    @Override
+    public boolean canExtractEnergy() {
         return false;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return true;
     }
 
@@ -107,7 +106,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
         if (slot == 0) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else if (slot == 1) {
-            return GalacticraftEnergy::isOxygenItem;
+            return OxygenUtils::isOxygenItem;
         } else {
             return itemStack -> false;
         }
@@ -133,7 +132,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
         drainOxygenFromStack(1);
         trySpreadEnergy();
 
-        if (this.getCapacitor().getCurrentEnergy() > 0 && this.tank.getContents(0).getAmount().doubleValue() > 0) {
+        if (this.getCapacitor().getCurrentEnergy() > 0 && this.getFluidTank().getContents(0).getAmount().doubleValue() > 0) {
             this.status = BubbleDistributorStatus.DISTRIBUTING;
         } else {
             this.status = BubbleDistributorStatus.OFF;
@@ -164,7 +163,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
                 }
             }
 
-            Fraction amount = this.tank.takeFluid(0, Fraction.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), ActionType.PERFORM).getAmount();
+            Fraction amount = this.getFluidTank().takeFluid(0, Fraction.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), ActionType.PERFORM).getAmount();
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
@@ -205,7 +204,6 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tank.toTag(tag);
         tag.putByte("MaxSize", targetSize);
         tag.putDouble("Size", size);
         return tag;
@@ -214,7 +212,6 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        tank.fromTag(tag);
         this.size = tag.getDouble("Size");
         if (size < 0) size = 0;
         this.targetSize = tag.getByte("MaxSize");
@@ -231,13 +228,34 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
         return this.toTag(tag);
     }
 
-    public TankComponent getOxygenTank() {
-        return this.tank;
-    }
-
     @Override
     public int getEnergyUsagePerTick() {
         return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
+    }
+
+    @Override
+    public boolean canHopperExtractItems(int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean canHopperInsertItems(int slot) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertFluid(int tank) {
+        return true;
+    }
+
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 
     public double getSize() {
@@ -249,15 +267,15 @@ public class BubbleDistributorBlockEntity extends ConfigurableElectricMachineBlo
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (tank.getContents(0).getAmount().compareTo(tank.getMaxCapacity(0)) >= 0) {
+        if (this.getFluidTank().getContents(0).getAmount().compareTo(this.getFluidTank().getMaxCapacity(0)) >= 0) {
             return;
         }
         ItemStack stack = getInventory().getStack(slot).copy();
-        if (GalacticraftEnergy.isOxygenItem(stack)) {
-            TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
+        if (OxygenUtils.isOxygenItem(stack)) {
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(stack, "oxy-drain-bubble");
             for (int i = 0; i < component.getTanks(); i++) {
                 if (component.getContents(i).getFluid().equals(GalacticraftFluids.OXYGEN)) {
-                    tank.insertFluid(component.takeFluid(i, tank.getMaxCapacity(0).subtract(tank.getContents(0).getAmount()), ActionType.PERFORM), ActionType.PERFORM);
+                    this.getFluidTank().insertFluid(component.takeFluid(i, this.getFluidTank().getMaxCapacity(0).subtract(this.getFluidTank().getContents(0).getAmount()), ActionType.PERFORM), ActionType.PERFORM);
                 }
             }
         }

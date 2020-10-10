@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.recipe.rei;
@@ -61,7 +60,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     @Override
     @Environment(EnvType.CLIENT)
     public EntryStack getLogo() {
-        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
+        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
     }
 
     @Environment(EnvType.CLIENT)

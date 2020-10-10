@@ -18,12 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
@@ -34,7 +33,7 @@ import net.minecraft.screen.slot.Slot;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineScreenHandler<T extends ConfigurableElectricMachineBlockEntity> extends ScreenHandler {
+public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEntity> extends ScreenHandler {
 
     public final PlayerEntity playerEntity;
     public final T blockEntity;
@@ -84,10 +83,10 @@ public abstract class MachineScreenHandler<T extends ConfigurableElectricMachine
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return blockEntity.getSecurity().getPublicity() == ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
+        return blockEntity.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
                 || !blockEntity.getSecurity().hasOwner()
                 || blockEntity.getSecurity().getOwner().equals(player.getUuid())
-                || (blockEntity.getSecurity().hasTeam() && blockEntity.getSecurity().getPublicity() == ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
+                || (blockEntity.getSecurity().hasTeam() && blockEntity.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
 //        && blockEntity.getSecurity().getTeam() == player
         );
     }

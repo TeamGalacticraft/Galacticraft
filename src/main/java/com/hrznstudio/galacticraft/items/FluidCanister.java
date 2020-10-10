@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -134,7 +134,7 @@ public class FluidCanister extends Item implements ItemComponentCallback {
                                 ItemStack itemStack2 = itemStack.copy();
                                 ComponentProvider.fromItemStack(itemStack2).getComponent(UniversalComponents.TANK_COMPONENT).setFluid(0, new FluidVolume(fluid, Fraction.ONE));
 
-                                return TypedActionResult.method_29237(itemStack2, world.isClient());
+                                return TypedActionResult.success(itemStack2, world.isClient());
                             }
                         }
 

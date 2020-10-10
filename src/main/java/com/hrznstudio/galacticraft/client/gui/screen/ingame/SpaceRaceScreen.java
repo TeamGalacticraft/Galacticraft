@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -320,7 +319,7 @@ public class SpaceRaceScreen extends Screen {
                                     && baseX >= this.getLeft() + 10 && baseY >= this.getTop() + 25
                                     && baseX + SLOT_WIDTH <= this.getRight() - 10 && baseY + SLOT_WIDTH <= this.getBottom() - 10
                                     && baseX <= this.getRight() - 10 && baseY <= this.getBottom() - 10) {
-                                itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getStackForRender(), baseX + 2, baseY + 2);
+                                itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getDefaultStack(), baseX + 2, baseY + 2);
                             }
                         }
                     }
@@ -505,8 +504,8 @@ public class SpaceRaceScreen extends Screen {
 //        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
 //
 //        DiffuseLighting.enableForItems();
-//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getStackForRender(), this.x + 6, this.y - 20);
-//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getStackForRender(), this.x + 35, this.y - 20);
+//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.x + 6, this.y - 20);
+//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
     private void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {

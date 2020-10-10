@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.entity;
@@ -46,8 +45,6 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class MoonVillagerEntity extends VillagerEntity {
-    public static final VillagerType MOON_VILLAGER_TYPE = new VillagerType("Galacticraft: Rewoven - Moon Villager");
-
     public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, World world) {
         this(entityType, world, MoonVillagerType.MOON_HIGHLANDS);
     }

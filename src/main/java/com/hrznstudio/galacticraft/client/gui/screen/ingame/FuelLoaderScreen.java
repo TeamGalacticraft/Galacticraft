@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -88,12 +88,12 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
-        if (this.blockEntity.getTank().getContents(0).getFluid() != null
-        && this.blockEntity.getTank().getContents(0).getFluid() != Fluids.EMPTY) {
+        if (this.blockEntity.getFluidTank().getContents(0).getFluid() != null
+        && this.blockEntity.getFluidTank().getContents(0).getFluid() != Fluids.EMPTY) {
             stack.push();
-            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.blockEntity.getTank().getContents(0).getFluid()).getFluidSprites(null, null, this.blockEntity.getTank().getContents(0).getFluid().getDefaultState())[0];
+            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.blockEntity.getFluidTank().getContents(0).getFluid()).getFluidSprites(null, null, this.blockEntity.getFluidTank().getContents(0).getFluid().getDefaultState())[0];
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (blockEntity.getTank().getContents(0).getAmount().doubleValue() / blockEntity.getTank().getMaxCapacity(0).doubleValue())), sprite);
+            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() / blockEntity.getFluidTank().getMaxCapacity(0).doubleValue())), sprite);
             stack.pop();
             this.client.getTextureManager().bindTexture(BACKGROUND);
             drawTexture(stack, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
@@ -144,10 +144,10 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
         List<OrderedText> list = new ArrayList<>();
         if (check(mouseX, mouseY, x + 69, y + 9, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            if (blockEntity.getTank().getContents(0).isEmpty()) {
+            if (blockEntity.getFluidTank().getContents(0).isEmpty()) {
                 list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             } else {
-                Fraction fraction = blockEntity.getTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
+                Fraction fraction = blockEntity.getFluidTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
                 if (fraction.getDenominator() == 1) {
                     list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                 } else {
@@ -164,7 +164,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                     }
                 }
                 if (Screen.hasControlDown()) {
-                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(blockEntity.getTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
+                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(blockEntity.getFluidTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                 }
             }
             this.renderOrderedTooltip(stack, list, mouseX, mouseY);

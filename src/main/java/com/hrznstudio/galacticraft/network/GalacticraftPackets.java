@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.network;
@@ -27,35 +26,35 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
+import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
-import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
-import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
-import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
+import net.fabricmc.fabric.api.network.PacketContext;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -75,9 +74,9 @@ public class GalacticraftPackets {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "redstone"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
-                BlockEntity blockEntity = context.getPlayer().world.getBlockEntity(buffer.readBlockPos());
-                if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                    ((ConfigurableElectricMachineBlockEntity) blockEntity).setRedstoneState(buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.RedstoneState.class));
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), context, false);
+                if (blockEntity != null) {
+                    blockEntity.setRedstone(buffer.readEnumConstant(ConfigurableMachineBlockEntity.RedstoneState.class));
                 }
             });
         }));
@@ -85,35 +84,26 @@ public class GalacticraftPackets {
         ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "security"), ((context, buf) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
-                BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(buffer.readBlockPos());
-                if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                    if (context.getPlayer().getPos().distanceTo(Vec3d.ofCenter(blockEntity.getPos())) < 12.0D) { //Make sure a player isn't just sending packets to insta-claim any machine placed down.
-                        if (!((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
-                                ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().isOwner(context.getPlayer())) {
-                            ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableElectricMachineBlockEntity.SecurityInfo.Publicity.class);
-
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setOwner(context.getPlayer());
-                            ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().setPublicity(publicity);
-                        } else {
-                            Galacticraft.logger.error("Received invalid security packet from: " + context.getPlayer().getEntityName());
-                        }
-                    }
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), context, true);
+                if (blockEntity != null) {
+                    ConfigurableMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.class);
+                    blockEntity.getSecurity().setPublicity(publicity);
                 }
             });
         }));
 
-        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config"), ((context, buffer) -> {
-            PacketByteBuf buf = new PacketByteBuf(buffer.copy());
+        ServerSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "side_config"), ((context, buf) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             context.getTaskQueue().execute(() -> {
-                BlockPos pos = buf.readBlockPos();
-                if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    BlockEntity blockEntity = ((ServerPlayerEntity) context.getPlayer()).getServerWorld().getBlockEntity(pos);
-                    if (blockEntity instanceof ConfigurableElectricMachineBlockEntity) {
-                        if (!((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().hasOwner() ||
-                                ((ConfigurableElectricMachineBlockEntity) blockEntity).getSecurity().getOwner().equals(context.getPlayer().getUuid())) {
-                            EnumProperty<SideOption> prop = EnumProperty.of(buf.readEnumConstant(Direction.class).getName(), SideOption.class, SideOption.getApplicableValuesForMachine(context.getPlayer().world.getBlockState(pos).getBlock()));
-                            context.getPlayer().world.setBlockState(pos, context.getPlayer().world.getBlockState(pos)
-                                    .with(prop, buf.readEnumConstant(SideOption.class)));
+                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), context, false);
+                if (blockEntity != null) {
+                    if (buffer.readBoolean()) {
+                        blockEntity.getSideConfigInfo().set(buffer.readEnumConstant(BlockFace.class), buffer.readEnumConstant(SideOption.class));
+                    } else {
+                        if (buffer.readBoolean()) {
+                            blockEntity.getSideConfigInfo().increment(buffer.readEnumConstant(BlockFace.class));
+                        } else {
+                            blockEntity.getSideConfigInfo().decrement(buffer.readEnumConstant(BlockFace.class));
                         }
                     }
                 }
@@ -344,5 +334,35 @@ public class GalacticraftPackets {
             PacketByteBuf buf = new PacketByteBuf(buff.copy());
             packetContext.getTaskQueue().execute(() -> ((ServerPlayerEntityAccessor) packetContext.getPlayer()).setResearchScroll(buf.readDouble(), buf.readDouble()));
         }));
+    }
+
+    private static @Nullable ConfigurableMachineBlockEntity doBasicChecksAndGrabEntity(@NotNull BlockPos pos, @NotNull PacketContext context, boolean strictAccess) {
+        if (context.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+            BlockEntity entity = context.getPlayer().world.getBlockEntity(pos);
+            if (entity instanceof ConfigurableMachineBlockEntity) {
+                if (context.getPlayer().getPos().distanceTo(Vec3d.ofCenter(entity.getPos())) < 6.5D) {
+                    if (strictAccess) {
+                        if (((ConfigurableMachineBlockEntity) entity).getSecurity().isOwner(context.getPlayer())) {
+                            return (ConfigurableMachineBlockEntity) entity;
+                        } else {
+                            Galacticraft.logger.error("Player '" + context.getPlayer().getEntityName() + "' sent critical packet without the proper permissions! ");
+                        }
+                    } else {
+                        if (((ConfigurableMachineBlockEntity) entity).getSecurity().hasAccess(context.getPlayer())) {
+                            return (ConfigurableMachineBlockEntity) entity;
+                        } else {
+                            Galacticraft.logger.error("Player '" + context.getPlayer().getEntityName() + "' sent packet without the proper permissions! ");
+                        }
+                    }
+                } else {
+                    Galacticraft.logger.error(context.getPlayer().getEntityName() + " tried to access machine while being more than 6.5 blocks away from the machine! (reach distance is 5 blocks)");
+                }
+            } else {
+                Galacticraft.logger.error("Failed to grab block entity specified by " + context.getPlayer().getEntityName());
+            }
+        } else {
+            Galacticraft.logger.error("Block entity specified by " + context.getPlayer().getEntityName() + " is in an unloaded chunk");
+        }
+        return null;
     }
 }

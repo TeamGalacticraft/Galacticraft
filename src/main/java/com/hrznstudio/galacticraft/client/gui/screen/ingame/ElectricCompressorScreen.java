@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -72,17 +71,16 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float var1, int var2, int var3) {
+    protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
         updateProgressDisplay();
 
-        //this.drawTexturedRect(...)
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawCraftProgressBar(stack);
-        this.drawConfigTabs(stack);
+        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

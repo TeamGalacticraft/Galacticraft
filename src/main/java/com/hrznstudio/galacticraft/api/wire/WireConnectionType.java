@@ -18,15 +18,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.api.wire;
 
+import net.minecraft.util.StringIdentifiable;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public enum WireConnectionType {
+public enum WireConnectionType implements StringIdentifiable {
     /**
      * The wire is not connected to anything.
      */
@@ -38,12 +39,22 @@ public enum WireConnectionType {
     WIRE,
 
     /**
-     * The wire is connected to some sort of energy consuming block.
+     * The wire is connected to an output face of a energy holding block.
      */
     ENERGY_INPUT,
 
     /**
-     * The wire is connected to some sort of energy generating block.
+     * The wire is connected to an input face of a energy holding block.
      */
-    ENERGY_OUTPUT
+    ENERGY_OUTPUT,
+
+    /**
+     * The wire is connected to an directionless energy face of a energy holding block.
+     */
+    ENERGY_IO;
+
+    @Override
+    public String asString() {
+        return name().toLowerCase();
+    }
 }

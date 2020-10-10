@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.tag;
@@ -31,7 +30,6 @@ import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
 import net.minecraft.block.Block;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 
@@ -42,17 +40,12 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftTags {
-    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(Constants.Compatibility.COMMON_MOD_ID, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(Constants.Compatibility.COMMON_MOD_ID, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> OXYGEN = TagRegistry.create(new Identifier(Constants.Compatibility.COMMON_MOD_ID, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier("c", "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier("c", "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> OXYGEN = TagRegistry.create(new Identifier("c", "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
 
     public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
     public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constants.MOD_ID, "moon_stone"), BlockTags::getTagGroup);
-
-    //COTTON RESOURCES IDS (they haven't updated to 1.16.2)
-    public static final Tag<Item> C_COPPER_INGOTS = TagRegistry.item(new Identifier(Constants.Compatibility.COMMON_MOD_ID, "copper_ingots"));
-    public static final Tag<Item> C_TIN_INGOTS = TagRegistry.item(new Identifier(Constants.Compatibility.COMMON_MOD_ID, "tin_ingots"));
-    public static final Tag<Item> C_ALU_INGOTS = TagRegistry.item(new Identifier(Constants.Compatibility.COMMON_MOD_ID, "aluminum_ingots"));
 
     public static void register() {
     }

@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.fluids;
@@ -43,7 +42,7 @@ import net.minecraft.world.WorldView;
 public class OxygenFluid extends Fluid {
     @Override
     public Item getBucketItem() {
-        return Items.AIR; //todo
+        return Items.BUCKET;
     }
 
     @Override

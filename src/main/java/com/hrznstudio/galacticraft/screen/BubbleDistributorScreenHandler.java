@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -117,7 +117,7 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().doubleValue() * 100));
+        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() * 100));
         super.sendContentUpdates();
     }
 

@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -84,7 +83,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawEnergyBufferBar(stack, this.x + 11, this.y + 18);
         this.drawOxygenBufferBar(stack);
-        this.drawConfigTabs(stack);
+        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

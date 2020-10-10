@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -73,7 +72,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
     @Override
     public void sendContentUpdates() {
         status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getTank().getContents(0).getAmount().floatValue() * 100.0F));
+        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().floatValue() * 100.0F));
         lastCollectAmount.set(blockEntity.collectionAmount);
         super.sendContentUpdates();
     }

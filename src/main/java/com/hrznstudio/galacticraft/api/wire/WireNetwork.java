@@ -18,123 +18,259 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.api.wire;
 
-import com.hrznstudio.galacticraft.accessor.ServerWorldAccessor;
+import com.google.common.graph.Graphs;
+import com.google.common.graph.MutableValueGraph;
+import com.google.common.graph.ValueGraphBuilder;
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.WireBlock;
+import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.CapacitorComponent;
+import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class WireNetwork {
-    private final Map<BlockPos, List<BlockPos>> adjacentVertices = new ConcurrentHashMap<>();
-    private final List<BlockPos> consumers = new ArrayList<>();
-    private final List<BlockPos> producers = new ArrayList<>();
-    private final List<BlockPos> query = new ArrayList<>();
+    @SuppressWarnings("UnstableApiUsage")
+    private final MutableValueGraph<BlockPos, WireConnectionType> graph = ValueGraphBuilder.directed().allowsSelfLoops(false).build();
+    private final Map<BlockPos, CapacitorComponent> capList = new LinkedHashMap<>();
+    private boolean invalid = false;
 
     private final ServerWorld world;
 
-    public WireNetwork(BlockPos start, ServerWorld world) {
-        this(world);
-        addVertex(new BlockPos(start));
-        ((ServerWorldAccessor) world).getNetworkManager().addWire(start, this);
-    }
-
-    public WireNetwork(ServerWorld world) {
+    public WireNetwork(BlockPos pos, ServerWorld world, WireBlockEntity be) {
         this.world = world;
+        addWire(pos.toImmutable(), be);
     }
 
-    public void addWire(BlockPos pos) {
-        addVertex(pos);
-        ((ServerWorldAccessor) world).getNetworkManager().addWire(pos, this);
-        for (Direction dir : Direction.values()) {
-            if (adjacentVertices.containsKey(new BlockPos(pos.offset(dir)))) {
-                addEdge(pos, new BlockPos(pos.offset(dir)));
+    private WireNetwork(Set<BlockPos> set, ServerWorld world) {
+        this.world = world;
+        for (BlockPos pos : set) {
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof WireBlockEntity) {
+                this.addWire(pos, (WireBlockEntity) entity);
             }
         }
+    }
+
+    public void addWire(BlockPos pos, @Nullable WireBlockEntity wireBlockEntity) {
+        pos = pos.toImmutable();
+        WireBlockEntity be = wireBlockEntity == null ? (WireBlockEntity)world.getBlockEntity(pos) : wireBlockEntity;
+        be.setNetwork(this);
+        node(pos);
+        for (Direction direction : Direction.values()) {
+            BlockPos cap = pos.offset(direction);
+            BlockState state = world.getBlockState(cap);
+            if (state.getBlock() instanceof WireBlock) {
+                WireBlockEntity entity = (WireBlockEntity)world.getBlockEntity(cap);
+                if (entity.getNetwork() != this) {
+                    this.addWire(cap, entity);
+                } else {
+                    graph.putEdgeValue(pos, cap, WireConnectionType.WIRE);
+                    graph.putEdgeValue(cap, pos, WireConnectionType.WIRE);
+                }
+                continue;
+            }
+            CapacitorComponent component = ((BlockComponentProvider) state.getBlock()).getComponent(world, cap, UniversalComponents.CAPACITOR_COMPONENT, direction.getOpposite());
+            if (component != null) {
+                if (component.canInsertEnergy()) {
+                    node(cap);
+                    if (component.canExtractEnergy()) {
+                        graph.putEdgeValue(pos, cap, WireConnectionType.ENERGY_IO);
+                    } else {
+                        graph.putEdgeValue(pos, cap, WireConnectionType.ENERGY_INPUT);
+                    }
+                    this.capList.put(cap, component);
+                } else if (component.canExtractEnergy()) {
+                    node(cap);
+                    graph.putEdgeValue(pos, cap, WireConnectionType.ENERGY_OUTPUT);
+                    this.capList.put(cap, component);
+                }
+            }
+        }
+    }
+
+    private void invalidate() {
+        Galacticraft.logger.debug("Invalidated network.");
+        this.invalid = true;
+    }
+
+    public boolean isInvalid() {
+        return invalid;
     }
 
     public void removeWire(BlockPos blockPos) {
-        ArrayList<BlockPos> skip = new ArrayList<>();
-        ArrayList<BlockPos> visited = new ArrayList<>();
+        Set<BlockPos> set = graph.adjacentNodes(blockPos);
+        Deque<BlockPos> wires = new LinkedList<>();
+        for (BlockPos pos : set) {
+            WireConnectionType type = graph.edgeValue(blockPos, pos);
+            if (type == WireConnectionType.WIRE) {
+                wires.push(pos);
+            } else if (type != null && type != WireConnectionType.NONE) {
+                graph.removeEdge(blockPos, pos);
+                if (graph.adjacentNodes(pos).size() == 0) {
+                    graph.removeNode(pos);
+                    this.capList.remove(pos);
+                }
+            } else {
+                Galacticraft.logger.debug("Node claimed to be adjacent to other node, but edge was empty or not found!");
+            }
+        }
+        this.graph.removeNode(blockPos);
+        this.capList.remove(blockPos);
+        wires.add(BlockPos.ORIGIN);
 
-        List<BlockPos> adjacent = new ArrayList<>(adjacentVertices.get(blockPos));
-        for (BlockPos pos : adjacent) {
-            if (skip.contains(pos)) continue;
-            ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
-            WireNetwork g = new WireNetwork(pos, world);
-            Queue<BlockPos> queue = new LinkedList<>(adjacentVertices.get(pos));
-            while (!queue.isEmpty()) {
-                BlockPos position = queue.poll();
-                if (visited.contains(position)) continue;
-                visited.add(position);
-                queue.addAll(adjacentVertices.get(new BlockPos(position)));
-                ((ServerWorldAccessor) world).getNetworkManager().removeWire(position);
-                g.addWire(position);
-                removeVertexNC(new BlockPos(position));
-                if (adjacent.contains(position)) {
-                    skip.add(position);
+        boolean stillConnected = true;
+        boolean changed = false;
+        if (wires.size() >= 3) { // if its connected to one wire, this wire being removed is not vital to the graph staying connected
+            while (wires.size() > 2) {
+                BlockPos pos = wires.pop();
+                BlockPos pos1 = wires.pop();
+                if (pos == BlockPos.ORIGIN) {
+                    if (changed) {
+                        pos = wires.pop();
+                        wires.addLast(BlockPos.ORIGIN);
+                        changed = false;
+                    } else {
+                        wires.addLast(pos);
+                        wires.addLast(pos1);
+                        stillConnected = false;
+                        break;
+                    }
+                } else if (pos1 == BlockPos.ORIGIN) {
+                    if (changed) {
+                        pos1 = wires.pop();
+                        wires.addLast(BlockPos.ORIGIN);
+                        changed = false;
+                    } else {
+                        wires.add(pos);
+                        wires.add(pos1);
+                        stillConnected = false;
+                        break;
+                    }
+                }
+                wires.addLast(pos1);
+
+                if (!checkConnected(pos, pos1)) {
+                    wires.addLast(pos);
+                } else {
+                    changed = true;
                 }
             }
+        }
 
+        wires.remove(BlockPos.ORIGIN);
+
+        if (!stillConnected) {
+            if (wires.size() < 2) {
+                throw new RuntimeException("marcus8448 did a bad");
+            }
+            this.invalidate();
+            while (!wires.isEmpty()) {
+                new WireNetwork(Graphs.reachableNodes(this.graph, wires.pop()), this.world);
+            }
         }
     }
 
-    private void addEdge(BlockPos value1, BlockPos value2) {
-        if (!adjacentVertices.get(value1).contains(value2)) {
-            adjacentVertices.get(value1).add(value2);
+    public boolean checkConnected(BlockPos from, BlockPos to) {
+        if (!graph.nodes().contains(from) || !graph.nodes().contains(to)) throw new RuntimeException();
+        Set<BlockPos> visitedNodes = new LinkedHashSet<>();
+        Queue<BlockPos> queuedNodes = new ArrayDeque<>();
+        visitedNodes.add(from);
+        queuedNodes.add(from);
+        // BFS traversal
+        while (!queuedNodes.isEmpty()) {
+            BlockPos currentNode = queuedNodes.remove();
+            for (BlockPos successor : graph.successors(currentNode)) {
+                if (successor.equals(to)) return true;
+                if (visitedNodes.add(successor)) {
+                    queuedNodes.add(successor);
+                }
+            }
         }
-        if (!adjacentVertices.get(value2).contains(value1)) {
-            adjacentVertices.get(value2).add(value1);
-        }
+        return false;
     }
 
-    private void addVertex(BlockPos value) {
-        adjacentVertices.putIfAbsent(value, new ArrayList<>());
-    }
-//
-//    private void removeVertex(BlockPos value) {
-//        boolean b = adjacentVertices.remove(value) != null;
-//        Iterator<Map.Entry<BlockPos, List<BlockPos>>> iterator = adjacentVertices.entrySet().iterator();
-//        while (iterator.hasNext()) {
-//            Map.Entry<BlockPos, List<BlockPos>> entry = iterator.next();
-//            BlockPos info = entry.getKey();
-//            List<BlockPos> connections = entry.getValue();
-//            connections.remove(value);
-//            if (adjacentVertices.get(info) != null) {
-//                if (adjacentVertices.size() == 0) {
-//                    NetworkManager.getManagerForDimension(dimId).removeWire(info);
-//                    new WireNetwork(info, dimId);
-//                    iterator.remove();
-//                    removeVertex(info);
-//                }
-//            }
-//        }
-//    }
 
-    private boolean removeVertexNC(BlockPos value) {
-        boolean b = adjacentVertices.remove(value) != null;
-        for (List<BlockPos> connections : adjacentVertices.values()) {
-            connections.remove(value);
+
+    @SuppressWarnings("UnstableApiUsage")
+    private void node(BlockPos value) {
+        BlockPos immutable = value.toImmutable();
+        graph.addNode(immutable);
+    }
+
+    public void updateConnections(BlockPos neighbor, BlockPos pos) {
+        BlockState blockState = world.getBlockState(pos);
+
+        if (blockState.isAir() && this.graph.nodes().contains(pos)) {
+            Set<BlockPos> conn = this.graph.adjacentNodes(pos);
+            boolean b = false;
+            for (BlockPos pos1 : conn) {
+                if (this.graph.edgeValue(pos, pos1) == WireConnectionType.WIRE) {
+                    b = true;
+                    break;
+                }
+            }
+            if (b) {
+                removeWire(pos);
+            } else {
+                this.graph.removeEdge(neighbor, pos);
+                this.graph.removeEdge(pos, neighbor);
+            }
         }
-        return b;
+
+        if (blockState.getBlock() instanceof WireBlock) {
+            if (world.getBlockEntity(pos) instanceof WireBlockEntity) {
+                if (((WireBlockEntity) world.getBlockEntity(pos)).getNetwork() != this) throw new RuntimeException();
+            }
+        } else if (!blockState.isAir()) {
+            this.graph.removeNode(pos);
+            this.capList.remove(pos);
+            if (((BlockComponentProvider) blockState.getBlock()).hasComponent(world, pos, UniversalComponents.CAPACITOR_COMPONENT, null)) {
+                for (Direction direction : Direction.values()) {
+                    if (this.graph.nodes().contains(pos.offset(direction))) {
+                        CapacitorComponent component = ((BlockComponentProvider) blockState.getBlock()).getComponent(world, pos, UniversalComponents.CAPACITOR_COMPONENT, direction);
+                        if (component != null) {
+                            if (component.canExtractEnergy() || component.canInsertEnergy()) {
+                                this.graph.addNode(pos);
+                            }
+                            if (component.canExtractEnergy() && component.canInsertEnergy()) {
+                                this.graph.putEdgeValue(pos.offset(direction), pos, WireConnectionType.ENERGY_IO);
+                                this.capList.put(pos, component);
+                            } else if (component.canExtractEnergy()) {
+                                this.graph.putEdgeValue(pos.offset(direction), pos, WireConnectionType.ENERGY_OUTPUT);
+                                this.capList.put(pos, component);
+                            } else if (component.canInsertEnergy()) {
+                                this.graph.putEdgeValue(pos.offset(direction), pos, WireConnectionType.ENERGY_INPUT);
+                                this.capList.put(pos, component);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public String toString() {
-        return "WireGraph{" +
-                "adjacentVertices=" + adjacentVertices +
-                ", consumers=" + consumers +
-                ", producers=" + producers +
-                ", dimId=" + world +
+        return "WireNetwork{" +
+                "graph=" + graph +
+                ", invalid=" + invalid +
                 '}';
     }
 
@@ -142,76 +278,39 @@ public class WireNetwork {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        WireNetwork wireNetwork = (WireNetwork) o;
-        return Objects.equals(adjacentVertices, wireNetwork.adjacentVertices);
+        WireNetwork network = (WireNetwork) o;
+        return isInvalid() == network.isInvalid() &&
+                Objects.equals(graph, network.graph) &&
+                Objects.equals(world, network.world);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(adjacentVertices);
+        return Objects.hash(graph, isInvalid(), world);
     }
 
-    public WireNetwork merge(WireNetwork network) {
-        if (this.adjacentVertices.size() < network.adjacentVertices.size()) {
-            for (BlockPos pos : this.adjacentVertices.keySet()) {
-                ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
-                network.addWire(pos);
+    public int spreadEnergy(BlockPos pos, int amount, ActionType actionType) {
+        if (!graph.nodes().contains(pos)) throw new RuntimeException();
+        Set<BlockPos> visitedNodes = new LinkedHashSet<>();
+        Queue<BlockPos> queuedNodes = new ArrayDeque<>();
+        visitedNodes.add(pos);
+        queuedNodes.add(pos);
+        // BFS traversal
+        while (!queuedNodes.isEmpty()) {
+            BlockPos currentNode = queuedNodes.remove();
+            for (BlockPos successor : graph.successors(currentNode)) {
+                if (visitedNodes.add(successor)) {
+                    CapacitorComponent component = this.capList.get(successor);
+                    if (component != null && component.canInsertEnergy()) {
+                        amount = component.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, actionType);
+                        if (amount == 0) {
+                            return 0;
+                        }
+                    }
+                    queuedNodes.add(successor);
+                }
             }
-            network.producers.addAll(this.producers);
-            network.consumers.addAll(this.consumers);
-            network.query.addAll(this.query);
-            this.adjacentVertices.clear();
-            this.producers.clear();
-            this.consumers.clear();
-            this.query.clear();
-            return network;
-        } else {
-            for (BlockPos pos : network.adjacentVertices.keySet()) {
-                ((ServerWorldAccessor) world).getNetworkManager().removeWire(pos);
-                this.addWire(pos);
-            }
-            this.producers.addAll(network.producers);
-            this.consumers.addAll(network.consumers);
-            this.query.addAll(network.query);
-            network.adjacentVertices.clear();
-            network.producers.clear();
-            network.consumers.clear();
-            network.query.clear();
-            return this;
         }
-    }
-
-    public void addConsumer(BlockPos pos) {
-        consumers.add(pos);
-    }
-
-    public void addProducer(BlockPos pos) {
-        producers.add(pos);
-    }
-
-    public List<BlockPos> getQuery() {
-        return new ArrayList<>(query);
-    }
-
-    public void clearQuery() {
-        query.clear();
-    }
-
-    public boolean removeConsumer(BlockPos pos) {
-        query.add(pos);
-        return consumers.remove(pos);
-    }
-
-    public boolean removeProducer(BlockPos pos) {
-        query.add(pos);
-        return producers.remove(pos);
-    }
-
-    public List<BlockPos> getConsumers() {
-        return new ArrayList<>(consumers);
-    }
-
-    public List<BlockPos> getProducers() {
-        return new ArrayList<>(producers);
+        return amount;
     }
 }

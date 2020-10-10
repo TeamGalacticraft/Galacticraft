@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft;
@@ -41,14 +40,13 @@ public class Constants {
         public static final String MOON_TURF = "moon_turf";
         public static final String MOON_SURFACE_ROCK = "moon_surface_rock";
         public static final String MOON_ROCK = "moon_rock";
+        public static final String COBBLED_MOON_ROCK = "cobbled_moon_rock";
         public static final String MOON_BASALT = "moon_basalt";
         public static final String MOON_DIRT = "moon_dirt";
-        public static final String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
         public static final String MARS_SURFACE_ROCK = "mars_surface_rock";
         public static final String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
         public static final String MARS_STONE = "mars_stone";
         public static final String MARS_COBBLESTONE = "mars_cobblestone";
-        public static final String MARS_DUNGEON_BRICK = "mars_dungeon_brick";
         public static final String ASTEROID_ROCK = "asteroid_rock";
         public static final String ASTEROID_ROCK_1 = "asteroid_rock_block_1";
         public static final String ASTEROID_ROCK_2 = "asteroid_rock_block_2";
@@ -76,17 +74,24 @@ public class Constants {
 
         // Solid Blocks
         public static final String SILICON_BLOCK = "silicon_block";
-        public static final String SOLID_METEORIC_IRON_BLOCK = "solid_meteoric_iron";
+        public static final String METEORIC_IRON_BLOCK = "meteoric_iron_block";
         public static final String DESH_BLOCK = "desh_block";
         public static final String TITANIUM_BLOCK = "titanium_block";
         public static final String LEAD_BLOCK = "lead_block";
         public static final String LUNAR_SAPPHIRE_BLOCK = "lunar_sapphire_block";
 
         // Decorative BLocks
+        public static final String ALUMINUM_DECORATION = "aluminum_decoration";
+        public static final String BRONZE_DECORATION = "bronze_decoration";
+        public static final String COPPER_DECORATION = "copper_decoration";
+        public static final String IRON_DECORATION = "iron_decoration";
+        public static final String METEORIC_IRON_DECORATION = "meteoric_iron_decoration";
+        public static final String STEEL_DECORATION = "steel_decoration";
         public static final String TIN_DECORATION = "tin_decoration";
-        public static final String DETAILED_TIN_DECORATION = "detailed_tin_decoration";
+        public static final String TITANIUM_DECORATION = "titanium_decoration";
         public static final String DARK_DECORATION = "dark_decoration";
         public static final String GRATING = "grating";
+        public static final String TIN_LADDER = "tin_ladder";
         public static final String SQUARE_LIGHT_PANEL = "square_light_panel";
         public static final String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
         public static final String LINEAR_LIGHT_PANEL = "linear_light_panel";
@@ -98,31 +103,8 @@ public class Constants {
         public static final String WALKWAY = "walkway";
         public static final String WIRE_WALKWAY = "wire_walkway";
         public static final String PIPE_WALKWAY = "pipe_walkway";
-        public static final String TIN_DECORATION_SLAB = "tin_decoration_slab";
-        public static final String DETAILED_TIN_DECORATION_SLAB = "detailed_tin_decoration_slab";
-        public static final String DARK_DECORATION_SLAB = "dark_decoration_slab";
-        public static final String MARS_COBBLESTONE_SLAB = "mars_cobblestone_slab";
-        public static final String MARS_DUNGEON_BRICK_SLAB = "mars_dungeon_brick_slab";
-        public static final String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
-        public static final String MOON_ROCK_SLAB = "moon_rock_slab";
-        public static final String MOON_BASALT_SLAB = "moon_basalt_slab";
-        public static final String MOON_ROCK_STAIRS = "moon_rock_stairs";
-        public static final String MOON_BASALT_STAIRS = "moon_basalt_stairs";
-        public static final String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
-        public static final String TIN_DECORATION_STAIRS = "tin_decoration_stairs";
-        public static final String DETAILED_TIN_DECORATION_STAIRS = "detailed_tin_decoration_stairs";
-        public static final String MARS_DUNGEON_BRICK_STAIRS = "mars_dungeon_brick_stairs";
-        public static final String MARS_COBBLESTONE_STAIRS = "mars_cobblestone_stairs";
-        public static final String TIN_DECORATION_WALL = "tin_decoration_wall";
-        public static final String DETAILED_TIN_DECORATION_WALL = "detailed_tin_decoration_wall";
-        public static final String MOON_ROCK_WALL = "moon_rock_wall";
-        public static final String MOON_BASALT_WALL = "moon_basalt_wall";
         public static final String MOON_CHEESE_LEAVES = "moon_cheese_leaves";
         public static final String MOON_CHEESE_LOG = "moon_cheese_log";
-
-        public static final String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
-        public static final String MARS_COBBLESTONE_WALL = "mars_cobblestone_wall";
-        public static final String MARS_DUNGEON_BRICK_WALL = "mars_dungeon_brick_wall";
 
         //  Environment
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
@@ -163,6 +145,7 @@ public class Constants {
         public static final String OXYGEN_DETECTOR = "oxygen_detector";
         public static final String OXYGEN_SEALER = "oxygen_sealer";
         public static final String FLUID_PIPE = "fluid_pipe";
+        public static final String GLASS_FLUID_PIPE = "glass_fluid_pipe";
         public static final String REFINERY = "refinery";
         public static final String TERRAFORMER = "terraformer";
         public static final String DECONSTRUCTOR = "deconstructor";
@@ -225,12 +208,13 @@ public class Constants {
         public static final String BEAM_RECEIVER = "beam_receiver";
         public static final String SOLAR_ARRAY_MODULE = "solar_array_module";
         public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
-        public static final String MOON_BASALT_BRICKS = "moon_basalt_bricks";
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
+        public static final String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
         public static final String EARTH_BLOCK = "earth_planet";
         public static final String MOON_BLOCK = "moon_planet";
         public static final String SUN_BLOCK = "sun_planet";
         public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
+        public static final String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
     }
 
     // Fluids
@@ -429,12 +413,14 @@ public class Constants {
         public static final String MACHINES = "config.galacticraft-rewoven.energy.machines";
         public static final String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.coal_generator_energy_production_rate";
         public static final String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.solar_panel_energy_production_rate";
-        public static final String CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
-        public static final String ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
-        public static final String OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
-        public static final String REFINERY_ENERGY_PRODUCTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.circuit_fabricator_energy_consumption_rate";
+        public static final String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
+        public static final String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
+        public static final String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
         public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
         public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
+        public static final String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_compressor_energy_consumption_rate";
+        public static final String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_decompressor_energy_consumption_rate";
         public static final String ROCKET_ASSEMBLER_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.rocket_assembler_energy_consumption_rate";
 
         public static final String MISC = "config.galacticraft-rewoven.misc";
@@ -469,6 +455,8 @@ public class Constants {
         public static final String RESEARCH_PANELS = "gui/research_panels";
         public static final String FUEL_LOADER_SCREEN = "gui/fuel_loader_screen";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
+        public static final String OXYGEN_COMPRESSOR_SCREEN = "gui/oxygen_compressor_screen";
+        public static final String OXYGEN_STORAGE_MODULE_SCREEN = "gui/oxygen_storage_module_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -506,6 +494,10 @@ public class Constants {
         public static final int OXYGEN_DARK_Y = 40;
         public static final int OXYGEN_LIGHT_X = 12;
         public static final int OXYGEN_LIGHT_Y = 40;
+        public static final int LARGE_TANK_OVERLAY_X = 54; //8 bucket tank
+        public static final int LARGE_TANK_OVERLAY_Y = 80;
+        public static final int LARGE_TANK_OVERLAY_WIDTH = 18;
+        public static final int LARGE_TANK_OVERLAY_HEIGHT = 49;
     }
 
     public static class ScreenHandler {
@@ -523,6 +515,9 @@ public class Constants {
         public static final String ROCKET_DESIGNER_SCREEN_HANDLER = "rocket_designer_screen_handler";
         public static final String ROCKET_ASSEMBLER_SCREEN_HANDLER = "rocket_assembler_screen_handler";
         public static final String FUEL_LOADER_SCREEN_HANDLER = "fuel_loader_screen_handler";
+        public static final String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
+        public static final String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
+        public static final String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
     }
 
     public static class Biomes {

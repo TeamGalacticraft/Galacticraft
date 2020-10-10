@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.render.block.entity;
@@ -36,5 +35,6 @@ public class GalacticraftBlockEntityRenderers {
     public static void register() {
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE, BasicSolarPanelBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.ADVANCED_SOLAR_PANEL_TYPE, AdvancedSolarPanelBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(GalacticraftBlockEntities.GLASS_FLUID_PIPE_TYPE, FluidPipeBlockEntityRenderer::new);
     }
 }

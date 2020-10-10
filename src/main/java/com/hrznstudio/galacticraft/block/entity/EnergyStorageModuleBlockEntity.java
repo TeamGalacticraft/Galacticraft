@@ -18,42 +18,41 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableElectricMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
+import com.hrznstudio.galacticraft.api.block.SideOption;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import net.minecraft.block.BlockState;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
-    private int prevEnergy = 0;
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
     }
 
     @Override
-    protected boolean canExtractEnergy() {
+    public boolean canExtractEnergy() {
         return true;
     }
 
     @Override
-    protected boolean canInsertEnergy() {
+    public boolean canInsertEnergy() {
         return true;
     }
 
@@ -63,8 +62,18 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
     }
 
     @Override
-    protected int getInventorySize() {
+    public int getInventorySize() {
         return 2;
+    }
+
+    @Override
+    public int getFluidTankSize() {
+        return 0;
+    }
+
+    @Override
+    public List<SideOption> validSideOptions() {
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.POWER_OUTPUT);
     }
 
     @Override
@@ -85,22 +94,35 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableElectricMachineB
         attemptChargeFromStack(DRAIN_BATTERY_SLOT);
         attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
         trySpreadEnergy();
-
-        if (prevEnergy != getCapacitor().getCurrentEnergy()) {
-            int level = (int) (((double) getCapacitor().getCurrentEnergy() / (double) getMaxEnergy()) * 8.0D);
-            world.setBlockState(pos, world.getBlockState(pos).with(EnergyStorageModuleBlock.ENERGY_LEVEL, level), 0);
-            prevEnergy = getCapacitor().getCurrentEnergy();
-        }
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        prevEnergy = getCapacitor().getCurrentEnergy();
     }
 
     @Override
     public int getEnergyUsagePerTick() {
         return 0;
+    }
+
+    @Override
+    public boolean canHopperExtractItems(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean canHopperInsertItems(int slot) {
+        return true;
+    }
+
+    @Override
+    public boolean canExtractFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean canInsertFluid(int tank) {
+        return false;
+    }
+
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return false;
     }
 }

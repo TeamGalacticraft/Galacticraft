@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -89,6 +88,20 @@ public class GalacticraftScreenHandlerTypes {
                     OxygenCollectorScreenHandler::new
             );
 
+    public static final Identifier OXYGEN_COMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_COMPRESSOR_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenCompressorScreenHandler> OXYGEN_COMPRESSOR_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_COMPRESSOR_HANDLER_ID,
+                    OxygenCompressorScreenHandler::new
+            );
+
+    public static final Identifier OXYGEN_DECOMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenDecompressorScreenHandler> OXYGEN_DECOMPRESSOR_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_DECOMPRESSOR_HANDLER_ID,
+                    OxygenDecompressorScreenHandler::new
+            );
+
     public static final Identifier PLAYER_INVENTORY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
     public static final ScreenHandlerType<PlayerInventoryGCScreenHandler> PLAYER_INV_GC_HANDLER =
             ScreenHandlerRegistry.registerSimple(
@@ -102,11 +115,19 @@ public class GalacticraftScreenHandlerTypes {
                     REFINERY_HANDLER_ID,
                     RefineryScreenHandler::new
             );
+
     public static final Identifier BUBBLE_DISTRIBUTOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.BUBBLE_DISTRIBUTOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<BubbleDistributorScreenHandler> BUBBLE_DISTRIBUTOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(
                     BUBBLE_DISTRIBUTOR_HANDLER_ID,
                     BubbleDistributorScreenHandler::new
+            );
+
+    public static final Identifier OXYGEN_STORAGE_MODULE_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_STORAGE_MODULE_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenStorageModuleScreenHandler> OXYGEN_STORAGE_MODULE_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_STORAGE_MODULE_HANDLER_ID,
+                    OxygenStorageModuleScreenHandler::new
             );
 
     public static final Identifier ROCKET_DESIGNER_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.ROCKET_DESIGNER_SCREEN_HANDLER);

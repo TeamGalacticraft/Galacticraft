@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -41,9 +40,7 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> {
-
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
-
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.REFINERY_SCREEN));
 
     public RefineryScreen(RefineryScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
@@ -54,14 +51,13 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
     protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
-
-        int leftPos = this.x;
-        int topPos = this.y;
-
-        this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight + 26);
+        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.client.getTextureManager().bindTexture(OVERLAY);
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 35);
+        this.drawFluidTankBufferBar(stack, 0, this.x + 122, this.y + 27);
+        this.drawFluidTankBufferBar(stack, 1, this.x + 152, this.y + 27);
 
-        this.drawConfigTabs(stack);
+        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

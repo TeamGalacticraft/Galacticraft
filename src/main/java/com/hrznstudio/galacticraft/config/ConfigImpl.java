@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.config;
@@ -55,6 +54,10 @@ public class ConfigImpl implements Config {
     private int energyStorageModuleStorageSize = 500_000;
     @Expose
     private int machineEnergyStorageSize = 30_000;
+    @Expose
+    private int oxygenCompressorEnergyConsumptionRate = 15;
+    @Expose
+    private int oxygenDecompressorEnergyConsumptionRate = 15;
     @Expose
     private int rocketAssemblerProcessTime = 30_000;
 
@@ -176,6 +179,26 @@ public class ConfigImpl implements Config {
     @Override
     public void setMachineEnergyStorageSize(int amount) {
         this.machineEnergyStorageSize = amount;
+    }
+
+    @Override
+    public int oxygenCompressorEnergyConsumptionRate() {
+        return oxygenCompressorEnergyConsumptionRate;
+    }
+
+    @Override
+    public void setOxygenCompressorEnergyConsumptionRate(int amount) {
+        this.oxygenCompressorEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public int oxygenDecompressorEnergyConsumptionRate() {
+        return oxygenDecompressorEnergyConsumptionRate;
+    }
+
+    @Override
+    public void setOxygenDecompressorEnergyConsumptionRate(int amount) {
+        this.oxygenDecompressorEnergyConsumptionRate = amount;
     }
 
     @Override
