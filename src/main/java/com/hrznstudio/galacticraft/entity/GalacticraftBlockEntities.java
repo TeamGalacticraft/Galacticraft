@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.entity;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.FluidPipe;
-import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.*;
@@ -50,14 +49,7 @@ public class GalacticraftBlockEntities {
     public static final BlockEntityType<EnergyStorageModuleBlockEntity> ENERGY_STORAGE_MODULE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ENERGY_STORAGE_MODULE), BlockEntityType.Builder.create(EnergyStorageModuleBlockEntity::new, GalacticraftBlocks.ENERGY_STORAGE_MODULE).build(null));
     public static final BlockEntityType<RefineryBlockEntity> REFINERY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.REFINERY), BlockEntityType.Builder.create(RefineryBlockEntity::new, GalacticraftBlocks.REFINERY).build(null));
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_COLLECTOR), BlockEntityType.Builder.create(OxygenCollectorBlockEntity::new, GalacticraftBlocks.OXYGEN_COLLECTOR).build(null));
-    public static final BlockEntityType<RocketDesignerBlockEntity> ROCKET_DESIGNER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_DESIGNER), BlockEntityType.Builder.create(RocketDesignerBlockEntity::new, GalacticraftBlocks.ROCKET_DESIGNER).build(null));
-    public static final BlockEntityType<RocketAssemblerBlockEntity> ROCKET_ASSEMBLER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_ASSEMBLER), BlockEntityType.Builder.create(RocketAssemblerBlockEntity::new, GalacticraftBlocks.ROCKET_ASSEMBLER).build(null));
-    public static final BlockEntityType<WireBlockEntity> WIRE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE), BlockEntityType.Builder.create(WireBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
-        @Override
-        public boolean equals(Object obj) {
-            return obj instanceof WireBlock; //bad stuff
-        }
-    }).build(null));
+    public static final BlockEntityType<WireBlockEntity> WIRE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ALUMINUM_WIRE), BlockEntityType.Builder.create(WireBlockEntity::new, GalacticraftBlocks.ALUMINUM_WIRE, GalacticraftBlocks.SEALABLE_ALUMINUM_WIRE).build(null));
     public static final BlockEntityType<FluidPipeBlockEntity> FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, new Block(FabricBlockSettings.of(Material.AIR)) {
         @Override
         public boolean equals(Object obj) {
@@ -66,6 +58,8 @@ public class GalacticraftBlockEntities {
     }).build(null));
     public static final BlockEntityType<FluidPipeBlockEntity> GLASS_FLUID_PIPE_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.GLASS_FLUID_PIPE), BlockEntityType.Builder.create(FluidPipeBlockEntity::new, GalacticraftBlocks.GLASS_FLUID_PIPE).build(null));
     public static final BlockEntityType<AdvancedSolarPanelBlockEntity> ADVANCED_SOLAR_PANEL_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ADVANCED_SOLAR_PANEL), BlockEntityType.Builder.create(AdvancedSolarPanelBlockEntity::new, GalacticraftBlocks.ADVANCED_SOLAR_PANEL).build(null));
+    public static final BlockEntityType<RocketDesignerBlockEntity> ROCKET_DESIGNER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_DESIGNER), BlockEntityType.Builder.create(RocketDesignerBlockEntity::new, GalacticraftBlocks.ROCKET_DESIGNER).build(null));
+    public static final BlockEntityType<RocketAssemblerBlockEntity> ROCKET_ASSEMBLER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_ASSEMBLER), BlockEntityType.Builder.create(RocketAssemblerBlockEntity::new, GalacticraftBlocks.ROCKET_ASSEMBLER).build(null));
     public static final BlockEntityType<RocketLaunchPadBlockEntity> LAUNCH_PAD_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.ROCKET_LAUNCH_PAD), BlockEntityType.Builder.create(RocketLaunchPadBlockEntity::new, GalacticraftBlocks.ROCKET_LAUNCH_PAD).build(null));
     public static final BlockEntityType<FuelLoaderBlockEntity> FUEL_LOADER_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.FUEL_LOADER), BlockEntityType.Builder.create(FuelLoaderBlockEntity::new, GalacticraftBlocks.FUEL_LOADER).build(null));
     public static final BlockEntityType<BubbleDistributorBlockEntity> BUBBLE_DISTRIBUTOR_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR), BlockEntityType.Builder.create(BubbleDistributorBlockEntity::new, GalacticraftBlocks.BUBBLE_DISTRIBUTOR).build(null));
