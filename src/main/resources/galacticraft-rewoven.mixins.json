@@ -9,7 +9,6 @@
     "BuiltinBiomesAccessor",
     "ChunkGeneratorAccessor",
     "EntityMixin",
-    "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
     "LootTablesAccessor",

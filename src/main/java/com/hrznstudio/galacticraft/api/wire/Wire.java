@@ -18,21 +18,36 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.api.wire;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.FireBlock;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Invoker;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(FireBlock.class)
-public interface FireBlockAccessor {
-    @Invoker
-    void callRegisterFlammableBlock(Block block, int burnChance, int spreadChance);
+public interface Wire {
+    /**
+     * Sets the {@link WireNetwork} associated with this wie
+     * @param network The network to associate with
+     */
+    void setNetwork(WireNetwork network);
+
+    /**
+     * Returns the associated {@link WireNetwork}
+     * @return The associated {@link WireNetwork}
+     */
+    @NotNull WireNetwork getNetwork();
+
+    /**
+     * Returns whether or not this wire is able to connect to another block on the specified face/direction
+     * @param direction the direction offset to the block to check adjacency to
+     * @return Whether or not this wire is able to connect to another block on the specified face/direction
+     */
+    @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity);
+
+    default boolean canConnect(Direction direction) {
+        return true;
+    }
 }

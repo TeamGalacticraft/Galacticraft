@@ -18,18 +18,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
 import com.google.common.collect.ImmutableSet;
+import com.hrznstudio.galacticraft.api.wire.Wire;
+import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.CapacitorComponent;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -44,6 +46,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,20 +55,20 @@ import java.util.Set;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class WireBlockEntity extends BlockEntity implements BlockEntityClientSerializable, BlockComponentProvider {
+public class WireBlockEntity extends BlockEntity implements BlockEntityClientSerializable, BlockComponentProvider, Wire {
     private WireNetwork network;
     private static final int MAX_TRANSFER_RATE = 120;
 
-    private final CapacitorComponent capacitor = new SimpleCapacitorComponent(MAX_TRANSFER_RATE * 2, GalacticraftEnergy.GALACTICRAFT_JOULES) {
+    private final CapacitorComponent capacitor = new SimpleCapacitorComponent(MAX_TRANSFER_RATE, GalacticraftEnergy.GALACTICRAFT_JOULES) {
         @Override
         public int getCurrentEnergy() {
-            return MAX_TRANSFER_RATE;
+            return 0;
         }
 
         @Override
         public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
-            if (getNetwork() != null && !getNetwork().isInvalid()) {
-                return getNetwork().spreadEnergy(pos, amount, actionType);
+            if (type.isCompatibleWith(getPreferredType())) {
+                return getNetwork().insertEnergy(pos, null, type, amount, actionType);
             } else {
                 return amount;
             }
@@ -123,15 +126,17 @@ public class WireBlockEntity extends BlockEntity implements BlockEntityClientSer
             if (this.network == null) {
                 for (Direction direction : Direction.values()) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof WireBlockEntity) {
-                        if (((WireBlockEntity) entity).network != null && !((WireBlockEntity) entity).network.isInvalid()) {
-                            ((WireBlockEntity) entity).network.addWire(pos, this);
+                    if (entity instanceof Wire) {
+                        //noinspection ConstantConditions
+                        if (((Wire) entity).getNetwork() != null) {
+                            ((Wire) entity).getNetwork().addWire(pos, this);
                             break;
                         }
                     }
                 }
                 if (this.network == null) {
-                    this.network = new WireNetwork(pos, (ServerWorld)world, this);
+                    this.network = WireNetwork.create((ServerWorld)world);
+                    this.network.addWire(pos, this);
                 }
             }
         }
@@ -147,12 +152,31 @@ public class WireBlockEntity extends BlockEntity implements BlockEntityClientSer
         return this.toTag(compoundTag);
     }
 
+    @Override
     public void setNetwork(WireNetwork network) {
         this.network = network;
     }
 
-    public WireNetwork getNetwork() {
+    @Override
+    public @NotNull WireNetwork getNetwork() {
         return network;
+    }
+
+    @Override
+    public @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity) {
+        if (entity == null || !canConnect(direction)) return WireConnectionType.NONE;
+        if (entity instanceof Wire && ((Wire) entity).canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
+        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, entity.getPos(), direction.getOpposite());
+        if (component != null) {
+            if (component.canInsertEnergy() && component.canExtractEnergy()) {
+                return WireConnectionType.ENERGY_IO;
+            } else if (component.canInsertEnergy()) {
+                return WireConnectionType.ENERGY_INPUT;
+            } else if (component.canExtractEnergy()) {
+                return WireConnectionType.ENERGY_OUTPUT;
+            }
+        }
+        return WireConnectionType.NONE;
     }
 
     @Override

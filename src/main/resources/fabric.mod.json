@@ -142,6 +142,7 @@
     "fabric-api-base": "*",
     "fabric-blockrenderlayer-v1": "*",
     "fabric-command-api-v1": "*",
+    "fabric-content-registries-v0": "*",
     "fabric-item-groups-v0": "*",
     "fabric-networking-blockentity-v0": "*",
     "fabric-networking-v0": "*",
