@@ -20,6 +20,9 @@
  * SOFTWARE.
  */
 
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+
 plugins {
     id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'maven-publish'
@@ -138,6 +141,13 @@ processResources {
 
     from(sourceSets.main.resources.srcDirs) {
         exclude "fabric.mod.json"
+    }
+
+    // Minify json resources - https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
+    doLast {
+        fileTree(dir: outputs.files.asPath, includes: ["**/*.json", "**/*.mcmeta"]).each {
+            File file -> file.text = JsonOutput.toJson(new JsonSlurper().parse(file))
+        }
     }
 }
 
