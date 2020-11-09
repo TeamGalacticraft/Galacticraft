@@ -35,6 +35,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.options.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -63,7 +65,7 @@ public class GalacticraftClientPackets {
             packetContext.getTaskQueue().execute(() -> {
                 int id = buf.readVarInt();
                 UUID uuid = buf.readUuid();
-                Entity entity = Registry.ENTITY_TYPE.get(buf.readVarInt()).create(MinecraftClient.getInstance().world);
+                Entity entity = Registry.ENTITY_TYPE.get(buf.readVarInt()).create(packetContext.getPlayer().world);
                 entity.setEntityId(id);
                 entity.setUuid(uuid);
                 entity.setPos(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -75,7 +77,10 @@ public class GalacticraftClientPackets {
         });
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "planet_menu_open"), ((context, buf) -> {
-            MinecraftClient.getInstance().openScreen(new PlanetSelectScreen(buf.readInt()));
+            int tier = buf.readInt();
+            context.getTaskQueue().execute(() -> {
+                MinecraftClient.getInstance().openScreen(new PlanetSelectScreen(tier));
+            });
         }));
 
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "research_scroll"), ((context, buf) -> {

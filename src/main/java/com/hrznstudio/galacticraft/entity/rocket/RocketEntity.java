@@ -300,13 +300,9 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public void updatePassengerPosition(Entity entity_1) {
-        if (this.hasPassenger(entity_1)) {
-            entity_1.updatePosition(this.getX(), this.getY() + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5, this.getZ());
-            entity_1.prevX = this.prevX;
-            entity_1.prevY = this.prevY + this.getMountedHeightOffset() + entity_1.getHeightOffset() - 2.5;
-            entity_1.prevZ = this.prevZ;
-            entity_1.setVelocity(Vec3d.ZERO);
+    public void updatePassengerPosition(Entity passenger) {
+        if (this.hasPassenger(passenger)) {
+            passenger.updatePosition(this.getX(), this.getY() + this.getMountedHeightOffset() + passenger.getHeightOffset() - 2.5, this.getZ());
         }
     }
 

@@ -192,10 +192,6 @@ public class GalacticraftBlocks {
     public static final Block ROCKET_BOOSTER_TIER_2_RENDER_BLOCK = registerBlockWithoutItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_2);
     public static final Block OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.AIR)), Constants.Blocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK);
     public static final Block SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constants.Blocks.GENERIC_MULTIBLOCK_PART);
-    public static final Block SUN_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.SUN_BLOCK);
-    public static final Block MOON_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.MOON_BLOCK);
-    public static final Block EARTH_BLOCK = registerBlockWithoutItem(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F, 6.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.EARTH_BLOCK);
-
     // MACHINES
     public static final Block CIRCUIT_FABRICATOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), CircuitFabricatorScreenHandler::new, blockView -> new CircuitFabricatorBlockEntity(),
             (itemStack, blockView, tooltipContext) -> new TranslatableText("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY))), Constants.Blocks.CIRCUIT_FABRICATOR);

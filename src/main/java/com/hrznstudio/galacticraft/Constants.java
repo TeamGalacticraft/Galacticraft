@@ -210,9 +210,6 @@ public class Constants {
         public static final String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
         public static final String MOON_BASALT_BRICK = "moon_basalt_brick";
         public static final String CRACKED_MOON_BASALT_BRICK = "cracked_moon_basalt_brick";
-        public static final String EARTH_BLOCK = "earth_planet";
-        public static final String MOON_BLOCK = "moon_planet";
-        public static final String SUN_BLOCK = "sun_planet";
         public static final String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
         public static final String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
     }
