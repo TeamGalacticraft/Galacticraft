@@ -12,5 +12,6 @@ accessible      method   net/minecraft/block/LadderBlock                        
 accessible      method   net/minecraft/block/StairsBlock                                      <init>            (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible      method   net/minecraft/block/FluidBlock                                       <init>            (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible      field    net/minecraft/item/BucketItem                                        fluid             Lnet/minecraft/fluid/Fluid;
+accessible      field    net/minecraft/client/options/GameOptions                             field_26677       Lnet/minecraft/client/options/Perspective;
 
 accessible      method   net/minecraft/advancement/criterion/AbstractCriterionConditions      getPlayerPredicate   ()Lnet/minecraft/predicate/entity/EntityPredicate$Extended;

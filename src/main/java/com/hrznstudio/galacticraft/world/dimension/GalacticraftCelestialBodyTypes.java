@@ -42,9 +42,8 @@ public class GalacticraftCelestialBodyTypes {
                     new CelestialBodyDisplayInfo.Builder()
                             .texture(new Identifier("galacticraft-rewoven", "gui/celestialbodies/moon"))
                             .w(8).h(8)
-                            .radX(5)
-                            .radY(5)
-                            .scale(0.27F)
+                            .distance(5f)
+                            .scale(0.5F)
                             .time(648000) // 27 mc days in ticks
                             .build()
             )

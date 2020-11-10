@@ -31,7 +31,6 @@
     "client.ClientPlayNetworkHandlerMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
-    "client.Matrix4fAccessor",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.WorldRendererMixin"
