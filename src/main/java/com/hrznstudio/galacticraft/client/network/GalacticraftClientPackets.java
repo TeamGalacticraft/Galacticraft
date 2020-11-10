@@ -29,14 +29,11 @@ import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.options.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -44,15 +41,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import java.util.UUID;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.EntityType;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
-import java.util.UUID;
+import net.minecraft.entity.EntityType;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -79,7 +69,7 @@ public class GalacticraftClientPackets {
         ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "planet_menu_open"), ((context, buf) -> {
             int tier = buf.readInt();
             context.getTaskQueue().execute(() -> {
-                MinecraftClient.getInstance().openScreen(new PlanetSelectScreen(tier));
+                MinecraftClient.getInstance().openScreen(new PlanetSelectScreen(false, tier, true));
             });
         }));
 
