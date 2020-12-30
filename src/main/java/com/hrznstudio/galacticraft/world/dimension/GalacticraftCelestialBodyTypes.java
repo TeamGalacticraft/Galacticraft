@@ -41,7 +41,7 @@ public class GalacticraftCelestialBodyTypes {
             .display(
                     new CelestialBodyDisplayInfo.Builder()
                             .texture(new Identifier("galacticraft-rewoven", "planet_icons"))
-                            .distance(5d)
+                            .distance(5)
                             .time(46656000d) // 27 mc days in ticks
                             .build()
             )

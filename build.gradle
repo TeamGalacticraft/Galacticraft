@@ -45,24 +45,59 @@ minecraft {
     accessWidener "src/main/resources/galacticraft_rewoven.accesswidener"
 }
 
-allprojects {
-    repositories {
-        mavenLocal()
-        maven { url "https://www.curseforge.com/api/maven" }
-        maven { url "https://server.bbkr.space/artifactory/libs-release" }
-        maven { url "https://maven.modmuss50.me" }
-        maven { url "https://dl.bintray.com/ladysnake/libs" }
-        maven { url "https://maven.abusedmaster.xyz/" }
-        maven { url "https://cdn.hrzn.studio/maven" }
+repositories {
+    mavenLocal()
+    jcenter() {
+        content {
+            includeGroup "me.shedaniel.cloth"
+        }
+    }
+    maven {
+        url "https://server.bbkr.space/artifactory/libs-release"
+        content {
+            includeGroup "io.github.cottonmc"
+            includeGroup "io.github.fablabsmc"
+        }
+    }
+    maven {
+        url "https://maven.modmuss50.me"
+        content {
+            includeGroup "io.github.prospector"
+        }
+    }
+    maven {
+        url "https://dl.bintray.com/ladysnake/libs"
+        content {
+            includeGroup "io.github.onyxstudios.Cardinal-Components-API"
+        }
+    }
+    maven {
+        url "https://maven.abusedmaster.xyz/"
+        content {
+            includeGroup "dev.onyxstudios"
+        }
+    }
+    maven {
+        url "https://cdn.hrzn.studio/maven"
+        content {
+            includeGroup "com.hrznstudio"
+        }
+    }
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
+
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.minecraft_version}")
     mappings("net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-    modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-api-base", project.fabric_version))
     modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version))
     modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version))
     modRuntime(fabricApi.module("fabric-commands-v0", project.fabric_version))
@@ -90,7 +125,6 @@ dependencies {
     modImplementation(fabricApi.module("fabric-textures-v0", project.fabric_version))
     modImplementation(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version))
 
-    modImplementation("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}") { transitive = false }
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
@@ -119,7 +153,6 @@ dependencies {
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")
-    include("me.shedaniel.cloth.api:cloth-api:${project.cloth_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
     include("io.github.cottonmc:UniversalComponents:${project.uc_version}")
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}")
@@ -129,6 +162,7 @@ dependencies {
     include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
     include("dev.onyxstudios:FOML:${project.foml_version}")
     include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
+    modImplementationMapped("com.google.code.findbugs:jsr305:3.0.1") { transitive = false }
     modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}") { transitive = false } //to satisfy mods that depend on the full FAPI
 }
 

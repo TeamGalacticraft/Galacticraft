@@ -551,7 +551,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public int getMaxY() {
+    public int getWorldHeight() {
         return this.height;
     }
 
