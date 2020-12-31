@@ -319,6 +319,8 @@
   "ui.galacticraft-rewoven.tabs.security_config.public_2": "Public",
   "ui.galacticraft-rewoven.tabs.security_config.not_your_machine": "This is not your machine!",
   "ui.galacticraft-rewoven.tabs.security_config.owner": "Owner: %s",
+  "ui.galacticraft-rewoven.space_race_manager.button": "Space Race",
+  "ui.galacticraft-rewoven.space_race_manager.button_2": "Manager",
   "ui.galacticraft-rewoven.space_race_manager": "Space Race Manager",
   "ui.galacticraft-rewoven.space_race_manager.add_players": "Add Player(s)",
   "ui.galacticraft-rewoven.space_race_manager.remove_players": "Remove Player(s)",

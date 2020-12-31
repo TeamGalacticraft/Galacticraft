@@ -62,10 +62,9 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
     protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.handler.blockEntity.status = OxygenDecompressorBlockEntity.OxygenDecompressorStatus.get(this.handler.status.get());
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        if (OxygenDecompressorBlockEntity.OxygenDecompressorStatus.get(handler.status.get()) == OxygenDecompressorBlockEntity.OxygenDecompressorStatus.DECOMPRESSING) {
+        if (handler.blockEntity.getStatus().getType().isActive()) {
             int height = (int) (System.currentTimeMillis() % 2250);
             if (height == 0) height = 1; //prevent dividing by zero
             height /= 125;

@@ -56,8 +56,6 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 35);
         this.drawFluidTankBufferBar(stack, 0, this.x + 122, this.y + 27);
         this.drawFluidTankBufferBar(stack, 1, this.x + 152, this.y + 27);
-
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

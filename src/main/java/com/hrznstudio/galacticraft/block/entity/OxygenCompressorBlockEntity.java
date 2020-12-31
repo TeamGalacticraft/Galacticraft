@@ -30,18 +30,18 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
-import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -52,9 +52,6 @@ import java.util.function.Predicate;
 public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
     public static final int BATTERY_SLOT = 0;
-
-    public int collectionAmount = 0;
-    public OxygenCompressorStatus status = OxygenCompressorStatus.INACTIVE;
 
     public OxygenCompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
@@ -100,8 +97,8 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public MachineStatus getStatusForTooltip() {
-        return this.status;
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -115,24 +112,24 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
         attemptChargeFromStack(BATTERY_SLOT);
         trySpreadEnergy();
         if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
-            status = OxygenCompressorStatus.NOT_ENOUGH_ENERGY;
+            setStatus(Status.NOT_ENOUGH_ENERGY);
         } else if (this.getFluidTank().isEmpty()) {
-            status = OxygenCompressorStatus.NOT_ENOUGH_OXYGEN;
+            setStatus(Status.NOT_ENOUGH_OXYGEN);
         } else {
-            TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
             if (component != null) {
                 if (component.getContents(0).getAmount().compareTo(component.getMaxCapacity(0)) == 0) {
-                    status = OxygenCompressorStatus.CONTAINER_FULL;
+                    setStatus(Status.CONTAINER_FULL);
                 } else {
-                    status = OxygenCompressorStatus.COMPRESSING;
+                    setStatus(Status.COMPRESSING);
                 }
             } else {
-                status = OxygenCompressorStatus.INACTIVE;
+                setStatus(Status.NOT_ENOUGH_ITEMS);
             }
         }
 
-        if (status == OxygenCompressorStatus.COMPRESSING) {
-            TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
+        if (getStatus() == Status.COMPRESSING) {
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
             getFluidTank().insertFluid(0, component.insertFluid(0, getFluidTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
         }
@@ -171,27 +168,34 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenCompressorStatus implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED),
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
-        CONTAINER_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD),
-        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.compressing"), Formatting.GREEN);
+    private enum Status implements MachineStatus {
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.missing_tank"), Formatting.RED, StatusType.MISSING_ITEMS),
+        CONTAINER_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.compressing"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
+        private final StatusType type;
 
-        OxygenCompressorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static OxygenCompressorStatus get(int index) {
-            if (index < 0) return OxygenCompressorStatus.values()[0];
-            return OxygenCompressorStatus.values()[index % OxygenCompressorStatus.values().length];
+        @Override
+        public @NotNull Text getName() {
+            return text;
         }
 
         @Override
-        public Text getText() {
-            return text;
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

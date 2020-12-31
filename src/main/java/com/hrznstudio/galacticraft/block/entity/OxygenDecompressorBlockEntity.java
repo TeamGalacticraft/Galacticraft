@@ -30,13 +30,12 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
-import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -45,6 +44,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -73,9 +73,6 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
             }
         }
     };
-
-    public int collectionAmount = 0;
-    public OxygenDecompressorStatus status = OxygenDecompressorStatus.INACTIVE;
 
     public OxygenDecompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_DECOMPRESSOR_TYPE);
@@ -121,8 +118,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public MachineStatus getStatusForTooltip() {
-        return this.status;
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -136,24 +133,24 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
         trySpreadFluids(0);
         attemptChargeFromStack(BATTERY_SLOT);
         if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
-            status = OxygenDecompressorStatus.NOT_ENOUGH_ENERGY;
+            setStatus(Status.NOT_ENOUGH_ENERGY);
         } else if (this.getTank().getContents(0).getAmount().compareTo(this.getTank().getMaxCapacity(0)) == 0) {
-            status = OxygenDecompressorStatus.FULL;
+            setStatus(Status.FULL);
         } else {
-            TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
             if (component != null) {
                 if (component.getContents(0).isEmpty()) {
-                    status = OxygenDecompressorStatus.EMPTY_CANISTER;
+                    setStatus(Status.NOT_ENOUGH_OXYGEN);
                 } else {
-                    status = OxygenDecompressorStatus.DECOMPRESSING;
+                    setStatus(Status.DECOMPRESSING);
                 }
             } else {
-                status = OxygenDecompressorStatus.INACTIVE;
+                setStatus(Status.NOT_ENOUGH_ITEMS);
             }
         }
 
-        if (status == OxygenDecompressorStatus.DECOMPRESSING) {
-            TankComponent component = ComponentProvider.fromItemStack(this.getInventory().getStack(1)).getComponent(UniversalComponents.TANK_COMPONENT);
+        if (getStatus() == Status.DECOMPRESSING) {
+            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
             component.insertFluid(0, getTank().insertFluid(0, component.takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
         }
@@ -210,27 +207,39 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenDecompressorStatus implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED),
-        EMPTY_CANISTER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.empty_canister"), Formatting.RED),
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD),
-        DECOMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.decompressing"), Formatting.GREEN);
+    private enum Status implements MachineStatus {
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_ITEMS),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        DECOMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.decompressing"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
+        private final StatusType type;
 
-        OxygenDecompressorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static OxygenDecompressorStatus get(int index) {
-            if (index < 0) return OxygenDecompressorStatus.values()[0];
-            return OxygenDecompressorStatus.values()[index % OxygenDecompressorStatus.values().length];
+        public static Status get(int index) {
+            if (index < 0) return Status.values()[0];
+            return Status.values()[index % Status.values().length];
         }
 
         @Override
-        public Text getText() {
+        public @NotNull Text getName() {
             return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

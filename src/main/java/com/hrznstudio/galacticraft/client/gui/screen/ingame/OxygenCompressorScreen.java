@@ -31,7 +31,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.*;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -62,14 +65,13 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.handler.blockEntity.status = OxygenCompressorBlockEntity.OxygenCompressorStatus.get(this.handler.status.get());
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        if (OxygenCompressorBlockEntity.OxygenCompressorStatus.get(handler.status.get()) == OxygenCompressorBlockEntity.OxygenCompressorStatus.COMPRESSING) {
-            int height = (int) (System.currentTimeMillis() % 2250);
+        if (handler.blockEntity.getStatus().getType().isActive()) {
+            double height = (System.currentTimeMillis() % 2250);
             if (height == 0) height = 1; //prevent dividing by zero
-            height /= -125;
-            this.drawTexture(stack, this.x + 93, this.y + 64, 187, 18, -11, height);
+            height /= -125D;
+            this.drawTexture(stack, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
         }
 
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
@@ -98,10 +100,10 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
         if (mouseX >= this.x + 33 && mouseX <= this.x + 33 + OVERLAY_WIDTH && mouseY >= this.y + 9 && mouseY <= this.y + 9 + OVERLAY_HEIGHT) {
-            List<OrderedText> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCompressorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)).asOrderedText());
-            this.renderOrderedTooltip(stack, toolTipLines, mouseX, mouseY);
+            List<Text> toolTipLines = new ArrayList<>();
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCompressorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
     }
 }

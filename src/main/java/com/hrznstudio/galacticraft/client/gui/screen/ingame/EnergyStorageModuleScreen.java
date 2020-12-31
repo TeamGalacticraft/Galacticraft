@@ -53,7 +53,6 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
 
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawEnergyBufferBar(stack, this.x + 58, this.y + 24);
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

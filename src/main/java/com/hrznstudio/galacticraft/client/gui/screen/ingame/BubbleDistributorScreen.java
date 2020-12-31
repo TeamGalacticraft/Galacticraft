@@ -24,13 +24,11 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -85,7 +83,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     @Override
     protected void drawBackground(MatrixStack matrices, float v, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        DiffuseLighting.disable();
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
@@ -120,11 +117,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         textField.setText("" + handler.blockEntity.getTargetSize());
         DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
-        String status = handler.blockEntity.status == BubbleDistributorBlockEntity.BubbleDistributorStatus.DISTRIBUTING ? "ui.galacticraft-rewoven.machinestatus.distributing"
-                : handler.blockEntity.status == BubbleDistributorBlockEntity.BubbleDistributorStatus.NOT_ENOUGH_POWER ? "ui.galacticraft-rewoven.machinestatus.not_enough_power"
-                : handler.blockEntity.status == BubbleDistributorBlockEntity.BubbleDistributorStatus.NOT_ENOUGH_OXYGEN ? "ui.galacticraft-rewoven.machinestatus.not_enough_oxygen" : "ui.galacticraft-rewoven.machinestatus.off";
-
-        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(new TranslatableText(status).setStyle(Style.EMPTY.withColor(handler.blockEntity.status.getColor()))), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(handler.blockEntity.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
 
         this.textField.render(matrices, mouseX, mouseY, delta);
 
@@ -132,8 +125,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         this.textField.x = this.x + 132;
         this.textField.y = this.y + 53;
 
-        if (handler.blockEntity.status == BubbleDistributorBlockEntity.BubbleDistributorStatus.DISTRIBUTING) {
-            this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.blockEntity.getSize()))).setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY)), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
+        if (handler.blockEntity.getStatus().getType().isActive()) {
+            this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.blockEntity.getSize()))).setStyle(Constants.Misc.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
         }
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }

@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -93,9 +93,8 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected void drawFuelProgressBar(MatrixStack stack) {
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int fuelUsageScale;
-        CompressorBlockEntity.CompressorStatus status = this.handler.blockEntity.status;
 
-        if (status != CompressorBlockEntity.CompressorStatus.IDLE) {
+        if (this.handler.blockEntity.getStatus().getType() != ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_ENERGY) {
             fuelUsageScale = getFuelProgress();
             this.drawTexture(stack, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }

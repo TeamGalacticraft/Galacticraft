@@ -25,14 +25,13 @@ package com.hrznstudio.galacticraft.api.screen;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -41,7 +40,7 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.block.FluidRenderer;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.texture.Sprite;
@@ -167,10 +166,10 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     public void drawConfigTabs(MatrixStack stack, int mouseX, int mouseY) {
+        DiffuseLighting.disable();
         if (this.handler.blockEntity != null) {
             final ConfigurableMachineBlockEntity entity = this.handler.blockEntity;
 
-            ConfigurableMachineBlockEntity.SecurityInfo security = entity.getSecurity();
             if (redstoneOpen) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
                 this.drawTexture(stack, this.x - PANEL_WIDTH, this.y + 3, PANEL_REDSTONE_X, PANEL_REDSTONE_Y, PANEL_WIDTH, PANEL_HEIGHT);
@@ -180,7 +179,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(stack, this.x - PANEL_WIDTH + 21 + 44, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
 
                 switch (entity.getRedstone()) {
-                    case DISABLED:
+                    case IGNORE:
                         this.drawTexture(stack, this.x - PANEL_WIDTH + 21, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
                         break;
                     case OFF:
@@ -194,10 +193,11 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(stack, this.x - PANEL_WIDTH + 43, this.y + 23, ICON_REDSTONE_TORCH_OFF_X, ICON_REDSTONE_TORCH_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
 
                 drawStringWithShadow(stack, this.client.textRenderer, I18n.translate("ui.galacticraft-rewoven.tabs.redstone_activation_config"), this.x - PANEL_WIDTH + 23, this.y + 12, Formatting.GRAY.getColorValue());
-
+                DiffuseLighting.enableGuiDepthLighting();
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE), this.x - PANEL_WIDTH + 6, this.y + 7);
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.GUNPOWDER), this.x - PANEL_WIDTH + 6 + 15, this.y + 26);
                 this.client.getItemRenderer().renderInGuiWithOverrides(new ItemStack(Items.REDSTONE_TORCH), this.x - PANEL_WIDTH + 6 + 15 + 15, this.y + 25 - 2);
+                DiffuseLighting.disableGuiDepthLighting();
             } else {
                 this.client.getTextureManager().bindTexture(TABS_TEXTURE);
                 this.drawTexture(stack, this.x - TAB_WIDTH, this.y + 3, TAB_REDSTONE_X, TAB_REDSTONE_Y, TAB_WIDTH, TAB_HEIGHT);
@@ -307,7 +307,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawTexture(stack, this.x + 174 + 43, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
                 this.drawTexture(stack, this.x + 174 + 65, this.y + 26, BUTTON_X, BUTTON_OFF_Y, ICONS_WIDTH, ICONS_HEIGHT);
 
-                switch (security.getPublicity()) {
+                switch (entity.getSecurity().getPublicity()) {
                     case PRIVATE:
                         this.drawTexture(stack, this.x + 174 + 21, this.y + 26, BUTTON_X, BUTTON_ON_Y, ICONS_WIDTH, ICONS_HEIGHT);
                         break;
@@ -350,7 +350,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
 
                     if (mouseX >= this.x - 78 && mouseX <= this.x - 78 + 19 - 3 && mouseY >= this.y + 26 && mouseY <= this.y + 41) {
-                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.DISABLED);
+                        entity.setRedstone(ConfigurableMachineBlockEntity.RedstoneState.IGNORE);
                         sendRedstoneUpdate(entity);
                         playButtonSound();
                         return true;
@@ -487,6 +487,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     protected void drawTabTooltips(MatrixStack stack, int mouseX, int mouseY) {
+        assert this.client != null;
         if (!redstoneOpen) {
             if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
                 this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
@@ -556,8 +557,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
+        assert this.client != null;
         if (this.handler.blockEntity != null) {
             ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
             switch (security.getPublicity()) {
@@ -568,7 +568,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
                 case SPACE_RACE:
                     if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
-                        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, "\u00A7l" + new TranslatableText("Team stuff pending...").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
+                        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, "\u00A7l" + new TranslatableText("Space race system WIP").asString(), (this.width / 2), this.y + 50, Formatting.DARK_RED.getColorValue());
                         return;
                     }
                 default:
@@ -576,8 +576,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
         }
 
-        this.drawConfigTabs(stack, mouseX, mouseY);
         super.render(stack, mouseX, mouseY, delta);
+        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override
@@ -674,8 +674,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     protected void drawEnergyTooltip(MatrixStack stack, int mouseX, int mouseY, int energyX, int energyY) {
         if (check(mouseX, mouseY, energyX, energyY, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>();
-            if (handler.blockEntity.getStatusForTooltip() != null) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatusForTooltip().getText()));
+            if (handler.blockEntity.getStatus() != null) {
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatus().getName()));
             }
 
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));

@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -84,10 +83,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.FULL
-                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.BLOCKED
-                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.NIGHT
-        ) {
+        if (this.handler.blockEntity.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
                 time = 6000 - (time - 6000);

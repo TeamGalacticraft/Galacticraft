@@ -58,7 +58,6 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 28);
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override

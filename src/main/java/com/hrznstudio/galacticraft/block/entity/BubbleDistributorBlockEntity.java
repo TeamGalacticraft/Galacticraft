@@ -46,9 +46,14 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -59,7 +64,6 @@ import java.util.function.Predicate;
 public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
     public static final int BATTERY_SLOT = 0;
-    public BubbleDistributorStatus status = BubbleDistributorStatus.OFF;
     public boolean bubbleVisible = true;
     private double size = 0;
     private byte targetSize = 1;
@@ -79,6 +83,11 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -133,12 +142,12 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         trySpreadEnergy();
 
         if (this.getCapacitor().getCurrentEnergy() > 0 && this.getFluidTank().getContents(0).getAmount().doubleValue() > 0) {
-            this.status = BubbleDistributorStatus.DISTRIBUTING;
+            this.setStatus(Status.DISTRIBUTING);
         } else {
-            this.status = BubbleDistributorStatus.OFF;
+            this.setStatus(Status.OFF);
         }
 
-        if (this.status == BubbleDistributorStatus.OFF) {
+        if (getStatus() == Status.OFF) {
             idleEnergyDecrement(false);
             if (size > 0) {
                 setSize(size - 0.2D);
@@ -149,7 +158,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
             }
         }
 
-        if (status == BubbleDistributorStatus.DISTRIBUTING) {
+        if (getStatus() == Status.DISTRIBUTING) {
             if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
                 BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, world);
                 entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
@@ -177,7 +186,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         if (size < 0) {
             setSize(0);
         }
-        if (size == 0 && status != BubbleDistributorStatus.DISTRIBUTING) {
+        if (size == 0 && getStatus() != Status.DISTRIBUTING) {
             if (this.bubbleId != -1) {
                 world.getEntityById(bubbleId).remove();
                 this.bubbleId = -1;
@@ -284,25 +293,38 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum BubbleDistributorStatus {
-        OFF(Formatting.RED),
-        NOT_ENOUGH_POWER(Formatting.RED),
-        DISTRIBUTING(Formatting.GREEN),
-        NOT_ENOUGH_OXYGEN(Formatting.AQUA);
+    private enum Status implements MachineStatus {
+        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off"), Formatting.RED, StatusType.OFF),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        DISTRIBUTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
 
-        private final Formatting textColor;
+        private final Text text;
+        private final StatusType type;
 
-        BubbleDistributorStatus(Formatting color) {
-            this.textColor = color;
+        Status(MutableText text, Formatting color, StatusType type) {
+            this.text = text.setStyle(Style.EMPTY.withColor(color));
+            this.type = type;
         }
 
-        public static BubbleDistributorStatus get(int index) {
-            if (index < 0) return BubbleDistributorStatus.values()[0];
-            return BubbleDistributorStatus.values()[index % BubbleDistributorStatus.values().length];
+        public static Status get(int index) {
+            if (index < 0) return Status.values()[0];
+            return Status.values()[index % Status.values().length];
         }
 
-        public Formatting getColor() {
-            return textColor;
+        @Override
+        public @NotNull Text getName() {
+            return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

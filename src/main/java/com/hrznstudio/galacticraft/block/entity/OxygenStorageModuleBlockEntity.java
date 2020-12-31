@@ -64,6 +64,11 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
+    protected MachineStatus getStatus(int index) {
+        return MachineStatus.EMPTY;
+    }
+
+    @Override
     public boolean canExtractEnergy() {
         return false;
     }

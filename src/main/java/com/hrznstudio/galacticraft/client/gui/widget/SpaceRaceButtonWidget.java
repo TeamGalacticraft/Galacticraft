@@ -22,25 +22,26 @@
 
 package com.hrznstudio.galacticraft.client.gui.widget;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class SpaceRaceButtonWidget extends ButtonWidget {
-    private final TextRenderer font;
+    private final TextRenderer textRenderer;
     private final int screenWidth;
     private final int screenHeight;
 
     public SpaceRaceButtonWidget(MinecraftClient minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, new LiteralText(""), (button) -> minecraft.openScreen(new SpaceRaceScreen()));
-        this.font = minecraft.textRenderer;
+        super(x, y, buttonWidth, buttonHeight, Constants.Misc.EMPTY, (button) -> minecraft.openScreen(new SpaceRaceScreen()));
+        this.textRenderer = minecraft.textRenderer;
         this.screenWidth = screenWidth;
         this.screenHeight = screenHeight;
     }
@@ -55,14 +56,14 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         int y = screenHeight - buttonHeight;
 
         int spaceBetweenLines = 1;
-        int lineHeight = font.fontHeight;
+        int lineHeight = textRenderer.fontHeight;
         int textYOffset = 9;
 
         this.fillGradient(stack, x, y, x + buttonWidth, y + buttonHeight, 0xF0151515, 0xF00C0C0C);
         this.drawHorizontalLine(stack, x, screenWidth, y, 0xFF000000);
         this.drawVerticalLine(stack, x, screenHeight, y, 0xFF000000);
 
-        DrawableUtils.drawCenteredString(stack, font, "Space Race", x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        DrawableUtils.drawCenteredString(stack, font, "Manager", x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

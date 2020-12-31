@@ -44,12 +44,10 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static final Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
     public final Property progress = Property.create();
-    private final Property status = Property.create();
 
     public CircuitFabricatorScreenHandler(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER);
         addProperty(progress);
-        addProperty(status);
         Inventory inventory = blockEntity.getInventory().asInventory();
         // Energy slot
         this.addSlot(new ChargeSlot(inventory, 0, 8, 79));
@@ -82,7 +80,6 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     @Override
     public void sendContentUpdates() {
         progress.set(blockEntity.getProgress());
-        status.set(blockEntity.status.ordinal());
         super.sendContentUpdates();
     }
 
@@ -90,6 +87,5 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
         blockEntity.progress = progress.get();
-        blockEntity.status = CircuitFabricatorBlockEntity.CircuitFabricatorStatus.values()[status.get()];
     }
 }

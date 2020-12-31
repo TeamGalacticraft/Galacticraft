@@ -153,6 +153,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         throw new IllegalArgumentException();
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180:
@@ -166,6 +167,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         }
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT:

@@ -38,12 +38,14 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
     public final PlayerEntity playerEntity;
     public final T blockEntity;
     public final Property energy = Property.create();
+    public final Property status = Property.create();
 
     protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
         super(handlerType, syncId);
         this.playerEntity = playerEntity;
         this.blockEntity = blockEntity;
         addProperty(energy);
+        addProperty(status);
     }
 
     @Override
@@ -78,6 +80,7 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
     @Override
     public void sendContentUpdates() {
         energy.set(blockEntity.getCapacitor().getCurrentEnergy());
+        status.set(blockEntity.getStatus().getIndex());
         super.sendContentUpdates();
     }
 
@@ -93,6 +96,12 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
 
     public int getMaxEnergy() {
         return blockEntity.getMaxEnergy();
+    }
+
+    @Override
+    public void setProperty(int id, int value) {
+        super.setProperty(id, value);
+        blockEntity.setStatus(status.get());
     }
 
     @FunctionalInterface

@@ -66,7 +66,10 @@ public class AluminumWireBlock extends WireBlock {
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+        setDefaultState(this.getStateManager().getDefaultState()
+                .with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false)
+                .with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false)
+                .with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
     }
 
     @Override
@@ -160,10 +163,5 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;
-    }
-
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
-        return true;
     }
 }

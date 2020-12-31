@@ -22,6 +22,10 @@
 
 package com.hrznstudio.galacticraft;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 /**
@@ -180,7 +184,7 @@ public class Constants {
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
-        public static final String GENERIC_MULTIBLOCK_PART = "generic_multiblock_part";
+        public static final String SOLAR_PANEL_PART = "solar_panel_part";
         public static final String ADVANCED_SOLAR_PANEL = "advanced_solar_panel";
         public static final String COAL_GENERATOR = "coal_generator";
         public static final String GEOTHERMAL_GENERATOR = "geothermal_generator";
@@ -506,5 +510,10 @@ public class Constants {
 
     public static class LootTables {
         public static final String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
+    }
+
+    public static class Misc {
+        public static final Text EMPTY = new LiteralText("");
+        public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
     }
 }

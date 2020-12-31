@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
 import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
@@ -55,7 +56,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Tickable;
@@ -75,11 +75,12 @@ import java.util.stream.IntStream;
  */
 public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, BlockComponentProvider, Tickable {
     private final InventoryWrapper wrapper = InventoryWrapper.of(getInventory());
-    
+
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, getInventorySize(), getFluidTankSize());
 
-    private RedstoneState redstone = RedstoneState.DISABLED;
+    private MachineStatus status = MachineStatus.EMPTY;
+    private RedstoneState redstone = RedstoneState.IGNORE;
 
 
     public ConfigurableMachineBlockEntity(BlockEntityType<? extends ConfigurableMachineBlockEntity> blockEntityType) {
@@ -118,9 +119,19 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.redstone = redstone;
     }
 
-    public MachineStatus getStatusForTooltip() {
-        return null;
+    public final MachineStatus getStatus() {
+        return status;
     }
+
+    public void setStatus(MachineStatus status) {
+        this.status = status;
+    }
+
+    public void setStatus(int index) {
+        setStatus(getStatus(index));
+    }
+
+    protected abstract MachineStatus getStatus(int index);
 
     /**
      * The max energy that this machine can hold. Override for machines that should hold more.
@@ -516,7 +527,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         /**
          * Ignores redstone entirely.
          */
-        DISABLED,
+        IGNORE,
 
         /**
          * When powered with redstone, the machine turns off.
@@ -535,7 +546,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                 case "ON":
                     return ON;
                 default:
-                    return DISABLED;
+                    return IGNORE;
             }
         }
 
@@ -554,9 +565,85 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public interface MachineStatus {
-        MachineStatus OFF = () -> new TranslatableText("ui.galacticraft-rewoven.machinestatus.off");
+        MachineStatus EMPTY = new MachineStatus() {
+            @Override
+            public @NotNull Text getName() {
+                return Constants.Misc.EMPTY;
+            }
 
-        Text getText();
+            @Override
+            public @NotNull StatusType getType() {
+                return StatusType.OTHER;
+            }
+
+            @Override
+            public int getIndex() {
+                return 0;
+            }
+        };
+
+        @NotNull Text getName();
+
+        @NotNull StatusType getType();
+
+        int getIndex();
+
+        enum StatusType {
+            /**
+             * The machine is active
+             */
+            WORKING(true),
+            /**
+             * THe machine is active, but at reduced efficiency.
+             */
+            PARTIALLY_WORKING(true),
+            /**
+             * The machine is missing a resource it needs to function.
+             * Should not be an item, fluid or energy.
+             *
+             * @see #MISSING_ENERGY
+             * @see #MISSING_FLUIDS
+             * @see #MISSING_ITEMS
+             */
+            MISSING_RESOURCE(false),
+            /**
+             * The machine is missing a fluid it needs to function.
+             * Should be preferred over {@link #MISSING_RESOURCE}
+             */
+            MISSING_FLUIDS(false),
+            /**
+             * The machine does not have the amount of energy needed to function.
+             * Should be preferred over {@link #MISSING_RESOURCE}
+             */
+            MISSING_ENERGY(false),
+            /**
+             * The machine does not have the items needed to function.
+             * Should be preferred over {@link #MISSING_RESOURCE}
+             */
+            MISSING_ITEMS(false),
+            /**
+             * The machine's output is blocked/full.
+             */
+            OUTPUT_FULL(false),
+            /**
+             *
+             */
+            OTHER(false),
+            /**
+             * The machine is off (manual redstone power-off).
+             */
+            OFF(false);
+
+            final boolean active;
+
+            StatusType(boolean active) {
+                this.active = active;
+            }
+
+            public boolean isActive() {
+                return this.active;
+            }
+        }
     }
 
     public static class SecurityInfo {

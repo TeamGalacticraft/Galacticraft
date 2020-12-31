@@ -46,7 +46,7 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     public PlayerInventoryGCScreen(PlayerInventoryGCScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, new LiteralText(""));
+        super(handler, inv, Constants.Misc.EMPTY);
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {

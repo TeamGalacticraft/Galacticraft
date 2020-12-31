@@ -39,7 +39,6 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
-    public final Property status = Property.create();
     public final Property oxygen = Property.create();
     private final Inventory inventory;
 
@@ -56,8 +55,6 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
                 return blockEntity.getInventory();
             }
         };
-
-        addProperty(status);
         addProperty(oxygen);
 
         // Charging Slot
@@ -116,14 +113,7 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
         oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() * 100));
         super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = BubbleDistributorBlockEntity.BubbleDistributorStatus.get(status.get());
     }
 }

@@ -39,8 +39,6 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
-
-    private final Property status = Property.create();
     private final Property fluidOil = Property.create();
     private final Property fluidFuel = Property.create();
 
@@ -98,7 +96,6 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
         fluidOil.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() * 1000.0D));
         fluidFuel.set((int) (blockEntity.getFluidTank().getContents(1).getAmount().doubleValue() * 1000.0D));
         super.sendContentUpdates();
@@ -107,7 +104,6 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = RefineryBlockEntity.RefineryStatus.values()[status.get()];
         if (fluidOil.get() != 0) {
             blockEntity.getFluidTank().setFluid(0, new FluidVolume(GalacticraftFluids.CRUDE_OIL, Fraction.ofThousandths(fluidOil.get())));
         } else {

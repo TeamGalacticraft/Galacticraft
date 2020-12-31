@@ -45,6 +45,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +59,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     public static final int BATTERY_SLOT = 0;
 
     public int collectionAmount = 0;
-    public OxygenCollectorStatus status = OxygenCollectorStatus.INACTIVE;
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -82,6 +82,11 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_OUTPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -149,20 +154,17 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
         trySpreadFluids(0);
 
         if (this.getCapacitor().getCurrentEnergy() > 0) {
-            this.status = OxygenCollectorStatus.COLLECTING;
+            setStatus(Status.COLLECTING);
         } else {
-            this.status = OxygenCollectorStatus.INACTIVE;
-        }
-
-        if (this.status == OxygenCollectorStatus.INACTIVE) {
+            setStatus(Status.NOT_ENOUGH_ENERGY);
             idleEnergyDecrement(false);
         }
 
-        if (status == OxygenCollectorStatus.COLLECTING) {
+        if (getStatus() == Status.COLLECTING) {
             collectionAmount = collectOxygen(this.pos);
 
             if (this.collectionAmount <= 0) {
-                this.status = OxygenCollectorStatus.NOT_ENOUGH_LEAVES;
+                this.setStatus(Status.NOT_ENOUGH_LEAVES);
                 return;
             }
 
@@ -172,7 +174,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
                 this.getFluidTank().insertFluid(0, new FluidVolume(this.getFluidTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getFluidTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
             } else {
-                status = OxygenCollectorStatus.FULL;
+                setStatus(Status.FULL);
             }
         } else {
             collectionAmount = 0;
@@ -212,26 +214,33 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenCollectorStatus implements MachineStatus {
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED),
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD);
+    private enum Status implements MachineStatus {
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
 
         private final Text text;
+        private final StatusType type;
 
-        OxygenCollectorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static OxygenCollectorStatus get(int index) {
-            if (index < 0) return OxygenCollectorStatus.values()[0];
-            return OxygenCollectorStatus.values()[index % OxygenCollectorStatus.values().length];
+        @Override
+        public @NotNull Text getName() {
+            return text;
         }
 
         @Override
-        public Text getText() {
-            return text;
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

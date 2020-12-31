@@ -44,6 +44,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
+        setStatus(MachineStatus.EMPTY);
     }
 
     @Override
@@ -74,6 +75,11 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.POWER_OUTPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return MachineStatus.EMPTY;
     }
 
     @Override

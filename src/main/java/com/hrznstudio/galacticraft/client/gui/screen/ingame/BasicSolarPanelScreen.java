@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -83,8 +82,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.status != BasicSolarPanelBlockEntity.BasicSolarPanelStatus.FULL
-                && this.handler.blockEntity.status != BasicSolarPanelBlockEntity.BasicSolarPanelStatus.BLOCKED) {
+        if (this.handler.blockEntity.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
                 lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * this.handler.blockEntity.multiplier).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
