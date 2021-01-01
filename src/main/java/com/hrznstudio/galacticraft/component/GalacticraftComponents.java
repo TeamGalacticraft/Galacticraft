@@ -23,42 +23,60 @@
 package com.hrznstudio.galacticraft.component;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
+import com.hrznstudio.galacticraft.api.pipe.Pipe;
+import com.hrznstudio.galacticraft.api.wire.Wire;
+import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.items.BatteryItem;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import io.github.cottonmc.component.energy.type.EnergyType;
+import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
+import io.github.cottonmc.component.item.impl.SyncedInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import nerdhub.cardinal.components.api.ComponentRegistry;
-import nerdhub.cardinal.components.api.ComponentType;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer, ItemComponentInitializer {
     public static final List<Identifier> MACHINE_BLOCKS = new LinkedList<>();
-    public static final ComponentType<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
+    public static final ComponentKey<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
 
     public static void register() {
     }
 
     @Override
     public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new EntitySyncedInventoryComponent(12, player), RespawnCopyStrategy.INVENTORY);
+        entityComponentFactoryRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new SyncedInventoryComponent<>(12, GEAR_INVENTORY_COMPONENT, (ComponentProvider) player), RespawnCopyStrategy.INVENTORY);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -79,6 +97,109 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             public void fromTag(CompoundTag tag) {
                 if (getMaxEnergy() == 0) return;
                 super.fromTag(tag);
+            }
+        });
+
+        registry.registerFor(WireBlockEntity.class, UniversalComponents.CAPACITOR_COMPONENT, be -> new SimpleCapacitorComponent(be.getMaxTransferRate(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
+            @Override
+            public int getCurrentEnergy() {
+                return 0;
+            }
+
+            @Override
+            public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
+                if (type.isCompatibleWith(getPreferredType())) {
+                    return be.getNetwork().insertEnergy(be.getPos(), null, type, amount, actionType);
+                } else {
+                    return amount;
+                }
+            }
+
+            @Override
+            public int extractEnergy(EnergyType type, int amount, ActionType actionType) {
+                return 0;
+            }
+
+            @Override
+            public int generateEnergy(World world, BlockPos pos, int amount) {
+                return amount;
+            }
+
+            @Override
+            public List<Runnable> getListeners() {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public void listen(@NotNull Runnable listener) {
+            }
+
+            @Override
+            public SimpleCapacitorComponent setCurrentEnergy(int amount) {
+                return this;
+            }
+
+            @Override
+            public SimpleCapacitorComponent setMaxEnergy(int amount) {
+                return this;
+            }
+
+            @Override
+            public boolean canExtractEnergy() {
+                return true;
+            }
+
+            @Override
+            public boolean canInsertEnergy() {
+                return true;
+            }
+        });
+
+        registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(1, 10)) {
+            @Override
+            public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
+                if (be.getFluid() == Pipe.FluidData.EMPTY) {
+                    if (be.getNetwork() != null) {
+                        Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
+                        if (action == ActionType.PERFORM) {
+                            if (data == null) {
+                                return fluid;
+                            }
+                            be.setFluid(data);
+                            return data.getFluid();
+                        }
+                    }
+                }
+                return fluid;
+            }
+
+            @Override
+            public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
+                return insertFluid(fluid, action);
+            }
+
+            @Override
+            public FluidVolume removeFluid(int slot, ActionType action) {
+                return FluidVolume.EMPTY;
+            }
+
+            @Override
+            public FluidVolume takeFluid(int slot, Fraction amount, ActionType action) {
+                return FluidVolume.EMPTY;
+            }
+
+            @Override
+            public void setFluid(int slot, FluidVolume stack) {
+            }
+
+            @Override
+            public boolean isAcceptableFluid(int tank) {
+                return true;
+            }
+
+            @Override
+            public FluidVolume getContents(int slot) {
+                return FluidVolume.EMPTY;
             }
         });
 
@@ -159,7 +280,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             }
         });
 
-        for (Identifier id : MACHINE_BLOCKS) { //CC API v3
+        for (Identifier id : MACHINE_BLOCKS) {
             registry.registerFor(id, UniversalComponents.INVENTORY_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getInventory(state, side));
             registry.registerFor(id, UniversalComponents.CAPACITOR_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getCapacitor(state, side));
             registry.registerFor(id, UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getFluidTank(state, side));
@@ -169,7 +290,65 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
     }
 
     @Override
-    public void registerItemComponentFactories(ItemComponentFactoryRegistry itemComponentFactoryRegistry) {
+    public void registerItemComponentFactories(ItemComponentFactoryRegistry registry) {
+        registry.registerFor((item) -> item instanceof OxygenTankItem, UniversalComponents.TANK_COMPONENT, stack -> {
+            ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.of(stack.getItem().getMaxDamage(), 1000))) {
+                @Override
+                public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
+                    if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN) || fluid.isEmpty()) {
+                        return super.insertFluid(tank, fluid, action);
+                    } else {
+                        return fluid;
+                    }
+                }
 
+                @Override
+                public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
+                    return insertFluid(0, fluid, action);
+                }
+
+                @Override
+                public void setFluid(int slot, FluidVolume stack) {
+                    if (stack.getFluid().isIn(GalacticraftTags.OXYGEN) || stack.isEmpty()) {
+                        super.setFluid(slot, stack);
+                    }
+                }
+            };
+            component.listen(() -> stack.setDamage(stack.getItem().getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 1000.0D)));
+            return component;
+        });
+
+        registry.registerFor((item) -> item instanceof BatteryItem, UniversalComponents.CAPACITOR_COMPONENT, stack -> {
+            ItemCapacitorComponent component = new ItemCapacitorComponent(((BatteryItem)stack.getItem()).getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
+            component.listen(() -> stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()));
+            return component;
+        });
+
+        registry.registerFor(GalacticraftItems.INFINITE_BATTERY, UniversalComponents.CAPACITOR_COMPONENT, stack -> new ItemCapacitorComponent(Integer.MAX_VALUE, GalacticraftEnergy.GALACTICRAFT_JOULES) {
+            @Override
+            public boolean canInsertEnergy() {
+                return false;
+            }
+
+            @Override
+            public SimpleCapacitorComponent setCurrentEnergy(int amount) {
+                return this;
+            }
+
+            @Override
+            public int extractEnergy(EnergyType type, int amount, ActionType actionType) {
+                return amount;
+            }
+
+            @Override
+            public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
+                return amount;
+            }
+
+            @Override
+            public int getCurrentEnergy() {
+                return Integer.MAX_VALUE;
+            }
+        });
     }
 }

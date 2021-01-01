@@ -31,8 +31,10 @@ import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.fluid.TankComponent;
@@ -40,10 +42,8 @@ import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
-import nerdhub.cardinal.components.api.component.Component;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -73,7 +73,7 @@ import java.util.stream.IntStream;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, BlockComponentProvider, Tickable {
+public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, Tickable {
     private final InventoryWrapper wrapper = InventoryWrapper.of(getInventory());
 
     private final SecurityInfo security = new SecurityInfo();
@@ -187,44 +187,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return null;
     }
 
-    @Override
-    public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
-        if (type == UniversalComponents.CAPACITOR_COMPONENT) {
-            return getCapacitor(blockView.getBlockState(pos), side) != null;
-        } else if (type == UniversalComponents.INVENTORY_COMPONENT) {
-            return getInventory(blockView.getBlockState(pos), side) != null;
-        } else if (type == UniversalComponents.TANK_COMPONENT) {
-            return getFluidTank(blockView.getBlockState(pos), side) != null;
-        }
-
-        return type.getNullable(this) != null;
-    }
-
-    @Override
-    public <T extends Component> T getComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
-        if (type == UniversalComponents.CAPACITOR_COMPONENT) {
-            return (T) getCapacitor(blockView.getBlockState(pos), side);
-        } else if (type == UniversalComponents.INVENTORY_COMPONENT) {
-            return (T) getInventory(blockView.getBlockState(pos), side);
-        } else if (type == UniversalComponents.TANK_COMPONENT) {
-            return (T) getFluidTank(blockView.getBlockState(pos), side);
-        }
-
-        return type.get(this);
-    }
-
-    @Override
-    public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos pos, Direction side) {
-        Set<ComponentType<?>> set = new LinkedHashSet<>(((ComponentProvider) this).getComponentTypes());
-        if (getCapacitor(blockView.getBlockState(pos), side) == null)
-            set.remove(UniversalComponents.CAPACITOR_COMPONENT);
-        if (getInventory(blockView.getBlockState(pos), side) == null)
-            set.remove(UniversalComponents.INVENTORY_COMPONENT);
-        if (getFluidTank(blockView.getBlockState(pos), side) == null)
-            set.remove(UniversalComponents.TANK_COMPONENT);
-        return set;
-    }
-
     public final @NotNull SecurityInfo getSecurity() {
         return security;
     }
@@ -277,9 +239,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        this.getCapacitor().toTag(tag);
-        this.getInventory().toTag(tag);
-        this.getFluidTank().toTag(tag);
+        this.getCapacitor().writeToNbt(tag);
+        this.getInventory().writeToNbt(tag);
+        this.getFluidTank().writeToNbt(tag);
         this.security.toTag(tag);
         this.sideConfigInfo.toTag(tag);
         this.redstone.toTag(tag);
@@ -289,9 +251,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.getCapacitor().fromTag(tag);
-        this.getInventory().fromTag(tag);
-        this.getFluidTank().fromTag(tag);
+        this.getCapacitor().readFromNbt(tag);
+        this.getInventory().readFromNbt(tag);
+        this.getFluidTank().readFromNbt(tag);
         this.security.fromTag(tag);
         this.sideConfigInfo.fromTag(tag);
         this.redstone = RedstoneState.fromTag(tag);
@@ -327,7 +289,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                 ConfiguredSideOption option = this.getSideConfigInfo().get(face);
                 if (option.getOption() == SideOption.POWER_OUTPUT) {
                     Direction dir = face.toDirection(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
-                    CapacitorComponent component = ((BlockComponentProvider) world.getBlockState(pos).getBlock()).getComponent(world, pos.offset(dir), UniversalComponents.CAPACITOR_COMPONENT, dir.getOpposite());
+                    CapacitorComponent component = ComponentHelper.CAPACITOR.getComponent(world, pos.offset(dir), dir.getOpposite());
                     if (component != null) {
                         if (component.canInsertEnergy()) {
                             int i = this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.getMaxEnergy() - component.getCurrentEnergy(), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);

@@ -39,8 +39,7 @@ import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
-import nerdhub.cardinal.components.api.component.Component;
+import dev.onyxstudios.cca.api.v3.component.Component;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -58,57 +57,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClientSerializable, BlockComponentProvider, Tickable, Pipe {
+public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, Pipe {
     private PipeNetwork network = null;
     private @NotNull Pipe.FluidData data = Pipe.FluidData.EMPTY;
     private byte timeUntilPush = 0;
-    private final TankComponent component = new SimpleTankComponent(1, Fraction.of(1, 10)) {
-        @Override
-        public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-            if (data == Pipe.FluidData.EMPTY) {
-                if (network != null) {
-                    Pipe.FluidData data = network.insertFluid(pos, null, fluid, action);
-                    if (action == ActionType.PERFORM) {
-                        if (data == null) {
-                            return fluid;
-                        }
-                        FluidPipeBlockEntity.this.data = data;
-                        return data.getFluid();
-                    }
-                }
-            }
-            return fluid;
-        }
-
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            return insertFluid(fluid, action);
-        }
-
-        @Override
-        public FluidVolume removeFluid(int slot, ActionType action) {
-            return FluidVolume.EMPTY;
-        }
-
-        @Override
-        public FluidVolume takeFluid(int slot, Fraction amount, ActionType action) {
-            return FluidVolume.EMPTY;
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-        }
-
-        @Override
-        public boolean isAcceptableFluid(int tank) {
-            return true;
-        }
-
-        @Override
-        public FluidVolume getContents(int slot) {
-            return FluidVolume.EMPTY;
-        }
-    };
 
     public FluidPipeBlockEntity() {
         super(GalacticraftBlockEntities.FLUID_PIPE_TYPE);
@@ -205,21 +157,6 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
     @Override
     public CompoundTag toClientTag(CompoundTag compoundTag) {
         return this.data.toTag(compoundTag);
-    }
-
-    @Override
-    public <T extends Component> boolean hasComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
-        return type == UniversalComponents.TANK_COMPONENT;
-    }
-
-    @Override
-    public <T extends Component> T getComponent(BlockView blockView, BlockPos pos, ComponentType<T> type, Direction side) {
-        return type == UniversalComponents.TANK_COMPONENT ? (T) component : null;
-    }
-
-    @Override
-    public Set<ComponentType<?>> getComponentTypes(BlockView blockView, BlockPos pos, Direction side) {
-        return ImmutableSet.of(UniversalComponents.TANK_COMPONENT);
     }
 
     @Override

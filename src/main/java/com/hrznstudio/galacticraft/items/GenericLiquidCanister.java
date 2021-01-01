@@ -43,9 +43,8 @@ public class GenericLiquidCanister extends Item {
 
     @Override
     public int getEnchantability() {
-        return 0;
+        return -1;
     }
-
 
     @Override
     @Environment(EnvType.CLIENT)

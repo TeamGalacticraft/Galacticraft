@@ -127,7 +127,7 @@
   },
   "custom": {
     "cardinal-components": [
-      "galacticraft-rewoven:oxygen_tank"
+      "galacticraft-rewoven:gear_inv"
     ]
   },
   "mixins": [ "galacticraft-rewoven.mixins.json" ],

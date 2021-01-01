@@ -22,25 +22,15 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
-import io.github.cottonmc.component.energy.type.EnergyType;
-import nerdhub.cardinal.components.api.component.ComponentContainer;
-import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
-import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class InfiniteBatteryItem extends Item implements ItemComponentCallback {
+public class InfiniteBatteryItem extends Item {
     public InfiniteBatteryItem(Settings settings) {
         super(settings);
-        ItemComponentCallback.registerSelf(this);
     }
 
     @Override
@@ -49,37 +39,17 @@ public class InfiniteBatteryItem extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
+    public boolean isEnchantable(ItemStack stack) {
         return false;
     }
 
     @Override
-    public void initComponents(ItemStack stack, ComponentContainer<CopyableComponent<?>> components) {
-        components.put(UniversalComponents.CAPACITOR_COMPONENT, new ItemCapacitorComponent(Integer.MAX_VALUE, GalacticraftEnergy.GALACTICRAFT_JOULES) {
-            @Override
-            public boolean canInsertEnergy() {
-                return false;
-            }
+    public int getEnchantability() {
+        return -1;
+    }
 
-            @Override
-            public SimpleCapacitorComponent setCurrentEnergy(int amount) {
-                return this;
-            }
-
-            @Override
-            public int extractEnergy(EnergyType type, int amount, ActionType actionType) {
-                return amount;
-            }
-
-            @Override
-            public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
-                return amount;
-            }
-
-            @Override
-            public int getCurrentEnergy() {
-                return Integer.MAX_VALUE;
-            }
-        });
+    @Override
+    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
+        return false;
     }
 }
