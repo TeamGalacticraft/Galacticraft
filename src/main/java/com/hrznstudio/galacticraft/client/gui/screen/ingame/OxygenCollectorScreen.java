@@ -24,22 +24,16 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -51,17 +45,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
     private static final int OVERLAY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
     private static final int OVERLAY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-    private static final int ENERGY_X = Constants.TextureCoordinates.ENERGY_LIGHT_X;
-    private static final int ENERGY_Y = Constants.TextureCoordinates.ENERGY_LIGHT_Y;
-    private static final int ENERGY_DIMMED_X = Constants.TextureCoordinates.ENERGY_DARK_X;
-    private static final int ENERGY_DIMMED_Y = Constants.TextureCoordinates.ENERGY_DARK_Y;
-    private static final int OXYGEN_X = Constants.TextureCoordinates.OXYGEN_LIGHT_X;
-    private static final int OXYGEN_Y = Constants.TextureCoordinates.OXYGEN_LIGHT_Y;
-    private static final int OXYGEN_DIMMED_X = Constants.TextureCoordinates.OXYGEN_DARK_X;
-    private static final int OXYGEN_DIMMED_Y = Constants.TextureCoordinates.OXYGEN_DARK_Y;
 
-    private int oxygenDisplayX = 0;
-    private int oxygenDisplayY = 0;
 
     public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
@@ -73,15 +57,9 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
-        int leftPos = this.x;
-        int topPos = this.y;
-
-        oxygenDisplayX = leftPos + 33;
-        oxygenDisplayY = topPos + 18;
-
-        this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawEnergyBufferBar(stack, this.x + 11, this.y + 18);
-        this.drawOxygenBufferBar(stack);
+        this.drawOxygenBufferBar(stack, this.x + 33, this.y + 18, 0);
     }
 
     @Override
@@ -89,7 +67,6 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         super.render(stack, mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_collector").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         String statusText = new TranslatableText("ui.galacticraft-rewoven.machine.status").getString();
-
 
         int statusX = this.x + 38;
         int statusY = this.y + 64;
@@ -102,25 +79,10 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
-    private void drawOxygenBufferBar(MatrixStack stack) {
-        float currentOxygen = ((float) this.handler.oxygen.get());
-        float maxOxygen = OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F;
-        float oxygenScale = (currentOxygen / maxOxygen);
-
-        this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(stack, oxygenDisplayX, oxygenDisplayY, OXYGEN_DIMMED_X, OXYGEN_DIMMED_Y, OVERLAY_WIDTH, OVERLAY_HEIGHT);
-        this.drawTexture(stack, oxygenDisplayX, (oxygenDisplayY - (int) (OVERLAY_HEIGHT * oxygenScale)) + OVERLAY_HEIGHT, OXYGEN_X, OXYGEN_Y, OVERLAY_WIDTH, (int) (OVERLAY_HEIGHT * oxygenScale));
-    }
-
     @Override
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
-        if (mouseX >= oxygenDisplayX && mouseX <= oxygenDisplayX + OVERLAY_WIDTH && mouseY >= oxygenDisplayY && mouseY <= oxygenDisplayY + OVERLAY_HEIGHT) {
-            List<Text> toolTipLines = new ArrayList<>(2);
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenCollectorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)));
-            this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
-        }
+        this.drawOxygenTooltip(stack, mouseX, mouseY, this.x + 33, this.y + 18, 0);
     }
 }

@@ -20,36 +20,25 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.items;
+package com.hrznstudio.galacticraft.screen.property;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import net.minecraft.screen.Property;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public class InfiniteBatteryItem extends Item {
-    public InfiniteBatteryItem(Settings settings) {
-        super(settings.maxCount(1));
+public class StatusProperty extends Property {
+    private final ConfigurableMachineBlockEntity blockEntity;
+
+    public StatusProperty(ConfigurableMachineBlockEntity blockEntity) {
+        this.blockEntity = blockEntity;
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
-        return true;
+    public int get() {
+        return blockEntity.getStatus().getIndex();
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public int getEnchantability() {
-        return -1;
-    }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
-        return false;
+    public void set(int value) {
+        blockEntity.setStatus(value);
     }
 }

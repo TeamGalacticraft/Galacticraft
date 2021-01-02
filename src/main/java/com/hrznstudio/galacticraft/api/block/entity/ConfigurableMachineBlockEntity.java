@@ -44,6 +44,8 @@ import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -89,12 +91,29 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getInventory().getListeners().add(this::markDirty);
     }
 
+    /**
+     * Returns whether this machine may have energy extracted from it.
+     * @return whether this machine may have energy extracted from it.
+     */
     public abstract boolean canExtractEnergy();
 
+    /**
+     * Returns whether this machine may have energy inserted into it.
+     * @return whether this machine may have energy inserted into it.
+     */
     public abstract boolean canInsertEnergy();
 
+    /**
+     * The amount of energy that the machine uses in a tick.
+     * @return The amount of energy that the machine uses in a tick.
+     */
     protected abstract int getEnergyUsagePerTick();
 
+    /**
+     * Returns whether a hopper may extract items from the given slot.
+     * @param slot The slot to test
+     * @return
+     */
     public abstract boolean canHopperExtractItems(int slot);
 
     public abstract boolean canHopperInsertItems(int slot);
@@ -119,7 +138,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.redstone = redstone;
     }
 
-    public final MachineStatus getStatus() {
+    public @NotNull MachineStatus getStatus() {
         return status;
     }
 
@@ -259,6 +278,19 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.redstone = RedstoneState.fromTag(tag);
     }
 
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void fromClientTag(CompoundTag tag) {
+        this.sideConfigInfo.fromTag(tag);
+        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
+    }
+
+    @Override
+    public CompoundTag toClientTag(CompoundTag tag) {
+        this.sideConfigInfo.toTag(tag);
+        return tag;
+    }
+
     public boolean canInsert(int slot, ItemStack stack) {
         return getInventory().insertStack(slot, stack, ActionType.TEST).isEmpty();
     }
@@ -269,18 +301,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         } else {
             throw new RuntimeException();
         }
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
-
-        ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
     }
 
     public void trySpreadEnergy() {

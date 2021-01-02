@@ -56,7 +56,7 @@ public class BatteryItem extends Item {
     public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1).maxDamageIfAbsent(MAX_ENERGY));
     }
 
     public int getMaxEnergy() {

@@ -28,6 +28,7 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
+import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
@@ -641,8 +642,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void drawEnergyBufferBar(MatrixStack stack, int energyX, int energyY) {
         float height = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-        float currentEnergy = handler.energy.get();
-        float maxEnergy = handler.getMaxEnergy();
+        float currentEnergy = handler.blockEntity.getCapacitor().getCurrentEnergy();
+        float maxEnergy = handler.blockEntity.getMaxEnergy();
         float energyScale = (currentEnergy / maxEnergy);
 
         this.client.getTextureManager().bindTexture(OVERLAY);
@@ -650,12 +651,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.drawTexture(stack, energyX, (int) ((energyY - (height * energyScale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * energyScale));
     }
 
-    protected void drawOxygenBufferBar(MatrixStack stack, float currentOxygen, float maxOxygen, int oxygenDisplayX, int oxygenDisplayY) {
-        float oxygenScale = (currentOxygen / maxOxygen);
+    protected void drawOxygenBufferBar(MatrixStack stack, int x, int y, int tank) {
+        float oxygenScale = this.handler.blockEntity.getFluidTank().getContents(tank).getAmount().divide(this.handler.blockEntity.getFluidTank().getMaxCapacity(tank)).floatValue();
 
         this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(stack, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
-        this.drawTexture(stack, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
+        this.drawTexture(stack, x, y, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
+        this.drawTexture(stack, x, (y - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
     }
 
     protected void drawFluidTankBufferBar(MatrixStack stack, int tank, int tankX, int tankY) {
@@ -673,16 +674,23 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void drawEnergyTooltip(MatrixStack stack, int mouseX, int mouseY, int energyX, int energyY) {
         if (check(mouseX, mouseY, energyX, energyY, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
-            List<Text> lines = new ArrayList<>();
-            if (handler.blockEntity.getStatus() != null) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatus().getName()));
-            }
+            List<Text> lines = new LinkedList<>();
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatus().getName()));
 
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.energy.get()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.blockEntity.getCapacitor().getCurrentEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.blockEntity.getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
             lines.addAll(getEnergyTooltipLines());
 
             this.renderOrderedTooltip(stack, Lists.transform(lines, Text::asOrderedText), mouseX, mouseY);
+        }
+    }
+
+    protected void drawOxygenTooltip(MatrixStack stack, int mouseX, int mouseY, int x, int y, int tank) {
+        if (check(mouseX, mouseY, x, y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
+            List<Text> toolTipLines = new ArrayList<>(2);
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((int)(this.handler.blockEntity.getFluidTank().getContents(tank).getAmount().doubleValue() * 1000.0D))).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.doubleValue() * 1000.0D))).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            this.renderTooltip(stack, toolTipLines, mouseX, mouseY);
         }
     }
 

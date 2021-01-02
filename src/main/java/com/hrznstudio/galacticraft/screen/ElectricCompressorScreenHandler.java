@@ -70,7 +70,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
         }
 
-        addProperty(energy);
         addSlot(new FurnaceOutputSlot(player, this.inventory, ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, getOutputSlotPos()[0], getOutputSlotPos()[1] + 18));
         addSlot(new ChargeSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75));
     }
@@ -81,7 +80,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.getStatus().getIndex());
         progress.set(blockEntity.getProgress());
         super.sendContentUpdates();
     }
@@ -89,7 +87,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.setStatus(status.get());
         blockEntity.progress = progress.get();
     }
 

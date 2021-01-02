@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.OxygenDecompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.OxygenDecompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -34,9 +33,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -72,7 +68,7 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
         }
 
         this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
-        this.drawOxygenBufferBar(stack);
+        this.drawOxygenBufferBar(stack, this.x + 34, this.y + 9, 0);
     }
 
     @Override
@@ -82,25 +78,10 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 
-    private void drawOxygenBufferBar(MatrixStack stack) {
-        float currentOxygen = ((float) this.handler.oxygen.get());
-        float maxOxygen = OxygenDecompressorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F;
-        float oxygenScale = (currentOxygen / maxOxygen);
-
-        this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(stack, this.x + 34, this.y + 9, OXYGEN_DIMMED_X, OXYGEN_DIMMED_Y, OVERLAY_WIDTH, OVERLAY_HEIGHT);
-        this.drawTexture(stack, this.x + 34, (this.y + 9 - (int) (OVERLAY_HEIGHT * oxygenScale)) + OVERLAY_HEIGHT, OXYGEN_X, OXYGEN_Y, OVERLAY_WIDTH, (int) (OVERLAY_HEIGHT * oxygenScale));
-    }
-
     @Override
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
-        if (mouseX >= this.x + 33 && mouseX <= this.x + 33 + OVERLAY_WIDTH && mouseY >= this.y + 9 && mouseY <= this.y + 9 + OVERLAY_HEIGHT) {
-            List<OrderedText> toolTipLines = new ArrayList<>();
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf((float) this.handler.oxygen.get())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
-            toolTipLines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf(OxygenDecompressorBlockEntity.MAX_OXYGEN.floatValue() * 100.0F)).setStyle(Style.EMPTY.withColor(Formatting.RED)).asOrderedText());
-            this.renderOrderedTooltip(stack, toolTipLines, mouseX, mouseY);
-        }
+        this.drawOxygenTooltip(stack, mouseX, mouseY, this.x + 33, this.y + 9, 0);
     }
 }

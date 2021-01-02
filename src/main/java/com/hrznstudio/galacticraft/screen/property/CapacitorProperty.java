@@ -20,36 +20,24 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.items;
+package com.hrznstudio.galacticraft.screen.property;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import net.minecraft.screen.Property;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public class InfiniteBatteryItem extends Item {
-    public InfiniteBatteryItem(Settings settings) {
-        super(settings.maxCount(1));
+public class CapacitorProperty extends Property {
+    private final SimpleCapacitorComponent component;
+    public CapacitorProperty(SimpleCapacitorComponent component) {
+        this.component = component;
     }
 
     @Override
-    public boolean hasGlint(ItemStack stack) {
-        return true;
+    public int get() {
+        return component.getCurrentEnergy();
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public int getEnchantability() {
-        return -1;
-    }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
-        return false;
+    public void set(int value) {
+        component.setCurrentEnergy(value);
     }
 }

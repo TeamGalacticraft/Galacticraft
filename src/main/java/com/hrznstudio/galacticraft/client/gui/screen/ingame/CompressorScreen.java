@@ -42,11 +42,11 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
-
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
+
     protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
     protected int progressDisplayX;
     protected int progressDisplayY;
@@ -121,15 +121,6 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
-        }
-    }
-
-    @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-
     }
 }
