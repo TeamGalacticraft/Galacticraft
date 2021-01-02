@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.EnergyBufferWidget;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -52,6 +53,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
 
     public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        this.addWidget(new EnergyBufferWidget(handler.blockEntity.getCapacitor(), 10, 9, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -63,7 +65,6 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
         int topPos = this.y;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
     }
 
     @Override
@@ -71,12 +72,6 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
         super.render(stack, mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
     }
 
     @Override

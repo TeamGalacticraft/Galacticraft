@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
@@ -71,7 +72,7 @@ import java.util.*;
 public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> extends HandledScreen<C> {
     public static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_TABS));
     public static final Identifier PANELS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.MACHINE_CONFIG_PANELS));
-    protected static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
+    public static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     public static final int PANEL_WIDTH = 99;
     public static final int PANEL_HEIGHT = 91;
@@ -121,6 +122,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected final BlockPos pos;
     protected final World world;
+    private final List<AbstractWidget> widgets = new LinkedList<>();
 
     public boolean securityOpen = false;
     public boolean redstoneOpen = false;
@@ -163,7 +165,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
-        return new ArrayList<>();
+        return Collections.emptyList();
     }
 
     public void drawConfigTabs(MatrixStack stack, int mouseX, int mouseY) {
@@ -579,12 +581,21 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
         super.render(stack, mouseX, mouseY, delta);
         this.drawConfigTabs(stack, mouseX, mouseY);
+        stack.push();
+        stack.translate(this.x, this.y, 0);
+        for (AbstractWidget widget : this.widgets) {
+            widget.render(stack, mouseX - this.x, mouseY - this.y, delta);
+        }
+        stack.pop();
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isAllowed()) {
-            return this.checkTabsClick(new MatrixStack(), mouseX, mouseY, button) || super.mouseClicked(mouseX, mouseY, button);
+            for (AbstractWidget widget : widgets) {
+                widget.mouseClicked(mouseX - this.x, mouseY - this.y, button);
+            }
+            return this.checkTabsClick(new MatrixStack(), mouseX, mouseY, button) | super.mouseClicked(mouseX, mouseY, button);
         } else {
             return false;
         }
@@ -595,6 +606,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (isAllowed()) {
             super.drawMouseoverTooltip(stack, mouseX, mouseY);
             drawTabTooltips(stack, mouseX, mouseY);
+            stack.push();
+            stack.translate(this.x, this.y, 0);
+            for (AbstractWidget widget : widgets) {
+                widget.drawMouseoverTooltip(stack, mouseX - this.x, mouseY - this.y);
+            }
+            stack.pop();
         }
     }
 
@@ -640,17 +657,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         ));
     }
 
-    protected void drawEnergyBufferBar(MatrixStack stack, int energyX, int energyY) {
-        float height = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-        float currentEnergy = handler.blockEntity.getCapacitor().getCurrentEnergy();
-        float maxEnergy = handler.blockEntity.getMaxEnergy();
-        float energyScale = (currentEnergy / maxEnergy);
-
-        this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(stack, energyX, energyY, Constants.TextureCoordinates.ENERGY_DARK_X, Constants.TextureCoordinates.ENERGY_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) height);
-        this.drawTexture(stack, energyX, (int) ((energyY - (height * energyScale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * energyScale));
-    }
-
     protected void drawOxygenBufferBar(MatrixStack stack, int x, int y, int tank) {
         float oxygenScale = this.handler.blockEntity.getFluidTank().getContents(tank).getAmount().divide(this.handler.blockEntity.getFluidTank().getMaxCapacity(tank)).floatValue();
 
@@ -670,19 +676,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         stack.pop();
         this.client.getTextureManager().bindTexture(OVERLAY);
         this.drawTexture(stack, tankX, tankY, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_X, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_Y, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_WIDTH, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT);
-    }
-
-    protected void drawEnergyTooltip(MatrixStack stack, int mouseX, int mouseY, int energyX, int energyY) {
-        if (check(mouseX, mouseY, energyX, energyY, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
-            List<Text> lines = new LinkedList<>();
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(this.handler.blockEntity.getStatus().getName()));
-
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.blockEntity.getCapacitor().getCurrentEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.handler.blockEntity.getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
-            lines.addAll(getEnergyTooltipLines());
-
-            this.renderOrderedTooltip(stack, Lists.transform(lines, Text::asOrderedText), mouseX, mouseY);
-        }
     }
 
     protected void drawOxygenTooltip(MatrixStack stack, int mouseX, int mouseY, int x, int y, int tank) {
@@ -760,5 +753,71 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        boolean b = false;
+        for (AbstractWidget widget : widgets) {
+            b |= widget.mouseScrolled(mouseX - this.x, mouseY - this.y, amount);
+        }
+        return b;
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        boolean b = false;
+        for (AbstractWidget widget : widgets) {
+            b |= widget.keyReleased(keyCode, scanCode, modifiers);
+        }
+        return b;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int keyCode) {
+        boolean b = false;
+        for (AbstractWidget widget : widgets) {
+            b |= widget.charTyped(chr, keyCode);
+        }
+        return b;
+    }
+
+    @Override
+    public void mouseMoved(double mouseX, double mouseY) {
+        for (AbstractWidget widget : widgets) {
+            widget.mouseMoved(mouseX - this.x, mouseY - this.y);
+        }
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        boolean b = false;
+        for (AbstractWidget widget : widgets) {
+            b |= widget.mouseDragged(mouseX - this.x, mouseY - this.y, button, deltaX, deltaY);
+        }
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY) || b;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        boolean b = false;
+        for (AbstractWidget widget : widgets) {
+            b |= widget.mouseReleased(mouseX - this.x, mouseY - this.y, button);
+        }
+        return super.mouseReleased(mouseX, mouseY, button) || b;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        boolean b = false;
+        for (AbstractWidget widget : widgets) {
+            b |= widget.keyPressed(keyCode, scanCode, modifiers);
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers) || b;
+    }
+
+    public <T extends AbstractWidget> T addWidget(T widget) {
+        this.widgets.add(widget);
+        return widget;
     }
 }

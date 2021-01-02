@@ -159,16 +159,16 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             @Override
             public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
                 if (be.getFluid() == Pipe.FluidData.EMPTY) {
-                    if (be.getNetwork() != null) {
-                        Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
-                        if (action == ActionType.PERFORM) {
-                            if (data == null) {
-                                return fluid;
-                            }
-                            be.setFluid(data);
-                            return data.getFluid();
+                    assert be.getNetwork() != null;
+                    Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
+                    if (action == ActionType.PERFORM) {
+                        if (data == null) {
+                            return fluid;
                         }
+                        be.setFluid(data);
+                        return data.getFluid();
                     }
+
                 }
                 return fluid;
             }

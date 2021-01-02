@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.EnergyBufferWidget;
 import com.hrznstudio.galacticraft.screen.OxygenCompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -53,6 +54,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
+        this.addWidget(new EnergyBufferWidget(handler.blockEntity.getCapacitor(), 10, 9, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -68,7 +70,6 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
             this.drawTexture(stack, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
         }
 
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
         this.drawOxygenBufferBar(stack, this.x + 34, this.y + 9, 0);
     }
 
@@ -82,7 +83,6 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     @Override
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
         this.drawOxygenTooltip(stack, mouseX, mouseY, this.x + 33, this.y + 9, 0);
     }
 }

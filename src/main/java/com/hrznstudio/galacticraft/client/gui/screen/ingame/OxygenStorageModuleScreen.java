@@ -77,10 +77,4 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
-    }
 }

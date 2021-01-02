@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.EnergyBufferWidget;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
@@ -78,6 +79,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                 return false;
             }
         }));
+        this.addWidget(new EnergyBufferWidget(handler.blockEntity.getCapacitor(), 10, 9, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -107,7 +109,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
         client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.size"), this.x + 70, this.y + 58, Formatting.DARK_GRAY.getColorValue());
 
-        this.drawEnergyBufferBar(matrices, this.x + 10, this.y + 9);
         this.drawOxygenBufferBar(matrices, this.x + 33, this.y + 9, 0);
     }
 
@@ -134,14 +135,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     @Override
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(matrices, mouseX, mouseY);
-        this.drawEnergyTooltip(matrices, mouseX, mouseY, this.x + 10, this.y + 9);
-
-        if (check(mouseX, mouseY, this.x + 33, this.y + 9, OVERLAY_WIDTH, OVERLAY_HEIGHT)) {
-            List<OrderedText> toolTipLines = new ArrayList<>();
-            toolTipLines.addAll(client.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(String.valueOf(handler.blockEntity.getFluidTank().getContents(0).getAmount())).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)), 10000));
-            toolTipLines.addAll(client.textRenderer.wrapLines(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 100.0D))).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.RED)), 10000));
-            this.renderOrderedTooltip(matrices, toolTipLines, mouseX, mouseY);
-        }
+        this.drawOxygenTooltip(matrices, mouseX, mouseY, this.x + 33, this.y + 9, 0);
     }
 
     @Override
