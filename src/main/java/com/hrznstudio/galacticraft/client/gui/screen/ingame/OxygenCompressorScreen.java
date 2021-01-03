@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.OxygenCompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -48,6 +49,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
         this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new OxygenTankWidget(handler.blockEntity.getFluidTank(), 0, 30, 8, 48));
     }
 
     @Override
@@ -63,7 +65,6 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
             this.drawTexture(stack, this.x + 93, this.y + 64, 187, 18, -11, (int) height);
         }
 
-        this.drawOxygenBufferBar(stack, this.x + 34, this.y + 9, 0);
     }
 
     @Override
@@ -71,11 +72,5 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         super.render(stack, mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_compressor").getString(), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawOxygenTooltip(stack, mouseX, mouseY, this.x + 33, this.y + 9, 0);
     }
 }

@@ -472,9 +472,9 @@ public class Constants {
         public static final int ENERGY_LIGHT_Y = 0;
 
         public static final int OXYGEN_DARK_X = 0;
-        public static final int OXYGEN_DARK_Y = 48;
+        public static final int OXYGEN_DARK_Y = 50;
         public static final int OXYGEN_LIGHT_X = 16;
-        public static final int OXYGEN_LIGHT_Y = 48;
+        public static final int OXYGEN_LIGHT_Y = 50;
 
         public static final int FLUID_TANK_WIDTH = 18;
 

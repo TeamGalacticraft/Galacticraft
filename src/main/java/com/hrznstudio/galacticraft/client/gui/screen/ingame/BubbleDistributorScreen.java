@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
@@ -70,6 +71,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         }));
 
         this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new OxygenTankWidget(handler.blockEntity.getFluidTank(), 0, 31, 8, 48));
     }
 
     @Override
@@ -104,8 +106,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         }
 
         client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.size"), this.x + 70, this.y + 64, Formatting.DARK_GRAY.getColorValue());
-
-        this.drawOxygenBufferBar(matrices, this.x + 33, this.y + 9, 0);
     }
 
     @Override
@@ -126,12 +126,6 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.blockEntity.getSize()))).setStyle(Constants.Misc.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
         }
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(matrices, mouseX, mouseY);
-        this.drawOxygenTooltip(matrices, mouseX, mouseY, this.x + 33, this.y + 9, 0);
     }
 
     @Override
