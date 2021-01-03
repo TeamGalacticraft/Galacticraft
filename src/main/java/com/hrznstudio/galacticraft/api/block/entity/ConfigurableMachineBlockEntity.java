@@ -78,6 +78,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     private MachineStatus status = MachineStatus.EMPTY;
     private RedstoneState redstone = RedstoneState.IGNORE;
+    private boolean noDrop = false;
 
 
     public ConfigurableMachineBlockEntity(BlockEntityType<? extends ConfigurableMachineBlockEntity> blockEntityType) {
@@ -259,6 +260,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.security.toTag(tag);
         this.sideConfigInfo.toTag(tag);
         this.redstone.toTag(tag);
+        tag.putBoolean("NoDrop", this.noDrop);
         return tag;
     }
 
@@ -271,6 +273,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.security.fromTag(tag);
         this.sideConfigInfo.fromTag(tag);
         this.redstone = RedstoneState.fromTag(tag);
+        this.noDrop = tag.getBoolean("NoDrop");
     }
 
     @Override

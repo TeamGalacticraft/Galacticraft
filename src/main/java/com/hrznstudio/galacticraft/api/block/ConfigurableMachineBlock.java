@@ -44,6 +44,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.loot.context.LootContext;
+import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
@@ -64,6 +66,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -238,6 +242,13 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
             }
         }
+    }
+
+    @Override
+    public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
+        BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
+        if (entity.toTag(new CompoundTag()).getBoolean("NoDrop")) return Collections.emptyList();
+        return super.getDroppedStacks(state, builder);
     }
 
     @Override
