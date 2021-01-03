@@ -55,7 +55,7 @@ public class BiomePropertyType<T> {
 
     public static class Builder<T> {
         private T defaultValue = null;
-        private Text name = Constants.Misc.EMPTY;
+        private Text name = Constants.Misc.EMPTY_TEXT;
 
         public Builder<T> defaultValue(T defaultValue) {
             this.defaultValue = defaultValue;

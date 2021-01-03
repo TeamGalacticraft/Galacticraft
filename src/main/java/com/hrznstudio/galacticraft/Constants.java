@@ -581,7 +581,7 @@ public class Constants {
     }
 
     public static class Misc {
-        public static final Text EMPTY = new LiteralText("");
+        public static final Text EMPTY_TEXT = new LiteralText("");
         public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
     }
 }

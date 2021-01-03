@@ -115,6 +115,6 @@ public enum SideOption implements Comparable<SideOption> {
             case ITEM_OUTPUT:
                 return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         }
-        return Constants.Misc.EMPTY;
+        return Constants.Misc.EMPTY_TEXT;
     }
 }

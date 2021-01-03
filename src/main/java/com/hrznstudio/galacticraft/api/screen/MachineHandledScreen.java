@@ -30,28 +30,23 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.minecraft.client.MinecraftClient;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.*;
@@ -153,11 +148,11 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private void sendSecurityUpdate(ConfigurableMachineBlockEntity entity) {
         if (this.playerInventory.player.getUuid().equals(entity.getSecurity().getOwner()) || !entity.getSecurity().hasOwner()) {
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "security"),
+            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "security"),
                     new PacketByteBuf(Unpooled.buffer())
                             .writeBlockPos(pos)
                             .writeEnumConstant(entity.getSecurity().getPublicity())
-            ));
+            );
         } else {
             Galacticraft.logger.error("Tried to send security update when not the owner!");
         }
@@ -650,11 +645,11 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private void sendRedstoneUpdate(ConfigurableMachineBlockEntity entity) {
-        MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "redstone"),
+        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "redstone"),
                 new PacketByteBuf(Unpooled.buffer())
                         .writeBlockPos(pos)
                         .writeEnumConstant(entity.getRedstone())
-        ));
+        );
     }
 
     protected void drawOxygenBufferBar(MatrixStack stack, int x, int y, int tank) {
@@ -691,7 +686,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 buf.writeBoolean(positive);
                 buf.writeEnumConstant(face);
             }
-            MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "side_config"), buf));
+            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
         } else {
             Galacticraft.logger.error("Tried to send side update when not trusted!");
         }

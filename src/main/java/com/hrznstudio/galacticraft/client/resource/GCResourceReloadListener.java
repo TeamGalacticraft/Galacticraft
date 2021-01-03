@@ -32,6 +32,7 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasHolder;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -41,16 +42,17 @@ import net.minecraft.world.BlockRenderView;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class FluidRenderingResourceReloadListener implements SimpleSynchronousResourceReloadListener {
+public class GCResourceReloadListener implements SimpleSynchronousResourceReloadListener {
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier(Constants.MOD_ID, "fluid_reload_listener");
+        return new Identifier(Constants.MOD_ID, "resource_reload_listener");
     }
 
     @Override
@@ -60,33 +62,15 @@ public class FluidRenderingResourceReloadListener implements SimpleSynchronousRe
 
     @Override
     public void apply(ResourceManager var1) {
-        FluidRenderHandler oilRenderHandler = new FluidRenderHandler() {
-            @Override
-            public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
-                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
-            }
+        Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
+        FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
+        FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen"))};
 
-            @Override
-            public int getFluidColor(BlockRenderView view, BlockPos pos, FluidState state) {
-                return -1;
-            }
-        };
-
-        FluidRenderHandler fuelRenderHandler = new FluidRenderHandler() {
-            @Override
-            public Sprite[] getFluidSprites(BlockRenderView view, BlockPos pos, FluidState state) {
-                return new Sprite[]{MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
-            }
-
-            @Override
-            public int getFluidColor(BlockRenderView view, BlockPos pos, FluidState state) {
-                return -1;
-            }
-        };
-
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.CRUDE_OIL, oilRenderHandler);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_CRUDE_OIL, oilRenderHandler);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FUEL, fuelRenderHandler);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_FUEL, fuelRenderHandler);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_CRUDE_OIL, oil);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_FUEL, fuel);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.OXYGEN, oxygen);
     }
 }

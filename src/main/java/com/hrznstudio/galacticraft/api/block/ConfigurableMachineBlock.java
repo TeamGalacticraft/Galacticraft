@@ -77,7 +77,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
     private final TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo;
 
     protected ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory) {
-        this(settings, factory, (view) -> null, Constants.Misc.EMPTY);
+        this(settings, factory, (view) -> null, Constants.Misc.EMPTY_TEXT);
     }
 
     public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo) {
@@ -156,7 +156,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
 
         if (stack != null && stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
             CompoundTag tag = stack.getTag().getCompound("BlockEntityTag");
-            lines.add(Constants.Misc.EMPTY);
+            lines.add(Constants.Misc.EMPTY_TEXT);
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
             lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
             if (tag.getBoolean("Public")) {
@@ -202,7 +202,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
 
             @Override
             public Text getDisplayName() {
-                return Constants.Misc.EMPTY;
+                return Constants.Misc.EMPTY_TEXT;
             }
 
             @Override
