@@ -665,19 +665,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.drawTexture(stack, x, (y - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
     }
 
-    protected void drawFluidTankBufferBar(MatrixStack stack, int tank, int tankX, int tankY) {
-        FluidVolume content = this.handler.blockEntity.getFluidTank().getContents(tank);
-        if (content.isEmpty()) return;
-        stack.push();
-        double scale = content.getAmount().divide(this.handler.blockEntity.getFluidTankMaxCapacity()).doubleValue();
-        Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getFluid()).getFluidSprites(world, pos, content.getFluid().getDefaultState())[0];
-        this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        drawSprite(stack, tankX + 1, ((tankY + 1) - (int)(Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT * scale)) + Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT, 0, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_WIDTH - 2, (int)(Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT * scale) - 2, sprite);
-        stack.pop();
-        this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(stack, tankX, tankY, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_X, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_Y, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_WIDTH, Constants.TextureCoordinates.LARGE_TANK_OVERLAY_HEIGHT);
-    }
-
     protected void drawOxygenTooltip(MatrixStack stack, int mouseX, int mouseY, int x, int y, int tank) {
         if (check(mouseX, mouseY, x, y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> toolTipLines = new ArrayList<>(2);

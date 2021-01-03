@@ -39,7 +39,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class EnergyBufferWidget extends AbstractWidget {
+public class CapacitorWidget extends AbstractWidget {
     private final CapacitorComponent component;
     private final int x;
     private final int y;
@@ -47,7 +47,7 @@ public class EnergyBufferWidget extends AbstractWidget {
     private final Supplier<Collection<? extends Text>> tooltipSupplier;
     private final Supplier<MachineStatus> statusSupplier;
 
-    public EnergyBufferWidget(CapacitorComponent component, int x, int y, int height, Supplier<Collection<? extends Text>> tooltipSupplier, Supplier<MachineStatus> statusSupplier) {
+    public CapacitorWidget(CapacitorComponent component, int x, int y, int height, Supplier<Collection<? extends Text>> tooltipSupplier, Supplier<MachineStatus> statusSupplier) {
         this.component = component;
         this.x = x;
         this.y = y;
@@ -86,6 +86,11 @@ public class EnergyBufferWidget extends AbstractWidget {
     private void render(MatrixStack matrices, int height, float scale) {
         this.drawTexture(matrices, this.x, this.y, Constants.TextureCoordinates.ENERGY_DARK_X, Constants.TextureCoordinates.ENERGY_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, height);
         this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * scale));
+    }
+
+    @Override
+    public void drawTexture(MatrixStack matrices, int x, int y, int u, int v, int width, int height) {
+        drawTexture(matrices, x, y, u, v, width, height, 128, 128);
     }
 
     public CapacitorComponent getComponent() {

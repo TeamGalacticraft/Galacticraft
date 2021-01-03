@@ -473,10 +473,44 @@ public class Constants {
         public static final int OXYGEN_DARK_Y = 40;
         public static final int OXYGEN_LIGHT_X = 12;
         public static final int OXYGEN_LIGHT_Y = 40;
-        public static final int LARGE_TANK_OVERLAY_X = 54; //8 bucket tank
-        public static final int LARGE_TANK_OVERLAY_Y = 80;
-        public static final int LARGE_TANK_OVERLAY_WIDTH = 18;
-        public static final int LARGE_TANK_OVERLAY_HEIGHT = 49;
+
+        public static final int FLUID_TANK_WIDTH = 18;
+
+        private static final int BASE_FLUID_TANK_Y = 49;
+
+        public static final int FLUID_TANK_8_16_X = 24;
+        public static final int FLUID_TANK_8_16_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_8_16_HEIGHT = 49;
+
+        public static final int FLUID_TANK_7_14_X = FLUID_TANK_8_16_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_7_14_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_7_14_HEIGHT = FLUID_TANK_8_16_HEIGHT - 6; // segment size
+
+        public static final int FLUID_TANK_6_12_X = FLUID_TANK_7_14_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_6_12_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_6_12_HEIGHT = FLUID_TANK_7_14_HEIGHT - 6;
+
+        public static final int FLUID_TANK_5_10_X = FLUID_TANK_6_12_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_5_10_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_5_10_HEIGHT = FLUID_TANK_6_12_HEIGHT - 6;
+
+        public static final int FLUID_TANK_4_8_X = FLUID_TANK_5_10_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_4_8_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_4_8_HEIGHT = FLUID_TANK_5_10_HEIGHT - 6;
+
+        public static final int FLUID_TANK_3_6_X = FLUID_TANK_5_10_X;
+        public static final int FLUID_TANK_3_6_Y = FLUID_TANK_5_10_Y - FLUID_TANK_5_10_HEIGHT;
+        public static final int FLUID_TANK_3_6_HEIGHT = FLUID_TANK_4_8_HEIGHT - 6;
+
+        public static final int FLUID_TANK_2_4_X = FLUID_TANK_6_12_X;
+        public static final int FLUID_TANK_2_4_Y = FLUID_TANK_6_12_Y - FLUID_TANK_6_12_HEIGHT;
+        public static final int FLUID_TANK_2_4_HEIGHT = FLUID_TANK_3_6_HEIGHT - 6;
+
+        public static final int FLUID_TANK_1_2_X = FLUID_TANK_7_14_X;
+        public static final int FLUID_TANK_1_2_Y = FLUID_TANK_7_14_Y - FLUID_TANK_7_14_HEIGHT;
+        public static final int FLUID_TANK_1_2_HEIGHT = FLUID_TANK_2_4_HEIGHT - 6;
+
+        public static final int FLUID_TANK_UNDERLAY_OFFSET = -49;
     }
 
     public static class ScreenHandler {
