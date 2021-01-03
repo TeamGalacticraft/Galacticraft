@@ -584,4 +584,8 @@ public class Constants {
         public static final Text EMPTY_TEXT = new LiteralText("");
         public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
     }
+
+    public static class Nbt {
+        public static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
+    }
 }

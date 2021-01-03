@@ -154,8 +154,8 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
             }
         }
 
-        if (stack != null && stack.getTag() != null && stack.getTag().contains("BlockEntityTag")) {
-            CompoundTag tag = stack.getTag().getCompound("BlockEntityTag");
+        if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
+            CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
             lines.add(Constants.Misc.EMPTY_TEXT);
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
             lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
@@ -194,25 +194,29 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
 
     @Override
     public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-            @Override
-            public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                buf.writeBlockPos(pos);
-            }
+        if (!world.isClient) {
+            if (((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getSecurity().isOwner(player) || (((ConfigurableMachineBlockEntity) world.getBlockEntity(pos))).canUse(player)) {
+                player.openHandledScreen(new ExtendedScreenHandlerFactory() {
+                    @Override
+                    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
+                        buf.writeBlockPos(pos);
+                    }
 
-            @Override
-            public Text getDisplayName() {
-                return Constants.Misc.EMPTY_TEXT;
-            }
+                    @Override
+                    public Text getDisplayName() {
+                        return Constants.Misc.EMPTY_TEXT;
+                    }
 
-            @Override
-            public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
-                //TODO: Look into why we have to create a new PacketByteBuf.
-                return factory.create(syncId, inv, buf);
+                    @Override
+                    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                        buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
+                        //TODO: Look into why we have to create a new PacketByteBuf.
+                        return factory.create(syncId, inv, buf);
+                    }
+                });
             }
-        });
+        }
 
         return ActionResult.SUCCESS;
     }
@@ -254,7 +258,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
         ItemStack stack = super.getPickStack(view, pos, state);
         CompoundTag tag = (stack.getTag() != null ? stack.getTag() : new CompoundTag());
         if (view.getBlockEntity(pos) != null) {
-            tag.put("BlockEntityTag", view.getBlockEntity(pos).toTag(new CompoundTag()));
+            tag.put(Constants.Nbt.BLOCK_ENTITY_TAG, view.getBlockEntity(pos).toTag(new CompoundTag()));
         }
 
         stack.setTag(tag);
