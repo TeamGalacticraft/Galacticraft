@@ -38,7 +38,7 @@ public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSola
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
         Inventory inventory = blockEntity.getInventory().asInventory();
 
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 53));
+        this.addSlot(new ChargeSlot(inventory, 0, 8, 62));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {

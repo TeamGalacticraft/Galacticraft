@@ -53,7 +53,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     public BasicSolarPanelScreen(BasicSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 10, 9, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override

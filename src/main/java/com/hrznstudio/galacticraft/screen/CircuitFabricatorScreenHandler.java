@@ -50,13 +50,13 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
         addProperty(progress);
         Inventory inventory = blockEntity.getInventory().asInventory();
         // Energy slot
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 79));
-        this.addSlot(new ItemSpecificSlot(inventory, 1, 8, 15, Items.DIAMOND));
-        this.addSlot(new ItemSpecificSlot(inventory, 2, 8 + (18 * 3), 79, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(inventory, 3, 8 + (18 * 3), 79 - 18, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(inventory, 4, 8 + (18 * 6), 79 - 18, Items.REDSTONE));
-        this.addSlot(new ItemSpecificSlot(inventory, 5, 8 + (18 * 7), 15, materials));
-        this.addSlot(new FurnaceOutputSlot(playerEntity, inventory, 6, 8 + (18 * 8), 79));
+        this.addSlot(new ChargeSlot(inventory, 0, 8, 86));
+        this.addSlot(new ItemSpecificSlot(inventory, 1, 8, 8, Items.DIAMOND));
+        this.addSlot(new ItemSpecificSlot(inventory, 2, 62, 68, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(inventory, 3, 62, 86, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(inventory, 4, 116, 68, Items.REDSTONE));
+        this.addSlot(new ItemSpecificSlot(inventory, 5, 134, 8, materials));
+        this.addSlot(new FurnaceOutputSlot(playerEntity, inventory, 6, 152, 86));
 
 
         // Player inventory slots

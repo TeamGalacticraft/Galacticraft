@@ -42,23 +42,13 @@ import net.minecraft.util.Identifier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistributorScreenHandler> {
-    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.BUBBLE_DISTRIBUTOR_SCREEN));
-    private static final int OVERLAY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
-    private static final int OVERLAY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-    private static final int OXYGEN_X = Constants.TextureCoordinates.OXYGEN_LIGHT_X;
-    private static final int OXYGEN_Y = Constants.TextureCoordinates.OXYGEN_LIGHT_Y;
-    private static final int OXYGEN_DIMMED_X = Constants.TextureCoordinates.OXYGEN_DARK_X;
-    private static final int OXYGEN_DIMMED_Y = Constants.TextureCoordinates.OXYGEN_DARK_Y;
-    private static final int BUTTON_WIDTH = 13;
-    private static final int BUTTON_HEIGHT = 13;
-    private static final int ARROW_WIDTH = 11;
-    private static final int ARROW_HEIGHT = 10;
+
     private final TextFieldWidget textField;
 
     public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
-        this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 53, 26, 20, new LiteralText(String.valueOf(handler.blockEntity.getSize())));
+        this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 59, 26, 20, new LiteralText(String.valueOf(handler.blockEntity.getSize())));
         textField.setChangedListener((s -> {
             try {
                 if (Byte.parseByte(s) < 1) {
@@ -76,7 +66,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                 return false;
             }
         }));
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 10, 9, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -90,21 +81,27 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
         if (!handler.blockEntity.bubbleVisible) {
             if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, 0, 182, 13, 13);
+                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_RED_X, Constants.TextureCoordinates.BUTTON_RED_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             } else {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, 0, 169, 13, 13);
+                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_RED_HOVER_X, Constants.TextureCoordinates.BUTTON_RED_HOVER_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             }
             client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.not_visible"), this.x + 60 , this.y + 18, Formatting.RED.getColorValue());
         } else {
             if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, 13, 182, 13, 13);
+                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_GREEN_X, Constants.TextureCoordinates.BUTTON_GREEN_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             } else {
-                this.drawTexture(matrices, this.x + 156, this.y + 16, 13, 169, 13, 13);
+                this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_GREEN_HOVER_X, Constants.TextureCoordinates.BUTTON_GREEN_HOVER_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             }
             client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.visible"), this.x + 60, this.y + 18, Formatting.GREEN.getColorValue());
         }
+        if (check(mouseX, mouseY, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
+            this.drawTexture(matrices, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_UP_HOVER_X, Constants.TextureCoordinates.ARROW_UP_HOVER_Y, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT);
+        }
+        if (check(mouseX, mouseY, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
+            this.drawTexture(matrices, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_DOWN_HOVER_X, Constants.TextureCoordinates.ARROW_DOWN_HOVER_Y, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT);
+        }
 
-        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.size"), this.x + 70, this.y + 58, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.size"), this.x + 70, this.y + 64, Formatting.DARK_GRAY.getColorValue());
 
         this.drawOxygenBufferBar(matrices, this.x + 33, this.y + 9, 0);
     }
@@ -112,7 +109,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        textField.setText("" + handler.blockEntity.getTargetSize());
+        textField.setText(String.valueOf(handler.blockEntity.getTargetSize()));
         DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
         client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(handler.blockEntity.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
@@ -121,7 +118,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
 
         this.textField.x = this.x + 132;
-        this.textField.y = this.y + 53;
+        this.textField.y = this.y + 59;
 
         if (handler.blockEntity.getStatus().getType().isActive()) {
             this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.blockEntity.getSize()))).setStyle(Constants.Misc.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
@@ -153,13 +150,13 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (check(mouseX, mouseY, this.x + 156, this.y + 16, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (check(mouseX, mouseY, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT)) {
                 handler.blockEntity.bubbleVisible = !handler.blockEntity.bubbleVisible;
                 MinecraftClient.getInstance().getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.blockEntity.bubbleVisible)).writeBlockPos(this.handler.blockEntity.getPos())));
                 return true;
             }
 
-            if (check(mouseX, mouseY, this.x + 158, this.y + 53, ARROW_WIDTH, ARROW_HEIGHT)) {
+            if (check(mouseX, mouseY, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
                 if (handler.blockEntity.getTargetSize() != Byte.MAX_VALUE) {
                     handler.blockEntity.setTargetSize((byte) (handler.blockEntity.getTargetSize() + 1));
                     textField.setText(handler.blockEntity.getTargetSize() + "");
@@ -168,7 +165,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
                 }
             }
 
-            if (check(mouseX, mouseY, this.x + 158, this.y + 63, ARROW_WIDTH, ARROW_HEIGHT)) {
+            if (check(mouseX, mouseY, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
                 if (handler.blockEntity.getTargetSize() > 1) {
                     handler.blockEntity.setTargetSize((byte) (handler.blockEntity.getTargetSize() - 1));
                     textField.setText(handler.blockEntity.getTargetSize() + "");

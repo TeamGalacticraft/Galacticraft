@@ -55,7 +55,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 10, 35, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 32, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
         int topPos = this.y;
 
         progressDisplayX = leftPos + 90;
-        progressDisplayY = topPos + 82;
+        progressDisplayY = topPos + 89;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight + 26);
         this.drawProgressBar(stack);

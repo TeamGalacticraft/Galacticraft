@@ -38,13 +38,13 @@ import net.minecraft.screen.slot.Slot;
  */
 public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGeneratorBlockEntity> {
 
-    private static final Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
+    private static final Item[] FUEL = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
 
     public CoalGeneratorScreenHandler(int syncId, PlayerEntity playerEntity, CoalGeneratorBlockEntity generator) {
         super(syncId, playerEntity, generator, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
         Inventory inventory = blockEntity.getInventory().asInventory();
         // Coal Generator fuel slot
-        this.addSlot(new ItemSpecificSlot(inventory, 0, 8, 72, fuel));
+        this.addSlot(new ItemSpecificSlot(inventory, 0, 8, 74, FUEL));
         this.addSlot(new ChargeSlot(inventory, 1, 8, 8));
 
         // Player inventory slots

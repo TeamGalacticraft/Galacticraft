@@ -41,18 +41,13 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorScreenHandler> {
-
-    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
-    private static final int OVERLAY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
-    private static final int OVERLAY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-
 
     public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 181;
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 11, 18, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override

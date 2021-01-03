@@ -48,9 +48,9 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 10, 35, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
-        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 122, 27, 0, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
-        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 152, 27, 1, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 122, 28, 0, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
+        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 152, 28, 1, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
     }
 
     @Override

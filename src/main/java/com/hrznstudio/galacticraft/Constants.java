@@ -463,22 +463,24 @@ public class Constants {
     }
 
     public static class TextureCoordinates {
-        public static final int OVERLAY_WIDTH = 12;
-        public static final int OVERLAY_HEIGHT = 40;
+        public static final int OVERLAY_WIDTH = 16;
+        public static final int OVERLAY_HEIGHT = 48;
+
         public static final int ENERGY_DARK_X = 0;
         public static final int ENERGY_DARK_Y = 0;
-        public static final int ENERGY_LIGHT_X = 12;
+        public static final int ENERGY_LIGHT_X = 16;
         public static final int ENERGY_LIGHT_Y = 0;
+
         public static final int OXYGEN_DARK_X = 0;
-        public static final int OXYGEN_DARK_Y = 40;
-        public static final int OXYGEN_LIGHT_X = 12;
-        public static final int OXYGEN_LIGHT_Y = 40;
+        public static final int OXYGEN_DARK_Y = 48;
+        public static final int OXYGEN_LIGHT_X = 16;
+        public static final int OXYGEN_LIGHT_Y = 48;
 
         public static final int FLUID_TANK_WIDTH = 18;
 
         private static final int BASE_FLUID_TANK_Y = 49;
 
-        public static final int FLUID_TANK_8_16_X = 24;
+        public static final int FLUID_TANK_8_16_X = 32;
         public static final int FLUID_TANK_8_16_Y = BASE_FLUID_TANK_Y;
         public static final int FLUID_TANK_8_16_HEIGHT = 49;
 
@@ -511,6 +513,38 @@ public class Constants {
         public static final int FLUID_TANK_1_2_HEIGHT = FLUID_TANK_2_4_HEIGHT - 6;
 
         public static final int FLUID_TANK_UNDERLAY_OFFSET = -49;
+
+        public static final int BUTTON_WIDTH = 13;
+        public static final int BUTTON_HEIGHT = 13;
+
+        public static final int BUTTON_RED_X = 0;
+        public static final int BUTTON_RED_Y = 115;
+        public static final int BUTTON_RED_HOVER_X = 0;
+        public static final int BUTTON_RED_HOVER_Y = 102;
+
+        public static final int BUTTON_GREEN_X = 13;
+        public static final int BUTTON_GREEN_Y = 115;
+        public static final int BUTTON_GREEN_HOVER_X = 13;
+        public static final int BUTTON_GREEN_HOVER_Y = 102;
+
+        public static final int BUTTON_NORMAL_X = 26;
+        public static final int BUTTON_NORMAL_Y = 115;
+        public static final int BUTTON_NORMAL_HOVER_X = 26;
+        public static final int BUTTON_NORMAL_HOVER_Y = 102;
+
+        public static final int ARROW_VERTICAL_WIDTH = 11;
+        public static final int ARROW_VERTICAL_HEIGHT = 10;
+
+        public static final int ARROW_UP_X = 39;
+        public static final int ARROW_UP_Y = 108;
+        public static final int ARROW_UP_HOVER_X = 50;
+        public static final int ARROW_UP_HOVER_Y = 108;
+
+        public static final int ARROW_DOWN_X = 39;
+        public static final int ARROW_DOWN_Y = 118;
+        public static final int ARROW_DOWN_HOVER_X = 50;
+        public static final int ARROW_DOWN_HOVER_Y = 118;
+
     }
 
     public static class ScreenHandler {

@@ -41,7 +41,7 @@ public class OxygenCompressorScreenHandler extends MachineScreenHandler<OxygenCo
         Inventory inventory = blockEntity.getInventory().asInventory();
 
         // Charging slot
-        this.addSlot(new ChargeSlot(inventory, 0, 20, 55));
+        this.addSlot(new ChargeSlot(inventory, 0, 8, 62));
         this.addSlot(new OxygenTankSlot(inventory, 1, 80, 27));
 
         // Player inventory slots

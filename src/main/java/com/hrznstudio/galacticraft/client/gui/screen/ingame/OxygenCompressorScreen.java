@@ -41,20 +41,13 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompressorScreenHandler> {
-    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COMPRESSOR_SCREEN));
-    private static final int OVERLAY_WIDTH = Constants.TextureCoordinates.OVERLAY_WIDTH;
-    private static final int OVERLAY_HEIGHT = Constants.TextureCoordinates.OVERLAY_HEIGHT;
-    private static final int OXYGEN_X = Constants.TextureCoordinates.OXYGEN_LIGHT_X;
-    private static final int OXYGEN_Y = Constants.TextureCoordinates.OXYGEN_LIGHT_Y;
-    private static final int OXYGEN_DIMMED_X = Constants.TextureCoordinates.OXYGEN_DARK_X;
-    private static final int OXYGEN_DIMMED_Y = Constants.TextureCoordinates.OXYGEN_DARK_Y;
 
     public OxygenCompressorScreen(OxygenCompressorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 10, 9, 40, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override

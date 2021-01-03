@@ -43,7 +43,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
         addProperty(lastCollectAmount);
 
         // Charging slot
-        this.addSlot(new ChargeSlot(inventory, 0, 20, 70));
+        this.addSlot(new ChargeSlot(inventory, 0, 13, 69));
 
         // Player inventory slots
         int playerInvYOffset = 99;
