@@ -23,11 +23,9 @@
 package com.hrznstudio.galacticraft.component;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
-import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.BatteryItem;
@@ -82,23 +80,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public void registerBlockComponentFactories(BlockComponentFactoryRegistry registry) {
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.CAPACITOR_COMPONENT, be -> new SimpleCapacitorComponent(be.getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
-            @Override
-            public boolean canExtractEnergy() {
-                return be.canExtractEnergy();
-            }
-
-            @Override
-            public boolean canInsertEnergy() {
-                return be.canInsertEnergy();
-            }
-
-            @Override
-            public void fromTag(CompoundTag tag) {
-                if (getMaxEnergy() == 0) return;
-                super.fromTag(tag);
-            }
-        });
 
         registry.registerFor(WireBlockEntity.class, UniversalComponents.CAPACITOR_COMPONENT, be -> new SimpleCapacitorComponent(be.getMaxTransferRate(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
             @Override
@@ -109,10 +90,11 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             @Override
             public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
                 if (type.isCompatibleWith(getPreferredType())) {
-                    return be.getNetwork().insertEnergy(be.getPos(), null, type, amount, actionType);
-                } else {
-                    return amount;
+                    if (be.getWorld() != null && !be.getWorld().isClient) {
+                        return be.getNetwork().insertEnergy(be.getPos(), null, type, amount, actionType);
+                    }
                 }
+                return amount;
             }
 
             @Override
@@ -158,8 +140,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
         registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(1, 10)) {
             @Override
             public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                if (be.getFluid() == Pipe.FluidData.EMPTY) {
-                    assert be.getNetwork() != null;
+                if (be.getWorld() != null && !be.getWorld().isClient && be.getFluid() == Pipe.FluidData.EMPTY) {
                     Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
                     if (action == ActionType.PERFORM) {
                         if (data == null) {
@@ -200,83 +181,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             @Override
             public FluidVolume getContents(int slot) {
                 return FluidVolume.EMPTY;
-            }
-        });
-
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.INVENTORY_COMPONENT, be -> new SimpleInventoryComponent(be.getInventorySize()) {
-            @Override
-            public boolean isAcceptableStack(int slot, ItemStack stack) {
-                return be.getFilterForSlot(slot).test(stack) || stack.isEmpty();
-            }
-
-            @Override
-            public boolean canExtract(int slot) {
-                return be.canHopperExtractItems(slot);
-            }
-
-            @Override
-            public boolean canInsert(int slot) {
-                return be.canHopperInsertItems(slot);
-            }
-
-            @Override
-            public void fromTag(CompoundTag tag) {
-                this.clear();
-                if (be.size() == 0) return;
-                super.fromTag(tag);
-            }
-        });
-
-        registry.registerFor(ConfigurableMachineBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(be.getFluidTankSize(), be.getFluidTankMaxCapacity()) {
-            @Override
-            public boolean canExtract(int slot) {
-                return be.canExtractFluid(slot);
-            }
-
-            @Override
-            public boolean canInsert(int slot) {
-                return be.canInsertFluid(slot);
-            }
-
-            @Override
-            public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                for (int i = 0; i < contents.size(); i++) {
-                    if (isAcceptableFluid(i, fluid)) {
-                        fluid = insertFluid(i, fluid, action);
-                        if (fluid.isEmpty()) return fluid;
-                    }
-                }
-
-                return fluid;
-            }
-
-            @Override
-            public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-                if (isAcceptableFluid(tank, fluid)) {
-                    return super.insertFluid(tank, fluid, action);
-                }
-                return fluid;
-            }
-
-            public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-                return be.isAcceptableFluid(tank, volume);
-            }
-
-            @Override
-            public void setFluid(int slot, FluidVolume stack) {
-                if (isAcceptableFluid(slot, stack)) super.setFluid(slot, stack);
-            }
-
-            @Override
-            public boolean isAcceptableFluid(int tank) {//how are you supposed to check if its acceptable if you *only* get the tank and no fluid?! also currently unused?
-                return canInsert(tank);
-            }
-
-            @Override
-            public void fromTag(CompoundTag tag) {
-                this.clear();
-                if (this.getTanks() == 0) return;
-                super.fromTag(tag);
             }
         });
 

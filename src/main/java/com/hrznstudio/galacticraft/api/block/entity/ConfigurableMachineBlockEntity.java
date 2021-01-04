@@ -36,9 +36,12 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
+import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
+import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.fabricmc.api.EnvType;
@@ -79,6 +82,126 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     private MachineStatus status = MachineStatus.EMPTY;
     private RedstoneState redstone = RedstoneState.IGNORE;
     private boolean noDrop = false;
+
+    private final @NotNull SimpleCapacitorComponent capacitor = new SimpleCapacitorComponent(this.getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
+        @Override
+        public boolean canExtractEnergy() {
+            return ConfigurableMachineBlockEntity.this.canExtractEnergy();
+        }
+
+        @Override
+        public boolean canInsertEnergy() {
+            return ConfigurableMachineBlockEntity.this.canInsertEnergy();
+        }
+
+        @Override
+        public void readFromNbt(CompoundTag tag) {
+            if (tag.getBoolean("disabled")) return;
+            super.readFromNbt(tag);
+        }
+
+        @Override
+        public void writeToNbt(CompoundTag tag) {
+            if (getMaxEnergy() == 0) {
+                tag.putBoolean("disabled", true);
+                return;
+            }
+            super.writeToNbt(tag);
+        }
+    };
+
+    private final @NotNull SimpleInventoryComponent inventory = new SimpleInventoryComponent(this.getInventorySize()) {
+        @Override
+        public boolean isAcceptableStack(int slot, ItemStack stack) {
+            return ConfigurableMachineBlockEntity.this.getFilterForSlot(slot).test(stack) || stack.isEmpty();
+        }
+
+        @Override
+        public boolean canExtract(int slot) {
+            return ConfigurableMachineBlockEntity.this.canHopperExtractItems(slot);
+        }
+
+        @Override
+        public boolean canInsert(int slot) {
+            return ConfigurableMachineBlockEntity.this.canHopperInsertItems(slot);
+        }
+
+        @Override
+        public void readFromNbt(CompoundTag tag) {
+            if (tag.getBoolean("disabled")) return;
+            super.readFromNbt(tag);
+        }
+
+        @Override
+        public void writeToNbt(CompoundTag tag) {
+            if (getMaxEnergy() == 0) {
+                tag.putBoolean("disabled", true);
+                return;
+            }
+            super.writeToNbt(tag);
+        }
+    };
+
+    private final @NotNull SimpleTankComponent tank = new SimpleTankComponent(this.getFluidTankSize(), this.getFluidTankMaxCapacity()) {
+        @Override
+        public boolean canExtract(int slot) {
+            return ConfigurableMachineBlockEntity.this.canExtractFluid(slot);
+        }
+
+        @Override
+        public boolean canInsert(int slot) {
+            return ConfigurableMachineBlockEntity.this.canInsertFluid(slot);
+        }
+
+        @Override
+        public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
+            for (int i = 0; i < contents.size(); i++) {
+                if (isAcceptableFluid(i, fluid)) {
+                    fluid = insertFluid(i, fluid, action);
+                    if (fluid.isEmpty()) return fluid;
+                }
+            }
+
+            return fluid;
+        }
+
+        @Override
+        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
+            if (isAcceptableFluid(tank, fluid)) {
+                return super.insertFluid(tank, fluid, action);
+            }
+            return fluid;
+        }
+
+        public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+            return ConfigurableMachineBlockEntity.this.isAcceptableFluid(tank, volume);
+        }
+
+        @Override
+        public void setFluid(int slot, FluidVolume stack) {
+            if (isAcceptableFluid(slot, stack)) super.setFluid(slot, stack);
+        }
+
+        @Override
+        public boolean isAcceptableFluid(int tank) {//how are you supposed to check if its acceptable if you *only* get the tank and no fluid?! also currently unused?
+            return canInsert(tank);
+        }
+
+        @Override
+        public void readFromNbt(CompoundTag tag) {
+            if (tag.getBoolean("disabled")) return;
+            super.readFromNbt(tag);
+        }
+
+        @Override
+        public void writeToNbt(CompoundTag tag) {
+            if (getMaxEnergy() == 0) {
+                tag.putBoolean("disabled", true);
+                return;
+            }
+            super.writeToNbt(tag);
+        }
+    };
 
 
     public ConfigurableMachineBlockEntity(BlockEntityType<? extends ConfigurableMachineBlockEntity> blockEntityType) {
@@ -172,33 +295,37 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return 50;
     }
 
-    public final @NotNull CapacitorComponent getCapacitor() {
-        return UniversalComponents.CAPACITOR_COMPONENT.get(this);
+    public final @NotNull SimpleCapacitorComponent getCapacitor() {
+        return this.capacitor;
     }
 
-    public final @NotNull InventoryComponent getInventory() {
-        return UniversalComponents.INVENTORY_COMPONENT.get(this);
+    public final @NotNull SimpleInventoryComponent getInventory() {
+        return this.inventory;
     }
 
-    public final @NotNull TankComponent getFluidTank() {
-        return UniversalComponents.TANK_COMPONENT.get(this);
+    public final @NotNull SimpleTankComponent getFluidTank() {
+        return this.tank;
     }
 
     public final @Nullable CapacitorComponent getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isEnergy())
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isEnergy()) {
             return getCapacitor();
+        }
         return null;
     }
 
     public final @Nullable InventoryComponent getInventory(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isItem())
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isItem()){
             return getInventory();
+        }
         return null;
+
     }
 
     public final @Nullable TankComponent getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isFluid())
+        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isFluid()) {
             return getFluidTank();
+        }
         return null;
     }
 
