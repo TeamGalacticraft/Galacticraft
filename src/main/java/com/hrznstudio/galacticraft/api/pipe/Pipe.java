@@ -44,9 +44,10 @@ public interface Pipe {
 
     /**
      * Returns the associated {@link PipeNetwork}
+     * Has the potential to be null if the pipe has not been initialized.
      * @return The associated {@link PipeNetwork}
      */
-    @NotNull PipeNetwork getNetwork();
+    PipeNetwork getNetwork();
 
     /**
      * Returns whether or not this pipe is able to connect to another block on the specified face/direction
@@ -59,13 +60,13 @@ public interface Pipe {
      * Returns the fluid in the pipe and its transport data
      * @return The fluid in the pipe and its transport data
      */
-    @NotNull Pipe.FluidData getFluid();
+    @NotNull Pipe.FluidData getData();
 
     /**
      * Sets the fluid and the transport data of this pipe
      * @param data The fluid/transport data
      */
-    void setFluid(@NotNull Pipe.FluidData data);
+    void setData(@NotNull Pipe.FluidData data);
 
     default boolean canConnect(Direction direction) {
         return true;
@@ -97,7 +98,7 @@ public interface Pipe {
             return endDir;
         }
 
-        public FluidVolume getFluid() {
+        public FluidVolume getFluidVolume() {
             return fluid;
         }
 

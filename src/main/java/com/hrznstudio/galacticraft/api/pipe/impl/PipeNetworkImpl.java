@@ -146,16 +146,20 @@ public class PipeNetworkImpl implements PipeNetwork {
         removeEdge(neighborPipe, theBlockThatWasActuallyChanged, true);
         BlockPos poss = theBlockThatWasActuallyChanged.subtract(neighborPipe);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, theBlockThatWasActuallyChanged, opposite);
+        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, theBlockThatWasActuallyChanged, opposite);
+        boolean insert = false;
+        boolean extract = false;
         if (component != null) {
-            if (component.canInsertEnergy() && component.canExtractEnergy()) {
-                node(theBlockThatWasActuallyChanged);
+            for (int i = 0; i < component.getTanks(); i++) {
+                insert |= component.canInsert(i);
+                extract |= component.canExtract(i);
+            }
+            node(theBlockThatWasActuallyChanged);
+            if (insert && extract) {
                 edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_IO);
-            } else if (component.canInsertEnergy()) {
-                node(theBlockThatWasActuallyChanged);
+            } else if (insert) {
                 edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_INPUT);
-            } else if (component.canExtractEnergy()) {
-                node(theBlockThatWasActuallyChanged);
+            } else if (extract) {
                 edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_OUTPUT);
             }
         }

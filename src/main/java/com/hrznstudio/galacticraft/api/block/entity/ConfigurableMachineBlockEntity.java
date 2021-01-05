@@ -29,9 +29,10 @@ import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
+import com.hrznstudio.galacticraft.component.SubTankComponent;
+import com.hrznstudio.galacticraft.component.SubInventoryComponent;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
@@ -44,6 +45,7 @@ import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -157,7 +159,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
             for (int i = 0; i < contents.size(); i++) {
                 if (isAcceptableFluid(i, fluid)) {
-                    fluid = insertFluid(i, fluid, action);
+                    fluid = super.insertFluid(i, fluid, action);
                     if (fluid.isEmpty()) return fluid;
                 }
             }
@@ -174,7 +176,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
 
         public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-            return ConfigurableMachineBlockEntity.this.isAcceptableFluid(tank, volume);
+            return ConfigurableMachineBlockEntity.this.isAcceptableFluid(tank, volume) || volume.isEmpty();
         }
 
         @Override
@@ -308,25 +310,72 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public final @Nullable CapacitorComponent getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isEnergy()) {
-            return getCapacitor();
+        if (direction != null) {
+            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (sideOption.getOption().isEnergy()) {
+                return getCapacitor();
+            }
+            return null;
         }
-        return null;
+        return getCapacitor();
     }
 
     public final @Nullable InventoryComponent getInventory(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isItem()){
-            return getInventory();
+        if (direction != null) {
+            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (sideOption.getOption().isItem()) {
+                if (sideOption.isWildcard()) {
+                    IntArrayList list = new IntArrayList();
+                    if (sideOption.getOption().isInput()) {
+                        for (int i = 0; i < tank.getTanks(); i++) {
+                            if (tank.canInsert(i)) {
+                                list.add(i);
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < tank.getTanks(); i++) {
+                            if (tank.canExtract(i)) {
+                                list.add(i);
+                            }
+                        }
+                    }
+                    return new SubInventoryComponent(getInventory(), list.toArray(new int[0]));
+                } else {
+                    return new SubInventoryComponent(getInventory(), new int[]{sideOption.getValue()});
+                }
+            }
+            return null;
         }
-        return null;
-
+        return getInventory();
     }
 
     public final @Nullable TankComponent getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction == null || this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction)).getOption().isFluid()) {
-            return getFluidTank();
+        if (direction != null) {
+            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (sideOption.getOption().isFluid()) {
+                if (sideOption.isWildcard()) {
+                    IntArrayList list = new IntArrayList();
+                    if (sideOption.getOption().isInput()) {
+                        for (int i = 0; i < tank.getTanks(); i++) {
+                            if (tank.canInsert(i)) {
+                                list.add(i);
+                            }
+                        }
+                    } else {
+                        for (int i = 0; i < tank.getTanks(); i++) {
+                            if (tank.canExtract(i)) {
+                                list.add(i);
+                            }
+                        }
+                    }
+                    return new SubTankComponent(getFluidTank(), list.toArray(new int[0]));
+                } else {
+                    return new SubTankComponent(getFluidTank(), new int[]{sideOption.getValue()});
+                }
+            }
+            return null;
         }
-        return null;
+        return getFluidTank();
     }
 
     public final @NotNull SecurityInfo getSecurity() {
@@ -381,9 +430,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        this.getCapacitor().writeToNbt(tag);
-        this.getInventory().writeToNbt(tag);
-        this.getFluidTank().writeToNbt(tag);
+        if (this.getMaxEnergy() > 0) this.getCapacitor().writeToNbt(tag);
+        if (this.getInventorySize() > 0) this.getInventory().writeToNbt(tag);
+        if (this.getFluidTankSize() > 0) this.getFluidTank().writeToNbt(tag);
         this.security.toTag(tag);
         this.sideConfigInfo.toTag(tag);
         this.redstone.toTag(tag);
@@ -394,9 +443,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.getCapacitor().readFromNbt(tag);
-        this.getInventory().readFromNbt(tag);
-        this.getFluidTank().readFromNbt(tag);
+        if (this.getMaxEnergy() > 0) this.getCapacitor().readFromNbt(tag);
+        if (this.getInventorySize() > 0) this.getInventory().readFromNbt(tag);
+        if (this.getFluidTankSize() > 0) this.getFluidTank().readFromNbt(tag);
         this.security.fromTag(tag);
         this.sideConfigInfo.fromTag(tag);
         this.redstone = RedstoneState.fromTag(tag);
@@ -449,16 +498,16 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public void trySpreadFluids(int tank) {
-        if (this.getFluidTank().getTanks() > tank && tank >= 0 && this.canExtractFluid(tank) && !this.getFluidTank().getContents(tank).isEmpty()) {
+        if (this.canExtractFluid(tank) && !this.getFluidTank().getContents(tank).isEmpty()) {
             for (BlockFace face : BlockFace.values()) {
                 ConfiguredSideOption option = this.getSideConfigInfo().get(face);
-                if (option.getOption() == SideOption.FLUID_OUTPUT) {
+                if (option.getOption().isFluid() && option.getOption().isOutput()) {
                     Direction dir = face.toDirection(world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
                     TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos.offset(dir), dir.getOpposite());
                     if (component != null) {
                         for (int i = 0; i < component.getTanks(); i++) {
                             if (component.canInsert(i)) {
-                                FluidVolume a = this.getFluidTank().insertFluid(tank, component.insertFluid(this.getFluidTank().takeFluid(tank, component.getMaxCapacity(i).subtract(component.getContents(i).getAmount()), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
+                                FluidVolume a = this.getFluidTank().insertFluid(tank, component.insertFluid(this.getFluidTank().takeFluid(tank, component.getMaxCapacity(i), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
                                 if (!a.isEmpty()) {
                                     Galacticraft.logger.debug(a.getAmount().toString() + " " + Registry.FLUID.getId(a.getFluid()) + " wasted?!");
                                 }

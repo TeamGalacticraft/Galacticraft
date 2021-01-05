@@ -49,7 +49,6 @@ import java.util.LinkedList;
 public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, Pipe {
     private PipeNetwork network = null;
     private @NotNull Pipe.FluidData data = Pipe.FluidData.EMPTY;
-    private byte timeUntilPush = 0;
 
     public FluidPipeBlockEntity() {
         super(GalacticraftBlockEntities.FLUID_PIPE_TYPE);
@@ -62,33 +61,15 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
     @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
-
-        if (!world.isClient()) {
-            if (this.network == null) {
-                for (Direction direction : Direction.values()) {
-                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof FluidPipeBlockEntity) {
-                        if (((FluidPipeBlockEntity) entity).network != null) {
-                            ((FluidPipeBlockEntity) entity).network.addPipe(pos, this);
-                            break;
-                        }
-                    }
-                }
-                if (this.network == null) {
-                    this.network = PipeNetwork.create((ServerWorld)world);
-                    this.network.addPipe(pos, this);
-                }
-            }
-        }
     }
 
     @Override
-    public @NotNull Pipe.FluidData getFluid() {
+    public @NotNull Pipe.FluidData getData() {
         return data;
     }
 
     @Override
-    public @NotNull PipeNetwork getNetwork() {
+    public PipeNetwork getNetwork() {
         return network;
     }
 
@@ -122,7 +103,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
     }
 
     @Override
-    public void setFluid(@NotNull Pipe.FluidData data) {
+    public void setData(@NotNull Pipe.FluidData data) {
         this.data = data;
     }
 
@@ -151,63 +132,73 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
     @Override
     public void tick() {
         if (world.isClient) return;
+        if (this.network == null) {
+            for (Direction direction : Direction.values()) {
+                BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                if (entity instanceof FluidPipeBlockEntity) {
+                    if (((FluidPipeBlockEntity) entity).network != null) {
+                        ((FluidPipeBlockEntity) entity).network.addPipe(pos, this);
+                        break;
+                    }
+                }
+            }
+            if (this.network == null) {
+                this.network = PipeNetwork.create((ServerWorld) world);
+                this.network.addPipe(pos, this);
+            }
+        }
         if (data != Pipe.FluidData.EMPTY) {
-            if (++timeUntilPush >= 5) {
-                this.timeUntilPush = 0;
-                if (!this.data.getPath().isEmpty()) {
-                    BlockPos pos = this.data.getPath().getLast();
-                    if (pos.equals(this.pos)) {
+            if (!this.data.getPath().isEmpty()) {
+                BlockPos pos = this.data.getPath().getLast();
+                if (pos.equals(this.pos)) {
+                    this.data.getPath().pollLast();
+                    pos = this.data.getPath().getLast();
+                }
+                if (pos.getManhattanDistance(this.pos) > 1) {
+                    throw new RuntimeException();
+                }
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity instanceof FluidPipeBlockEntity) {
+                    if (((FluidPipeBlockEntity) entity).data.getFluidVolume().isEmpty()) {
                         this.data.getPath().pollLast();
-                        pos = this.data.getPath().getLast();
-                    }
-                    if (pos.getManhattanDistance(this.pos) > 1) {
-                        throw new RuntimeException();
-                    }
-                    BlockEntity entity = world.getBlockEntity(pos);
-                    if (entity instanceof FluidPipeBlockEntity) {
-                        if (((FluidPipeBlockEntity) entity).data.getFluid().isEmpty()) {
-                            this.data.getPath().pollLast();
-                            ((FluidPipeBlockEntity) entity).data = this.data;
-                            ((FluidPipeBlockEntity) entity).timeUntilPush = 0;
-                            this.data = Pipe.FluidData.EMPTY;
-                        }
-                    } else {
-                        if (this.data.getPath().size() != 1) {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluid(), ActionType.PERFORM);
-                            if (dat != null) {
-                                this.data = dat;
-                            }
-                            return;
-                        }
-                        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.data.getEndDir().getOpposite());
-                        if (component != null) {
-                            FluidVolume volume = component.insertFluid(data.getFluid(), ActionType.PERFORM);
-                            if (!volume.isEmpty()) {
-                                Pipe.FluidData dat = network.insertFluid(this.pos, null, volume, ActionType.PERFORM);
-                                if (dat != null) {
-                                    this.data = dat;
-                                } else {
-                                    BlockPos finalPos = pos;
-                                    this.data = new Pipe.FluidData(pos, Util.make(new LinkedList<>(), l -> l.add(finalPos)), volume, this.data.getEndDir());
-                                }
-                            } else {
-                                this.data = Pipe.FluidData.EMPTY;
-                            }
-                        } else {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluid(), ActionType.PERFORM);
-                            if (dat != null) {
-                                this.data = dat;
-                            }
-                        }
+                        ((FluidPipeBlockEntity) entity).data = this.data;
+                        this.data = Pipe.FluidData.EMPTY;
                     }
                 } else {
-                    Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluid(), ActionType.PERFORM);
-                    if (dat != null) {
-                        this.data = dat;
+                    if (this.data.getPath().size() != 1) {
+                        Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluidVolume(), ActionType.PERFORM);
+                        if (dat != null) {
+                            this.data = dat;
+                        }
+                        return;
                     }
+                    TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.data.getEndDir().getOpposite());
+                    if (component != null) {
+                        FluidVolume volume = component.insertFluid(data.getFluidVolume(), ActionType.PERFORM);
+                        this.data.getPath().clear();
+                        this.data = Pipe.FluidData.EMPTY;
+                        if (!volume.isEmpty()) {
+                            Pipe.FluidData dat = network.insertFluid(this.pos, null, volume, ActionType.PERFORM);
+                            if (dat != null) {
+                                this.data = dat;
+                            } else {
+                                BlockPos finalPos = pos;
+                                this.data = new Pipe.FluidData(pos, Util.make(new LinkedList<>(), l -> l.add(finalPos)), volume, this.data.getEndDir());
+                            }
+                        }
+                    } else {
+                        Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluidVolume(), ActionType.PERFORM);
+                        if (dat != null) {
+                            this.data = dat;
+                        }
+                    }
+                }
+            } else {
+                Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluidVolume(), ActionType.PERFORM);
+                if (dat != null) {
+                    this.data = dat;
                 }
             }
         }
     }
-
 }

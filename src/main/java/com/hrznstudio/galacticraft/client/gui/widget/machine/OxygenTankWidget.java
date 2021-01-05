@@ -83,7 +83,7 @@ public class OxygenTankWidget extends AbstractWidget {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>(2);
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getComponent().getContents(tank).getAmount().toString() + "B" : (((int) (getComponent().getContents(tank).getAmount().doubleValue() * 1000.0D)) + "mB")).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.doubleValue() * 1000.0D))).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.doubleValue() * 1000.0D))).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.RED)));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }

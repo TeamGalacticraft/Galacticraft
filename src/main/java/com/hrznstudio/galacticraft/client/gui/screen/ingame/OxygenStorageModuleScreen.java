@@ -60,8 +60,8 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
 
         this.drawOxygenBufferBar(stack);
 
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", this.handler.blockEntity.getFluidTank().getContents(0).getAmount().doubleValue()), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 100.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", (int)(this.handler.blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() * 1000.0D)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 1000.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override

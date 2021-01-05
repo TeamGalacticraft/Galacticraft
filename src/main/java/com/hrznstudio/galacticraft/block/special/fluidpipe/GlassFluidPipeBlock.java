@@ -87,10 +87,10 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos thePosOThisPipe, Block block, BlockPos updatedBlockPos, boolean notify) {
-        super.neighborUpdate(state, world, thePosOThisPipe, block, updatedBlockPos, notify);
-        Direction direction = Direction.fromVector(thePosOThisPipe.getX() - updatedBlockPos.getX(), thePosOThisPipe.getY() - updatedBlockPos.getY(), thePosOThisPipe.getZ() - updatedBlockPos.getZ());
-        world.setBlockState(thePosOThisPipe, getStateForNeighborUpdate(state, direction.getOpposite(), world.getBlockState(updatedBlockPos), world, thePosOThisPipe, updatedBlockPos));
+    public void neighborUpdate(BlockState state, World world, BlockPos thePipePos, Block block, BlockPos updatedBlockPos, boolean notify) {
+        super.neighborUpdate(state, world, thePipePos, block, updatedBlockPos, notify);
+        Direction direction = Direction.fromVector(thePipePos.getX() - updatedBlockPos.getX(), thePipePos.getY() - updatedBlockPos.getY(), thePipePos.getZ() - updatedBlockPos.getZ());
+        world.setBlockState(thePipePos, getStateForNeighborUpdate(state, direction.getOpposite(), world.getBlockState(updatedBlockPos), world, thePipePos, updatedBlockPos));
     }
 
     @Override

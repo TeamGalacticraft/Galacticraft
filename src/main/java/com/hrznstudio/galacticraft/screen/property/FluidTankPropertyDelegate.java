@@ -26,6 +26,7 @@ import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.registry.Registry;
 
@@ -41,7 +42,6 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
     @Override
     public int get(int index) {
         if (index % 2 == 0) {
-            if (index == 0) return Registry.FLUID.getRawId(component.getContents(0).getFluid());
             return Registry.FLUID.getRawId(component.getContents(index / 2).getFluid());
         } else {
             return (int) (component.getContents(((index + 1) / 2) - 1).getAmount().doubleValue() * 1000.0D);
@@ -51,7 +51,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
     @Override
     public void set(int index, int value) {
         if (index % 2 == 0) {
-            fluids[index == 0 ? index : (index / 2)] = Registry.FLUID.get(value);
+            fluids[index / 2] = Registry.FLUID.get(value);
         } else {
             component.setFluid(((index + 1) / 2) - 1, new FluidVolume(fluids[((index + 1) / 2) - 1], Fraction.of(value, 1000)));
         }

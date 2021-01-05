@@ -49,13 +49,10 @@ import io.github.cottonmc.component.energy.type.EnergyType;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.github.cottonmc.component.item.impl.SyncedInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -137,19 +134,18 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             }
         });
 
-        registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(1, 10)) {
+        registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(10, 1000)) {
             @Override
             public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                if (be.getWorld() != null && !be.getWorld().isClient && be.getFluid() == Pipe.FluidData.EMPTY) {
+                if (be.getWorld() != null && !be.getWorld().isClient && be.getData() == Pipe.FluidData.EMPTY && be.getNetwork() != null) {
                     Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
                     if (action == ActionType.PERFORM) {
                         if (data == null) {
                             return fluid;
                         }
-                        be.setFluid(data);
-                        return data.getFluid();
+                        be.setData(data);
                     }
-
+                    return new FluidVolume(data.getFluidVolume().getFluid(), fluid.getAmount().subtract(data.getFluidVolume().getAmount()));
                 }
                 return fluid;
             }
@@ -157,6 +153,11 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             @Override
             public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
                 return insertFluid(fluid, action);
+            }
+
+            @Override
+            public boolean canInsert(int slot) {
+                return be.getWorld() != null && !be.getWorld().isClient && be.getData() == Pipe.FluidData.EMPTY && be.getNetwork() != null;
             }
 
             @Override
@@ -171,6 +172,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
 
             @Override
             public void setFluid(int slot, FluidVolume stack) {
+                insertFluid(stack, ActionType.PERFORM);
             }
 
             @Override

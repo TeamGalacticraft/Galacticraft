@@ -36,26 +36,28 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum SideOption implements Comparable<SideOption> {
-    DEFAULT(false, false, false, false),
-    POWER_INPUT(true, false, false, false),
-    POWER_OUTPUT(true, false, false, false),
+    DEFAULT(false, false, false, false, false),
+    POWER_INPUT(true, false, false, true, false),
+    POWER_OUTPUT(true, false, false, false, true),
 //    OXYGEN_INPUT(false, false, false, true),
 //    OXYGEN_OUTPUT(false, false, false, true),
-    FLUID_INPUT(false, true, false, false),
-    FLUID_OUTPUT(false, true, false, false),
-    ITEM_INPUT(false, false, true, false),
-    ITEM_OUTPUT(false, false, true, false);
+    FLUID_INPUT(false, true, false, true, false),
+    FLUID_OUTPUT(false, true, false, false, true),
+    ITEM_INPUT(false, false, true, true, false),
+    ITEM_OUTPUT(false, false, true, false, true);
 
     private final boolean energy;
     private final boolean fluid;
     private final boolean item;
-    private final boolean oxygen;
+    private final boolean input;
+    private final boolean output;
 
-    SideOption(boolean energy, boolean fluid, boolean item, boolean oxygen) {
+    SideOption(boolean energy, boolean fluid, boolean item, boolean input, boolean output) {
         this.energy = energy;
         this.fluid = fluid;
         this.item = item;
-        this.oxygen = oxygen;
+        this.input = input;
+        this.output = output;
     }
 
     public boolean isEnergy() {
@@ -67,11 +69,19 @@ public enum SideOption implements Comparable<SideOption> {
     }
 
     public boolean isOxygen() {
-        return fluid; //todo gas api maybe?
+        return false; //todo gas api maybe?
     }
 
     public boolean isFluid() {
         return fluid;
+    }
+
+    public boolean isInput() {
+        return input;
+    }
+
+    public boolean isOutput() {
+        return output;
     }
 
     public SideOption nextValidOption(ConfigurableMachineBlockEntity blockEntity) {
