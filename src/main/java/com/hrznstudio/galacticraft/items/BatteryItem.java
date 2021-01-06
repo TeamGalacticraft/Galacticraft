@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.items;
@@ -26,9 +25,10 @@ package com.hrznstudio.galacticraft.items;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
-import nerdhub.cardinal.components.api.component.ComponentContainer;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
 import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
@@ -52,22 +52,21 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BatteryItem extends Item implements ItemComponentCallback {
+public class BatteryItem extends Item {
     public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
-        super(settings);
-        ItemComponentCallback.registerSelf(this);
+        super(settings.maxCount(1).maxDamageIfAbsent(MAX_ENERGY));
     }
 
-    public static int getMaxEnergy() {
+    public int getMaxEnergy() {
         return MAX_ENERGY;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        int charge = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.CAPACITOR_COMPONENT).getCurrentEnergy();
+        int charge = CapacitorComponentHelper.INSTANCE.getComponent(stack).getCurrentEnergy();
         if (charge < (MAX_ENERGY / 3)) {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         } else if (charge < (MAX_ENERGY / 3) * 2) {
@@ -101,18 +100,16 @@ public class BatteryItem extends Item implements ItemComponentCallback {
 
     @Override
     public int getEnchantability() {
-        return 0;
+        return -1;
+    }
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return false;
     }
 
     @Override
     public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
         return false;
-    }
-
-    @Override
-    public void initComponents(ItemStack stack, @NotNull ComponentContainer<CopyableComponent<?>> components) {
-        ItemCapacitorComponent component = new ItemCapacitorComponent(getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
-        components.put(UniversalComponents.CAPACITOR_COMPONENT, component);
-        component.listen(() -> stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()));
     }
 }

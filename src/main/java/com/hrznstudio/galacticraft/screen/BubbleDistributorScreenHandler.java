@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 HRZN LTD
+ * Copyright (c) 2020 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,8 +39,6 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleDistributorBlockEntity> {
-    public final Property status = Property.create();
-    public final Property oxygen = Property.create();
     private final Inventory inventory;
 
     public BubbleDistributorScreenHandler(int syncId, PlayerEntity playerEntity, BubbleDistributorBlockEntity blockEntity) {
@@ -56,9 +54,6 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
                 return blockEntity.getInventory();
             }
         };
-
-        addProperty(status);
-        addProperty(oxygen);
 
         // Charging Slot
         this.addSlot(new ChargeSlot(this.inventory, 0, 8, 56));
@@ -112,18 +107,5 @@ public class BubbleDistributorScreenHandler extends MachineScreenHandler<BubbleD
             }
         }
         return itemStack;
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().doubleValue() * 100));
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = BubbleDistributorBlockEntity.BubbleDistributorStatus.get(status.get());
     }
 }

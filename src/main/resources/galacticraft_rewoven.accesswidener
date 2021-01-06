@@ -1,37 +1,14 @@
 accessWidener	v1	 named
 
-accessible      field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator                   field_24774       Lnet/minecraft/world/gen/chunk/ChunkGeneratorSettings;
-accessible      field   net/minecraft/world/gen/chunk/SurfaceChunkGenerator                   field_24778       J
-
-accessible      field    net/minecraft/world/gen/chunk/ChunkGenerator                         biomeSource       Lnet/minecraft/world/biome/source/BiomeSource;
-
-accessible      field    net/minecraft/world/World                                            dimension         Lnet/minecraft/world/dimension/DimensionType;
-mutable         field    net/minecraft/world/World                                            dimension         Lnet/minecraft/world/dimension/DimensionType;
-accessible      field    net/minecraft/client/render/SkyProperties                            BY_IDENTIFIER     Lit/unimi/dsi/fastutil/objects/Object2ObjectMap;
-
 accessible      method   net/minecraft/world/dimension/DimensionType                          <init>            (Ljava/util/OptionalLong;ZZZZZZZZZZILnet/minecraft/world/biome/source/BiomeAccessType;Lnet/minecraft/util/Identifier;F)V
-accessible      method   net/minecraft/world/gen/stateprovider/BlockStateProviderType         register          (Ljava/lang/String;Lcom/mojang/serialization/Codec;)Lnet/minecraft/world/gen/stateprovider/BlockStateProviderType;
+accessible      method   net/minecraft/world/gen/stateprovider/BlockStateProviderType         <init>            (Lcom/mojang/serialization/Codec;)V
 accessible      method   net/minecraft/world/gen/chunk/ChunkGeneratorSettings                 <init>            (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
 accessible      method   net/minecraft/structure/pool/LegacySinglePoolElement                 <init>            (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
 accessible      method   net/minecraft/structure/pool/FeaturePoolElement                      <init>            (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible      method   net/minecraft/loot/LootTables                                        registerLootTable (Lnet/minecraft/util/Identifier;)Lnet/minecraft/util/Identifier;
-
 accessible      method   net/minecraft/item/PickaxeItem                                       <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/item/AxeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/item/HoeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
 accessible      method   net/minecraft/block/LadderBlock                                      <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible      method   net/minecraft/block/StairsBlock                                      <init>            (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
 accessible      method   net/minecraft/block/FluidBlock                                       <init>            (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
-
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)V
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;II)V
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          setup             (Lnet/minecraft/world/poi/PointOfInterestType;)Lnet/minecraft/world/poi/PointOfInterestType;
-accessible      method   net/minecraft/village/VillagerType                                   <init>            (Ljava/lang/String;)V
-accessible      method   net/minecraft/village/VillagerProfession                             <init>            (Ljava/lang/String;Lnet/minecraft/world/poi/PointOfInterestType;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lnet/minecraft/sound/SoundEvent;)V
-accessible      class    net/minecraft/village/TradeOffers$BuyForOneEmeraldFactory
-accessible      class    net/minecraft/village/TradeOffers$SellItemFactory
-accessible      class    net/minecraft/village/TradeOffers$SellMapFactory
-
-accessible      field    net/minecraft/world/biome/BuiltinBiomes                              BY_RAW_ID         Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-mutable         field    net/minecraft/client/render/entity/model/VillagerResemblingModel     field_17142       Lnet/minecraft/client/model/ModelPart;
-accessible      field    net/minecraft/village/VillagerType                                   BIOME_TO_TYPE     Ljava/util/Map;
+accessible      field    net/minecraft/item/BucketItem                                        fluid             Lnet/minecraft/fluid/Fluid;

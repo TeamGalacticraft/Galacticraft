@@ -18,23 +18,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.block.machines.EnergyStorageModuleBlock;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
 
 import java.util.List;
@@ -49,6 +44,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
+        setStatus(MachineStatus.EMPTY);
     }
 
     @Override
@@ -72,18 +68,19 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT}); }
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.POWER_OUTPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return MachineStatus.EMPTY;
+    }
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
@@ -118,16 +115,6 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     @Override
     public boolean canHopperInsertItems(int slot) {
         return true;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
     }
 
     @Override

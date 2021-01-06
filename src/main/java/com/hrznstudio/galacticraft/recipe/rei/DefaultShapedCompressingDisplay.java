@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.recipe.rei;
@@ -28,7 +27,7 @@ import me.shedaniel.rei.api.EntryStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,22 +60,17 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
 
 
     @Override
-    public List<List<EntryStack>> getRequiredEntries() {
+    public @NotNull List<List<EntryStack>> getRequiredEntries() {
         return input;
     }
 
     @Override
-    public List<List<EntryStack>> getInputEntries() {
+    public @NotNull List<List<EntryStack>> getInputEntries() {
         return input;
     }
 
     @Override
-    public List<EntryStack> getOutputEntries() {
+    public @NotNull List<EntryStack> getOutputEntries() {
         return output;
-    }
-
-    @Override
-    public Identifier getRecipeCategory() {
-        return GalacticraftREIPlugin.COMPRESSING;
     }
 }

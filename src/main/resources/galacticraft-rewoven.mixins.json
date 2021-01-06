@@ -5,16 +5,17 @@
   "mixins": [
     "BaseFluidMixin",
     "BiomeMixin",
-    "EntityAttributeInstanceAccessor",
+    "BlockStateProviderTypeAccessor",
+    "BuiltinBiomesAccessor",
+    "ChunkGeneratorAccessor",
     "EntityMixin",
-    "FireBlockAccessor",
     "ItemStackMixin",
     "LivingEntityMixin",
-    "PlayerEntityMixin",
+    "LootTablesAccessor",
     "ServerWorldMixin",
+    "SkyPropertiesAccessor",
     "StructurePoolGeneratorMixin",
-    "TorchBlockMixin",
-    "TypeAwareBuyForOneEmeraldFactoryMixin"
+    "TorchBlockMixin"
   ],
   "client": [
     "client.AbstractClientPlayerEntityMixin",

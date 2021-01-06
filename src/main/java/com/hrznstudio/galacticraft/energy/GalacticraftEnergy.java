@@ -18,16 +18,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.energy;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.fluid.TankComponent;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ElectricalEnergyType;
 import io.github.cottonmc.component.energy.impl.WUEnergyType;
@@ -42,28 +38,17 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftEnergy {
-    public static final GalacticraftJoules GALACTICRAFT_JOULES = Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), new GalacticraftJoules());
+    public static final EnergyType GALACTICRAFT_JOULES = Registry.register(UniversalComponents.ENERGY_TYPES, new Identifier(Constants.MOD_ID, Constants.Energy.GALACTICRAFT_JOULES), new GalacticraftJoules());
 
     public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = EnergyUtils::isEnergyItem;
 
     public static void register() {
     }
 
-    public static boolean isOxygenItem(ItemStack stack) {
-        ComponentProvider provider = ComponentProvider.fromItemStack(stack);
-        if (provider.hasComponent(UniversalComponents.TANK_COMPONENT)) {
-            TankComponent component = provider.getComponent(UniversalComponents.TANK_COMPONENT);
-            if (component != null) {
-                return component.contains(GalacticraftFluids.OXYGEN);
-            }
-        }
-        return false;
-    }
-
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public static class GalacticraftJoules extends ElectricalEnergyType {
+    private static final class GalacticraftJoules extends ElectricalEnergyType {
 
         @Override
         public int getMaximumTransferSize() {

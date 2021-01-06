@@ -18,13 +18,13 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.CircuitFabricatorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -55,6 +55,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 32, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -66,11 +67,9 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
         int topPos = this.y;
 
         progressDisplayX = leftPos + 90;
-        progressDisplayY = topPos + 82;
+        progressDisplayY = topPos + 89;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight + 26);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 35);
-
         this.drawProgressBar(stack);
     }
 
@@ -88,11 +87,5 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 35);
     }
 }

@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.special.walkway;
@@ -154,6 +153,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         throw new IllegalArgumentException();
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180:
@@ -167,6 +167,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         }
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT:

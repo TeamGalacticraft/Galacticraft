@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.compat.SubInventoryComponent;
+import com.hrznstudio.galacticraft.component.SubInventoryComponent;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -17,10 +17,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -29,7 +31,6 @@ import java.util.function.Predicate;
 public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public int cookTime = 0;
     public int maxCookTime = 0;
-    public ElectricFurnaceStatus status = ElectricFurnaceStatus.IDLE;
     private final Inventory subInv = InventoryWrapper.of(new SubInventoryComponent(this.getInventory(), new int[]{0}));
 
     public ElectricFurnaceBlockEntity(BlockEntityType<? extends ElectricFurnaceBlockEntity> blockEntityType) {
@@ -65,16 +66,6 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
         return false;
     }
@@ -95,11 +86,6 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
@@ -112,6 +98,11 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -129,12 +120,12 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
                 if (recipe != null && canAcceptRecipeOutput(recipe)) {
                     if (canInsert(1, recipe.getOutput())) {
                         this.maxCookTime = (int) (recipe.getCookTime() * 0.85D); //15% faster?
-                        status = ElectricFurnaceStatus.ACTIVE;
+                        setStatus(Status.ACTIVE);
                     } else {
-                        status = ElectricFurnaceStatus.FULL;
+                        setStatus(Status.FULL);
                     }
                 } else {
-                    status = ElectricFurnaceStatus.IDLE;
+                    setStatus(Status.NOT_ENOUGH_ITEMS);
                     maxCookTime = 0;
                     if (cookTime > 0) {
                         cookTime--;
@@ -149,13 +140,13 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
                         recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElse(null);
                         maxCookTime = 0;
                         cookTime = -1;
-                        status = ElectricFurnaceStatus.IDLE;
+                        setStatus(Status.NOT_ENOUGH_ITEMS);
                         if (recipe != null) {
                             if (canInsert(1, recipe.getOutput())) {
                                 this.maxCookTime = (int) (recipe.getCookTime() * 0.85F); //15% faster?
-                                status = ElectricFurnaceStatus.ACTIVE;
+                                setStatus(Status.ACTIVE);
                             } else {
-                                status = ElectricFurnaceStatus.FULL;
+                                setStatus(Status.FULL);
                             }
                         }
                     }
@@ -165,7 +156,7 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
                 }
             }
         } else {
-            status = ElectricFurnaceStatus.NOT_ENOUGH_ENERGY;
+            setStatus(Status.NOT_ENOUGH_ENERGY);
             maxCookTime = 0;
             if (cookTime > 0) {
                 cookTime--;
@@ -175,19 +166,19 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
 
     protected boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe) {
         if (!this.getInventory().getStack(0).isEmpty() && recipe != null) {
-            ItemStack itemStack = recipe.getOutput();
-            if (itemStack.isEmpty()) {
+            ItemStack output = recipe.getOutput();
+            if (output.isEmpty()) {
                 return false;
             } else {
-                ItemStack itemStack2 = this.getInventory().getStack(1);
-                if (itemStack2.isEmpty()) {
+                ItemStack stack = this.getInventory().getStack(1);
+                if (stack.isEmpty()) {
                     return true;
-                } else if (!itemStack2.isItemEqualIgnoreDamage(itemStack)) {
+                } else if (!stack.isItemEqualIgnoreDamage(output)) {
                     return false;
-                } else if (itemStack2.getCount() < this.getMaxCountPerStack() && itemStack2.getCount() < itemStack2.getMaxCount()) {
+                } else if (stack.getCount() < this.getMaxCountPerStack() && stack.getCount() < stack.getMaxCount()) {
                     return true;
                 } else {
-                    return itemStack2.getCount() < itemStack.getMaxCount();
+                    return stack.getCount() < output.getMaxCount();
                 }
             }
         } else {
@@ -195,41 +186,48 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
         }
     }
 
-    @Override
-    public MachineStatus getStatusForTooltip() {
-        return status;
-    }
-
-    public enum ElectricFurnaceStatus implements MachineStatus {
+    private enum Status implements MachineStatus {
         /**
-         * Refinery is active and is refining oil into fuel.
+         * The electric furnace is cooking/smelting items
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active").setStyle(Style.EMPTY.withColor(Formatting.GREEN))),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
-         * Refinery has oil but the fuel tank is full.
+         * The output slot is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GOLD))),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
-         * The refinery is out of oil.
+         * There are no valid items to smelt/cook.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle").setStyle(Style.EMPTY.withColor(Formatting.GRAY))),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GRAY, StatusType.MISSING_ITEMS),
 
         /**
-         * The refinery is out of oil.
+         * The electric furnace has no more energy
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
-        private final Text text;
+        private final Text name;
+        private final StatusType type;
 
-        ElectricFurnaceStatus(Text text) {
-            this.text = text;
+        Status(MutableText name, Formatting color, StatusType type) {
+            this.type = type;
+            this.name = name.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public Text getText() {
-            return this.text;
+        public @NotNull Text getName() {
+            return name;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

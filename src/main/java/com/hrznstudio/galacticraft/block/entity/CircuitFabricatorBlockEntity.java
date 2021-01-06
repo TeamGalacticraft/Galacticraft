@@ -18,12 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
@@ -34,9 +33,6 @@ import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
@@ -49,6 +45,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -74,7 +71,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     private final int maxProgress = 300;
-    public CircuitFabricatorStatus status = CircuitFabricatorStatus.IDLE;
+    public Status status = Status.NOT_ENOUGH_RESOURCES;
     public int progress;
 
     public CircuitFabricatorBlockEntity() {
@@ -97,19 +94,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public CircuitFabricatorStatus getStatusForTooltip() {
-        return status;
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
     public int getInventorySize() {
         return 7;
-    }
-
-    @Override
-    public int getOxygenTankSize() {
-        return 0;
     }
 
     @Override
@@ -119,7 +110,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     @Override
@@ -137,14 +128,14 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         }
 
         if (disabled()) {
-            this.status = CircuitFabricatorStatus.OFF;
+            this.status = Status.OFF;
             idleEnergyDecrement(true);
             return;
         }
         attemptChargeFromStack(0);
 
 
-        if (status == CircuitFabricatorStatus.IDLE) {
+        if (status == Status.NOT_ENOUGH_RESOURCES) {
             idleEnergyDecrement(false);
             if (this.progress > 0) {
                 progress--;
@@ -153,13 +144,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
 
         if (getCapacitor().getCurrentEnergy() <= 0) {
-            status = CircuitFabricatorStatus.NOT_ENOUGH_ENERGY;
+            status = Status.NOT_ENOUGH_ENERGY;
         } else {
-            status = CircuitFabricatorStatus.IDLE;
+            status = Status.NOT_ENOUGH_RESOURCES;
         }
 
 
-        if (status == CircuitFabricatorStatus.NOT_ENOUGH_ENERGY) {
+        if (status == Status.NOT_ENOUGH_ENERGY) {
             if (progress > 0) {
                 this.progress--;
             }
@@ -169,15 +160,15 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
         if (isValidRecipe(this.getInventory().getStack(5))) {
             if (canPutStackInResultSlot(getResultFromRecipeStack())) {
-                this.status = CircuitFabricatorStatus.PROCESSING;
+                this.status = Status.PROCESSING;
             }
         } else {
-            if (this.status != CircuitFabricatorStatus.NOT_ENOUGH_ENERGY) {
-                this.status = CircuitFabricatorStatus.IDLE;
+            if (this.status != Status.NOT_ENOUGH_ENERGY) {
+                this.status = Status.NOT_ENOUGH_RESOURCES;
             }
         }
 
-        if (status == CircuitFabricatorStatus.PROCESSING) {
+        if (status == Status.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack();
             if (this.progress < this.maxProgress) {
                 ++progress;
@@ -276,16 +267,6 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
         return false;
     }
@@ -303,40 +284,41 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CircuitFabricatorStatus implements MachineStatus {
+    private enum Status implements MachineStatus {
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Fabricator is not processing.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
+        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY),
 
         /**
          * The fabricator has been switched off.
          */
-        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off"), Formatting.RED);
-
+        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off"), Formatting.RED, StatusType.OFF);
 
         private final Text text;
+        private final StatusType type;
 
-        CircuitFabricatorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static CircuitFabricatorStatus get(int index) {
+        public static Status get(int index) {
             switch (index) {
                 case 0:
                     return PROCESSING;
                 case 1:
-                    return IDLE;
+                    return NOT_ENOUGH_RESOURCES;
                 case 3:
                     return OFF;
                 default:
@@ -345,8 +327,18 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         }
 
         @Override
-        public Text getText() {
+        public @NotNull Text getName() {
             return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

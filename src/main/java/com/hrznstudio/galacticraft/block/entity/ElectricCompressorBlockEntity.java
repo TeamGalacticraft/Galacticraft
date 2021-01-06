@@ -18,27 +18,22 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
-import com.hrznstudio.galacticraft.recipe.ShapelessCompressingRecipe;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -49,6 +44,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -62,7 +58,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    public ElectricCompressorStatus status = ElectricCompressorStatus.IDLE;
     public int progress;
 
     public ElectricCompressorBlockEntity() {
@@ -75,18 +70,13 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getOxygenTankSize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 0;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
 
     public int getProgress() {
@@ -117,9 +107,8 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public ElectricCompressorStatus getStatusForTooltip() {
-        return status;
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     public void tick() {
@@ -144,14 +133,15 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
         if (getCapacitor().getCurrentEnergy() < 1) {
-            status = ElectricCompressorStatus.IDLE;
+            setStatus(Status.NOT_ENOUGH_ENERGY);
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-            status = ElectricCompressorStatus.PROCESSING;
+            setStatus(Status.PROCESSING);
         } else {
-            status = ElectricCompressorStatus.IDLE;
+            if (isValidRecipe(inv)) setStatus(Status.OUTPUT_FULL);
+            else setStatus(Status.INVALID_RECIPE);
         }
 
-        if (status == ElectricCompressorStatus.PROCESSING) {
+        if (getStatus() == Status.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             this.progress++;
@@ -165,7 +155,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
                 craftItem(resultStack);
             }
-        } else if (status == ElectricCompressorStatus.IDLE) {
+        } else if (!getStatus().getType().isActive()) {
             if (progress > 0) {
                 progress--;
             }
@@ -221,20 +211,11 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     public ItemStack getResultFromRecipeStack(Inventory inv) {
         // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
-
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(inv);
-        if (shapelessRecipe.isPresent()) {
-            return shapelessRecipe.get().craft(inv);
-        }
-        return getShapedRecipe(inv).orElseThrow(() -> new IllegalStateException("Neither a shapeless recipe or shaped recipe was present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
+        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("A recipe was not present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
     }
 
-    private Optional<ShapelessCompressingRecipe> getShapelessRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPELESS_COMPRESSING_TYPE, input, this.world);
-    }
-
-    private Optional<ShapedCompressingRecipe> getShapedRecipe(Inventory input) {
-        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.SHAPED_COMPRESSING_TYPE, input, this.world);
+    private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 
     protected boolean canPutStackInResultSlot(ItemStack stack) {
@@ -242,10 +223,9 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     public boolean isValidRecipe(Inventory input) {
-        Optional<ShapelessCompressingRecipe> shapelessRecipe = getShapelessRecipe(input);
-        Optional<ShapedCompressingRecipe> shapedRecipe = getShapedRecipe(input);
+        Optional<CompressingRecipe> reciper = getRecipe(input);
 
-        return shapelessRecipe.isPresent() || shapedRecipe.isPresent();
+        return reciper.isPresent();
     }
 
     @Override
@@ -255,22 +235,12 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public boolean canHopperExtractItems(int slot) {
-        return slot == OUTPUT_SLOT;
+        return slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT;
     }
 
     @Override
     public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
+        return !(slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT);
     }
 
     @Override
@@ -291,44 +261,49 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum ElectricCompressorStatus implements MachineStatus {
+    private enum Status implements MachineStatus {
 
         /**
          * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+
+        /**
+         * Compressor has no valid recipe.
+         */
+        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+
+        /**
+         * Compressor has no valid recipe.
+         */
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no items to process.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
-
-        /**
-         * Compressor has no items to process.
-         */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
+        private final StatusType type;
 
-        ElectricCompressorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static ElectricCompressorStatus get(int index) {
-            switch (index) {
-                case 0:
-                    return PROCESSING;
-                case 1:
-                    return IDLE;
-                case 2:
-                    return NOT_ENOUGH_ENERGY;
-            }
-            return IDLE;
+        @Override
+        public @NotNull Text getName() {
+            return text;
         }
 
         @Override
-        public Text getText() {
-            return text;
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

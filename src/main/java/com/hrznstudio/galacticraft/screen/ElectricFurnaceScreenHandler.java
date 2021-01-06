@@ -13,7 +13,6 @@ import net.minecraft.screen.Property;
 import net.minecraft.screen.slot.Slot;
 
 public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricFurnaceBlockEntity> {
-    private final Property status = Property.create();
     private final Property time = Property.create();
     private final Property maxTime = Property.create();
 
@@ -48,7 +47,6 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
         }
 
-        addProperty(status);
         addProperty(time);
         addProperty(maxTime);
     }
@@ -60,14 +58,12 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = ElectricFurnaceBlockEntity.ElectricFurnaceStatus.values()[status.get()];
         blockEntity.cookTime = time.get();
         blockEntity.maxCookTime = maxTime.get();
     }
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
         time.set(blockEntity.cookTime);
         maxTime.set(blockEntity.maxCookTime);
         super.sendContentUpdates();

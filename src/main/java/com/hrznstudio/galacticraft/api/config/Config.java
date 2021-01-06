@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.api.config;
@@ -79,4 +78,12 @@ public interface Config {
     int machineEnergyStorageSize();
 
     void setMachineEnergyStorageSize(int amount);
+
+    int oxygenCompressorEnergyConsumptionRate();
+
+    void setOxygenCompressorEnergyConsumptionRate(int amount);
+
+    int oxygenDecompressorEnergyConsumptionRate();
+
+    void setOxygenDecompressorEnergyConsumptionRate(int amount);
 }

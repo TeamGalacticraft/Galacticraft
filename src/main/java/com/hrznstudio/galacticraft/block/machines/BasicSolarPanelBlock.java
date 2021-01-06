@@ -18,32 +18,21 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.machines;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
 import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -51,57 +40,45 @@ import java.util.List;
  */
 public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
     public BasicSolarPanelBlock(Settings settings) {
-        super(settings, BasicSolarPanelScreenHandler::new);
+        super(settings, BasicSolarPanelScreenHandler::new, BasicSolarPanelBlockEntity::new,
+                new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel")
+                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
     }
 
-    @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
-        return new BasicSolarPanelBlockEntity();
-    }
+    @NotNull
+    protected static List<BlockPos> genPartList(BlockPos pos) {
+        List<BlockPos> parts = new LinkedList<>();
+        BlockPos rod = pos.up();
+        BlockPos mid = rod.up();
+        BlockPos front = mid.north();
+        BlockPos back = mid.south();
 
-    @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
+        BlockPos right = mid.east();
+        BlockPos left = mid.west();
 
-        for (BlockPos otherPart : getOtherParts(state, pos)) {
-            world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
-        }
+        BlockPos frontLeft = front.east();
+        BlockPos frontRight = front.west();
+        BlockPos backLeft = back.east();
+        BlockPos backRight = back.west();
+
+        parts.add(rod);
+        parts.add(mid);
+        parts.add(front);
+        parts.add(back);
+
+        parts.add(right);
+        parts.add(left);
+
+        parts.add(frontLeft);
+        parts.add(frontRight);
+        parts.add(backLeft);
+        parts.add(backRight);
+
+        return parts;
     }
 
     @Override
     public List<BlockPos> getOtherParts(BlockState state, BlockPos pos) {
-        return MultiBlockBase.genPartList(pos);
-    }
-
-    @Override
-    public boolean canPlaceAt(BlockState state, WorldView WorldView, BlockPos pos) {
-        for (BlockPos otherPart : getOtherParts(state, pos)) {
-            if (!WorldView.getBlockState(otherPart).getMaterial().isReplaceable()) {
-                return false;
-            }
-        }
-        return super.canPlaceAt(state, WorldView, pos);
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
-        onMultiblockPlaced(world, pos, state);
-    }
-
-    @Override
-    public void onPartDestroyed(World world, PlayerEntity player, BlockState state, BlockPos pos, BlockState partState, BlockPos partPos) {
-        world.breakBlock(pos, !player.isCreative());
-
-        for (BlockPos otherPart : getOtherParts(state, pos)) {
-            if (!world.getBlockState(otherPart).isAir()) {
-                world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
-            }
-        }
-    }
-
-    @Override
-    public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+        return genPartList(pos);
     }
 }

@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.render;
@@ -39,7 +38,7 @@ public class MoonSkyProperties extends SkyProperties {
     }
 
     @Override
-    public Vec3d adjustSkyColor(Vec3d color, float sunHeight) {
+    public Vec3d adjustFogColor(Vec3d color, float sunHeight) {
         return Vec3d.ZERO;
     }
 
@@ -48,10 +47,8 @@ public class MoonSkyProperties extends SkyProperties {
         return false;
     }
 
-    @Nullable
     @Override
-    public float[] getSkyColor(float skyAngle, float tickDelta) {
+    public float[] getFogColorOverride(float skyAngle, float tickDelta) {
         return new float[]{0.0F, 0.0F, 0.0F, 0.0F};
     }
-
 }

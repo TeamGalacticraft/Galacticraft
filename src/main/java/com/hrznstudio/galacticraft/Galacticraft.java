@@ -18,14 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
@@ -38,7 +35,7 @@ import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
 import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
-import com.hrznstudio.galacticraft.network.GalacticraftPackets;
+import com.hrznstudio.galacticraft.network.GalacticraftS2CPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
@@ -59,15 +56,7 @@ import com.hrznstudio.galacticraft.world.gen.feature.GalacticraftFeatures;
 import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceBuilders;
 import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
 import com.mojang.serialization.Lifecycle;
-import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.item.impl.EntitySyncedInventoryComponent;
-import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -112,7 +101,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftParticles.register();
         GalacticraftCommands.register();
         GalacticraftEnergy.register();
-        GalacticraftPackets.register();
+        GalacticraftS2CPackets.register();
         GalacticraftSounds.register();
         GalacticraftBannerPatterns.register();
         GalacticraftPointOfInterestType.register();

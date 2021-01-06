@@ -18,12 +18,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
@@ -43,12 +43,10 @@ import net.minecraft.util.Identifier;
  */
 public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScreenHandler> {
     public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
-
-    private float mouseX;
-    private float mouseY;
+    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
 
     public PlayerInventoryGCScreen(PlayerInventoryGCScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, title);
+        super(handler, inv, Constants.Misc.EMPTY_TEXT);
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -76,51 +74,46 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     }
 
     @Override
-    public void render(MatrixStack stack, int x, int y, float lastFrameDuration) {
+    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         this.renderBackground(stack);
-        super.render(stack, x, y, lastFrameDuration);
-        this.drawMouseoverTooltip(stack, x, y);
-
-        this.mouseX = (float) x;
-        this.mouseY = (float)/*y*/ this.client.getWindow().getScaledHeight() / 2;
+        super.render(stack, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(stack, mouseX, mouseY);
 
         DiffuseLighting.enableGuiDepthLighting();
-        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getStackForRender(), this.x + 6, this.y - 20);
-        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getStackForRender(), this.x + 35, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
+        this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
+    }
+
+    public void drawOxygenBufferBar(MatrixStack stack, float currentOxygen, float maxOxygen, int oxygenDisplayX, int oxygenDisplayY) {
+        float oxygenScale = (currentOxygen / maxOxygen);
+
+        this.client.getTextureManager().bindTexture(OVERLAY);
+        this.drawTexture(stack, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
+        this.drawTexture(stack, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-//        System.out.println("X: " + mouseX);
-//        System.out.println("Y: " + mouseY);
-//        System.out.println("b: " + button);
-        boolean b = super.mouseClicked(mouseX, mouseY, button);
-
         if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
                 && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
-            System.out.println("Clicked on vanilla tab!");
             this.client.openScreen(new InventoryScreen(playerInventory.player));
+            return true;
         }
 
-        return b;
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
-//        this.drawTexturedReact(...)
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        ItemStack tank1 = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(this.playerInventory.player).getStack(6);
+        ItemStack tank2 = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(this.playerInventory.player).getStack(7);
 
-        int int_3 = this.x;
-        int int_4 = this.y;
-        InventoryScreen.drawEntity(int_3 + 51, int_4 + 75, 30, (float) (int_3 + 51) - this.mouseX, (float) (int_4 + 75 - 50) - this.mouseY, this.client.player);
+        this.drawOxygenBufferBar(stack, OxygenUtils.getOxygen(tank1).floatValue() * 100.0F, OxygenUtils.getMaxOxygen(tank1).floatValue() * 100.0F, this.x + 138, this.y + 8);
+        this.drawOxygenBufferBar(stack, OxygenUtils.getOxygen(tank2).floatValue() * 100.0F, OxygenUtils.getMaxOxygen(tank2).floatValue() * 100.0F, this.x + 156, this.y + 8);
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
-
-        //X,Y,blitOffset,u,v,width,height
-        this.drawTexture(stack, this.x + 138, this.y + 8, 244, 0, 12, 40);
-        this.drawTexture(stack, this.x + 156, this.y + 8, 244, 0, 12, 40);
-
+        InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
         this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
         this.drawTexture(stack, this.x, this.y - 28, 0, 32, 57, 62);
     }
