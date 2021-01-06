@@ -42,7 +42,6 @@ public class MoonVillageData {
 
     private static final String BASE_ID = Constants.MOD_ID + ":moon_village/";
 
-    private static final Identifier EMPTY = new Identifier("empty");
     private static final Identifier STREETS = new Identifier(Constants.MOD_ID, "moon_village/streets");
     private static final Identifier TERMINATORS = new Identifier(Constants.MOD_ID, "moon_village/terminators");
     private static final Identifier HOUSES = new Identifier(Constants.MOD_ID, "moon_village/houses");
@@ -57,7 +56,7 @@ public class MoonVillageData {
 
     static {
         BASE_POOL = StructurePools.register(new StructurePool(STARTS,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "starts/start_1"), 3),
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "starts/start_2"), 4),
@@ -98,7 +97,7 @@ public class MoonVillageData {
                 StructurePool.Projection.RIGID));
 
         StructurePools.register(new StructurePool(TERMINATORS,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "terminators/terminator_01"), 1),
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "terminators/terminator_02"), 1),
@@ -108,14 +107,14 @@ public class MoonVillageData {
                 StructurePool.Projection.TERRAIN_MATCHING));
 
         StructurePools.register(new StructurePool(TREES,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of((projection) -> EmptyPoolElement.INSTANCE, 10) //todo
                 ),
                 StructurePool.Projection.RIGID));
 
         StructurePools.register(new StructurePool(SAPLINGS,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/oak"), 2),
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "misc/saplings/birch"), 2),
@@ -128,7 +127,7 @@ public class MoonVillageData {
                 StructurePool.Projection.RIGID));
 
         StructurePools.register(new StructurePool(DECOR,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "lamp"), 2),
                         Pair.of(StructurePoolElement.method_30421(Feature.BLOCK_PILE.configure(GalacticraftFeatures.CHEESE_LOG_PILE_CONFIG)), 1),
@@ -137,7 +136,7 @@ public class MoonVillageData {
                 StructurePool.Projection.RIGID));
 
         StructurePools.register(new StructurePool(VILLAGERS,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "villagers/nitwit"), 1),
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "villagers/baby"), 1),
@@ -146,14 +145,14 @@ public class MoonVillageData {
                 StructurePool.Projection.RIGID));
 
         StructurePools.register(new StructurePool(ANIMALS,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of((projection) -> EmptyPoolElement.INSTANCE, 5) //todo
                 ),
                 StructurePool.Projection.RIGID));
 
         StructurePools.register(new StructurePool(IRON_GOLEM,
-                EMPTY,
+                Constants.Misc.EMPTY,
                 ImmutableList.of(
                         Pair.of(StructurePoolElement.method_30425(BASE_ID + "iron_golem"), 1)
                 ),
