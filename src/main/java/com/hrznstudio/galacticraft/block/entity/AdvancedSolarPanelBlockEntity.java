@@ -30,14 +30,13 @@ import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,8 +48,6 @@ import java.util.function.Predicate;
 public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
 
     public double multiplier;
-
-    public AdvancedSolarPanelStatus status = AdvancedSolarPanelStatus.NIGHT;
 
     public AdvancedSolarPanelBlockEntity() {
         super(GalacticraftBlockEntities.ADVANCED_SOLAR_PANEL_TYPE);
@@ -69,6 +66,11 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -117,12 +119,6 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public AdvancedSolarPanelStatus getStatusForTooltip() {
-        return status;
-    }
-
-    @Override
     public void tick() {
         trySpreadEnergy();
         attemptDrainPowerToStack(0);
@@ -145,29 +141,29 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
 
         double time = (world.getTimeOfDay() % 24000);
         if (world.isRaining() || world.isThundering()) {
-            status = AdvancedSolarPanelStatus.PARTIALLY_BLOCKED;
+            setStatus(Status.PARTIALLY_BLOCKED);
             multiplier *= 0.55;
         }
 
         if (time > 1000.0D && time < 11000.0D) {
-            status = AdvancedSolarPanelStatus.COLLECTING;
+            setStatus(Status.COLLECTING);
             if (getCapacitor().getCurrentEnergy() >= getCapacitor().getMaxEnergy()) {
-                status = AdvancedSolarPanelStatus.FULL;
+                setStatus(Status.FULL);
                 return;
             }
         } else {
             multiplier *= 0.15D;
-            status = AdvancedSolarPanelStatus.NIGHT;
+            setStatus(Status.NIGHT);
             return;
         }
 
         if (visiblePanels < 9) {
-            if (status != AdvancedSolarPanelStatus.NIGHT) status = AdvancedSolarPanelStatus.PARTIALLY_BLOCKED;
+            if (getStatus() != Status.NIGHT) setStatus(Status.PARTIALLY_BLOCKED);
             multiplier *= 0.8D;
         }
 
         if (visiblePanels == 0) {
-            status = AdvancedSolarPanelStatus.BLOCKED;
+            setStatus(Status.BLOCKED);
             return;
         }
 
@@ -191,46 +187,53 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum AdvancedSolarPanelStatus implements MachineStatus {
+    private enum Status implements MachineStatus {
         /**
          * Solar panel is active and is generating energy.
          */
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Solar Panel can generate energy, but the buffer is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Solar Panel is generating energy, but less efficiently as it is blocked or raining.
          */
-        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.partially_blocked"), Formatting.DARK_AQUA),
+        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * Solar Panel is generating very little energy as it is night.
          */
-        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night"), Formatting.BLUE),
+        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
 
         /**
          * The sun is not visible.
          */
-        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked"), Formatting.DARK_GRAY);
+        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
 
         private final Text text;
+        private final MachineStatus.StatusType type;
 
-        AdvancedSolarPanelStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
             this.text = text.setStyle(Style.EMPTY.withColor(color));
-        }
-
-        public static AdvancedSolarPanelStatus get(int index) {
-            if (index < 0) index = 0;
-            return AdvancedSolarPanelStatus.values()[index % AdvancedSolarPanelStatus.values().length];
+            this.type = type;
         }
 
         @Override
-        public Text getText() {
+        public @NotNull Text getName() {
             return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

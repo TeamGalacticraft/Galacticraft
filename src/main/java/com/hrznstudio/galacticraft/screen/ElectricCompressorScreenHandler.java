@@ -37,15 +37,12 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ElectricCompressorScreenHandler extends MachineScreenHandler<ElectricCompressorBlockEntity> {
-
-    public final Property status = Property.create();
     public final Property progress = Property.create();
     protected final Inventory inventory;
 
     public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
         super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER);
         this.inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
         addProperty(progress);
 
         // 3x3 compressor input grid
@@ -73,7 +70,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
             this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
         }
 
-        addProperty(energy);
         addSlot(new FurnaceOutputSlot(player, this.inventory, ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, getOutputSlotPos()[0], getOutputSlotPos()[1] + 18));
         addSlot(new ChargeSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75));
     }
@@ -84,7 +80,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
         progress.set(blockEntity.getProgress());
         super.sendContentUpdates();
     }
@@ -92,7 +87,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = ElectricCompressorBlockEntity.ElectricCompressorStatus.get(status.get());
         blockEntity.progress = progress.get();
     }
 

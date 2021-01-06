@@ -32,11 +32,11 @@ import net.minecraft.util.math.BlockPos;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MultiBlockPartBlockEntity extends BlockEntity {
+public class SolarPanelPartBlockEntity extends BlockEntity {
     public BlockPos basePos = BlockPos.ORIGIN;
 
-    public MultiBlockPartBlockEntity() {
-        super(GalacticraftBlockEntities.GENERIC_MULTIBLOCK_PART_TYPE);
+    public SolarPanelPartBlockEntity() {
+        super(GalacticraftBlockEntities.SOLAR_PANEL_PART_TYPE);
     }
 
     @Override

@@ -28,22 +28,17 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
 import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class AdvancedSolarPanelScreenHandler extends MachineScreenHandler<AdvancedSolarPanelBlockEntity> {
-
-    private final Property status = Property.create();
-
     public AdvancedSolarPanelScreenHandler(int syncId, PlayerEntity playerEntity, AdvancedSolarPanelBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.ADVANCED_SOLAR_PANEL_HANDLER);
         Inventory inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
 
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 53));
+        this.addSlot(new ChargeSlot(inventory, 0, 8, 62));
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -58,17 +53,5 @@ public class AdvancedSolarPanelScreenHandler extends MachineScreenHandler<Advanc
 
     public AdvancedSolarPanelScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (AdvancedSolarPanelBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.get(status.get());
     }
 }

@@ -23,8 +23,9 @@
 package com.hrznstudio.galacticraft.block.special.aluminumwire.tier1;
 
 import com.hrznstudio.galacticraft.api.block.WireBlock;
+import dev.onyxstudios.cca.api.v3.block.BlockComponents;
 import io.github.cottonmc.component.UniversalComponents;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
+import io.github.cottonmc.component.api.ComponentHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -66,7 +67,10 @@ public class AluminumWireBlock extends WireBlock {
 
     public AluminumWireBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false).with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false).with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
+        setDefaultState(this.getStateManager().getDefaultState()
+                .with(ATTACHED_NORTH, false).with(ATTACHED_EAST, false)
+                .with(ATTACHED_SOUTH, false).with(ATTACHED_WEST, false)
+                .with(ATTACHED_UP, false).with(ATTACHED_DOWN, false));
     }
 
     @Override
@@ -104,8 +108,7 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction direction : Direction.values()) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || (((BlockComponentProvider)block.getBlock()).hasComponent(context.getWorld(), context.getBlockPos().offset(direction), UniversalComponents.CAPACITOR_COMPONENT, direction.getOpposite()))
-            ));
+                    || ComponentHelper.CAPACITOR.hasComponent(context.getWorld(), context.getBlockPos().offset(direction), direction.getOpposite())));
 
         }
 
@@ -141,7 +144,7 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
         return state.with(getPropForDirection(dir), !(neighbor).isAir() && (neighbor.getBlock() instanceof WireBlock
-                || (((BlockComponentProvider)neighbor.getBlock()).hasComponent(world, otherConnectable, UniversalComponents.CAPACITOR_COMPONENT, dir.getOpposite()))
+                || ComponentHelper.CAPACITOR.hasComponent(world, otherConnectable, dir.getOpposite())
         ));
     }
 
@@ -160,10 +163,5 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView view, BlockPos pos) {
         return 1.0F;
-    }
-
-    @Override
-    public boolean isTranslucent(BlockState state, BlockView view, BlockPos pos) {
-        return true;
     }
 }

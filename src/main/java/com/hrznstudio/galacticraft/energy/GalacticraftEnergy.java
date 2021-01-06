@@ -23,12 +23,7 @@
 package com.hrznstudio.galacticraft.energy;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.energy.impl.ElectricalEnergyType;
 import io.github.cottonmc.component.energy.impl.WUEnergyType;

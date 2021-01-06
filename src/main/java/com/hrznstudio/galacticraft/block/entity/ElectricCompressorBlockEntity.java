@@ -34,8 +34,6 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -46,6 +44,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +58,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
-    public ElectricCompressorStatus status = ElectricCompressorStatus.IDLE;
     public int progress;
 
     public ElectricCompressorBlockEntity() {
@@ -109,9 +107,8 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public ElectricCompressorStatus getStatusForTooltip() {
-        return status;
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     public void tick() {
@@ -136,14 +133,15 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
         attemptChargeFromStack(FUEL_INPUT_SLOT);
         if (getCapacitor().getCurrentEnergy() < 1) {
-            status = ElectricCompressorStatus.NOT_ENOUGH_ENERGY;
+            setStatus(Status.NOT_ENOUGH_ENERGY);
         } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-            status = ElectricCompressorStatus.PROCESSING;
+            setStatus(Status.PROCESSING);
         } else {
-            status = ElectricCompressorStatus.IDLE;
+            if (isValidRecipe(inv)) setStatus(Status.OUTPUT_FULL);
+            else setStatus(Status.INVALID_RECIPE);
         }
 
-        if (status == ElectricCompressorStatus.PROCESSING) {
+        if (getStatus() == Status.PROCESSING) {
             ItemStack resultStack = getResultFromRecipeStack(inv);
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
             this.progress++;
@@ -157,7 +155,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
 
                 craftItem(resultStack);
             }
-        } else if (status == ElectricCompressorStatus.IDLE) {
+        } else if (!getStatus().getType().isActive()) {
             if (progress > 0) {
                 progress--;
             }
@@ -263,44 +261,49 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum ElectricCompressorStatus implements MachineStatus {
+    private enum Status implements MachineStatus {
 
         /**
          * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+
+        /**
+         * Compressor has no valid recipe.
+         */
+        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+
+        /**
+         * Compressor has no valid recipe.
+         */
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no items to process.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
-
-        /**
-         * Compressor has no items to process.
-         */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
+        private final StatusType type;
 
-        ElectricCompressorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static ElectricCompressorStatus get(int index) {
-            switch (index) {
-                case 0:
-                    return PROCESSING;
-                case 1:
-                    return IDLE;
-                case 2:
-                    return NOT_ENOUGH_ENERGY;
-            }
-            return IDLE;
+        @Override
+        public @NotNull Text getName() {
+            return text;
         }
 
         @Override
-        public Text getText() {
-            return text;
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

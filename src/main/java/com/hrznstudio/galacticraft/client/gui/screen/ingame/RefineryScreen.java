@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.FluidTankWidget;
 import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -45,6 +47,10 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
     public RefineryScreen(RefineryScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 192;
+
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 122, 28, 0, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
+        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 152, 28, 1, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
     }
 
     @Override
@@ -52,12 +58,6 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
         this.renderBackground(stack);
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 35);
-        this.drawFluidTankBufferBar(stack, 0, this.x + 122, this.y + 27);
-        this.drawFluidTankBufferBar(stack, 1, this.x + 152, this.y + 27);
-
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override
@@ -65,11 +65,5 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
         super.render(stack, mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.refinery").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 35);
     }
 }

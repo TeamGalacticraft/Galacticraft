@@ -45,6 +45,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -73,8 +74,6 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
             return false;
         };
     }
-
-    public RefineryStatus status = RefineryStatus.IDLE;
 
     public RefineryBlockEntity() {
         super(GalacticraftBlockEntities.REFINERY_TYPE);
@@ -116,8 +115,8 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public RefineryStatus getStatusForTooltip() {
-        return status;
+    protected MachineStatus getStatus(int index) {
+        return null;
     }
 
     @Override
@@ -175,20 +174,20 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
         }
 
         if (getCapacitor().getCurrentEnergy() <= 0) {
-            status = RefineryStatus.NOT_ENOUGH_ENERGY;
+            setStatus(Status.NOT_ENOUGH_ENERGY);
             return;
         }
 
         if (!this.getFluidTank().getContents(0).isEmpty() && (this.getFluidTank().getContents(1).getAmount().compareTo(this.getFluidTank().getMaxCapacity(1))) < 0) {
-            this.status = RefineryStatus.ACTIVE;
+            this.setStatus(Status.ACTIVE);
         } else {
-            this.status = RefineryStatus.IDLE;
+            this.setStatus(Status.NOT_ENOUGH_FLUID);
         }
-        if (status == RefineryStatus.IDLE) {
+        if (getStatus() == Status.NOT_ENOUGH_FLUID) {
             idleEnergyDecrement(false);
         }
 
-        if (status == RefineryStatus.ACTIVE) {
+        if (getStatus() == Status.ACTIVE) {
             this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM); //x2 an average machine
 
             FluidVolume extracted = this.getFluidTank().takeFluid(0, Fraction.of(5, 1000), ActionType.PERFORM);
@@ -234,37 +233,48 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum RefineryStatus implements MachineStatus {
-
+    private enum Status implements MachineStatus {
         /**
          * Refinery is active and is refining oil into fuel.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining"), Formatting.GREEN),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Refinery has oil but the fuel tank is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The refinery is out of oil.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GRAY),
+        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
 
         /**
-         * The refinery is out of oil.
+         * The refinery is out of energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
+        private final StatusType type;
 
-        RefineryStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
         @Override
-        public Text getText() {
+        public @NotNull Text getName() {
             return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return 0;
         }
     }
 }

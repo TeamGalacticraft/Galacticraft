@@ -24,10 +24,13 @@ package com.hrznstudio.galacticraft.block.special;
 
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.block.entity.MultiBlockPartBlockEntity;
+import com.hrznstudio.galacticraft.block.entity.SolarPanelPartBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,7 +47,7 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
+public class SolarPanelPartBlock extends BlockWithEntity {
     private static final VoxelShape POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 16, 8 + 2);
     private static final VoxelShape TOP_POLE_SHAPE = createCuboidShape(8 - 2, 0, 8 - 2, 8 + 2, 8, 8 + 2);
     private static final VoxelShape TOP_SHAPE = createCuboidShape(0, 6, 0, 16, 10, 16);
@@ -52,11 +55,6 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
 
     public SolarPanelPartBlock(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.INVISIBLE;
     }
 
     @Override
@@ -73,7 +71,7 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
     @Override
     public void onBreak(World world, BlockPos partPos, BlockState partState, PlayerEntity player) {
         BlockEntity partBE = world.getBlockEntity(partPos);
-        MultiBlockPartBlockEntity be = (MultiBlockPartBlockEntity) partBE;
+        SolarPanelPartBlockEntity be = (SolarPanelPartBlockEntity) partBE;
 
         if (be == null || be.basePos == BlockPos.ORIGIN) {
             return;
@@ -104,7 +102,7 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
 
     @Override
     public BlockEntity createBlockEntity(BlockView var1) {
-        return new MultiBlockPartBlockEntity();
+        return new SolarPanelPartBlockEntity();
     }
 
     @Environment(EnvType.CLIENT)
@@ -125,16 +123,15 @@ public class SolarPanelPartBlock extends Block implements BlockEntityProvider {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         BlockEntity partEntity = world.getBlockEntity(pos);
-        if (world.isAir(pos) || !(partEntity instanceof MultiBlockPartBlockEntity)) {
+        if (world.isAir(pos) || !(partEntity instanceof SolarPanelPartBlockEntity)) {
             return ActionResult.SUCCESS;
         }
 
         if (world.isClient) return ActionResult.SUCCESS;
 
-        BlockPos basePos = ((MultiBlockPartBlockEntity) partEntity).basePos;
+        BlockPos basePos = ((SolarPanelPartBlockEntity) partEntity).basePos;
 
         BlockState base = world.getBlockState(basePos);
         return base.getBlock().onUse(base, world, basePos, player, hand, blockHitResult);
     }
-
 }

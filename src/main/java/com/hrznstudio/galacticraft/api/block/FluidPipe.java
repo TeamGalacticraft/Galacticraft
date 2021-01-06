@@ -50,7 +50,6 @@ public class FluidPipe extends Block implements BlockEntityProvider {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof FluidPipeBlockEntity) {
                 Galacticraft.logger.info(((FluidPipeBlockEntity) entity).getNetwork());
-                return ActionResult.SUCCESS;
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -65,10 +64,10 @@ public class FluidPipe extends Block implements BlockEntityProvider {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos thePosOThisPipe, Block block, BlockPos updatedBlockPos, boolean notify) {
-        super.neighborUpdate(state, world, thePosOThisPipe, block, updatedBlockPos, notify);
-        if (!world.isClient()) {
-            ((FluidPipeBlockEntity) world.getBlockEntity(thePosOThisPipe)).getNetwork().updateConnections(updatedBlockPos, thePosOThisPipe);
+    public void neighborUpdate(BlockState state, World world, BlockPos thePipePos, Block block, BlockPos updatedBlockPos, boolean notify) {
+        super.neighborUpdate(state, world, thePipePos, block, updatedBlockPos, notify);
+        if (!world.isClient() && ((FluidPipeBlockEntity) world.getBlockEntity(thePipePos)).getNetwork() != null) {
+            ((FluidPipeBlockEntity) world.getBlockEntity(thePipePos)).getNetwork().updateConnections(thePipePos, updatedBlockPos);
         }
     }
 

@@ -37,12 +37,8 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<OxygenStorageModuleBlockEntity> {
-    public final Property oxygen = Property.create(); //loses some data (cant send a fraction)
-
     public OxygenStorageModuleScreenHandler(int syncId, PlayerEntity playerEntity, OxygenStorageModuleBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER);
-
-        addProperty(oxygen);
 
         // Player inventory slots
         int playerInvYOffset = 84;
@@ -61,16 +57,5 @@ public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<Oxyge
 
     public OxygenStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (OxygenStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().floatValue() * 100.0D));
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
     }
 }

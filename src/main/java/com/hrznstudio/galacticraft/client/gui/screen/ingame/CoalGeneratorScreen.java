@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -46,6 +47,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
     public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
         this.backgroundHeight = 176;
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 28, 42, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -57,8 +59,6 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
         int topPos = this.y;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 28);
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override
@@ -66,11 +66,5 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
         super.render(stack, mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.coal_generator").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 28);
     }
 }

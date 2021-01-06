@@ -60,8 +60,8 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
 
         this.drawOxygenBufferBar(stack);
 
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", this.handler.oxygen.get()), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 100.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", (int)(this.handler.blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() * 1000.0D)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 1000.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override
@@ -72,17 +72,9 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     }
 
     private void drawOxygenBufferBar(MatrixStack stack) {
-        double currentOxygen = this.handler.oxygen.get();
-        double maxOxygen = handler.blockEntity.getFluidTank().getMaxCapacity(0).doubleValue() * 100.D;
-        double oxygenScale = (currentOxygen / maxOxygen);
+        double oxygenScale = this.handler.blockEntity.getFluidTank().getContents(0).getAmount().divide(this.handler.blockEntity.getFluidTank().getMaxCapacity(0)).doubleValue();
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 11, this.y + 18);
     }
 }

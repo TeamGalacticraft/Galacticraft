@@ -26,7 +26,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
@@ -40,32 +41,32 @@ import java.util.UUID;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class GalacticraftClientPackets {
+public class GalacticraftC2SPackets {
     public static void register() {
-        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "entity_spawn"), (packetContext, packetByteBuf) -> {
-            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
-            packetContext.getTaskQueue().execute(() -> {
-                int id = buf.readVarInt();
-                UUID uuid = buf.readUuid();
-                Entity entity = Registry.ENTITY_TYPE.get(buf.readVarInt()).create(MinecraftClient.getInstance().world);
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            client.execute(() -> {
+                int id = buffer.readVarInt();
+                UUID uuid = buffer.readUuid();
+                Entity entity = Registry.ENTITY_TYPE.get(buffer.readVarInt()).create(MinecraftClient.getInstance().world);
                 entity.setEntityId(id);
                 entity.setUuid(uuid);
-                entity.setPos(buf.readDouble(), buf.readDouble(), buf.readDouble());
-                entity.yaw = (float) (buf.readByte() * 360) / 256.0F;
-                entity.pitch = (float) (buf.readByte() * 360) / 256.0F;
-                entity.setVelocity(buf.readShort(), buf.readShort(), buf.readShort());
+                entity.setPos(buffer.readDouble(), buffer.readDouble(), buffer.readDouble());
+                entity.yaw = (float) (buffer.readByte() * 360) / 256.0F;
+                entity.pitch = (float) (buffer.readByte() * 360) / 256.0F;
+                entity.setVelocity(buffer.readShort(), buffer.readShort(), buffer.readShort());
                 MinecraftClient.getInstance().world.addEntity(id, entity);
             });
         });
 
-
-        ClientSidePacketRegistryImpl.INSTANCE.register(new Identifier(Constants.MOD_ID, "bubble_size"), (packetContext, packetByteBuf) -> {
-            PacketByteBuf buf = new PacketByteBuf(packetByteBuf.copy());
-            packetContext.getTaskQueue().execute(() -> {
-                BlockPos pos = buf.readBlockPos();
-                if (packetContext.getPlayer().world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
-                    if (packetContext.getPlayer().world.getBlockEntity(pos) instanceof BubbleDistributorBlockEntity) {
-                        ((BubbleDistributorBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos)).setSize(buf.readDouble());
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_size"), (client, handler, buf, responseSender) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            client.execute(() -> {
+                BlockPos pos = buffer.readBlockPos();
+                if (client.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+                    BlockEntity entity = client.world.getBlockEntity(pos);
+                    if (entity instanceof BubbleDistributorBlockEntity) {
+                        ((BubbleDistributorBlockEntity) entity).setSize(buffer.readDouble());
                     }
                 }
             });

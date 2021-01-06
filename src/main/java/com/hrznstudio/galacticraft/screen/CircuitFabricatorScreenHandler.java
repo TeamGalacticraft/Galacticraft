@@ -44,21 +44,19 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     //TODO not use this. recipes are added with json so we cant hardcode this anymore really.
     public static final Item[] materials = new Item[]{Items.LAPIS_LAZULI, Items.REDSTONE_TORCH, Items.REPEATER, GalacticraftItems.SOLAR_DUST};
     public final Property progress = Property.create();
-    private final Property status = Property.create();
 
     public CircuitFabricatorScreenHandler(int syncId, PlayerEntity playerEntity, CircuitFabricatorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER);
         addProperty(progress);
-        addProperty(status);
         Inventory inventory = blockEntity.getInventory().asInventory();
         // Energy slot
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 79));
-        this.addSlot(new ItemSpecificSlot(inventory, 1, 8, 15, Items.DIAMOND));
-        this.addSlot(new ItemSpecificSlot(inventory, 2, 8 + (18 * 3), 79, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(inventory, 3, 8 + (18 * 3), 79 - 18, GalacticraftItems.RAW_SILICON));
-        this.addSlot(new ItemSpecificSlot(inventory, 4, 8 + (18 * 6), 79 - 18, Items.REDSTONE));
-        this.addSlot(new ItemSpecificSlot(inventory, 5, 8 + (18 * 7), 15, materials));
-        this.addSlot(new FurnaceOutputSlot(playerEntity, inventory, 6, 8 + (18 * 8), 79));
+        this.addSlot(new ChargeSlot(inventory, 0, 8, 86));
+        this.addSlot(new ItemSpecificSlot(inventory, 1, 8, 8, Items.DIAMOND));
+        this.addSlot(new ItemSpecificSlot(inventory, 2, 62, 68, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(inventory, 3, 62, 86, GalacticraftItems.RAW_SILICON));
+        this.addSlot(new ItemSpecificSlot(inventory, 4, 116, 68, Items.REDSTONE));
+        this.addSlot(new ItemSpecificSlot(inventory, 5, 134, 8, materials));
+        this.addSlot(new FurnaceOutputSlot(playerEntity, inventory, 6, 152, 86));
 
 
         // Player inventory slots
@@ -82,7 +80,6 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     @Override
     public void sendContentUpdates() {
         progress.set(blockEntity.getProgress());
-        status.set(blockEntity.status.ordinal());
         super.sendContentUpdates();
     }
 
@@ -90,6 +87,5 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
         blockEntity.progress = progress.get();
-        blockEntity.status = CircuitFabricatorBlockEntity.CircuitFabricatorStatus.values()[status.get()];
     }
 }
