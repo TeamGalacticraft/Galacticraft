@@ -52,13 +52,12 @@ public class MoonBiomeLayers {
 
         baseLayer = MoonMergeLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer, MoonMareBiomeLayer.INSTANCE.create(contextProvider.apply(6521L))); //layer merge
 
-        for (int i = 1; i < biomeSize / 2; ++i) {
-            baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(2557L + i * 3L), baseLayer);
+        for (int i = 1; i < biomeSize - 1; ++i) {
+            baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(3891L + i * 3L), baseLayer);
         }
-
-        baseLayer = ValleyCrossSamplingLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer); //add valleys (separators, like rivers)
-        baseLayer = ScaleLayer.FUZZY.create(contextProvider.apply(9277L), baseLayer);
-        baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(7893L), baseLayer);
+        baseLayer = ValleyCrossSamplingLayer.INSTANCE.create(contextProvider.apply(9241L), baseLayer); //add valleys (separators, like rivers)
+        baseLayer = ScaleLayer.FUZZY.create(contextProvider.apply(6214L), baseLayer);
+        baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(7834L), baseLayer);
 
         return baseLayer;
     }

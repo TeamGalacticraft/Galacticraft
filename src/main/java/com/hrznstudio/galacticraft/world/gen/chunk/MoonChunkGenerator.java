@@ -13,6 +13,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.JigsawJunction;
 import net.minecraft.structure.PoolStructurePiece;
 import net.minecraft.structure.StructurePiece;
@@ -542,7 +544,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 for (int x = 0; x < 16; x++) {
                     for (int z = 0; z < 16; z++) {
                         if (Math.abs(this.randFromPoint((cx << 4) + x, (cz << 4) + z)) < this.sampleDepthNoise(x << 4 + x, cz << 4 + z) / 32.0D) {
-                            Random random = new Random(((cx << 4) + x + (cz << 4) + z) * 102L);
+                            Random random = new Random((((long) cx << 4) + x + ((long) cz << 4) + z) * 102L);
                             int size;
 
                             int i = random.nextInt(100);
@@ -611,5 +613,11 @@ public final class MoonChunkGenerator extends ChunkGenerator {
                 }
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public BlockPos locateStructure(ServerWorld world, StructureFeature<?> feature, BlockPos center, int radius, boolean skipExistingChunks) {
+        return super.locateStructure(world, feature, center, radius, skipExistingChunks);
     }
 }

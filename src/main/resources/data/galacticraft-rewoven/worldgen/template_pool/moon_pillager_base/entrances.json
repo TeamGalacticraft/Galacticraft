@@ -3,7 +3,7 @@
   "fallback": "galacticraft-rewoven:moon_pillager_base/base",
   "elements": [
     {
-      "weight": 7,
+      "weight": 5,
       "element": {
         "location": "galacticraft-rewoven:moon_pillager_base/entrance/entrance_1",
         "processors": "minecraft:empty",
@@ -12,7 +12,7 @@
       }
     },
     {
-      "weight": 2,
+      "weight": 1,
       "element": {
         "element_type": "minecraft:empty_pool_element"
       }

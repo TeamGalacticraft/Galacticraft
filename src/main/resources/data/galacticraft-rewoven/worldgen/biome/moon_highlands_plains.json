@@ -13,7 +13,7 @@
       "replace_current_music": true
     },
     "sky_color": 0,
-    "fog_color": 1447446,
+    "fog_color": 1447445,
     "water_color": 4013374,
     "water_fog_color": 4802890
   },
@@ -50,6 +50,13 @@
         "size": 6
       },
       "type": "minecraft:village"
+    },
+    {
+      "config": {
+        "start_pool": "galacticraft-rewoven:moon_pillager_base/entrances",
+        "size": 10
+      },
+      "type": "galacticraft-rewoven:moon_pillager_base"
     }
   ],
   "spawners": {

@@ -192,7 +192,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
         if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
             //noinspection ConstantConditions
-            return ((GCBiomePropertyAccessor)(Object) client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ))).getProperty(GalacticraftBiomeProperties.IS_MARE);
+            return client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ)).getEffects().getFogColor() == 1447446;
         }
         return skyProperties.useThickFog(camX, camY);
     }

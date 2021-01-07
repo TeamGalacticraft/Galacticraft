@@ -36,6 +36,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BuiltinBiomes;
 import net.minecraft.world.biome.source.BiomeLayerSampler;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.gen.feature.StructureFeature;
 
 import java.util.ArrayList;
 
@@ -82,9 +83,8 @@ public class MoonBiomeSource extends BiomeSource {
     @Override
     public Biome getBiomeForNoiseGen(int biomeX, int biomeY, int biomeZ) {
         if (!this.initialized) {
-            if (!BuiltinBiomes.BY_RAW_ID.containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
+            if (BuiltinBiomes.BY_RAW_ID.containsValue(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) {
                 if (registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)) != -1) {
-                    this.initialized = true;
                     BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_PLAINS)), GalacticraftBiomes.Moon.HIGHLANDS_PLAINS);
                     BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_ROCKS)), GalacticraftBiomes.Moon.HIGHLANDS_ROCKS);
                     BuiltinBiomes.BY_RAW_ID.put(registry.getRawId(registry.get(GalacticraftBiomes.Moon.HIGHLANDS_VALLEY)), GalacticraftBiomes.Moon.HIGHLANDS_VALLEY);
@@ -101,7 +101,10 @@ public class MoonBiomeSource extends BiomeSource {
                     this.biomes.add(registry.get(GalacticraftBiomes.Moon.MARE_EDGE));
                     this.structureFeatures.clear();
                     this.topMaterials.clear();
+                    this.initialized = true;
                 }
+            } else {
+                throw new RuntimeException();
             }
         }
         return this.sampler.sample(registry, biomeX, biomeZ);
