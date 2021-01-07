@@ -56,13 +56,12 @@ public enum ValleyCrossSamplingLayer implements CrossSamplingLayer {
         if (mare > 2) {
             if (hl > 0) {
                 return MoonBiomeLayers.MOON_MARE_EDGE_ID;
-
             } else {
                 return chooseRandom(context, n, e, s, w);
             }
         }
         if (hl == 2 && mare == 2) {
-//            return MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID;
+            return MoonBiomeLayers.MOON_HIGHLANDS_VALLEY_ID;
         }
         return chooseRandom(context, n, e, s, w);
     }
