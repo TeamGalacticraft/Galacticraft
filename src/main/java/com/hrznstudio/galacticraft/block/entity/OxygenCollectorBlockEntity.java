@@ -18,12 +18,11 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -34,20 +33,19 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -61,7 +59,6 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     public static final int BATTERY_SLOT = 0;
 
     public int collectionAmount = 0;
-    public OxygenCollectorStatus status = OxygenCollectorStatus.INACTIVE;
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -73,23 +70,23 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public int getOxygenTankSize() {
+    public int getFluidTankSize() {
         return 1;
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
-    public Fraction getOxygenTankMaxCapacity() {
+    public Fraction getFluidTankMaxCapacity() {
         return MAX_OXYGEN;
     }
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_INPUT, new SideOption[]{SideOption.OXYGEN_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_OUTPUT);
+    }
+
+    @Override
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -154,33 +151,30 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
             return;
         }
         attemptChargeFromStack(BATTERY_SLOT);
-        trySpreadEnergy();
+        trySpreadFluids(0);
 
         if (this.getCapacitor().getCurrentEnergy() > 0) {
-            this.status = OxygenCollectorStatus.COLLECTING;
+            setStatus(Status.COLLECTING);
         } else {
-            this.status = OxygenCollectorStatus.INACTIVE;
-        }
-
-        if (this.status == OxygenCollectorStatus.INACTIVE) {
+            setStatus(Status.NOT_ENOUGH_ENERGY);
             idleEnergyDecrement(false);
         }
 
-        if (status == OxygenCollectorStatus.COLLECTING) {
+        if (getStatus() == Status.COLLECTING) {
             collectionAmount = collectOxygen(this.pos);
 
             if (this.collectionAmount <= 0) {
-                this.status = OxygenCollectorStatus.NOT_ENOUGH_LEAVES;
+                this.setStatus(Status.NOT_ENOUGH_LEAVES);
                 return;
             }
 
             // If the oxygen capacity isn't full, add collected oxygen.
-            if (this.getOxygenTank().getMaxCapacity(0).compareTo(this.getOxygenTank().getContents(0).getAmount()) > 0) {
+            if (this.getFluidTank().getMaxCapacity(0).compareTo(this.getFluidTank().getContents(0).getAmount()) > 0) {
                 this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
 
-                this.getOxygenTank().insertFluid(0, new FluidVolume(this.getOxygenTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getOxygenTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
+                this.getFluidTank().insertFluid(0, new FluidVolume(this.getFluidTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getFluidTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
             } else {
-                status = OxygenCollectorStatus.FULL;
+                setStatus(Status.FULL);
             }
         } else {
             collectionAmount = 0;
@@ -203,18 +197,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return true;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
-        return false;
+        return true;
     }
 
     @Override
@@ -224,32 +208,39 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
     }
 
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenCollectorStatus implements MachineStatus {
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED),
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD);
+    private enum Status implements MachineStatus {
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
 
         private final Text text;
+        private final StatusType type;
 
-        OxygenCollectorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static OxygenCollectorStatus get(int index) {
-            if (index < 0) return OxygenCollectorStatus.values()[0];
-            return OxygenCollectorStatus.values()[index % OxygenCollectorStatus.values().length];
+        @Override
+        public @NotNull Text getName() {
+            return text;
         }
 
         @Override
-        public Text getText() {
-            return text;
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

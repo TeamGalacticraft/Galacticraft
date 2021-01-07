@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.items;
@@ -44,9 +43,8 @@ public class GenericLiquidCanister extends Item {
 
     @Override
     public int getEnchantability() {
-        return 0;
+        return -1;
     }
-
 
     @Override
     @Environment(EnvType.CLIENT)

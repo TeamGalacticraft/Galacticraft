@@ -18,21 +18,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -41,7 +38,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.Direction;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
@@ -53,16 +50,16 @@ import java.util.function.Predicate;
  */
 public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
 
+    public static final Map<Item, Integer> FUEL_MAP = new HashMap<>(ImmutableMap.of(Items.COAL_BLOCK, 320 * 10, Items.COAL, 320, Items.CHARCOAL, 310));
     @SuppressWarnings("unchecked")
     private static final Predicate<ItemStack>[] SLOT_FILTERS = new Predicate[2];
-    public static final Map<Item, Integer> FUEL_MAP = new HashMap<>(ImmutableMap.of(Items.COAL_BLOCK, 320 * 10, Items.COAL, 320, Items.CHARCOAL, 310));
 
     static {
         SLOT_FILTERS[0] = stack -> FUEL_MAP.containsKey(stack.getItem());
         SLOT_FILTERS[1] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
-    public CoalGeneratorStatus status = CoalGeneratorStatus.IDLE;
+    public Status status = Status.FULL;
     public int fuelTimeMax;
     public int fuelTimeCurrent;
     public int fuelEnergyPerTick;
@@ -89,19 +86,13 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     @Override
-    @Environment(EnvType.CLIENT)
-    public CoalGeneratorStatus getStatusForTooltip() {
-        return status;
+    protected MachineStatus getStatus(int index) {
+        return Status.values()[index];
     }
 
     @Override
     public int getInventorySize() {
         return 2;
-    }
-
-    @Override
-    public int getOxygenTankSize() {
-        return 0;
     }
 
     @Override
@@ -111,7 +102,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
 
     @Override
     public List<SideOption> validSideOptions() {
-        return Lists.asList(SideOption.DEFAULT, SideOption.POWER_OUTPUT, new SideOption[]{SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT});
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT);
     }
 
     @Override
@@ -125,7 +116,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
             return;
         }
 
-        if (status == CoalGeneratorStatus.IDLE) {
+        if (status == Status.FULL) {
             if (heat >= 1.0F) {
                 heat -= 0.05F;
             } else {
@@ -133,8 +124,8 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
             }
         }
 
-        if (FUEL_MAP.containsKey(getInventory().getStack(0).getItem()) && getCapacitor().getCurrentEnergy() < getCapacitor().getMaxEnergy() && status == CoalGeneratorStatus.IDLE) {
-            this.status = CoalGeneratorStatus.WARMING;
+        if (FUEL_MAP.containsKey(getInventory().getStack(0).getItem()) && getCapacitor().getCurrentEnergy() < getCapacitor().getMaxEnergy() && status == Status.FULL) {
+            this.status = Status.WARMING;
 
             this.fuelTimeMax = FUEL_MAP.get(getInventory().getStack(0).getItem());
             this.fuelTimeCurrent = 0;
@@ -145,19 +136,19 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
             getInventory().setStack(0, stack);
         }
 
-        if (this.status == CoalGeneratorStatus.WARMING) {
+        if (this.status == Status.WARMING) {
             if (this.heat >= 1.0f) {
-                this.status = CoalGeneratorStatus.ACTIVE;
+                this.status = Status.ACTIVE;
             }
             this.heat += 0.005f; //10 secs of heating - 1/8th of the time is spent heating (in this case) when it comes to coal/charcoal
         }
 
-        if (status == CoalGeneratorStatus.ACTIVE || this.status == CoalGeneratorStatus.WARMING) {
+        if (status == Status.ACTIVE || this.status == Status.WARMING) {
             fuelTimeCurrent++;
             getCapacitor().generateEnergy(world, pos, (int) (Galacticraft.configManager.get().coalGeneratorEnergyProductionRate() * heat));
 
             if (fuelTimeCurrent >= fuelTimeMax) {
-                this.status = CoalGeneratorStatus.IDLE;
+                this.status = Status.FULL;
                 this.fuelTimeCurrent = 0;
             }
         }
@@ -182,16 +173,6 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     @Override
-    public boolean canExtractOxygen(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertOxygen(int tank) {
-        return false;
-    }
-
-    @Override
     public boolean canExtractFluid(int tank) {
         return false;
     }
@@ -209,36 +190,53 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum CoalGeneratorStatus implements MachineStatus {
+    private enum Status implements MachineStatus {
         /**
          * The generator is active and is generating energy.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * The generator is warming up.
          */
-        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming"), Formatting.GOLD),
+        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
 
         /**
-         * The generator is full or out of fuel.
+         * The generator is full.
          */
-        IDLE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD);
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+
+        /**
+         * The generator is out of fuel.
+         */
+        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
 
         private final Text text;
+        private final StatusType type;
 
-        CoalGeneratorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static CoalGeneratorStatus get(int index) {
+        public static Status get(int index) {
             if (index < 0) return ACTIVE;
-            return CoalGeneratorStatus.values()[index % CoalGeneratorStatus.values().length];
+            return Status.values()[index % Status.values().length];
         }
 
         @Override
-        public Text getText() {
+        public @NotNull Text getName() {
             return text;
+        }
+
+        @Override
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

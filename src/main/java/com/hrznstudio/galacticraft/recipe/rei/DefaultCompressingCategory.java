@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.recipe.rei;
@@ -89,7 +88,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
 
             @Override
             public List<? extends Element> children() {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
         }
 

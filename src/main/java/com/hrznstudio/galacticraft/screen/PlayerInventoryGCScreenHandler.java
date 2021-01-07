@@ -18,13 +18,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.items.ThermalArmorItem;
@@ -63,7 +62,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
 
         this.player = playerEntity;
-        this.inventory = ((GCPlayerAccessor) player).getGearInventory().asInventory();
+        this.inventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player).asInventory();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];

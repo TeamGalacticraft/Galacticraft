@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -36,20 +35,15 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
-    public final Property status = Property.create();
-    public final Property oxygen = Property.create(); //loses some data (cant send a fraction)
     public final Property lastCollectAmount = Property.create();
 
     public OxygenCollectorScreenHandler(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
         Inventory inventory = blockEntity.getInventory().asInventory();
-
-        addProperty(status);
-        addProperty(oxygen);
         addProperty(lastCollectAmount);
 
         // Charging slot
-        this.addSlot(new ChargeSlot(inventory, 0, 20, 70));
+        this.addSlot(new ChargeSlot(inventory, 0, 13, 69));
 
         // Player inventory slots
         int playerInvYOffset = 99;
@@ -72,15 +66,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getOxygenTank().getContents(0).getAmount().floatValue() * 100.0F));
         lastCollectAmount.set(blockEntity.collectionAmount);
         super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = OxygenCollectorBlockEntity.OxygenCollectorStatus.get(status.get());
     }
 }

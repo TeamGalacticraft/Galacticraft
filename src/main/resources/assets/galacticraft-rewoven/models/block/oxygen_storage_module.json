@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up": "galacticraft-rewoven:block/machine",
+    "down": "galacticraft-rewoven:block/machine",
+    "north": "galacticraft-rewoven:block/oxygen_storage_module_8",
+    "south": "galacticraft-rewoven:block/oxygen_storage_module_8",
+    "east": "galacticraft-rewoven:block/machine",
+    "west": "galacticraft-rewoven:block/machine",
+    "particle": "galacticraft-rewoven:block/machine"
+  }
+}

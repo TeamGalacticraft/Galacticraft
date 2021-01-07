@@ -18,15 +18,19 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.screen.property.CapacitorProperty;
+import com.hrznstudio.galacticraft.screen.property.FluidTankPropertyDelegate;
+import com.hrznstudio.galacticraft.screen.property.StatusProperty;
+import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
+import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
@@ -35,16 +39,21 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEntity> extends ScreenHandler {
-
     public final PlayerEntity playerEntity;
     public final T blockEntity;
-    public final Property energy = Property.create();
 
     protected MachineScreenHandler(int syncId, PlayerEntity playerEntity, T blockEntity, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
         super(handlerType, syncId);
         this.playerEntity = playerEntity;
         this.blockEntity = blockEntity;
-        addProperty(energy);
+
+        addProperty(new CapacitorProperty((SimpleCapacitorComponent) blockEntity.getCapacitor()));
+        addProperty(new StatusProperty(blockEntity));
+
+        PropertyDelegate tankDelegate = new FluidTankPropertyDelegate(blockEntity.getFluidTank());
+        for (int i = 0; i < blockEntity.getFluidTankSize() * 2; i++) {
+            addProperty(Property.create(tankDelegate, i));
+        }
     }
 
     @Override
@@ -77,12 +86,6 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
     }
 
     @Override
-    public void sendContentUpdates() {
-        energy.set(blockEntity.getCapacitor().getCurrentEnergy());
-        super.sendContentUpdates();
-    }
-
-    @Override
     public boolean canUse(PlayerEntity player) {
         return blockEntity.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
                 || !blockEntity.getSecurity().hasOwner()
@@ -90,10 +93,6 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
                 || (blockEntity.getSecurity().hasTeam() && blockEntity.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
 //        && blockEntity.getSecurity().getTeam() == player
         );
-    }
-
-    public int getMaxEnergy() {
-        return blockEntity.getMaxEnergy();
     }
 
     @FunctionalInterface

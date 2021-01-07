@@ -18,35 +18,20 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.block.machines;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -56,23 +41,16 @@ import java.util.Random;
  */
 public class RefineryBlock extends ConfigurableMachineBlock {
     public RefineryBlock(Settings settings) {
-        super(settings, RefineryScreenHandler::new);
-    }
-
-    @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
-        return new RefineryBlockEntity();
-    }
-
-    @Override
-    public Text machineInfo(ItemStack stack, BlockView blockView, TooltipContext tooltipContext) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.refinery").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+        super(settings, RefineryScreenHandler::new, RefineryBlockEntity::new,
+                new TranslatableText("tooltip.galacticraft-rewoven.refinery")
+                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
     }
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
-        if (world.getBlockEntity(pos) instanceof RefineryBlockEntity && ((RefineryBlockEntity) world.getBlockEntity(pos)).status == RefineryBlockEntity.RefineryStatus.ACTIVE) {
+        BlockEntity entity = world.getBlockEntity(pos);
+        if (entity instanceof ConfigurableMachineBlockEntity && ((ConfigurableMachineBlockEntity) entity).getStatus().getType().isActive()) {
             world.addParticle(ParticleTypes.SMOKE, pos.getX() + random.nextDouble(), pos.getY() + 1, pos.getZ() + random.nextDouble(), 0.0D, 0.0D, 0.0D);
         }
     }

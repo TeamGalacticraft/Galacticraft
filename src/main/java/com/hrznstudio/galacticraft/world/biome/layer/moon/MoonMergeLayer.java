@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.world.biome.layer.moon;
@@ -36,7 +35,7 @@ public enum MoonMergeLayer implements MergingLayer, IdentityCoordinateTransforme
         int id1 = sampler1.sample(this.transformX(x), this.transformZ(z));
         int id2 = sampler2.sample(this.transformX(x), this.transformZ(z));
 
-        return context.nextInt(10) <= 2 ? id2 : id1;
+        return context.nextInt(10) <= 3 ? id2 : id1;
 
     }
 }

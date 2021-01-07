@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.screen;
@@ -39,8 +38,6 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CompressorScreenHandler extends MachineScreenHandler<CompressorBlockEntity> {
-
-    public final Property status = Property.create();
     public final Property progress = Property.create();
     public final Property fuelTime = Property.create();
     protected final Inventory inventory;
@@ -48,7 +45,6 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
     public CompressorScreenHandler(int syncId, PlayerEntity playerEntity, CompressorBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
         this.inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
         addProperty(progress);
         addProperty(fuelTime);
 
@@ -92,7 +88,6 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
 
     @Override
     public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
         progress.set(blockEntity.getProgress());
         fuelTime.set(blockEntity.fuelTime);
         super.sendContentUpdates();
@@ -102,7 +97,6 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
     @Override
     public void setProperty(int id, int value) {
         super.setProperty(id, value);
-        blockEntity.status = CompressorBlockEntity.CompressorStatus.get(status.get());
         blockEntity.progress = progress.get();
         blockEntity.fuelTime = fuelTime.get();
     }

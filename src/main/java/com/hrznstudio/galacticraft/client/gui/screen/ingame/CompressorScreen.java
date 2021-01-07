@@ -18,13 +18,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -43,11 +42,11 @@ import net.minecraft.util.Identifier;
  */
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
-
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
+
     protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
     protected int progressDisplayX;
     protected int progressDisplayY;
@@ -94,9 +93,8 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected void drawFuelProgressBar(MatrixStack stack) {
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int fuelUsageScale;
-        CompressorBlockEntity.CompressorStatus status = this.handler.blockEntity.status;
 
-        if (status != CompressorBlockEntity.CompressorStatus.IDLE) {
+        if (this.handler.blockEntity.getStatus().getType() != ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_ENERGY) {
             fuelUsageScale = getFuelProgress();
             this.drawTexture(stack, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
@@ -123,15 +121,6 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        if (mouseX >= this.x - 22 && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + (22 + 3)) {
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.tabs.side_config").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
-        }
-    }
-
-    @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
-
     }
 }

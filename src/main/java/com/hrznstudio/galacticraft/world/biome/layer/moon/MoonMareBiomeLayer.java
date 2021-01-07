@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.world.biome.layer.moon;
@@ -32,7 +31,7 @@ public enum MoonMareBiomeLayer implements InitLayer {
 
     public int sample(LayerRandomnessSource context, int x, int y) {
         int i = context.nextInt(10);
-        if (i <= 7) {
+        if (i <= 9) {
             return MoonBiomeLayers.MOON_MARE_PLAINS_ID;
         } else {
             return MoonBiomeLayers.MOON_MARE_ROCKS_ID;

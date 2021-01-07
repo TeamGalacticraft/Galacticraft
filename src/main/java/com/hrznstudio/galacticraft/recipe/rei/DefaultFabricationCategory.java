@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.recipe.rei;
@@ -44,6 +43,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -61,7 +61,7 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
     @Override
     @Environment(EnvType.CLIENT)
     public EntryStack getLogo() {
-        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getStackForRender());
+        return EntryStack.create(GalacticraftBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultStack());
     }
 
     @Environment(EnvType.CLIENT)
@@ -83,15 +83,15 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
                 this.drawTexture(stack, startPoint.x, startPoint.y, 0, 0, 162, 82);
 
-                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D / 1.0D);
+                int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
                 this.drawTexture(stack, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D / 1.0D);
+                int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
                 this.drawTexture(stack, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
 
             @Override
             public List<? extends Element> children() {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
         }
 

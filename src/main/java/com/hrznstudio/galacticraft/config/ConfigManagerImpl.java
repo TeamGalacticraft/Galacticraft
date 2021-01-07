@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.config;
@@ -149,7 +148,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
-                new TranslatableText(Constants.Config.CIRCUIT_FABRICATOR_ENERGY_PRODUCTION_RATE),
+                new TranslatableText(Constants.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                 this.config.circuitFabricatorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setCircuitFabricatorEnergyConsumptionRate)
                 .setDefaultValue(20)
@@ -158,7 +157,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
-                new TranslatableText(Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_PRODUCTION_RATE),
+                new TranslatableText(Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.electricCompressorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setElectricCompressorEnergyConsumptionRate)
                 .setDefaultValue(75)
@@ -167,7 +166,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
-                new TranslatableText(Constants.Config.OXYGEN_COLLECTOR_ENERGY_PRODUCTION_RATE),
+                new TranslatableText(Constants.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCollectorEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setOxygenCollectorEnergyConsumptionRate)
                 .setDefaultValue(10)
@@ -176,7 +175,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
-                new TranslatableText(Constants.Config.REFINERY_ENERGY_PRODUCTION_RATE),
+                new TranslatableText(Constants.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                 this.config.refineryEnergyConsumptionRate())
                 .setSaveConsumer(this.config::setRefineryEnergyConsumptionRate)
                 .setDefaultValue(60)
@@ -198,6 +197,26 @@ public class ConfigManagerImpl implements ConfigManager {
                 this.config.machineEnergyStorageSize())
                 .setSaveConsumer(this.config::setMachineEnergyStorageSize)
                 .setDefaultValue(30_000)
+                .requireRestart()
+                .build()
+        );
+        
+        machines.add(new IntFieldBuilder(
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                this.config.oxygenCompressorEnergyConsumptionRate())
+                .setSaveConsumer(this.config::setOxygenCompressorEnergyConsumptionRate)
+                .setDefaultValue(15)
+                .requireRestart()
+                .build()
+        );
+
+        machines.add(new IntFieldBuilder(
+                new TranslatableText(Constants.Config.RESET),
+                new TranslatableText(Constants.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
+                this.config.oxygenDecompressorEnergyConsumptionRate())
+                .setSaveConsumer(this.config::setOxygenDecompressorEnergyConsumptionRate)
+                .setDefaultValue(15)
                 .requireRestart()
                 .build()
         );

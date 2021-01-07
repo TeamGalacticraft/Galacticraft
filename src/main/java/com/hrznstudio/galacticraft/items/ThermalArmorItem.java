@@ -18,12 +18,12 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,7 +51,7 @@ public class ThermalArmorItem extends Item {
 
     @Override //should sync with server
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        SimpleInventoryComponent inv = ((GCPlayerAccessor) player).getGearInventory();
+        InventoryComponent inv = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player);
         ItemStack thermalPiece = inv.getStack(getSlotIdForType(getSlotType()));
         if (thermalPiece.isEmpty()) {
             inv.setStack(getSlotIdForType(getSlotType()), player.getStackInHand(hand));

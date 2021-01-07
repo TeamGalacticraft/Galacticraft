@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.world.biome.layer;
@@ -54,7 +53,7 @@ public class MoonBiomeLayers {
         baseLayer = MoonMergeLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer, MoonMareBiomeLayer.INSTANCE.create(contextProvider.apply(6521L))); //layer merge
 
         for (int i = 1; i < biomeSize / 2; ++i) {
-            baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(2557L + i * 3), baseLayer);
+            baseLayer = ScaleLayer.NORMAL.create(contextProvider.apply(2557L + i * 3L), baseLayer);
         }
 
         baseLayer = ValleyCrossSamplingLayer.INSTANCE.create(contextProvider.apply(1703L), baseLayer); //add valleys (separators, like rivers)

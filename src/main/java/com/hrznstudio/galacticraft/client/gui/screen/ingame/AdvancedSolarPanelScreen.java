@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
@@ -26,7 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -54,6 +53,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
 
     public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
     }
 
     @Override
@@ -65,7 +65,6 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
         int topPos = this.y;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
     }
 
     @Override
@@ -76,19 +75,10 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
-    }
-
-    @Override
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.FULL
-                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.BLOCKED
-                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.NIGHT
-        ) {
+        if (this.handler.blockEntity.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
                 time = 6000 - (time - 6000);

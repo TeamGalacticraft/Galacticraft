@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.recipe;
@@ -49,7 +48,7 @@ import java.util.Set;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ShapedCompressingRecipe implements Recipe<Inventory> {
+public class ShapedCompressingRecipe implements CompressingRecipe {
     final String group;
     private final int width;
     private final int height;
@@ -200,11 +199,6 @@ public class ShapedCompressingRecipe implements Recipe<Inventory> {
 
     public RecipeSerializer<?> getSerializer() {
         return GalacticraftRecipes.SHAPED_COMPRESSING_SERIALIZER;
-    }
-
-    @Override
-    public RecipeType<?> getType() {
-        return GalacticraftRecipes.SHAPED_COMPRESSING_TYPE;
     }
 
     @Environment(EnvType.CLIENT)

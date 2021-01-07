@@ -18,17 +18,17 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.GCPlayerAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
+import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.entity.damage.GalacticraftDamageSource;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
+import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -125,7 +125,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void updateAir(LivingEntity entity) {
         //todo check for sealed space
         if (entity instanceof PlayerEntity) {
-            SimpleInventoryComponent gearInventory = ((GCPlayerAccessor) entity).getGearInventory();
+            InventoryComponent gearInventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(entity);
             if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(6).getMaxDamage() - gearInventory.getStack(6).getDamage()) > 0)) {
                 gearInventory.getStack(6).setDamage(gearInventory.getStack(6).getDamage() + 1);
                 return;

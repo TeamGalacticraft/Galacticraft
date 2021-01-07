@@ -18,7 +18,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 
 package com.hrznstudio.galacticraft.world.dimension;
@@ -42,7 +41,7 @@ public class GalacticraftCelestialBodyTypes {
             .display(
                     new CelestialBodyDisplayInfo.Builder()
                             .texture(new Identifier("galacticraft-rewoven", "planet_icons"))
-                            .distance(5d)
+                            .distance(5)
                             .time(46656000d) // 27 mc days in ticks
                             .build()
             )
