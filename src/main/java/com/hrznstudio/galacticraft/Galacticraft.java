@@ -56,6 +56,7 @@ import com.hrznstudio.galacticraft.world.gen.surfacebuilder.GalacticraftSurfaceB
 import com.hrznstudio.galacticraft.world.poi.GalacticraftPointOfInterestType;
 import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -117,5 +118,6 @@ public class Galacticraft implements ModInitializer {
 //        });
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        StructureUpdater.update(MinecraftClient.getInstance().getDataFixer());
     }
 }
