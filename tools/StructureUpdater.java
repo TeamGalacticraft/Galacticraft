@@ -13,7 +13,7 @@
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR a\\ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
@@ -37,10 +37,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * updates gc structures' data format
+ */
 public class StructureUpdater {
     public static void update(DataFixer dataFixer) {
         try (Stream<Path> walk = Files.walk((new File("../src/main/resources/data/galacticraft-rewoven/").toPath()))) {
-            List<String> fileNamesList = walk.filter(Files::isRegularFile).filter(path -> path.toString().endsWith("nbt")).map(Path::toString).collect(Collectors.toList());
+            List<String> fileNamesList = walk.filter(Files::isRegularFile).map(Path::toString).filter(path -> path.endsWith("nbt")).collect(Collectors.toList());
             LevelStorage storage = new LevelStorage(new File("../run/structure_update/").toPath(), new File("../run/structure_update/backup").toPath(), dataFixer);
             StructureManager manager = new StructureManager(null, storage.createSession("session"), dataFixer);
 
