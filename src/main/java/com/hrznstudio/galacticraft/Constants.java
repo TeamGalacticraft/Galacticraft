@@ -422,6 +422,7 @@ public class Constants {
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
         public static final String ELECTRIC_FURNACE_SCREEN = "gui/electric_furnace_screen";
+        public static final String ELECTRIC_ARC_FURNACE_SCREEN = "gui/electric_arc_furnace_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
         public static final String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
@@ -560,6 +561,7 @@ public class Constants {
         public static final String ENERGY_STORAGE_MODULE_SCREEN_HANDLER = "energy_storage_module_screen_handler";
         public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
         public static final String ELECTRIC_FURNACE_SCREEN_HANDLER = "electric_furnace_screen_handler";
+        public static final String ELECTRIC_ARC_FURNACE_SCREEN_HANDLER = "electric_arc_furnace_screen_handler";
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
         public static final String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";

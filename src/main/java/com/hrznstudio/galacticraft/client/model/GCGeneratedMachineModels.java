@@ -201,6 +201,19 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                     return spriteFunction.apply(MACHINE);
             }
         });
+
+        register(GalacticraftBlocks.ELECTRIC_ARC_FURNACE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/electric_furnace"));
+                case LEFT:
+                case RIGHT:
+                case BACK:
+                    return spriteFunction.apply(MACHINE_SIDE);
+                default:
+                    return spriteFunction.apply(MACHINE);
+            }
+        });
     }
 
     @Override
