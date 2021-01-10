@@ -102,6 +102,7 @@ dependencies {
     modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-content-registries-v0", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-item-groups-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-models-v0", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)) { transitive = false }
     modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version)) { transitive = false }

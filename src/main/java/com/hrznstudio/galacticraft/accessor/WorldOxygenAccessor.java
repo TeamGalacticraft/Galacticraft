@@ -20,16 +20,20 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.accessor;
 
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import net.minecraft.server.world.ServerWorld;
-import org.spongepowered.asm.mixin.Mixin;
+import net.minecraft.util.math.BlockPos;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
+public interface WorldOxygenAccessor {
+    default boolean isBreathable(int x, int y, int z) {
+        return isBreathable(new BlockPos(x, y, z));
+    }
 
+    boolean isBreathable(BlockPos pos);
+
+    default void setBreathable(int x, int y, int z, boolean value) {
+        setBreathable(new BlockPos(x, y, z), value);
+    }
+
+    void setBreathable(BlockPos pos, boolean value);
 }

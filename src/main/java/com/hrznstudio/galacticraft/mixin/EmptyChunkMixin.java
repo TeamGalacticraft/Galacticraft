@@ -22,14 +22,20 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import net.minecraft.server.world.ServerWorld;
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.EmptyChunk;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
+@Mixin(EmptyChunk.class)
+public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
+    @Override
+    public boolean isBreathable(int x, int y, int z) {
+        return false;
+    }
 
+    @Override
+    public void setBreathable(int x, int y, int z, boolean value) {
+
+    }
 }

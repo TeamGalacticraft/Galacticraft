@@ -20,16 +20,10 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.accessor;
 
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import net.minecraft.server.world.ServerWorld;
-import org.spongepowered.asm.mixin.Mixin;
+public interface ChunkOxygenAccessor {
+    boolean isBreathable(int x, int y, int z);
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
-
+    void setBreathable(int x, int y, int z, boolean value);
 }

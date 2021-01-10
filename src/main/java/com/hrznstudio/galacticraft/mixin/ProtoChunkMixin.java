@@ -22,14 +22,35 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import net.minecraft.server.world.ServerWorld;
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
+import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkSection;
+import net.minecraft.world.chunk.ProtoChunk;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
+@Mixin(ProtoChunk.class)
+public abstract class ProtoChunkMixin implements ChunkOxygenAccessor {
+    @Shadow @Final private ChunkSection[] sections;
 
+    @Override
+    public boolean isBreathable(int x, int y, int z) {
+        if (y < 0 || y > 255) return false;
+        ChunkSection section = sections[y >> 4];
+        if (!ChunkSection.isEmpty(section)) {
+            return ((ChunkSectionOxygenAccessor) section).isBreathable(x & 15, y & 15, z & 15);
+        }
+        return false;
+    }
+
+    @Override
+    public void setBreathable(int x, int y, int z, boolean value) {
+        if (y < 0 || y > 255) return;
+        ChunkSection section = sections[y >> 4];
+        if (!ChunkSection.isEmpty(section)) {
+            ((ChunkSectionOxygenAccessor) section).setBreathable(x & 15, y & 15, z & 15, value);
+        }
+    }
 }

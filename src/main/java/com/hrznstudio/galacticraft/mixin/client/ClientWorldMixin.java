@@ -20,16 +20,16 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import net.minecraft.server.world.ServerWorld;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
-
+@Mixin(ClientWorld.class)
+@Environment(EnvType.CLIENT)
+public abstract class ClientWorldMixin implements WorldOxygenAccessor {
 }

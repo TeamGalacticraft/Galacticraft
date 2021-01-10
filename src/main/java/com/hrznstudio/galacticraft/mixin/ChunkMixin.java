@@ -22,14 +22,11 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import net.minecraft.server.world.ServerWorld;
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
+import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
+import net.minecraft.world.chunk.Chunk;
 import org.spongepowered.asm.mixin.Mixin;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin implements WorldOxygenAccessor {
-
+@Mixin(Chunk.class)
+public interface ChunkMixin extends ChunkOxygenAccessor {
 }
