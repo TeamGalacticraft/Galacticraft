@@ -59,7 +59,7 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
         if (hasHadOxygen) {
             byte[] array = new byte[(16 * 16 * 16) / 8];
             boolean[] arr = getArray();
-            for (int p = 0; p < arr.length - 8; p += 9) {
+            for (int p = 0; p < arr.length - 8; p += 8) {
                 byte b = -128;
                 b += arr[p] ? 1 : 0;
                 b += arr[p + 1] ? 2 : 0;
@@ -121,6 +121,44 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
     @Override
     public boolean hasOxygen() {
         return hasHadOxygen;
+    }
+
+    @Override
+    public void setHasOxygen(boolean b) {
+        hasHadOxygen = b;
+    }
+
+    @Override
+    public void writeOxygen(PacketByteBuf buf) {
+        boolean[] arr = this.oxygen;
+        for (int p = 0; p < (16 * 16 * 16) / 8; p++) {
+            byte b = -128;
+            b += arr[(p * 8)] ? 1 : 0;
+            b += arr[(p * 8) + 1] ? 2 : 0;
+            b += arr[(p * 8) + 2] ? 4 : 0;
+            b += arr[(p * 8) + 3] ? 8 : 0;
+            b += arr[(p * 8) + 4] ? 16 : 0;
+            b += arr[(p * 8) + 5] ? 32 : 0;
+            b += arr[(p * 8) + 6] ? 64 : 0;
+            b += arr[(p * 8) + 7] ? 128 : 0;
+            buf.writeByte(b);
+        }
+    }
+
+    @Override
+    public void readOxygen(PacketByteBuf packetByteBuf) {
+        boolean[] oxygen = this.getArray();
+        for (int i = 0; i < (16 * 16 * 16) / 8; i++) {
+            short b = (short) (packetByteBuf.readByte() + 128);
+            oxygen[(i * 8)] = (b & 1) != 0;
+            oxygen[(i * 8) + 1] = (b & 2) != 0;
+            oxygen[(i * 8) + 2] = (b & 4) != 0;
+            oxygen[(i * 8) + 3] = (b & 8) != 0;
+            oxygen[(i * 8) + 4] = (b & 16) != 0;
+            oxygen[(i * 8) + 5] = (b & 32) != 0;
+            oxygen[(i * 8) + 6] = (b & 64) != 0;
+            oxygen[(i * 8) + 7] = (b & 128) != 0;
+        }
     }
 
     public ChunkSectionMixin(boolean hasHadOxygen) {

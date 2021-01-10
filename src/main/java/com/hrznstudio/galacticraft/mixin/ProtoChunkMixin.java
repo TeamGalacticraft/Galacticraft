@@ -24,12 +24,15 @@ package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ProtoChunk;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+
+import java.util.List;
 
 @Mixin(ProtoChunk.class)
 public abstract class ProtoChunkMixin implements ChunkOxygenAccessor {
@@ -52,5 +55,15 @@ public abstract class ProtoChunkMixin implements ChunkOxygenAccessor {
         if (!ChunkSection.isEmpty(section)) {
             ((ChunkSectionOxygenAccessor) section).setBreathable(x & 15, y & 15, z & 15, value);
         }
+    }
+
+    @Override
+    public List<CustomPayloadS2CPacket> syncToClient() {
+        throw new UnsupportedOperationException("NYI");
+    }
+
+    @Override
+    public void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf) {
+        throw new UnsupportedOperationException("NYI");
     }
 }

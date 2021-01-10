@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
@@ -39,6 +40,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -69,8 +71,9 @@ public abstract class LivingEntityMixin extends Entity {
     @Shadow
     protected abstract int getNextAirUnderwater(int air);
 
-    @Shadow public abstract void travel(Vec3d movementInput);
+    @Shadow protected abstract int getNextAirOnLand(int air);
 
+    //todo make this less invasive
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getNextAirOnLand(I)I"))
     private int skipAirCheck_1gc(LivingEntity livingEntity, int air) {
         return air;
@@ -89,6 +92,12 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;tickStatusEffects()V", shift = At.Shift.BEFORE))
     private void doOxygenChecks(CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
+        BlockPos pos = new BlockPos(entity.getX(), entity.getEyeY(), entity.getZ());
+        if (((WorldOxygenAccessor) entity.getEntityWorld()).isBreathable(pos)) {
+            this.setAir(this.getNextAirOnLand(this.getAir()));
+            return;
+        }
+
         //noinspection ConstantConditions
         if (this.isAlive() && !(entity instanceof PlayerEntity && ((PlayerEntity) entity).abilities.invulnerable)) {
             if (CelestialBodyType.getByDimType(world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
@@ -123,8 +132,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     private void updateAir(LivingEntity entity) {
-        //todo check for sealed space
-        if (entity instanceof PlayerEntity) {
+                if (entity instanceof PlayerEntity) {
             InventoryComponent gearInventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(entity);
             if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem && ((gearInventory.getStack(6).getMaxDamage() - gearInventory.getStack(6).getDamage()) > 0)) {
                 gearInventory.getStack(6).setDamage(gearInventory.getStack(6).getDamage() + 1);

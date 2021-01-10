@@ -36,10 +36,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAccessor {
     @Inject(method = "fromPacket", at = @At("RETURN"))
-    private void toPacket(PacketByteBuf packetByteBuf, CallbackInfo ci) {
+    private void fromPacket(PacketByteBuf packetByteBuf, CallbackInfo ci) {
         if (!packetByteBuf.readBoolean()) return;
         boolean[] oxygen = this.getArray();
-        for (int i = 0; i < 4096 / 8; i++) {
+        for (int i = 0; i < (16 * 16 * 16) / 8; i++) {
             short b = (short) (packetByteBuf.readByte() + 128);
             oxygen[(i * 8)] = (b & 1) != 0;
             oxygen[(i * 8) + 1] = (b & 2) != 0;

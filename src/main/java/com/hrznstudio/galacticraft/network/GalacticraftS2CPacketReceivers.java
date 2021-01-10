@@ -36,6 +36,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GalacticraftS2CPackets {
+public class GalacticraftS2CPacketReceivers {
     public static void register() {
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());

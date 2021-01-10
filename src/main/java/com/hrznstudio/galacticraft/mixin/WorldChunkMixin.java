@@ -22,20 +22,39 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
-import net.minecraft.world.chunk.Chunk;
+import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.Unpooled;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.WorldChunk;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 @Mixin(WorldChunk.class)
 public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
     @Shadow
     @Final
     private ChunkSection[] sections;
+
+    @Shadow public abstract void setShouldSave(boolean shouldSave);
+
+    @Shadow @Final private ChunkPos pos;
+    @Shadow @Final private World world;
+    private @Unique boolean update = false;
+    private final @Unique boolean[] updatable = new boolean[16];
 
     @Override
     public boolean isBreathable(int x, int y, int z) {
@@ -52,7 +71,37 @@ public abstract class WorldChunkMixin implements ChunkOxygenAccessor {
         if (y < 0 || y > 255) return;
         ChunkSection section = sections[y >> 4];
         if (!ChunkSection.isEmpty(section)) {
-            ((ChunkSectionOxygenAccessor) section).setBreathable(x & 15, y & 15, z & 15, value);
+            if (value != ((ChunkSectionOxygenAccessor) section).isBreathable(x & 15, y & 15, z & 15)) {
+                if (!this.world.isClient) {
+                    setShouldSave(true);
+                    update = true;
+                    updatable[y >> 4] = true;
+                }
+                ((ChunkSectionOxygenAccessor) section).setBreathable(x & 15, y & 15, z & 15, value);
+            }
         }
+    }
+
+    @Override
+    public List<CustomPayloadS2CPacket> syncToClient() {
+        if (update && !world.isClient) {
+            update = false;
+            List<CustomPayloadS2CPacket> list = new LinkedList<>();
+            for (int i = 0; i < 16; i++) {
+                if (updatable[i]) {
+                    updatable[i] = false;
+                    PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer(1 + ((16 * 16 * 16) / 8) + (4 * 2), 50 + 1 + ((16 * 16 * 16) / 8) + (4 * 2)).writeByte(i).writeInt(this.pos.x).writeInt(this.pos.z));
+                    ((ChunkSectionOxygenAccessor) sections[i]).writeOxygen(buf);
+                    list.add(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "oxygen_update"), buf));
+                }
+            }
+            return list;
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf) {
+        ((ChunkSectionOxygenAccessor) sections[b]).readOxygen(packetByteBuf);
     }
 }

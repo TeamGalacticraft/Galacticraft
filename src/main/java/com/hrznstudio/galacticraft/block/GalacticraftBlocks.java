@@ -195,6 +195,7 @@ public class GalacticraftBlocks {
     public static final Block ENERGY_STORAGE_MODULE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), EnergyStorageModuleScreenHandler::new, blockView -> new EnergyStorageModuleBlockEntity(),
             new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(Constants.Misc.TOOLTIP_STYLE)), Constants.Blocks.ENERGY_STORAGE_MODULE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR);
+    public static final Block OXYGEN_SEALER = registerMachine(new OxygenSealerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_SEALER);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY);
     public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), BubbleDistributorScreenHandler::new, blockView -> new BubbleDistributorBlockEntity(),
             new TranslatableText("tooltip.galacticraft-rewoven.oxygen_bubble_distributor").setStyle(Constants.Misc.TOOLTIP_STYLE)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR);

@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
 import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
-import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPackets;
+import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPacketReceivers;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.*;
@@ -117,6 +117,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, PlayerInventoryGCScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.BUBBLE_DISTRIBUTOR_HANDLER, BubbleDistributorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
 
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerEntityRenderer(entityRenderDispatcher, context.getResourceManager()));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
@@ -127,7 +128,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         GalacticraftBlockEntityRenderers.register();
         GalacticraftParticles.registerClient();
-        GalacticraftC2SPackets.register();
+        GalacticraftC2SPacketReceivers.register();
         GCGeneratedMachineModels.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getTranslucent());

@@ -20,26 +20,30 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.accessor;
+package com.hrznstudio.galacticraft.mixin;
 
-import net.minecraft.network.PacketByteBuf;
-import org.jetbrains.annotations.ApiStatus;
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
+import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.server.world.ChunkHolder;
+import net.minecraft.world.chunk.WorldChunk;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public interface ChunkSectionOxygenAccessor {
-    boolean isBreathable(int x, int y, int z);
+import java.util.List;
 
-    void setBreathable(int x, int y, int z, boolean value);
+@Mixin(ChunkHolder.class)
+public abstract class ChunkHolderMixin {
+    @Shadow protected abstract void sendPacketToPlayersWatching(Packet<?> packet, boolean onlyOnWatchDistanceEdge);
 
-    @ApiStatus.Internal
-    boolean[] getArray();
-
-    @ApiStatus.Internal
-    boolean hasOxygen();
-
-    @ApiStatus.Internal
-    void setHasOxygen(boolean b);
-
-    void writeOxygen(PacketByteBuf buf);
-
-    void readOxygen(PacketByteBuf packetByteBuf);
+    @Inject(method = "flushUpdates", at = @At("HEAD"))
+    private void flushGC(WorldChunk chunk, CallbackInfo ci) {
+        List<CustomPayloadS2CPacket> packets = ((ChunkOxygenAccessor) chunk).syncToClient();
+        for (CustomPayloadS2CPacket packet : packets) {
+            sendPacketToPlayersWatching(packet, false);
+        }
+    }
 }

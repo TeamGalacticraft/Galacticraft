@@ -23,9 +23,13 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.world.chunk.EmptyChunk;
 import org.spongepowered.asm.mixin.Mixin;
+
+import java.util.Collections;
+import java.util.List;
 
 @Mixin(EmptyChunk.class)
 public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
@@ -36,6 +40,15 @@ public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
 
     @Override
     public void setBreathable(int x, int y, int z, boolean value) {
+    }
+
+    @Override
+    public List<CustomPayloadS2CPacket> syncToClient() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf) {
 
     }
 }
