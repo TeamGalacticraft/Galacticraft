@@ -123,6 +123,9 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (entityRenderDispatcher, context) -> new EvolvedSkeletonEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (entityRenderDispatcher, context) -> new EvolvedSpiderEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_EVOKER, (entityRenderDispatcher, context) -> new EvolvedEvokerEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_PILLAGER, (entityRenderDispatcher, context) -> new EvolvedPillagerEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (entityRenderDispatcher, context) -> new EvolvedVindicatorEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();

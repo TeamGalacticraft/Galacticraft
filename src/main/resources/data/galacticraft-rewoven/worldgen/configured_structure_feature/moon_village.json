@@ -3,5 +3,5 @@
     "start_pool": "galacticraft-rewoven:moon_village/starts",
     "size": 6
   },
-  "type": "galacticraft-rewoven:moon_village"
+  "type": "minecraft:village"
 }

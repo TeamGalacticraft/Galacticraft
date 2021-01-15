@@ -1,0 +1,30 @@
+{
+  "name": "galacticraft-rewoven:moon_village/houses",
+  "fallback": "galacticraft-rewoven:moon_village/terminators",
+  "elements": [
+    {
+      "weight": 4,
+      "element": {
+        "location": "galacticraft-rewoven:moon_village/houses/house_1",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:legacy_single_pool_element"
+      }
+    },
+    {
+      "weight": 2,
+      "element": {
+        "location": "galacticraft-rewoven:moon_village/houses/greenhouse",
+        "processors": "minecraft:empty",
+        "projection": "rigid",
+        "element_type": "minecraft:legacy_single_pool_element"
+      }
+    },
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:empty_pool_element"
+      }
+    }
+  ]
+}
