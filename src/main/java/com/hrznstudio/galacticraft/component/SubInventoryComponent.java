@@ -75,8 +75,8 @@ public class SubInventoryComponent implements InventoryComponent {
     public DefaultedList<ItemStack> getMutableStacks() {
         DefaultedList<ItemStack> stacks = DefaultedList.ofSize(slots.length, ItemStack.EMPTY);
         DefaultedList<ItemStack> stacks1 = component.getMutableStacks();
-        for (int i : slots) {
-            stacks.add(stacks1.get(i));
+        for (int i = 0; i < slots.length; i++) {
+            stacks.set(i, stacks1.get(slots[i]));
         }
         return stacks;
     }
