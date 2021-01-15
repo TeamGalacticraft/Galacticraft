@@ -142,7 +142,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 case FRONT:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor"));
                 case BACK:
-                    return spriteFunction.apply(new Identifiekr(Constants.MOD_ID, "block/oxygen_compressor_back"));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"));
                 case LEFT:
                 case RIGHT:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine_side"));
