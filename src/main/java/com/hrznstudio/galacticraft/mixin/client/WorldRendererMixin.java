@@ -101,6 +101,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
     private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
+            this.client.getProfiler().push("gc-r_sky_render");
             RenderSystem.disableTexture();
             RenderSystem.disableFog();
             RenderSystem.disableRescaleNormal();
@@ -180,6 +181,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
             RenderSystem.depthMask(true);
             RenderSystem.enableColorMaterial();
             RenderSystem.enableFog();
+            this.client.getProfiler().pop();
             ci.cancel();
             //noinspection UnnecessaryReturnStatement
             return;
@@ -190,7 +192,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     private boolean useThickFogGC(SkyProperties skyProperties, int camX, int camY) {
         if (client.world.getRegistryKey().equals(GalacticraftDimensions.MOON)) {
             //noinspection ConstantConditions
-            return ((GCBiomePropertyAccessor)(Object) client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ))).getProperty(GalacticraftBiomeProperties.IS_MARE);
+            return client.world.getBiome(new BlockPos(lastCameraX, lastCameraY, lastCameraZ)).getEffects().getFogColor() == 1447446;
         }
         return skyProperties.useThickFog(camX, camY);
     }
