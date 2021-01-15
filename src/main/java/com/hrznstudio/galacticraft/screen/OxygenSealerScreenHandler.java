@@ -35,21 +35,16 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenSealerScreenHandler extends MachineScreenHandler<OxygenSealerBlockEntity> {
-    public final Property progress = Property.create();
-    public final Property fuelTime = Property.create();
     protected final Inventory inventory;
 
     public OxygenSealerScreenHandler(int syncId, PlayerEntity playerEntity, OxygenSealerBlockEntity blockEntity) {
         super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER);
         this.inventory = blockEntity.getInventory().asInventory();
-        addProperty(progress);
-        addProperty(fuelTime);
 
-        this.addSlot(new ChargeSlot(this.inventory, 0, 50, 50));
-
+        this.addSlot(new ChargeSlot(this.inventory, 0, 8, 62));
 
         // Player inventory slots
-        int playerInvYOffset = 110;
+        int playerInvYOffset = 84;
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
@@ -65,9 +60,5 @@ public class OxygenSealerScreenHandler extends MachineScreenHandler<OxygenSealer
 
     public OxygenSealerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (OxygenSealerBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    protected int[] getOutputSlotPos() {
-        return new int[]{138, 38};
     }
 }
