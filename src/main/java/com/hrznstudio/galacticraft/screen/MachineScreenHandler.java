@@ -47,7 +47,7 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
         this.playerEntity = playerEntity;
         this.blockEntity = blockEntity;
 
-        addProperty(new CapacitorProperty((SimpleCapacitorComponent) blockEntity.getCapacitor()));
+        addProperty(new CapacitorProperty(blockEntity.getCapacitor()));
         addProperty(new StatusProperty(blockEntity));
 
         PropertyDelegate tankDelegate = new FluidTankPropertyDelegate(blockEntity.getFluidTank());

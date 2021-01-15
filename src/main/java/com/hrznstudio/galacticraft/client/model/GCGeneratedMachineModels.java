@@ -142,7 +142,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 case FRONT:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor"));
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_compressor_back"));
+                    return spriteFunction.apply(new Identifiekr(Constants.MOD_ID, "block/oxygen_compressor_back"));
                 case LEFT:
                 case RIGHT:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine_side"));
@@ -194,6 +194,32 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
             }
             return spriteFunction.apply(MACHINE_SIDE);
+        });
+
+        register(GalacticraftBlocks.ELECTRIC_FURNACE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/electric_furnace"));
+                case LEFT:
+                case RIGHT:
+                case BACK:
+                    return spriteFunction.apply(MACHINE_SIDE);
+                default:
+                    return spriteFunction.apply(MACHINE);
+            }
+        });
+
+        register(GalacticraftBlocks.ELECTRIC_ARC_FURNACE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/electric_furnace"));
+                case LEFT:
+                case RIGHT:
+                case BACK:
+                    return spriteFunction.apply(MACHINE_SIDE);
+                default:
+                    return spriteFunction.apply(MACHINE);
+            }
         });
     }
 
