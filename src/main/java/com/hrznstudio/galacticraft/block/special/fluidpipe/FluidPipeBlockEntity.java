@@ -27,8 +27,8 @@ import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
@@ -77,7 +77,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
     public @NotNull PipeConnectionType getConnection(@NotNull Direction direction, @Nullable BlockEntity entity) {
         if (entity == null || !canConnect(direction)) return PipeConnectionType.NONE;
         if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
-        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, entity.getPos(), direction.getOpposite());
+        TankComponent component = ComponentHelper.TANK.getComponent(world, entity.getPos(), direction.getOpposite());
         if (component != null) {
             if (component.canInsert(0) && component.canExtract(0)) {
                 return PipeConnectionType.FLUID_IO;
@@ -172,7 +172,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements BlockEntityClie
                         }
                         return;
                     }
-                    TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.data.getEndDir().getOpposite());
+                    TankComponent component = ComponentHelper.TANK.getComponent(world, pos, this.data.getEndDir().getOpposite());
                     if (component != null) {
                         FluidVolume volume = component.insertFluid(data.getFluidVolume(), ActionType.PERFORM);
                         this.data.getPath().clear();

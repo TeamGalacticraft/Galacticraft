@@ -51,9 +51,9 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
 
     public BasicSolarPanelScreen(BasicSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
@@ -75,13 +75,8 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.getStatus().getType().isActive()) {
-            long time = world.getTimeOfDay() % 24000;
-            if (time > 6000) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) (((6000D - (time - 6000D)) / 705.882353D) + 0.5D) * this.handler.blockEntity.multiplier).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
-            } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) ((time / 705.882353D) + 0.5D) * this.handler.blockEntity.multiplier).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
-            }
+        if (this.handler.machine.getStatus().getType().isActive()) {
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
         }
         return lines;
     }

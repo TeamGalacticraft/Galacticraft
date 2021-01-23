@@ -1,13 +1,11 @@
 package com.hrznstudio.galacticraft.screen;
 
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.entity.ElectricFurnaceBlockEntity;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
+import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.slot.Slot;
@@ -16,56 +14,40 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
     private final Property time = Property.create();
     private final Property maxTime = Property.create();
 
-    protected ElectricFurnaceScreenHandler(int syncId, PlayerEntity playerEntity, ElectricFurnaceBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
+    protected ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
 
-        this.addSlot(new Slot(inventory, 0, 56, 25) {
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), ElectricFurnaceBlockEntity.CHARGE_SLOT, 8, 7)); //charge
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), ElectricFurnaceBlockEntity.INPUT_SLOT, 56, 25)); //in
+        this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 109, 25)); //out
+        this.addPlayerInventorySlots(0, 84);
+
+        this.addProperty(new Property() {
             @Override
-            public boolean canInsert(ItemStack stack) {
-                return stack.getItem() != GalacticraftItems.BATTERY;
+            public int get() {
+                return machine.cookTime;
             }
-        }); //in
-        this.addSlot(new Slot(inventory, 1, 109, 25) {
+
             @Override
-            public boolean canInsert(ItemStack stack) {
-                return false;
+            public void set(int value) {
+                machine.cookTime = value;
             }
-        }); //out
+        });
 
-        this.addSlot(new ChargeSlot(inventory, 2, 8, 7)); //charge
-
-        // Player inventory slots
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+        this.addProperty(new Property() {
+            @Override
+            public int get() {
+                return machine.cookLength;
             }
-        }
 
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
-        }
-
-        addProperty(time);
-        addProperty(maxTime);
+            @Override
+            public void set(int value) {
+                machine.cookLength = value;
+            }
+        });
     }
 
     public ElectricFurnaceScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (ElectricFurnaceBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.cookTime = time.get();
-        blockEntity.maxCookTime = maxTime.get();
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        time.set(blockEntity.cookTime);
-        maxTime.set(blockEntity.maxCookTime);
-        super.sendContentUpdates();
     }
 }

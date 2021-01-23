@@ -50,16 +50,32 @@ public class OxygenCollectorBlock extends ConfigurableMachineBlock {
         BlockEntity blockEntity = world.getBlockEntity(pos);
 
         if (blockEntity instanceof OxygenCollectorBlockEntity && ((OxygenCollectorBlockEntity) blockEntity).collectionAmount > 0) {
-            for (int particleCount = 0; particleCount < 10; particleCount++) {
-                for (int int_1 = 0; int_1 < 32; ++int_1) {
+            for (int count = 0; count < 10; count++) {
+                for (int i = 0; i < 32; ++i) {
+                    double x2 = pos.getX() + random.nextFloat();
+                    double y2 = pos.getY() + random.nextFloat();
+                    double z2 = pos.getZ() + random.nextFloat();
+                    double mX, mY, mZ;
+                    int dir = random.nextInt(2) * 2 - 1;
+                    mX = (random.nextFloat() - 0.5D) * 0.5D;
+                    mY = (random.nextFloat() - 0.5D) * 0.5D;
+                    mZ = (random.nextFloat() - 0.5D) * 0.5D;
+
+                    if (random.nextBoolean())
+                    {
+                        x2 = pos.getX() + 0.5D + 0.25D * dir;
+                        mX = random.nextFloat() * 2.0F * dir;
+                    }
+                    else
+                    {
+                        z2 = pos.getZ() + 0.5D + 0.25D * dir;
+                        mZ = random.nextFloat() * 2.0F * dir;
+                    }
+
                     world.addParticle(
-                            new DustParticleEffect(0.9f, 0.9f, 1.0f, 1.0F),
-                            pos.getX() + 0.5D,
-                            (random.nextFloat() - 0.5D) * 0.5D + /*random.nextDouble() * 2.0D*/ 0.5D,
-                            pos.getZ() + 0.5D,
-                            random.nextGaussian(),
-                            0.0D,
-                            random.nextGaussian());
+                            new DustParticleEffect(0.8f, 0.8f, 1.0f, 1.0F),
+                            x2, y2, z2,
+                            mX, mY, mZ);
                 }
             }
         }

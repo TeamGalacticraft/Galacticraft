@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -49,11 +50,6 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getInventorySize() {
-        return 0;
-    }
-
-    @Override
     public int getFluidTankSize() {
         return 1;
     }
@@ -64,18 +60,8 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return MachineStatus.EMPTY;
-    }
-
-    @Override
-    public boolean canExtractEnergy() {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertEnergy() {
-        return false;
     }
 
     @Override
@@ -84,13 +70,18 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    protected int getBatteryTransferRate() {
-        return 0;
+    public void updateComponents() {
+        super.updateComponents();
+        this.trySpreadFluids(0);
     }
 
     @Override
-    public void tick() {
-        if (!world.isClient()) trySpreadFluids(0);
+    public @NotNull MachineStatus updateStatus() {
+        return MachineStatus.EMPTY;
+    }
+
+    @Override
+    public void tickWork() {
     }
 
     @Override
@@ -99,27 +90,12 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getEnergyUsagePerTick() {
-        return 0;
-    }
-
-    @Override
-    public boolean canHopperExtractItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractFluid(int tank) {
+    public boolean canPipeExtractFluid(int tank) {
         return true;
     }
 
     @Override
-    public boolean canInsertFluid(int tank) {
+    public boolean canPipeInsertFluid(int tank) {
         return true;
     }
 

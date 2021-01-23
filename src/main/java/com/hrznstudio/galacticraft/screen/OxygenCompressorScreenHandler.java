@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenCompressorBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -36,27 +37,11 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCompressorScreenHandler extends MachineScreenHandler<OxygenCompressorBlockEntity> {
-    public OxygenCompressorScreenHandler(int syncId, PlayerEntity playerEntity, OxygenCompressorBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COMPRESSOR_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
-
-        // Charging slot
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 62));
-        this.addSlot(new OxygenTankSlot(inventory, 1, 80, 27));
-
-        // Player inventory slots
-        int playerInvYOffset = 84;
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
-        }
+    public OxygenCompressorScreenHandler(int syncId, PlayerEntity player, OxygenCompressorBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_COMPRESSOR_HANDLER);
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), 0, 8, 62));
+        this.addSlot(new OxygenTankSlot(machine.getWrappedInventory(), 1, 80, 27));
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public OxygenCompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {

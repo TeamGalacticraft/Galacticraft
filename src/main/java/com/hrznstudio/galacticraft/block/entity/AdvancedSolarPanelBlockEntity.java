@@ -23,13 +23,13 @@
 package com.hrznstudio.galacticraft.block.entity;
 
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -46,9 +46,8 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-
-    public double multiplier;
-
+    public static final int CHARGE_SLOT = 0;
+    
     public AdvancedSolarPanelBlockEntity() {
         super(GalacticraftBlockEntities.ADVANCED_SOLAR_PANEL_TYPE);
     }
@@ -59,53 +58,18 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT);
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
     }
 
     @Override
-    public int getEnergyUsagePerTick() {
-        return 0;
-    }
-
-    @Override
-    public boolean canHopperExtractItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
-    }
-
-    @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        return slot == CHARGE_SLOT ? GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER : Constants.Misc.alwaysFalse();
     }
 
     @Override
@@ -114,73 +78,73 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public boolean canInsertEnergy() {
-        return false;
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptDrainPowerToStack(CHARGE_SLOT);
     }
 
+    @NotNull
     @Override
-    public void tick() {
-        trySpreadEnergy();
-        attemptDrainPowerToStack(0);
+    public MachineStatus updateStatus() {
+        if (getCapacitor().getCurrentEnergy() >= getCapacitor().getMaxEnergy()) {
+            return Status.FULL;
+        }
 
-        int visiblePanels = 0;
+        if (!this.world.isDay()) {
+            return Status.NIGHT;
+        }
 
+        byte panels = 0;
         for (int z = -1; z < 2; z++) {
             for (int y = -1; y < 2; y++) {
-                if (world.isSkyVisible(pos.add(z, 2, y))) {
-                    visiblePanels++;
+                if (this.world.isSkyVisible(pos.add(z, 2, y))) {
+                    panels++;
                 }
             }
         }
 
-        multiplier = ((double) visiblePanels) / 9D;
-
-        if (world.isClient || disabled()) {
-            return;
-        }
-
-        double time = (world.getTimeOfDay() % 24000);
-        if (world.isRaining() || world.isThundering()) {
-            setStatus(Status.PARTIALLY_BLOCKED);
-            multiplier *= 0.55;
-        }
-
-        if (time > 1000.0D && time < 11000.0D) {
-            setStatus(Status.COLLECTING);
-            if (getCapacitor().getCurrentEnergy() >= getCapacitor().getMaxEnergy()) {
-                setStatus(Status.FULL);
-                return;
-            }
+        if (panels == 0) {
+            return Status.BLOCKED;
+        } else if (panels == 9) {
+            return Status.COLLECTING;
         } else {
-            multiplier *= 0.15D;
-            setStatus(Status.NIGHT);
-            return;
+            return Status.PARTIALLY_BLOCKED;
         }
-
-        if (visiblePanels < 9) {
-            if (getStatus() != Status.NIGHT) setStatus(Status.PARTIALLY_BLOCKED);
-            multiplier *= 0.8D;
-        }
-
-        if (visiblePanels == 0) {
-            setStatus(Status.BLOCKED);
-            return;
-        }
-
-        if (time > 6000) {
-            time = 6000D - (time - 6000D);
-        }
-
-        this.getCapacitor().generateEnergy(world, pos, (int) Math.min(Galacticraft.configManager.get().solarPanelEnergyProductionRate(), (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * multiplier) * 4));
     }
 
     @Override
-    protected int getBatteryTransferRate() {
-        return 10;
+    public void tickWork() {
     }
 
     @Override
-    public List<BlockFace> getNonConfigurableSides() {
+    public int getEnergyGenerated() {
+        if (this.getStatus().getType().isActive()) {
+            double time = world.getTimeOfDay() % 24000;
+            double multiplier = 0;
+            if (time > 6000) time = 6000D - (time - 6000D);
+            for (int z = -1; z < 2; z++) {
+                for (int y = -1; y < 2; y++) {
+                    if (this.world.isSkyVisible(pos.add(z, 2, y))) {
+                        multiplier++;
+                    }
+                }
+            }
+            multiplier /= 9;
+            if (world.isRaining() || world.isThundering()) multiplier *= 0.5D;
+
+            return (int) Math.min(this.getBaseEnergyGenerated(), (this.getBaseEnergyGenerated() * ((time) / 6000D) * multiplier) * 4);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getBaseEnergyGenerated() {
+        return Galacticraft.configManager.get().solarPanelEnergyProductionRate();
+    }
+
+    @Override
+    public List<BlockFace> getLockedFaces() {
         return Collections.singletonList(BlockFace.TOP);
     }
 

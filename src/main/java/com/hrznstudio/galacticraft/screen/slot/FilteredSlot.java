@@ -20,29 +20,25 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.screen;
+package com.hrznstudio.galacticraft.screen.slot;
 
-import com.hrznstudio.galacticraft.block.entity.OxygenStorageModuleBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.OxygenStorageModuleBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<OxygenStorageModuleBlockEntity> {
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerEntity player, OxygenStorageModuleBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER);
-        this.addPlayerInventorySlots(0, 84);
+import java.util.function.Predicate;
+
+public class FilteredSlot extends Slot {
+    private final Predicate<ItemStack> predicate;
+
+    public FilteredSlot(ConfigurableMachineBlockEntity entity, Inventory inventory, int index, int x, int y) {
+        super(inventory, index, x, y);
+        predicate = entity.getFilterForSlot(index);
     }
 
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
-        this(syncId, inv.player, (OxygenStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
+    @Override
+    public boolean canInsert(ItemStack stack) {
+        return predicate.test(stack);
     }
 }

@@ -45,11 +45,11 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COMPRESSOR_SCREEN));
 
     public OxygenCompressorScreen(OxygenCompressorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.blockEntity.getFluidTank(), 0, 30, 8, 48));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank(), 0, 30, 8, 48));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        if (handler.blockEntity.getStatus().getType().isActive()) {
+        if (handler.machine.getStatus().getType().isActive()) {
             double height = (System.currentTimeMillis() % 2250);
             if (height == 0) height = 1; //prevent dividing by zero
             height /= -125D;

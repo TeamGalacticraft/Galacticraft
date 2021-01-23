@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
@@ -54,25 +55,8 @@ import java.util.function.Predicate;
  */
 public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
-    public static final int BATTERY_SLOT = 0;
-
-    private final SimpleTankComponent tank = new SimpleTankComponent(1, MAX_OXYGEN) {
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                return super.insertFluid(tank, fluid, action);
-            } else {
-                return fluid;
-            }
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-            if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftTags.OXYGEN)) {
-                super.setFluid(slot, stack);
-            }
-        }
-    };
+    public static final int CHARGE_SLOT = 0;
+    public static final int TANK_SLOT = 1;
 
     public OxygenDecompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_DECOMPRESSOR_TYPE);
@@ -95,12 +79,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT);
-    }
-
-    @Override
-    public boolean canExtractEnergy() {
-        return false;
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT, SideOption.POWER_INPUT);
     }
 
     @Override
@@ -110,7 +89,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == 0) {
+        if (slot == CHARGE_SLOT) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else {
             return OxygenUtils::isOxygenItem;
@@ -118,85 +97,52 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
     }
 
     @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            if (disabled()) {
-                idleEnergyDecrement(true);
-            }
-            return;
-        }
-        trySpreadFluids(0);
-        attemptChargeFromStack(BATTERY_SLOT);
-        if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
-            setStatus(Status.NOT_ENOUGH_ENERGY);
-        } else if (this.getTank().getContents(0).getAmount().compareTo(this.getTank().getMaxCapacity(0)) == 0) {
-            setStatus(Status.FULL);
-        } else {
-            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
-            if (component != null) {
-                if (component.getContents(0).isEmpty()) {
-                    setStatus(Status.NOT_ENOUGH_OXYGEN);
-                } else {
-                    setStatus(Status.DECOMPRESSING);
-                }
-            } else {
-                setStatus(Status.NOT_ENOUGH_ITEMS);
-            }
-        }
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(CHARGE_SLOT);
+        this.trySpreadFluids(0);
+    }
 
-        if (getStatus() == Status.DECOMPRESSING) {
-            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
-            component.insertFluid(0, getTank().insertFluid(0, component.takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
-            this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+    @Override
+    public @NotNull MachineStatus updateStatus() {
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(TANK_SLOT));
+        if (component == null) return Status.EMPTY_CANISTER;
+        if (this.isTankFull(0)) return Status.FULL;
+        return Status.DECOMPRESSING;
+    }
+
+    @Override
+    public void tickWork() {
+        if (this.getStatus().getType().isActive()) {
+            TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(TANK_SLOT));
+            component.insertFluid(0, this.getFluidTank().insertFluid(0, component.takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
         }
     }
 
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        super.toTag(tag);
-        tank.toTag(tag);
-
-        return tag;
-    }
-
-    @Override
-    public void fromTag(BlockState state, CompoundTag tag) {
-        super.fromTag(state, tag);
-        tank.fromTag(tag);
-    }
-
-    public SimpleTankComponent getTank() {
-        return this.tank;
-    }
-
-    @Override
-    public int getEnergyUsagePerTick() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenDecompressorEnergyConsumptionRate();
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtract(int slot) {
         return true;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsert(int slot) {
         return true;
     }
 
     @Override
-    public boolean canExtractFluid(int tank) {
+    public boolean canPipeExtractFluid(int tank) {
         return true;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
-        return false;
     }
 
     @Override
@@ -210,6 +156,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     private enum Status implements MachineStatus {
         NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
         NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        EMPTY_CANISTER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_FLUIDS),
         NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_ITEMS),
         FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
         DECOMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.decompressing"), Formatting.GREEN, StatusType.WORKING);

@@ -39,15 +39,15 @@ public class EvolvedPillagerSpawner implements Spawner {
                   if (i < 1) {
                      return 0;
                   } else {
-                     PlayerEntity playerEntity = world.getPlayers().get(random.nextInt(i));
-                     if (playerEntity.isSpectator()) {
+                     PlayerEntity player = world.getPlayers().get(random.nextInt(i));
+                     if (player.isSpectator()) {
                         return 0;
-                     } else if (world.isNearOccupiedPointOfInterest(playerEntity.getBlockPos(), 2)) {
+                     } else if (world.isNearOccupiedPointOfInterest(player.getBlockPos(), 2)) {
                         return 0;
                      } else {
                         int j = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
                         int k = (24 + random.nextInt(24)) * (random.nextBoolean() ? -1 : 1);
-                        BlockPos.Mutable mutable = playerEntity.getBlockPos().mutableCopy().move(j, 0, k);
+                        BlockPos.Mutable mutable = player.getBlockPos().mutableCopy().move(j, 0, k);
                         if (!world.isRegionLoaded(mutable.getX() - 10, mutable.getY() - 10, mutable.getZ() - 10, mutable.getX() + 10, mutable.getY() + 10, mutable.getZ() + 10)) {
                            return 0;
                         } else {
