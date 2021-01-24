@@ -40,9 +40,10 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftTags {
-    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier("c", "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier("c", "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
-    public static final Tag.Identified<Fluid> OXYGEN = TagRegistry.create(new Identifier("c", "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
+    private static final String COMMON_NAMESPACE = "c";
+    public static final Tag.Identified<Fluid> OIL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oil"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> FUEL = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "fuel"), AccessorFluidTags.getRequiredTags()::getGroup);
+    public static final Tag.Identified<Fluid> OXYGEN = TagRegistry.create(new Identifier(COMMON_NAMESPACE, "oxygen"), AccessorFluidTags.getRequiredTags()::getGroup);
 
     public static final Tag.Identified<Block> INFINIBURN_MOON = TagRegistry.create(new Identifier(Constants.MOD_ID, "infiniburn_moon"), BlockTags::getTagGroup);
     public static final Tag.Identified<Block> MOON_STONE = TagRegistry.create(new Identifier(Constants.MOD_ID, "moon_stone"), BlockTags::getTagGroup);

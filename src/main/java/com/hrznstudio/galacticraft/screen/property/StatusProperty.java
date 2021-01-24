@@ -39,6 +39,6 @@ public class StatusProperty extends Property {
 
     @Override
     public void set(int value) {
-        blockEntity.setStatus(value);
+        blockEntity.setStatusById(value);
     }
 }

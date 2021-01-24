@@ -52,8 +52,8 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
 
     public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
@@ -78,13 +78,13 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.getStatus().getType().isActive()) {
+        if (this.handler.machine.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) Math.min(Galacticraft.configManager.get().solarPanelEnergyProductionRate(), (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * this.handler.blockEntity.multiplier) * 4)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
         }
         return lines;
     }

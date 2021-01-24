@@ -264,6 +264,6 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
 
     @Override
     public void addChunkToRebuild(int x, int y, int z) {
-        this.chunks.scheduleRebuild(x, y, z, true);
+        this.chunks.scheduleRebuild(x, y, z, false);
     }
 }

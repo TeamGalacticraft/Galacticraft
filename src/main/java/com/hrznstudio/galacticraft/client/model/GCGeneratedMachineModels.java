@@ -232,7 +232,10 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             SideOption option = blockEntity.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getOption();
             switch (option) {
                 case DEFAULT:
-                    quad.spriteBake(0, textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos), MutableQuadView.BAKE_LOCK_UV);
+                    Sprite sprite = textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos);
+                    //noinspection ConstantConditions
+                    if (sprite == null) throw new RuntimeException("Missing default sprite for block: " + state.getBlock());
+                    quad.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_FLUID_IN), MutableQuadView.BAKE_LOCK_UV);

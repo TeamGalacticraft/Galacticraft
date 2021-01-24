@@ -20,34 +20,23 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.screen.slot;
+package com.hrznstudio.galacticraft.component;
 
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.world.World;
 
-import java.util.Arrays;
-
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
-
-    private final RecipeType<T> type;
-    private final World world;
-
-    public RecipeInputSlot(I inventory, int slotId, int x, int y, World world, RecipeType<T> type) {
-        super(inventory, slotId, x, y);
-        this.type = type;
-        this.world = world;
+public class AutoSyncedItemTankComponent extends ItemTankComponent implements AutoSyncedComponent {
+    public AutoSyncedItemTankComponent(int size, Fraction maxCapacity, ItemStack provider) {
+        this(size, maxCapacity, UniversalComponents.TANK_COMPONENT, provider);
     }
 
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        return world.getRecipeManager().getFirstMatch(this.type, (I)new SimpleInventory(stack), world).isPresent();
+    public AutoSyncedItemTankComponent(int size, Fraction maxCapacity, ComponentKey<TankComponent> type, ItemStack provider) {
+        super(size, maxCapacity, type);
+        this.listen(() -> type.sync(provider));
     }
 }

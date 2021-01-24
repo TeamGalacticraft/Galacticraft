@@ -77,7 +77,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public void registerBlockComponentFactories(BlockComponentFactoryRegistry registry) {
-
         registry.registerFor(WireBlockEntity.class, UniversalComponents.CAPACITOR_COMPONENT, be -> new SimpleCapacitorComponent(be.getMaxTransferRate(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
             @Override
             public int getCurrentEnergy() {
@@ -198,7 +197,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
     @Override
     public void registerItemComponentFactories(ItemComponentFactoryRegistry registry) {
         registry.registerFor((item) -> item instanceof OxygenTankItem, UniversalComponents.TANK_COMPONENT, stack -> {
-            ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.of(stack.getItem().getMaxDamage(), 1000))) {
+            ItemTankComponent component = new AutoSyncedItemTankComponent(1, Fraction.of(stack.getItem().getMaxDamage(), 1000), stack) {
                 @Override
                 public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
                     if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN) || fluid.isEmpty()) {
@@ -210,13 +209,13 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
 
                 @Override
                 public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                    return insertFluid(0, fluid, action);
+                    return this.insertFluid(0, fluid, action);
                 }
 
                 @Override
-                public void setFluid(int slot, FluidVolume stack) {
-                    if (stack.getFluid().isIn(GalacticraftTags.OXYGEN) || stack.isEmpty()) {
-                        super.setFluid(slot, stack);
+                public void setFluid(int slot, FluidVolume volume) {
+                    if (volume.getFluid().isIn(GalacticraftTags.OXYGEN) || volume.isEmpty()) {
+                        super.setFluid(slot, volume);
                     }
                 }
             };

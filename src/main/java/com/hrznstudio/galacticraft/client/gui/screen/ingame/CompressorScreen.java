@@ -31,7 +31,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -94,15 +93,15 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int fuelUsageScale;
 
-        if (this.handler.blockEntity.getStatus().getType() != ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_ENERGY) {
+        if (this.handler.machine.getStatus().getType() != ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_ENERGY) {
             fuelUsageScale = getFuelProgress();
             this.drawTexture(stack, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
     }
 
     protected void drawCraftProgressBar(MatrixStack stack) {
-        float progress = this.handler.blockEntity.getProgress();
-        float maxProgress = this.handler.blockEntity.getMaxProgress();
+        float progress = this.handler.machine.getProgress();
+        float maxProgress = this.handler.machine.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 
@@ -111,7 +110,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     private int getFuelProgress() {
-        int maxFuelTime = this.handler.blockEntity.maxFuelTime;
+        int maxFuelTime = this.handler.machine.fuelLength;
         if (maxFuelTime == 0) {
             maxFuelTime = 200;
         }

@@ -28,6 +28,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Predicate;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -592,6 +594,18 @@ public class Constants {
         public static final Text EMPTY_TEXT = new LiteralText("");
         public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
         public static final Identifier EMPTY = new Identifier("empty");
+        public static final Predicate<?> ALWAYS_FALSE = o -> false;
+        public static final Predicate<?> ALWAYS_TRUE = o -> true;
+
+        @SuppressWarnings("unchecked")
+        public static <T> Predicate<T> alwaysFalse() {
+            return (Predicate<T>) ALWAYS_FALSE;
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <T> Predicate<T> alwaysTrue() {
+            return (Predicate<T>) ALWAYS_TRUE;
+        }
     }
 
     public static class Nbt {

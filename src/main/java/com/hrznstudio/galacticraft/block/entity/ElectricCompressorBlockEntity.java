@@ -33,17 +33,14 @@ import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -53,11 +50,24 @@ import java.util.function.Predicate;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    public static final int FUEL_INPUT_SLOT = 9;
+public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntity {
+    public static final int CHARGE_SLOT = 9;
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
-    private final int maxProgress = 200; // In ticks, 100/20 = 10 seconds
+    private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
+
+    private final InventoryWrapper craftingInv = new InventoryWrapper() {
+        @Override
+        public InventoryComponent getComponent() {
+            return getInventory();
+        }
+
+        @Override
+        public int size() {
+            return 9;
+        }
+    };
+
     public int progress;
 
     public ElectricCompressorBlockEntity() {
@@ -70,11 +80,6 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
     }
@@ -84,12 +89,12 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     public int getMaxProgress() {
-        return maxProgress;
+        return MAX_PROGRESS;
     }
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == FUEL_INPUT_SLOT) {
+        if (slot == CHARGE_SLOT) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else {
             return super.getFilterForSlot(slot);
@@ -97,8 +102,37 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return false;
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(CHARGE_SLOT);
+    }
+
+    @Override
+    public @NotNull MachineStatus updateStatus() {
+        Optional<CompressingRecipe> optional = this.getRecipe(this.craftingInv);
+        if (!optional.isPresent()) return Status.INVALID_RECIPE;
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        if (!this.getInventory().insertStack(SECOND_OUTPUT_SLOT,
+                this.getInventory().insertStack(OUTPUT_SLOT, optional.get().getOutput().copy(), ActionType.TEST),
+                ActionType.TEST).isEmpty()) return Status.OUTPUT_FULL;
+        return Status.COMPRESSING;
+    }
+
+    @Override
+    public void tickWork() {
+        if (this.getStatus().getType().isActive()) {
+            if (this.progress++ >= this.getMaxProgress()) {
+                this.craftItem(this.getRecipe(this.craftingInv).orElseThrow(AssertionError::new).getOutput().copy());
+                this.progress = 0;
+            }
+            if (this.progress % 40 == 0 && this.progress > this.getMaxProgress() / 2) {
+                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+            }
+        } else {
+            if (this.getProgress() > 0) {
+                this.progress--;
+            }
+        }
     }
 
     @Override
@@ -107,155 +141,57 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    public void tick() {
-        if (disabled() || world.isClient) {
-            if (disabled()) {
-                idleEnergyDecrement(true);
-            }
-            return;
-        }
-
-        Inventory inv = new InventoryWrapper() {
-            @Override
-            public InventoryComponent getComponent() {
-                return getInventory();
-            }
-
-            @Override
-            public int size() {
-                return 9;
-            }
-        };
-
-        attemptChargeFromStack(FUEL_INPUT_SLOT);
-        if (getCapacitor().getCurrentEnergy() < 1) {
-            setStatus(Status.NOT_ENOUGH_ENERGY);
-        } else if (isValidRecipe(inv) && canPutStackInResultSlot(getResultFromRecipeStack(inv))) {
-            setStatus(Status.PROCESSING);
-        } else {
-            if (isValidRecipe(inv)) setStatus(Status.OUTPUT_FULL);
-            else setStatus(Status.INVALID_RECIPE);
-        }
-
-        if (getStatus() == Status.PROCESSING) {
-            ItemStack resultStack = getResultFromRecipeStack(inv);
-            this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
-            this.progress++;
-
-            if (this.progress % 40 == 0 && this.progress > maxProgress / 2) {
-                this.world.playSound(null, this.getPos(), SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.3F, this.world.random.nextFloat() * 0.1F + 0.9F);
-            }
-
-            if (this.progress == maxProgress) {
-                this.progress = 0;
-
-                craftItem(resultStack);
-            }
-        } else if (!getStatus().getType().isActive()) {
-            if (progress > 0) {
-                progress--;
-            }
-        } else {
-            idleEnergyDecrement(false);
-            if (progress > 0) {
-                progress--;
-            }
-        }
-
-        trySpreadEnergy();
     }
 
     protected void craftItem(ItemStack craftingResult) {
         boolean canCraftTwo = true;
 
         for (int i = 0; i < 9; i++) {
-            ItemStack item = getInventory().getStack(i);
-
-            // If slot is not empty ( must be an ingredient if we've made it this far ), and there is less than 2 items in the slot, we cannot craft two.
-            if (!item.isEmpty() && item.getCount() < 2) {
+            ItemStack stack = getInventory().getStack(i);
+            if (!stack.isEmpty() && stack.getCount() < 2) {
                 canCraftTwo = false;
                 break;
             }
         }
         if (canCraftTwo) {
-            if (getInventory().getStack(OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount() || getInventory().getStack(SECOND_OUTPUT_SLOT).getCount() >= craftingResult.getMaxCount()) {
-                // There would be too many items in the output slot. Just craft one.
+            ItemStack res = craftingResult.copy();
+            res.setCount(res.getCount() * 2);
+            res = this.getInventory().insertStack(OUTPUT_SLOT, res, ActionType.TEST);
+            res = this.getInventory().insertStack(SECOND_OUTPUT_SLOT, res, ActionType.TEST);
+            if (!res.isEmpty()) {
                 canCraftTwo = false;
             }
         }
+        if (canCraftTwo) {
+            craftingResult = craftingResult.copy();
+            craftingResult.setCount(craftingResult.getCount() * 2);
+        }
 
         for (int i = 0; i < 9; i++) {
-            decrement(i, canCraftTwo ? 2 : 1);
+            this.decrement(i, canCraftTwo ? 2 : 1);
         }
-
-        // <= because otherwise it loops only once and puts in only one slot
-        for (int i = OUTPUT_SLOT; i <= SECOND_OUTPUT_SLOT; i++) {
-            insert(i, craftingResult);
-        }
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(this.getCachedState(), tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
-    }
-
-
-    public ItemStack getResultFromRecipeStack(Inventory inv) {
-        // Once this method has been called, we have verified that either a shapeless or shaped recipe is present with isValidRecipe. Ignore the warning on getShapedRecipe(inv).get().
-        return getRecipe(inv).orElseThrow(() -> new IllegalStateException("A recipe was not present when getResultFromRecipeStack was called. This should never happen, as isValidRecipe should have been called first. That would have prevented this.")).craft(inv);
+        this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, ActionType.PERFORM), ActionType.PERFORM);
     }
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 
-    protected boolean canPutStackInResultSlot(ItemStack stack) {
-        return canInsert(OUTPUT_SLOT, stack);
-    }
-
-    public boolean isValidRecipe(Inventory input) {
-        Optional<CompressingRecipe> reciper = getRecipe(input);
-
-        return reciper.isPresent();
-    }
-
     @Override
-    public int getEnergyUsagePerTick() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtract(int slot) {
         return slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsert(int slot) {
         return !(slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT);
-    }
-
-    @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
     }
 
     /**
@@ -266,7 +202,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Compressor has no valid recipe.
