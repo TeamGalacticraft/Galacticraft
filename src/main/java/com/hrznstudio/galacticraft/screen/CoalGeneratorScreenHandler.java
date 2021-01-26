@@ -23,60 +23,25 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGeneratorBlockEntity> {
 
-    private static final Item[] fuel = new Item[]{Items.COAL_BLOCK, Items.COAL, Items.CHARCOAL, Items.AIR};
-    public final Property status = Property.create();
-
-    public CoalGeneratorScreenHandler(int syncId, PlayerEntity playerEntity, CoalGeneratorBlockEntity generator) {
-        super(syncId, playerEntity, generator, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
-        // Coal Generator fuel slot
-        this.addSlot(new ItemSpecificSlot(inventory, 0, 8, 72, fuel));
-        this.addSlot(new ChargeSlot(inventory, 1, 8, 8));
-
-        // Player inventory slots
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 94 + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 152));
-        }
-
+    public CoalGeneratorScreenHandler(int syncId, PlayerEntity player, CoalGeneratorBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), CoalGeneratorBlockEntity.FUEL_SLOT, 8, 74));
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), CoalGeneratorBlockEntity.CHARGE_SLOT, 8, 8));
+        this.addPlayerInventorySlots(0, 94);
     }
 
     public CoalGeneratorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (CoalGeneratorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = CoalGeneratorBlockEntity.CoalGeneratorStatus.get(status.get());
     }
 }

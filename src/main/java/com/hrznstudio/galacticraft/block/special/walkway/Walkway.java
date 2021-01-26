@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.block.special.walkway;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -61,7 +62,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 .with(EAST, false)
                 .with(SOUTH, false)
                 .with(WEST, false)
-                .with(FLUID, new Identifier("empty"))
+                .with(FLUID, Constants.Misc.EMPTY)
                 .with(FlowableFluid.LEVEL, 8));
     }
 
@@ -153,6 +154,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         throw new IllegalArgumentException();
     }
 
+    @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
             case CLOCKWISE_180:
@@ -166,6 +168,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         }
     }
 
+    @Override
     public BlockState mirror(BlockState state, BlockMirror mirror) {
         switch (mirror) {
             case LEFT_RIGHT:
@@ -195,7 +198,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.get(FLUID).equals(new Identifier("empty"))) {
+        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
         return facing.getAxis().getType() == Direction.Type.HORIZONTAL ? state.with(getPropForDir(facing), this.canConnect(neighborState)) : super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);

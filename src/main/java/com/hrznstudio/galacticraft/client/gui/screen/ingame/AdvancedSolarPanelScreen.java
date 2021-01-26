@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -52,7 +52,8 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
 
     public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
@@ -64,7 +65,6 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
         int topPos = this.y;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
     }
 
     @Override
@@ -75,25 +75,16 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
-    }
-
-    @Override
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new ArrayList<>();
-        if (this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.FULL
-                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.BLOCKED
-                && this.handler.blockEntity.status != AdvancedSolarPanelBlockEntity.AdvancedSolarPanelStatus.NIGHT
-        ) {
+        if (this.handler.machine.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) Math.min(Galacticraft.configManager.get().solarPanelEnergyProductionRate(), (Galacticraft.configManager.get().solarPanelEnergyProductionRate() * (time / 6000D) * this.handler.blockEntity.multiplier) * 4)).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
         }
         return lines;
     }

@@ -26,11 +26,11 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
 import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
-import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
+import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPackets;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.*;
-import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
+import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
@@ -116,6 +116,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.REFINERY_HANDLER, RefineryScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER, ElectricFurnaceScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER, ElectricArcFurnaceScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER, CompressorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
@@ -134,12 +136,15 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (entityRenderDispatcher, context) -> new EvolvedSkeletonEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (entityRenderDispatcher, context) -> new EvolvedSpiderEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_EVOKER, (entityRenderDispatcher, context) -> new EvolvedEvokerEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_PILLAGER, (entityRenderDispatcher, context) -> new EvolvedPillagerEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (entityRenderDispatcher, context) -> new EvolvedVindicatorEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.ROCKET, (entityRenderDispatcher, context) -> new RocketEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();
         GalacticraftParticles.registerClient();
-        GalacticraftClientPackets.register();
+        GalacticraftC2SPackets.register();
         GCGeneratedMachineModels.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getTranslucent());
@@ -163,7 +168,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_BOOSTER_TIER_2_RENDER_BLOCK, RenderLayer.getTranslucent());
 
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (resourceId.equals(GCGeneratedMachineModels.MACHINE_MARKER)) {

@@ -49,10 +49,7 @@ public class GalacticraftCelestialBodyTypes {
             )
             .build();
 
-    private static CelestialBodyType register(CelestialBodyType type) {
-        return Registry.register(AddonRegistry.CELESTIAL_BODIES, type.getId(), type);
-    }
-
-    public static void init() {
+    public static void register() {
+        Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
     }
 }

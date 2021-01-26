@@ -45,6 +45,9 @@ public class GalacticraftEntityTypes {
     public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_CREEPER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedCreeperEntity::new).dimensions(EntityDimensions.changing(0.65F, 1.8F)).build());
     public static final EntityType<EvolvedSkeletonEntity> EVOLVED_SKELETON = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_SKELETON), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedSkeletonEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.99F)).build());
     public static final EntityType<EvolvedSpiderEntity> EVOLVED_SPIDER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_SPIDER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedSpiderEntity::new).dimensions(EntityDimensions.fixed(1.4F, 0.9F)).build());
+    public static final EntityType<EvolvedPillagerEntity> EVOLVED_PILLAGER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_PILLAGER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedPillagerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build());
+    public static final EntityType<EvolvedEvokerEntity> EVOLVED_EVOKER = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_EVOKER), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedEvokerEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build());
+    public static final EntityType<EvolvedVindicatorEntity> EVOLVED_VINDICATOR = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.EVOLVED_VINDICATOR), FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, EvolvedVindicatorEntity::new).dimensions(EntityDimensions.fixed(0.6F, 1.95F)).build());
     public static final EntityType<BubbleEntity> BUBBLE = Registry.register(Registry.ENTITY_TYPE, new Identifier(Constants.MOD_ID, Constants.Entities.BUBBLE), FabricEntityTypeBuilder.create(SpawnGroup.MISC, BubbleEntity::new).fireImmune().dimensions(EntityDimensions.fixed(0, 0)).disableSaving().disableSummon().build());
 
     public static void register() {
@@ -53,5 +56,8 @@ public class GalacticraftEntityTypes {
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createCreeperAttributes().add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_SKELETON, EvolvedSkeletonEntity.createAbstractSkeletonAttributes().add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 25.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_SPIDER, EvolvedSpiderEntity.createSpiderAttributes().add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 22.0D));
+        FabricDefaultAttributeRegistry.register(EVOLVED_PILLAGER, EvolvedPillagerEntity.createPillagerAttributes().add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 25.0D));
+        FabricDefaultAttributeRegistry.register(EVOLVED_EVOKER, EvolvedEvokerEntity.createEvokerAttributes().add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 25.0D));
+        FabricDefaultAttributeRegistry.register(EVOLVED_VINDICATOR, EvolvedVindicatorEntity.createVindicatorAttributes().add(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(EntityAttributes.GENERIC_MAX_HEALTH, 25.0D));
     }
 }

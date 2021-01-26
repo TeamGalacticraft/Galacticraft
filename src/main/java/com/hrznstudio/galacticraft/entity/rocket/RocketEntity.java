@@ -36,7 +36,8 @@ import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.fluid.impl.EntitySyncedTankComponent;
+import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.impl.SyncedTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -106,7 +107,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         }
     });
 
-    private final EntitySyncedTankComponent tank = new EntitySyncedTankComponent(1, Fraction.ofWhole(12), UniversalComponents.TANK_COMPONENT, this);
+    private final TankComponent tank = new SyncedTankComponent<>(1, Fraction.ofWhole(12), UniversalComponents.TANK_COMPONENT, this);
     
     private static final TrackedData<Float[]> COLOR = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Float[]>() {
 

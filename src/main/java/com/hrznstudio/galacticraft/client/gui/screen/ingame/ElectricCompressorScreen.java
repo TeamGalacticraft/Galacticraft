@@ -51,7 +51,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private int progressDisplayY;
 
     public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 199;
     }
 
@@ -80,7 +80,6 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawCraftProgressBar(stack);
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override
@@ -91,8 +90,8 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     protected void drawCraftProgressBar(MatrixStack stack) {
-        float progress = this.handler.blockEntity.getProgress();
-        float maxProgress = this.handler.blockEntity.getMaxProgress();
+        float progress = this.handler.machine.getProgress();
+        float maxProgress = this.handler.machine.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 

@@ -6,7 +6,7 @@
   "name": "Galacticraft: Rewoven",
   "icon": "assets/galacticraft-rewoven/icon.png",
   "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
-  "licence": "MIT",
+  "license": "MIT",
 
   "contact": {
     "sources": "https://github.com/StellarHorizons/Galacticraft-Rewoven",
@@ -127,7 +127,7 @@
   },
   "custom": {
     "cardinal-components": [
-      "galacticraft-rewoven:oxygen_tank"
+      "galacticraft-rewoven:gear_inv"
     ]
   },
   "mixins": [ "galacticraft-rewoven.mixins.json" ],

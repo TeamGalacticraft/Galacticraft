@@ -50,8 +50,7 @@ public class UnlitTorchBlock extends TorchBlock {
         if (player.getStackInHand(hand).getItem() instanceof FlintAndSteelItem) {
             world.setBlockState(pos, Blocks.TORCH.getDefaultState());
             ItemStack stack = player.getStackInHand(hand).copy();
-            stack.damage(1, player, (playerEntity -> {
-            }));
+            stack.damage(1, player, e -> {});
             player.setStackInHand(hand, stack);
         }
         return super.onUse(state, world, pos, player, hand, hit);

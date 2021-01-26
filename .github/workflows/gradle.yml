@@ -7,15 +7,16 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        java: [8-jdk]
+    container:
+      image: openjdk:${{ matrix.java }}
+      options: --user root
     steps:
     - uses: actions/checkout@v1
-    - name: Set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        java-version: 1.8
+    - uses: gradle/wrapper-validation-action@v1
     - name: Build with Gradle
       run: ./gradlew build --stacktrace
     - uses: actions/setup-ruby@v1

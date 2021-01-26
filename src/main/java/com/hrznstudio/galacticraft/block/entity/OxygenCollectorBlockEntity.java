@@ -45,6 +45,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -55,10 +56,9 @@ import java.util.function.Predicate;
  */
 public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
-    public static final int BATTERY_SLOT = 0;
+    public static final int CHARGE_SLOT = 0;
 
     public int collectionAmount = 0;
-    public OxygenCollectorStatus status = OxygenCollectorStatus.INACTIVE;
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
@@ -85,8 +85,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return false;
+    protected MachineStatus getStatusById(int index) {
+        return Status.values()[index];
     }
 
     @Override
@@ -99,17 +99,17 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
         return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
     }
 
-    private int collectOxygen(BlockPos center) {
+    private int collectOxygen() {
         Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
 
         if (celestialBodyType.isPresent()) {
             if (!celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
-                int minX = center.getX() - 5;
-                int minY = center.getY() - 5;
-                int minZ = center.getZ() - 5;
-                int maxX = center.getX() + 5;
-                int maxY = center.getY() + 5;
-                int maxZ = center.getZ() + 5;
+                int minX = this.pos.getX() - 5;
+                int minY = this.pos.getY() - 5;
+                int minZ = this.pos.getZ() - 5;
+                int maxX = this.pos.getX() + 5;
+                int maxY = this.pos.getY() + 5;
+                int maxZ = this.pos.getZ() + 5;
 
                 float leafBlocks = 0;
 
@@ -129,79 +129,84 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
                 double oxyCount = 20 * (leafBlocks / 14.0F);
                 return (int) Math.ceil(oxyCount) / 20; //every tick
-            } else {
-                return 183 / 20;
             }
-        } else {
-            return 183 / 20;
+        }
+        return 183 / 20;
+    }
+
+    private boolean canCollectOxygen() {
+        Optional<CelestialBodyType> celestialBodyType = CelestialBodyType.getByDimType(world.getRegistryKey());
+
+        if (celestialBodyType.isPresent()) {
+            if (!celestialBodyType.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+                int minX = this.pos.getX() - 5;
+                int minY = this.pos.getY() - 5;
+                int minZ = this.pos.getZ() - 5;
+                int maxX = this.pos.getX() + 5;
+                int maxY = this.pos.getY() + 5;
+                int maxZ = this.pos.getZ() + 5;
+
+                float leafBlocks = 0;
+
+                for (BlockPos pos : BlockPos.iterate(minX, minY, minZ, maxX, maxY, maxZ)) {
+                    BlockState blockState = world.getBlockState(pos);
+                    if (blockState.isAir()) {
+                        continue;
+                    }
+                    if (blockState.getBlock() instanceof LeavesBlock && !blockState.get(LeavesBlock.PERSISTENT)) {
+                        if (++leafBlocks >= 2) break;
+                    } else if (blockState.getBlock() instanceof CropBlock) {
+                        if ((leafBlocks += 0.75) >= 2) break;
+                    }
+                }
+                return leafBlocks >= 2;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(CHARGE_SLOT);
+        this.trySpreadFluids(0);
+    }
+
+    @Override
+    public @NotNull MachineStatus updateStatus() {
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        if (this.getFluidTank().getMaxCapacity(0).compareTo(this.getFluidTank().getContents(0).getAmount()) <= 0) return Status.FULL;
+        if (!canCollectOxygen()) return Status.NOT_ENOUGH_LEAVES;
+        return Status.COLLECTING;
+    }
+
+    @Override
+    public void tickWork() {
+        this.collectionAmount = 0;
+        if (this.getStatus().getType().isActive()) {
+            this.collectionAmount = collectOxygen();
+            this.getFluidTank().insertFluid(0, new FluidVolume(this.getFluidTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getFluidTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
         }
     }
 
     @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            if (disabled()) {
-                idleEnergyDecrement(true);
-            }
-            return;
-        }
-        attemptChargeFromStack(BATTERY_SLOT);
-        trySpreadFluids(0);
-
-        if (this.getCapacitor().getCurrentEnergy() > 0) {
-            this.status = OxygenCollectorStatus.COLLECTING;
-        } else {
-            this.status = OxygenCollectorStatus.INACTIVE;
-        }
-
-        if (this.status == OxygenCollectorStatus.INACTIVE) {
-            idleEnergyDecrement(false);
-        }
-
-        if (status == OxygenCollectorStatus.COLLECTING) {
-            collectionAmount = collectOxygen(this.pos);
-
-            if (this.collectionAmount <= 0) {
-                this.status = OxygenCollectorStatus.NOT_ENOUGH_LEAVES;
-                return;
-            }
-
-            // If the oxygen capacity isn't full, add collected oxygen.
-            if (this.getFluidTank().getMaxCapacity(0).compareTo(this.getFluidTank().getContents(0).getAmount()) > 0) {
-                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
-
-                this.getFluidTank().insertFluid(0, new FluidVolume(this.getFluidTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getFluidTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
-            } else {
-                status = OxygenCollectorStatus.FULL;
-            }
-        } else {
-            collectionAmount = 0;
-        }
-    }
-
-    @Override
-    public int getEnergyUsagePerTick() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtract(int slot) {
         return true;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsert(int slot) {
         return true;
     }
 
     @Override
-    public boolean canExtractFluid(int tank) {
+    public boolean canPipeExtractFluid(int tank) {
         return true;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
-        return false;
     }
 
     @Override
@@ -212,26 +217,33 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     /**
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
-    public enum OxygenCollectorStatus implements MachineStatus {
-        INACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.inactive"), Formatting.GRAY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED),
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD);
+    private enum Status implements MachineStatus {
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
 
         private final Text text;
+        private final StatusType type;
 
-        OxygenCollectorStatus(TranslatableText text, Formatting color) {
+        Status(TranslatableText text, Formatting color, StatusType type) {
+            this.type = type;
             this.text = text.setStyle(Style.EMPTY.withColor(color));
         }
 
-        public static OxygenCollectorStatus get(int index) {
-            if (index < 0) return OxygenCollectorStatus.values()[0];
-            return OxygenCollectorStatus.values()[index % OxygenCollectorStatus.values().length];
+        @Override
+        public @NotNull Text getName() {
+            return text;
         }
 
         @Override
-        public Text getText() {
-            return text;
+        public @NotNull StatusType getType() {
+            return type;
+        }
+
+        @Override
+        public int getIndex() {
+            return ordinal();
         }
     }
 }

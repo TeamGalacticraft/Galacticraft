@@ -22,7 +22,13 @@
 
 package com.hrznstudio.galacticraft;
 
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -193,7 +199,7 @@ public class Constants {
 
         // Power
         public static final String BASIC_SOLAR_PANEL = "basic_solar_panel";
-        public static final String GENERIC_MULTIBLOCK_PART = "generic_multiblock_part";
+        public static final String SOLAR_PANEL_PART = "solar_panel_part";
         public static final String ADVANCED_SOLAR_PANEL = "advanced_solar_panel";
         public static final String COAL_GENERATOR = "coal_generator";
         public static final String GEOTHERMAL_GENERATOR = "geothermal_generator";
@@ -414,6 +420,7 @@ public class Constants {
         public static final String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_compressor_energy_consumption_rate";
         public static final String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_collector_energy_consumption_rate";
         public static final String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate";
+        public static final String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.electric_furnace_energy_consumption_rate";
         public static final String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size";
         public static final String ENERGY_STORAGE_SIZE = "config.galacticraft-rewoven.energy.machines.energy_storage_size";
         public static final String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_compressor_energy_consumption_rate";
@@ -434,6 +441,8 @@ public class Constants {
         public static final String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
         public static final String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
         public static final String REFINERY_SCREEN = "gui/refinery_screen";
+        public static final String ELECTRIC_FURNACE_SCREEN = "gui/electric_furnace_screen";
+        public static final String ELECTRIC_ARC_FURNACE_SCREEN = "gui/electric_arc_furnace_screen";
         public static final String COMPRESSOR_SCREEN = "gui/compressor_screen";
         public static final String ROCKET_DESIGNER_SCREEN = "gui/rocket_designer_screen";
         public static final String ROCKET_ASSEMBLER_SCREEN = "gui/rocket_assembler_screen";
@@ -478,23 +487,94 @@ public class Constants {
         public static final String BUBBLE = "bubble";
         public static final String EVOLVED_SKELETON = "evolved_skeleton";
         public static final String EVOLVED_SPIDER = "evolved_spider";
+        public static final String EVOLVED_PILLAGER = "evolved_pillager";
+        public static final String EVOLVED_EVOKER = "evolved_evoker";
+        public static final String EVOLVED_VINDICATOR = "evolved_vindicator";
     }
 
     public static class TextureCoordinates {
-        public static final int OVERLAY_WIDTH = 12;
-        public static final int OVERLAY_HEIGHT = 40;
+        public static final int OVERLAY_WIDTH = 16;
+        public static final int OVERLAY_HEIGHT = 48;
+
         public static final int ENERGY_DARK_X = 0;
         public static final int ENERGY_DARK_Y = 0;
-        public static final int ENERGY_LIGHT_X = 12;
+        public static final int ENERGY_LIGHT_X = 16;
         public static final int ENERGY_LIGHT_Y = 0;
+
         public static final int OXYGEN_DARK_X = 0;
-        public static final int OXYGEN_DARK_Y = 40;
-        public static final int OXYGEN_LIGHT_X = 12;
-        public static final int OXYGEN_LIGHT_Y = 40;
-        public static final int LARGE_TANK_OVERLAY_X = 54; //8 bucket tank
-        public static final int LARGE_TANK_OVERLAY_Y = 80;
-        public static final int LARGE_TANK_OVERLAY_WIDTH = 18;
-        public static final int LARGE_TANK_OVERLAY_HEIGHT = 49;
+        public static final int OXYGEN_DARK_Y = 50;
+        public static final int OXYGEN_LIGHT_X = 16;
+        public static final int OXYGEN_LIGHT_Y = 50;
+
+        public static final int FLUID_TANK_WIDTH = 18;
+
+        private static final int BASE_FLUID_TANK_Y = 49;
+
+        public static final int FLUID_TANK_8_16_X = 32;
+        public static final int FLUID_TANK_8_16_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_8_16_HEIGHT = 49;
+
+        public static final int FLUID_TANK_7_14_X = FLUID_TANK_8_16_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_7_14_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_7_14_HEIGHT = FLUID_TANK_8_16_HEIGHT - 6; // segment size
+
+        public static final int FLUID_TANK_6_12_X = FLUID_TANK_7_14_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_6_12_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_6_12_HEIGHT = FLUID_TANK_7_14_HEIGHT - 6;
+
+        public static final int FLUID_TANK_5_10_X = FLUID_TANK_6_12_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_5_10_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_5_10_HEIGHT = FLUID_TANK_6_12_HEIGHT - 6;
+
+        public static final int FLUID_TANK_4_8_X = FLUID_TANK_5_10_X + FLUID_TANK_WIDTH;
+        public static final int FLUID_TANK_4_8_Y = BASE_FLUID_TANK_Y;
+        public static final int FLUID_TANK_4_8_HEIGHT = FLUID_TANK_5_10_HEIGHT - 6;
+
+        public static final int FLUID_TANK_3_6_X = FLUID_TANK_5_10_X;
+        public static final int FLUID_TANK_3_6_Y = FLUID_TANK_5_10_Y - FLUID_TANK_5_10_HEIGHT;
+        public static final int FLUID_TANK_3_6_HEIGHT = FLUID_TANK_4_8_HEIGHT - 6;
+
+        public static final int FLUID_TANK_2_4_X = FLUID_TANK_6_12_X;
+        public static final int FLUID_TANK_2_4_Y = FLUID_TANK_6_12_Y - FLUID_TANK_6_12_HEIGHT;
+        public static final int FLUID_TANK_2_4_HEIGHT = FLUID_TANK_3_6_HEIGHT - 6;
+
+        public static final int FLUID_TANK_1_2_X = FLUID_TANK_7_14_X;
+        public static final int FLUID_TANK_1_2_Y = FLUID_TANK_7_14_Y - FLUID_TANK_7_14_HEIGHT;
+        public static final int FLUID_TANK_1_2_HEIGHT = FLUID_TANK_2_4_HEIGHT - 6;
+
+        public static final int FLUID_TANK_UNDERLAY_OFFSET = -49;
+
+        public static final int BUTTON_WIDTH = 13;
+        public static final int BUTTON_HEIGHT = 13;
+
+        public static final int BUTTON_RED_X = 0;
+        public static final int BUTTON_RED_Y = 115;
+        public static final int BUTTON_RED_HOVER_X = 0;
+        public static final int BUTTON_RED_HOVER_Y = 102;
+
+        public static final int BUTTON_GREEN_X = 13;
+        public static final int BUTTON_GREEN_Y = 115;
+        public static final int BUTTON_GREEN_HOVER_X = 13;
+        public static final int BUTTON_GREEN_HOVER_Y = 102;
+
+        public static final int BUTTON_NORMAL_X = 26;
+        public static final int BUTTON_NORMAL_Y = 115;
+        public static final int BUTTON_NORMAL_HOVER_X = 26;
+        public static final int BUTTON_NORMAL_HOVER_Y = 102;
+
+        public static final int ARROW_VERTICAL_WIDTH = 11;
+        public static final int ARROW_VERTICAL_HEIGHT = 10;
+
+        public static final int ARROW_UP_X = 39;
+        public static final int ARROW_UP_Y = 108;
+        public static final int ARROW_UP_HOVER_X = 50;
+        public static final int ARROW_UP_HOVER_Y = 108;
+
+        public static final int ARROW_DOWN_X = 39;
+        public static final int ARROW_DOWN_Y = 118;
+        public static final int ARROW_DOWN_HOVER_X = 50;
+        public static final int ARROW_DOWN_HOVER_Y = 118;
+
     }
 
     public static class ScreenHandler {
@@ -507,6 +587,8 @@ public class Constants {
         public static final String PLAYER_INVENTORY_SCREEN_HANDLER = "player_inventory_screen_handler";
         public static final String ENERGY_STORAGE_MODULE_SCREEN_HANDLER = "energy_storage_module_screen_handler";
         public static final String REFINERY_SCREEN_HANDLER = "refinery_screen_handler";
+        public static final String ELECTRIC_FURNACE_SCREEN_HANDLER = "electric_furnace_screen_handler";
+        public static final String ELECTRIC_ARC_FURNACE_SCREEN_HANDLER = "electric_arc_furnace_screen_handler";
         public static final String OXYGEN_COLLECTOR_SCREEN_HANDLER = "oxygen_collector_screen_handler";
         public static final String BUBBLE_DISTRIBUTOR_SCREEN_HANDLER = "bubble_distributor_screen_handler";
         public static final String ROCKET_DESIGNER_SCREEN_HANDLER = "rocket_designer_screen_handler";
@@ -531,6 +613,28 @@ public class Constants {
 
     public static class LootTables {
         public static final String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
+    }
+
+    public static class Misc {
+        public static final Text EMPTY_TEXT = new LiteralText("");
+        public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
+        public static final Identifier EMPTY = new Identifier("empty");
+        public static final Predicate<?> ALWAYS_FALSE = o -> false;
+        public static final Predicate<?> ALWAYS_TRUE = o -> true;
+
+        @SuppressWarnings("unchecked")
+        public static <T> Predicate<T> alwaysFalse() {
+            return (Predicate<T>) ALWAYS_FALSE;
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <T> Predicate<T> alwaysTrue() {
+            return (Predicate<T>) ALWAYS_TRUE;
+        }
+    }
+
+    public static class Nbt {
+        public static final String BLOCK_ENTITY_TAG = "BlockEntityTag";
     }
 
     public static class Compatibility {

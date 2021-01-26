@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidDrainable;
 import net.minecraft.block.FluidFillable;
@@ -60,7 +61,7 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
                 for (Fluid f : Registry.FLUID) {
                     VALUES.add(Registry.FLUID.getId(f));
                 }
-                VALUES.add(new Identifier("empty"));
+                VALUES.add(Constants.Misc.EMPTY);
             }
             return VALUES;
         }
@@ -80,12 +81,12 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 
     @Override
     default boolean canFillWithFluid(BlockView view, BlockPos pos, BlockState state, Fluid fluid) {
-        return state.get(FLUID).equals(new Identifier("empty"));
+        return state.get(FLUID).equals(Constants.Misc.EMPTY);
     }
 
     @Override
     default boolean tryFillWithFluid(WorldAccess world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (state.get(FLUID).equals(new Identifier("empty"))) {
+        if (state.get(FLUID).equals(Constants.Misc.EMPTY)) {
             if (!world.isClient()) {
                 world.setBlockState(pos, state.with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                         .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1)), 3);
@@ -99,8 +100,8 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
 
     @Override
     default Fluid tryDrainFluid(WorldAccess world, BlockPos pos, BlockState state) {
-        if (!state.get(FLUID).equals(new Identifier("empty"))) {
-            world.setBlockState(pos, state.with(FLUID, new Identifier("empty")), 3);
+        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
+            world.setBlockState(pos, state.with(FLUID, Constants.Misc.EMPTY), 3);
             if (Registry.FLUID.get(state.get(FLUID)).getDefaultState().isStill()) {
                 return Registry.FLUID.get(state.get(FLUID));
             }

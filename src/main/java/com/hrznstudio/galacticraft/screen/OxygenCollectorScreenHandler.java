@@ -23,10 +23,9 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.slot.Slot;
@@ -35,51 +34,24 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCollectorBlockEntity> {
-    public final Property status = Property.create();
-    public final Property oxygen = Property.create(); //loses some data (cant send a fraction)
-    public final Property lastCollectAmount = Property.create();
-
-    public OxygenCollectorScreenHandler(int syncId, PlayerEntity playerEntity, OxygenCollectorBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
-
-        addProperty(status);
-        addProperty(oxygen);
-        addProperty(lastCollectAmount);
-
-        // Charging slot
-        this.addSlot(new ChargeSlot(inventory, 0, 20, 70));
-
-        // Player inventory slots
-        int playerInvYOffset = 99;
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
+    public OxygenCollectorScreenHandler(int syncId, PlayerEntity player, OxygenCollectorBlockEntity blockEntity) {
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_COLLECTOR_HANDLER);
+        this.addProperty(new Property() {
+            @Override
+            public int get() {
+                return machine.collectionAmount;
             }
-        }
 
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
-        }
+            @Override
+            public void set(int value) {
+                machine.collectionAmount = value;
+            }
+        });
+        this.addSlot(new FilteredSlot(blockEntity, blockEntity.getWrappedInventory(), OxygenCollectorBlockEntity.CHARGE_SLOT, 13, 69));
+        this.addPlayerInventorySlots(0, 99);
     }
 
     public OxygenCollectorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (OxygenCollectorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().floatValue() * 100.0F));
-        lastCollectAmount.set(blockEntity.collectionAmount);
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = OxygenCollectorBlockEntity.OxygenCollectorStatus.get(status.get());
     }
 }

@@ -23,52 +23,23 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSolarPanelBlockEntity> {
+    public BasicSolarPanelScreenHandler(int syncId, PlayerEntity player, BasicSolarPanelBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
 
-    private final Property status = Property.create();
-
-    public BasicSolarPanelScreenHandler(int syncId, PlayerEntity playerEntity, BasicSolarPanelBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
-
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 53));
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
-
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
-        }
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), BasicSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public BasicSolarPanelScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (BasicSolarPanelBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = BasicSolarPanelBlockEntity.BasicSolarPanelStatus.get(status.get());
     }
 }

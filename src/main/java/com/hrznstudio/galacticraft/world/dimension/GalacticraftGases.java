@@ -23,7 +23,9 @@
 package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,6 +47,8 @@ public class GalacticraftGases {
 
             );
 
-    public static void init() {
+    public static void register() {
+        Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN.getId(), GalacticraftGases.HYDROGEN_DEUTERIUM_OXYGEN);
+        Registry.register(AddonRegistry.ATMOSPHERIC_GASES, GalacticraftGases.NITROGEN_OXIDE.getId(), GalacticraftGases.NITROGEN_OXIDE);
     }
 }

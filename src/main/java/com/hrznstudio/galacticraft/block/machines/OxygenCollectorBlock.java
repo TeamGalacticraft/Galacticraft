@@ -22,31 +22,15 @@
 
 package com.hrznstudio.galacticraft.block.machines;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.DustParticleEffect;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -56,38 +40,42 @@ import java.util.Random;
  */
 public class OxygenCollectorBlock extends ConfigurableMachineBlock {
     public OxygenCollectorBlock(Settings settings) {
-        super(settings, OxygenCollectorScreenHandler::new);
-    }
-
-    @Override
-    public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
-        return new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
-    }
-
-    @Override
-    public ConfigurableMachineBlockEntity createBlockEntity(BlockView view) {
-        return new OxygenCollectorBlockEntity();
+        super(settings, OxygenCollectorScreenHandler::new, OxygenCollectorBlockEntity::new,
+                new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector")
+                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
     }
 
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (!(blockEntity instanceof OxygenCollectorBlockEntity)) {
-            return;
-        }
 
-        OxygenCollectorBlockEntity collector = (OxygenCollectorBlockEntity) blockEntity;
-        if (collector.collectionAmount > 0) {
-            for (int particleCount = 0; particleCount < 10; particleCount++) {
-                for (int int_1 = 0; int_1 < 32; ++int_1) {
+        if (blockEntity instanceof OxygenCollectorBlockEntity && ((OxygenCollectorBlockEntity) blockEntity).collectionAmount > 0) {
+            for (int count = 0; count < 10; count++) {
+                for (int i = 0; i < 32; ++i) {
+                    double x2 = pos.getX() + random.nextFloat();
+                    double y2 = pos.getY() + random.nextFloat();
+                    double z2 = pos.getZ() + random.nextFloat();
+                    double mX, mY, mZ;
+                    int dir = random.nextInt(2) * 2 - 1;
+                    mX = (random.nextFloat() - 0.5D) * 0.5D;
+                    mY = (random.nextFloat() - 0.5D) * 0.5D;
+                    mZ = (random.nextFloat() - 0.5D) * 0.5D;
+
+                    if (random.nextBoolean())
+                    {
+                        x2 = pos.getX() + 0.5D + 0.25D * dir;
+                        mX = random.nextFloat() * 2.0F * dir;
+                    }
+                    else
+                    {
+                        z2 = pos.getZ() + 0.5D + 0.25D * dir;
+                        mZ = random.nextFloat() * 2.0F * dir;
+                    }
+
                     world.addParticle(
-                            new DustParticleEffect(0.9f, 0.9f, 1.0f, 1.0F),
-                            pos.getX() + 0.5D,
-                            (random.nextFloat() - 0.5D) * 0.5D + /*random.nextDouble() * 2.0D*/ 0.5D,
-                            pos.getZ() + 0.5D,
-                            random.nextGaussian(),
-                            0.0D,
-                            random.nextGaussian());
+                            new DustParticleEffect(0.8f, 0.8f, 1.0f, 1.0F),
+                            x2, y2, z2,
+                            mX, mY, mZ);
                 }
             }
         }
