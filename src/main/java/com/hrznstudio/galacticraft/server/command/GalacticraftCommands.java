@@ -75,19 +75,18 @@ public class GalacticraftCommands {
         context.getSource().getMinecraftServer().execute(() -> {
             try {
                 ServerPlayerEntity player = context.getSource().getPlayer();
-                ServerWorld world = context.getSource().getWorld();
-
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                     return;
                 }
+                player.teleport(serverWorld,
+                        player.getX(),
+                        getTopBlockY(serverWorld, player),
+                        player.getZ(),
+                        player.yaw,
+                        player.pitch);
 
-                player.moveToWorld(serverWorld);
-                player.teleport(player.getX(),
-                        getTopBlockY(world, player),
-                        player.getZ()); // there's actually a method that takes in target world too, might be a good thing to look into.
-                                        // I haven't tested
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
 
             } catch (CommandSyntaxException ignore) {
@@ -119,7 +118,13 @@ public class GalacticraftCommands {
         return -1;
     }
 
-    // Hey it prob works
+    // Feel free to move this method to a utils class. Perhaps this could be cleaned up to return BlockPos.class or Vec3i.class
+    /**
+     * Gets the top y position in the world. Essentially a /top Y coord method
+     * @param world Takes in the world
+     * @param player Takes in the player
+     * @return The top Y value of the world.
+     */
     private static double getTopBlockY(ServerWorld world, ServerPlayerEntity player) {
         int playerX = (int) player.getX();
         int playerZ = (int) player.getZ();
