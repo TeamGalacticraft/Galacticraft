@@ -27,16 +27,23 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.command.TeleportCommand;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.Heightmap;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -67,13 +74,20 @@ public class GalacticraftCommands {
     private static int teleport(CommandContext<ServerCommandSource> context) {
         context.getSource().getMinecraftServer().execute(() -> {
             try {
+                ServerPlayerEntity player = context.getSource().getPlayer();
+                ServerWorld world = context.getSource().getWorld();
+
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                     return;
                 }
 
-                context.getSource().getPlayer().moveToWorld(serverWorld);
+                player.moveToWorld(serverWorld);
+                player.teleport(player.getX(),
+                        getTopBlockY(world, player),
+                        player.getZ()); // there's actually a method that takes in target world too, might be a good thing to look into.
+                                        // I haven't tested
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
 
             } catch (CommandSyntaxException ignore) {
@@ -103,5 +117,24 @@ public class GalacticraftCommands {
             }
         });
         return -1;
+    }
+
+    // Hey it prob works
+    private static double getTopBlockY(ServerWorld world, ServerPlayerEntity player) {
+        int playerX = (int) player.getX();
+        int playerZ = (int) player.getZ();
+
+        for (int i = world.getHeight(); i > 0; i-- ) {
+            BlockPos pos = new BlockPos(new Vec3d(playerX, i, playerZ));
+            Block currentBlock = world.getBlockState(pos).getBlock();
+            if (currentBlock != Blocks.VOID_AIR) {
+                if (currentBlock != Blocks.AIR) {
+                    System.out.println(pos);
+                    System.out.println(world.getBlockState(pos).getBlock());
+                    return pos.getY() + 1;
+                }
+            }
+        }
+        return player.getY(); // This SHOULD NOT happen! However if it does, player gets teleported to where they were before.
     }
 }
