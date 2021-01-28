@@ -50,6 +50,7 @@ repositories {
     jcenter() {
         content {
             includeGroup "me.shedaniel.cloth"
+            includeGroup "me.shedaniel"
         }
     }
     maven {
@@ -60,9 +61,9 @@ repositories {
         }
     }
     maven {
-        url "https://maven.modmuss50.me"
+        url "https://maven.terraformersmc.com"
         content {
-            includeGroup "io.github.prospector"
+            includeGroup "com.terraformersmc"
         }
     }
     maven {
@@ -123,7 +124,7 @@ dependencies {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
     }
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { transitive = false }
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
     modImplementation("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
