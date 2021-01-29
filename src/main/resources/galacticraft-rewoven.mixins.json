@@ -5,7 +5,6 @@
   "mixins": [
     "AbstractCriterionMixin",
     "BaseFluidMixin",
-    "BiomeMixin",
     "BlockStateProviderTypeAccessor",
     "BuiltinBiomesAccessor",
     "ChunkGeneratorAccessor",

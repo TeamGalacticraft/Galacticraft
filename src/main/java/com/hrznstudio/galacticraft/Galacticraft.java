@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.registry.RocketPartRegistry;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
@@ -71,7 +70,6 @@ import org.apache.logging.log4j.Logger;
 public class Galacticraft implements ModInitializer {
 
     public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
-    public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
 
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 

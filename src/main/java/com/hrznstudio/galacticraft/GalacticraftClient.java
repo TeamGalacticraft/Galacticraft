@@ -32,7 +32,7 @@ import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockE
 import com.hrznstudio.galacticraft.client.render.entity.*;
 import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntityRenderer;
+import com.hrznstudio.galacticraft.client.render.entity.rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.mixin.SkyPropertiesAccessor;

@@ -130,7 +130,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
         super(handler, inv, title);
         this.backgroundWidth = 323;
         this.backgroundHeight = 175;
-        this.blockEntity = handler.blockEntity;
+        this.blockEntity = handler.assembler;
     }
 
     @Override

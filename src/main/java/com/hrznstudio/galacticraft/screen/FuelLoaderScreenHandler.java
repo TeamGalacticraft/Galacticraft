@@ -23,62 +23,37 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
+import com.hrznstudio.galacticraft.screen.property.BlockPosPropertyDelegate;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import io.github.cottonmc.component.UniversalComponents;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import io.github.cottonmc.component.api.ComponentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
 import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBlockEntity> {
+    public FuelLoaderScreenHandler(int syncId, PlayerEntity player, FuelLoaderBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.FUEL_LOADER_HANDLER);
 
-    private final Property status = Property.create();
-
-    public FuelLoaderScreenHandler(int syncId, PlayerEntity playerEntity, FuelLoaderBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.FUEL_LOADER_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
-
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 53));
-        this.addSlot(new Slot(inventory, 1, 80, 53) {
+        this.addSlot(new ChargeSlot(machine.getWrappedInventory(), 0, 8, 53));
+        this.addSlot(new Slot(machine.getWrappedInventory(), 1, 80, 53) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return ComponentProvider.fromItemStack(stack).hasComponent(UniversalComponents.TANK_COMPONENT) || stack.getItem() instanceof BucketItem;
+                return ComponentHelper.TANK.hasComponent(stack) || stack.getItem() instanceof BucketItem;
             }
         });
 
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
+        this.addProperties(new BlockPosPropertyDelegate(machine::getConnectionPos, machine::setConnectionPos));
 
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
-        }
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public FuelLoaderScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (FuelLoaderBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = FuelLoaderBlockEntity.FuelLoaderStatus.get(status.get());
     }
 }

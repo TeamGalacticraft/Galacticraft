@@ -28,7 +28,9 @@ import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.items.BatteryItem;
+import com.hrznstudio.galacticraft.items.FluidCanister;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
@@ -48,11 +50,13 @@ import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
+import io.github.cottonmc.component.fluid.impl.SyncedTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SyncedInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -70,8 +74,26 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
     }
 
     @Override
-    public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new SyncedInventoryComponent<>(12, GEAR_INVENTORY_COMPONENT, (ComponentProvider) player), RespawnCopyStrategy.INVENTORY);
+    public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityRegistry) {
+        entityRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new SyncedInventoryComponent<>(12, GEAR_INVENTORY_COMPONENT, (ComponentProvider) player), RespawnCopyStrategy.INVENTORY);
+        entityRegistry.registerFor(RocketEntity.class, UniversalComponents.TANK_COMPONENT, rocket -> new SyncedTankComponent<ComponentProvider>(1, Fraction.ofWhole(12), UniversalComponents.TANK_COMPONENT, (ComponentProvider) rocket) {
+            @Override
+            public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
+                if (fluid.isEmpty() || fluid.getFluid().isIn(GalacticraftTags.FUEL)) return super.insertFluid(fluid, action);
+                return fluid;
+            }
+
+            @Override
+            public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
+                if (fluid.isEmpty() || fluid.getFluid().isIn(GalacticraftTags.FUEL)) return super.insertFluid(tank, fluid, action);
+                return fluid;
+            }
+
+            @Override
+            public void setFluid(int slot, FluidVolume stack) {
+                if (stack.isEmpty() || stack.getFluid().isIn(GalacticraftTags.FUEL)) super.setFluid(slot, stack);
+            }
+        });
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -254,6 +276,12 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             public int getCurrentEnergy() {
                 return Integer.MAX_VALUE;
             }
+        });
+
+        registry.registerFor(item -> item instanceof FluidCanister, UniversalComponents.TANK_COMPONENT, stack -> {
+            AutoSyncedItemTankComponent component = new AutoSyncedItemTankComponent(1, Fraction.ONE, stack);
+            component.listen(() -> stack.setDamage(1000 - component.getContents(0).getAmount().multiply(Fraction.ofWhole(1000)).intValue()));
+            return component;
         });
     }
 }

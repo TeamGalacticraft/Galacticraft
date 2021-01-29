@@ -20,39 +20,39 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.screen.property;
 
-import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
-import com.hrznstudio.galacticraft.api.biome.BiomeProperty;
-import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
-import net.minecraft.world.biome.Biome;
-import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.util.math.BlockPos;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
-/**
- * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
- */
-@Mixin(Biome.class)
-public abstract class BiomeMixin implements GCBiomePropertyAccessor {
-    @Unique
-    private final Map<BiomePropertyType<?>, BiomeProperty<?>> properties = new HashMap<>();
+public class BlockPosPropertyDelegate implements PropertyDelegate {
+    private final Supplier<BlockPos> supplier;
+    private final Consumer<BlockPos> consumer;
 
-    @Override
-    public <T> T getProperty(@NotNull BiomePropertyType<T> type) {
-        return (T) properties.getOrDefault(type, type.create()).getValue();
+    public BlockPosPropertyDelegate(Supplier<BlockPos> supplier, Consumer<BlockPos> consumer) {
+        this.supplier = supplier;
+        this.consumer = consumer;
     }
 
     @Override
-    public <T> void setProperty(BiomePropertyType<T> type, T value) {
-        this.properties.put(type, type.create(value));
+    public int get(int index) {
+        if (index == 0) return supplier.get().getX();
+        if (index == 1) return supplier.get().getY();
+        return supplier.get().getZ();
     }
 
     @Override
-    public Map<BiomePropertyType<?>, BiomeProperty<?>> getProperties() {
-        return properties;
+    public void set(int index, int value) {
+        if (index == 0) consumer.accept(new BlockPos(value, supplier.get().getY(), supplier.get().getZ()));
+        else if (index == 1) consumer.accept(new BlockPos(supplier.get().getX(), value, supplier.get().getZ()));
+        else consumer.accept(new BlockPos(supplier.get().getX(), supplier.get().getY(), value));
+    }
+
+    @Override
+    public int size() {
+        return 3;
     }
 }

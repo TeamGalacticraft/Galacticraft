@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.entity.rocket;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -37,20 +36,14 @@ import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.impl.SyncedTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.Component;
-import nerdhub.cardinal.components.api.component.ComponentContainer;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
-import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -80,56 +73,51 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntity extends Entity implements EntityComponentCallback<RocketEntity>, ComponentProvider { //pitch+90
-
+public class RocketEntity extends Entity {
     private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
         @Override
-        public void write(PacketByteBuf var1, LaunchStage var2) {
-            var1.writeEnumConstant(var2);
+        public void write(PacketByteBuf buf, LaunchStage stage) {
+            buf.writeEnumConstant(stage);
         }
 
         @Override
-        public LaunchStage read(PacketByteBuf var1) {
-            return var1.readEnumConstant(LaunchStage.class);
+        public LaunchStage read(PacketByteBuf buf) {
+            return buf.readEnumConstant(LaunchStage.class);
         }
 
         @Override
-        public LaunchStage copy(LaunchStage var1) {
-            return var1;
+        public LaunchStage copy(LaunchStage stage) {
+            return stage;
         }
     });
 
-    private final TankComponent tank = new SyncedTankComponent<>(1, Fraction.ofWhole(12), UniversalComponents.TANK_COMPONENT, this);
-    
     private static final TrackedData<Float[]> COLOR = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Float[]>() {
+        @Override
+        public void write(PacketByteBuf buf, Float[] colour) {
+            assert colour.length > 3;
+            buf.writeFloat(colour[0]);
+            buf.writeFloat(colour[1]);
+            buf.writeFloat(colour[2]);
+            buf.writeFloat(colour[3]);
+        }
 
-    @Override
-    public void write(PacketByteBuf var1, Float[] var2) {
-        assert var2.length > 3;
-        var1.writeFloat(var2[0]);
-        var1.writeFloat(var2[1]);
-        var1.writeFloat(var2[2]);
-        var1.writeFloat(var2[3]);
-    }
+        @Override
+        public Float[] read(PacketByteBuf buf) {
+            return new Float[] {buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat()};
+        }
 
-    @Override
-    public Float[] read(PacketByteBuf var1) {
-        return new Float[] {var1.readFloat(), var1.readFloat(), var1.readFloat(), var1.readFloat()};
+        @Override
+        public Float[] copy(Float[] colour) {
+        return colour;
     }
-
-    @Override
-    public Float[] copy(Float[] var1) {
-        return var1;
-    }
-});
+    });
 
     public static final TrackedData<Integer> DAMAGE_WOBBLE_TICKS = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.INTEGER);
     public static final TrackedData<Integer> DAMAGE_WOBBLE_SIDE = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -137,47 +125,47 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
     public static final TrackedData<Double> SPEED = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Double>() {
         @Override
-        public void write(PacketByteBuf var1, Double var2) {
-            var1.writeDouble(var2);
+        public void write(PacketByteBuf buf, Double speed) {
+            buf.writeDouble(speed);
         }
 
         @Override
-        public Double read(PacketByteBuf var1) {
-            return var1.readDouble();
+        public Double read(PacketByteBuf buf) {
+            return buf.readDouble();
         }
 
         @Override
-        public Double copy(Double var1) {
-            return var1;
+        public Double copy(Double speed) {
+            return speed;
         }
     });
 
     public static final TrackedData<RocketPart[]> PARTS = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<RocketPart[]>() {
         @Override
-        public void write(PacketByteBuf var1, RocketPart[] var2) {
+        public void write(PacketByteBuf buf, RocketPart[] speed) {
             for (byte i = 0; i < RocketPartType.values().length; i++) {
-                var1.writeBoolean(var2[i] != null);
-                if (var2[i] != null) {
-                    var1.writeIdentifier(Galacticraft.ROCKET_PARTS.getId(var2[i]));
+                buf.writeBoolean(speed[i] != null);
+                if (speed[i] != null) {
+                    buf.writeIdentifier(Galacticraft.ROCKET_PARTS.getId(speed[i]));
                 }
             }
         }
 
         @Override
-        public RocketPart[] read(PacketByteBuf var1) {
+        public RocketPart[] read(PacketByteBuf buf) {
             RocketPart[] array = new RocketPart[RocketPartType.values().length];
             for (byte i = 0; i < RocketPartType.values().length; i++) {
-                if (var1.readBoolean()) {
-                    array[i] = Galacticraft.ROCKET_PARTS.get(var1.readIdentifier());
+                if (buf.readBoolean()) {
+                    array[i] = Galacticraft.ROCKET_PARTS.get(buf.readIdentifier());
                 }
             }
             return array;
         }
 
         @Override
-        public RocketPart[] copy(RocketPart[] var1) {
+        public RocketPart[] copy(RocketPart[] buf) {
             RocketPart[] parts = new RocketPart[RocketPartType.values().length];
-            System.arraycopy(var1, 0, parts, 0, var1.length);
+            System.arraycopy(buf, 0, parts, 0, buf.length);
             return parts;
         }
     });
@@ -192,41 +180,41 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
     private BlockPos linkedPad = new BlockPos(0, 0, 0);
 
-    public RocketEntity(EntityType<RocketEntity> type, World world_1) {
-        super(type, world_1);
+    public RocketEntity(EntityType<RocketEntity> type, World world) {
+        super(type, world);
     }
 
     public Float[] getColor() {
         return this.dataTracker.get(COLOR);
     }
 
+    private long timeAsState = 0;
+
     @Override
-    protected boolean canAddPassenger(Entity entity_1) {
+    protected boolean canAddPassenger(Entity passenger) {
         return this.getPassengerList().isEmpty();
     }
-
-    private long timeAsState = 0;
 
     public BlockPos getLinkedPad() {
         return linkedPad;
     }
 
     @Override
-    public boolean damage(DamageSource damageSource_1, float float_1) {
+    public boolean damage(DamageSource source, float amount) {
         if (!this.world.isClient && !this.removed) {
-            if (this.isInvulnerableTo(damageSource_1)) {
+            if (this.isInvulnerableTo(source)) {
                 return false;
             } else {
                 this.dataTracker.set(DAMAGE_WOBBLE_SIDE, -this.dataTracker.get(DAMAGE_WOBBLE_SIDE));
                 this.dataTracker.set(DAMAGE_WOBBLE_TICKS, 10);
-                this.dataTracker.set(DAMAGE_WOBBLE_STRENGTH, this.dataTracker.get(DAMAGE_WOBBLE_STRENGTH) + float_1 * 10.0F);
-                boolean boolean_1 = damageSource_1.getAttacker() instanceof PlayerEntity && ((PlayerEntity)damageSource_1.getAttacker()).abilities.creativeMode;
-                if (boolean_1 || this.dataTracker.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
+                this.dataTracker.set(DAMAGE_WOBBLE_STRENGTH, this.dataTracker.get(DAMAGE_WOBBLE_STRENGTH) + amount * 10.0F);
+                boolean creative = source.getAttacker() instanceof PlayerEntity && ((PlayerEntity)source.getAttacker()).abilities.creativeMode;
+                if (creative || this.dataTracker.get(DAMAGE_WOBBLE_STRENGTH) > 40.0F) {
                     this.removeAllPassengers();
-                    if (boolean_1 && !this.hasCustomName()) {
+                    if (creative && !this.hasCustomName()) {
                         this.remove();
                     } else {
-                        this.dropItems(damageSource_1, false);
+                        this.dropItems(source, false);
                     }
                 }
 
@@ -241,32 +229,23 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     public void remove() {
         super.remove();
         if (this.linkedPad != null) {
-            if (this.world.getBlockEntity(this.linkedPad) instanceof RocketLaunchPadBlockEntity){
-                ((RocketLaunchPadBlockEntity) this.world.getBlockEntity(this.linkedPad)).setRocketEntityId(Integer.MIN_VALUE);
-                ((RocketLaunchPadBlockEntity) this.world.getBlockEntity(this.linkedPad)).setRocketEntityUUID(null);
+            BlockEntity pad = this.world.getBlockEntity(this.linkedPad);
+            if (pad instanceof RocketLaunchPadBlockEntity){
+                ((RocketLaunchPadBlockEntity) pad).setRocketEntityId(Integer.MIN_VALUE);
+                ((RocketLaunchPadBlockEntity) pad).setRocketEntityUUID(null);
             }
 
         }
     }
 
     @Override
-    protected boolean canStartRiding(Entity entity_1) {
+    protected boolean canStartRiding(Entity ridable) {
         return false;
     }
 
     @Override
-    public void updateTrackedPosition(double double_1, double double_2, double double_3) {
-        super.updateTrackedPosition(double_1, double_2, double_3);
-    }
-
-    @Override
-    public boolean canUsePortals() {
-        return true;
-    }
-
-    @Override
-    public ActionResult interactAt(PlayerEntity playerEntity_1, Vec3d vec3d_1, Hand hand_1) {
-        playerEntity_1.startRiding(this);
+    public ActionResult interactAt(PlayerEntity player, Vec3d vec3d, Hand hand) {
+        player.startRiding(this);
         return ActionResult.SUCCESS;
     }
 
@@ -283,9 +262,9 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public ActionResult interact(PlayerEntity playerEntity_1, Hand hand_1) {
+    public ActionResult interact(PlayerEntity player, Hand hand) {
         if (this.getPassengerList().isEmpty()) {
-            playerEntity_1.startRiding(this);
+            player.startRiding(this);
             return ActionResult.SUCCESS;
         }
         return ActionResult.FAIL;
@@ -305,8 +284,6 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
     @Override
     public void readCustomDataFromTag(CompoundTag tag) {
-        this.tank.fromTag(tag);
-
         CompoundTag parts = tag.getCompound("Parts");
         RocketPart[] list = new RocketPart[RocketPartType.values().length];
         for (RocketPartType type : RocketPartType.values()) {
@@ -335,8 +312,6 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
     @Override
     public void writeCustomDataToTag(CompoundTag tag) {
-        this.tank.toTag(tag);
-
         CompoundTag parts = new CompoundTag();
         CompoundTag color = new CompoundTag();
 
@@ -368,8 +343,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public void setCustomName(@Nullable Text text_1) {
-
+    public void setCustomName(@Nullable Text text) {
     }
 
     @Override
@@ -384,7 +358,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public void setCustomNameVisible(boolean boolean_1) {
+    public void setCustomNameVisible(boolean visible) {
 
     }
 
@@ -451,7 +425,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
         super.tick();
 
-        if (!world.isClient && world instanceof ServerWorld) {
+        if (!world.isClient) {
             if (this.getPassengerList().isEmpty()) {
                 if (getStage() != LaunchStage.FAILED) {
                     if (getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
@@ -479,14 +453,14 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
             }
 
             if (getStage() == LaunchStage.IGNITED) {
-                if (this.tank.getContents(0).isEmpty() && !debugMode) {
+                if (this.getTank().getContents(0).isEmpty() && !debugMode) {
                     this.setStage(LaunchStage.IDLE);
                     if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                         ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), false);
                     }
                     return;
                 }
-                this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
+                this.getTank().takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
@@ -502,10 +476,10 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.tank.isEmpty() || !this.tank.getContents(0).getFluid().isIn(GalacticraftTags.FUEL))) {
+                if (!debugMode && (this.getTank().isEmpty() || !this.getTank().getContents(0).getFluid().isIn(GalacticraftTags.FUEL))) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
-                    this.tank.takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
+                    this.getTank().takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
@@ -578,14 +552,18 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         }
     }
 
+    public TankComponent getTank() {
+        return UniversalComponents.TANK_COMPONENT.get(this);
+    }
+
     @Override
     public void setVelocity(double x, double y, double z) {
         this.setVelocity(new Vec3d(x, y, z));
     }
 
     @Override
-    public void setVelocity(Vec3d vec3d_1) {
-        super.setVelocity(vec3d_1);
+    public void setVelocity(Vec3d vec3d) {
+        super.setVelocity(vec3d);
         this.velocityDirty = true;
     }
 
@@ -610,8 +588,8 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    protected void setRotation(float float_1, float float_2) {
-        super.setRotation(float_1, float_2);
+    protected void setRotation(float yaw, float pitch) {
+        super.setRotation(yaw, pitch);
         this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 
@@ -627,10 +605,10 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public boolean handleFallDamage(float float_1, float float_2) {
+    public boolean handleFallDamage(float fallDistance, float damageMultiplier) {
         if (this.hasPassengers()) {
             for (Entity entity : this.getPassengerList()) {
-                entity.handleFallDamage(fallDistance, float_2);
+                entity.handleFallDamage(fallDistance, damageMultiplier);
             }
         }
         return true;
@@ -652,8 +630,8 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public void setOnFireFor(int int_1) {
-        super.setOnFireFor(int_1);
+    public void setOnFireFor(int seconds) {
+        super.setOnFireFor(seconds);
         if (!world.isClient) {
             world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
             world.createExplosion(this, this.getPos().x + ((world.random.nextDouble() - 0.5) * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + ((world.random.nextDouble() - 0.5) * 4), 10.0F, Explosion.DestructionType.DESTROY);
@@ -664,8 +642,8 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    protected void onBlockCollision(BlockState blockState_1) {
-        if (getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal() && timeAsState >= 30 && !(blockState_1.getBlock() instanceof AirBlock) && !world.isClient) {
+    protected void onBlockCollision(BlockState state) {
+        if (getStage().ordinal() >= LaunchStage.LAUNCHED.ordinal() && timeAsState >= 30 && !state.isAir() && !world.isClient) {
             world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
             world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
             world.createExplosion(this, this.getPos().x + (world.random.nextDouble() - 0.5 * 4), this.getPos().y + (world.random.nextDouble() * 3), this.getPos().z + (world.random.nextDouble() - 0.5 * 4), 10.0F, Explosion.DestructionType.DESTROY);
@@ -682,22 +660,22 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
     }
 
     @Override
-    public void move(MovementType movementType_1, Vec3d vec3d_1) {
-        if (onGround) vec3d_1.multiply(1.0D, 0.0D, 1.0D);
-        super.move(movementType_1, vec3d_1);
+    public void move(MovementType type, Vec3d vec3d) {
+        if (onGround) vec3d.multiply(1.0D, 0.0D, 1.0D);
+        super.move(type, vec3d);
         this.getPassengerList().forEach(this::updatePassengerPosition);
     }
 
     @Override
-    protected void removePassenger(Entity entity_1) {
-        if (this.getPassengerList().get(0) == entity_1) {
+    protected void removePassenger(Entity passenger) {
+        if (this.getPassengerList().get(0) == passenger) {
             if (getStage().ordinal() > LaunchStage.IGNITED.ordinal()) {
                 this.setStage(LaunchStage.FAILED);
             } else {
                 this.setStage(LaunchStage.IDLE);
             }
         }
-        super.removePassenger(entity_1);
+        super.removePassenger(passenger);
     }
 
     private long ticksSinceJump = 0;
@@ -710,7 +688,7 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
         if (!this.getPassengerList().isEmpty() && ticksSinceJump > 10) {
             if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    if (!tank.getContents(0).isEmpty()) {
+                    if (!this.getTank().getContents(0).isEmpty()) {
                         this.setStage(this.getStage().next());
                         if (getStage() == LaunchStage.WARNING) {
                             ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.warning"), true);
@@ -761,32 +739,6 @@ public class RocketEntity extends Entity implements EntityComponentCallback<Rock
 
     public void dropItems(DamageSource source, boolean exploded) {
 
-    }
-
-    @Override
-    public void initComponents(RocketEntity rocketEntity, ComponentContainer<Component> componentContainer) {
-        componentContainer.put(UniversalComponents.TANK_COMPONENT, rocketEntity.tank);
-    }
-
-    @Override
-    public boolean hasComponent(ComponentType<?> componentType) {
-        return componentType == UniversalComponents.TANK_COMPONENT;
-    }
-
-    @Nullable
-    @Override
-    public <C extends Component> C getComponent(ComponentType<C> componentType) {
-        //noinspection unchecked
-        return componentType == UniversalComponents.TANK_COMPONENT ? (C)tank : null;
-    }
-
-    @Override
-    public @NotNull Set<ComponentType<?>> getComponentTypes() {
-        return Sets.newHashSet(UniversalComponents.TANK_COMPONENT);
-    }
-
-    public EntitySyncedTankComponent getFuelTank() {
-        return tank;
     }
 
     public void onBaseDestroyed() {

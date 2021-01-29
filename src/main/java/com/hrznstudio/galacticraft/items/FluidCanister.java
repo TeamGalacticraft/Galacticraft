@@ -22,15 +22,10 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import io.github.cottonmc.component.UniversalComponents;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.component.ComponentContainer;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
-import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
-import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -56,27 +51,25 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FluidCanister extends Item implements ItemComponentCallback {
-
+public class FluidCanister extends Item {
     public FluidCanister(Settings settings) {
         super(settings.maxDamage(1000));
-        ItemComponentCallback.registerSelf(this);
     }
 
     @Override
     public int getEnchantability() {
-        return 0;
+        return -1;
     }
 
     @Override
-    public boolean canRepair(ItemStack itemStack_1, ItemStack itemStack_2) {
+    public boolean canRepair(ItemStack stack, ItemStack ingredient) {
         return false;
     }
 
@@ -84,7 +77,7 @@ public class FluidCanister extends Item implements ItemComponentCallback {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        TankComponent component = ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT);
+        TankComponent component = ComponentHelper.TANK.getComponent(stack);
         if (component.getContents(0).isEmpty()) {
             tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid"));
         } else {
@@ -99,30 +92,21 @@ public class FluidCanister extends Item implements ItemComponentCallback {
     }
 
     @Override
-    public void initComponents(ItemStack itemStack, ComponentContainer<CopyableComponent<?>> componentContainer) {
-        ItemTankComponent component = new ItemTankComponent(1, Fraction.ONE);
-        component.listen(() -> {
-            itemStack.setDamage((int) (1.0D - component.getContents(0).getAmount().doubleValue()) * 1000);
-        });
-        componentContainer.put(UniversalComponents.TANK_COMPONENT, component);
-    }
-
-    @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        TankComponent tank = ComponentProvider.fromItemStack(itemStack).getComponent(UniversalComponents.TANK_COMPONENT);
+        ItemStack stack = user.getStackInHand(hand);
+        TankComponent tank = ComponentHelper.TANK.getComponent(stack);
 
         if (tank.isEmpty()) {
             BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
             if (hitResult.getType() == HitResult.Type.MISS) {
-                return TypedActionResult.pass(itemStack);
+                return TypedActionResult.pass(stack);
             } else if (hitResult.getType() != HitResult.Type.BLOCK) {
-                return TypedActionResult.pass(itemStack);
+                return TypedActionResult.pass(stack);
             } else {
                 BlockPos blockPos = hitResult.getBlockPos();
                 Direction direction = hitResult.getSide();
                 BlockPos blockPos2 = blockPos.offset(direction);
-                if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos2, direction, itemStack)) {
+                if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos2, direction, stack)) {
                     BlockState blockState;
                     if (tank.isEmpty()) {
                         blockState = world.getBlockState(blockPos);
@@ -131,18 +115,18 @@ public class FluidCanister extends Item implements ItemComponentCallback {
                             if (fluid != Fluids.EMPTY) {
                                 user.incrementStat(Stats.USED.getOrCreateStat(this));
                                 user.playSound(fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-                                ItemStack itemStack2 = itemStack.copy();
-                                ComponentProvider.fromItemStack(itemStack2).getComponent(UniversalComponents.TANK_COMPONENT).setFluid(0, new FluidVolume(fluid, Fraction.ONE));
+                                ItemStack stack1 = stack.copy();
+                                ComponentHelper.TANK.getComponent(stack1).setFluid(0, new FluidVolume(fluid, Fraction.ONE));
 
-                                return TypedActionResult.success(itemStack2, world.isClient());
+                                return TypedActionResult.success(stack1, world.isClient());
                             }
                         }
 
-                        return TypedActionResult.fail(itemStack);
+                        return TypedActionResult.fail(stack);
                     }
                 }
             }
         }
-        return TypedActionResult.fail(itemStack);
+        return TypedActionResult.fail(stack);
     }
 }

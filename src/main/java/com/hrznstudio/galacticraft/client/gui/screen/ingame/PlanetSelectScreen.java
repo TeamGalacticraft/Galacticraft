@@ -510,7 +510,7 @@ public class PlanetSelectScreen extends Screen {
 //                            return;
 //                        }
 
-                        this.client.options.field_26677 = Perspective.FIRST_PERSON;
+                        this.client.options.perspective = Perspective.FIRST_PERSON;
                     } else {
                         dimensionID = this.selectedBody.getWorld();
 //                        dimension = WorldUtil.getDimensionName(WorldUtil.getProviderForDimensionClient(dimensionID));

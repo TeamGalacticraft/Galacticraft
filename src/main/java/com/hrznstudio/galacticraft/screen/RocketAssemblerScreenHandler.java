@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,12 +44,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 public class RocketAssemblerScreenHandler extends ScreenHandler {
 
     protected Inventory inventory;
-    public final RocketAssemblerBlockEntity blockEntity;
+    public final RocketAssemblerBlockEntity assembler;
 
-    public RocketAssemblerScreenHandler(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity blockEntity) {
+    public RocketAssemblerScreenHandler(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity assembler) {
         super(GalacticraftScreenHandlerTypes.ROCKET_ASSEMBLER_HANDLER, syncId);
-        this.blockEntity = blockEntity;
-        this.inventory = blockEntity.getInventory().asInventory();
+        this.assembler = assembler;
+        this.inventory = assembler.getInventory().asInventory();
 
         final int playerInvYOffset = 94;
         final int playerInvXOffset = 148;

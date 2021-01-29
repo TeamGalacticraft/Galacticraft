@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
+import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -63,7 +64,7 @@ public class FuelLoaderBlock extends ConfigurableMachineBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        if (direction != Direction.UP && direction != Direction.DOWN) {
+        if (direction != Direction.UP && direction != Direction.DOWN && newState.getBlock() instanceof RocketLaunchPadBlock) {
             ((FuelLoaderBlockEntity) world.getBlockEntity(pos)).updateConnections(direction);
         }
         return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);

@@ -23,9 +23,11 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
@@ -34,6 +36,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
@@ -71,11 +74,12 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
     public static final int TANK_OVERLAY_WIDTH = 38;
     public static final int TANK_OVERLAY_HEIGHT = 38;
 
-    private final FuelLoaderBlockEntity blockEntity;
+    private final FuelLoaderBlockEntity fuelLoader;
 
     public FuelLoaderScreen(FuelLoaderScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
-        this.blockEntity = handler.blockEntity;
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        this.fuelLoader = handler.machine;
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 10, 9, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
@@ -87,37 +91,37 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
         int topPos = this.y;
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 10, this.y + 9);
-        if (this.blockEntity.getFluidTank().getContents(0).getFluid() != null
-        && this.blockEntity.getFluidTank().getContents(0).getFluid() != Fluids.EMPTY) {
+
+        if (this.fuelLoader.getFluidTank().getContents(0).getFluid() != null
+        && this.fuelLoader.getFluidTank().getContents(0).getFluid() != Fluids.EMPTY) {
             stack.push();
-            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.blockEntity.getFluidTank().getContents(0).getFluid()).getFluidSprites(null, null, this.blockEntity.getFluidTank().getContents(0).getFluid().getDefaultState())[0];
+            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.fuelLoader.getFluidTank().getContents(0).getFluid()).getFluidSprites(null, null, this.fuelLoader.getFluidTank().getContents(0).getFluid().getDefaultState())[0];
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() / blockEntity.getFluidTank().getMaxCapacity(0).doubleValue())), sprite);
+            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (fuelLoader.getFluidTank().getContents(0).getAmount().doubleValue() / fuelLoader.getFluidTank().getMaxCapacity(0).doubleValue())), sprite);
             stack.pop();
             this.client.getTextureManager().bindTexture(BACKGROUND);
             drawTexture(stack, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
         }
 
-        if (blockEntity.status == FuelLoaderBlockEntity.FuelLoaderStatus.NO_ROCKET) {
+        if (fuelLoader.getStatus().getType() == ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_RESOURCE) {
             this.client.getTextureManager().bindTexture(BACKGROUND);
             drawTexture(stack, x + 116, y + 45, X_X, X_Y, X_WIDTH, X_HEIGHT);
         }
 
         if (check(mouseX, mouseY, x + 145, y + 29, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
-            if (blockEntity.getConnectionPos() != null) {
-                BlockEntity be = world.getBlockEntity(blockEntity.getConnectionPos());
+            if (fuelLoader.getConnectionPos() != null) {
+                BlockEntity be = world.getBlockEntity(fuelLoader.getConnectionPos());
                 if (be instanceof RocketLaunchPadBlockEntity) {
                     if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
                         Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity) {
-                            if (!((RocketEntity) entity).getFuelTank().getContents(0).isEmpty()) {
-                                double amount = ((RocketEntity) entity).getFuelTank().getContents(0).getAmount().doubleValue();
-                                double max = ((RocketEntity) entity).getFuelTank().getMaxCapacity(0).doubleValue();
+                            if (!((RocketEntity) entity).getTank().getContents(0).isEmpty()) {
+                                double amount = ((RocketEntity) entity).getTank().getContents(0).getAmount().doubleValue();
+                                double max = ((RocketEntity) entity).getTank().getMaxCapacity(0).doubleValue();
                                 stack.push();
-                                Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(((RocketEntity) entity).getFuelTank().getContents(0).getFluid()).getFluidSprites(null, null, ((RocketEntity) entity).getFuelTank().getContents(0).getFluid().getDefaultState())[0];
+                                Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(((RocketEntity) entity).getTank().getContents(0).getFluid()).getFluidSprites(null, null, ((RocketEntity) entity).getTank().getContents(0).getFluid().getDefaultState())[0];
                                 this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-                                drawSprite(stack, x + 159, y + 64, getZOffset(), -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * (amount / max)), sprite);
+                                DrawableHelper.drawSprite(stack, x + 159, y + 64, getZOffset(), -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * (amount / max)), sprite);
                                 stack.pop();
                             }
                         }
@@ -141,13 +145,12 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
     @Override
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 10, this.y + 9);
         List<OrderedText> list = new ArrayList<>();
         if (check(mouseX, mouseY, x + 69, y + 9, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            if (blockEntity.getFluidTank().getContents(0).isEmpty()) {
+            if (fuelLoader.getFluidTank().getContents(0).isEmpty()) {
                 list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             } else {
-                Fraction fraction = blockEntity.getFluidTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
+                Fraction fraction = fuelLoader.getFluidTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
                 if (fraction.getDenominator() == 1) {
                     list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                 } else {
@@ -164,7 +167,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                     }
                 }
                 if (Screen.hasControlDown()) {
-                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(blockEntity.getFluidTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
+                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(fuelLoader.getFluidTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                 }
             }
             this.renderOrderedTooltip(stack, list, mouseX, mouseY);
@@ -172,16 +175,16 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
         list.clear();
 
         if (check(mouseX, mouseY, x + 145, y + 29, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
-            if (blockEntity.getConnectionPos() != null) {
-                BlockEntity be = world.getBlockEntity(blockEntity.getConnectionPos());
+            if (fuelLoader.getConnectionPos() != null) {
+                BlockEntity be = world.getBlockEntity(fuelLoader.getConnectionPos());
                 if (be instanceof RocketLaunchPadBlockEntity) {
                     if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
                         Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity) {
-                            if (((RocketEntity) entity).getFuelTank().isEmpty()) {
+                            if (((RocketEntity) entity).getTank().isEmpty()) {
                                 list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                             } else {
-                                Fraction fraction = ((RocketEntity) entity).getFuelTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
+                                Fraction fraction = ((RocketEntity) entity).getTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
                                 if (fraction.getDenominator() == 1) {
                                     list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                 } else {
@@ -198,7 +201,7 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                                     }
                                 }
                                 if (Screen.hasControlDown()) {
-                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(((RocketEntity) entity).getFuelTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
+                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(((RocketEntity) entity).getTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                                 }
                             }
                         }
