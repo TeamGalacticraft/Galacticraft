@@ -28,6 +28,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -132,7 +133,7 @@ public class GalacticraftCommands {
         for (int i = world.getHeight(); i > 0; i-- ) {
             BlockPos pos = new BlockPos(new Vec3d(playerX, i, playerZ));
             Block currentBlock = world.getBlockState(pos).getBlock();
-            if ((currentBlock != Blocks.VOID_AIR) && (currentBlock != Blocks.AIR)) {
+            if (!currentBlock.getDefaultState().isAir()) {
                 System.out.println(pos);
                 System.out.println(world.getBlockState(pos).getBlock());
                 return pos.getY() + 1;
