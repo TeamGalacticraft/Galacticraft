@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "galacticraft-rewoven:block/unlit_lantern"
+    },
+    "hanging=true": {
+      "model": "galacticraft-rewoven:block/unlit_lantern_hanging"
+    }
+  }
+}
