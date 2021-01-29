@@ -78,13 +78,13 @@ import java.util.function.Supplier;
 public class ConfigurableMachineBlock extends BlockWithEntity {
     private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
     private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
-    private final TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo;
+    private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
 
     protected ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory) {
         this(settings, factory, (view) -> null, Constants.Misc.EMPTY_TEXT);
     }
 
-    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo) {
+    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
         super(settings);
         this.factory = factory;
         this.blockEntityFunc = blockEntityFunc;
@@ -95,7 +95,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
         this(settings, factory, blockEntityFunc, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
-    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, TooltipContext, Text> machineInfo) {
+    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
         this(settings, factory, (view) -> blockEntitySupplier.get(), machineInfo);
     }
 
@@ -135,7 +135,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
     @Override
     @Environment(EnvType.CLIENT)
     public final void appendTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
-        Text text = machineInfo(stack, view, context);
+        Text text = machineInfo(stack, view, context.isAdvanced());
         if (text != null) {
             if (Screen.hasShiftDown()) {
                 char[] line = text instanceof TranslatableText ? I18n.translate(((TranslatableText) text).getKey()).toCharArray() : text.getString().toCharArray();
@@ -276,7 +276,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
         return stack;
     }
 
-    public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
+    public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
         return machineInfo.apply(stack, view, context);
     }
 }
