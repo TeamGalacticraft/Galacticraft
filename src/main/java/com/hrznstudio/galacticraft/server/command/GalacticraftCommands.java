@@ -134,8 +134,6 @@ public class GalacticraftCommands {
             BlockPos pos = new BlockPos(new Vec3d(playerX, i, playerZ));
             Block currentBlock = world.getBlockState(pos).getBlock();
             if (!currentBlock.getDefaultState().isAir()) {
-                System.out.println(pos);
-                System.out.println(world.getBlockState(pos).getBlock());
                 return pos.getY() + 1;
             }
         }
