@@ -87,7 +87,6 @@ public class GalacticraftCommands {
                         player.getZ(),
                         player.yaw,
                         player.pitch);
-                System.out.println("HEY");
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
 
             } catch (CommandSyntaxException ignore) {
