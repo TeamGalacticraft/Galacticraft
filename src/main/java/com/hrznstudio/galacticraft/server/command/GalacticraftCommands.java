@@ -86,7 +86,7 @@ public class GalacticraftCommands {
                         player.getZ(),
                         player.yaw,
                         player.pitch);
-
+                System.out.println("HEY");
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
 
             } catch (CommandSyntaxException ignore) {
@@ -132,12 +132,10 @@ public class GalacticraftCommands {
         for (int i = world.getHeight(); i > 0; i-- ) {
             BlockPos pos = new BlockPos(new Vec3d(playerX, i, playerZ));
             Block currentBlock = world.getBlockState(pos).getBlock();
-            if (currentBlock != Blocks.VOID_AIR) {
-                if (currentBlock != Blocks.AIR) {
-                    System.out.println(pos);
-                    System.out.println(world.getBlockState(pos).getBlock());
-                    return pos.getY() + 1;
-                }
+            if ((currentBlock != Blocks.VOID_AIR) && (currentBlock != Blocks.AIR)) {
+                System.out.println(pos);
+                System.out.println(world.getBlockState(pos).getBlock());
+                return pos.getY() + 1;
             }
         }
         return player.getY(); // This SHOULD NOT happen! However if it does, player gets teleported to where they were before.
