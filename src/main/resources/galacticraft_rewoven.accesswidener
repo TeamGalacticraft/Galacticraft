@@ -14,8 +14,6 @@ accessible      method   net/minecraft/block/FluidBlock                         
 accessible      field    net/minecraft/item/BucketItem                                        fluid             Lnet/minecraft/fluid/Fluid;
 accessible      field    net/minecraft/client/options/GameOptions                             perspective       Lnet/minecraft/client/options/Perspective;
 
-accessible      method   net/minecraft/advancement/criterion/AbstractCriterionConditions      getPlayerPredicate   ()Lnet/minecraft/predicate/entity/EntityPredicate$Extended;
-
 accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)V
 accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;II)V
 accessible      method   net/minecraft/world/poi/PointOfInterestType                          setup             (Lnet/minecraft/world/poi/PointOfInterestType;)Lnet/minecraft/world/poi/PointOfInterestType;

@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.client.network;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;

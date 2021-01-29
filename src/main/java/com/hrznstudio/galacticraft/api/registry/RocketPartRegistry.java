@@ -22,9 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.registry;
 
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.accessor.ClientPlayNetworkHandlerAccessor;
-import com.hrznstudio.galacticraft.api.research.ClientResearchManager;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.mojang.serialization.Lifecycle;

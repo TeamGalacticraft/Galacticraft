@@ -1,13 +1,10 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.MinecraftServerAccessor;
-import com.hrznstudio.galacticraft.accessor.ServerResourceAccessor;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.research.PlayerResearchTracker;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
@@ -26,22 +23,9 @@ public class ServerPlayerEntityMixin implements ServerPlayerEntityAccessor {
     public MinecraftServer server;
 
     @Unique
-    private PlayerResearchTracker researchTracker;
-
-    @Unique
     private double researchScrollX = 0.0D;
     @Unique
     private double researchScrollY = 0.0D;
-
-    @Inject(at = @At("RETURN"), method = "<init>")
-    private void initResearch(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager serverPlayerInteractionManager, CallbackInfo ci) {
-        researchTracker = ((MinecraftServerAccessor) server).getResearchTracker((ServerPlayerEntity) (Object) this);
-    }
-
-    @Inject(at = @At("RETURN"), method = "tick")
-    private void tickResearch(CallbackInfo ci) {
-        researchTracker.sendUpdate(((ServerPlayerEntity) (Object) this));
-    }
 
     @Inject(at = @At("RETURN"), method = "writeCustomDataToTag")
     private void writeCustomDataGC(CompoundTag tag, CallbackInfo ci) {
@@ -53,12 +37,6 @@ public class ServerPlayerEntityMixin implements ServerPlayerEntityAccessor {
     private void readCustomDataGC(CompoundTag tag, CallbackInfo ci) {
         this.researchScrollX = tag.getDouble("gc_research_x");
         this.researchScrollY = tag.getDouble("gc_research_y");
-    }
-
-    @Override
-    @Unique
-    public PlayerResearchTracker getResearchTracker() {
-        return researchTracker;
     }
 
     @Override

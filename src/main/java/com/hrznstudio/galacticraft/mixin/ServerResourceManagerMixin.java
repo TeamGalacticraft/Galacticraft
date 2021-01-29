@@ -1,7 +1,5 @@
 package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.accessor.ServerResourceAccessor;
-import com.hrznstudio.galacticraft.server.ServerResearchLoader;
 import net.minecraft.loot.condition.LootConditionManager;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.ServerResourceManager;
