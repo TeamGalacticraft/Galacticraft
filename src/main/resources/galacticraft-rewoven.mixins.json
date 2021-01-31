@@ -10,6 +10,7 @@
     "ChunkGeneratorAccessor",
     "DimensionTypeMixin",
     "EntityMixin",
+    "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "LootTablesAccessor",
