@@ -42,12 +42,10 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.dimension.DimensionType;
-import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -129,7 +127,7 @@ public class GalacticraftCommands {
                 UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
                 if (!gcr_houston_timers.containsKey(playerID)) {
                     gcr_houston_timers.put(playerID, System.currentTimeMillis());
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()), true);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Style.EMPTY.withColor(Formatting.RED)), false);
                 } else if (gcr_houston_timers.get(playerID) + GCR_HOUSTON_TIMER_LENGTH > System.currentTimeMillis()) {
                     gcr_houston_timers.remove(playerID);
                     BlockPos pos = getValidTeleportPos(serverWorld, player);
@@ -139,7 +137,7 @@ public class GalacticraftCommands {
                             pos.getZ(),
                             player.yaw,
                             player.pitch);
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.success", serverWorld.getRegistryKey().getValue()), true);
+                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Style.EMPTY.withColor(Formatting.GREEN)), true);
                 }
             } catch (CommandSyntaxException ignore) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
