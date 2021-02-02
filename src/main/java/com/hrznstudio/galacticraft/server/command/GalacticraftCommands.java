@@ -197,10 +197,10 @@ public class GalacticraftCommands {
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
                 entities.forEach((Consumer<Entity>) entity -> {
                     BlockPos pos = getValidTeleportPos(serverWorld, entity);
-                    entity.moveToWorld(serverWorld);
                     entity.teleport(pos.getX(), pos.getY(), pos.getZ());
-                    context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
+                    entity.moveToWorld(serverWorld);
                 });
+                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException ignore) {
                 context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                 retval[0] = -1;
