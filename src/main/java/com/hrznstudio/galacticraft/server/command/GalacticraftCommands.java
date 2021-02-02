@@ -23,19 +23,19 @@
 package com.hrznstudio.galacticraft.server.command;
 
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.command.TeleportCommand;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
@@ -43,8 +43,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.Heightmap;
+import org.apache.logging.log4j.core.jmx.Server;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -56,18 +55,33 @@ public class GalacticraftCommands {
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
-            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
+            LiteralCommandNode<ServerCommandSource> dimensiontp_root = commandDispatcher.register(
+                    LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                            .executes(GalacticraftCommands::teleport)
-                            .then(CommandManager.argument("entities", EntityArgumentType.entities())
-                                    .executes(((GalacticraftCommands::teleportMultiple))))));
-            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("gcr_listbodies")
+                    .executes(GalacticraftCommands::teleport)));
+            LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
+                    LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
+                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+                    .then(CommandManager.argument("entities", EntityArgumentType.entities())
+                    .executes(((GalacticraftCommands::teleportMultiple))))));
+            LiteralCommandNode<ServerCommandSource> dimensiontp_pos = commandDispatcher.register(
+                    LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
+                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+                    .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
+                    .executes(GalacticraftCommands::teleportToCoords))));
+            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_root));
+            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_entities));
+            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_pos));
+            commandDispatcher.register(
+                    LiteralArgumentBuilder.<ServerCommandSource>literal("gcr_listbodies")
                     .executes(context -> {
                         StringBuilder builder = new StringBuilder();
                         CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
                         context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
-                        return 1;
+                        return Command.SINGLE_SUCCESS;
                     }));
         });
     }
@@ -81,10 +95,11 @@ public class GalacticraftCommands {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                     return;
                 }
+                BlockPos pos = getValidTeleportPos(serverWorld, player);
                 player.teleport(serverWorld,
-                        player.getX(),
-                        getTopBlockY(serverWorld, player),
-                        player.getZ(),
+                        pos.getX(),
+                        pos.getY(),
+                        pos.getZ(),
                         player.yaw,
                         player.pitch);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
@@ -98,17 +113,26 @@ public class GalacticraftCommands {
 
     private static int teleportMultiple(CommandContext<ServerCommandSource> context) {
         context.getSource().getMinecraftServer().execute(() -> {
-
             try {
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                     return;
                 }
-
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
                 entities.forEach((Consumer<Entity>) entity -> {
-                    entity.moveToWorld(serverWorld);
+                    BlockPos pos = getValidTeleportPos(serverWorld, entity);
+                    if (entity instanceof ServerPlayerEntity) {
+                        ((ServerPlayerEntity)entity).teleport(serverWorld,
+                                pos.getX(),
+                                pos.getY(),
+                                pos.getZ(),
+                                entity.yaw,
+                                entity.pitch);
+                    } else {
+                        entity.moveToWorld(serverWorld);
+                        entity.teleport(pos.getX(), pos.getY(), pos.getZ());
+                    }
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
                 });
             } catch (CommandSyntaxException ignore) {
@@ -118,24 +142,49 @@ public class GalacticraftCommands {
         return -1;
     }
 
-    // Feel free to move this method to a utils class. Perhaps this could be cleaned up to return BlockPos.class or Vec3i.class
+    private static int teleportToCoords(CommandContext<ServerCommandSource> context) {
+        context.getSource().getMinecraftServer().execute(() -> {
+            try {
+                ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                BlockPos pos = BlockPosArgumentType.getBlockPos(context, "pos");
+                if (serverWorld == null || pos == null) {
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                    return;
+                }
+                ServerPlayerEntity player = context.getSource().getPlayer();
+                player.teleport(serverWorld,
+                        pos.getX(),
+                        pos.getY(),
+                        pos.getZ(),
+                        player.yaw,
+                        player.pitch);
+                context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.pos", serverWorld.getRegistryKey().getValue(), pos.getX(), pos.getY(), pos.getZ()), true);
+            } catch (CommandSyntaxException ignore) {
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            }
+        });
+        return -1;
+    }
+
     /**
-     * Gets the top y position in the world. Essentially a /top Y coord method
-     * @param world Takes in the world
-     * @param player Takes in the player
-     * @return The top Y value of the world.
+     * Finds the highest solid block in the world to teleport to.
+     * @param world The ServerWorld.
+     * @param entity The entity to teleport.
+     * @return A valid position (BlockPos) to teleport to.
      */
-    private static double getTopBlockY(ServerWorld world, ServerPlayerEntity player) {
-        int playerX = (int) player.getX();
-        int playerZ = (int) player.getZ();
+    private static BlockPos getValidTeleportPos(ServerWorld world, Entity entity) {
+        int playerX = (int) entity.getX();
+        int playerZ = (int) entity.getZ();
 
         for (int i = world.getHeight(); i > 0; i-- ) {
-            BlockPos pos = new BlockPos(new Vec3d(playerX, i, playerZ));
+            BlockPos.Mutable pos = new BlockPos.Mutable(playerX, i, playerZ);
             Block currentBlock = world.getBlockState(pos).getBlock();
             if (!currentBlock.getDefaultState().isAir()) {
-                return pos.getY() + 1;
+                pos.setY(pos.getY() + 1);
+                return pos;
             }
         }
-        return player.getY(); // This SHOULD NOT happen! However if it does, player gets teleported to where they were before.
+        // SHOULD NOT happen! Entity gets teleported to where they were before.
+        return entity.getBlockPos();
     }
 }
