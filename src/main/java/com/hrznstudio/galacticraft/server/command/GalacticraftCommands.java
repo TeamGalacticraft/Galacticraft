@@ -57,7 +57,7 @@ import java.util.function.Consumer;
  */
 public class GalacticraftCommands {
 
-    private static final HashMap<UUID,Long> gcr_houston_timers = new HashMap<>();
+    private static final HashMap<UUID,Long> GCR_HOUSTON_TIMERS = new HashMap<>();
     private static final long GCR_HOUSTON_TIMER_LENGTH = 12L * 1000L; // in milliseconds
 
     public static void register() {
@@ -70,8 +70,8 @@ public class GalacticraftCommands {
             /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
              * One as the base, one to also teleport entities, and one to also teleport to a specific position.
              * This is because the command I added, to teleport to a specific position, breaks when combined with
-             * teleporting multiple non-player entities for some reason. So, I made it where you can only pick
-             * teleporting entities OR setting a custom position to go to :P
+             * teleporting multiple non-player entities for some reason. So, I made it where you can pick
+             * teleporting entities OR setting a custom position to go to, but not both :P
              */
             LiteralCommandNode<ServerCommandSource> dimensiontp_root = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
@@ -106,9 +106,9 @@ public class GalacticraftCommands {
         final int[] retval = new int[1];
         retval[0] = Command.SINGLE_SUCCESS;
         // Clear the expired timers
-        for (UUID id : gcr_houston_timers.keySet()) {
-            if (gcr_houston_timers.get(id) + GCR_HOUSTON_TIMER_LENGTH < System.currentTimeMillis()) {
-                gcr_houston_timers.remove(id);
+        for (UUID id : GCR_HOUSTON_TIMERS.keySet()) {
+            if (GCR_HOUSTON_TIMERS.get(id) + GCR_HOUSTON_TIMER_LENGTH < System.currentTimeMillis()) {
+                GCR_HOUSTON_TIMERS.remove(id);
             }
         }
         context.getSource().getMinecraftServer().execute(() -> {
@@ -125,11 +125,11 @@ public class GalacticraftCommands {
                     return;
                 }
                 UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
-                if (!gcr_houston_timers.containsKey(playerID)) {
-                    gcr_houston_timers.put(playerID, System.currentTimeMillis());
+                if (!GCR_HOUSTON_TIMERS.containsKey(playerID)) {
+                    GCR_HOUSTON_TIMERS.put(playerID, System.currentTimeMillis());
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Style.EMPTY.withColor(Formatting.RED)), false);
-                } else if (gcr_houston_timers.get(playerID) + GCR_HOUSTON_TIMER_LENGTH > System.currentTimeMillis()) {
-                    gcr_houston_timers.remove(playerID);
+                } else if (GCR_HOUSTON_TIMERS.get(playerID) + GCR_HOUSTON_TIMER_LENGTH > System.currentTimeMillis()) {
+                    GCR_HOUSTON_TIMERS.remove(playerID);
                     BlockPos pos = getValidTeleportPos(serverWorld, player);
                     player.teleport(serverWorld,
                             pos.getX(),
@@ -196,7 +196,9 @@ public class GalacticraftCommands {
                 }
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
                 entities.forEach((Consumer<Entity>) entity -> {
+                    BlockPos pos = getValidTeleportPos(serverWorld, entity);
                     entity.moveToWorld(serverWorld);
+                    entity.teleport(pos.getX(), pos.getY(), pos.getZ());
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
                 });
             } catch (CommandSyntaxException ignore) {
