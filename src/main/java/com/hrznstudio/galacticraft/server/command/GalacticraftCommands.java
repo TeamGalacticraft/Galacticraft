@@ -55,35 +55,41 @@ public class GalacticraftCommands {
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
+
             LiteralCommandNode<ServerCommandSource> dimensiontp_root = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .executes(GalacticraftCommands::teleport)));
-            LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
+            // The entity teleporting code is bugged right now, I'll fix it later
+            /* LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .then(CommandManager.argument("entities", EntityArgumentType.entities())
-                    .executes(((GalacticraftCommands::teleportMultiple))))));
+                    .executes(((GalacticraftCommands::teleportMultiple))))));*/
             LiteralCommandNode<ServerCommandSource> dimensiontp_pos = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
                     .executes(GalacticraftCommands::teleportToCoords))));
+
             commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_root));
-            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_entities));
+            //commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_entities));
             commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_pos));
+
             commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("gcr_listbodies")
-                    .executes(context -> {
-                        StringBuilder builder = new StringBuilder();
-                        CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
-                        context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
-                        return Command.SINGLE_SUCCESS;
-                    }));
+                    .executes(GalacticraftCommands::listBodies));
         });
+    }
+
+    private static int listBodies(CommandContext<ServerCommandSource> context) {
+        StringBuilder builder = new StringBuilder();
+        CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
+        context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
+        return Command.SINGLE_SUCCESS;
     }
 
     private static int teleport(CommandContext<ServerCommandSource> context) {
