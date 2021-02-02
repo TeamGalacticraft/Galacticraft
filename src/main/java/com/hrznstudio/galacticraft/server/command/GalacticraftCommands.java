@@ -78,12 +78,13 @@ public class GalacticraftCommands {
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .executes(GalacticraftCommands::teleport)));
-            LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
+            // TODO: either fix this or remove it
+            /* LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .then(CommandManager.argument("entities", EntityArgumentType.entities())
-                    .executes(((GalacticraftCommands::teleportMultiple))))));
+                    .executes(((GalacticraftCommands::teleportMultiple)))))); */
             LiteralCommandNode<ServerCommandSource> dimensiontp_pos = commandDispatcher.register(
                     LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
@@ -93,7 +94,7 @@ public class GalacticraftCommands {
 
             // Because I don't like to type
             commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_root));
-            commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_entities));
+            //commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_entities));
             commandDispatcher.register(LiteralArgumentBuilder.<ServerCommandSource>literal("dimtp").redirect(dimensiontp_pos));
 
             commandDispatcher.register(
@@ -178,7 +179,7 @@ public class GalacticraftCommands {
         });
         return retval[0];
     }
-
+    /*
     private static int teleportMultiple(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[1];
         retval[0] = Command.SINGLE_SUCCESS;
@@ -197,8 +198,8 @@ public class GalacticraftCommands {
                 Collection<? extends Entity> entities = EntityArgumentType.getEntities(context, "entities");
                 entities.forEach((Consumer<Entity>) entity -> {
                     BlockPos pos = getValidTeleportPos(serverWorld, entity);
-                    entity.teleport(pos.getX(), pos.getY(), pos.getZ());
                     entity.moveToWorld(serverWorld);
+                    entity.teleport(pos.getX(), pos.getY(), pos.getZ());
                 });
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.multiple", entities.size(), serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException ignore) {
@@ -207,7 +208,7 @@ public class GalacticraftCommands {
             }
         });
         return retval[0];
-    }
+    } */
 
     private static int teleportToCoords(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[1];
