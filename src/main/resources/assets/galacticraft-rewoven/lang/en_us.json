@@ -416,7 +416,7 @@
   "galacticraft-rewoven:moon": "Moon",
   "commands.galacticraft-rewoven.dimensiontp.success.multiple": "Teleported %s entities to %s",
   "commands.galacticraft-rewoven.dimensiontp.success.single": "Teleported to %s",
-  "commands.galacticraft-rewoven.dimensiontp.success.pos": "Teleported to %s at (%d,%d,%d)",
+  "commands.galacticraft-rewoven.dimensiontp.success.pos": "Teleported to %s at (%d, %d, %d)",
   "commands.galacticraft-rewoven.dimensiontp.failure.dimension": "Cannot locate dimension",
   "commands.galacticraft-rewoven.dimensiontp.failure.already_in_dimension": "Already inside dimension %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "Invalid entity",
