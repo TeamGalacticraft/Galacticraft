@@ -23,11 +23,6 @@
 package com.hrznstudio.galacticraft.particle;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.particle.fluid.DrippingCrudeOilParticle;
-import com.hrznstudio.galacticraft.particle.fluid.DrippingFuelParticle;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.util.Identifier;
@@ -42,11 +37,5 @@ public class GalacticraftParticles {
     public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
 
     public static void register() {
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void registerClient() {
-        ParticleFactoryRegistry.getInstance().register(DRIPPING_FUEL_PARTICLE, (effect1, world1, x1, y1, z1, velX1, velY1, velZ1) -> new DrippingFuelParticle(world1, x1, y1, z1, velX1, velY1, velZ1));
-        ParticleFactoryRegistry.getInstance().register(DRIPPING_CRUDE_OIL_PARTICLE, (effect, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
     }
 }
