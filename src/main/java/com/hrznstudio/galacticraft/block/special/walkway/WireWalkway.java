@@ -57,7 +57,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     public static final BooleanProperty UP = Properties.UP;
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final DirectionProperty FACING = Properties.FACING;
-    private static final VoxelShape[] shape = new VoxelShape[64];
+    private static final VoxelShape[] shape = new VoxelShape[4096];
     private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
     public WireWalkway(Settings settings) {
@@ -76,6 +76,10 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
 
     private static int getDirectionMask(Direction dir) {
         return 1 << dir.getId();
+    }
+
+    private static int getFacingMask(Direction dir) {
+        return 1 << (dir.getId() + 6);
     }
 
     private static VoxelShape createShape(Direction facing, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
@@ -176,6 +180,18 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 i |= getDirectionMask(Direction.UP);
             if (blockState.get(DOWN))
                 i |= getDirectionMask(Direction.DOWN);
+            if (blockState.get(FACING).equals(Direction.NORTH))
+                i |= getFacingMask(Direction.NORTH);
+            if (blockState.get(FACING).equals(Direction.SOUTH))
+                i |= getFacingMask(Direction.SOUTH);
+            if (blockState.get(FACING).equals(Direction.EAST))
+                i |= getFacingMask(Direction.EAST);
+            if (blockState.get(FACING).equals(Direction.WEST))
+                i |= getFacingMask(Direction.WEST);
+            if (blockState.get(FACING).equals(Direction.UP))
+                i |= getFacingMask(Direction.UP);
+            if (blockState.get(FACING).equals(Direction.DOWN))
+                i |= getFacingMask(Direction.DOWN);
             return i;
         });
     }
