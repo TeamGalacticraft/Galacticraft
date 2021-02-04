@@ -53,7 +53,7 @@ import java.util.UUID;
  */
 public class GalacticraftCommands {
 
-    private static final HashMap<UUID,Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
+    private static final HashMap<UUID,Long> GCR_HOUSTON_TIMERS = new HashMap<>();
     private static final int GCR_HOUSTON_TIMER_LENGTH = 12; // in seconds
 
     public static void register() {
@@ -103,7 +103,7 @@ public class GalacticraftCommands {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         // Clear the expired timers
         for (UUID id : GCR_HOUSTON_TIMERS.keySet()) {
-            if (GCR_HOUSTON_TIMERS.get(id) + GCR_HOUSTON_TIMER_LENGTH < (((int) System.currentTimeMillis()) / 1000)) {
+            if (GCR_HOUSTON_TIMERS.get(id) + (GCR_HOUSTON_TIMER_LENGTH * 1000L) < System.currentTimeMillis()) {
                 GCR_HOUSTON_TIMERS.remove(id);
             }
         }
@@ -127,9 +127,9 @@ public class GalacticraftCommands {
                 }
                 UUID playerID = context.getSource().getPlayer().getGameProfile().getId();
                 if (!GCR_HOUSTON_TIMERS.containsKey(playerID)) {
-                    GCR_HOUSTON_TIMERS.put(playerID, ((int)System.currentTimeMillis()) / 1000);
+                    GCR_HOUSTON_TIMERS.put(playerID, System.currentTimeMillis());
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.confirm", serverWorld.getRegistryKey().getValue()).setStyle(Style.EMPTY.withColor(Formatting.RED)), false);
-                } else if (GCR_HOUSTON_TIMERS.get(playerID) + GCR_HOUSTON_TIMER_LENGTH > (((int) System.currentTimeMillis()) / 1000)) {
+                } else if (GCR_HOUSTON_TIMERS.get(playerID) + (GCR_HOUSTON_TIMER_LENGTH * 1000L) > System.currentTimeMillis()) {
                     GCR_HOUSTON_TIMERS.remove(playerID);
                     BlockPos pos = getValidTeleportPos(serverWorld, player);
                     player.teleport(serverWorld,
