@@ -421,7 +421,7 @@
   "commands.galacticraft-rewoven.dimensiontp.failure.already_in_dimension": "Already inside dimension %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "Invalid entity",
   "commands.galacticraft-rewoven.gcrhouston.confirm": "Er, Houston, we have a problem... (Run this command again to confirm teleport)",
-  "commands.galacticraft-rewoven.gcrhouston.on_earth_already": "I don't need rescued!",
+  "commands.galacticraft-rewoven.gcrhouston.on_earth_already": "I don't need to be rescued!",
   "commands.galacticraft-rewoven.gcrhouston.success": "You have been rescued. Better luck next time...",
   "advancements.galacticraft-rewoven.travel_moon.title": "To the Moon!",
   "advancements.galacticraft-rewoven.travel_moon.description": "Take a Tier 1 rocket to the Moon!",
