@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,6 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -50,7 +49,7 @@ import net.minecraft.world.WorldAccess;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Walkway extends Block implements FluidLoggableBlock {
+public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     public static final BooleanProperty NORTH = Properties.NORTH;
     public static final BooleanProperty EAST = Properties.EAST;
     public static final BooleanProperty SOUTH = Properties.SOUTH;
@@ -61,9 +60,8 @@ public class Walkway extends Block implements FluidLoggableBlock {
     private static final VoxelShape[] shape = new VoxelShape[64];
     private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
-    public Walkway(Settings settings) {
+    public WireWalkway(Settings settings) {
         super(settings);
-
         this.setDefaultState(this.getStateManager().getDefaultState()
                 .with(NORTH, false)
                 .with(EAST, false)
@@ -121,7 +119,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 break;
         }
 
-        int offset = 1;
+        int offset = 2;
         VoxelShape northC = Block.createCuboidShape(8 - offset, 8 - offset, 0, 8 + offset, 8 + offset, 8 + offset);
         VoxelShape eastC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 16, 8 + offset, 8 + offset);
         VoxelShape southC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 8 + offset, 8 + offset, 16);
@@ -226,14 +224,16 @@ public class Walkway extends Block implements FluidLoggableBlock {
         }
     }
 
-    public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos) {
+    public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos, WorldAccess world) {
         try {
             if (pos.offset(state.get(FACING)).equals(neighborPos))
                 return false;
             if (neighborPos.offset(neighborState.get(FACING)).equals(pos))
                 return false;
         } catch (IllegalArgumentException ignored) {}
-        return neighborState.getBlock() instanceof Walkway;
+        // TODO: Only connect to machines when the wire port is facing the block and the block isn't facing the machine
+        // TODO: The WireBlockEntity will still connect on the top face of this block (there's no wire there)
+        return neighborState.getBlock() instanceof WireBlock || neighborState.getBlock() instanceof ConfigurableMachineBlock;
     }
 
     @Override
@@ -246,10 +246,10 @@ public class Walkway extends Block implements FluidLoggableBlock {
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
+           if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
-        return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos));
+        return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos, world));
     }
 
     @Override
