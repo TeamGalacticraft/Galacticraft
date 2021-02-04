@@ -423,6 +423,8 @@
   "commands.galacticraft-rewoven.dimensiontp.failure.dimension": "Cannot locate dimension",
   "commands.galacticraft-rewoven.dimensiontp.failure.already_in_dimension": "Already inside dimension %s",
   "commands.galacticraft-rewoven.dimensiontp.failure.entity": "Invalid entity",
+  "commands.galacticraft-rewoven.gcrhouston.error": "We cannot locate your signal!",
+  "commands.galacticraft-rewoven.gcrhouston.cannot_detect_signal": "We cannot locate your signal! Are you sure you're in space?",
   "commands.galacticraft-rewoven.gcrhouston.confirm": "Er, Houston, we have a problem... (Run this command again to confirm teleport)",
   "commands.galacticraft-rewoven.gcrhouston.on_earth_already": "I don't need to be rescued!",
   "commands.galacticraft-rewoven.gcrhouston.success": "You have been rescued. Better luck next time...",

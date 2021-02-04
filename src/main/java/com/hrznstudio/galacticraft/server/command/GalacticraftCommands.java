@@ -32,7 +32,6 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
-import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -43,15 +42,11 @@ import net.minecraft.text.Style;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -114,6 +109,11 @@ public class GalacticraftCommands {
         }
         context.getSource().getMinecraftServer().execute(() -> {
             try {
+                if (!CelestialBodyType.getByDimType(context.getSource().getWorld().getRegistryKey()).isPresent()) {
+                    context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.cannot_detect_signal").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                    retval[0] = -1;
+                    return;
+                }
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 ServerWorld serverWorld = context.getSource().getMinecraftServer().getWorld(World.OVERWORLD);
                 if (serverWorld == null) {
@@ -141,7 +141,8 @@ public class GalacticraftCommands {
                     context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.success", serverWorld.getRegistryKey().getValue()).setStyle(Style.EMPTY.withColor(Formatting.GREEN)), true);
                 }
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.gchouston.error").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                e.printStackTrace();
                 retval[0] = -1;
             }
         });
@@ -151,8 +152,15 @@ public class GalacticraftCommands {
     private static int teleport(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         context.getSource().getMinecraftServer().execute(() -> {
+            ServerPlayerEntity player;
             try {
-                ServerPlayerEntity player = context.getSource().getPlayer();
+                player = context.getSource().getPlayer();
+            } catch (CommandSyntaxException e) {
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                retval[0] = -1;
+                return;
+            }
+            try {
                 ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
                 if (serverWorld == null) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
@@ -172,7 +180,7 @@ public class GalacticraftCommands {
                         player.pitch);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.single", serverWorld.getRegistryKey().getValue()), true);
             } catch (CommandSyntaxException e) {
-                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.entity").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                 retval[0] = -1;
             }
         });
@@ -211,9 +219,11 @@ public class GalacticraftCommands {
     private static int teleportToCoords(CommandContext<ServerCommandSource> context) {
         final int[] retval = new int[]{Command.SINGLE_SUCCESS};
         context.getSource().getMinecraftServer().execute(() -> {
+            ServerWorld serverWorld;
+            BlockPos pos;
             try {
-                ServerWorld serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
-                BlockPos pos = BlockPosArgumentType.getBlockPos(context, "pos");
+                serverWorld = DimensionArgumentType.getDimensionArgument(context, "dimension");
+                pos = BlockPosArgumentType.getBlockPos(context, "pos");
                 if (serverWorld == null || pos == null) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
                     retval[0] = -1;
@@ -223,11 +233,17 @@ public class GalacticraftCommands {
                     retval[0] = -1;
                     return;
                 }
+            } catch (CommandSyntaxException e) {
+                context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.failure.dimension").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+                retval[0] = -1;
+                return;
+            }
+            try {
                 ServerPlayerEntity player = context.getSource().getPlayer();
                 player.teleport(serverWorld,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
+                        MathHelper.clamp(pos.getX(), -30000000, 30000000),
+                        MathHelper.clamp(pos.getY(), 0, serverWorld.getDimensionHeight() - 1),
+                        MathHelper.clamp(pos.getZ(), -30000000, 30000000),
                         player.yaw,
                         player.pitch);
                 context.getSource().sendFeedback(new TranslatableText("commands.galacticraft-rewoven.dimensiontp.success.pos", serverWorld.getRegistryKey().getValue(), pos.getX(), pos.getY(), pos.getZ()), true);
