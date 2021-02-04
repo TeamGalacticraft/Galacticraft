@@ -16,6 +16,7 @@
     "ServerWorldMixin",
     "SkyPropertiesAccessor",
     "StructurePoolGeneratorMixin",
+    "LanternBlockMixin",
     "TorchBlockMixin"
   ],
   "client": [

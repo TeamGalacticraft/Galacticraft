@@ -1,0 +1,19 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "NNN",
+    "NTN",
+    "NNN"
+  ],
+  "key": {
+    "N": {
+      "item": "minecraft:iron_nugget"
+    },
+    "T": {
+      "item": "galacticraft-rewoven:glowstone_torch"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:glowstone_lantern"
+  }
+}
