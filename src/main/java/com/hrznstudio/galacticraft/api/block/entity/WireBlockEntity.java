@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
+import com.hrznstudio.galacticraft.api.block.WireBlock;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
@@ -29,6 +30,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
