@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.block.decoration;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CakeBlock;
+import net.minecraft.block.Waterloggable;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -33,19 +34,15 @@ import net.minecraft.state.property.Properties;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonCheeseBlock extends CakeBlock {
-
-    private static final IntProperty BITES = IntProperty.of("bites", 0, 6);
-    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-
+public class MoonCheeseBlock extends CakeBlock implements Waterloggable {
     public MoonCheeseBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(BITES, 0));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(Properties.WATERLOGGED, false));
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(WATERLOGGED);
+        builder.add(Properties.WATERLOGGED);
     }
 }
