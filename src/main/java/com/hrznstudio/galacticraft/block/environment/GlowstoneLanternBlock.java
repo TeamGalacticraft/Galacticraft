@@ -20,22 +20,38 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.particle;
+package com.hrznstudio.galacticraft.block.environment;
 
-import com.hrznstudio.galacticraft.Constants;
-import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.block.LanternBlock;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.world.BlockView;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class GalacticraftParticles {
+public class GlowstoneLanternBlock extends LanternBlock {
 
-    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
-    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
+    public GlowstoneLanternBlock(Settings settings) {
+        super(settings);
+    }
 
-    public static void register() {
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+        if (Screen.hasShiftDown()) {
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+        } else {
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+        }
     }
 }
