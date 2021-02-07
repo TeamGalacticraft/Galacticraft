@@ -24,11 +24,12 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.RocketAssemblerRecipe;
 import com.hrznstudio.galacticraft.screen.RocketAssemblerScreenHandler;
@@ -196,7 +197,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                         boolean aG = true;
                         offsetX++;
 
-                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(Galacticraft.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
+                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(AddonRegistry.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         for (ItemStack stack : recipe.getInput()) {
                             this.client.getTextureManager().bindTexture(TEXTURE);
 
@@ -327,7 +328,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             offsetY++;
                         }
                         offsetX = 1;
-                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(Galacticraft.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
+                        RocketAssemblerRecipe recipe = blockEntity.recipes.get(AddonRegistry.ROCKET_PARTS.getId(blockEntity.data.getPartForType(RocketPartType.values()[i])));
                         DefaultedList<ItemStack> input = recipe.getInput();
                         for (int i1 = 0; i1 < input.size(); i1++) {
                             if (check(mouseX, mouseY, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT)) {

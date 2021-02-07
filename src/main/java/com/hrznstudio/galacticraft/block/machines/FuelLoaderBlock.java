@@ -71,7 +71,7 @@ public class FuelLoaderBlock extends ConfigurableMachineBlock {
     }
 
     @Override
-    public Text machineInfo(ItemStack stack, BlockView view, TooltipContext context) {
+    public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
         return new TranslatableText("tooltip.galacticraft-rewoven.fuel_loader");
     }
 }

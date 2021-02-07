@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
-import com.hrznstudio.galacticraft.api.registry.RocketPartRegistry;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
@@ -74,8 +73,6 @@ public class Galacticraft implements ModInitializer {
     public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
 
     public static final ConfigManager configManager = new ConfigManagerImpl();
-
-    public static final RocketPartRegistry ROCKET_PARTS = new RocketPartRegistry(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "rocket_parts")), Lifecycle.stable());
 
     @Override
     public void onInitialize() {

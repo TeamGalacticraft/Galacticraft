@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.entity;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;

@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.hrznstudio.galacticraft.items.BatteryItem;
 import com.hrznstudio.galacticraft.items.FluidCanister;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;

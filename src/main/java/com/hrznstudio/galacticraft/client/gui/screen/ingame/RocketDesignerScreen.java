@@ -23,13 +23,13 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.hrznstudio.galacticraft.screen.RocketDesignerScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -47,9 +47,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
-import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +145,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.backgroundHeight = 164;
         this.blockEntity = screenHandler.blockEntity;
         this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, inv.player.world);
-        this.validParts.addAll(Galacticraft.ROCKET_PARTS.getAvailablePartsForType(inv.player, OPEN_TAB));
+        this.validParts.addAll(AddonRegistry.ROCKET_PARTS.getAvailablePartsForType(inv.player, OPEN_TAB));
     }
 
     public static void drawEntity(int x, int y, RocketEntity entity) {
@@ -413,7 +411,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     if (check(mouseX, mouseY, this.x - 27, this.y + 3 + ((27) * i), DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
                         OPEN_TAB = RocketPartType.values()[i];
                         validParts.clear();
-                        validParts.addAll(Galacticraft.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB));
+                        validParts.addAll(AddonRegistry.ROCKET_PARTS.getAvailablePartsForType(playerInventory.player, OPEN_TAB));
                         page = 0;
                         return true;
                     }
@@ -447,8 +445,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     }
                 }
             } else {
-                for (int i = page * 25; i < Galacticraft.ROCKET_PARTS.getAllValidParts(playerInventory.player).size(); i++) {
-                    RocketPart part = Galacticraft.ROCKET_PARTS.getAllValidParts(playerInventory.player).get(i);
+                for (int i = page * 25; i < AddonRegistry.ROCKET_PARTS.getAllValidParts(playerInventory.player).size(); i++) {
+                    RocketPart part = AddonRegistry.ROCKET_PARTS.getAllValidParts(playerInventory.player).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
                         this.blockEntity.setPartClient(part);
                         break;

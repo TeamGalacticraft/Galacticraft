@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.GCRecipeAccessor;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
@@ -31,7 +32,7 @@ import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.RocketAssemblerRecipe;
@@ -158,7 +159,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         RocketPartType[] values = RocketPartType.values();
         for (RocketPartType type : values) {
             if (this.data.getPartForType(type).hasRecipe()) {
-                Identifier id = Galacticraft.ROCKET_PARTS.getId(this.data.getPartForType(type));
+                Identifier id = AddonRegistry.ROCKET_PARTS.getId(this.data.getPartForType(type));
                 for (ItemStack stack : this.recipes.get(id).getInput()) {
                     filters.put(slots++, stack::isItemEqual); //damage matters
                 }
@@ -177,7 +178,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
                         if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
-                            Identifier id = Galacticraft.ROCKET_PARTS.getId(data.getPartForType(RocketPartType.values()[i]));
+                            Identifier id = AddonRegistry.ROCKET_PARTS.getId(data.getPartForType(RocketPartType.values()[i]));
                             if (a + recipes.get(id).getInput().size() > slot) {
                                 for (ItemStack ingredient : recipes.get(id).getInput()) {
                                     if (a == slot) {
@@ -240,7 +241,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
 
         if (inventory.getStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
             if (!this.data.equals(RocketData.fromItem(inventory.getStack(SCHEMATIC_INPUT_SLOT)))) {
-                schematicUpdate(data.toSchematic(), inventory.getStack(SCHEMATIC_INPUT_SLOT));
+                schematicUpdate(data.toSchematic(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC)), inventory.getStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
         }
@@ -250,7 +251,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         RocketPartType[] values = RocketPartType.values();
         for (RocketPartType type : values) {
             if (this.data.getPartForType(type).hasRecipe()) {
-                Identifier id = Galacticraft.ROCKET_PARTS.getId(this.data.getPartForType(type));
+                Identifier id = AddonRegistry.ROCKET_PARTS.getId(this.data.getPartForType(type));
                 for (ItemStack stack : this.recipes.get(id).getInput()) {
                     filters.put(slots++, stack1 -> stack.getItem().equals(stack1.getItem()));
                 }
@@ -269,7 +270,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
                         if (data.getPartForType(RocketPartType.values()[i]).hasRecipe()) {
-                            Identifier id = Galacticraft.ROCKET_PARTS.getId(data.getPartForType(RocketPartType.values()[i]));
+                            Identifier id = AddonRegistry.ROCKET_PARTS.getId(data.getPartForType(RocketPartType.values()[i]));
                             if (a + recipes.get(id).getInput().size() > slot) {
                                 for (ItemStack ingredient : recipes.get(id).getInput()) {
                                     if (a == slot) {
@@ -286,8 +287,10 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                 return -1;
             }
         };
+        CompoundTag tag = new CompoundTag();
+        extendedInventory.writeToNbt(tag);
+        inv.readFromNbt(tag);
 
-        inv.fromTag(extendedInventory.toTag(new CompoundTag()));
 
         extendedInventory = inv;
 
@@ -329,10 +332,10 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     @Override
     public void fromTag(BlockState state, CompoundTag compoundTag) {
         super.fromTag(state, compoundTag);
-        this.inventory.fromTag(compoundTag);
+        this.inventory.readFromNbt(compoundTag);
         this.data = RocketData.fromTag(compoundTag.getCompound("data"));
         this.extendedInventory = new SimpleInventoryComponent(compoundTag.getInt("slots"));
-        this.extendedInventory.fromTag(compoundTag);
+        this.extendedInventory.readFromNbt(compoundTag);
         this.schematicUpdateFromTag();
     }
 
@@ -341,8 +344,8 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         super.toTag(compoundTag);
         compoundTag.put("data", data.toTag());
         compoundTag.putInt("slots", extendedInventory.getSize());
-        inventory.toTag(compoundTag);
-        extendedInventory.toTag(compoundTag);
+        inventory.writeToNbt(compoundTag);
+        extendedInventory.writeToNbt(compoundTag);
         return compoundTag;
     }
 

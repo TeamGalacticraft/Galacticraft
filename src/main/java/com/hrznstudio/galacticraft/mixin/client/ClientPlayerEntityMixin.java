@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.entity.RocketEntity;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

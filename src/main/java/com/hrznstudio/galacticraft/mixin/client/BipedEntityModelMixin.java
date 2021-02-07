@@ -1,6 +1,6 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,7 +51,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> {
     private void rotateToMatchRocket(T entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         if (entity.hasVehicle()) {
             if (entity.getVehicle() instanceof RocketEntity) {
-                GlStateManager.rotatef(((entity.getVehicle().yaw - 180.0F) * -1.0F), 0.0F, 1.0F, 0.0F);
+                GlStateManager.rotatef(((entity.getVehicle().yaw - 180.0F) * -1.0F), 0.0F, 1.0F, 0.0F); //todo: what is this mess??
                 GlStateManager.rotatef(((entity.getVehicle().pitch) * -1.0F), 1.0F, 0.0F, 0.0F);
             }
         }

@@ -20,11 +20,11 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.entity.rocket;
+package com.hrznstudio.galacticraft.entity;
 
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
@@ -80,7 +80,7 @@ import java.util.Collections;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RocketEntity extends Entity {
+public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.api.entity.RocketEntity {
     private static final TrackedData<LaunchStage> STAGE = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<LaunchStage>() {
         @Override
         public void write(PacketByteBuf buf, LaunchStage stage) {
@@ -98,9 +98,9 @@ public class RocketEntity extends Entity {
         }
     });
 
-    private static final TrackedData<Float[]> COLOR = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<Float[]>() {
+    private static final TrackedData<float[]> COLOR = DataTracker.registerData(RocketEntity.class, new TrackedDataHandler<float[]>() {
         @Override
-        public void write(PacketByteBuf buf, Float[] colour) {
+        public void write(PacketByteBuf buf, float[] colour) {
             assert colour.length > 3;
             buf.writeFloat(colour[0]);
             buf.writeFloat(colour[1]);
@@ -109,14 +109,16 @@ public class RocketEntity extends Entity {
         }
 
         @Override
-        public Float[] read(PacketByteBuf buf) {
-            return new Float[] {buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat()};
+        public float[] read(PacketByteBuf buf) {
+            return new float[] {buf.readFloat(), buf.readFloat(), buf.readFloat(), buf.readFloat()};
         }
 
         @Override
-        public Float[] copy(Float[] colour) {
-        return colour;
-    }
+        public float[] copy(float[] colour) {
+            float[] copy = new float[4];
+            System.arraycopy(colour, 0, copy, 0, 4);
+            return copy;
+        }
     });
 
     public static final TrackedData<Integer> DAMAGE_WOBBLE_TICKS = DataTracker.registerData(RocketEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -146,7 +148,7 @@ public class RocketEntity extends Entity {
             for (byte i = 0; i < RocketPartType.values().length; i++) {
                 buf.writeBoolean(speed[i] != null);
                 if (speed[i] != null) {
-                    buf.writeIdentifier(Galacticraft.ROCKET_PARTS.getId(speed[i]));
+                    buf.writeIdentifier(AddonRegistry.ROCKET_PARTS.getId(speed[i]));
                 }
             }
         }
@@ -156,7 +158,7 @@ public class RocketEntity extends Entity {
             RocketPart[] array = new RocketPart[RocketPartType.values().length];
             for (byte i = 0; i < RocketPartType.values().length; i++) {
                 if (buf.readBoolean()) {
-                    array[i] = Galacticraft.ROCKET_PARTS.get(buf.readIdentifier());
+                    array[i] = AddonRegistry.ROCKET_PARTS.get(buf.readIdentifier());
                 }
             }
             return array;
@@ -184,7 +186,8 @@ public class RocketEntity extends Entity {
         super(type, world);
     }
 
-    public Float[] getColor() {
+    @Override
+    public float[] getColor() {
         return this.dataTracker.get(COLOR);
     }
 
@@ -195,6 +198,7 @@ public class RocketEntity extends Entity {
         return this.getPassengerList().isEmpty();
     }
 
+    @Override
     public BlockPos getLinkedPad() {
         return linkedPad;
     }
@@ -249,14 +253,16 @@ public class RocketEntity extends Entity {
         return ActionResult.SUCCESS;
     }
 
+    @Override
     public int getTier() {
         int tier = 0;
         for (RocketPart part : this.getParts()) {
-            if (part != null) tier = Math.max(part.getTier(Lists.newArrayList(this.getParts())), tier);
+            if (part != null) tier = Math.min(part.getTier(), tier);
         }
         return tier;
     }
 
+    @Override
     public void setLinkedPad(BlockPos linkedPad) {
         this.linkedPad = linkedPad;
     }
@@ -288,7 +294,7 @@ public class RocketEntity extends Entity {
         RocketPart[] list = new RocketPart[RocketPartType.values().length];
         for (RocketPartType type : RocketPartType.values()) {
             if (parts.contains(type.asString())) {
-                list[type.ordinal()] = Galacticraft.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString())));
+                list[type.ordinal()] = AddonRegistry.ROCKET_PARTS.get(new Identifier(parts.getString(type.asString())));
             }
         }
 
@@ -370,7 +376,7 @@ public class RocketEntity extends Entity {
     @Override
     protected void initDataTracker() {
         dataTracker.startTracking(STAGE, LaunchStage.IDLE);
-        dataTracker.startTracking(COLOR, new Float[]{255.0F, 255.0F, 255.0F, 255.0F});
+        dataTracker.startTracking(COLOR, new float[]{255.0F, 255.0F, 255.0F, 255.0F});
         dataTracker.startTracking(SPEED, 0.0D);
 
         dataTracker.startTracking(DAMAGE_WOBBLE_TICKS, 0);
@@ -394,22 +400,22 @@ public class RocketEntity extends Entity {
         tag.putFloat("blue", getColor()[2]);
         tag.putFloat("alpha", getColor()[3]);
         RocketPart part = this.getPartForType(RocketPartType.CONE);
-        if (part != null) tag.putString("cone", Galacticraft.ROCKET_PARTS.getId(part).toString());
+        if (part != null) tag.putString("cone", AddonRegistry.ROCKET_PARTS.getId(part).toString());
 
         part = this.getPartForType(RocketPartType.BODY);
-        if (part != null) tag.putString("body", Galacticraft.ROCKET_PARTS.getId(part).toString());
+        if (part != null) tag.putString("body", AddonRegistry.ROCKET_PARTS.getId(part).toString());
 
         part = this.getPartForType(RocketPartType.FIN);
-        if (part != null) tag.putString("fin", Galacticraft.ROCKET_PARTS.getId(part).toString());
+        if (part != null) tag.putString("fin", AddonRegistry.ROCKET_PARTS.getId(part).toString());
 
         part = this.getPartForType(RocketPartType.BOOSTER);
-        if (part != null) tag.putString("booster", Galacticraft.ROCKET_PARTS.getId(part).toString());
+        if (part != null) tag.putString("booster", AddonRegistry.ROCKET_PARTS.getId(part).toString());
 
         part = this.getPartForType(RocketPartType.BOTTOM);
-        if (part != null) tag.putString("bottom", Galacticraft.ROCKET_PARTS.getId(part).toString());
+        if (part != null) tag.putString("bottom", AddonRegistry.ROCKET_PARTS.getId(part).toString());
 
         part = this.getPartForType(RocketPartType.UPGRADE);
-        if (part != null) tag.putString("upgrade", Galacticraft.ROCKET_PARTS.getId(part).toString());
+        if (part != null) tag.putString("upgrade", AddonRegistry.ROCKET_PARTS.getId(part).toString());
 
         buf.writeCompoundTag(tag);
 
@@ -579,10 +585,12 @@ public class RocketEntity extends Entity {
         return distance < d * d;
     }
 
+    @Override
     public double getSpeed() {
         return dataTracker.get(SPEED);
     }
 
+    @Override
     public void setSpeed(double speed) {
         this.dataTracker.set(SPEED, speed);
     }
@@ -680,6 +688,7 @@ public class RocketEntity extends Entity {
 
     private long ticksSinceJump = 0;
 
+    @Override
     public void onJump() {
         for (RocketPart part : this.getParts()) {
             if (part == null) return;
@@ -699,10 +708,12 @@ public class RocketEntity extends Entity {
         }
     }
 
+    @Override
     public RocketPart[] getParts() {
         return this.dataTracker.get(PARTS);
     }
 
+    @Override
     public RocketPart getPartForType(RocketPartType type) {
         for (RocketPart part : this.dataTracker.get(PARTS)) {
             if (part != null) {
@@ -714,33 +725,40 @@ public class RocketEntity extends Entity {
         return null;
     }
 
+    @Override
     public void setPart(RocketPart part) {
         this.dataTracker.get(PARTS)[part.getType().ordinal()] = part;
     }
 
+    @Override
     public void setParts(RocketPart[] parts) {
         this.dataTracker.set(PARTS, parts);
     }
 
+    @Override
     public LaunchStage getStage() {
         return this.dataTracker.get(STAGE);
     }
 
+    @Override
     public void setStage(LaunchStage stage) {
         if (dataTracker.get(STAGE) != stage) {
             this.dataTracker.set(STAGE, stage);
             timeAsState = 0;
         }
     }
-    
+
+    @Override
     public void setColor(float red, float green, float blue, float alpha) {
-        this.dataTracker.set(COLOR, new Float[] {red, green, blue, alpha});
+        this.dataTracker.set(COLOR, new float[] {red, green, blue, alpha});
     }
 
+    @Override
     public void dropItems(DamageSource source, boolean exploded) {
 
     }
 
+    @Override
     public void onBaseDestroyed() {
         //todo
     }

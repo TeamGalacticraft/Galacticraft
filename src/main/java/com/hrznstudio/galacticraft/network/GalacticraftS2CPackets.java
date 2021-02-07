@@ -28,11 +28,11 @@ import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
+import com.hrznstudio.galacticraft.api.entity.RocketEntity;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
@@ -210,7 +210,7 @@ public class GalacticraftS2CPackets {
                         Identifier id = buffer.readIdentifier();
                         if (player instanceof ServerPlayerEntityAccessor
                                 && ((ServerPlayerEntityAccessor) player).getResearchTracker().isUnlocked(id)) {
-                            blockEntity.setPartServer(Objects.requireNonNull(Galacticraft.ROCKET_PARTS.get(id)));
+                            blockEntity.setPartServer(Objects.requireNonNull(AddonRegistry.ROCKET_PARTS.get(id)));
                             blockEntity.updateSchematic();
                         }
                     }

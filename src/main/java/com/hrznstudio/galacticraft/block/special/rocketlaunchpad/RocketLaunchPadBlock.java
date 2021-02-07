@@ -1,8 +1,8 @@
 package com.hrznstudio.galacticraft.block.special.rocketlaunchpad;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.entity.RocketEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;

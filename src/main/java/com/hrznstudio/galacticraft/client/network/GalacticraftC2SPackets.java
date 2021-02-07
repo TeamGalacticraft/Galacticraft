@@ -27,8 +27,8 @@ import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -123,12 +123,6 @@ public class GalacticraftC2SPackets {
 
                 MinecraftClient.getInstance().world.addEntity(entityID, entity);
             });
-        }));
-
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "research_update"), ((client, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-
-            client.execute(() -> ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().onResearch(buffer));
         }));
     }
 }

@@ -60,12 +60,12 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
             public boolean canInsert(ItemStack stack) {
                 RocketData data = RocketData.fromItem(stack);
                 return stack.getItem() != GalacticraftItems.ROCKET_SCHEMATIC || !this.getStack().isEmpty() || (!(playerEntity instanceof ServerPlayerEntity)) || (
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getCone())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getBody())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getBooster())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getBottom())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getFin())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(Galacticraft.ROCKET_PARTS.getId(data.getUpgrade()))
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getCone())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getBody())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getBooster())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getBottom())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getFin())) &&
+                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getUpgrade()))
                 );
             }
 

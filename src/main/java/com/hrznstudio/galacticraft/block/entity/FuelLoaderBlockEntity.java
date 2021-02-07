@@ -31,7 +31,6 @@ import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPad
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import io.github.cottonmc.component.UniversalComponents;

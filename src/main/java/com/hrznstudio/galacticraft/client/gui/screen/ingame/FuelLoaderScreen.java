@@ -28,7 +28,7 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
-import com.hrznstudio.galacticraft.entity.rocket.RocketEntity;
+import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
