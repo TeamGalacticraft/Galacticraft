@@ -61,7 +61,7 @@ public class GalacticraftCommands {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
 
             commandDispatcher.register(
-                    LiteralArgumentBuilder.<ServerCommandSource>literal("gcrhouston")
+                    CommandManager.literal("gcrhouston")
                     .executes(GalacticraftCommands::teleportToEarth));
 
             /* This looks convoluted, but it works. Essentially, it registers three branches of the same command.
