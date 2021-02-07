@@ -269,11 +269,11 @@ public class GalacticraftCommands {
      * @return A valid position (BlockPos) to teleport to.
      */
     private static BlockPos getValidTeleportPos(ServerWorld world, Entity entity) {
-        int playerX = (int) entity.getX();
-        int playerZ = (int) entity.getZ();
+        int posX = (int) entity.getX();
+        int posZ = (int) entity.getZ();
 
-        for (int i = world.getHeight(); i > 0; i-- ) {
-            BlockPos.Mutable pos = new BlockPos.Mutable(playerX, i, playerZ);
+        for (int i = world.getHeight(); i > 0; i--) {
+            BlockPos.Mutable pos = new BlockPos.Mutable(posX, i, posZ);
             Block currentBlock = world.getBlockState(pos).getBlock();
             if (!currentBlock.getDefaultState().isAir()) {
                 pos.setY(pos.getY() + 1);
