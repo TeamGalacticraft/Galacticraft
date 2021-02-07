@@ -55,7 +55,7 @@ import java.util.UUID;
 public class GalacticraftCommands {
 
     private static final HashMap<UUID,Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
-    private static final int GCR_HOUSTON_TIMER_LENGTH = 12 * 20; // in seconds
+    private static final int GCR_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
 
     public static void register() {
         CommandRegistrationCallback.EVENT.register((commandDispatcher, b) -> {
