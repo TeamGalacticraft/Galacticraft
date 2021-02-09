@@ -46,7 +46,7 @@ import java.util.LinkedList;
 
 public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe {
     private PipeNetwork network = null;
-    private @NotNull Pipe.FluidData data = Pipe.FluidData.EMPTY;
+    private @NotNull Pipe.FluidData fluidData = Pipe.FluidData.EMPTY;
     private byte timeUntilPush = 0;
 
     public FluidPipeBlockEntity() {
@@ -58,8 +58,8 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
     }
 
     @Override
-    public @NotNull Pipe.FluidData getFluid() {
-        return data;
+    public @NotNull Pipe.FluidData getFluidData() {
+        return fluidData;
     }
 
     @Override
@@ -119,80 +119,80 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
     }
 
     @Override
-    public void setFluid(@NotNull Pipe.FluidData data) {
-        this.data = data;
+    public void setFluidData(@NotNull Pipe.FluidData data) {
+        this.fluidData = data;
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        this.data.toTag(tag);
+        this.fluidData.toTag(tag);
         return super.toTag(tag);
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.data = Pipe.FluidData.fromTag(tag);
+        this.fluidData = Pipe.FluidData.fromTag(tag);
     }
 
     @Override
     public void tick() {
         if (world.isClient) return;
-        if (data != Pipe.FluidData.EMPTY) {
+        if (fluidData != Pipe.FluidData.EMPTY) {
             if (++timeUntilPush >= 5) {
                 this.timeUntilPush = 0;
-                if (!this.data.getPath().isEmpty()) {
-                    BlockPos pos = this.data.getPath().getLast();
+                if (!this.fluidData.getPath().isEmpty()) {
+                    BlockPos pos = this.fluidData.getPath().getLast();
                     if (pos.equals(this.pos)) {
-                        this.data.getPath().pollLast();
-                        pos = this.data.getPath().getLast();
+                        this.fluidData.getPath().pollLast();
+                        pos = this.fluidData.getPath().getLast();
                     }
                     if (pos.getManhattanDistance(this.pos) > 1) {
                         throw new RuntimeException();
                     }
                     BlockEntity entity = world.getBlockEntity(pos);
                     if (entity instanceof Pipe) {
-                        if (((Pipe) entity).getFluid().getFluid().isEmpty()) {
-                            this.data.getPath().pollLast();
-                            ((Pipe) entity).setFluid(this.data);
+                        if (((Pipe) entity).getFluidData().getFluid().isEmpty()) {
+                            this.fluidData.getPath().pollLast();
+                            ((Pipe) entity).setFluidData(this.fluidData);
                             if (entity instanceof FluidPipeBlockEntity) {
                                 ((FluidPipeBlockEntity) entity).timeUntilPush = 0; //todo remove tup
                             }
-                            this.data = Pipe.FluidData.EMPTY;
+                            this.fluidData = Pipe.FluidData.EMPTY;
                         }
                     } else {
-                        if (this.data.getPath().size() != 1) {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluid(), ActionType.PERFORM);
+                        if (this.fluidData.getPath().size() != 1) {
+                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), ActionType.PERFORM);
                             if (dat != null) {
-                                this.data = dat;
+                                this.fluidData = dat;
                             }
                             return;
                         }
-                        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.data.getEndDir().getOpposite());
+                        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.fluidData.getEndDir().getOpposite());
                         if (component != null) {
-                            FluidVolume volume = component.insertFluid(data.getFluid(), ActionType.PERFORM);
+                            FluidVolume volume = component.insertFluid(fluidData.getFluid(), ActionType.PERFORM);
                             if (!volume.isEmpty()) {
                                 Pipe.FluidData dat = network.insertFluid(this.pos, null, volume, ActionType.PERFORM);
                                 if (dat != null) {
-                                    this.data = dat;
+                                    this.fluidData = dat;
                                 } else {
                                     BlockPos finalPos = pos;
-                                    this.data = new Pipe.FluidData(pos, Util.make(new LinkedList<>(), l -> l.add(finalPos)), volume, this.data.getEndDir());
+                                    this.fluidData = new Pipe.FluidData(pos, Util.make(new LinkedList<>(), l -> l.add(finalPos)), volume, this.fluidData.getEndDir());
                                 }
                             } else {
-                                this.data = Pipe.FluidData.EMPTY;
+                                this.fluidData = Pipe.FluidData.EMPTY;
                             }
                         } else {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluid(), ActionType.PERFORM);
+                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), ActionType.PERFORM);
                             if (dat != null) {
-                                this.data = dat;
+                                this.fluidData = dat;
                             }
                         }
                     }
                 } else {
-                    Pipe.FluidData dat = network.insertFluid(this.pos, null, this.data.getFluid(), ActionType.PERFORM);
+                    Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), ActionType.PERFORM);
                     if (dat != null) {
-                        this.data = dat;
+                        this.fluidData = dat;
                     }
                 }
             }

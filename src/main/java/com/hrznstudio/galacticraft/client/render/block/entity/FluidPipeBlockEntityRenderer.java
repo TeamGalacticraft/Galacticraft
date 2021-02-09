@@ -36,7 +36,7 @@ public class FluidPipeBlockEntityRenderer extends BlockEntityRenderer<FluidPipeB
 
     @Override
     public void render(FluidPipeBlockEntity entity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (entity.getFluid() != Pipe.FluidData.EMPTY) {
+        if (entity.getFluidData() != Pipe.FluidData.EMPTY) {
 //            entity.getData().getPath().pLast(); //todo
         }
     }

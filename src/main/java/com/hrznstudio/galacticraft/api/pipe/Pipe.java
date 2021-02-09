@@ -61,13 +61,13 @@ public interface Pipe {
      * Returns the fluid in the pipe and its transport data
      * @return The fluid in the pipe and its transport data
      */
-    @NotNull Pipe.FluidData getFluid();
+    @NotNull Pipe.FluidData getFluidData();
 
     /**
      * Sets the fluid and the transport data of this pipe
      * @param data The fluid/transport data
      */
-    void setFluid(@NotNull Pipe.FluidData data);
+    void setFluidData(@NotNull Pipe.FluidData data);
 
     default boolean canConnect(Direction direction) {
         return true;

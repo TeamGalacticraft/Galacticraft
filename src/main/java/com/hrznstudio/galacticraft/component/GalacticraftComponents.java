@@ -135,14 +135,14 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
         registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(1, 10)) {
             @Override
             public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                if (be.getFluid() == Pipe.FluidData.EMPTY) {
+                if (be.getFluidData() == Pipe.FluidData.EMPTY) {
                     if (be.getNetwork() != null) {
                         Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
                         if (action == ActionType.PERFORM) {
                             if (data == null) {
                                 return fluid;
                             }
-                            be.setFluid(data);
+                            be.setFluidData(data);
                             return data.getFluid();
                         }
                     }
