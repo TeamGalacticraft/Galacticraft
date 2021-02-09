@@ -128,11 +128,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     private final @NotNull SimpleInventoryComponent inventory = new SimpleInventoryComponent(this.getInventorySize()) {
         @Override
-        public boolean isAcceptableStack(int slot, ItemStack stack) {
-            return ConfigurableMachineBlockEntity.this.getFilterForSlot(slot).test(stack) || stack.isEmpty();
-        }
-
-        @Override
         public void readFromNbt(CompoundTag tag) {
             if (tag.getBoolean("disabled")) return;
             super.readFromNbt(tag);
@@ -512,6 +507,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     @NotNull
     public <C extends Inventory, T extends Recipe<C>> Optional<T> getRecipe(RecipeType<T> type, C inventory) {
+        if (this.world == null) return Optional.empty();
         return this.world.getRecipeManager().getFirstMatch(type, inventory, this.world);
     }
 

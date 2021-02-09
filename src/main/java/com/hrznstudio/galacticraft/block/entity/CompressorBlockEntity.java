@@ -154,6 +154,7 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        if (this.world == null) return Optional.empty();
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 

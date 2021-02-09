@@ -22,26 +22,14 @@
 
 package com.hrznstudio.galacticraft.block.special.fluidpipe;
 
-import com.google.common.collect.ImmutableSet;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
-import com.hrznstudio.galacticraft.api.wire.Wire;
-import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.BlockComponentProvider;
-import nerdhub.cardinal.components.api.component.Component;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -51,12 +39,10 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.LinkedList;
 
 public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe {
     private PipeNetwork network = null;
@@ -72,16 +58,19 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
     }
 
     @Override
-    public void setLocation(World world, BlockPos pos) {
-        super.setLocation(world, pos);
+    public @NotNull Pipe.FluidData getFluid() {
+        return data;
+    }
 
+    @Override
+    public @NotNull PipeNetwork getNetwork() {
         if (!world.isClient()) {
             if (this.network == null) {
                 for (Direction direction : Direction.values()) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof FluidPipeBlockEntity) {
-                        if (((FluidPipeBlockEntity) entity).network != null) {
-                            ((FluidPipeBlockEntity) entity).network.addPipe(pos, this);
+                    if (entity instanceof Pipe) {
+                        if (((Pipe) entity).getNetworkNullable() != null) {
+                            ((Pipe) entity).getNetworkNullable().addPipe(pos, this);
                             break;
                         }
                     }
@@ -92,16 +81,12 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
                 }
             }
         }
+        return this.network;
     }
 
     @Override
-    public @NotNull Pipe.FluidData getFluid() {
-        return data;
-    }
-
-    @Override
-    public PipeNetwork getNetwork() {
-        return network;
+    public @Nullable PipeNetwork getNetworkNullable() {
+        return this.network;
     }
 
     @Override
@@ -166,11 +151,13 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
                         throw new RuntimeException();
                     }
                     BlockEntity entity = world.getBlockEntity(pos);
-                    if (entity instanceof FluidPipeBlockEntity) {
-                        if (((FluidPipeBlockEntity) entity).data.getFluid().isEmpty()) {
+                    if (entity instanceof Pipe) {
+                        if (((Pipe) entity).getFluid().getFluid().isEmpty()) {
                             this.data.getPath().pollLast();
-                            ((FluidPipeBlockEntity) entity).data = this.data;
-                            ((FluidPipeBlockEntity) entity).timeUntilPush = 0;
+                            ((Pipe) entity).setFluid(this.data);
+                            if (entity instanceof FluidPipeBlockEntity) {
+                                ((FluidPipeBlockEntity) entity).timeUntilPush = 0; //todo remove tup
+                            }
                             this.data = Pipe.FluidData.EMPTY;
                         }
                     } else {
