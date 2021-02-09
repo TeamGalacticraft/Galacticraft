@@ -8,6 +8,7 @@
     "BlockStateProviderTypeAccessor",
     "BuiltinBiomesAccessor",
     "ChunkGeneratorAccessor",
+    "DimensionTypeMixin",
     "EntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
@@ -15,6 +16,7 @@
     "ServerWorldMixin",
     "SkyPropertiesAccessor",
     "StructurePoolGeneratorMixin",
+    "LanternBlockMixin",
     "TorchBlockMixin"
   ],
   "client": [

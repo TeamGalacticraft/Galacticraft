@@ -36,10 +36,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftItems {
+    public static final List<Item> HIDDEN_ITEMS = new LinkedList<>();
+
     public static final Item GLOWSTONE_TORCH = registerItem(Constants.Blocks.GLOWSTONE_TORCH, new WallStandingBlockItem(GalacticraftBlocks.GLOWSTONE_TORCH, GalacticraftBlocks.GLOWSTONE_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
     public static final Item UNLIT_TORCH = registerItem(Constants.Blocks.UNLIT_TORCH, new WallStandingBlockItem(GalacticraftBlocks.UNLIT_TORCH, GalacticraftBlocks.UNLIT_WALL_TORCH, (new Item.Settings())/*.group(GalacticraftBlocks.BLOCKS_GROUP)*/));
 
@@ -158,28 +163,29 @@ public class GalacticraftItems {
     public static final Item TITANIUM_AXE = registerItem(Constants.Items.TITANIUM_AXE, new AxeItem(GalacticraftToolMaterials.TITANIUM, 6.0F, -3.1F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item TITANIUM_HOE = registerItem(Constants.Items.TITANIUM_HOE, new HoeItem(GalacticraftToolMaterials.TITANIUM, -3, -1.0F, new Item.Settings().group(ITEMS_GROUP)));
     public static final Item STANDARD_WRENCH = registerItem(Constants.Items.STANDARD_WRENCH, new StandardWrenchItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item BATTERY = registerItem(Constants.Items.BATTERY, new BatteryItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(BatteryItem.MAX_ENERGY)));
+    public static final Item BATTERY = registerItem(Constants.Items.BATTERY, new BatteryItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item INFINITE_BATTERY = registerItem(Constants.Items.INFINITE_BATTERY, new InfiniteBatteryItem(new Item.Settings().group(ITEMS_GROUP).rarity(Rarity.EPIC)));
     //Fluid buckets
-    public static final BucketItem CRUDE_OIL_BUCKET = registerItem(Constants.Items.CRUDE_OIL_BUCKET, new BucketItem(GalacticraftFluids.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).group(ITEMS_GROUP)));
-    public static final BucketItem FUEL_BUCKET = registerItem(Constants.Items.FUEL_BUCKET, new BucketItem(GalacticraftFluids.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).group(ITEMS_GROUP)));
+    public static final BucketItem CRUDE_OIL_BUCKET = registerItem(Constants.Items.CRUDE_OIL_BUCKET, new BucketItem(GalacticraftFluids.CRUDE_OIL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
+    public static final BucketItem FUEL_BUCKET = registerItem(Constants.Items.FUEL_BUCKET, new BucketItem(GalacticraftFluids.FUEL, new Item.Settings().recipeRemainder(Items.BUCKET).maxCount(1).group(ITEMS_GROUP)));
     //GC INVENTORY
-    public static final Item PARACHUTE = registerItem(Constants.Items.PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item ORANGE_PARACHUTE = registerItem(Constants.Items.ORANGE_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item MAGENTA_PARACHUTE = registerItem(Constants.Items.MAGENTA_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item LIGHT_BLUE_PARACHUTE = registerItem(Constants.Items.LIGHT_BLUE_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item YELLOW_PARACHUTE = registerItem(Constants.Items.YELLOW_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item LIME_PARACHUTE = registerItem(Constants.Items.LIME_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item PINK_PARACHUTE = registerItem(Constants.Items.PINK_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item GRAY_PARACHUTE = registerItem(Constants.Items.GRAY_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item LIGHT_GRAY_PARACHUTE = registerItem(Constants.Items.LIGHT_GRAY_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item CYAN_PARACHUTE = registerItem(Constants.Items.CYAN_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item PURPLE_PARACHUTE = registerItem(Constants.Items.PURPLE_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item BLUE_PARACHUTE = registerItem(Constants.Items.BLUE_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item BROWN_PARACHUTE = registerItem(Constants.Items.BROWN_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item GREEN_PARACHUTE = registerItem(Constants.Items.GREEN_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item RED_PARACHUTE = registerItem(Constants.Items.RED_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item BLACK_PARACHUTE = registerItem(Constants.Items.BLACK_PARACHUTE, new Item(new Item.Settings().group(ITEMS_GROUP)));
+    private static final Item.Settings PARACHUTE_SETTINGS = new Item.Settings().group(ITEMS_GROUP).maxCount(1);
+    public static final Item PARACHUTE = registerItem(Constants.Items.PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item ORANGE_PARACHUTE = registerItem(Constants.Items.ORANGE_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item MAGENTA_PARACHUTE = registerItem(Constants.Items.MAGENTA_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item LIGHT_BLUE_PARACHUTE = registerItem(Constants.Items.LIGHT_BLUE_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item YELLOW_PARACHUTE = registerItem(Constants.Items.YELLOW_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item LIME_PARACHUTE = registerItem(Constants.Items.LIME_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item PINK_PARACHUTE = registerItem(Constants.Items.PINK_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item GRAY_PARACHUTE = registerItem(Constants.Items.GRAY_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item LIGHT_GRAY_PARACHUTE = registerItem(Constants.Items.LIGHT_GRAY_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item CYAN_PARACHUTE = registerItem(Constants.Items.CYAN_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item PURPLE_PARACHUTE = registerItem(Constants.Items.PURPLE_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item BLUE_PARACHUTE = registerItem(Constants.Items.BLUE_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item BROWN_PARACHUTE = registerItem(Constants.Items.BROWN_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item GREEN_PARACHUTE = registerItem(Constants.Items.GREEN_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item RED_PARACHUTE = registerItem(Constants.Items.RED_PARACHUTE, new Item(PARACHUTE_SETTINGS));
+    public static final Item BLACK_PARACHUTE = registerItem(Constants.Items.BLACK_PARACHUTE, new Item(PARACHUTE_SETTINGS));
     public static final Item OXYGEN_MASK = registerItem(Constants.Items.OXYGEN_MASK, new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item OXYGEN_GEAR = registerItem(Constants.Items.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SHIELD_CONTROLLER = registerItem(Constants.Items.SHIELD_CONTROLLER, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));

@@ -47,6 +47,8 @@ public interface Wire {
      */
     @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity);
 
+    int getMaxTransferRate();
+
     default boolean canConnect(Direction direction) {
         return true;
     }

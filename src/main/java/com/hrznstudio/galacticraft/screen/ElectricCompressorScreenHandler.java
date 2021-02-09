@@ -22,12 +22,10 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 import net.minecraft.screen.slot.FurnaceOutputSlot;
@@ -37,73 +35,37 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ElectricCompressorScreenHandler extends MachineScreenHandler<ElectricCompressorBlockEntity> {
-
-    public final Property status = Property.create();
-    public final Property progress = Property.create();
-    protected final Inventory inventory;
-
     public ElectricCompressorScreenHandler(int syncId, PlayerEntity player, ElectricCompressorBlockEntity blockEntity) {
         super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER);
-        this.inventory = blockEntity.getInventory().asInventory();
-        addProperty(status);
-        addProperty(progress);
+        this.addProperty(new Property() {
+            @Override
+            public int get() {
+                return machine.progress;
+            }
+
+            @Override
+            public void set(int value) {
+                machine.progress = value;
+            }
+        });
 
         // 3x3 compressor input grid
         int slot = 0;
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 18));
+                this.addSlot(new Slot(machine.getWrappedInventory(), slot, x * 18 + 19, y * 18 + 18));
                 slot++;
             }
         }
 
-        // Output slot
-        this.addSlot(new FurnaceOutputSlot(playerEntity, this.inventory, CompressorBlockEntity.OUTPUT_SLOT, getOutputSlotPos()[0], getOutputSlotPos()[1]));
+        this.addSlot(new FurnaceOutputSlot(this.player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.OUTPUT_SLOT, 138, 29));
+        this.addSlot(new FurnaceOutputSlot(player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, 138, 47));
+        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), ElectricCompressorBlockEntity.CHARGE_SLOT, 3 * 18 + 1, 75));
 
-        // Player inventory slots
-        int playerInvYOffset = 117;
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
-        }
-
-        addProperty(energy);
-        addSlot(new FurnaceOutputSlot(player, this.inventory, ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, getOutputSlotPos()[0], getOutputSlotPos()[1] + 18));
-        addSlot(new ChargeSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75));
+        this.addPlayerInventorySlots(0, 117);
     }
 
     public ElectricCompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (ElectricCompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        progress.set(blockEntity.getProgress());
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = ElectricCompressorBlockEntity.ElectricCompressorStatus.get(status.get());
-        blockEntity.progress = progress.get();
-    }
-
-    protected int[] getOutputSlotPosO() {
-        return new int[]{138, 38};
-    }
-
-    protected int[] getOutputSlotPos() {
-        int[] outputSlotPos = getOutputSlotPosO();
-        // Move output slot up by half a slot
-        outputSlotPos[1] = outputSlotPos[1] - (18 / 2);
-        return outputSlotPos;
     }
 }

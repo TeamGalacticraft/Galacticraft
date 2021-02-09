@@ -188,6 +188,32 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                     return spriteFunction.apply(MACHINE);
             }
         });
+
+        register(GalacticraftBlocks.ELECTRIC_FURNACE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/electric_furnace"));
+                case LEFT:
+                case RIGHT:
+                case BACK:
+                    return spriteFunction.apply(MACHINE_SIDE);
+                default:
+                    return spriteFunction.apply(MACHINE);
+            }
+        });
+
+        register(GalacticraftBlocks.ELECTRIC_ARC_FURNACE, (face, spriteFunction, view, state, pos) -> {
+            switch (face) {
+                case FRONT:
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/electric_furnace"));
+                case LEFT:
+                case RIGHT:
+                case BACK:
+                    return spriteFunction.apply(MACHINE_SIDE);
+                default:
+                    return spriteFunction.apply(MACHINE);
+            }
+        });
     }
 
     @Override
@@ -206,7 +232,10 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             SideOption option = blockEntity.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getOption();
             switch (option) {
                 case DEFAULT:
-                    quad.spriteBake(0, textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos), MutableQuadView.BAKE_LOCK_UV);
+                    Sprite sprite = textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos);
+                    //noinspection ConstantConditions
+                    if (sprite == null) throw new RuntimeException("Missing default sprite for block: " + state.getBlock());
+                    quad.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_FLUID_IN), MutableQuadView.BAKE_LOCK_UV);

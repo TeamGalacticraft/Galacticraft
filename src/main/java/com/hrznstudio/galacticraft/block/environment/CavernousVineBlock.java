@@ -61,10 +61,10 @@ public class CavernousVineBlock extends Block implements Waterloggable {
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity playerEntity) {
-        super.onBreak(world, blockPos, blockState, playerEntity);
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+        super.onBreak(world, blockPos, blockState, player);
 
-        if (playerEntity.getActiveItem().getItem() instanceof ShearsItem) {
+        if (player.getActiveItem().getItem() instanceof ShearsItem) {
             ItemScatterer.spawn(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), new ItemStack(this.asItem(), 1));
         }
     }

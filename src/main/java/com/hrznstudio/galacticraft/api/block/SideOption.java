@@ -22,13 +22,12 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import net.minecraft.block.Block;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.StringIdentifiable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,26 +36,28 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum SideOption implements Comparable<SideOption> {
-    DEFAULT(false, false, false, false),
-    POWER_INPUT(true, false, false, false),
-    POWER_OUTPUT(true, false, false, false),
+    DEFAULT(false, false, false, false, false),
+    POWER_INPUT(true, false, false, true, false),
+    POWER_OUTPUT(true, false, false, false, true),
 //    OXYGEN_INPUT(false, false, false, true),
 //    OXYGEN_OUTPUT(false, false, false, true),
-    FLUID_INPUT(false, true, false, false),
-    FLUID_OUTPUT(false, true, false, false),
-    ITEM_INPUT(false, false, true, false),
-    ITEM_OUTPUT(false, false, true, false);
+    FLUID_INPUT(false, true, false, true, false),
+    FLUID_OUTPUT(false, true, false, false, true),
+    ITEM_INPUT(false, false, true, true, false),
+    ITEM_OUTPUT(false, false, true, false, true);
 
     private final boolean energy;
     private final boolean fluid;
     private final boolean item;
-    private final boolean oxygen;
+    private final boolean input;
+    private final boolean output;
 
-    SideOption(boolean energy, boolean fluid, boolean item, boolean oxygen) {
+    SideOption(boolean energy, boolean fluid, boolean item, boolean input, boolean output) {
         this.energy = energy;
         this.fluid = fluid;
         this.item = item;
-        this.oxygen = oxygen;
+        this.input = input;
+        this.output = output;
     }
 
     public boolean isEnergy() {
@@ -68,11 +69,19 @@ public enum SideOption implements Comparable<SideOption> {
     }
 
     public boolean isOxygen() {
-        return fluid; //todo gas api maybe?
+        return false; //todo gas api maybe?
     }
 
     public boolean isFluid() {
         return fluid;
+    }
+
+    public boolean isInput() {
+        return input;
+    }
+
+    public boolean isOutput() {
+        return output;
     }
 
     public SideOption nextValidOption(ConfigurableMachineBlockEntity blockEntity) {
@@ -98,7 +107,7 @@ public enum SideOption implements Comparable<SideOption> {
     public Text getFormattedName() {
         switch (this) {
             case DEFAULT:
-                return new LiteralText("Blank").setStyle(Style.EMPTY.withColor(Formatting.DARK_GRAY));
+                return new LiteralText("Blank").setStyle(Constants.Misc.TOOLTIP_STYLE);
 //            case OXYGEN_INPUT:
 //                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
 //            case OXYGEN_OUTPUT:
@@ -116,6 +125,6 @@ public enum SideOption implements Comparable<SideOption> {
             case ITEM_OUTPUT:
                 return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
         }
-        return new LiteralText("");
+        return Constants.Misc.EMPTY_TEXT;
     }
 }

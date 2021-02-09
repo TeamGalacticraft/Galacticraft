@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,84 +40,33 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
-
-    private final Property status = Property.create();
-    private final Property fluidOil = Property.create();
-    private final Property fluidFuel = Property.create();
-
     private final Inventory inventory;
 
-    public RefineryScreenHandler(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
-        addProperty(status);
-        addProperty(fluidOil);
-        addProperty(fluidFuel);
+    public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity blockEntity) {
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
+
         this.inventory = blockEntity.getInventory().asInventory();
         // Energy slot
-        this.addSlot(new ChargeSlot(this.inventory, 0, 8, 7));
-        this.addSlot(new Slot(this.inventory, 1, 123, 7) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return blockEntity.getFilterForSlot(1).test(stack);
-            }
-
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-        });
-        this.addSlot(new Slot(this.inventory, 2, 153, 7) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return blockEntity.getFilterForSlot(2).test(stack);
-            }
-
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-        });
+        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 0, 8, 7));
+        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 1, 123, 7));
+        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 2, 153, 7));
 
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 86 + i * 18));
+                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 86 + i * 18));
             }
         }
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 144));
+            this.addSlot(new Slot(player.inventory, i, 8 + i * 18, 144));
         }
 
     }
 
     public RefineryScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (RefineryBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        status.set(blockEntity.status.ordinal());
-        fluidOil.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().doubleValue() * 1000.0D));
-        fluidFuel.set((int) (blockEntity.getFluidTank().getContents(1).getAmount().doubleValue() * 1000.0D));
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.status = RefineryBlockEntity.RefineryStatus.values()[status.get()];
-        if (fluidOil.get() != 0) {
-            blockEntity.getFluidTank().setFluid(0, new FluidVolume(GalacticraftFluids.CRUDE_OIL, Fraction.ofThousandths(fluidOil.get())));
-        } else {
-            blockEntity.getFluidTank().setFluid(0, FluidVolume.EMPTY);
-        }
-        if (fluidFuel.get() != 0) {
-            blockEntity.getFluidTank().setFluid(1, new FluidVolume(GalacticraftFluids.FUEL, Fraction.ofThousandths(fluidFuel.get())));
-        } else {
-            blockEntity.getFluidTank().setFluid(1, FluidVolume.EMPTY);
-        }
     }
 }

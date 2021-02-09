@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
+import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -43,7 +44,8 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ENERGY_STORAGE_MODULE_SCREEN));
 
     public EnergyStorageModuleScreen(EnergyStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
@@ -52,8 +54,6 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        this.drawEnergyBufferBar(stack, this.x + 58, this.y + 24);
-        this.drawConfigTabs(stack, mouseX, mouseY);
     }
 
     @Override
@@ -61,11 +61,5 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
         super.render(stack, mouseX, mouseY, v);
         DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.energy_storage_module").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
-        this.drawEnergyTooltip(stack, mouseX, mouseY, this.x + 58, this.y + 24);
     }
 }

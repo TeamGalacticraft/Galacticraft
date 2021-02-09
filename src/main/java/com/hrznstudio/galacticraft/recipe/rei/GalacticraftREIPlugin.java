@@ -26,6 +26,7 @@ import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.mixin.client.HandledScreenHooks;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.ShapedCompressingRecipe;
@@ -35,6 +36,7 @@ import me.shedaniel.rei.api.*;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.item.Item;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.util.Identifier;
 
@@ -47,7 +49,6 @@ import java.util.List;
 public class GalacticraftREIPlugin implements REIPluginV0 {
     public static final Identifier CIRCUIT_FABRICATION = new Identifier(Constants.MOD_ID, "plugins/circuit_fabricator");
     public static final Identifier COMPRESSING = new Identifier(Constants.MOD_ID, "plugins/compressing");
-
 
     public void registerPluginCategories(RecipeHelper recipeHelper) {
         recipeHelper.registerCategory(new DefaultFabricationCategory());
@@ -93,5 +94,12 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
             return l;
         });
+    }
+
+    @Override
+    public void registerEntries(EntryRegistry entryRegistry) {
+        for (Item item : GalacticraftItems.HIDDEN_ITEMS) {
+            entryRegistry.removeEntry(EntryStack.create(item));
+        }
     }
 }

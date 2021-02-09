@@ -35,14 +35,13 @@ import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
 import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
-import com.hrznstudio.galacticraft.network.GalacticraftPackets;
+import com.hrznstudio.galacticraft.network.GalacticraftS2CPackets;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
 import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
-import com.hrznstudio.galacticraft.structure.moon_village.MoonVillageData;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
 import com.hrznstudio.galacticraft.village.MoonVillagerType;
@@ -101,11 +100,10 @@ public class Galacticraft implements ModInitializer {
         GalacticraftParticles.register();
         GalacticraftCommands.register();
         GalacticraftEnergy.register();
-        GalacticraftPackets.register();
+        GalacticraftS2CPackets.register();
         GalacticraftSounds.register();
         GalacticraftBannerPatterns.register();
         GalacticraftPointOfInterestType.register();
-        MoonVillageData.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfessions.register();
 

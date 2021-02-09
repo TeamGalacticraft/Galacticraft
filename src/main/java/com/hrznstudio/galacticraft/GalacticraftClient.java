@@ -26,16 +26,18 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
 import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
-import com.hrznstudio.galacticraft.client.network.GalacticraftClientPackets;
+import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPackets;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.*;
-import com.hrznstudio.galacticraft.client.resource.FluidRenderingResourceReloadListener;
+import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.mixin.SkyPropertiesAccessor;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
+import com.hrznstudio.galacticraft.particle.fluid.DrippingCrudeOilParticle;
+import com.hrznstudio.galacticraft.particle.fluid.DrippingFuelParticle;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.mojang.datafixers.util.Pair;
 import dev.onyxstudios.foml.obj.OBJLoader;
@@ -44,6 +46,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
@@ -108,6 +111,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER, CoalGeneratorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER, CircuitFabricatorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.REFINERY_HANDLER, RefineryScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER, ElectricFurnaceScreen::new);
+        ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER, ElectricArcFurnaceScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER, CompressorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.ELECTRIC_COMPRESSOR_HANDLER, ElectricCompressorScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER, EnergyStorageModuleScreen::new);
@@ -123,11 +128,13 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (entityRenderDispatcher, context) -> new EvolvedSkeletonEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (entityRenderDispatcher, context) -> new EvolvedSpiderEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_EVOKER, (entityRenderDispatcher, context) -> new EvolvedEvokerEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_PILLAGER, (entityRenderDispatcher, context) -> new EvolvedPillagerEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (entityRenderDispatcher, context) -> new EvolvedVindicatorEntityRenderer(entityRenderDispatcher));
         EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
 
         GalacticraftBlockEntityRenderers.register();
-        GalacticraftParticles.registerClient();
-        GalacticraftClientPackets.register();
+        GalacticraftC2SPackets.register();
         GCGeneratedMachineModels.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getTranslucent());
@@ -138,9 +145,14 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_WALL_TORCH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_TORCH, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_WALL_TORCH, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK, RenderLayer.getTranslucent());
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new FluidRenderingResourceReloadListener());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
+
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_FUEL_PARTICLE, (effect1, world1, x1, y1, z1, velX1, velY1, velZ1) -> new DrippingFuelParticle(world1, x1, y1, z1, velX1, velY1, velZ1));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE, (effect, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
             if (resourceId.equals(GCGeneratedMachineModels.MACHINE_MARKER)) {

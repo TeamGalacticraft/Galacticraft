@@ -88,7 +88,7 @@ public class DefaultCompressingCategory implements RecipeCategory<DefaultCompres
 
             @Override
             public List<? extends Element> children() {
-                return new ArrayList<>();
+                return Collections.emptyList();
             }
         }
 

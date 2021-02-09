@@ -52,8 +52,7 @@ public class UnlitWallTorchBlock extends WallTorchBlock {
         if (player.getStackInHand(hand).getItem() instanceof FlintAndSteelItem) {
             world.setBlockState(pos, Blocks.WALL_TORCH.getDefaultState().with(WallTorchBlock.FACING, state.get(WallTorchBlock.FACING)));
             ItemStack stack = player.getStackInHand(hand).copy();
-            stack.damage(1, player, (playerEntity -> {
-            }));
+            stack.damage(1, player, e -> {});
             player.setStackInHand(hand, stack);
         }
 

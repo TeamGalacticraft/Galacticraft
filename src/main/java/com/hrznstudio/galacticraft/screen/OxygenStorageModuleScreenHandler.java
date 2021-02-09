@@ -37,40 +37,12 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleScreenHandler extends MachineScreenHandler<OxygenStorageModuleBlockEntity> {
-    public final Property oxygen = Property.create(); //loses some data (cant send a fraction)
-
-    public OxygenStorageModuleScreenHandler(int syncId, PlayerEntity playerEntity, OxygenStorageModuleBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER);
-
-        addProperty(oxygen);
-
-        // Player inventory slots
-        int playerInvYOffset = 84;
-
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
-        }
+    public OxygenStorageModuleScreenHandler(int syncId, PlayerEntity player, OxygenStorageModuleBlockEntity blockEntity) {
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER);
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public OxygenStorageModuleScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (OxygenStorageModuleBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        oxygen.set((int) (blockEntity.getFluidTank().getContents(0).getAmount().floatValue() * 100.0D));
-        super.sendContentUpdates();
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
     }
 }

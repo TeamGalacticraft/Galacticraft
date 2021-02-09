@@ -22,7 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.biome;
 
-import net.minecraft.text.LiteralText;
+import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.text.Text;
 
 /**
@@ -55,7 +55,7 @@ public class BiomePropertyType<T> {
 
     public static class Builder<T> {
         private T defaultValue = null;
-        private Text name = new LiteralText("");
+        private Text name = Constants.Misc.EMPTY_TEXT;
 
         public Builder<T> defaultValue(T defaultValue) {
             this.defaultValue = defaultValue;

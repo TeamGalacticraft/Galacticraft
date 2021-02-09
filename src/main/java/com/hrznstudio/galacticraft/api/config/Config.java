@@ -59,6 +59,10 @@ public interface Config {
 
     void setElectricCompressorEnergyConsumptionRate(int amount);
 
+    int electricArcFurnaceEnergyConsumptionRate();
+
+    void setElectricArcFurnaceEnergyConsumptionRate(int amount);
+
     int oxygenCollectorEnergyConsumptionRate();
 
     void setOxygenCollectorEnergyConsumptionRate(int amount);
@@ -66,6 +70,10 @@ public interface Config {
     int refineryEnergyConsumptionRate();
 
     void setRefineryEnergyConsumptionRate(int amount);
+
+    int electricFurnaceEnergyConsumptionRate();
+
+    void setElectricFurnaceEnergyConsumptionRate(int amount);
 
     int energyStorageModuleStorageSize();
 

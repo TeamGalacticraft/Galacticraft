@@ -26,14 +26,18 @@ import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
+import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
+import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.component.ComponentContainer;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
+import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
 import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
 import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
@@ -56,19 +60,18 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenTankItem extends Item implements ItemComponentCallback{
+public class OxygenTankItem extends Item {
     public OxygenTankItem(Settings settings) {
         super(settings);
-        ItemComponentCallback.registerSelf(this);
     }
 
     @Override
-    public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> list) {
-        if (this.isIn(itemGroup_1)) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
+        if (this.isIn(group)) {
             ItemStack stack = new ItemStack(this);
             list.add(stack);
             stack = stack.copy();
-            ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentProvider.fromItemStack(stack).getComponent(UniversalComponents.TANK_COMPONENT).getMaxCapacity(0)));
+            UniversalComponents.TANK_COMPONENT.get(stack).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentHelper.TANK.getComponent(stack).getMaxCapacity(0)));
             list.add(stack);
         }
     }
@@ -91,33 +94,5 @@ public class OxygenTankItem extends Item implements ItemComponentCallback{
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
-    }
-
-    @Override
-    public void initComponents(ItemStack itemStack, ComponentContainer<CopyableComponent<?>> componentContainer) {
-        ItemTankComponent component = new ItemTankComponent(1, Fraction.of(1, 100).multiply(Fraction.ofWhole(getMaxDamage()))) {
-            @Override
-            public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-                if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN) || fluid.isEmpty()) {
-                    return super.insertFluid(tank, fluid, action);
-                } else {
-                    return fluid;
-                }
-            }
-
-            @Override
-            public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                return insertFluid(0, fluid, action);
-            }
-
-            @Override
-            public void setFluid(int slot, FluidVolume stack) {
-                if (stack.getFluid().isIn(GalacticraftTags.OXYGEN) || stack.isEmpty()) {
-                    super.setFluid(slot, stack);
-                }
-            }
-        };
-        component.listen(() -> itemStack.setDamage(getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 100.0D)));
-        componentContainer.put(UniversalComponents.TANK_COMPONENT, component);
     }
 }

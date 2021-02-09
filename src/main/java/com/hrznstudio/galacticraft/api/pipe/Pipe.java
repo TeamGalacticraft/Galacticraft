@@ -46,7 +46,7 @@ public interface Pipe {
      * Returns the associated {@link PipeNetwork}
      * @return The associated {@link PipeNetwork}
      */
-    @NotNull PipeNetwork getNetwork();
+    PipeNetwork getNetwork();
 
     /**
      * Returns whether or not this pipe is able to connect to another block on the specified face/direction
