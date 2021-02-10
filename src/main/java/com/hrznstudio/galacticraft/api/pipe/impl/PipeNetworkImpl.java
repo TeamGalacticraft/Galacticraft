@@ -138,25 +138,25 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public void updateConnections(@NotNull BlockPos neighborPipe, @NotNull BlockPos theBlockThatWasActuallyChanged) {
-        if (world.getBlockEntity(theBlockThatWasActuallyChanged) instanceof Pipe) return;
+    public void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
+        if (world.getBlockEntity(updatedPos) instanceof Pipe) return;
         //pipes should call #removePipe before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(neighborPipe, theBlockThatWasActuallyChanged, true);
-        BlockPos poss = theBlockThatWasActuallyChanged.subtract(neighborPipe);
+        removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, theBlockThatWasActuallyChanged, opposite);
+        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
         if (component != null) {
             if (component.canInsertEnergy() && component.canExtractEnergy()) {
-                node(theBlockThatWasActuallyChanged);
-                edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_IO);
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
             } else if (component.canInsertEnergy()) {
-                node(theBlockThatWasActuallyChanged);
-                edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_INPUT);
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
             } else if (component.canExtractEnergy()) {
-                node(theBlockThatWasActuallyChanged);
-                edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_OUTPUT);
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
             }
         }
     }
