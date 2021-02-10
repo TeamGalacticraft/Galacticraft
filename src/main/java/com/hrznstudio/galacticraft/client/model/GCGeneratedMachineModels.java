@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -239,7 +239,10 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             SideOption option = blockEntity.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getOption();
             switch (option) {
                 case DEFAULT:
-                    quad.spriteBake(0, textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos), MutableQuadView.BAKE_LOCK_UV);
+                    Sprite sprite = textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos);
+                    //noinspection ConstantConditions
+                    if (sprite == null) throw new RuntimeException("Missing default sprite for block: " + state.getBlock());
+                    quad.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_FLUID_IN), MutableQuadView.BAKE_LOCK_UV);

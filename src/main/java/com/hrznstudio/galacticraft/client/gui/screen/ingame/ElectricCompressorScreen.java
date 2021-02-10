@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -51,7 +51,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private int progressDisplayY;
 
     public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 199;
     }
 
@@ -90,8 +90,8 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     protected void drawCraftProgressBar(MatrixStack stack) {
-        float progress = this.handler.blockEntity.getProgress();
-        float maxProgress = this.handler.blockEntity.getMaxProgress();
+        float progress = this.handler.machine.getProgress();
+        float maxProgress = this.handler.machine.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,7 @@ public class MoonBerryBushBlock extends PlantBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity playerEntity, Hand hand, BlockHitResult blockHitResult) {
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         int age = blockState.get(AGE);
         boolean mature = age == 3;
 
@@ -104,7 +104,7 @@ public class MoonBerryBushBlock extends PlantBlock {
             world.setBlockState(blockPos, blockState.with(AGE, 1), 2);
             return ActionResult.SUCCESS;
         } else {
-            return super.onUse(blockState, world, blockPos, playerEntity, hand, blockHitResult);
+            return super.onUse(blockState, world, blockPos, player, hand, blockHitResult);
         }
     }
 

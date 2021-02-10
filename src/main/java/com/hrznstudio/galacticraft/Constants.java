@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,8 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+
+import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -113,8 +115,10 @@ public class Constants {
         //  Environment
         public static final String GLOWSTONE_TORCH = "glowstone_torch";
         public static final String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";
+        public static final String GLOWSTONE_LANTERN = "glowstone_lantern";
         public static final String UNLIT_TORCH = "unlit_torch";
         public static final String UNLIT_WALL_TORCH = "unlit_wall_torch";
+        public static final String UNLIT_LANTERN = "unlit_lantern";
         public static final String CAVERNOUS_VINE = "cavernous_vine";
         public static final String POISONOUS_CAVERNOUS_VINE = "poisonous_cavernous_vine";
         public static final String MOON_BERRY_BUSH = "moon_berry_bush";
@@ -594,6 +598,18 @@ public class Constants {
         public static final Text EMPTY_TEXT = new LiteralText("");
         public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
         public static final Identifier EMPTY = new Identifier("empty");
+        public static final Predicate<?> ALWAYS_FALSE = o -> false;
+        public static final Predicate<?> ALWAYS_TRUE = o -> true;
+
+        @SuppressWarnings("unchecked")
+        public static <T> Predicate<T> alwaysFalse() {
+            return (Predicate<T>) ALWAYS_FALSE;
+        }
+
+        @SuppressWarnings("unchecked")
+        public static <T> Predicate<T> alwaysTrue() {
+            return (Predicate<T>) ALWAYS_TRUE;
+        }
     }
 
     public static class Nbt {

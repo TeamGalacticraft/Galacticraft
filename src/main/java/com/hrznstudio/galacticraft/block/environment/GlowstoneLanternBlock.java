@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,38 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.block.decoration;
+package com.hrznstudio.galacticraft.block.environment;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CakeBlock;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.IntProperty;
-import net.minecraft.state.property.Properties;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.block.LanternBlock;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
+import net.minecraft.world.BlockView;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class MoonCheeseBlock extends CakeBlock {
+public class GlowstoneLanternBlock extends LanternBlock {
 
-    private static final IntProperty BITES = IntProperty.of("bites", 0, 6);
-    private static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-
-    public MoonCheeseBlock(Settings settings) {
+    public GlowstoneLanternBlock(Settings settings) {
         super(settings);
-        this.setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(BITES, 0));
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(WATERLOGGED);
+    @Environment(EnvType.CLIENT)
+    public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
+        if (Screen.hasShiftDown()) {
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+        } else {
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.config;
 
 import com.google.gson.annotations.Expose;
 import com.hrznstudio.galacticraft.api.config.Config;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,23 +42,25 @@ public class ConfigImpl implements Config {
     @Expose
     private int solarPanelEnergyProductionRate = 44;
     @Expose
-    private int circuitFabricatorEnergyConsumptionRate = 20;
+    private int circuitFabricatorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricCompressorEnergyConsumptionRate = 75;
+    private int electricCompressorEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int oxygenCollectorEnergyConsumptionRate = 10;
+    private int electricArcFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int refineryEnergyConsumptionRate = 60;
+    private int oxygenCollectorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricFurnaceEnergyConsumptionRate = 60;
+    private int refineryEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    @Expose
+    private int electricFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
     private int energyStorageModuleStorageSize = 500_000;
     @Expose
     private int machineEnergyStorageSize = 30_000;
     @Expose
-    private int oxygenCompressorEnergyConsumptionRate = 15;
+    private int oxygenCompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int oxygenDecompressorEnergyConsumptionRate = 15;
+    private int oxygenDecompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
 
     @Override
     public boolean isDebugLogEnabled() {
@@ -127,6 +130,16 @@ public class ConfigImpl implements Config {
     @Override
     public void setElectricCompressorEnergyConsumptionRate(int amount) {
         this.electricCompressorEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public int electricArcFurnaceEnergyConsumptionRate() {
+        return electricArcFurnaceEnergyConsumptionRate;
+    }
+
+    @Override
+    public void setElectricArcFurnaceEnergyConsumptionRate(int amount) {
+        this.electricArcFurnaceEnergyConsumptionRate = amount;
     }
 
     @Override

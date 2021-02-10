@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.screen.slot;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
@@ -34,12 +35,12 @@ import java.util.Arrays;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RecipeInputSlot extends Slot {
+public class RecipeInputSlot<I extends Inventory, T extends Recipe<I>> extends Slot {
 
-    private final RecipeType<?> type;
+    private final RecipeType<T> type;
     private final World world;
 
-    public RecipeInputSlot(Inventory inventory, int slotId, int x, int y, World world, RecipeType<?> type) {
+    public RecipeInputSlot(I inventory, int slotId, int x, int y, World world, RecipeType<T> type) {
         super(inventory, slotId, x, y);
         this.type = type;
         this.world = world;
@@ -47,6 +48,6 @@ public class RecipeInputSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
+        return world.getRecipeManager().getFirstMatch(this.type, (I)new SimpleInventory(stack), world).isPresent();
     }
 }

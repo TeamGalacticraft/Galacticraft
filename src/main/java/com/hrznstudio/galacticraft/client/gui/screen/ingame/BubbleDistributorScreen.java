@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -50,15 +50,15 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     private final TextFieldWidget textField;
 
     public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
-        this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 59, 26, 20, new LiteralText(String.valueOf(handler.blockEntity.getSize())));
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
+        this.textField = new TextFieldWidget(MinecraftClient.getInstance().textRenderer, this.x + 132, this.y + 59, 26, 20, new LiteralText(String.valueOf(handler.machine.getSize())));
         textField.setChangedListener((s -> {
             try {
                 if (Byte.parseByte(s) < 1) {
-                    textField.setText(String.valueOf(handler.blockEntity.getTargetSize()));
+                    textField.setText(String.valueOf(handler.machine.getTargetSize()));
                 }
             } catch (NumberFormatException ignore) {
-                textField.setText(String.valueOf(handler.blockEntity.getTargetSize()));
+                textField.setText(String.valueOf(handler.machine.getTargetSize()));
             }
         }));
 
@@ -70,8 +70,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
             }
         }));
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.blockEntity.getFluidTank(), 0, 31, 8, 48));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank(), 0, 31, 8, 48));
     }
 
     @Override
@@ -83,7 +83,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
 
         this.client.getTextureManager().bindTexture(OVERLAY);
 
-        if (!handler.blockEntity.bubbleVisible) {
+        if (!handler.machine.bubbleVisible) {
             if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {
                 this.drawTexture(matrices, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_RED_X, Constants.TextureCoordinates.BUTTON_RED_Y, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT);
             } else {
@@ -111,10 +111,10 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        textField.setText(String.valueOf(handler.blockEntity.getTargetSize()));
+        textField.setText(String.valueOf(handler.machine.getTargetSize()));
         DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
-        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(handler.blockEntity.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(handler.machine.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
 
         this.textField.render(matrices, mouseX, mouseY, delta);
 
@@ -122,8 +122,8 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         this.textField.x = this.x + 132;
         this.textField.y = this.y + 59;
 
-        if (handler.blockEntity.getStatus().getType().isActive()) {
-            this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.blockEntity.getSize()))).setStyle(Constants.Misc.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
+        if (handler.machine.getStatus().getType().isActive()) {
+            this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.machine.getSize()))).setStyle(Constants.Misc.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
         }
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
@@ -147,25 +147,25 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (check(mouseX, mouseY, this.x + 156, this.y + 16, Constants.TextureCoordinates.BUTTON_WIDTH, Constants.TextureCoordinates.BUTTON_HEIGHT)) {
-                handler.blockEntity.bubbleVisible = !handler.blockEntity.bubbleVisible;
-                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.blockEntity.bubbleVisible)).writeBlockPos(this.handler.blockEntity.getPos()));
+                handler.machine.bubbleVisible = !handler.machine.bubbleVisible;
+                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_visible"), new PacketByteBuf(Unpooled.buffer().writeBoolean(handler.machine.bubbleVisible)).writeBlockPos(this.handler.machine.getPos()));
                 return true;
             }
 
             if (check(mouseX, mouseY, this.x + 158, this.y + 59, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
-                if (handler.blockEntity.getTargetSize() != Byte.MAX_VALUE) {
-                    handler.blockEntity.setTargetSize((byte) (handler.blockEntity.getTargetSize() + 1));
-                    textField.setText(handler.blockEntity.getTargetSize() + "");
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.blockEntity.getTargetSize())).writeBlockPos(this.handler.blockEntity.getPos()));
+                if (handler.machine.getTargetSize() != Byte.MAX_VALUE) {
+                    handler.machine.setTargetSize((byte) (handler.machine.getTargetSize() + 1));
+                    textField.setText(handler.machine.getTargetSize() + "");
+                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())).writeBlockPos(this.handler.machine.getPos()));
                     return true;
                 }
             }
 
             if (check(mouseX, mouseY, this.x + 158, this.y + 69, Constants.TextureCoordinates.ARROW_VERTICAL_WIDTH, Constants.TextureCoordinates.ARROW_VERTICAL_HEIGHT)) {
-                if (handler.blockEntity.getTargetSize() > 1) {
-                    handler.blockEntity.setTargetSize((byte) (handler.blockEntity.getTargetSize() - 1));
-                    textField.setText(handler.blockEntity.getTargetSize() + "");
-                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.blockEntity.getTargetSize())).writeBlockPos(this.handler.blockEntity.getPos()));
+                if (handler.machine.getTargetSize() > 1) {
+                    handler.machine.setTargetSize((byte) (handler.machine.getTargetSize() - 1));
+                    textField.setText(handler.machine.getTargetSize() + "");
+                    ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "bubble_max"), new PacketByteBuf(Unpooled.buffer().writeByte(handler.machine.getTargetSize())).writeBlockPos(this.handler.machine.getPos()));
                     return true;
                 }
             }

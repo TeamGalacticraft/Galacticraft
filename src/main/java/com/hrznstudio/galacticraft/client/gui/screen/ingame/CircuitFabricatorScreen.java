@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,9 +53,9 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     private int progressDisplayY;
 
     public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 192;
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 32, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 15, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
 
     private void drawProgressBar(MatrixStack stack) {
         float progress = this.handler.progress.get();
-        float maxProgress = this.handler.blockEntity.getMaxProgress();
+        float maxProgress = this.handler.machine.getMaxProgress();
         float progressScale = (progress / maxProgress);
 
         this.client.getTextureManager().bindTexture(BACKGROUND);

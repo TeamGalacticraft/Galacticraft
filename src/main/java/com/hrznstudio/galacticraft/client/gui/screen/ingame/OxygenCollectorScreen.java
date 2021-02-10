@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,11 +45,11 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_COLLECTOR_SCREEN));
 
     public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 181;
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.blockEntity.getFluidTank(), 0, 36, 13, 48));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank(), 0, 36, 13, 48));
     }
 
     @Override
@@ -71,9 +71,9 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.client.textRenderer.draw(stack, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
-        this.client.textRenderer.draw(stack, handler.blockEntity.getStatus().getName(), statusX + this.client.textRenderer.getWidth(statusText), statusY, 0);
+        this.client.textRenderer.draw(stack, handler.machine.getStatus().getName(), statusX + this.client.textRenderer.getWidth(statusText), statusY, 0);
 
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.lastCollectAmount.get()).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(stack, mouseX, mouseY);
     }
 }

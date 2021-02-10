@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -45,12 +45,12 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.REFINERY_SCREEN));
 
     public RefineryScreen(RefineryScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 192;
 
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
-        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 122, 28, 0, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
-        this.addWidget(new FluidTankWidget(handler.blockEntity.getFluidTank(), 152, 28, 1, handler.blockEntity.getWorld(), handler.blockEntity.getPos()));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new FluidTankWidget(handler.machine.getFluidTank(), 122, 28, 0, handler.machine.getWorld(), handler.machine.getPos()));
+        this.addWidget(new FluidTankWidget(handler.machine.getFluidTank(), 152, 28, 1, handler.machine.getWorld(), handler.machine.getPos()));
     }
 
     @Override

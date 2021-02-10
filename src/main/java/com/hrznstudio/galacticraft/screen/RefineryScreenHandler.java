@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
+import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,46 +42,26 @@ import net.minecraft.screen.slot.Slot;
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
     private final Inventory inventory;
 
-    public RefineryScreenHandler(int syncId, PlayerEntity playerEntity, RefineryBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
+    public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity blockEntity) {
+        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
 
         this.inventory = blockEntity.getInventory().asInventory();
         // Energy slot
-        this.addSlot(new ChargeSlot(this.inventory, 0, 8, 7));
-        this.addSlot(new Slot(this.inventory, 1, 123, 7) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return blockEntity.getFilterForSlot(1).test(stack);
-            }
-
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-        });
-        this.addSlot(new Slot(this.inventory, 2, 153, 7) {
-            @Override
-            public boolean canInsert(ItemStack stack) {
-                return blockEntity.getFilterForSlot(2).test(stack);
-            }
-
-            @Override
-            public int getMaxItemCount() {
-                return 1;
-            }
-        });
+        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 0, 8, 7));
+        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 1, 123, 7));
+        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 2, 153, 7));
 
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 86 + i * 18));
+                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 86 + i * 18));
             }
         }
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 144));
+            this.addSlot(new Slot(player.inventory, i, 8 + i * 18, 144));
         }
 
     }

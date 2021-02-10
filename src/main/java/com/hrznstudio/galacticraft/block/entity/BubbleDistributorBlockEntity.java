@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,10 +32,11 @@ import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
@@ -44,7 +45,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
@@ -65,6 +65,7 @@ import java.util.function.Predicate;
 public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
     public static final int BATTERY_SLOT = 0;
+    public static final int OXYGEN_TANK_SLOT = 1;
     public boolean bubbleVisible = true;
     private double size = 0;
     private byte targetSize = 1;
@@ -83,11 +84,11 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT);
+        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
     }
 
@@ -102,11 +103,6 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return false;
-    }
-
-    @Override
     public boolean canInsertEnergy() {
         return true;
     }
@@ -118,89 +114,71 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         } else if (slot == 1) {
             return OxygenUtils::isOxygenItem;
         } else {
-            return itemStack -> false;
+            return Constants.Misc.alwaysFalse();
         }
     }
 
     @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            if (disabled()) {
-                idleEnergyDecrement(true);
-                if (size > 0) {
-                    setSize(size - 0.2D);
-                }
-            }
-            return;
-        }
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(BATTERY_SLOT);
+        this.drainOxygenFromStack(1);
+    }
+
+    @Override
+    public @NotNull MachineStatus updateStatus() {
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        Fraction oxygenRequired = Fraction.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
+        if (this.getFluidTank().takeFluid(0, oxygenRequired, ActionType.TEST).getAmount().compareTo(oxygenRequired) != 0) return Status.NOT_ENOUGH_OXYGEN;
+        return Status.DISTRIBUTING;
+    }
+
+    @Override
+    public void tickWork() {
+        this.players = world.getPlayers().size();
+        this.prevSize = this.size;
 
         if (this.size > this.targetSize) {
-            setSize(Math.max(size - 0.1F, targetSize));
+            this.setSize(Math.max(size - 0.1F, targetSize));
         }
-
-        attemptChargeFromStack(BATTERY_SLOT);
-        drainOxygenFromStack(1);
-        trySpreadEnergy();
-
-        if (this.getCapacitor().getCurrentEnergy() > 0 && this.getFluidTank().getContents(0).getAmount().doubleValue() > 0) {
-            this.setStatus(Status.DISTRIBUTING);
-        } else {
-            this.setStatus(Status.OFF);
-        }
-
-        if (getStatus() == Status.OFF) {
-            idleEnergyDecrement(false);
-            if (size > 0) {
-                setSize(size - 0.2D);
-            }
-
-            if (size < 0) {
-                setSize(0);
+        if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
+            BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, world);
+            entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+            entity.prevX = this.getPos().getX();
+            entity.prevY = this.getPos().getY();
+            entity.prevZ = this.getPos().getZ();
+            world.spawnEntity(entity);
+            bubbleId = entity.getEntityId();
+            for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
+                player.networkHandler.sendPacket(entity.createSpawnPacket());
             }
         }
-
-        if (getStatus() == Status.DISTRIBUTING) {
-            if (size > 0.0D && bubbleVisible && bubbleId == -1 && (world instanceof ServerWorld)) {
-                BubbleEntity entity = new BubbleEntity(GalacticraftEntityTypes.BUBBLE, world);
-                entity.setPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
-                entity.prevX = this.getPos().getX();
-                entity.prevY = this.getPos().getY();
-                entity.prevZ = this.getPos().getZ();
-                world.spawnEntity(entity);
-                bubbleId = entity.getEntityId();
-                for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
-                    player.networkHandler.sendPacket(entity.createSpawnPacket());
-                }
-            }
-
-            Fraction amount = this.getFluidTank().takeFluid(0, Fraction.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), ActionType.PERFORM).getAmount();
+        if (this.getStatus().getType().isActive()) {
+            this.getFluidTank().takeFluid(0, Fraction.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), ActionType.PERFORM);
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
                 }
             }
         } else {
-            if (size > 0) {
-                setSize(size - 0.2D);
-            }
-        }
-        if (size < 0) {
-            setSize(0);
-        }
-        if (size == 0 && getStatus() != Status.DISTRIBUTING) {
-            if (this.bubbleId != -1) {
+            if (this.bubbleId != -1 && size <= 0) {
                 world.getEntityById(bubbleId).remove();
                 this.bubbleId = -1;
             }
-        }
 
+            if (size > 0) {
+                this.setSize(size - 0.2D);
+            }
+
+            if (size < 0) {
+                this.setSize(0);
+            }
+        }
         if (prevSize != size || players != world.getPlayers().size()) {
             for (ServerPlayerEntity player : ((ServerWorld) world).getPlayers()) {
                 ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "bubble_size"), new PacketByteBuf(new PacketByteBuf(Unpooled.buffer()).writeBlockPos(this.pos).writeDouble(this.size)));
             }
         }
-        this.players = world.getPlayers().size();
-        this.prevSize = this.size;
     }
 
     public byte getTargetSize() {
@@ -229,43 +207,13 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public void fromClientTag(CompoundTag tag) {
-        this.fromTag(null, tag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag tag) {
-        return this.toTag(tag);
-    }
-
-    @Override
-    public int getEnergyUsagePerTick() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canHopperInsertItems(int slot) {
-        return false;
-    }
-
-    @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
+    public boolean canPipeInsertFluid(int tank) {
         return true;
-    }
-
-    @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
     }
 
     public double getSize() {
@@ -276,13 +224,18 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         this.size = size;
     }
 
+    @Override
+    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
+        return volume.isEmpty() || volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    }
+
     protected void drainOxygenFromStack(int slot) {
         if (this.getFluidTank().getContents(0).getAmount().compareTo(this.getFluidTank().getMaxCapacity(0)) >= 0) {
             return;
         }
         ItemStack stack = getInventory().getStack(slot).copy();
         if (OxygenUtils.isOxygenItem(stack)) {
-            TankComponent component = TankComponentHelper.INSTANCE.getComponent(stack, "oxy-drain-bubble");
+            TankComponent component = ComponentHelper.TANK.getComponent(stack, "oxy-drain-bubble");
             for (int i = 0; i < component.getTanks(); i++) {
                 if (component.getContents(i).getFluid().equals(GalacticraftFluids.OXYGEN)) {
                     this.getFluidTank().insertFluid(component.takeFluid(i, this.getFluidTank().getMaxCapacity(0).subtract(this.getFluidTank().getContents(0).getAmount()), ActionType.PERFORM), ActionType.PERFORM);
@@ -295,7 +248,6 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        OFF(new TranslatableText("ui.galacticraft-rewoven.machinestatus.off"), Formatting.RED, StatusType.OFF),
         NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
         DISTRIBUTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
         NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
 import io.github.cottonmc.component.UniversalComponents;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
@@ -65,12 +66,12 @@ public class OxygenTankItem extends Item {
     }
 
     @Override
-    public void appendStacks(ItemGroup itemGroup_1, DefaultedList<ItemStack> list) {
-        if (this.isIn(itemGroup_1)) {
+    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
+        if (this.isIn(group)) {
             ItemStack stack = new ItemStack(this);
             list.add(stack);
             stack = stack.copy();
-            TankComponentHelper.INSTANCE.getComponent(stack).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, TankComponentHelper.INSTANCE.getComponent(stack).getMaxCapacity(0)));
+            UniversalComponents.TANK_COMPONENT.get(stack).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentHelper.TANK.getComponent(stack).getMaxCapacity(0)));
             list.add(stack);
         }
     }

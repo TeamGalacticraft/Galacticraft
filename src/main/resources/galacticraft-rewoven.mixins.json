@@ -16,6 +16,7 @@
     "EmptyChunkMixin",
     "EntityMixin",
     "ItemStackMixin",
+    "LanternBlockMixin",
     "LivingEntityMixin",
     "LootTablesAccessor",
     "ProtoChunkMixin",

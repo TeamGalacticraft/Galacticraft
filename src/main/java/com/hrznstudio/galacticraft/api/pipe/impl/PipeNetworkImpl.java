@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,10 +30,8 @@ import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -146,7 +144,7 @@ public class PipeNetworkImpl implements PipeNetwork {
         removeEdge(neighborPipe, theBlockThatWasActuallyChanged, true);
         BlockPos poss = theBlockThatWasActuallyChanged.subtract(neighborPipe);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, theBlockThatWasActuallyChanged, opposite);
+        TankComponent component = ComponentHelper.TANK.getComponent(world, theBlockThatWasActuallyChanged, opposite);
         boolean insert = false;
         boolean extract = false;
         if (component != null) {
@@ -184,7 +182,7 @@ public class PipeNetworkImpl implements PipeNetwork {
                 BlockEntity entity = world.getBlockEntity(successor);
                 BlockPos poss = successor.subtract(pos);
                 Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-                TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, successor, opposite);
+                TankComponent component = ComponentHelper.TANK.getComponent(world, successor, opposite);
                 if (component != null && !(entity instanceof Pipe)) {
                     if (component.canInsert(0)) {
                         FluidVolume data = component.insertFluid(amount, actionType);

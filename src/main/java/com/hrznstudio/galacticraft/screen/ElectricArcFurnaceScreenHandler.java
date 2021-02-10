@@ -1,63 +1,71 @@
+/*
+ * Copyright (c) 2019-2021 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.ElectricArcFurnaceBlockEntity;
-import com.hrznstudio.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import com.hrznstudio.galacticraft.screen.slot.RecipeInputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.Slot;
 
 public class ElectricArcFurnaceScreenHandler extends MachineScreenHandler<ElectricArcFurnaceBlockEntity> {
-    private final Property time = Property.create();
-    private final Property maxTime = Property.create();
 
-    protected ElectricArcFurnaceScreenHandler(int syncId, PlayerEntity playerEntity, ElectricArcFurnaceBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER);
-        Inventory inventory = blockEntity.getInventory().asInventory();
-
-        this.addSlot(new ChargeSlot(inventory, 0, 8, 7)); //charge
-        this.addSlot(new RecipeInputSlot(inventory, 1, 56, 25, blockEntity.getWorld(), RecipeType.SMELTING)); //in
-        this.addSlot(new OutputSlot(inventory, 2, 109, 25)); //out
-        this.addSlot(new OutputSlot(inventory, 3, 127, 25)); //out
-
-
-        // Player inventory slots
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+    protected ElectricArcFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricArcFurnaceBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_ARC_FURNACE_HANDLER);
+        this.addProperty(new Property() {
+            @Override
+            public int get() {
+                return machine.cookTime;
             }
-        }
 
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, 142));
-        }
+            @Override
+            public void set(int value) {
+                machine.cookTime = value;
+            }
+        });
+        this.addProperty(new Property() {
+            @Override
+            public int get() {
+                return machine.cookLength;
+            }
 
-        addProperty(time);
-        addProperty(maxTime);
+            @Override
+            public void set(int value) {
+                machine.cookLength = value;
+            }
+        });
+        this.addSlot(new ChargeSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.CHARGE_SLOT, 8, 7));
+        this.addSlot(new RecipeInputSlot<>(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.INPUT_SLOT, 56, 25, machine.getWorld(), RecipeType.SMELTING));
+        this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_1, 109, 25));
+        this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricArcFurnaceBlockEntity.OUTPUT_SLOT_2, 127, 25));
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public ElectricArcFurnaceScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (ElectricArcFurnaceBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        blockEntity.cookTime = time.get();
-        blockEntity.maxCookTime = maxTime.get();
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        time.set(blockEntity.cookTime);
-        maxTime.set(blockEntity.maxCookTime);
-        super.sendContentUpdates();
     }
 }

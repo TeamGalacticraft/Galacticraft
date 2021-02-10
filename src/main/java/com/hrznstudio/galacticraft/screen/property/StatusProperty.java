@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,6 @@ public class StatusProperty extends Property {
 
     @Override
     public void set(int value) {
-        blockEntity.setStatus(value);
+        blockEntity.setStatusById(value);
     }
 }

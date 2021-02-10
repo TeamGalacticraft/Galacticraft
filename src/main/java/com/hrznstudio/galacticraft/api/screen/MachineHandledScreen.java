@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
-import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
@@ -130,19 +129,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.pos = pos;
         this.world = world;
 
-        ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
+        ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.machine.getSecurity();
         if (!security.hasOwner()) {
             security.setOwner(this.playerInventory.player);
             security.setPublicity(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PRIVATE);
-            sendSecurityUpdate(this.handler.blockEntity);
+            sendSecurityUpdate(this.handler.machine);
         } else if (security.getOwner().equals(playerInventory.player.getUuid())
                 && !security.getUsername().equals(playerInventory.player.getEntityName())) {
             security.setUsername(playerInventory.player.getEntityName());
-            sendSecurityUpdate(this.handler.blockEntity);
+            sendSecurityUpdate(this.handler.machine);
         }
 
         for (BlockFace face : BlockFace.values()) {
-            config.put(face, screenHandler.blockEntity.getSideConfigInfo().get(face).getOption());
+            config.put(face, screenHandler.machine.getSideConfigInfo().get(face).getOption());
         }
     }
 
@@ -165,8 +164,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public void drawConfigTabs(MatrixStack stack, int mouseX, int mouseY) {
         DiffuseLighting.disable();
-        if (this.handler.blockEntity != null) {
-            final ConfigurableMachineBlockEntity entity = this.handler.blockEntity;
+        if (this.handler.machine != null) {
+            final ConfigurableMachineBlockEntity entity = this.handler.machine;
 
             if (redstoneOpen) {
                 this.client.getTextureManager().bindTexture(PANELS_TEXTURE);
@@ -218,8 +217,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 if (hasShiftDown()) {
                     if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y - 18, ICONS_WIDTH, ICONS_HEIGHT)) {
                         if (config.get(BlockFace.TOP).isItem()) {
-                            if (handler.blockEntity.getSideConfigInfo().getTopValue() != -1) {
-                                textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getTopValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y - 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                            if (handler.machine.getSideConfigInfo().getTopValue() != -1) {
+                                textRenderer.draw(stack, String.valueOf(handler.machine.getSideConfigInfo().getTopValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y - 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
                             }
                             for (Slot slot : handler.slots) {
                                 if (slot.inventory != playerInventory) {
@@ -228,8 +227,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y + 18, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.blockEntity.getSideConfigInfo().getBottomValue() != -1) {
-                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getBottomValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y + 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        if (handler.machine.getSideConfigInfo().getBottomValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.machine.getSideConfigInfo().getBottomValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y + 18) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
                         }
                         if (config.get(BlockFace.BOTTOM).isItem()) {
                             for (Slot slot : handler.slots) {
@@ -239,8 +238,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.blockEntity.getSideConfigInfo().getFrontValue() != -1) {
-                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getFrontValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        if (handler.machine.getSideConfigInfo().getFrontValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.machine.getSideConfigInfo().getFrontValue()), this.x + BASE_CONFIG_BUTTON_X + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
                         }
                         if (config.get(BlockFace.FRONT).isItem()) {
                             for (Slot slot : handler.slots) {
@@ -250,8 +249,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.blockEntity.getSideConfigInfo().getLeftValue() != -1) {
-                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getLeftValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        if (handler.machine.getSideConfigInfo().getLeftValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.machine.getSideConfigInfo().getLeftValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
                         }
                         if (config.get(BlockFace.LEFT).isItem()) {
                             for (Slot slot : handler.slots) {
@@ -261,8 +260,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.blockEntity.getSideConfigInfo().getBackValue() != -1) {
-                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getBackValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        if (handler.machine.getSideConfigInfo().getBackValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.machine.getSideConfigInfo().getBackValue()), this.x + BASE_CONFIG_BUTTON_X + CONFIG_BUTTON_SPACING + CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
                         }
                         if (config.get(BlockFace.BACK).isItem()) {
                             for (Slot slot : handler.slots) {
@@ -272,8 +271,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                             }
                         }
                     } else if (check(mouseX, mouseY, this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING, this.y + BASE_CONFIG_BUTTON_Y, ICONS_WIDTH, ICONS_HEIGHT)) {
-                        if (handler.blockEntity.getSideConfigInfo().getRightValue() != -1) {
-                            textRenderer.draw(stack, String.valueOf(handler.blockEntity.getSideConfigInfo().getRightValue()), this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
+                        if (handler.machine.getSideConfigInfo().getRightValue() != -1) {
+                            textRenderer.draw(stack, String.valueOf(handler.machine.getSideConfigInfo().getRightValue()), this.x + BASE_CONFIG_BUTTON_X - CONFIG_BUTTON_SPACING + (ICONS_WIDTH / 2F), (this.y + BASE_CONFIG_BUTTON_Y) + (ICONS_HEIGHT / 2F), Formatting.GOLD.getColorValue());
                         }
                         if (config.get(BlockFace.RIGHT).isItem()) {
                             for (Slot slot : handler.slots) {
@@ -331,8 +330,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public boolean checkTabsClick(MatrixStack stack, double mouseX, double mouseY, int button) {
         if (button != 3) {
-            if (this.handler.blockEntity != null) {
-                ConfigurableMachineBlockEntity entity = this.handler.blockEntity;
+            if (this.handler.machine != null) {
+                ConfigurableMachineBlockEntity entity = this.handler.machine;
                 if (!redstoneOpen) {
                     if (mouseX >= this.x - TAB_WIDTH && mouseX <= this.x && mouseY >= this.y + 3 && mouseY <= this.y + TAB_HEIGHT + 3) {
                         redstoneOpen = true;
@@ -391,42 +390,42 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     }
 
                     if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.FRONT)) {
+                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.FRONT)) {
                             updateSides(button, BlockFace.FRONT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 + 19 + 19 && (mouseX + 48) - 19 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.BACK)) {
+                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.BACK)) {
                             updateSides(button, BlockFace.BACK);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 - 19 && mouseX + 48 + 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.RIGHT)) {
+                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.RIGHT)) {
                             updateSides(button, BlockFace.RIGHT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 + 19 && mouseX + 48 - 19 <= this.x && mouseY >= this.y + 49 + 3 + 18 && mouseY <= this.y + 68 + 18) {
-                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.LEFT)) {
+                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.LEFT)) {
                             updateSides(button, BlockFace.LEFT);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 && mouseY <= this.y + 68) {
-                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.TOP)) {
+                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.TOP)) {
                             updateSides(button, BlockFace.TOP);
                             return true;
                         }
                     }
 
                     if (mouseX >= (this.x - PANEL_WIDTH + 43) - 3 - 5 && mouseX + 48 <= this.x && mouseY >= this.y + 49 + 3 + 18 + 18 && mouseY <= this.y + 68 + 18 + 18) {
-                        if (!this.handler.blockEntity.getNonConfigurableSides().contains(BlockFace.BOTTOM)) {
+                        if (!this.handler.machine.getLockedFaces().contains(BlockFace.BOTTOM)) {
                             updateSides(button, BlockFace.BOTTOM);
                             return true;
                         }
@@ -556,8 +555,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     @Override
     public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
         assert this.client != null;
-        if (this.handler.blockEntity != null) {
-            ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.blockEntity.getSecurity();
+        if (this.handler.machine != null) {
+            ConfigurableMachineBlockEntity.SecurityInfo security = this.handler.machine.getSecurity();
             switch (security.getPublicity()) {
                 case PRIVATE:
                     if (!this.playerInventory.player.getUuid().equals(security.getOwner())) {
@@ -615,8 +614,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     public boolean isAllowed() {
-        if (this.handler.blockEntity != null) {
-            return handler.blockEntity.getSecurity().hasAccess(playerInventory.player);
+        if (this.handler.machine != null) {
+            return handler.machine.getSecurity().hasAccess(playerInventory.player);
         }
         return false;
     }
@@ -625,19 +624,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (!Screen.hasShiftDown()) {
             SideOption next;
             if (btn == 1) {
-                next = handler.blockEntity.getSideConfigInfo().get(face).getOption().prevValidOption(handler.blockEntity);
+                next = handler.machine.getSideConfigInfo().get(face).getOption().prevValidOption(handler.machine);
             } else {
-                next = handler.blockEntity.getSideConfigInfo().get(face).getOption().nextValidOption(handler.blockEntity);
+                next = handler.machine.getSideConfigInfo().get(face).getOption().nextValidOption(handler.machine);
             }
-            handler.blockEntity.getSideConfigInfo().set(face, next);
+            handler.machine.getSideConfigInfo().set(face, next);
             sendSideConfigUpdate(face, true, next, false);
             config.replace(face, next);
         } else {
             if (btn != 1) {
-                handler.blockEntity.getSideConfigInfo().increment(face);
+                handler.machine.getSideConfigInfo().increment(face);
                 sendSideConfigUpdate(face, false, null, true);
             } else {
-                handler.blockEntity.getSideConfigInfo().decrement(face);
+                handler.machine.getSideConfigInfo().decrement(face);
                 sendSideConfigUpdate(face, false ,null, false);
             }
         }
@@ -658,9 +657,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     @Contract("_, true, null, _ -> fail;")
     private void sendSideConfigUpdate(@NotNull BlockFace face, boolean optionChange, @Nullable SideOption option, boolean positive) {
-        if (handler.blockEntity.getSecurity().hasAccess(playerInventory.player)) {
+        if (handler.machine.getSecurity().hasAccess(playerInventory.player)) {
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-            buf.writeBlockPos(handler.blockEntity.getPos());
+            buf.writeBlockPos(handler.machine.getPos());
             buf.writeBoolean(optionChange);
             if (optionChange) {
                 buf.writeEnumConstant(face);

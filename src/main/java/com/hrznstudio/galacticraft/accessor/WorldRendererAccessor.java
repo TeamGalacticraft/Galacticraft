@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import net.minecraft.util.math.BlockPos;
 @Environment(EnvType.CLIENT)
 public interface WorldRendererAccessor {
     default void addChunkToRebuild(BlockPos pos) {
-        addChunkToRebuild(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
+        this.addChunkToRebuild(pos.getX() >> 4, pos.getY() >> 4, pos.getZ() >> 4);
     }
 
     void addChunkToRebuild(int x, int y, int z);

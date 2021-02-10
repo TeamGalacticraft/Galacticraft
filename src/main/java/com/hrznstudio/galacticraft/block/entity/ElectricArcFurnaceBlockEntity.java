@@ -1,6 +1,29 @@
+/*
+ * Copyright (c) 2019-2021 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.block.entity;
 
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
@@ -10,7 +33,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -25,17 +48,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public int cookTime = 0;
-    public int maxCookTime = 0;
+    public int cookLength = 0;
     private final Inventory subInv = InventoryWrapper.of(new SubInventoryComponent(this.getInventory(), new int[]{INPUT_SLOT}));
 
-    private static final int CHARGE_SLOT = 0;
-    private static final int INPUT_SLOT = 1;
-    private static final int OUTPUT_SLOT_1 = 2;
-    private static final int OUTPUT_SLOT_2 = 3;
+    public static final int CHARGE_SLOT = 0;
+    public static final int INPUT_SLOT = 1;
+    public static final int OUTPUT_SLOT_1 = 2;
+    public static final int OUTPUT_SLOT_2 = 3;
 
     public ElectricArcFurnaceBlockEntity(BlockEntityType<? extends ElectricArcFurnaceBlockEntity> blockEntityType) {
         super(blockEntityType);
@@ -46,43 +70,23 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return false;
-    }
-
-    @Override
     public boolean canInsertEnergy() {
         return true;
     }
 
     @Override
-    protected int getEnergyUsagePerTick() {
-        return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
+    protected int getBaseEnergyConsumption() {
+        return Galacticraft.configManager.get().electricArcFurnaceEnergyConsumptionRate();
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
-        return slot == 2;
+    public boolean canHopperExtract(int slot) {
+        return slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
-        return slot == 0 || slot == 1;
-    }
-
-    @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+    public boolean canHopperInsert(int slot) {
+        return slot == INPUT_SLOT;
     }
 
     @Override
@@ -91,15 +95,10 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyItem;
         if (slot == INPUT_SLOT) return (stack) -> world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
-        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? s -> true : s -> false;
+        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? Constants.Misc.alwaysTrue() : Constants.Misc.alwaysFalse();
     }
 
     @Override
@@ -108,90 +107,41 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
     }
 
     @Override
-    public void tick() {
-        if (world.isClient) return;
-        if (disabled()) {
-            this.idleEnergyDecrement(true);
-            return;
-        }
-        this.attemptChargeFromStack(CHARGE_SLOT);
-
-        if (this.getCapacitor().getCurrentEnergy() >= this.getEnergyUsagePerTick()) {
-            SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElse(null);
-            if (maxCookTime == 0) {
-                if (recipe != null) {
-                    if (canAcceptRecipeOutput(recipe)) {
-                        this.maxCookTime = (int) (recipe.getCookTime() * 0.80D); //20% faster?
-                        setStatus(Status.ACTIVE);
-                    } else {
-                        setStatus(Status.FULL);
-                    }
-                } else {
-                    setStatus(Status.NOT_ENOUGH_ITEMS);
-                    maxCookTime = 0;
-                    if (cookTime > 0) {
-                        cookTime--;
-                    }
-                }
-            } else {
-                if (recipe != null && canAcceptRecipeOutput(recipe)) {
-                    if (!world.isClient) this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
-                    if (cookTime++ >= maxCookTime) {
-                        ItemStack out = new ItemStack(recipe.getOutput().getItem(), 1);
-                        out.setTag(recipe.getOutput().getTag());
-                        if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) {
-                            out.setCount(2);
-                        }
-                        this.getInventory().takeStack(INPUT_SLOT, 1, ActionType.PERFORM);
-                        if (canInsert(OUTPUT_SLOT_1, out)) {
-                            this.insert(OUTPUT_SLOT_1, out);
-                        } else {
-                            this.insert(OUTPUT_SLOT_2, out);
-                        }
-                        recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElse(null);
-                        maxCookTime = 0;
-                        cookTime = -1;
-                        setStatus(Status.NOT_ENOUGH_ITEMS);
-                        if (recipe != null && canAcceptRecipeOutput(recipe)) {
-                            this.maxCookTime = (int) (recipe.getCookTime() * 0.85F); //15% faster?teh e
-                            setStatus(Status.ACTIVE);
-                        }
-                    }
-                } else {
-                    cookTime--;
-                    maxCookTime = 0;
-                }
-            }
-        } else {
-            setStatus(Status.NOT_ENOUGH_ENERGY);
-            maxCookTime = 0;
-            if (cookTime > 0) {
-                cookTime--;
-            }
-        }
+    public @NotNull MachineStatus updateStatus() {
+        Optional<SmeltingRecipe> recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world);
+        if (!recipe.isPresent()) return Status.NOT_ENOUGH_ITEMS;
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        if (!this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, 
+                recipe.get().getOutput().copy(), ActionType.TEST), ActionType.TEST).isEmpty()) return Status.OUTPUT_FULL;
+        return Status.ACTIVE;
     }
 
-    protected boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe) {
-        if (!this.getInventory().getStack(INPUT_SLOT).isEmpty() && recipe != null) {
-            ItemStack output = new ItemStack(recipe.getOutput().getItem(), 1);
-            if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) {
-                output.setCount(2);
+    @Override
+    public void tickWork() {
+        if (this.getStatus().getType().isActive()) {
+            if (this.cookLength == 0) {
+                SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
+                this.cookLength = (int) (recipe.getCookTime() * 0.8F);
+                this.cookTime = 0;
             }
-            ItemStack stack = this.getInventory().getStack(OUTPUT_SLOT_1);
-            ItemStack stack1 = this.getInventory().getStack(OUTPUT_SLOT_2);
-            if (stack.isEmpty() || stack1.isEmpty()) {
-                return true;
-            } else if (stack.isItemEqual(output) && stack.getCount() + output.getCount() < this.getMaxCountPerStack() && stack.getCount() + output.getCount() <= stack.getMaxCount()) {
-                return true;
-            } else
-                return stack1.isItemEqual(output) && stack1.getCount() + output.getCount() < this.getMaxCountPerStack() && stack1.getCount() + output.getCount() <= stack1.getMaxCount();
+            if (this.cookTime++ >= this.cookLength) {
+                SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
+                if (this.getInventory().takeStack(INPUT_SLOT, 1, ActionType.PERFORM).isEmpty()) return;
+                this.cookTime = 0;
+                this.cookLength = 0;
+                if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), ActionType.PERFORM), ActionType.PERFORM);
+                this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
+                        recipe.getOutput().copy(), ActionType.PERFORM), ActionType.PERFORM);
+
+            }
+        } else {
+            if (this.cookTime > 0) this.cookTime--;
         }
-        return false;
     }
 
     private enum Status implements MachineStatus {
@@ -203,7 +153,7 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
         /**
          * The output slot is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * There are no valid items to smelt/cook.

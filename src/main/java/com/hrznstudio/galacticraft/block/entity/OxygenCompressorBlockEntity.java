@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
 import io.github.cottonmc.component.api.ActionType;
+import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
@@ -51,7 +52,7 @@ import java.util.function.Predicate;
  */
 public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
     public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
-    public static final int BATTERY_SLOT = 0;
+    public static final int CHARGE_SLOT = 0;
 
     public OxygenCompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
@@ -78,11 +79,6 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public boolean canExtractEnergy() {
-        return false;
-    }
-
-    @Override
     public boolean canInsertEnergy() {
         return true;
     }
@@ -97,66 +93,51 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
     }
 
     @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            if (disabled()) {
-                idleEnergyDecrement(true);
-            }
-            return;
-        }
-        attemptChargeFromStack(BATTERY_SLOT);
-        trySpreadEnergy();
-        if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
-            setStatus(Status.NOT_ENOUGH_ENERGY);
-        } else if (this.getFluidTank().isEmpty()) {
-            setStatus(Status.NOT_ENOUGH_OXYGEN);
-        } else {
-            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
-            if (component != null) {
-                if (component.getContents(0).getAmount().compareTo(component.getMaxCapacity(0)) == 0) {
-                    setStatus(Status.CONTAINER_FULL);
-                } else {
-                    setStatus(Status.COMPRESSING);
-                }
-            } else {
-                setStatus(Status.NOT_ENOUGH_ITEMS);
-            }
-        }
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(CHARGE_SLOT);
+    }
 
-        if (getStatus() == Status.COMPRESSING) {
+    @Override
+    public @NotNull MachineStatus updateStatus() {
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        if (this.getFluidTank().isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(1));
+        if (component == null) return Status.NOT_ENOUGH_ITEMS;
+        if (component.getContents(0).getAmount().compareTo(component.getMaxCapacity(0)) >= 0) return Status.CONTAINER_FULL;
+        return Status.COMPRESSING;
+    }
+
+    @Override
+    public void tickWork() {
+        if (this.getStatus().getType().isActive()) {
             TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getStack(1));
-            getFluidTank().insertFluid(0, component.insertFluid(0, getFluidTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
-            this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
+            this.getFluidTank().insertFluid(0, component.insertFluid(0, this.getFluidTank().takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
         }
     }
 
     @Override
-    public int getEnergyUsagePerTick() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtract(int slot) {
         return true;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsert(int slot) {
         return true;
     }
 
     @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
+    public boolean canPipeInsertFluid(int tank) {
         return true;
     }
 

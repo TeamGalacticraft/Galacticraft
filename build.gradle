@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,6 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-
 ext {
     buildNum = (System.getenv("BUILD_NUMBER") != null) ? System.getenv("BUILD_NUMBER") : "0"
 }
@@ -40,33 +39,35 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version + "+build." + buildNum
 group = project.maven_group
 
-minecraft {
-	refmapName = 'galacticraft-rewoven.refmap.json'
+loom {
+    refmapName = "galacticraft-rewoven.refmap.json"
     accessWidener "src/main/resources/galacticraft_rewoven.accesswidener"
 }
 
 repositories {
     mavenLocal()
-    jcenter() {
+    maven {
+        url "https://maven.shedaniel.me/"
         content {
             includeGroup "me.shedaniel.cloth"
+            includeGroup "me.shedaniel"
         }
     }
     maven {
-        url "https://server.bbkr.space/artifactory/libs-release"
+        url "https://server.bbkr.space/artifactory/libs-release/"
         content {
             includeGroup "io.github.cottonmc"
             includeGroup "io.github.fablabsmc"
         }
     }
     maven {
-        url "https://maven.modmuss50.me"
+        url "https://maven.terraformersmc.com/"
         content {
-            includeGroup "io.github.prospector"
+            includeGroup "com.terraformersmc"
         }
     }
     maven {
-        url "https://dl.bintray.com/ladysnake/libs"
+        url "https://dl.bintray.com/ladysnake/libs/"
         content {
             includeGroup "io.github.onyxstudios.Cardinal-Components-API"
         }
@@ -78,15 +79,9 @@ repositories {
         }
     }
     maven {
-        url "https://cdn.hrzn.studio/maven"
+        url "https://cdn.hrzn.studio/maven/"
         content {
             includeGroup "com.hrznstudio"
-        }
-    }
-    maven {
-        url "https://www.cursemaven.com"
-        content {
-            includeGroup "curse.maven"
         }
     }
 }
@@ -124,7 +119,7 @@ dependencies {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
     }
-    modImplementation("io.github.prospector:modmenu:${project.modmenu_version}") { transitive = false }
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") { transitive = false }
     modImplementation("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:${project.rei_version}") {
@@ -164,13 +159,8 @@ dependencies {
 processResources {
     inputs.property "version", project.version
 
-    from(sourceSets.main.resources.srcDirs) {
-        include "fabric.mod.json"
+    filesMatching("fabric.mod.json") {
         expand "version": project.version
-    }
-
-    from(sourceSets.main.resources.srcDirs) {
-        exclude "fabric.mod.json"
     }
 
     // Minify json resources - https://stackoverflow.com/questions/41028030/gradle-minimize-json-resources-in-processresources#41029113
@@ -181,13 +171,17 @@ processResources {
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+
+    def targetVersion = 8
+    if (JavaVersion.current().isJava9Compatible()) {
+        it.options.release = targetVersion
+    }
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    archiveClassifier = "sources"
-    from sourceSets.main.allSource
+java {
+    withSourcesJar()
 }
 
 task javadocJar(type: Jar) {

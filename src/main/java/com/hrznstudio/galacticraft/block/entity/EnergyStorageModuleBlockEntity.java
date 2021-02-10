@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -68,17 +69,12 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 0;
-    }
-
-    @Override
     public List<SideOption> validSideOptions() {
         return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.POWER_OUTPUT);
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
+    protected MachineStatus getStatusById(int index) {
         return MachineStatus.EMPTY;
     }
 
@@ -89,46 +85,32 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     protected int getBatteryTransferRate() {
-        return 5;
+        return 100;
     }
 
     @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            return;
-        }
-        attemptChargeFromStack(DRAIN_BATTERY_SLOT);
-        attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
-        trySpreadEnergy();
+    public @NotNull MachineStatus updateStatus() {
+        return MachineStatus.EMPTY;
     }
 
     @Override
-    public int getEnergyUsagePerTick() {
-        return 0;
+    public void tickWork() {
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(DRAIN_BATTERY_SLOT);
+        this.attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
+    }
+
+    @Override
+    public boolean canHopperExtract(int slot) {
         return true;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsert(int slot) {
         return true;
-    }
-
-    @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
     }
 }

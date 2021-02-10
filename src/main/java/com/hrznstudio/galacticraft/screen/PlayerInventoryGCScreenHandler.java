@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -58,10 +58,10 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
     private final PlayerEntity player;
 
-    public PlayerInventoryGCScreenHandler(PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public PlayerInventoryGCScreenHandler(PlayerInventory playerInventory, PlayerEntity player) {
         super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
 
-        this.player = playerEntity;
+        this.player = player;
         this.inventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player).asInventory();
 
         for (int slotY = 0; slotY < 4; ++slotY) {
@@ -79,8 +79,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
                 }
 
                 @Override
-                public boolean canTakeItems(PlayerEntity playerEntity) {
-                    return player.getUuid() == playerEntity.getUuid();
+                public boolean canTakeItems(PlayerEntity player) {
+                    return player.getUuid() == player.getUuid();
                 }
 
                 @Override
@@ -97,8 +97,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity) {
-                return player.getUuid() == playerEntity.getUuid();
+            public boolean canTakeItems(PlayerEntity player) {
+                return player.getUuid() == player.getUuid();
             }
         });
 
@@ -109,8 +109,8 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             }
 
             @Override
-            public boolean canTakeItems(PlayerEntity playerEntity) {
-                return player.getUuid() == playerEntity.getUuid();
+            public boolean canTakeItems(PlayerEntity player) {
+                return player.getUuid() == player.getUuid();
             }
         });
         this.addSlot(new OxygenTankSlot(this.inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));

@@ -45,11 +45,11 @@ public class OxygenSealerScreen extends MachineHandledScreen<OxygenSealerScreenH
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OXYGEN_SEALER_SCREEN));
 
     public OxygenSealerScreen(OxygenSealerScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, inv.player.world, handler.blockEntity.getPos(), title);
+        super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
-        this.addWidget(new CapacitorWidget(handler.blockEntity.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.blockEntity::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.blockEntity.getFluidTank(), 0, 30, 8, 48));
+        this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
+        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank(), 0, 30, 8, 48));
     }
 
     @Override

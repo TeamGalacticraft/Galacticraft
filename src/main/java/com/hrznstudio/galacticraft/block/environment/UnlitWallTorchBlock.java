@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,8 +52,7 @@ public class UnlitWallTorchBlock extends WallTorchBlock {
         if (player.getStackInHand(hand).getItem() instanceof FlintAndSteelItem) {
             world.setBlockState(pos, Blocks.WALL_TORCH.getDefaultState().with(WallTorchBlock.FACING, state.get(WallTorchBlock.FACING)));
             ItemStack stack = player.getStackInHand(hand).copy();
-            stack.damage(1, player, (playerEntity -> {
-            }));
+            stack.damage(1, player, e -> {});
             player.setStackInHand(hand, stack);
         }
 

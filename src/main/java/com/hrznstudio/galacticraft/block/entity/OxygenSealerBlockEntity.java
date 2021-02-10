@@ -90,6 +90,11 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
+    protected MachineStatus getStatusById(int index) {
+        return Status.values()[index];
+    }
+
+    @Override
     public boolean canExtractEnergy() {
         return false;
     }
@@ -108,94 +113,63 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    protected MachineStatus getStatus(int index) {
-        return Status.values()[index];
+    public void updateComponents() {
+        super.updateComponents();
+        this.attemptChargeFromStack(BATTERY_SLOT);
+        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().takeFluid(0, Fraction.of(set.size(), 2000), ActionType.PERFORM);
     }
 
     @Override
-    public void tick() {
-        if (world.isClient || disabled()) {
-            if (!set.isEmpty()) {
-                for (BlockPos pos1 : set) {
-                    ((WorldOxygenAccessor) world).setBreathable(pos1, false);
-                }
-                set.clear();
-            }
-            if (disabled()) {
-                idleEnergyDecrement(true);
-            }
-            return;
-        }
+    public @NotNull MachineStatus updateStatus() {
+        if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
+        if (this.getFluidTank().isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        return Status.SEALED;
+    }
 
-        attemptChargeFromStack(BATTERY_SLOT);
-        if (this.getCapacitor().getCurrentEnergy() < getEnergyUsagePerTick()) {
-            setStatus(Status.NOT_ENOUGH_ENERGY);
-            return;
-        } else if (this.getFluidTank().isEmpty()) {
-            setStatus(Status.NOT_ENOUGH_OXYGEN);
-            return;
-        } else {
-            if (!set.isEmpty()) {
-                for (BlockPos pos1 : set) {
-                    ((WorldOxygenAccessor) world).setBreathable(pos1, false);
-                }
-                set.clear();
-            }
-        }
-
+    @Override
+    public void tickWork() {
         if (sealCheckTime > 0) {
             sealCheckTime--;
         }
-        if (sealCheckTime == 0) {
-            sealCheckTime = SEAL_CHECK_TIME;
-            Direction[] directions = Direction.values();
-            BlockPos pos = this.getPos();
-            Queue<BlockPos> queue = new LinkedList<>();
-            if (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up())) {
-                setStatus(Status.ALREADY_SEALED);
-                return;
-            }
-            set.clear();
-            {
-                BlockPos pos1 = pos.offset(Direction.UP);
-                BlockState state = world.getBlockState(pos1);
-                if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), Direction.DOWN)) {
-                    queue.add(pos1);
-                    set.add(pos1);
-                }
-            }
-            while (!queue.isEmpty()) {
-                pos = queue.poll();
-
-                for (Direction direction : directions) {
-                    if (Block.isFaceFullSquare(world.getBlockState(pos).getCollisionShape(world, pos), direction)) continue;
-                    BlockPos pos1 = pos.offset(direction);
-                    BlockState state = world.getBlockState(pos1);
-                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), direction.getOpposite())) {
-                        if (!set.contains(pos1)) {
-                            queue.add(pos1);
-                            set.add(pos1);
-                        }
-                    }
-                }
-                if (set.size() >= 1000) {
-                    setStatus(Status.AREA_TOO_LARGE);
+        if (this.getStatus().getType().isActive()) {
+            if (sealCheckTime == 0) {
+                sealCheckTime = SEAL_CHECK_TIME;
+                BlockPos pos = this.getPos();
+                Queue<BlockPos> queue = new LinkedList<>();
+                if (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up())) {
+                    setStatus(Status.ALREADY_SEALED);
                     return;
                 }
+                set.clear();
+                {
+                    BlockPos pos1 = pos.offset(Direction.UP);
+                    BlockState state = world.getBlockState(pos1);
+                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), Direction.DOWN)) {
+                        queue.add(pos1);
+                        set.add(pos1);
+                    }
+                }
+                for (BlockPos pos1 : set) {
+                    ((WorldOxygenAccessor) world).setBreathable(pos1, true);
+                }
+                setStatus(Status.SEALED);
             }
-            for (BlockPos pos1 : set) {
-                ((WorldOxygenAccessor) world).setBreathable(pos1, true);
-            }
-            setStatus(Status.SEALED);
-        }
-        if (getStatus() == Status.SEALED) {
-            this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyUsagePerTick(), ActionType.PERFORM);
-            this.getFluidTank().takeFluid(0, Fraction.of(set.size(), 2000), ActionType.PERFORM);
         }
     }
 
     @Override
-    public int getEnergyUsagePerTick() {
+    public void idleEnergyDecrement(boolean off) {
+        super.idleEnergyDecrement(off);
+        if (!set.isEmpty()) {
+            for (BlockPos pos1 : set) {
+                ((WorldOxygenAccessor) world).setBreathable(pos1, false);
+            }
+            set.clear();
+        }
+    }
+
+    @Override
+    protected int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
     }
 
@@ -208,22 +182,17 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public boolean canHopperExtractItems(int slot) {
+    public boolean canHopperExtract(int slot) {
         return true;
     }
 
     @Override
-    public boolean canHopperInsertItems(int slot) {
+    public boolean canHopperInsert(int slot) {
         return true;
     }
 
     @Override
-    public boolean canExtractFluid(int tank) {
-        return false;
-    }
-
-    @Override
-    public boolean canInsertFluid(int tank) {
+    public boolean canPipeInsertFluid(int tank) {
         return true;
     }
 
