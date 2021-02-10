@@ -30,8 +30,10 @@ import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
+import io.github.cottonmc.component.energy.CapacitorComponent;
+import io.github.cottonmc.component.energy.CapacitorComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
+import io.github.cottonmc.component.fluid.TankComponentHelper;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -136,29 +138,25 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public void updateConnections(@NotNull BlockPos neighborPipe, @NotNull BlockPos theBlockThatWasActuallyChanged) {
-        if (world.getBlockEntity(theBlockThatWasActuallyChanged) instanceof Pipe) return;
+    public void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
+        if (world.getBlockEntity(updatedPos) instanceof Pipe) return;
         //pipes should call #removePipe before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(neighborPipe, theBlockThatWasActuallyChanged, true);
-        BlockPos poss = theBlockThatWasActuallyChanged.subtract(neighborPipe);
+        removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        TankComponent component = ComponentHelper.TANK.getComponent(world, theBlockThatWasActuallyChanged, opposite);
-        boolean insert = false;
-        boolean extract = false;
+        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
         if (component != null) {
-            for (int i = 0; i < component.getTanks(); i++) {
-                insert |= component.canInsert(i);
-                extract |= component.canExtract(i);
-            }
-            node(theBlockThatWasActuallyChanged);
-            if (insert && extract) {
-                edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_IO);
-            } else if (insert) {
-                edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_INPUT);
-            } else if (extract) {
-                edge(neighborPipe, theBlockThatWasActuallyChanged, PipeConnectionType.FLUID_OUTPUT);
+            if (component.canInsertEnergy() && component.canExtractEnergy()) {
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
+            } else if (component.canInsertEnergy()) {
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
+            } else if (component.canExtractEnergy()) {
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
             }
         }
     }
@@ -182,7 +180,7 @@ public class PipeNetworkImpl implements PipeNetwork {
                 BlockEntity entity = world.getBlockEntity(successor);
                 BlockPos poss = successor.subtract(pos);
                 Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-                TankComponent component = ComponentHelper.TANK.getComponent(world, successor, opposite);
+                TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, successor, opposite);
                 if (component != null && !(entity instanceof Pipe)) {
                     if (component.canInsert(0)) {
                         FluidVolume data = component.insertFluid(amount, actionType);

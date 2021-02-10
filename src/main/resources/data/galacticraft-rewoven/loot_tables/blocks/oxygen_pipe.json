@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft-rewoven:fluid_pipe"
+          "name": "galacticraft-rewoven:glass_fluid_pipe"
         }
       ],
       "conditions": [

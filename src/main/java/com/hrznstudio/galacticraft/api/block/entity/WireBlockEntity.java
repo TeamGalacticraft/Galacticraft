@@ -28,63 +28,21 @@ import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class WireBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Wire {
+public class WireBlockEntity extends BlockEntity implements Wire {
     private WireNetwork network;
     private static final int MAX_TRANSFER_RATE = 120;
 
     public WireBlockEntity() {
         super(GalacticraftBlockEntities.WIRE_TYPE);
-    }
-
-    @Override
-    public void setLocation(World world, BlockPos pos) {
-        super.setLocation(world, pos);
-
-        if (!world.isClient()) {
-            if (this.network == null) {
-                for (Direction direction : Direction.values()) {
-                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
-                    if (entity instanceof Wire) {
-                        //noinspection ConstantConditions
-                        if (((Wire) entity).getNetwork() != null) {
-                            ((Wire) entity).getNetwork().addWire(pos, this);
-                            break;
-                        }
-                    }
-                }
-                if (this.network == null) {
-                    this.network = WireNetwork.create((ServerWorld)world);
-                    this.network.addWire(pos, this);
-                }
-            }
-        }
-    }
-
-    public int getMaxTransferRate() {
-        return MAX_TRANSFER_RATE;
-    }
-
-    @Override
-    public void fromClientTag(CompoundTag compoundTag) {
-        fromTag(this.getCachedState(), compoundTag);
-    }
-
-    @Override
-    public CompoundTag toClientTag(CompoundTag compoundTag) {
-        return this.toTag(compoundTag);
     }
 
     @Override
@@ -94,7 +52,30 @@ public class WireBlockEntity extends BlockEntity implements BlockEntityClientSer
 
     @Override
     public @NotNull WireNetwork getNetwork() {
-        return network;
+        if (this.network == null) {
+            if (!this.world.isClient()) {
+                for (Direction direction : Direction.values()) {
+                    BlockEntity entity = world.getBlockEntity(pos.offset(direction));
+                    if (entity instanceof Wire) {
+                        //noinspection ConstantConditions
+                        if (((Wire) entity).getNetworkNullable() != null) {
+                            ((Wire) entity).getNetworkNullable().addWire(pos, this);
+                            break;
+                        }
+                    }
+                }
+                if (this.network == null) {
+                    this.setNetwork(WireNetwork.create((ServerWorld) world));
+                    this.network.addWire(pos, this);
+                }
+            }
+        }
+        return this.network;
+    }
+
+    @Override
+    public @Nullable WireNetwork getNetworkNullable() {
+        return this.network;
     }
 
     @Override
@@ -112,5 +93,10 @@ public class WireBlockEntity extends BlockEntity implements BlockEntityClientSer
             }
         }
         return WireConnectionType.NONE;
+    }
+
+    @Override
+    public int getMaxTransferRate() {
+        return MAX_TRANSFER_RATE;
     }
 }
