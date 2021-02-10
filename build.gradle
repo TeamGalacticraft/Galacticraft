@@ -232,6 +232,7 @@ publishing {
 license {
     header = project.file("LICENSE_HEADER.txt")
     include '**/com/hrznstudio/**/*.java'
+    include 'build.gradle'
     ext {
         year = Date.newInstance().toYear().toString()
         company = "HRZN LTD"
