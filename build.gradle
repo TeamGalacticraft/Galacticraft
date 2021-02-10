@@ -26,6 +26,7 @@ import groovy.json.JsonSlurper
 plugins {
     id 'fabric-loom' version '0.5-SNAPSHOT'
     id 'maven-publish'
+    id 'org.cadixdev.licenser' version '0.5.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -225,5 +226,15 @@ publishing {
                 awsIm(AwsImAuthentication)
             }
         }
+    }
+}
+
+license {
+    header = project.file("LICENSE_HEADER.txt")
+    include '**/com/hrznstudio/**/*.java'
+    include 'build.gradle'
+    ext {
+        year = Date.newInstance().toYear().toString()
+        company = "HRZN LTD"
     }
 }
