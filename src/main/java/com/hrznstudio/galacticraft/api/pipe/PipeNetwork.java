@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ public interface PipeNetwork {
     /**
      * Adds a pipe to the network
      * @param pos The position of the pipe being added
-     * @see #addPipe(BlockPos, Pipe)
+     * @see #addPipe(BlockPos, Wire)
      */
     default void addPipe(@NotNull BlockPos pos) {
         addPipe(pos, null);
@@ -65,10 +65,10 @@ public interface PipeNetwork {
 
     /**
      * Updates the pipe's connection to the updated block
-     * @param pipePos The pipe that is adjacent to the updated pos
+     * @param adjacentToUpdated The pipe that is adjacent to the updated pos
      * @param updatedPos The position of the block that was updated
      */
-    void updateConnections(@NotNull BlockPos pipePos, @NotNull BlockPos updatedPos);
+    void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos);
 
     /**
      * Returns the relationship between the two positions
