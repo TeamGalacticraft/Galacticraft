@@ -43,6 +43,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
@@ -88,15 +89,15 @@ public class SpaceRaceScreen extends Screen {
         super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
         TIER_TO_X_MAX_DIST.clear();
         TIER_TO_X_MAX_DIST.put(0, 0F);
-        for (ResearchNode root : ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().getRoots()) {
-            float x = root.getInfo().getX() + (root.getInfo().getTier() > 1 ? TIER_TO_X_MAX_DIST.get(root.getInfo().getTier() - 1) : 0);
-            Queue<ResearchNode> queue = new LinkedList<>(root.getChildren());
-            while (!queue.isEmpty()) {
-                queue.addAll(queue.peek().getChildren());
-                x += queue.poll().getInfo().getX();
-            }
-            TIER_TO_X_MAX_DIST.put(root.getInfo().getTier(), x);
-        }
+//        for (ResearchNode root : /*MinecraftClient.getInstance().getNetworkHandler().getClientResearchManager().getManager().getRoots()*/) {
+//            float x = root.getDisplay().getX() + (root.getDisplay().getTier() > 1 ? TIER_TO_X_MAX_DIST.get(root.getDisplay().getTier() - 1) : 0);
+//            Queue<ResearchNode> queue = new LinkedList<>(root.getChildren());
+//            while (!queue.isEmpty()) {
+//                queue.addAll(queue.peek().getChildren());
+//                x += queue.poll().getDisplay().getX();
+//            }
+//            TIER_TO_X_MAX_DIST.put(root.getDisplay().getTier(), x);
+//        }
     }
 
     @Override
@@ -244,10 +245,10 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private boolean areParentsComplete(ResearchNode node) {
-        if (node.getParents().length > 0) {
-            for (ResearchNode parent : node.getParents()) {
-                if (!((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().isComplete(parent))
-                    return false;
+        if (node.getParents().size() > 0) {
+            for (Lazy<ResearchNode> parent : node.getParents()) {
+//                if (!MinecraftClient.getInstance().getNetworkHandler().isComplete(parent)) return false;
+                return false;
             }
         }
         return true;
@@ -255,90 +256,90 @@ public class SpaceRaceScreen extends Screen {
 
 
     private void drawResearch(MatrixStack matrices, int mouseX, int mouseY) {
-        matrices.push();
-        List<Runnable> postRenderingThings = new ArrayList<>();
-        for (ResearchNode root : ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().getRoots()) {
-            Queue<ResearchNode> queue = new LinkedList<>();
-            queue.add(root);
-            while (!queue.isEmpty()) {
-                ResearchNode node = queue.poll();
-                if (areParentsComplete(node)) {
-                    client.getTextureManager().bindTexture(RESEARCH_TEX);
-                    int appTX = getAppropriateNodeTexX(node);
-                    int appTY = getAppropriateNodeTexY(node);
-                    int basePX = BASE_RESEARCH_OFFSET + (int) (researchScrollX + TIER_TO_X_MAX_DIST.get(node.getInfo().getTier() - 1) + (node.getInfo().getX() * (NODE_WIDTH + 5)));
-                    int basePY = BASE_RESEARCH_OFFSET + (int) (researchScrollY + (node.getInfo().getY() * (NODE_HEIGHT + 4)));
-                    int posXFit = getPosXToFit(basePX);
-                    int posYFit = getPosYToFit(basePY);
-                    int texPosXFit = getTexPosXToFit(basePX, appTX, NODE_WIDTH);
-                    int texPosYFit = getTexPosYToFit(basePY, appTY, NODE_HEIGHT);
-                    int texWidthFit = getWidthToFit(basePX, NODE_WIDTH);
-                    int texHeightFit = getHeightToFit(basePY, NODE_HEIGHT);
-                    if (texWidthFit > 0 && texHeightFit > 0
-                            && texPosXFit != appTX + NODE_WIDTH && texPosYFit != appTY + NODE_HEIGHT) {
-                        this.drawTexture(matrices,
-                                posXFit,
-                                posYFit,
-                                texPosXFit,
-                                texPosYFit,
-                                texWidthFit,
-                                texHeightFit
-                        );
-
-                        if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
-                            postRenderingThings.add(() -> {
-                                client.getTextureManager().bindTexture(RESEARCH_TEX);
-                                drawTexture(matrices, posXFit, getPosYToFit(basePY + 36), texPosXFit, getTexPosYToFit(basePY + 36, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 36, NODE_DESC_ADDON_HEIGHT)); //X matches
-                                drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 39, I18n.translate(node.getInfo().getDescription().getKey(), node.getInfo().getDescription().getArgs()), Formatting.GRAY.getColorValue(), NODE_WIDTH - 3, 0.5F);
-                            });
-                        }
-
-                        drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 3, I18n.translate(node.getInfo().getTitle().getKey(), node.getInfo().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 1.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
-
-                        for (int i = 0; i < node.getInfo().getIcons().length && i < 4; i++) {
-                            // 6, 31
-                            // 43
-
-                            int baseX = 3 + ((SLOT_WIDTH + 2) * i) + basePX;
-                            int baseY = 15 + basePY;
-                            client.getTextureManager().bindTexture(RESEARCH_TEX);
-                            this.drawTexture(matrices,
-                                    getPosXToFit(baseX),
-                                    getPosYToFit(baseY),
-
-                                    getTexPosXToFit(baseX, getSlotAppX(node), SLOT_WIDTH),
-                                    getTexPosYToFit(baseY, getSlotAppY(node), SLOT_HEIGHT),
-
-                                    getWidthToFit(baseX, SLOT_WIDTH),
-                                    getHeightToFit(baseY, SLOT_HEIGHT));
-
-                            //THIS CODE MAKES THE ITEM NOT RENDER IF IT BLEEDS OUT EVEN ONE PIXEL. I CAN'T TRIM THE ITEM RENDER LIKE THE BOX
-                            if (getPosXToFit(baseX) == baseX && getPosYToFit(baseY) == baseY
-                                    && baseX >= this.getLeft() + 10 && baseY >= this.getTop() + 25
-                                    && baseX + SLOT_WIDTH <= this.getRight() - 10 && baseY + SLOT_WIDTH <= this.getBottom() - 10
-                                    && baseX <= this.getRight() - 10 && baseY <= this.getBottom() - 10) {
-                                itemRenderer.renderGuiItemIcon(node.getInfo().getIcons()[i].asItem().getDefaultStack(), baseX + 2, baseY + 2);
-                            }
-                        }
-                    }
-
-                    if (((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().isComplete(node)) {
-                        //more than one parent is possible
-                        for (ResearchNode child : node.getChildren()) {
-                            if (areParentsComplete(child)) {
-                                queue.add(child);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        for (Runnable runnable : postRenderingThings) {
-            runnable.run();
-        }
-        postRenderingThings.clear();
-        matrices.pop();
+//        matrices.push();
+//        List<Runnable> postRenderingThings = new ArrayList<>();
+//        for (ResearchNode root : (MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().getRoots()) {
+//            Queue<ResearchNode> queue = new LinkedList<>();
+//            queue.add(root);
+//            while (!queue.isEmpty()) {
+//                ResearchNode node = queue.poll();
+//                if (areParentsComplete(node)) {
+//                    client.getTextureManager().bindTexture(RESEARCH_TEX);
+//                    int appTX = getAppropriateNodeTexX(node);
+//                    int appTY = getAppropriateNodeTexY(node);
+//                    int basePX = BASE_RESEARCH_OFFSET + (int) (researchScrollX + TIER_TO_X_MAX_DIST.get(node.getDisplay().getTier() - 1) + (node.getDisplay().getX() * (NODE_WIDTH + 5)));
+//                    int basePY = BASE_RESEARCH_OFFSET + (int) (researchScrollY + (node.getDisplay().getY() * (NODE_HEIGHT + 4)));
+//                    int posXFit = getPosXToFit(basePX);
+//                    int posYFit = getPosYToFit(basePY);
+//                    int texPosXFit = getTexPosXToFit(basePX, appTX, NODE_WIDTH);
+//                    int texPosYFit = getTexPosYToFit(basePY, appTY, NODE_HEIGHT);
+//                    int texWidthFit = getWidthToFit(basePX, NODE_WIDTH);
+//                    int texHeightFit = getHeightToFit(basePY, NODE_HEIGHT);
+//                    if (texWidthFit > 0 && texHeightFit > 0
+//                            && texPosXFit != appTX + NODE_WIDTH && texPosYFit != appTY + NODE_HEIGHT) {
+//                        this.drawTexture(matrices,
+//                                posXFit,
+//                                posYFit,
+//                                texPosXFit,
+//                                texPosYFit,
+//                                texWidthFit,
+//                                texHeightFit
+//                        );
+//
+//                        if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
+//                            postRenderingThings.add(() -> {
+//                                client.getTextureManager().bindTexture(RESEARCH_TEX);
+//                                drawTexture(matrices, posXFit, getPosYToFit(basePY + 36), texPosXFit, getTexPosYToFit(basePY + 36, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 36, NODE_DESC_ADDON_HEIGHT)); //X matches
+//                                drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 39, I18n.translate(node.getDisplay().getDescription().getKey(), node.getDisplay().getDescription().getArgs()), Formatting.GRAY.getColorValue(), NODE_WIDTH - 3, 0.5F);
+//                            });
+//                        }
+//
+//                        drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 3, I18n.translate(node.getDisplay().getTitle().getKey(), node.getDisplay().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 1.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
+//
+//                        for (int i = 0; i < node.getDisplay().getIcons().length && i < 4; i++) {
+//                            // 6, 31
+//                            // 43
+//
+//                            int baseX = 3 + ((SLOT_WIDTH + 2) * i) + basePX;
+//                            int baseY = 15 + basePY;
+//                            client.getTextureManager().bindTexture(RESEARCH_TEX);
+//                            this.drawTexture(matrices,
+//                                    getPosXToFit(baseX),
+//                                    getPosYToFit(baseY),
+//
+//                                    getTexPosXToFit(baseX, getSlotAppX(node), SLOT_WIDTH),
+//                                    getTexPosYToFit(baseY, getSlotAppY(node), SLOT_HEIGHT),
+//
+//                                    getWidthToFit(baseX, SLOT_WIDTH),
+//                                    getHeightToFit(baseY, SLOT_HEIGHT));
+//
+//                            //THIS CODE MAKES THE ITEM NOT RENDER IF IT BLEEDS OUT EVEN ONE PIXEL. I CAN'T TRIM THE ITEM RENDER LIKE THE BOX
+//                            if (getPosXToFit(baseX) == baseX && getPosYToFit(baseY) == baseY
+//                                    && baseX >= this.getLeft() + 10 && baseY >= this.getTop() + 25
+//                                    && baseX + SLOT_WIDTH <= this.getRight() - 10 && baseY + SLOT_WIDTH <= this.getBottom() - 10
+//                                    && baseX <= this.getRight() - 10 && baseY <= this.getBottom() - 10) {
+//                                itemRenderer.renderGuiItemIcon(node.getDisplay().getIcons()[i].asItem().getDefaultStack(), baseX + 2, baseY + 2);
+//                            }
+//                        }
+//                    }
+//
+//                    if (((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().isComplete(node)) {
+//                        //more than one parent is possible
+//                        for (ResearchNode child : node.getChildren()) {
+//                            if (areParentsComplete(child)) {
+//                                queue.add(child);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//
+//        for (Runnable runnable : postRenderingThings) {
+//            runnable.run();
+//        }
+//        postRenderingThings.clear();
+//        matrices.pop();
     }
 
     @Override
@@ -392,36 +393,36 @@ public class SpaceRaceScreen extends Screen {
             xOffset = xOffset + (textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale);
         }
     }
-
-    private int getSlotAppY(ResearchNode node) {
-        return SLOT_Y;
-    }
-
-    private int getSlotAppX(ResearchNode node) {
-        AdvancementProgress progress = ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getProgress(node);
-        if (progress.isDone()) {
-            return SLOT_COMPLETE_X;
-        } else if (progress.isAnyObtained()) {
-            return SLOT_IN_PROGRESS_X;
-        } else {
-            return SLOT_UNLOCKABLE_X;
-        }
-    }
-
-    private int getAppropriateNodeTexY(ResearchNode node) {
-        AdvancementProgress progress = ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getProgress(node);
-        if (progress.isDone()) {
-            return NODE_COMPLETE_Y;
-        } else if (progress.isAnyObtained()) {
-            return NODE_IN_PROGRESS_Y;
-        } else {
-            return NODE_UNLOCKABLE_Y;
-        }
-    }
-
-    private int getAppropriateNodeTexX(ResearchNode node) {
-        return NODE_X;
-    }
+//
+//    private int getSlotAppY(ResearchNode node) {
+//        return SLOT_Y;
+//    }
+//
+//    private int getSlotAppX(ResearchNode node) {
+//        AdvancementProgress progress = ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getProgress(node);
+//        if (progress.isDone()) {
+//            return SLOT_COMPLETE_X;
+//        } else if (progress.isAnyObtained()) {
+//            return SLOT_IN_PROGRESS_X;
+//        } else {
+//            return SLOT_UNLOCKABLE_X;
+//        }
+//    }
+//
+//    private int getAppropriateNodeTexY(ResearchNode node) {
+//        AdvancementProgress progress = ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getProgress(node);
+//        if (progress.isDone()) {
+//            return NODE_COMPLETE_Y;
+//        } else if (progress.isAnyObtained()) {
+//            return NODE_IN_PROGRESS_Y;
+//        } else {
+//            return NODE_UNLOCKABLE_Y;
+//        }
+//    }
+//
+//    private int getAppropriateNodeTexX(ResearchNode node) {
+//        return NODE_X;
+//    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {

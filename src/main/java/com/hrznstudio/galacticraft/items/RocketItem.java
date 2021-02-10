@@ -26,7 +26,7 @@ import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
-import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
+import com.hrznstudio.galacticraft.api.rocket.part.GCRocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
@@ -113,7 +113,7 @@ public class RocketItem extends Item {
             tag.putInt("blue", 255);
             tag.putInt("alpha", 255);
             for (RocketPartType type : RocketPartType.values()) {
-                tag.putString(type.asString(), AddonRegistry.ROCKET_PARTS.getId(RocketParts.getDefaultPartForType(type)).toString());
+                tag.putString(type.asString(), AddonRegistry.ROCKET_PARTS.getId(GCRocketParts.getDefaultPartForType(type)).toString());
             }
             stack.setTag(tag);
             stacks.add(stack);

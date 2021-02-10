@@ -29,7 +29,9 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.entity.RocketEntity;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
+import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
@@ -207,10 +209,10 @@ public class GalacticraftS2CPackets {
                     if (player.world.getBlockEntity(pos) instanceof RocketDesignerBlockEntity) {
                         RocketDesignerBlockEntity blockEntity = (RocketDesignerBlockEntity) player.world.getBlockEntity(pos);
                         assert blockEntity != null;
-                        Identifier id = buffer.readIdentifier();
-                        if (player instanceof ServerPlayerEntityAccessor
-                                && ((ServerPlayerEntityAccessor) player).getResearchTracker().isUnlocked(id)) {
-                            blockEntity.setPartServer(Objects.requireNonNull(AddonRegistry.ROCKET_PARTS.get(id)));
+                        RocketPart part = AddonRegistry.ROCKET_PARTS.get(buffer.readIdentifier());
+                        if (part == null) player.networkHandler.disconnect(new LiteralText("Invalid rocket designer packet received."));
+                        if (part.isUnlocked(player)) {
+                            blockEntity.setPartServer(part);
                             blockEntity.updateSchematic();
                         }
                     }

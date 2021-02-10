@@ -26,6 +26,7 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.text.TranslatableText;
@@ -33,7 +34,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
 
-public class RocketParts {
+import java.util.LinkedList;
+import java.util.List;
+
+public class GCRocketParts {
     public static final RocketPart DEFAULT_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_cone"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_cone"))
             .type(RocketPartType.CONE)
@@ -147,5 +151,25 @@ public class RocketParts {
             default:
                 throw new IllegalArgumentException("invalid part type");
         }
+    }
+
+    public static List<RocketPart> getUnlockedParts(PlayerEntity player, RocketPartType type) {
+        List<RocketPart> parts = new LinkedList<>();
+        for (RocketPart part : AddonRegistry.ROCKET_PARTS) {
+            if (part.getType() == type && part.isUnlocked(player)) {
+                parts.add(part);
+            }
+        }
+        return parts;
+    }
+
+    public static List<RocketPart> getUnlockedParts(PlayerEntity player) {
+        List<RocketPart> parts = new LinkedList<>();
+        for (RocketPart part : AddonRegistry.ROCKET_PARTS) {
+            if (part.isUnlocked(player)) {
+                parts.add(part);
+            }
+        }
+        return parts;
     }
 }

@@ -323,7 +323,7 @@ public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.
 
         for (RocketPart part : this.getParts()) {
             if (part != null) {
-                part.toTag(parts);
+                parts.putString(part.getType().asString(), part.getId().toString());
             }
         }
 

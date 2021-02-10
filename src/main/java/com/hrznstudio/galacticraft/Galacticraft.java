@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
-import com.hrznstudio.galacticraft.api.rocket.part.RocketParts;
+import com.hrznstudio.galacticraft.api.rocket.part.GCRocketParts;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
@@ -106,7 +106,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftPointOfInterestType.register();
         MoonVillagerType.register();
         GalacticraftVillagerProfessions.register();
-        RocketParts.register();
+        GCRocketParts.register();
 
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }

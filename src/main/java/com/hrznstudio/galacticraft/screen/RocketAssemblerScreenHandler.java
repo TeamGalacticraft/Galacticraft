@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
+import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
@@ -54,18 +55,17 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         final int playerInvYOffset = 94;
         final int playerInvXOffset = 148;
 
-        // Output slot
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.SCHEMATIC_INPUT_SLOT, 235, 19) {
             @Override
             public boolean canInsert(ItemStack stack) {
                 RocketData data = RocketData.fromItem(stack);
-                return stack.getItem() != GalacticraftItems.ROCKET_SCHEMATIC || !this.getStack().isEmpty() || (!(playerEntity instanceof ServerPlayerEntity)) || (
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getCone())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getBody())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getBooster())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getBottom())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getFin())) &&
-                        ((ServerPlayerEntityAccessor) playerEntity).getResearchTracker().isUnlocked(AddonRegistry.ROCKET_PARTS.getId(data.getUpgrade()))
+                return this.getStack().isEmpty() || (stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC
+                        && data.getCone().isUnlocked(playerEntity)
+                        && data.getBody().isUnlocked(playerEntity)
+                        && data.getBooster().isUnlocked(playerEntity)
+                        && data.getBottom().isUnlocked(playerEntity)
+                        && data.getFin().isUnlocked(playerEntity)
+                        && data.getUpgrade().isUnlocked(playerEntity)
                 );
             }
 
@@ -75,10 +75,11 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
             }
         });
 
+        // Output slot
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ROCKET_OUTPUT_SLOT, 299, 19) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return itemStack_1.getItem() == GalacticraftItems.ROCKET && this.getStack().isEmpty();
+                return false;
             }
 
             @Override
