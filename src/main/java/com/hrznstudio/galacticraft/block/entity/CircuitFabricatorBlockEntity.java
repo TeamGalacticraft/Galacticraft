@@ -108,7 +108,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == 5) return stack -> getRecipe(new SimpleInventory(stack)).isPresent();
+        if (slot == 5) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
         if (slot == 6) return Constants.Misc.alwaysTrue();
 
         return SLOT_FILTERS[slot];
@@ -152,6 +152,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     private Optional<FabricationRecipe> getRecipe(Inventory input) {
+        if (this.world == null) return Optional.empty();
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.FABRICATION_TYPE, input, this.world);
     }
 

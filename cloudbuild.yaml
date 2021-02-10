@@ -2,5 +2,6 @@ steps:
 - name: 'adoptopenjdk/openjdk8-openj9'
   args:
     - './gradlew'
+    - 'checkLicenses'
     - 'build'
     - '--stacktrace'
