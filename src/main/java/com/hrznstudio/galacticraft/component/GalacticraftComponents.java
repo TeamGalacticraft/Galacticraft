@@ -86,11 +86,10 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             @Override
             public int insertEnergy(EnergyType type, int amount, ActionType actionType) {
                 if (type.isCompatibleWith(getPreferredType())) {
-                    if (be.getWorld() != null && !be.getWorld().isClient) {
-                        return be.getNetwork().insertEnergy(be.getPos(), null, type, amount, actionType);
-                    }
+                    return be.getNetwork().insertEnergy(be.getPos(), null, type, amount, actionType);
+                } else {
+                    return amount;
                 }
-                return amount;
             }
 
             @Override
@@ -133,18 +132,20 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             }
         });
 
-        registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(10, 1000)) {
+        registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(1, 10)) {
             @Override
             public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                if (be.getWorld() != null && !be.getWorld().isClient && be.getData() == Pipe.FluidData.EMPTY && be.getNetwork() != null) {
-                    Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
-                    if (action == ActionType.PERFORM) {
-                        if (data == null) {
-                            return fluid;
+                if (be.getFluidData() == Pipe.FluidData.EMPTY) {
+                    if (be.getNetwork() != null) {
+                        Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
+                        if (action == ActionType.PERFORM) {
+                            if (data == null) {
+                                return fluid;
+                            }
+                            be.setFluidData(data);
+                            return data.getFluid();
                         }
-                        be.setData(data);
                     }
-                    return new FluidVolume(data.getFluidVolume().getFluid(), fluid.getAmount().subtract(data.getFluidVolume().getAmount()));
                 }
                 return fluid;
             }
@@ -152,11 +153,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
             @Override
             public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
                 return insertFluid(fluid, action);
-            }
-
-            @Override
-            public boolean canInsert(int slot) {
-                return be.getWorld() != null && !be.getWorld().isClient && be.getData() == Pipe.FluidData.EMPTY && be.getNetwork() != null;
             }
 
             @Override
@@ -171,7 +167,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
 
             @Override
             public void setFluid(int slot, FluidVolume stack) {
-                insertFluid(stack, ActionType.PERFORM);
             }
 
             @Override
