@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -87,10 +87,10 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos thePipePos, Block block, BlockPos updatedBlockPos, boolean notify) {
-        super.neighborUpdate(state, world, thePipePos, block, updatedBlockPos, notify);
-        Direction direction = Direction.fromVector(thePipePos.getX() - updatedBlockPos.getX(), thePipePos.getY() - updatedBlockPos.getY(), thePipePos.getZ() - updatedBlockPos.getZ());
-        world.setBlockState(thePipePos, getStateForNeighborUpdate(state, direction.getOpposite(), world.getBlockState(updatedBlockPos), world, thePipePos, updatedBlockPos));
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos updatedPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, updatedPos, notify);
+        Direction direction = Direction.fromVector(pos.getX() - updatedPos.getX(), pos.getY() - updatedPos.getY(), pos.getZ() - updatedPos.getZ());
+        world.setBlockState(pos, getStateForNeighborUpdate(state, direction.getOpposite(), world.getBlockState(updatedPos), world, pos, updatedPos));
     }
 
     @Override

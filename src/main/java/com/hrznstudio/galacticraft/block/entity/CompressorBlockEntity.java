@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -154,6 +154,7 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
+        if (this.world == null) return Optional.empty();
         return this.world.getRecipeManager().getFirstMatch(GalacticraftRecipes.COMPRESSING_TYPE, input, this.world);
     }
 

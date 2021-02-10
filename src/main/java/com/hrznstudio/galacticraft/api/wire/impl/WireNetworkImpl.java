@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -135,25 +135,25 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public void updateConnections(@NotNull BlockPos theWireThatReceivedANeighborUpdate, @NotNull BlockPos theBlockThatWasActuallyChanged) {
-        if (world.getBlockEntity(theBlockThatWasActuallyChanged) instanceof Wire) return;
+    public void updateConnections(@NotNull BlockPos adjacentToUpdated, @NotNull BlockPos updatedPos) {
+        if (world.getBlockEntity(updatedPos) instanceof Wire) return;
         //wires should call #removeWire before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(theWireThatReceivedANeighborUpdate, theBlockThatWasActuallyChanged, true);
-        BlockPos poss = theBlockThatWasActuallyChanged.subtract(theWireThatReceivedANeighborUpdate);
+        removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, theBlockThatWasActuallyChanged, opposite);
+        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
         if (component != null) {
             if (component.canInsertEnergy() && component.canExtractEnergy()) {
-                node(theBlockThatWasActuallyChanged);
-                edge(theWireThatReceivedANeighborUpdate, theBlockThatWasActuallyChanged, WireConnectionType.ENERGY_IO);
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
             } else if (component.canInsertEnergy()) {
-                node(theBlockThatWasActuallyChanged);
-                edge(theWireThatReceivedANeighborUpdate, theBlockThatWasActuallyChanged, WireConnectionType.ENERGY_INPUT);
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
             } else if (component.canExtractEnergy()) {
-                node(theBlockThatWasActuallyChanged);
-                edge(theWireThatReceivedANeighborUpdate, theBlockThatWasActuallyChanged, WireConnectionType.ENERGY_OUTPUT);
+                node(updatedPos);
+                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
             }
         }
     }
