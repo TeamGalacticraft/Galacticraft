@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,11 +41,19 @@ public interface Wire {
     @NotNull WireNetwork getNetwork();
 
     /**
+     * Returns the associated {@link WireNetwork}
+     * @return The associated {@link WireNetwork}
+     */
+    @Nullable WireNetwork getNetworkNullable();
+
+    /**
      * Returns whether or not this wire is able to connect to another block on the specified face/direction
      * @param direction the direction offset to the block to check adjacency to
      * @return Whether or not this wire is able to connect to another block on the specified face/direction
      */
     @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity);
+
+    int getMaxTransferRate();
 
     default boolean canConnect(Direction direction) {
         return true;
