@@ -77,7 +77,7 @@ public class TinLadderBlock extends Block {
         } else if (!(world.getBlockState(checkPos).getBlock() instanceof TinLadderBlock)) {
             return ActionResult.PASS;
         }
-        return null;
+        return ActionResult.PASS;
     }
 
     @Override
