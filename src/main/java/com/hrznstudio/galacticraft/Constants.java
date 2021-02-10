@@ -382,6 +382,11 @@ public class Constants {
         public static final String ROCKET_SPAWN_EGG_T1 = "rocket_spawn_egg_t1";
         public static final String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         public static final String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
+
+        public static final String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
+        public static final String LEGACY_MUSIC_DISC_MINMAS = "legacy_music_disc_minmas";
+        public static final String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
+        public static final String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
     }
 
     public static class Particles {

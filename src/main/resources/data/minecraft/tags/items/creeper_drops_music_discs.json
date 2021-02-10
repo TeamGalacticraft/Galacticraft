@@ -1,0 +1,9 @@
+{
+    "replace": false,
+    "values": [
+        "galacticraft-rewoven:legacy_music_disc_mars",
+        "galacticraft-rewoven:legacy_music_disc_minmas",
+        "galacticraft-rewoven:legacy_music_disc_orbit",
+        "galacticraft-rewoven:legacy_music_disc_spacerace"
+    ]
+}

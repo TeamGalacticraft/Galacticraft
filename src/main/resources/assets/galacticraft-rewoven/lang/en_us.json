@@ -458,5 +458,14 @@
   "config.galacticraft-rewoven.energy.machines.refinery_energy_consumption_rate": "Refinery Energy Consumption Rate/t",
   "config.galacticraft-rewoven.energy.machines.electric_furnace_energy_consumption_rate": "Electric Furnace Energy Consumption Rate/t",
   "config.galacticraft-rewoven.energy.machines.energy_storage_module_storage_size": "Energy Storage Module Energy Storage Size",
-  "config.galacticraft-rewoven.energy.machines.energy_storage_size": "Default Machine Energy Storage Size"
+  "config.galacticraft-rewoven.energy.machines.energy_storage_size": "Default Machine Energy Storage Size",
+
+  "item.galacticraft-rewoven.legacy_music_disc_mars": "Music Disc",
+  "item.galacticraft-rewoven.legacy_music_disc_minmas": "Music Disc",
+  "item.galacticraft-rewoven.legacy_music_disc_orbit": "Music Disc",
+  "item.galacticraft-rewoven.legacy_music_disc_spacerace": "Music Disc",
+  "item.galacticraft-rewoven.legacy_music_disc_mars.desc": "Unknown - Mars",
+  "item.galacticraft-rewoven.legacy_music_disc_minmas.desc": "Unknown - Minmas",
+  "item.galacticraft-rewoven.legacy_music_disc_orbit.desc": "Unknown - Orbit",
+  "item.galacticraft-rewoven.legacy_music_disc_spacerace.desc": "Unknown - Space Race"
 }
