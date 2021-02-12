@@ -22,15 +22,11 @@
 
 package com.hrznstudio.galacticraft.hooks;
 
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
-import io.github.prospector.modmenu.api.ConfigScreenFactory;
-import io.github.prospector.modmenu.api.ModMenuApi;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screen.Screen;
-
-import java.util.function.Function;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -41,10 +37,5 @@ public class ModMenuApiImpl implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> ConfigManager.getInstance().getScreen(parent);
-    }
-
-    @Override
-    public String getModId() {
-        return Constants.MOD_ID;
     }
 }
