@@ -23,10 +23,11 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
+import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
@@ -59,16 +60,12 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     protected void drawMouseoverTooltip(MatrixStack stack, int x, int y) {
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
-            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT);
-            int storedOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getOxygen(invStack).asInexactDouble() * 100);
-            int maxOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getMaxOxygen(invStack).asInexactDouble() * 100.0D);
-            this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
+            this.renderTooltip(stack, new LiteralText("Tank 1 Oxygen: " + tank.getAmount() + "/" + tank.getCapacity()), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
-            ItemStack invStack = this.handler.inventory.getStack(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT);
-            int storedOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getOxygen(invStack).asInexactDouble() * 100);
-            int maxOxy = invStack.isEmpty() ? 0 : (int) (OxygenUtils.getMaxOxygen(invStack).asInexactDouble() * 100.0D);
-            this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + storedOxy + "/" + maxOxy), x, y);
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
+            this.renderTooltip(stack, new LiteralText("Tank 2 Oxygen: " + tank.getAmount() + "/" + tank.getCapacity()), x, y);
         }
         super.drawMouseoverTooltip(stack, x, y);
     }
@@ -107,11 +104,11 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     public void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        ItemStack tank1 = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(this.playerInventory.player).getStack(6);
-        ItemStack tank2 = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(this.playerInventory.player).getStack(7);
+        OxygenTank tank1 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
+        OxygenTank tank2 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
 
-        this.drawOxygenBufferBar(stack, OxygenUtils.getOxygen(tank1).asInexactDouble() * 100.0F, OxygenUtils.getMaxOxygen(tank1).asInexactDouble() * 100.0F, this.x + 138, this.y + 8);
-        this.drawOxygenBufferBar(stack, OxygenUtils.getOxygen(tank2).asInexactDouble() * 100.0F, OxygenUtils.getMaxOxygen(tank2).asInexactDouble() * 100.0F, this.x + 156, this.y + 8);
+        this.drawOxygenBufferBar(stack, tank1.getAmount(), tank1.getCapacity(), this.x + 138, this.y + 8);
+        this.drawOxygenBufferBar(stack, tank2.getAmount(), tank2.getCapacity(), this.x + 156, this.y + 8);
 
         InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
         this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));

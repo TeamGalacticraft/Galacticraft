@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft;
 
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -219,7 +222,8 @@ public class Constants {
         public static final String BACTERIAL_ACID_STILL = "bacterial_acid_still";
         public static final String SULFURIC_ACID_FLOWING = "sulfuric_acid_flowing";
         public static final String SULFURIC_ACID_STILL = "sulfuric_acid_still";
-        public static final String OXYGEN = "oxygen";
+        public static final String OXYGEN_GAS = "oxygen_gas";
+        public static final String LIQUID_OXYGEN = "liquid_oxygen";
 
         public static Identifier getIdentifier(String s) {
             return new Identifier(Constants.MOD_ID, "block/" + s);
@@ -362,6 +366,7 @@ public class Constants {
         public static final String SMALL_OXYGEN_TANK = "small_oxygen_tank";
         public static final String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
         public static final String LARGE_OXYGEN_TANK = "large_oxygen_tank";
+        public static final String INFINITE_OXYGEN_TANK = "infinite_oxygen_tank";
 
         public static final String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         public static final String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
@@ -598,6 +603,7 @@ public class Constants {
         public static final Identifier EMPTY = new Identifier("empty");
         public static final Predicate<?> ALWAYS_FALSE = o -> false;
         public static final Predicate<?> ALWAYS_TRUE = o -> true;
+        public static final FluidFilter LOX_ONLY = key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
 
         @SuppressWarnings("unchecked")
         public static <T> Predicate<T> alwaysFalse() {

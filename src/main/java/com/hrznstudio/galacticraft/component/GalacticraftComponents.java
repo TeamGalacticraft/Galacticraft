@@ -22,24 +22,16 @@
 
 package com.hrznstudio.galacticraft.component;
 
+import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
-import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.BatteryItem;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.block.BlockComponentInitializer;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
 import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
 import io.github.cottonmc.component.UniversalComponents;
@@ -47,30 +39,17 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
-import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
-import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.impl.SyncedInventoryComponent;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
-public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer, ItemComponentInitializer {
-    public static final ComponentKey<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
-
+public class GalacticraftComponents implements BlockComponentInitializer, ItemComponentInitializer {
     public static void register() {
-    }
-
-    @Override
-    public void registerEntityComponentFactories(EntityComponentFactoryRegistry entityComponentFactoryRegistry) {
-        entityComponentFactoryRegistry.registerForPlayers(GalacticraftComponents.GEAR_INVENTORY_COMPONENT, player -> new SyncedInventoryComponent<>(12, GEAR_INVENTORY_COMPONENT, (ComponentProvider) player), RespawnCopyStrategy.INVENTORY);
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -182,33 +161,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
 
     @Override
     public void registerItemComponentFactories(ItemComponentFactoryRegistry registry) {
-        registry.registerFor((item) -> item instanceof OxygenTankItem, UniversalComponents.TANK_COMPONENT, stack -> {
-            ItemTankComponent component = new AutoSyncedItemTankComponent(1, Fraction.of(stack.getItem().getMaxDamage(), 1000), stack) {
-                @Override
-                public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-                    if (fluid.getFluid().isIn(GalacticraftTags.OXYGEN) || fluid.isEmpty()) {
-                        return super.insertFluid(tank, fluid, action);
-                    } else {
-                        return fluid;
-                    }
-                }
-
-                @Override
-                public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                    return this.insertFluid(0, fluid, action);
-                }
-
-                @Override
-                public void setFluid(int slot, FluidVolume volume) {
-                    if (volume.getFluid().isIn(GalacticraftTags.OXYGEN) || volume.isEmpty()) {
-                        super.setFluid(slot, volume);
-                    }
-                }
-            };
-            component.listen(() -> stack.setDamage(stack.getItem().getMaxDamage() - (int)(component.getContents(0).getAmount_F().asInexactDouble() * 1000.0D)));
-            return component;
-        });
-
         registry.registerFor((item) -> item instanceof BatteryItem, UniversalComponents.CAPACITOR_COMPONENT, stack -> {
             ItemCapacitorComponent component = new ItemCapacitorComponent(((BatteryItem)stack.getItem()).getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES);
             component.listen(() -> stack.setDamage(component.getMaxEnergy() - component.getCurrentEnergy()));

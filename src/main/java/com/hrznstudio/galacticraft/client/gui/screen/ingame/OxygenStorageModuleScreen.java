@@ -69,7 +69,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     }
 
     private void drawOxygenBufferBar(MatrixStack stack) {
-        double oxygenScale = this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().divide(this.handler.machine.getFluidTank().getMaxAmount_F(0)).asInexactDouble();
+        double oxygenScale = this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().div(this.handler.machine.getFluidTank().getMaxAmount_F(0)).asInexactDouble();
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);

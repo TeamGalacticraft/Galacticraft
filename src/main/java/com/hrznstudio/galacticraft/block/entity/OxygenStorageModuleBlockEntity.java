@@ -25,11 +25,12 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +68,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return OxygenUtils::isOxygenItem;
+        return stack -> FluidUtils.canExtractFluids(stack, Constants.Misc.LOX_ONLY);
     }
 
     @Override
@@ -102,6 +103,6 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
+        return Constants.Misc.LOX_ONLY;
     }
 }

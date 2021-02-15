@@ -22,16 +22,23 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
+import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
+import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import io.github.cottonmc.component.api.ComponentHelper;
 import io.github.cottonmc.component.fluid.TankComponent;
 import io.github.cottonmc.component.fluid.TankComponentHelper;
@@ -87,7 +94,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
         if (slot == 0) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else {
-            return OxygenUtils::isOxygenItem;
+            return OxygenTankUtils::isOxygenTank;
         }
     }
 
@@ -106,17 +113,17 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         if (this.getFluidTank().getInvFluid(0).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
-        TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getInvStack(1));
-        if (component == null) return Status.NOT_ENOUGH_ITEMS;
-        if (component.getContents(0).getAmount_F().compareTo(component.getMaxAmount_F(0)) >= 0) return Status.CONTAINER_FULL;
+        OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
+        if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
+        if (tank.getCapacity() >= tank.getCapacity()) return Status.CONTAINER_FULL;
         return Status.COMPRESSING;
     }
 
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            TankComponent component = TankComponentHelper.INSTANCE.getComponent(this.getInventory().getInvStack(1));
-            this.getFluidTank().insertFluid(0, component.insertFluid(0, this.getFluidTank().takeFluid(0, FluidAmount.of(1, 50), Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
+            this.getFluidTank().insertFluid(0, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().attemptExtraction(Constants.Misc.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 
@@ -141,8 +148,8 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public boolean getFilterForTank(int tank, FluidVolume volume) {
-        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    public FluidFilter getFilterForTank(int tank) {
+        return Constants.Misc.LOX_ONLY;
     }
 
     /**

@@ -37,7 +37,8 @@ import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
+import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -111,7 +112,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         if (slot == 0) {
             return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
         } else if (slot == 1) {
-            return OxygenUtils::isOxygenItem;
+            return stack -> FluidUtils.canExtractFluids(stack, GalacticraftFluids.LIQUID_OXYGEN);
         } else {
             return Constants.Misc.alwaysFalse();
         }
@@ -225,17 +226,16 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return OxygenUtils::isGCOxygen;
+        return Constants.Misc.LOX_ONLY;
     }
 
     protected void drainOxygenFromStack(int slot) {
         if (this.getFluidTank().getInvFluid(0).getAmount_F().compareTo(this.getFluidTank().getMaxAmount_F(0)) >= 0) {
             return;
         }
-        ItemStack stack = getInventory().getInvStack(slot).copy();
-        if (OxygenUtils.isOxygenItem(stack)) {
-            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(stack);
-            this.getFluidTank().insertFluid(0, extractable.attemptExtraction(OxygenUtils::isGCOxygen, this.getFluidTank().getMaxAmount_F(0).sub(this.getFluidTank().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
+        if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
+            FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
+            this.getFluidTank().insertFluid(0, extractable.attemptExtraction(Constants.Misc.LOX_ONLY, this.getFluidTank().getMaxAmount_F(0).sub(this.getFluidTank().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

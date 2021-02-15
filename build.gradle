@@ -145,7 +145,6 @@ dependencies {
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}") { transitive = false }
     modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}") { transitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}") { transitive = false }
     modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
 
     //include everything mandatory inside the jar
@@ -158,7 +157,6 @@ dependencies {
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}")
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
     include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cardinal_version}")
     include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
     include("dev.onyxstudios:FOML:${project.foml_version}")
     include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
