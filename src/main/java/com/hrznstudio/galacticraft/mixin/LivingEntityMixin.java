@@ -40,7 +40,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Optional;
@@ -56,21 +55,17 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
-    private @Unique boolean oxygenCache;
+    private @Unique boolean noOxygen;
 
-    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/Entity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
-    private boolean checkOxygenAtmosphere_gcr(Entity entity, Tag<Fluid> tag) {
-        return entity.isSubmergedIn(tag) || !oxygenCache;
-    }
-
-    @Inject(method = "setWorld", at = @At("HEAD"))
-    private void cacheOxygen_gcr(World world, CallbackInfo ci) {
+    @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
+    private boolean checkOxygenAtmosphere_gcr(LivingEntity entity, Tag<Fluid> tag) {
         Optional<CelestialBodyType> optional = CelestialBodyType.getByDimType(world.getRegistryKey());
-        oxygenCache = !optional.isPresent() || optional.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN);
+        noOxygen = (optional.isPresent() && !optional.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
+        return entity.isSubmergedIn(tag) || noOxygen;
     }
 
     @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
-    private void disableRespiration_cacheGC(int air, CallbackInfoReturnable<Integer> ci) {
+    private void disableRespiration_gcr(int air, CallbackInfoReturnable<Integer> ci) {
         FixedItemInv gearInv = ((GearInventoryProvider)this).getGearInv();
 
         OxygenTank tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(6));
@@ -84,6 +79,6 @@ public abstract class LivingEntityMixin extends Entity {
             ci.setReturnValue(this.getNextAirOnLand(air));
         }
 
-        if (!oxygenCache) ci.setReturnValue(air - 1);
+        if (noOxygen) ci.setReturnValue(air - 1);
     }
 }

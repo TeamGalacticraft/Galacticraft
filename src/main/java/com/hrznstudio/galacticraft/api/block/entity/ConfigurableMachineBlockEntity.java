@@ -80,13 +80,6 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, Tickable {
-    private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.getInventory()) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return ConfigurableMachineBlockEntity.this.getSecurity().hasAccess(player);
-        }
-    };
-
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
 
@@ -112,6 +105,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         @Override
         public FluidFilter getFilterForTank(int tank) {
             return ConfigurableMachineBlockEntity.this.getFilterForTank(tank).or(key -> key.getRawFluid() == Fluids.EMPTY);
+        }
+    };
+
+    private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.getInventory()) {
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return ConfigurableMachineBlockEntity.this.getSecurity().hasAccess(player);
         }
     };
 
@@ -636,7 +636,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public Inventory getWrappedInventory() {
-        return wrappedInventory;
+        return this.wrappedInventory;
     }
 
     @Override

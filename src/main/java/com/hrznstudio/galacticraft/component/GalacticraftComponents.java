@@ -22,11 +22,7 @@
 
 package com.hrznstudio.galacticraft.component;
 
-import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
-import com.hrznstudio.galacticraft.api.pipe.Pipe;
-import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.items.BatteryItem;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
@@ -39,8 +35,6 @@ import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import io.github.cottonmc.component.energy.type.EnergyType;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;

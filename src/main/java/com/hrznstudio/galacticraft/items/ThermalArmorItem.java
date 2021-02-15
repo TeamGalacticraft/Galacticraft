@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
@@ -51,10 +54,10 @@ public class ThermalArmorItem extends Item {
 
     @Override //should sync with server
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        InventoryComponent inv = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player);
-        ItemStack thermalPiece = inv.getStack(getSlotIdForType(getSlotType()));
+        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
+        ItemStack thermalPiece = inv.getInvStack(getSlotIdForType(getSlotType()));
         if (thermalPiece.isEmpty()) {
-            inv.setStack(getSlotIdForType(getSlotType()), player.getStackInHand(hand));
+            inv.setInvStack(getSlotIdForType(getSlotType()), player.getStackInHand(hand), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return super.use(world, player, hand);

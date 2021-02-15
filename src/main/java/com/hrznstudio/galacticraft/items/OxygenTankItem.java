@@ -24,8 +24,11 @@ package com.hrznstudio.galacticraft.items;
 
 import alexiil.mc.lib.attributes.AttributeProviderItem;
 import alexiil.mc.lib.attributes.ItemAttributeList;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.attribute.GalacticraftAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.InfiniteOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
@@ -104,12 +107,12 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
-        InventoryComponent component = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player);
-        if (component.getStack(6).isEmpty()) {
-            component.setStack(6, player.getStackInHand(hand).copy());
+        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
+        if (inv.getInvStack(6).isEmpty()) {
+            inv.setInvStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        } else if (component.getStack(7).isEmpty()) {
-            component.setStack(7, player.getStackInHand(hand).copy());
+        } else if (inv.getInvStack(7).isEmpty()) {
+            inv.setInvStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));

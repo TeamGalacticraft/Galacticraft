@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -40,11 +43,12 @@ public class OxygenMaskItem extends Item {
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(user).getStack(4).isEmpty()) {
-            GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(user).setStack(4, user.getStackInHand(hand));
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
+        if (inv.getInvStack(4).isEmpty()) {
+            inv.setInvStack(4, player.getStackInHand(hand), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
-        return super.use(world, user, hand);
+        return super.use(world, player, hand);
     }
 }
