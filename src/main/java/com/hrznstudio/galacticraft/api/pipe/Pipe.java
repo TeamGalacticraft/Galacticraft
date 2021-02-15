@@ -74,6 +74,8 @@ public interface Pipe {
         return true;
     }
 
+    BlockPos getPos();
+
     class FluidData {
         public static final FluidData EMPTY = new FluidData(BlockPos.ORIGIN, new ArrayDeque<>(), FluidVolumeUtil.EMPTY, null);
         private final BlockPos source;

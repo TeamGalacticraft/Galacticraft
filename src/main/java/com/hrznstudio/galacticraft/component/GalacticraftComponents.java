@@ -109,54 +109,6 @@ public class GalacticraftComponents implements BlockComponentInitializer, ItemCo
                 return true;
             }
         });
-
-        registry.registerFor(FluidPipeBlockEntity.class, UniversalComponents.TANK_COMPONENT, be -> new SimpleTankComponent(1, Fraction.of(1, 10)) {
-            @Override
-            public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-                if (be.getFluidData() == Pipe.FluidData.EMPTY) {
-                    if (be.getNetwork() != null) {
-                        Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
-                        if (action == Simulation.ACTION) {
-                            if (data == null) {
-                                return fluid;
-                            }
-                            be.setFluidData(data);
-                            return data.getFluid();
-                        }
-                    }
-                }
-                return fluid;
-            }
-
-            @Override
-            public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-                return insertFluid(fluid, action);
-            }
-
-            @Override
-            public FluidVolume removeFluid(int slot, ActionType action) {
-                return FluidVolume.EMPTY;
-            }
-
-            @Override
-            public FluidVolume takeFluid(int slot, Fraction amount, ActionType action) {
-                return FluidVolume.EMPTY;
-            }
-
-            @Override
-            public void setFluid(int slot, FluidVolume stack) {
-            }
-
-            @Override
-            public boolean isAcceptableFluid(int tank) {
-                return true;
-            }
-
-            @Override
-            public FluidVolume getContents(int slot) {
-                return FluidVolume.EMPTY;
-            }
-        });
     }
 
     @Override

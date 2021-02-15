@@ -22,17 +22,22 @@
 
 package com.hrznstudio.galacticraft.block.special.fluidpipe;
 
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
+import com.hrznstudio.galacticraft.attribute.fluid.PipeFixedFluidInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -47,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
 
-public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe {
+public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe, AttributeProviderBlockEntity {
     private PipeNetwork network = null;
     private @NotNull Pipe.FluidData fluidData = Pipe.FluidData.EMPTY;
     private byte timeUntilPush = 0;
@@ -194,4 +199,8 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
         }
     }
 
+    @Override
+    public void addAllAttributes(AttributeList<?> attributeList) {
+        attributeList.offer(new PipeFixedFluidInv(this));
+    }
 }

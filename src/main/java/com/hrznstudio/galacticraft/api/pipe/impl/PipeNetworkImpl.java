@@ -188,7 +188,7 @@ public class PipeNetworkImpl implements PipeNetwork {
                             if (!(data.getAmount_F().equals(volume.getAmount_F()))) {
                                 steps.push(successor);
                                 Direction direction = Direction.fromVector(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
-                                return new FluidPipeBlockEntity.FluidData(pos, steps, volume.getFluidKey().withAmount(volume.getAmount_F().sub(data.getAmount_F())), direction);
+                                return new FluidPipeBlockEntity.FluidData(pos, steps, data, direction);
                             }
 
                 } else {

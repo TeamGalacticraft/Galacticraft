@@ -84,9 +84,9 @@ public interface PipeNetwork {
      * @param fromBlock The block that inserted the energy
      * @param amount The amount of fluid, in to insert
      * @param type The type of action to perform
-     * @return the amount of energy that failed to insert
+     * @return the amount of fluid that succeeded to insert
      */
-    Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull Simulation simulation);
+    @Nullable Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull Simulation simulation);
 
     /**
      * Returns the adjacent connections from a position
