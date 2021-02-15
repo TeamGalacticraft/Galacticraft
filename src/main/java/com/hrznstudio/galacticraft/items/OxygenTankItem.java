@@ -22,24 +22,13 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
-import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
 import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
-import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -71,7 +60,7 @@ public class OxygenTankItem extends Item {
             ItemStack stack = new ItemStack(this);
             list.add(stack);
             stack = stack.copy();
-            UniversalComponents.TANK_COMPONENT.get(stack).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentHelper.TANK.getComponent(stack).getMaxCapacity(0)));
+            UniversalComponents.TANK_COMPONENT.get(stack).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentHelper.TANK.getComponent(stack).getMaxAmount_F(0)));
             list.add(stack);
         }
     }
@@ -79,7 +68,7 @@ public class OxygenTankItem extends Item {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ((int)(OxygenUtils.getOxygen(stack).doubleValue() * 100.0D) + "/" + (int)(OxygenUtils.getMaxOxygen(stack).doubleValue() * 100.0D))));
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ((int)(OxygenUtils.getOxygen(stack).asInexactDouble() * 100.0D) + "/" + (int)(OxygenUtils.getMaxOxygen(stack).asInexactDouble() * 100.0D))));
         super.appendTooltip(stack, world, lines, context);
     }
 

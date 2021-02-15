@@ -22,6 +22,17 @@
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
@@ -29,22 +40,12 @@ import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.component.SubTankComponent;
-import com.hrznstudio.galacticraft.component.SubInventoryComponent;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import io.github.cottonmc.component.api.ActionType;
 import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import io.github.cottonmc.component.energy.CapacitorComponent;
 import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
-import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,6 +55,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.Item;
@@ -67,28 +69,21 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.IntStream;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, Tickable {
-    private final InventoryWrapper wrappedInventory = new InventoryWrapper() {
+    private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.getInventory()) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
-            return ConfigurableMachineBlockEntity.this.canUse(player);
-        }
-
-        @Override
-        public InventoryComponent getComponent() {
-            return ConfigurableMachineBlockEntity.this.getInventory();
+            return ConfigurableMachineBlockEntity.this.getSecurity().hasAccess(player);
         }
     };
 
@@ -109,101 +104,16 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         public boolean canInsertEnergy() {
             return ConfigurableMachineBlockEntity.this.canInsertEnergy();
         }
-
-        @Override
-        public void readFromNbt(CompoundTag tag) {
-            if (tag.getBoolean("disabled")) return;
-            super.readFromNbt(tag);
-        }
-
-        @Override
-        public void writeToNbt(CompoundTag tag) {
-            if (ConfigurableMachineBlockEntity.this.getMaxEnergy() == 0) {
-                tag.putBoolean("disabled", true);
-                return;
-            }
-            super.writeToNbt(tag);
-        }
     };
 
-    private final @NotNull SimpleInventoryComponent inventory = new SimpleInventoryComponent(this.getInventorySize()) {
-        @Override
-        public void readFromNbt(CompoundTag tag) {
-            if (tag.getBoolean("disabled")) return;
-            super.readFromNbt(tag);
-        }
+    private final @NotNull FullFixedItemInv inventory = new FullFixedItemInv(this.getInventorySize());
 
+    private final @NotNull SimpleFixedFluidInv tank = new SimpleFixedFluidInv(this.getFluidTankSize(), this.getFluidTankCapacity()) {
         @Override
-        public void writeToNbt(CompoundTag tag) {
-            if (ConfigurableMachineBlockEntity.this.getMaxEnergy() == 0) {
-                tag.putBoolean("disabled", true);
-                return;
-            }
-            super.writeToNbt(tag);
+        public FluidFilter getFilterForTank(int tank) {
+            return ConfigurableMachineBlockEntity.this.getFilterForTank(tank).or(key -> key.getRawFluid() == Fluids.EMPTY);
         }
     };
-
-    private final @NotNull SimpleTankComponent tank = new SimpleTankComponent(this.getFluidTankSize(), this.getFluidTankMaxCapacity()) {
-        @Override
-        public boolean canExtract(int slot) {
-            return ConfigurableMachineBlockEntity.this.canPipeExtractFluid(slot);
-        }
-
-        @Override
-        public boolean canInsert(int slot) {
-            return ConfigurableMachineBlockEntity.this.canPipeInsertFluid(slot);
-        }
-
-        @Override
-        public FluidVolume insertFluid(FluidVolume fluid, ActionType action) {
-            for (int i = 0; i < contents.size(); i++) {
-                if (isAcceptableFluid(i, fluid)) {
-                    fluid = super.insertFluid(i, fluid, action);
-                    if (fluid.isEmpty()) return fluid;
-                }
-            }
-
-            return fluid;
-        }
-
-        @Override
-        public FluidVolume insertFluid(int tank, FluidVolume fluid, ActionType action) {
-            if (isAcceptableFluid(tank, fluid)) {
-                return super.insertFluid(tank, fluid, action);
-            }
-            return fluid;
-        }
-
-        public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-            return ConfigurableMachineBlockEntity.this.isAcceptableFluid(tank, volume) || volume.isEmpty();
-        }
-
-        @Override
-        public void setFluid(int slot, FluidVolume stack) {
-            if (isAcceptableFluid(slot, stack)) super.setFluid(slot, stack);
-        }
-
-        @Override
-        public boolean isAcceptableFluid(int tank) {//how are you supposed to check if its acceptable if you *only* get the tank and no fluid?! also currently unused?
-            return canInsert(tank);
-        }
-
-        @Override
-        public void readFromNbt(CompoundTag tag) {
-            if (tag.getBoolean("disabled")) return;
-            super.readFromNbt(tag);
-        }
-
-        @Override
-        public void writeToNbt(CompoundTag tag) {
-            if (ConfigurableMachineBlockEntity.this.getMaxEnergy() == 0) {
-                tag.putBoolean("disabled", true);
-                return;
-            }
-            super.writeToNbt(tag);
-        }
-    };
-
 
     public ConfigurableMachineBlockEntity(BlockEntityType<? extends ConfigurableMachineBlockEntity> blockEntityType) {
         super(blockEntityType);
@@ -280,8 +190,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return false;
     }
 
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return false;
+    public FluidFilter getFilterForTank(int tank) {
+        return fluidKey -> false;
     }
 
     public int getInventorySize() {
@@ -292,8 +202,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return 0;
     }
 
-    public Fraction getFluidTankMaxCapacity() {
-        return Fraction.ZERO;
+    public FluidAmount getFluidTankCapacity() {
+        return FluidAmount.ZERO;
     }
 
     public abstract List<SideOption> validSideOptions();
@@ -344,11 +254,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.capacitor;
     }
 
-    public final @NotNull SimpleInventoryComponent getInventory() {
+    public final @NotNull FullFixedItemInv getInventory() {
         return this.inventory;
     }
 
-    public final @NotNull SimpleTankComponent getFluidTank() {
+    public final @NotNull SimpleFixedFluidInv getFluidTank() {
         return this.tank;
     }
 
@@ -363,28 +273,29 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.getCapacitor();
     }
 
-    public final @Nullable InventoryComponent getInventory(@NotNull BlockState state, @Nullable Direction direction) {
+    public final @Nullable FixedItemInv getInventory(@NotNull BlockState state, @Nullable Direction direction) { //DIRECTION IS POINTING AWAY FROM MACHINE TO THE SEARCHER
         if (direction != null) {
             ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (sideOption.getOption().isItem()) {
                 if (sideOption.isWildcard()) {
                     IntArrayList list = new IntArrayList();
+
                     if (sideOption.getOption().isInput()) {
-                        for (int i = 0; i < tank.getTanks(); i++) {
-                            if (tank.canInsert(i)) {
+                        for (int i = 0; i < inventory.getSlotCount(); i++) {
+                            if (this.canHopperInsert(i)) {
                                 list.add(i);
                             }
                         }
                     } else {
-                        for (int i = 0; i < tank.getTanks(); i++) {
-                            if (tank.canExtract(i)) {
+                        for (int i = 0; i < inventory.getSlotCount(); i++) {
+                            if (this.canHopperExtract(i)) {
                                 list.add(i);
                             }
                         }
                     }
-                    return new SubInventoryComponent(this.getInventory(), list.toArray(new int[0]));
+                    return this.getInventory().getMappedInv(list.toIntArray());
                 } else {
-                    return new SubInventoryComponent(this.getInventory(), new int[]{sideOption.getValue()});
+                    return this.getInventory().getMappedInv(sideOption.getValue());
                 }
             }
             return null;
@@ -392,28 +303,28 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.getInventory();
     }
 
-    public final @Nullable TankComponent getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
+    public final @Nullable FixedFluidInv getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
             ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (sideOption.getOption().isFluid()) {
                 if (sideOption.isWildcard()) {
                     IntArrayList list = new IntArrayList();
                     if (sideOption.getOption().isInput()) {
-                        for (int i = 0; i < tank.getTanks(); i++) {
-                            if (tank.canInsert(i)) {
+                        for (int i = 0; i < tank.getTankCount(); i++) {
+                            if (this.canPipeInsertFluid(i)) {
                                 list.add(i);
                             }
                         }
                     } else {
-                        for (int i = 0; i < tank.getTanks(); i++) {
-                            if (tank.canExtract(i)) {
+                        for (int i = 0; i < tank.getTankCount(); i++) {
+                            if (this.canPipeExtractFluid(i)) {
                                 list.add(i);
                             }
                         }
                     }
-                    return new SubTankComponent(this.getFluidTank(), list.toArray(new int[0]));
+                    return this.getFluidTank().getMappedInv(list.toIntArray());
                 } else {
-                    return new SubTankComponent(this.getFluidTank(), new int[]{sideOption.getValue()});
+                    return this.getFluidTank().getMappedInv(sideOption.getValue());
                 }
             }
             return null;
@@ -437,10 +348,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.getSecurity().hasAccess(player);
     }
 
-    protected void decrement(int slot, int amount) {
-        ItemStack stack = this.getInventory().getStack(slot);
-        stack.decrement(amount);
-        this.getInventory().setStack(slot, stack);
+    protected ItemStack decrement(int slot, int amount) {
+        return this.getInventory().extractStack(slot, ConstantItemFilter.ANYTHING, ItemStack.EMPTY, amount, Simulation.ACTION);
     }
 
     /**
@@ -502,7 +411,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public boolean isTankFull(int tank) {
-        return this.getFluidTank().getContents(tank).getAmount().compareTo(this.getFluidTank().getMaxCapacity(tank)) >= 0;
+        return this.getFluidTank().getInvFluid(tank).getAmount_F().isGreaterThanOrEqual(this.getFluidTank().getMaxAmount_F(tank));
     }
 
     @NotNull
@@ -512,25 +421,25 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public boolean canInsert(int slot, Recipe<?> recipe) {
-        return canInsert(slot, recipe, 1);
+        return this.canInsert(slot, recipe, 1);
     }
 
     public boolean canInsert(int slot, Recipe<?> recipe, int multiplier) {
         ItemStack stack = recipe.getOutput().copy();
         stack.setCount(stack.getCount() * multiplier);
-        return canInsert(slot, stack);
+        return this.canInsert(slot, stack);
     }
 
     public boolean canInsert(int[] slots, Recipe<?> recipe, int multiplier) {
         ItemStack stack = recipe.getOutput().copy();
         stack.setCount(stack.getCount() * multiplier);
-        return canInsert(slots, stack);
+        return this.canInsert(slots, stack);
     }
 
     public boolean canInsert(int[] slots, ItemStack stack) {
         stack = stack.copy();
         for (int slot : slots) {
-            stack = this.getInventory().insertStack(slot, stack, ActionType.TEST);
+            stack = this.getInventory().insertStack(slot, stack, Simulation.SIMULATE);
             if (stack.isEmpty()) return true;
         }
         return stack.isEmpty();
@@ -540,8 +449,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         if (this.getMaxEnergy() > 0) this.getCapacitor().writeToNbt(tag);
-        if (this.getInventorySize() > 0) this.getInventory().writeToNbt(tag);
-        if (this.getFluidTankSize() > 0) this.getFluidTank().writeToNbt(tag);
+        if (this.getInventorySize() > 0) this.getInventory().toTag(tag);
+        if (this.getFluidTankSize() > 0) this.getFluidTank().toTag(tag);
         this.getSecurity().toTag(tag);
         this.getSideConfigInfo().toTag(tag);
         this.getRedstone().toTag(tag);
@@ -553,8 +462,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         if (this.getMaxEnergy() > 0) this.getCapacitor().readFromNbt(tag);
-        if (this.getInventorySize() > 0) this.getInventory().readFromNbt(tag);
-        if (this.getFluidTankSize() > 0) this.getFluidTank().readFromNbt(tag);
+        if (this.getInventorySize() > 0) this.getInventory().fromTag(tag);
+        if (this.getFluidTankSize() > 0) this.getFluidTank().fromTag(tag);
         this.getSecurity().fromTag(tag);
         this.getSideConfigInfo().fromTag(tag);
         this.setRedstone(RedstoneState.fromTag(tag));
@@ -575,12 +484,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public boolean canInsert(int slot, ItemStack stack) {
-        return this.getInventory().insertStack(slot, stack, ActionType.TEST).isEmpty();
+        return this.getInventory().insertStack(slot, stack, Simulation.SIMULATE).isEmpty();
     }
 
     public void insert(int slot, ItemStack stack) {
-        if (canInsert(slot, stack)) {
-            this.getInventory().insertStack(slot, stack, ActionType.PERFORM);
+        if (this.canInsert(slot, stack)) {
+            this.getInventory().insertStack(slot, stack, Simulation.ACTION);
         } else {
             throw new RuntimeException();
         }
@@ -607,23 +516,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public void trySpreadFluids(int tank) {
-        if (this.canPipeExtractFluid(tank) && !this.getFluidTank().getContents(tank).isEmpty()) {
+        if (this.canPipeExtractFluid(tank) && !this.getFluidTank().getInvFluid(tank).isEmpty()) {
             for (BlockFace face : BlockFace.values()) {
                 ConfiguredSideOption option = this.getSideConfigInfo().get(face);
                 if (option.getOption().isFluid() && option.getOption().isOutput()) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
-                    TankComponent component = ComponentHelper.TANK.getComponent(this.world, pos.offset(dir), dir.getOpposite());
-                    if (component != null) {
-                        for (int i = 0; i < component.getTanks(); i++) {
-                            if (component.canInsert(i)) {
-                                FluidVolume a = this.getFluidTank().insertFluid(tank, component.insertFluid(this.getFluidTank().takeFluid(tank, component.getMaxCapacity(i), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
-                                if (!a.isEmpty()) {
-                                    Galacticraft.logger.debug(a.getAmount().toString() + " " + Registry.FLUID.getId(a.getFluid()) + " wasted?!");
-                                }
-                                if (this.getFluidTank().getContents(tank).isEmpty()) return;
-                            }
-                        }
-                    }
+                    FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);
+                    this.getFluidTank().insertFluid(tank, insertable.attemptInsertion(this.getFluidTank().extractFluid(tank, null, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
                 }
             }
         }
@@ -644,11 +543,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (this.getCapacitor().getCurrentEnergy() >= this.getCapacitor().getMaxEnergy()) {
             return;
         }
-        ItemStack stack = this.getInventory().getStack(slot);
+        ItemStack stack = this.getInventory().getInvStack(slot);
         int neededEnergy = Math.min(this.getBatteryTransferRate(), this.getCapacitor().getMaxEnergy() - this.getCapacitor().getCurrentEnergy());
         if (EnergyUtils.isEnergyItem(stack)) {
             this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, EnergyUtils.extractEnergy(stack, neededEnergy, ActionType.PERFORM), ActionType.PERFORM);
-            this.getInventory().setStack(slot, stack);
+            this.getInventory().setInvStack(slot, stack, Simulation.ACTION);
         }
     }
 
@@ -662,23 +561,39 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (available <= 0) {
             return;
         }
-        ItemStack stack = this.getInventory().getStack(slot);
+        ItemStack stack = this.getInventory().getInvStack(slot);
         if (EnergyUtils.isEnergyItem(stack)) {
             if (EnergyUtils.getEnergy(stack) < EnergyUtils.getMaxEnergy(stack)) {
                 int i = EnergyUtils.insertEnergy(stack, available, ActionType.PERFORM);
                 this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, ActionType.PERFORM);
-                this.getInventory().setStack(slot, stack);
+                this.getInventory().setInvStack(slot, stack, Simulation.ACTION);
             }
         }
     }
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        ConfiguredSideOption configuredSideOption = this.getSideConfigInfo().get(BlockFace.toFace(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), side));
-        if (configuredSideOption.isWildcard()) {
-            return IntStream.range(0, this.getInventorySize()).toArray();
+        ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), side));
+        if (cso.isWildcard()) {
+            IntArrayList list = new IntArrayList();
+
+            if (cso.getOption().isInput()) {
+                for (int i = 0; i < inventory.getSlotCount(); i++) {
+                    if (this.canHopperInsert(i)) {
+                        list.add(i);
+                    }
+                }
+            } else {
+                for (int i = 0; i < inventory.getSlotCount(); i++) {
+                    if (this.canHopperExtract(i)) {
+                        list.add(i);
+                    }
+                }
+            }
+
+            return list.toIntArray();
         } else {
-            return new int[]{configuredSideOption.getValue()};
+            return new int[]{cso.getValue()};
         }
     }
 
@@ -694,7 +609,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             }
         }
 
-        return accessible && this.getInventory().canExtract(slot) && this.getInventory().getStack(slot).isItemEqual(stack);
+        return accessible && this.getInventory().getInvStack(slot).isItemEqual(stack);
     }
 
     @Override
@@ -709,7 +624,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             }
         }
 
-        return accessible && this.getInventory().insertStack(stack, ActionType.TEST).isEmpty() && canInsert(slot, stack);
+        return accessible && this.getInventory().attemptInsertion(stack, Simulation.SIMULATE).isEmpty() && canInsert(slot, stack);
     }
 
     /**
@@ -720,7 +635,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return Collections.emptyList();
     }
 
-    public InventoryWrapper getWrappedInventory() {
+    public Inventory getWrappedInventory() {
         return wrappedInventory;
     }
 

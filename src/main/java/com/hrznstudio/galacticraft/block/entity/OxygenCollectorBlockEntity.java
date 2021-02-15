@@ -22,6 +22,10 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
@@ -31,10 +35,7 @@ import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import com.hrznstudio.galacticraft.util.OxygenUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -55,7 +56,7 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
+    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
 
     public int collectionAmount = 0;
@@ -75,7 +76,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public Fraction getFluidTankMaxCapacity() {
+    public FluidAmount getFluidTankCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -175,7 +176,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getMaxCapacity(0).compareTo(this.getFluidTank().getContents(0).getAmount()) <= 0) return Status.FULL;
+        if (this.isTankFull(0)) return Status.FULL;
         if (!canCollectOxygen()) return Status.NOT_ENOUGH_LEAVES;
         return Status.COLLECTING;
     }
@@ -185,7 +186,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.getFluidTank().insertFluid(0, new FluidVolume(this.getFluidTank().getContents(0).isEmpty() ? GalacticraftFluids.OXYGEN : this.getFluidTank().getContents(0).getFluid(), Fraction.of(collectionAmount, 100)), ActionType.PERFORM);
+            this.getFluidTank().insertFluid(0, FluidKeys.get(GalacticraftFluids.OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
         }
     }
 
@@ -210,8 +211,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    public FluidFilter getFilterForTank(int tank) {
+        return OxygenUtils::isGCOxygen;
     }
 
     /**

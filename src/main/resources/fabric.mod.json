@@ -138,6 +138,9 @@
     "minecraft": ">=1.16.2",
     "universalcomponents": "*",
     "galacticraft-api": ">=0.2.9-alpha+1.16.1",
+    "libblockattributes_core": ">=0.8",
+    "libblockattributes_items": ">=0.8",
+    "libblockattributes_fluids": ">=0.8",
 
     "fabric-api-base": "*",
     "fabric-blockrenderlayer-v1": "*",

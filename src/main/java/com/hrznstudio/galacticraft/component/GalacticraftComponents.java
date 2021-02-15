@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.component;
 
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
@@ -50,7 +51,6 @@ import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
 import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
 import io.github.cottonmc.component.item.InventoryComponent;
 import io.github.cottonmc.component.item.impl.SyncedInventoryComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.minecraft.util.Identifier;
@@ -63,7 +63,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GalacticraftComponents implements EntityComponentInitializer, BlockComponentInitializer, ItemComponentInitializer {
-    public static final List<Identifier> MACHINE_BLOCKS = new LinkedList<>();
     public static final ComponentKey<InventoryComponent> GEAR_INVENTORY_COMPONENT = ComponentRegistry.getOrCreate(new Identifier(Constants.MOD_ID, "gear_inv"), InventoryComponent.class);
 
     public static void register() {
@@ -138,7 +137,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
                 if (be.getFluidData() == Pipe.FluidData.EMPTY) {
                     if (be.getNetwork() != null) {
                         Pipe.FluidData data = be.getNetwork().insertFluid(be.getPos(), null, fluid, action);
-                        if (action == ActionType.PERFORM) {
+                        if (action == Simulation.ACTION) {
                             if (data == null) {
                                 return fluid;
                             }
@@ -179,14 +178,6 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
                 return FluidVolume.EMPTY;
             }
         });
-
-        for (Identifier id : MACHINE_BLOCKS) {
-            registry.registerFor(id, UniversalComponents.INVENTORY_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getInventory(state, side));
-            registry.registerFor(id, UniversalComponents.CAPACITOR_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getCapacitor(state, side));
-            registry.registerFor(id, UniversalComponents.TANK_COMPONENT, (state, world, pos, side) -> ((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getFluidTank(state, side));
-        }
-
-        MACHINE_BLOCKS.clear();
     }
 
     @Override
@@ -214,7 +205,7 @@ public class GalacticraftComponents implements EntityComponentInitializer, Block
                     }
                 }
             };
-            component.listen(() -> stack.setDamage(stack.getItem().getMaxDamage() - (int)(component.getContents(0).getAmount().doubleValue() * 1000.0D)));
+            component.listen(() -> stack.setDamage(stack.getItem().getMaxDamage() - (int)(component.getContents(0).getAmount_F().asInexactDouble() * 1000.0D)));
             return component;
         });
 

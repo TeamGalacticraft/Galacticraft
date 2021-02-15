@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.screen.slot;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
@@ -32,9 +31,9 @@ import java.util.function.Predicate;
 public class FilteredSlot extends Slot {
     private final Predicate<ItemStack> predicate;
 
-    public FilteredSlot(ConfigurableMachineBlockEntity entity, Inventory inventory, int index, int x, int y) {
-        super(inventory, index, x, y);
-        predicate = entity.getFilterForSlot(index);
+    public FilteredSlot(ConfigurableMachineBlockEntity machine, int index, int x, int y) {
+        super(machine.getWrappedInventory(), index, x, y);
+        predicate = machine.getFilterForSlot(index);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class AdvancedSolarPanelScreenHandler extends MachineScreenHandler<Advanc
     public AdvancedSolarPanelScreenHandler(int syncId, PlayerEntity player, AdvancedSolarPanelBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ADVANCED_SOLAR_PANEL_HANDLER);
 
-        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), AdvancedSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
+        this.addSlot(new FilteredSlot(machine, AdvancedSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
         this.addPlayerInventorySlots(0, 84);
     }
 

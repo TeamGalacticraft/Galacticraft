@@ -249,7 +249,6 @@ public class GalacticraftBlocks {
     }
 
     private static <T extends Block> T registerMachine(T block, String id) {
-        GalacticraftComponents.MACHINE_BLOCKS.add(new Identifier(Constants.MOD_ID, id));
         return registerBlock(block, id, MACHINES_GROUP);
     }
 

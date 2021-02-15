@@ -23,15 +23,11 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenDecompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -39,7 +35,7 @@ import net.minecraft.screen.slot.Slot;
 public class OxygenDecompressorScreenHandler extends MachineScreenHandler<OxygenDecompressorBlockEntity> {
     public OxygenDecompressorScreenHandler(int syncId, PlayerEntity player, OxygenDecompressorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_DECOMPRESSOR_HANDLER);
-        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), 0, 8, 62));
+        this.addSlot(new FilteredSlot(machine, 0, 8, 62));
         this.addSlot(new OxygenTankSlot(machine.getWrappedInventory(), 1, 80, 27));
         this.addPlayerInventorySlots(0, 84);
     }

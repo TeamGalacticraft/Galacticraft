@@ -22,7 +22,8 @@
 
 package com.hrznstudio.galacticraft.api.pipe;
 
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
@@ -74,7 +75,7 @@ public interface Pipe {
     }
 
     class FluidData {
-        public static final FluidData EMPTY = new FluidData(BlockPos.ORIGIN, new ArrayDeque<>(), FluidVolume.EMPTY, null);
+        public static final FluidData EMPTY = new FluidData(BlockPos.ORIGIN, new ArrayDeque<>(), FluidVolumeUtil.EMPTY, null);
         private final BlockPos source;
         private final Deque<BlockPos> path;
         private final FluidVolume fluid;

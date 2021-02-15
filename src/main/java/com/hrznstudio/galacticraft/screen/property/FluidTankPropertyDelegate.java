@@ -22,29 +22,29 @@
 
 package com.hrznstudio.galacticraft.screen.property;
 
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.registry.Registry;
 
 public class FluidTankPropertyDelegate implements PropertyDelegate {
-    private final TankComponent component;
+    private final FixedFluidInv inv;
     private final Fluid[] fluids;
 
-    public FluidTankPropertyDelegate(TankComponent component) {
-        this.component = component;
-        this.fluids = new Fluid[component.getTanks()];
+    public FluidTankPropertyDelegate(FixedFluidInv inv) {
+        this.inv = inv;
+        this.fluids = new Fluid[inv.getTankCount()];
     }
 
     @Override
     public int get(int index) {
         if (index % 2 == 0) {
-            return Registry.FLUID.getRawId(component.getContents(index / 2).getFluid());
+            return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
         } else {
-            return (int) (component.getContents(((index + 1) / 2) - 1).getAmount().doubleValue() * 1000.0D);
+            return (int) (inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInexactDouble() * 1000.0D);
         }
     }
 
@@ -53,7 +53,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
         if (index % 2 == 0) {
             fluids[index / 2] = Registry.FLUID.get(value);
         } else {
-            component.setFluid(((index + 1) / 2) - 1, new FluidVolume(fluids[((index + 1) / 2) - 1], Fraction.of(value, 1000)));
+            inv.setInvFluid(((index + 1) / 2) - 1, FluidKeys.get(fluids[((index + 1) / 2) - 1]).withAmount(FluidAmount.of(value, 1000)), Simulation.ACTION);
         }
     }
 

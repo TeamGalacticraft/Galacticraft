@@ -22,14 +22,17 @@
 
 package com.hrznstudio.galacticraft.block.special.fluidpipe;
 
+import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -93,18 +96,17 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
     public @NotNull PipeConnectionType getConnection(@NotNull Direction direction, @Nullable BlockEntity entity) {
         if (entity == null || !canConnect(direction)) return PipeConnectionType.NONE;
         if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
-        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, entity.getPos(), direction.getOpposite());
-        if (component != null) {
-            if (component.canInsert(0) && component.canExtract(0)) {
-                return PipeConnectionType.FLUID_IO;
-            } else if (component.canInsert(0)) {
-                return PipeConnectionType.FLUID_INPUT;
-            } else if (component.canExtract(0)) {
-                return PipeConnectionType.FLUID_OUTPUT;
-            }
+        boolean insertable = FluidAttributes.INSERTABLE.getFromNeighbour(entity, direction) != RejectingFluidInsertable.NULL;
+        boolean extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(entity, direction) != EmptyFluidExtractable.NULL;
+        if (insertable && extractable) {
+            return PipeConnectionType.FLUID_IO;
+        } else if (insertable) {
+            return PipeConnectionType.FLUID_INPUT;
+        } else if (extractable) {
+            return PipeConnectionType.FLUID_OUTPUT;
         }
-        return PipeConnectionType.NONE;
 
+        return PipeConnectionType.NONE;
     }
 
     @Override
@@ -162,35 +164,28 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe 
                         }
                     } else {
                         if (this.fluidData.getPath().size() != 1) {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), ActionType.PERFORM);
+                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), Simulation.ACTION);
                             if (dat != null) {
                                 this.fluidData = dat;
                             }
                             return;
                         }
-                        TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, pos, this.fluidData.getEndDir().getOpposite());
-                        if (component != null) {
-                            FluidVolume volume = component.insertFluid(fluidData.getFluid(), ActionType.PERFORM);
-                            if (!volume.isEmpty()) {
-                                Pipe.FluidData dat = network.insertFluid(this.pos, null, volume, ActionType.PERFORM);
-                                if (dat != null) {
-                                    this.fluidData = dat;
-                                } else {
-                                    BlockPos finalPos = pos;
-                                    this.fluidData = new Pipe.FluidData(pos, Util.make(new LinkedList<>(), l -> l.add(finalPos)), volume, this.fluidData.getEndDir());
-                                }
-                            } else {
-                                this.fluidData = Pipe.FluidData.EMPTY;
-                            }
-                        } else {
-                            Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), ActionType.PERFORM);
+                        FluidInsertable insertable = FluidAttributes.INSERTABLE.get(world, pos, SearchOptions.inDirection(this.fluidData.getEndDir()));
+                        FluidVolume volume = insertable.attemptInsertion(fluidData.getFluid(), Simulation.ACTION);
+                        if (!volume.isEmpty()) {
+                            Pipe.FluidData dat = network.insertFluid(this.pos, null, volume, Simulation.ACTION);
                             if (dat != null) {
                                 this.fluidData = dat;
+                            } else {
+                                BlockPos finalPos = pos;
+                                this.fluidData = new Pipe.FluidData(pos, Util.make(new LinkedList<>(), l -> l.add(finalPos)), volume, this.fluidData.getEndDir());
                             }
+                        } else {
+                            this.fluidData = Pipe.FluidData.EMPTY;
                         }
                     }
                 } else {
-                    Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), ActionType.PERFORM);
+                    Pipe.FluidData dat = network.insertFluid(this.pos, null, this.fluidData.getFluid(), Simulation.ACTION);
                     if (dat != null) {
                         this.fluidData = dat;
                     }

@@ -68,11 +68,11 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
                 return stack;
             }
 
-            if (slotId < this.machine.getInventory().getSize()) {
-                if (!this.insertItem(stack1, this.machine.getInventory().getSize(), this.slots.size(), true)) {
+            if (slotId < this.machine.getInventory().getSlotCount()) {
+                if (!this.insertItem(stack1, this.machine.getInventory().getSlotCount(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(stack1, 0, this.machine.getInventory().getSize(), false)) {
+            } else if (!this.insertItem(stack1, 0, this.machine.getInventory().getSlotCount(), false)) {
                 return ItemStack.EMPTY;
             }
             if (stack1.getCount() == 0) {
@@ -87,12 +87,12 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
     protected void addPlayerInventorySlots(int x, int y) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, y + i * 18));
+                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
             }
         }
 
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(player.inventory, i, 8 + i * 18, y + 58));
+            this.addSlot(new Slot(player.inventory, i, x + 8 + i * 18, y + 58));
         }
     }
 

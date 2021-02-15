@@ -49,7 +49,7 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
         this.backgroundWidth = 176;
         this.backgroundHeight = 166;
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 8, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank(), 0, 30, 8, 48));
+        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank().getTank(0), 30, 8, 48));
     }
 
     @Override

@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.misc.TriFunction;
@@ -61,12 +64,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -75,7 +78,7 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ConfigurableMachineBlock extends BlockWithEntity {
+public class ConfigurableMachineBlock extends BlockWithEntity implements AttributeProvider {
     private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
     private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
     private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
@@ -230,13 +233,16 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof ConfigurableMachineBlockEntity) {
-            for (ItemStack stack : ((ConfigurableMachineBlockEntity) entity).getInventory().getStacks()) {
-                if (stack != null) {
+            FullFixedItemInv inv = ((ConfigurableMachineBlockEntity) entity).getInventory();
+            for (int i = 0; i < inv.getSlotCount(); i++) {
+                ItemStack stack = inv.getInvStack(i);
+                if (!stack.isEmpty()) {
                     world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
+                    inv.forceSetInvStack(i, ItemStack.EMPTY);
                 }
             }
-            ((ConfigurableMachineBlockEntity) entity).getInventory().clear();
         }
+
         if (this instanceof MultiBlockBase) {
             for (BlockPos otherPart : ((MultiBlockBase) this).getOtherParts(state, pos)) {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
@@ -278,5 +284,14 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
 
     public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
         return machineInfo.apply(stack, view, context);
+    }
+
+    @Override
+    public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
+        Direction direction = attributeList.getSearchDirection();
+        ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
+        assert machine != null;
+        attributeList.offer(machine.getInventory(blockState, direction == null ? null : direction.getOpposite()));
+        attributeList.offer(machine.getFluidTank(blockState, direction == null ? null : direction.getOpposite()));
     }
 }

@@ -22,30 +22,28 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.component.SubInventoryComponent;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +52,12 @@ import java.util.function.Predicate;
 public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public int cookTime = 0;
     public int cookLength = 0;
-    private final Inventory subInv = InventoryWrapper.of(new SubInventoryComponent(this.getInventory(), new int[]{INPUT_SLOT}));
+    private final Inventory subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return getWrappedInventory().canPlayerUse(player);
+        }
+    };
 
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
@@ -117,7 +120,7 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
         if (!recipe.isPresent()) return Status.NOT_ENOUGH_ITEMS;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         if (!this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, 
-                recipe.get().getOutput().copy(), ActionType.TEST), ActionType.TEST).isEmpty()) return Status.OUTPUT_FULL;
+                recipe.get().getOutput().copy(), Simulation.SIMULATE), Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
         return Status.ACTIVE;
     }
 
@@ -131,12 +134,12 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
             }
             if (this.cookTime++ >= this.cookLength) {
                 SmeltingRecipe recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, subInv, this.world).orElseThrow(AssertionError::new);
-                if (this.getInventory().takeStack(INPUT_SLOT, 1, ActionType.PERFORM).isEmpty()) return;
+                if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
                 this.cookTime = 0;
                 this.cookLength = 0;
-                if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), ActionType.PERFORM), ActionType.PERFORM);
+                if (this.world.getRecipeManager().getFirstMatch(RecipeType.BLASTING, subInv, this.world).isPresent()) this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1, recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
                 this.getInventory().insertStack(OUTPUT_SLOT_2, this.getInventory().insertStack(OUTPUT_SLOT_1,
-                        recipe.getOutput().copy(), ActionType.PERFORM), ActionType.PERFORM);
+                        recipe.getOutput().copy(), Simulation.ACTION), Simulation.ACTION);
 
             }
         } else {

@@ -22,9 +22,9 @@
 
 package com.hrznstudio.galacticraft.api.pipe;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.pipe.impl.PipeNetworkImpl;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -86,7 +86,7 @@ public interface PipeNetwork {
      * @param type The type of action to perform
      * @return the amount of energy that failed to insert
      */
-    Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull ActionType type);
+    Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull Simulation simulation);
 
     /**
      * Returns the adjacent connections from a position

@@ -22,14 +22,14 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.OxygenUtils;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,13 +40,14 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEntity {
+    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
     public OxygenStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);
     }
 
     @Override
-    public Fraction getFluidTankMaxCapacity() {
-        return Fraction.of(1, 100).multiply(Fraction.ofWhole(30_000));
+    public FluidAmount getFluidTankCapacity() {
+        return MAX_CAPACITY;
     }
 
     @Override
@@ -100,7 +101,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    public FluidFilter getFilterForTank(int tank) {
+        return key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
     }
 }

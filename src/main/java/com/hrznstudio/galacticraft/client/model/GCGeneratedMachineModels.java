@@ -169,7 +169,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getContents(0).getAmount().divide(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxCapacity(0)).doubleValue() * 8.0D)));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getInvFluid(0).getAmount_F().div(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxAmount_F(0)).asInexactDouble() * 8.0D)));
                 default:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
             }
