@@ -74,12 +74,6 @@ repositories {
         }
     }
     maven {
-        url "https://dl.bintray.com/ladysnake/libs/"
-        content {
-            includeGroup "io.github.onyxstudios.Cardinal-Components-API"
-        }
-    }
-    maven {
         url "https://maven.abusedmaster.xyz/"
         content {
             includeGroup "dev.onyxstudios"
@@ -140,24 +134,18 @@ dependencies {
     }
 
     modApi("com.hrznstudio:GalacticraftAPI:${project.addon_version}") { transitive = false }
-    modApi("io.github.cottonmc:UniversalComponents:${project.uc_version}")
     modApi("alexiil.mc.lib:libblockattributes-all:${project.lba_version}")
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}") { transitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}") { transitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}") { transitive = false }
-    modApi("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
+    modApi("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}")
+    modApi("teamreborn:energy:${project.energy_version}")
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")
     include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
-    include("io.github.cottonmc:UniversalComponents:${project.uc_version}")
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cardinal_version}")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:${project.cardinal_version}")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:${project.cardinal_version}")
-    include("io.github.cottonmc:cotton-resources:${cotton_resources_version}")
+    include("teamreborn:energy:${project.energy_version}")
+    include("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}")
     include("dev.onyxstudios:FOML:${project.foml_version}")
     include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
     modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
