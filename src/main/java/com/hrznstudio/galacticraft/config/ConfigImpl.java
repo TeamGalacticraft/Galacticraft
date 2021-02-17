@@ -30,37 +30,36 @@ import com.hrznstudio.galacticraft.util.EnergyUtils;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ConfigImpl implements Config {
-
     @Expose
     private boolean debugLog = false;
     @Expose
-    private int wireMaxTransferPerTick = 480;
+    private double wireMaxTransferPerTick = 128;
     @Expose
-    private int heavyWireMaxTransferPerTick = 1440;
+    private double heavyWireMaxTransferPerTick = 256;
     @Expose
-    private int coalGeneratorEnergyProductionRate = 120;
+    private double coalGeneratorEnergyProductionRate = 10; //total 4000
     @Expose
-    private int solarPanelEnergyProductionRate = 44;
+    private double solarPanelEnergyProductionRate = 3.6666666666666665;
     @Expose
-    private int circuitFabricatorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private double circuitFabricatorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricCompressorEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private double electricCompressorEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricArcFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private double electricArcFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int oxygenCollectorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private double oxygenCollectorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int refineryEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private double refineryEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int electricFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
+    private double electricFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int energyStorageModuleStorageSize = 500_000;
+    private double energyStorageModuleStorageSize = 41666.6666665;
     @Expose
-    private int machineEnergyStorageSize = 30_000;
+    private double machineEnergyStorageSize = 2500;
     @Expose
-    private int oxygenCompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private double oxygenCompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
     @Expose
-    private int oxygenDecompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
+    private double oxygenDecompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;
 
     @Override
     public boolean isDebugLogEnabled() {
@@ -73,142 +72,142 @@ public class ConfigImpl implements Config {
     }
 
     @Override
-    public int wireTransferLimit() {
+    public double wireTransferLimit() {
         return wireMaxTransferPerTick;
     }
 
     @Override
-    public void setWireTransferLimit(int amount) {
+    public void setWireTransferLimit(double amount) {
         this.wireMaxTransferPerTick = amount;
     }
 
     @Override
-    public int heavyWireTransferLimit() {
+    public double heavyWireTransferLimit() {
         return heavyWireMaxTransferPerTick;
     }
 
     @Override
-    public void setHeavyWireTransferLimit(int amount) {
+    public void setHeavyWireTransferLimit(double amount) {
         this.heavyWireMaxTransferPerTick = amount;
     }
 
     @Override
-    public int coalGeneratorEnergyProductionRate() {
+    public double coalGeneratorEnergyProductionRate() {
         return coalGeneratorEnergyProductionRate;
     }
 
     @Override
-    public void setCoalGeneratorEnergyProductionRate(int amount) {
+    public void setCoalGeneratorEnergyProductionRate(double amount) {
         this.coalGeneratorEnergyProductionRate = amount;
     }
 
     @Override
-    public int solarPanelEnergyProductionRate() {
+    public double solarPanelEnergyProductionRate() {
         return solarPanelEnergyProductionRate;
     }
 
     @Override
-    public void setSolarPanelEnergyProductionRate(int amount) {
+    public void setSolarPanelEnergyProductionRate(double amount) {
         this.solarPanelEnergyProductionRate = amount;
     }
 
     @Override
-    public int circuitFabricatorEnergyConsumptionRate() {
+    public double circuitFabricatorEnergyConsumptionRate() {
         return circuitFabricatorEnergyConsumptionRate;
     }
 
     @Override
-    public void setCircuitFabricatorEnergyConsumptionRate(int amount) {
+    public void setCircuitFabricatorEnergyConsumptionRate(double amount) {
         this.circuitFabricatorEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int electricCompressorEnergyConsumptionRate() {
+    public double electricCompressorEnergyConsumptionRate() {
         return electricCompressorEnergyConsumptionRate;
     }
 
     @Override
-    public void setElectricCompressorEnergyConsumptionRate(int amount) {
+    public void setElectricCompressorEnergyConsumptionRate(double amount) {
         this.electricCompressorEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int electricArcFurnaceEnergyConsumptionRate() {
+    public double electricArcFurnaceEnergyConsumptionRate() {
         return electricArcFurnaceEnergyConsumptionRate;
     }
 
     @Override
-    public void setElectricArcFurnaceEnergyConsumptionRate(int amount) {
+    public void setElectricArcFurnaceEnergyConsumptionRate(double amount) {
         this.electricArcFurnaceEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int oxygenCollectorEnergyConsumptionRate() {
+    public double oxygenCollectorEnergyConsumptionRate() {
         return oxygenCollectorEnergyConsumptionRate;
     }
 
     @Override
-    public void setOxygenCollectorEnergyConsumptionRate(int amount) {
+    public void setOxygenCollectorEnergyConsumptionRate(double amount) {
         this.oxygenCollectorEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int refineryEnergyConsumptionRate() {
+    public double refineryEnergyConsumptionRate() {
         return refineryEnergyConsumptionRate;
     }
 
     @Override
-    public void setRefineryEnergyConsumptionRate(int amount) {
+    public void setRefineryEnergyConsumptionRate(double amount) {
         this.refineryEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int electricFurnaceEnergyConsumptionRate() {
+    public double electricFurnaceEnergyConsumptionRate() {
         return electricFurnaceEnergyConsumptionRate;
     }
 
     @Override
-    public void setElectricFurnaceEnergyConsumptionRate(int amount) {
+    public void setElectricFurnaceEnergyConsumptionRate(double amount) {
         this.electricFurnaceEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int energyStorageModuleStorageSize() {
+    public double energyStorageModuleStorageSize() {
         return energyStorageModuleStorageSize;
     }
 
     @Override
-    public void setEnergyStorageModuleStorageSize(int amount) {
+    public void setEnergyStorageModuleStorageSize(double amount) {
         this.energyStorageModuleStorageSize = amount;
     }
 
     @Override
-    public int machineEnergyStorageSize() {
+    public double machineEnergyStorageSize() {
         return machineEnergyStorageSize;
     }
 
     @Override
-    public void setMachineEnergyStorageSize(int amount) {
+    public void setMachineEnergyStorageSize(double amount) {
         this.machineEnergyStorageSize = amount;
     }
 
     @Override
-    public int oxygenCompressorEnergyConsumptionRate() {
+    public double oxygenCompressorEnergyConsumptionRate() {
         return oxygenCompressorEnergyConsumptionRate;
     }
 
     @Override
-    public void setOxygenCompressorEnergyConsumptionRate(int amount) {
+    public void setOxygenCompressorEnergyConsumptionRate(double amount) {
         this.oxygenCompressorEnergyConsumptionRate = amount;
     }
 
     @Override
-    public int oxygenDecompressorEnergyConsumptionRate() {
+    public double oxygenDecompressorEnergyConsumptionRate() {
         return oxygenDecompressorEnergyConsumptionRate;
     }
 
     @Override
-    public void setOxygenDecompressorEnergyConsumptionRate(int amount) {
+    public void setOxygenDecompressorEnergyConsumptionRate(double amount) {
         this.oxygenDecompressorEnergyConsumptionRate = amount;
     }
 }

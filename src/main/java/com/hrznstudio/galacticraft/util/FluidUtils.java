@@ -1,5 +1,7 @@
 package com.hrznstudio.galacticraft.util;
 
+import alexiil.mc.lib.attributes.SearchOption;
+import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
@@ -15,6 +17,9 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.Tag;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
 
 public class FluidUtils {
     private FluidUtils() {}
@@ -97,5 +102,15 @@ public class FluidUtils {
 
     public static boolean isFixedFluidInvView(Reference<ItemStack> stack) {
         return FluidAttributes.FIXED_INV_VIEW.get(stack) != EmptyFixedFluidInv.INSTANCE;
+    }
+
+    public static boolean isAnythingRelatedToFluids(World world, BlockPos pos, Direction direction) {
+        return FluidAttributes.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
+                || FluidAttributes.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
+                || FluidAttributes.FIXED_INV.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
+                || FluidAttributes.FIXED_INV_VIEW.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
+                || FluidAttributes.GROUPED_INV.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
+                || FluidAttributes.GROUPED_INV_VIEW.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null
+                || FluidAttributes.FILTER.getFirstOrNull(world, pos, SearchOptions.inDirection(direction)) != null;
     }
 }

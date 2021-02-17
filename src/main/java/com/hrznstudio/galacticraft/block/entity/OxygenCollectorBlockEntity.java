@@ -33,11 +33,9 @@ import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.OxygenTankUtils;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
@@ -99,7 +97,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
     }
 
     private int collectOxygen() {
@@ -193,7 +191,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
     }
 

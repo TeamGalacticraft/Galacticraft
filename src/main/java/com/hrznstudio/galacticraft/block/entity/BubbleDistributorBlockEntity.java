@@ -33,11 +33,11 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -110,7 +110,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == 0) {
-            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         } else if (slot == 1) {
             return stack -> FluidUtils.canExtractFluids(stack, GalacticraftFluids.LIQUID_OXYGEN);
         } else {
@@ -207,7 +207,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
     }
 

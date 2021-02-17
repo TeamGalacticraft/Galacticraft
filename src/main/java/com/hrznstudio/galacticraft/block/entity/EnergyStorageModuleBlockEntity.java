@@ -26,8 +26,8 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +58,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getMaxEnergy() {
+    public double getMaxStored() {
         return Galacticraft.configManager.get().energyStorageModuleStorageSize();
     }
 
@@ -79,11 +79,11 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
     }
 
     @Override
-    protected int getBatteryTransferRate() {
+    protected double getBatteryTransferRate() {
         return 100;
     }
 

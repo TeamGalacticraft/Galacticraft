@@ -33,8 +33,6 @@ import com.hrznstudio.galacticraft.attribute.GalacticraftAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.InfiniteOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTankImpl;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
-import io.github.cottonmc.component.item.InventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;

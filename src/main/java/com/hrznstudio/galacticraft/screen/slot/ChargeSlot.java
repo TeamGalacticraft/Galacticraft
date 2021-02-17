@@ -42,6 +42,6 @@ public class ChargeSlot extends Slot {
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return EnergyUtils.isEnergyItem(stack);
+        return EnergyUtils.isEnergyHolder(stack);
     }
 }

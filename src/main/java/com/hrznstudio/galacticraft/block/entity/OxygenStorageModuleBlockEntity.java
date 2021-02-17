@@ -87,8 +87,8 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getMaxEnergy() {
-        return 0;
+    public double getMaxStored() {
+        return 0.0;
     }
 
     @Override

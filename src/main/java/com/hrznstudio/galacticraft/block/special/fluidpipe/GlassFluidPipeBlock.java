@@ -26,14 +26,12 @@ import com.hrznstudio.galacticraft.api.block.FluidPipe;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.StandardWrenchItem;
 import com.hrznstudio.galacticraft.util.ConnectingBlockUtils;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ComponentHelper;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -81,7 +79,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Direction.values()) {
             Block block = context.getWorld().getBlockState(pos.offset(direction)).getBlock();
-            if (block instanceof FluidPipe || ComponentHelper.TANK.hasComponent(context.getWorld(), pos.offset(direction), direction.getOpposite())) state = state.with(propFromDirection(direction), true);
+            if (block instanceof FluidPipe || FluidUtils.isAnythingRelatedToFluids(context.getWorld(), pos.offset(direction), direction.getOpposite())) state = state.with(propFromDirection(direction), true);
         }
         return state;
     }
@@ -133,7 +131,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         return state.with(getPropForDirection(direction), (
                 !other.isAir()
                         && ((other.getBlock() instanceof FluidPipe && other.get(COLOR) == state.get(COLOR))
-                        || ComponentHelper.TANK.hasComponent(world, otherConnectable, direction.getOpposite())
+                        || FluidUtils.isAnythingRelatedToFluids(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction.getOpposite())
                 )
         ));
     }

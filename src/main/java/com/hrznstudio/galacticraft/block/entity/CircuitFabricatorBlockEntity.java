@@ -29,11 +29,11 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -78,7 +78,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     static {
         //noinspection unchecked
         SLOT_FILTERS = new Predicate[6];
-        SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS[0] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         SLOT_FILTERS[1] = stack -> stack.getItem() == MANDATORY_MATERIALS[0];
         SLOT_FILTERS[2] = stack -> stack.getItem() == MANDATORY_MATERIALS[1];
         SLOT_FILTERS[3] = stack -> stack.getItem() == MANDATORY_MATERIALS[2];
@@ -186,7 +186,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
     }
 

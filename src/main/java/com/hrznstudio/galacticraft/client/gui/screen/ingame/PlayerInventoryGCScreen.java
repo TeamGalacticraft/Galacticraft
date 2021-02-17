@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;

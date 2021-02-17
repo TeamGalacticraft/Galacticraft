@@ -77,7 +77,7 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    protected int getBaseEnergyConsumption() {
+    protected double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
     }
 
@@ -98,7 +98,7 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyItem;
+        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyHolder;
         if (slot == INPUT_SLOT) return stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent();
         return Constants.Misc.alwaysTrue();
     }

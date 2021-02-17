@@ -24,9 +24,7 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -34,14 +32,9 @@ import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -92,7 +85,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == 0) {
-            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         } else {
             return OxygenTankUtils::isOxygenTank;
         }
@@ -128,7 +121,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
     }
 

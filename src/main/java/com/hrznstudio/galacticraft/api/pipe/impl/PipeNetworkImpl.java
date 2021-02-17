@@ -34,8 +34,7 @@ import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Util;
@@ -43,6 +42,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.EnergyHandler;
 
 import java.util.*;
 
@@ -147,19 +147,18 @@ public class PipeNetworkImpl implements PipeNetwork {
         removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
-        if (component != null) {
-            if (component.canInsertEnergy() && component.canExtractEnergy()) {
+        EnergyHandler handler = EnergyUtils.getEnergyHandler(world, updatedPos, opposite);
+            if (handler.getMaxInput() > 0 && handler.getMaxOutput() > 0) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
-            } else if (component.canInsertEnergy()) {
+            } else if (handler.getMaxInput() > 0) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
-            } else if (component.canExtractEnergy()) {
+            } else if (handler.getMaxOutput() > 0) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
             }
-        }
+
     }
 
     @Override

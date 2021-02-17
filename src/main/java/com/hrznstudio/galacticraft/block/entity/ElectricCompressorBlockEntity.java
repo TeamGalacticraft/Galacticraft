@@ -28,10 +28,10 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -90,7 +90,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) {
-            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         } else {
             return super.getFilterForSlot(slot);
         }
@@ -176,7 +176,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
     }
 

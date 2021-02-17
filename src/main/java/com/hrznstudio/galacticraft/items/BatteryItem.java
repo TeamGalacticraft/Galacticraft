@@ -23,14 +23,6 @@
 package com.hrznstudio.galacticraft.items;
 
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.energy.impl.ItemCapacitorComponent;
-import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
-import nerdhub.cardinal.components.api.event.ItemComponentCallback;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -46,33 +38,34 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import team.reborn.energy.*;
 
 import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BatteryItem extends Item {
+public class BatteryItem extends Item implements EnergyHolder {
     public static final int MAX_ENERGY = 15000;
 
     public BatteryItem(Settings settings) {
         super(settings.maxCount(1).maxDamageIfAbsent(MAX_ENERGY));
     }
 
-    public int getMaxEnergy() {
+    public double getMaxStored() {
         return MAX_ENERGY;
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        int charge = CapacitorComponentHelper.INSTANCE.getComponent(stack).getCurrentEnergy();
-        if (charge < (MAX_ENERGY / 3)) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (charge < (MAX_ENERGY / 3) * 2) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
+        double charge = Energy.of(stack).getEnergy();
+        if (charge < (MAX_ENERGY / 3.0)) {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(charge)).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
+        } else if (charge < (MAX_ENERGY / 3.0) * 2.0) {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(charge)).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", charge).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(charge)).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
         }
         super.appendTooltip(stack, world, lines, context);
     }
@@ -81,7 +74,7 @@ public class BatteryItem extends Item {
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
         if (this.isIn(group)) {
             ItemStack charged = new ItemStack(this);
-            EnergyUtils.setEnergy(charged, MAX_ENERGY);
+            EnergyUtils.setEnergy(charged, getMaxStored());
             stacks.add(charged);
 
             ItemStack depleted = new ItemStack(this);
@@ -94,7 +87,7 @@ public class BatteryItem extends Item {
     @Override
     public void onCraft(@NotNull ItemStack battery, World world, PlayerEntity player) {
         CompoundTag batteryTag = battery.getOrCreateTag();
-        battery.setDamage(BatteryItem.MAX_ENERGY);
+        battery.setDamage((int) getMaxStored());
         battery.setTag(batteryTag);
     }
 
@@ -111,5 +104,25 @@ public class BatteryItem extends Item {
     @Override
     public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
         return false;
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return getMaxStored();
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public double getMaxInput(EnergySide side) {
+        return getMaxStored() / 2.0;
+    }
+
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        return getMaxStored() / 2.0;
     }
 }

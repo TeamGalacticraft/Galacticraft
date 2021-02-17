@@ -27,8 +27,8 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.item.Item;
@@ -62,7 +62,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     static {
         //noinspection unchecked
         SLOT_FILTERS = new Predicate[2];
-        SLOT_FILTERS[CHARGE_SLOT] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         SLOT_FILTERS[FUEL_SLOT] = stack -> FUEL_MAP.containsKey(stack.getItem());
     }
 
@@ -109,7 +109,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (this.fuelLength == 0 && this.getInventory().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.getCapacitor().getCurrentEnergy() >= this.getCapacitor().getMaxEnergy()) return Status.FULL;
+        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxStored()) return Status.FULL;
         if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
@@ -122,12 +122,12 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     @Override
-    public int getBaseEnergyGenerated() {
+    public double getBaseEnergyGenerated() {
         return Galacticraft.configManager.get().coalGeneratorEnergyProductionRate();
     }
 
     @Override
-    public int getEnergyGenerated() {
+    public double getEnergyGenerated() {
         if (this.getStatus().getType().isActive()) return (int) (getBaseEnergyGenerated() * this.heat);
         return 0;
     }

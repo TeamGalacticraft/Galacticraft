@@ -26,8 +26,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.EnergyStorage;
 
-public interface Wire {
+public interface Wire extends EnergyStorage {
     /**
      * Sets the {@link WireNetwork} associated with this wie
      * @param network The network to associate with

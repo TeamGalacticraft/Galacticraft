@@ -30,10 +30,10 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
@@ -61,7 +61,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     static {
         //noinspection unchecked
         SLOT_FILTERS = new Predicate[3];
-        SLOT_FILTERS[CHARGE_SLOT] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL);
         SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL);
     }
@@ -133,7 +133,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public int getBaseEnergyConsumption() {
+    public double getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().refineryEnergyConsumptionRate();
     }
 
@@ -145,11 +145,6 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     @Override
     public boolean canPipeInsertFluid(int tank) {
         return tank == OIL_TANK;
-    }
-
-    @Override
-    public int getMaxCountPerStack() {
-        return 1;
     }
 
     @Override

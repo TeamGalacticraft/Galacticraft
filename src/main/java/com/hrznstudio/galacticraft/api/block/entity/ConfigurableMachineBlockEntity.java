@@ -40,12 +40,7 @@ import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -57,8 +52,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
@@ -72,6 +65,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.*;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -79,25 +73,14 @@ import java.util.function.Predicate;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, SidedInventory, Tickable {
+public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, EnergyStorage, Tickable {
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
 
+    private double energy = 0.0;
     private MachineStatus status = MachineStatus.EMPTY;
     private RedstoneState redstone = RedstoneState.IGNORE;
     private boolean noDrop = false;
-
-    private final @NotNull SimpleCapacitorComponent capacitor = new SimpleCapacitorComponent(this.getMaxEnergy(), GalacticraftEnergy.GALACTICRAFT_JOULES) {
-        @Override
-        public boolean canExtractEnergy() {
-            return ConfigurableMachineBlockEntity.this.canExtractEnergy();
-        }
-
-        @Override
-        public boolean canInsertEnergy() {
-            return ConfigurableMachineBlockEntity.this.canInsertEnergy();
-        }
-    };
 
     private final @NotNull FullFixedItemInv inventory = new FullFixedItemInv(this.getInventorySize());
 
@@ -139,34 +122,34 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
      * The amount of energy that the machine consumes in a tick.
      * @return The amount of energy that the machine consumes in a tick.
      */
-    protected int getBaseEnergyConsumption() {
-        return 0;
+    protected double getBaseEnergyConsumption() {
+        return 0.0;
     }
 
     /**
      * The amount of energy that the machine consumes in a tick, in the current context.
      * @return The amount of energy that the machine consumes in a tick, in the current context.
      */
-    public int getEnergyConsumption() {
-        if (getStatus().getType().isActive()) return getBaseEnergyConsumption();
-        return 0;
+    public double getEnergyConsumption() {
+        if (this.getStatus().getType().isActive()) return getBaseEnergyConsumption();
+        return 0.0;
     }
 
     /**
      * The amount of energy that the machine generates in a tick.
      * @return The amount of energy that the machine generates in a tick.
      */
-    public int getBaseEnergyGenerated() {
-        return 0;
+    public double getBaseEnergyGenerated() {
+        return 0.0;
     }
 
     /**
      * The amount of energy that the machine generates in a tick, in the current context.
      * @return The amount of energy that the machine generates in a tick, in the current context.
      */
-    public int getEnergyGenerated() {
-        if (getStatus().getType().isActive()) return getBaseEnergyGenerated();
-        return 0;
+    public double getEnergyGenerated() {
+        if (this.getStatus().getType().isActive()) return getBaseEnergyGenerated();
+        return 0.0;
     }
 
     /**
@@ -231,7 +214,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
      *
      * @return Energy capacity of this machine.
      */
-    public int getMaxEnergy() {
+    public double getMaxStored() {
         return Galacticraft.configManager.get().machineEnergyStorageSize();
     }
 
@@ -246,12 +229,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
      * @return The maximum amount of energy that can be transferred to or from a battery in this machine per call to
      * {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)}
      */
-    protected int getBatteryTransferRate() {
+    protected double getBatteryTransferRate() {
         return 50;
     }
 
-    public final @NotNull SimpleCapacitorComponent getCapacitor() {
-        return this.capacitor;
+    public final @NotNull EnergyHandler getCapacitor() {
+        return Energy.of(this);
     }
 
     public final @NotNull FullFixedItemInv getInventory() {
@@ -262,16 +245,16 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return this.tank;
     }
 
-    public final @Nullable CapacitorComponent getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
-        if (direction != null) {
-            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
-            if (sideOption.getOption().isEnergy()) {
-                return this.getCapacitor();
-            }
-            return null;
-        }
-        return this.getCapacitor();
-    }
+//    public final @Nullable EnergyHandler getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
+//        if (direction != null) {
+//            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+//            if (sideOption.getOption().isEnergy()) {
+//                return this.getCapacitor();
+//            }
+//            return null;
+//        }
+//        return this.getCapacitor();
+//    }
 
     public final @Nullable FixedItemInv getInventory(@NotNull BlockState state, @Nullable Direction direction) { //DIRECTION IS POINTING AWAY FROM MACHINE TO THE SEARCHER
         if (direction != null) {
@@ -381,9 +364,9 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             this.tickWork();
             if (this.getStatus().getType().isActive()) {
                 if (getBaseEnergyConsumption() > 0)
-                    this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyConsumption(), ActionType.PERFORM);
+                    this.getCapacitor().extract(getEnergyConsumption());
                 if (getBaseEnergyGenerated() > 0)
-                    this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, getEnergyGenerated(), ActionType.PERFORM);
+                    this.getCapacitor().insert(getEnergyGenerated());
             }
 
         }
@@ -406,8 +389,59 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.trySpreadEnergy();
     }
 
+    @Override
+    public double getStored(EnergySide energySide) {
+        if (energySide != EnergySide.UNKNOWN) {
+            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), Direction.values()[energySide.ordinal()]));
+            if (sideOption.getOption().isEnergy()) {
+                return this.energy;
+            }
+            return 0.0;
+        }
+        return this.energy;
+    }
+
+    @Override
+    public void setStored(double v) {
+        this.energy = v;
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return this.getMaxStored();
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.LOW; //todo: balance stuff
+    }
+
+    @Override
+    public double getMaxInput(EnergySide side) {
+        if (side != EnergySide.UNKNOWN) {
+            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), Direction.values()[side.ordinal()]));
+            if (sideOption.getOption().isEnergy() && sideOption.getOption().isInput()) {
+                return this.getBaseEnergyConsumption() * 2.0;
+            }
+            return 0.0;
+        }
+        return this.getBaseEnergyConsumption() * 2.0;
+    }
+
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        if (side != EnergySide.UNKNOWN) {
+            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), Direction.values()[side.ordinal()]));
+            if (sideOption.getOption().isEnergy() && sideOption.getOption().isOutput()) {
+                return this.getBaseEnergyGenerated() * 2.0;
+            }
+            return 0.0;
+        }
+        return this.getBaseEnergyGenerated() * 2.0;
+    }
+
     public boolean hasEnergyToWork() {
-        return this.getCapacitor().getCurrentEnergy() >= this.getBaseEnergyConsumption();
+        return this.getCapacitor().simulate().use(this.getBaseEnergyConsumption());
     }
 
     public boolean isTankFull(int tank) {
@@ -448,7 +482,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        if (this.getMaxEnergy() > 0) this.getCapacitor().writeToNbt(tag);
+        if (this.getMaxStored() > 0) tag.putDouble("Energy", this.energy);
         if (this.getInventorySize() > 0) this.getInventory().toTag(tag);
         if (this.getFluidTankSize() > 0) this.getFluidTank().toTag(tag);
         this.getSecurity().toTag(tag);
@@ -461,7 +495,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        if (this.getMaxEnergy() > 0) this.getCapacitor().readFromNbt(tag);
+        if (this.getMaxStored() > 0) this.energy = tag.getDouble("Energy");
         if (this.getInventorySize() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidTankSize() > 0) this.getFluidTank().fromTag(tag);
         this.getSecurity().fromTag(tag);
@@ -501,14 +535,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                 ConfiguredSideOption option = this.getSideConfigInfo().get(face);
                 if (option.getOption() == SideOption.POWER_OUTPUT) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
-                    CapacitorComponent component = ComponentHelper.CAPACITOR.getComponent(this.world, pos.offset(dir), dir.getOpposite());
-                    if (component != null) {
-                        if (component.canInsertEnergy()) {
-                            int i = this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, component.getMaxEnergy() - component.getCurrentEnergy(), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
-                            if (i != 0) {
-                                Galacticraft.logger.debug( i + "gJ wasted?!");
-                            }
-                        }
+                    if (Energy.valid(this.world.getBlockEntity(pos.offset(dir)))) {
+                        this.getCapacitor().insert(Energy.of(this.world.getBlockEntity(pos.offset(dir))).side(dir).insert(this.getCapacitor().extract(2048.0)));
                     }
                 }
             }
@@ -531,7 +559,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     public void idleEnergyDecrement(boolean off) {
         if (this.world.random.nextInt(off ? 40 : 20) == 1) {
             if (this.getBaseEnergyConsumption() > 0) {
-                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, this.getBaseEnergyConsumption() / 20, ActionType.PERFORM);
+                this.getCapacitor().extract(this.getBaseEnergyConsumption() / 20);
             }
         }
     }
@@ -540,13 +568,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
      * Tries to charge this machine from the item in the given slot in this {@link #getInventory}.
      */
     protected void attemptChargeFromStack(int slot) {
-        if (this.getCapacitor().getCurrentEnergy() >= this.getCapacitor().getMaxEnergy()) {
+        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxStored()) {
             return;
         }
         ItemStack stack = this.getInventory().getInvStack(slot);
-        int neededEnergy = Math.min(this.getBatteryTransferRate(), this.getCapacitor().getMaxEnergy() - this.getCapacitor().getCurrentEnergy());
-        if (EnergyUtils.isEnergyItem(stack)) {
-            this.getCapacitor().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, EnergyUtils.extractEnergy(stack, neededEnergy, ActionType.PERFORM), ActionType.PERFORM);
+        double neededEnergy = Math.min(this.getBatteryTransferRate(), this.getCapacitor().getMaxStored() - this.getCapacitor().getEnergy());
+        if (EnergyUtils.isEnergyHolder(stack)) {
+            this.getCapacitor().insert(EnergyUtils.extractEnergy(stack, neededEnergy));
             this.getInventory().setInvStack(slot, stack, Simulation.ACTION);
         }
     }
@@ -557,74 +585,18 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
      * @param slot The slot id of the item
      */
     protected void attemptDrainPowerToStack(int slot) {
-        int available = Math.min(this.getBatteryTransferRate(), this.getCapacitor().getCurrentEnergy());
+        double available = Math.min(this.getBatteryTransferRate(), this.getCapacitor().getEnergy());
         if (available <= 0) {
             return;
         }
         ItemStack stack = this.getInventory().getInvStack(slot);
-        if (EnergyUtils.isEnergyItem(stack)) {
-            if (EnergyUtils.getEnergy(stack) < EnergyUtils.getMaxEnergy(stack)) {
-                int i = EnergyUtils.insertEnergy(stack, available, ActionType.PERFORM);
-                this.getCapacitor().extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, available - i, ActionType.PERFORM);
+        if (EnergyUtils.isEnergyHolder(stack)) {
+            if (EnergyUtils.getEnergy(stack) < EnergyUtils.getMaxStored(stack)) {
+                double i = EnergyUtils.insert(stack, available);
+                this.getCapacitor().extract(available - i);
                 this.getInventory().setInvStack(slot, stack, Simulation.ACTION);
             }
         }
-    }
-
-    @Override
-    public int[] getAvailableSlots(Direction side) {
-        ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING), side));
-        if (cso.isWildcard()) {
-            IntArrayList list = new IntArrayList();
-
-            if (cso.getOption().isInput()) {
-                for (int i = 0; i < inventory.getSlotCount(); i++) {
-                    if (this.canHopperInsert(i)) {
-                        list.add(i);
-                    }
-                }
-            } else {
-                for (int i = 0; i < inventory.getSlotCount(); i++) {
-                    if (this.canHopperExtract(i)) {
-                        list.add(i);
-                    }
-                }
-            }
-
-            return list.toIntArray();
-        } else {
-            return new int[]{cso.getValue()};
-        }
-    }
-
-    @Override
-    public final boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        if (!canHopperExtract(slot)) return false;
-        int[] slots = this.getAvailableSlots(dir);
-        boolean accessible = false;
-        for (int i : slots) {
-            if (slot == i) {
-                accessible = true;
-                break;
-            }
-        }
-
-        return accessible && this.getInventory().getInvStack(slot).isItemEqual(stack);
-    }
-
-    @Override
-    public boolean canInsert(int slot, ItemStack stack, Direction dir) {
-        if (!canHopperInsert(slot)) return false;
-        int[] slots = this.getAvailableSlots(dir);
-        boolean accessible = false;
-        for (int i : slots) {
-            if (slot == i) {
-                accessible = true;
-                break;
-            }
-        }
-
-        return accessible && this.getInventory().attemptInsertion(stack, Simulation.SIMULATE).isEmpty() && canInsert(slot, stack);
     }
 
     /**
@@ -637,74 +609,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public Inventory getWrappedInventory() {
         return this.wrappedInventory;
-    }
-
-    @Override
-    public int getMaxCountPerStack() {
-        return this.getWrappedInventory().getMaxCountPerStack();
-    }
-
-    @Override
-    public void onOpen(PlayerEntity player) {
-    }
-
-    @Override
-    public void onClose(PlayerEntity player) {
-    }
-
-    @Override
-    public boolean isValid(int slot, ItemStack stack) {
-        return this.getWrappedInventory().isValid(slot, stack);
-    }
-
-    @Override
-    public int count(Item item) {
-        return this.getWrappedInventory().count(item);
-    }
-
-    @Override
-    public boolean containsAny(Set<Item> items) {
-        return this.getWrappedInventory().containsAny(items);
-    }
-
-    @Override
-    public int size() {
-        return this.getWrappedInventory().size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return this.getWrappedInventory().isEmpty();
-    }
-
-    @Override
-    public ItemStack getStack(int slot) {
-        return this.getWrappedInventory().getStack(slot);
-    }
-
-    @Override
-    public ItemStack removeStack(int slot, int amount) {
-        return this.getWrappedInventory().removeStack(slot, amount);
-    }
-
-    @Override
-    public ItemStack removeStack(int slot) {
-        return this.getWrappedInventory().removeStack(slot);
-    }
-
-    @Override
-    public void setStack(int slot, ItemStack stack) {
-        this.getWrappedInventory().setStack(slot, stack);
-    }
-
-    @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        return this.security.hasAccess(player);
-    }
-
-    @Override
-    public void clear() {
-        this.getWrappedInventory().clear();
     }
 
     @Override

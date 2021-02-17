@@ -120,21 +120,19 @@
     "main": [ "com.hrznstudio.galacticraft.Galacticraft" ],
     "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
     "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ],
-    "cardinal-components-block": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ],
-    "cardinal-components-item": [ "com.hrznstudio.galacticraft.component.GalacticraftComponents" ]
+    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ]
   },
   "mixins": [ "galacticraft-rewoven.mixins.json" ],
   "accessWidener": "galacticraft_rewoven.accesswidener",
 
   "depends": {
-    "fabricloader": ">=0.9.0",
     "minecraft": ">=1.16.2",
-    "universalcomponents": "*",
+    "fabricloader": ">=0.9.0",
     "galacticraft-api": ">=0.2.9-alpha+1.16.1",
     "libblockattributes_core": ">=0.8",
     "libblockattributes_items": ">=0.8",
     "libblockattributes_fluids": ">=0.8",
+    "team_reborn_energy": ">=0.1.1",
 
     "fabric-api-base": "*",
     "fabric-blockrenderlayer-v1": "*",

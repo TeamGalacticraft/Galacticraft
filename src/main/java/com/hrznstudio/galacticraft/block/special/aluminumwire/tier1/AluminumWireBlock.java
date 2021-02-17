@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.block.special.aluminumwire.tier1;
 
 import com.hrznstudio.galacticraft.api.block.WireBlock;
-import io.github.cottonmc.component.api.ComponentHelper;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -107,7 +107,7 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction direction : Direction.values()) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || ComponentHelper.CAPACITOR.hasComponent(context.getWorld(), context.getBlockPos().offset(direction), direction.getOpposite())));
+                    || EnergyUtils.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction.getOpposite())));
 
         }
 
@@ -143,7 +143,7 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
         return state.with(getPropForDirection(dir), !(neighbor).isAir() && (neighbor.getBlock() instanceof WireBlock
-                || ComponentHelper.CAPACITOR.hasComponent(world, otherConnectable, dir.getOpposite())
+                || EnergyUtils.canAccessEnergy(world, otherConnectable, dir.getOpposite())
         ));
     }
 

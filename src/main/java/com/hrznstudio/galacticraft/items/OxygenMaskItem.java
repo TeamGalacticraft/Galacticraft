@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.items;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

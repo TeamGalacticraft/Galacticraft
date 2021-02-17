@@ -36,7 +36,6 @@ import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAlum
 import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.block.special.walkway.WireWalkway;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.*;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;

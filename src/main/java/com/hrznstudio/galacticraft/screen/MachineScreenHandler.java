@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.screen.property.CapacitorProperty;
+import com.hrznstudio.galacticraft.screen.property.CapacitorPropertyDelegate;
 import com.hrznstudio.galacticraft.screen.property.FluidTankPropertyDelegate;
 import com.hrznstudio.galacticraft.screen.property.StatusProperty;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +46,7 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
         this.player = player;
         this.machine = machine;
 
-        this.addProperty(new CapacitorProperty(machine.getCapacitor()));
+        CapacitorPropertyDelegate.addTo(this, machine);
         this.addProperty(new StatusProperty(machine));
 
         PropertyDelegate tankDelegate = new FluidTankPropertyDelegate(machine.getFluidTank());
@@ -104,5 +104,10 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
                 || (machine.getSecurity().hasTeam() && machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
 //        && blockEntity.getSecurity().getTeam() == player
         );
+    }
+
+    @Override
+    public Property addProperty(Property property) {
+        return super.addProperty(property);
     }
 }

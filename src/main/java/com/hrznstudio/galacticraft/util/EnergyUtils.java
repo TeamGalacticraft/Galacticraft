@@ -22,76 +22,124 @@
 
 package com.hrznstudio.galacticraft.util;
 
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import alexiil.mc.lib.attributes.Simulation;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.Energy;
+import team.reborn.energy.EnergyHandler;
+
+import java.util.function.Predicate;
 
 public class EnergyUtils {
-    public static boolean isEnergyItem(ItemStack stack) {
-        return ComponentHelper.CAPACITOR.hasComponent(stack);
+    public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = EnergyUtils::isEnergyHolder;
+
+    public static boolean isEnergyHolder(Object object) {
+        return Energy.valid(object);
     }
 
-    public static int getEnergy(ItemStack stack) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).getCurrentEnergy();
+    public static boolean canAccessEnergy(WorldAccess world, BlockPos pos, Direction direction) {
+        EnergyHandler handler = Energy.of(world.getBlockEntity(pos)).side(direction).simulate();
+        if (handler.getEnergy() < 0) return false;
+        if (handler.getMaxStored() <= 0) return false;
+        return !(handler.insert(1.0) == 0.0 && handler.extract(1.0) == 0.0);
+    }
+
+    public static double getEnergy(ItemStack stack) {
+        assert isEnergyHolder(stack);
+        return getEnergyHandler(stack).getEnergy();
     }
 
     /**
      * @param stack  The battery/energy item to extract energy from
      * @param amount The amount of energy, in Galacticraft Joules to extract from the battery
-     * @param action The action
+     * @param simulation Whether to actually change values or not.
      * @return The amount of energy that was extracted
      */
-    public static int extractEnergy(ItemStack stack, int amount, ActionType action) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+    public static double extractEnergy(ItemStack stack, double amount, Simulation simulation) {
+        assert isEnergyHolder(stack);
+        return getEnergyHandler(stack, simulation).extract(amount);
+    }
+
+    public static double extractEnergy(ItemStack stack, double amount) {
+        return extractEnergy(stack, amount, Simulation.ACTION);
     }
 
     /**
      * @param stack  The battery/energy item to insert energy into
      * @param amount The amount of energy, in Galacticraft Joules, to inset into the battery
-     * @param action The action
+     * @param simulation Whether to actually change values or not
      * @return The amount of energy that could not be inserted
      */
-    public static int insertEnergy(ItemStack stack, int amount, ActionType action) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+    public static double insert(ItemStack stack, double amount, Simulation simulation) {
+        assert isEnergyHolder(stack);
+        return getEnergyHandler(stack, simulation).insert(amount);
+    }
+
+    public static double insert(ItemStack stack, double amount) {
+        return insert(stack, amount, Simulation.ACTION);
     }
 
     /**
      * @param stack The battery/energy item in question
      * @return The max amount of energy the battery can hold
      */
-    public static int getMaxEnergy(ItemStack stack) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).getMaxEnergy();
+    public static double getMaxStored(ItemStack stack) {
+        assert isEnergyHolder(stack);
+        return getEnergyHandler(stack).getMaxStored();
     }
 
-    public static void setEnergy(ItemStack stack, int amount) {
-        assert isEnergyItem(stack);
-        CapacitorComponent component = ComponentHelper.CAPACITOR.getComponent(stack);
-        if (component instanceof SimpleCapacitorComponent) ((SimpleCapacitorComponent) component).setCurrentEnergy(amount);
-        else throw new UnsupportedOperationException();
+    public static void setEnergy(ItemStack stack, double amount) {
+        assert isEnergyHolder(stack);
+        getEnergyHandler(stack).set(amount);
+    }
+
+    public static EnergyHandler getEnergyHandler(Object object, Simulation simulation) {
+        return simulation.isSimulate() ? Energy.of(object).simulate() : Energy.of(object);
+    }
+
+    public static EnergyHandler getEnergyHandler(Object object) {
+        return getEnergyHandler(object, Simulation.ACTION);
+    }
+
+    public static EnergyHandler getEnergyHandler(WorldAccess world, BlockPos pos, @Nullable Direction direction, Simulation simulation) {
+        BlockEntity entity = world.getBlockEntity(pos);
+        assert isEnergyHolder(entity);
+        return simulation == Simulation.SIMULATE ? getEnergyHandler(entity).side(direction).simulate() : getEnergyHandler(entity).side(direction);
+    }
+
+    public static EnergyHandler getEnergyHandler(WorldAccess world, BlockPos pos, @Nullable Direction direction) {
+        return getEnergyHandler(world, pos, direction, Simulation.ACTION);
+    }
+
+    public static EnergyHandler getEnergyHandler(Object object, @Nullable Direction direction, Simulation simulation) {
+        assert isEnergyHolder(object);
+        return simulation == Simulation.SIMULATE ? getEnergyHandler(object).side(direction).simulate() : getEnergyHandler(object).side(direction);
+    }
+
+    public static EnergyHandler getEnergyHandler(Object object, @Nullable Direction direction) {
+        return getEnergyHandler(object, direction, Simulation.ACTION);
+    }
+
+    public static EnergyHandler getEnergyHandler(WorldAccess world, BlockPos pos, Simulation simulation) {
+        return getEnergyHandler(world, pos, null, simulation);
+    }
+
+    public static EnergyHandler getEnergyHandler(WorldAccess world, BlockPos pos) {
+        return getEnergyHandler(world, pos, (Direction) null);
+    }
+
+    public static MutableText getDisplay(double value) {
+        return new LiteralText(String.valueOf(value));
     }
 
     public static class Values {
-        public static final int T1_MACHINE_ENERGY_USAGE = 30;
-        public static final int T2_MACHINE_ENERGY_USAGE = 60;
-
-        private static long tick = 0;
-
-        public static void incrementTick() {
-            tick++;
-        }
-
-        public static long getTick() {
-            return tick;
-        }
+        public static final double T1_MACHINE_ENERGY_USAGE = 2.5;
+        public static final double T2_MACHINE_ENERGY_USAGE = 5.0;
     }
 }

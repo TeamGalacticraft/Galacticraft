@@ -37,19 +37,4 @@ public class InfiniteBatteryItem extends Item {
     public boolean hasGlint(ItemStack stack) {
         return true;
     }
-
-    @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
-    }
-
-    @Override
-    public int getEnchantability() {
-        return -1;
-    }
-
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
-        return false;
-    }
 }

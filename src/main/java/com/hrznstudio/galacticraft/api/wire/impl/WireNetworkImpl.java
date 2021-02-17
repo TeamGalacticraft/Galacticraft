@@ -22,23 +22,21 @@
 
 package com.hrznstudio.galacticraft.api.wire.impl;
 
+import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.energy.type.EnergyType;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.EnergyHandler;
 
 import java.util.*;
 
@@ -143,18 +141,17 @@ public class WireNetworkImpl implements WireNetwork {
         removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
-        if (component != null) {
-            if (component.canInsertEnergy() && component.canExtractEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
-            } else if (component.canInsertEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
-            } else if (component.canExtractEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
-            }
+        EnergyHandler handler = EnergyUtils.getEnergyHandler(world, updatedPos, opposite, Simulation.SIMULATE);
+
+        if (handler.getMaxInput() > 0 && handler.getMaxOutput() > 0) {
+            node(updatedPos);
+            edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
+        } else if (handler.getMaxInput() > 0) {
+            node(updatedPos);
+            edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
+        } else if (handler.getMaxOutput() > 0) {
+            node(updatedPos);
+            edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
         }
     }
 
@@ -164,7 +161,7 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public int insertEnergy(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, @NotNull EnergyType energyType, int amount, @NotNull ActionType type) {
+    public double insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, double amount, @NotNull Simulation simulate) {
         if (!graph.nodes().contains(fromWire)) throw new RuntimeException("Inserted energy from non-existent wire?!");
         if (amount <= 0) return amount;
         Set<BlockPos> visitedNodes = new HashSet<>();
@@ -178,13 +175,12 @@ public class WireNetworkImpl implements WireNetwork {
                     if (!(world.getBlockEntity(successor) instanceof Wire)) {
                         BlockPos poss = successor.subtract(currentNode);
                         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-                        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, successor, opposite);
-                        if (component != null && component.canInsertEnergy()) {
-                            amount = component.insertEnergy(energyType, amount, type);
-                            if (amount == 0) {
-                                return 0;
-                            }
+                        EnergyHandler handler = EnergyUtils.getEnergyHandler(world, successor, opposite, simulate);
+                        amount = handler.insert(amount);
+                        if (amount == 0) {
+                            return 0;
                         }
+
                     }
                     queuedNodes.add(successor);
                 }
