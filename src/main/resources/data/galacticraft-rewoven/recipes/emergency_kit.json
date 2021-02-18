@@ -1,0 +1,38 @@
+{
+  "type": "crafting_shaped",
+  "pattern": [
+    "DMG",
+    "OSO",
+    "PXY"
+  ],
+  "key": {
+    "D": {
+      "item": "galacticraft-rewoven:heavy_duty_pickaxe"
+    },
+    "M": {
+      "item": "galacticraft-rewoven:oxygen_mask"
+    },
+    "G": {
+      "item": "galacticraft-rewoven:oxygen_gear"
+    },
+    "O": {
+       "item": "galacticraft-rewoven:small_oxygen_tank"
+    },
+    "S": {
+       "item": "galacticraft-rewoven:red_parachute"
+    },
+    "P": {
+        "item": "galacticraft-rewoven:canned_dehydrated_potato"
+    },
+    "X": {
+       "item": "minecraft:potion"
+    },
+    "Y": {
+       "item": "minecraft:potion"
+    }
+  },
+  "result": {
+    "item": "galacticraft-rewoven:emergency_kit",
+    "count": 1
+  }
+}

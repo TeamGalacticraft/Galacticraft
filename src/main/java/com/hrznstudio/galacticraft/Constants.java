@@ -358,6 +358,7 @@ public class Constants {
 
         public static final String SHIELD_CONTROLLER = "shield_controller";
         public static final String FREQUENCY_MODULE = "frequency_module";
+        public static final String EMERGENCY_KIT = "emergency_kit";
 
         public static final String SMALL_OXYGEN_TANK = "small_oxygen_tank";
         public static final String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
