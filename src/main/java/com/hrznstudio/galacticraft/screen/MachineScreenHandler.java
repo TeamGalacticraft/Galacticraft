@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.screen.property.CapacitorPropertyDelegate;
+import com.hrznstudio.galacticraft.screen.property.CapacitorProperty;
 import com.hrznstudio.galacticraft.screen.property.FluidTankPropertyDelegate;
 import com.hrznstudio.galacticraft.screen.property.StatusProperty;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,8 +46,8 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
         this.player = player;
         this.machine = machine;
 
-        CapacitorPropertyDelegate.addTo(this, machine);
         this.addProperty(new StatusProperty(machine));
+        this.addProperty(new CapacitorProperty(machine.getCapacitor()));
 
         PropertyDelegate tankDelegate = new FluidTankPropertyDelegate(machine.getFluidTank());
         for (int i = 0; i < machine.getFluidTankSize() * 2; i++) {

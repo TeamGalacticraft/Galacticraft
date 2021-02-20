@@ -186,7 +186,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public double getBaseEnergyConsumption() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().circuitFabricatorEnergyConsumptionRate();
     }
 

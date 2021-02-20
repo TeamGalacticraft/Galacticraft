@@ -292,6 +292,11 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
         ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
         attributeList.offer(machine.getInventory(blockState, direction == null ? null : direction.getOpposite()));
+        attributeList.offer(machine.getFluidInsertable(blockState, direction == null ? null : direction.getOpposite()));
+        attributeList.offer(machine.getFluidExtractable(blockState, direction == null ? null : direction.getOpposite()));
         attributeList.offer(machine.getFluidTank(blockState, direction == null ? null : direction.getOpposite()));
+        attributeList.offer(machine.getEnergyExtractable(blockState, direction == null ? null : direction.getOpposite()));
+        attributeList.offer(machine.getEnergyInsertable(blockState, direction == null ? null : direction.getOpposite()));
+        attributeList.offer(machine.getCapacitor(blockState, direction == null ? null : direction.getOpposite()));
     }
 }

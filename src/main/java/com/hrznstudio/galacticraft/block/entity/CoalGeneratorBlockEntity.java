@@ -109,7 +109,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (this.fuelLength == 0 && this.getInventory().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxStored()) return Status.FULL;
+        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxCapacity()) return Status.FULL;
         if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
@@ -122,12 +122,12 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     @Override
-    public double getBaseEnergyGenerated() {
+    public int getBaseEnergyGenerated() {
         return Galacticraft.configManager.get().coalGeneratorEnergyProductionRate();
     }
 
     @Override
-    public double getEnergyGenerated() {
+    public int getEnergyGenerated() {
         if (this.getStatus().getType().isActive()) return (int) (getBaseEnergyGenerated() * this.heat);
         return 0;
     }

@@ -62,10 +62,6 @@ import net.minecraft.util.registry.SimpleRegistry;
 import net.minecraft.village.VillagerProfession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import team.reborn.energy.Energy;
-import team.reborn.energy.EnergySide;
-import team.reborn.energy.EnergyStorage;
-import team.reborn.energy.EnergyTier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -116,28 +112,6 @@ public class Galacticraft implements ModInitializer {
 //        CelestialBodyRegistryCallback.EVENT.register(registry -> {
             Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
 //        });
-
-        Energy.registerHolder(object -> object instanceof ItemStack && ((ItemStack) object).getItem() == GalacticraftItems.INFINITE_BATTERY, object -> new EnergyStorage() {
-            @Override
-            public double getStored(EnergySide energySide) {
-                return Integer.MAX_VALUE;
-            }
-
-            @Override
-            public void setStored(double v) {
-            }
-
-            @Override
-            public double getMaxStoredPower() {
-                return Integer.MAX_VALUE;
-            }
-
-            @Override
-            public EnergyTier getTier() {
-                return EnergyTier.INFINITE;
-            }
-        });
-
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

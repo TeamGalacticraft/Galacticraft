@@ -207,7 +207,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public double getBaseEnergyConsumption() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
     }
 

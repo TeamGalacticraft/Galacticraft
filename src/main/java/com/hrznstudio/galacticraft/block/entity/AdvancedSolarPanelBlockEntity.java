@@ -86,7 +86,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     @NotNull
     @Override
     public MachineStatus updateStatus() {
-        if (getCapacitor().getEnergy() >= getCapacitor().getMaxStored()) {
+        if (getCapacitor().getEnergy() >= getCapacitor().getMaxCapacity()) {
             return Status.FULL;
         }
 
@@ -117,7 +117,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public double getEnergyGenerated() {
+    public int getEnergyGenerated() {
         if (this.getStatus().getType().isActive()) {
             double time = world.getTimeOfDay() % 24000;
             double multiplier = 0;
@@ -139,7 +139,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public double getBaseEnergyGenerated() {
+    public int getBaseEnergyGenerated() {
         return Galacticraft.configManager.get().solarPanelEnergyProductionRate();
     }
 

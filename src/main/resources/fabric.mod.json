@@ -132,7 +132,7 @@
     "libblockattributes_core": ">=0.8",
     "libblockattributes_items": ">=0.8",
     "libblockattributes_fluids": ">=0.8",
-    "team_reborn_energy": ">=0.1.1",
+    "galacticraft-energy": ">=0.1.0",
 
     "fabric-api-base": "*",
     "fabric-blockrenderlayer-v1": "*",

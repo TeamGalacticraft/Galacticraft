@@ -26,6 +26,8 @@ import alexiil.mc.lib.attributes.SearchOption;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFixedFluidInv;
@@ -124,6 +126,14 @@ public class FluidUtils {
 
     public static boolean isFixedFluidInvView(Reference<ItemStack> stack) {
         return FluidAttributes.FIXED_INV_VIEW.get(stack) != EmptyFixedFluidInv.INSTANCE;
+    }
+
+    public static FluidInsertable getInsertable(World world, BlockPos pos, Direction direction) {
+        return FluidAttributes.INSERTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static FluidExtractable getExtractable(World world, BlockPos pos, Direction direction) {
+        return FluidAttributes.EXTRACTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
     }
 
     public static boolean isAnythingRelatedToFluids(World world, BlockPos pos, Direction direction) {

@@ -143,7 +143,7 @@ public class AluminumWireBlock extends WireBlock {
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction dir, BlockState neighbor, WorldAccess world, BlockPos thisWire, BlockPos otherConnectable) {
         return state.with(getPropForDirection(dir), !(neighbor).isAir() && (neighbor.getBlock() instanceof WireBlock
-                || EnergyUtils.canAccessEnergy(world, otherConnectable, dir.getOpposite())
+                || EnergyUtils.canAccessEnergy(world.getBlockEntity(thisWire).getWorld(), otherConnectable, dir.getOpposite())
         ));
     }
 

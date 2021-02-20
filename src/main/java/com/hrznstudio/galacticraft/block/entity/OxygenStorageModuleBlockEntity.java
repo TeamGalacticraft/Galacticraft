@@ -29,7 +29,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -87,8 +86,8 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public double getMaxStored() {
-        return 0.0;
+    public int getEnergyCapacity() {
+        return 0;
     }
 
     @Override

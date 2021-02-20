@@ -29,6 +29,11 @@ import com.google.common.graph.ValueGraphBuilder;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
+import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -36,7 +41,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.EnergyHandler;
 
 import java.util.*;
 
@@ -141,15 +145,15 @@ public class WireNetworkImpl implements WireNetwork {
         removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        EnergyHandler handler = EnergyUtils.getEnergyHandler(world, updatedPos, opposite, Simulation.SIMULATE);
-
-        if (handler.getMaxInput() > 0 && handler.getMaxOutput() > 0) {
+        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, opposite);
+        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, updatedPos, opposite);
+        if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
             node(updatedPos);
             edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
-        } else if (handler.getMaxInput() > 0) {
+        } else if (insertable != RejectingEnergyInsertable.NULL) {
             node(updatedPos);
             edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
-        } else if (handler.getMaxOutput() > 0) {
+        } else if (extractable != EmptyEnergyExtractable.NULL) {
             node(updatedPos);
             edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
         }
@@ -161,7 +165,7 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public double insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, double amount, @NotNull Simulation simulate) {
+    public int insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, int amount, @NotNull Simulation simulate) {
         if (!graph.nodes().contains(fromWire)) throw new RuntimeException("Inserted energy from non-existent wire?!");
         if (amount <= 0) return amount;
         Set<BlockPos> visitedNodes = new HashSet<>();
@@ -175,8 +179,8 @@ public class WireNetworkImpl implements WireNetwork {
                     if (!(world.getBlockEntity(successor) instanceof Wire)) {
                         BlockPos poss = successor.subtract(currentNode);
                         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-                        EnergyHandler handler = EnergyUtils.getEnergyHandler(world, successor, opposite, simulate);
-                        amount = handler.insert(amount);
+                        EnergyInsertable handler = EnergyUtils.getEnergyInsertable(world, successor, opposite);
+                        amount = handler.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
                         if (amount == 0) {
                             return 0;
                         }

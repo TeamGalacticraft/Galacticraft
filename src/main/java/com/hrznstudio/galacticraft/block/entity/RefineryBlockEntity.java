@@ -133,7 +133,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public double getBaseEnergyConsumption() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().refineryEnergyConsumptionRate();
     }
 

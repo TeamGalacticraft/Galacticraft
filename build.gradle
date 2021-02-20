@@ -93,27 +93,27 @@ dependencies {
     mappings("net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-    modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-content-registries-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-item-groups-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-models-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-particles-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-registry-sync-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-renderer-api-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-renderer-indigo", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-renderer-registries-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-structure-api-v1", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-textures-v0", project.fabric_version)) { transitive = false }
-    modImplementation(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-command-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-content-registries-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-item-groups-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-models-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-networking-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-particles-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-registry-sync-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-renderer-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-renderer-indigo", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-renderer-registries-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-structure-api-v1", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-textures-v0", project.fabric_version)) { transitive = false }
+    modCompileOnly(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version)) { transitive = false }
 
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: 'net.fabricmc.fabric-api'
@@ -133,10 +133,22 @@ dependencies {
         exclude group: 'net.fabricmc'
     }
 
-    modApi("com.hrznstudio:GalacticraftAPI:${project.addon_version}") { transitive = false }
-    modApi("alexiil.mc.lib:libblockattributes-all:${project.lba_version}")
-    modApi("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}")
-    modApi("teamreborn:energy:${project.energy_version}")
+    modImplementation("com.hrznstudio:GalacticraftAPI:${project.addon_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
+    }
+
+    modImplementation("alexiil.mc.lib:libblockattributes-all:${project.lba_version}")
+
+    modImplementation("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
+    }
+
+    modImplementation("com.hrznstudio:Galacticraft-Energy:${project.energy_version}") {
+        exclude group: 'net.fabricmc.fabric-api'
+        exclude group: 'net.fabricmc'
+    }
 
     //include everything mandatory inside the jar
     include("com.hrznstudio:GalacticraftAPI:${project.addon_version}")
@@ -144,7 +156,7 @@ dependencies {
     include("alexiil.mc.lib:libblockattributes-core:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-fluids:${project.lba_version}")
     include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
-    include("teamreborn:energy:${project.energy_version}")
+    include("com.hrznstudio:Galacticraft-Energy:${project.energy_version}")
     include("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}")
     include("dev.onyxstudios:FOML:${project.foml_version}")
     include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }

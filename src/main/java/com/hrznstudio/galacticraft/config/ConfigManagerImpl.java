@@ -31,8 +31,8 @@ import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
-import me.shedaniel.clothconfig2.impl.builders.DoubleFieldBuilder;
-import me.shedaniel.clothconfig2.impl.builders.DoubleFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.IntFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SubCategoryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -109,7 +109,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder wires = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constants.Config.WIRES));
 
-        wires.add(new DoubleFieldBuilder(
+        wires.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.wireTransferLimit())
@@ -118,7 +118,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        wires.add(new DoubleFieldBuilder(
+        wires.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT),
                 this.config.heavyWireTransferLimit())
@@ -129,7 +129,7 @@ public class ConfigManagerImpl implements ConfigManager {
 
         SubCategoryBuilder machines = ConfigEntryBuilder.create().startSubCategory(new TranslatableText(Constants.Config.MACHINES));
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE),
                 this.config.coalGeneratorEnergyProductionRate())
@@ -138,7 +138,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE),
                 this.config.solarPanelEnergyProductionRate())
@@ -147,7 +147,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE),
                 this.config.circuitFabricatorEnergyConsumptionRate())
@@ -156,7 +156,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.electricCompressorEnergyConsumptionRate())
@@ -165,7 +165,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCollectorEnergyConsumptionRate())
@@ -174,7 +174,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.REFINERY_ENERGY_CONSUMPTION_RATE),
                 this.config.refineryEnergyConsumptionRate())
@@ -183,7 +183,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE),
                 this.config.electricFurnaceEnergyConsumptionRate())
@@ -192,7 +192,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE),
                 this.config.energyStorageModuleStorageSize())
@@ -201,7 +201,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.ENERGY_STORAGE_SIZE),
                 this.config.machineEnergyStorageSize())
@@ -211,7 +211,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
         
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenCompressorEnergyConsumptionRate())
@@ -221,7 +221,7 @@ public class ConfigManagerImpl implements ConfigManager {
                 .build()
         );
 
-        machines.add(new DoubleFieldBuilder(
+        machines.add(new IntFieldBuilder(
                 new TranslatableText(Constants.Config.RESET),
                 new TranslatableText(Constants.Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE),
                 this.config.oxygenDecompressorEnergyConsumptionRate())

@@ -129,7 +129,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + (int) (((double) entity.getCapacitor().getEnergy() / (double) entity.getMaxStored()) * 8.0D)));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + (int) (((double) entity.getCapacitor().getEnergy() / (double) entity.getEnergyCapacity()) * 8.0D)));
                 default:
                     return spriteFunction.apply(MACHINE);
             }

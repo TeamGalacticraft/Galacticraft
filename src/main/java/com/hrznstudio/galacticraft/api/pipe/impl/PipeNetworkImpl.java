@@ -25,7 +25,10 @@ package com.hrznstudio.galacticraft.api.pipe.impl;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableValueGraph;
@@ -35,6 +38,7 @@ import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Util;
@@ -42,7 +46,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.EnergyHandler;
 
 import java.util.*;
 
@@ -147,14 +150,15 @@ public class PipeNetworkImpl implements PipeNetwork {
         removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos poss = updatedPos.subtract(adjacentToUpdated);
         Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        EnergyHandler handler = EnergyUtils.getEnergyHandler(world, updatedPos, opposite);
-            if (handler.getMaxInput() > 0 && handler.getMaxOutput() > 0) {
+        FluidInsertable insertable = FluidUtils.getInsertable(world, poss, opposite);
+        FluidExtractable extractable = FluidUtils.getExtractable(world, poss, opposite);
+            if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
-            } else if (handler.getMaxInput() > 0) {
+            } else if (insertable != RejectingFluidInsertable.NULL) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
-            } else if (handler.getMaxOutput() > 0) {
+            } else if (extractable != EmptyFluidExtractable.NULL) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
             }
@@ -181,14 +185,14 @@ public class PipeNetworkImpl implements PipeNetwork {
                 if (!(entity instanceof Pipe)) {
                     BlockPos poss = successor.subtract(pos);
                     Direction dir = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
-                    FluidInsertable insertable = FluidAttributes.INSERTABLE.get(world, successor, SearchOptions.inDirection(dir));
-                            FluidVolume data = insertable.attemptInsertion(volume, simulation);
+                    FluidInsertable insertable = FluidUtils.getInsertable(world, successor, dir);
+                    FluidVolume data = insertable.attemptInsertion(volume, simulation);
 
-                            if (!(data.getAmount_F().equals(volume.getAmount_F()))) {
-                                steps.push(successor);
-                                Direction direction = Direction.fromVector(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
-                                return new FluidPipeBlockEntity.FluidData(pos, steps, data, direction);
-                            }
+                    if (!(data.getAmount_F().equals(volume.getAmount_F()))) {
+                        steps.push(successor);
+                        Direction direction = Direction.fromVector(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
+                        return new FluidPipeBlockEntity.FluidData(pos, steps, data, direction);
+                    }
 
                 } else {
                     other.add(successor);

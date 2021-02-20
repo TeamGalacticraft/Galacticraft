@@ -121,7 +121,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public double getBaseEnergyConsumption() {
+    public int getBaseEnergyConsumption() {
         return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
     }
 

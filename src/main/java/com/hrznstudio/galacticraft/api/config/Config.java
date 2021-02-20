@@ -35,59 +35,59 @@ public interface Config {
 
     void setDebugLog(boolean flag);
 
-    double wireTransferLimit();
+    int wireTransferLimit();
 
-    void setWireTransferLimit(double amount);
+    void setWireTransferLimit(int amount);
 
-    double heavyWireTransferLimit();
+    int heavyWireTransferLimit();
 
-    void setHeavyWireTransferLimit(double amount);
+    void setHeavyWireTransferLimit(int amount);
 
-    double coalGeneratorEnergyProductionRate();
+    int coalGeneratorEnergyProductionRate();
 
-    void setCoalGeneratorEnergyProductionRate(double amount);
+    void setCoalGeneratorEnergyProductionRate(int amount);
 
-    double solarPanelEnergyProductionRate();
+    int solarPanelEnergyProductionRate();
 
-    void setSolarPanelEnergyProductionRate(double amount);
+    void setSolarPanelEnergyProductionRate(int amount);
 
-    double circuitFabricatorEnergyConsumptionRate();
+    int circuitFabricatorEnergyConsumptionRate();
 
-    void setCircuitFabricatorEnergyConsumptionRate(double amount);
+    void setCircuitFabricatorEnergyConsumptionRate(int amount);
 
-    double electricCompressorEnergyConsumptionRate();
+    int electricCompressorEnergyConsumptionRate();
 
-    void setElectricCompressorEnergyConsumptionRate(double amount);
+    void setElectricCompressorEnergyConsumptionRate(int amount);
 
-    double electricArcFurnaceEnergyConsumptionRate();
+    int electricArcFurnaceEnergyConsumptionRate();
 
-    void setElectricArcFurnaceEnergyConsumptionRate(double amount);
+    void setElectricArcFurnaceEnergyConsumptionRate(int amount);
 
-    double oxygenCollectorEnergyConsumptionRate();
+    int oxygenCollectorEnergyConsumptionRate();
 
-    void setOxygenCollectorEnergyConsumptionRate(double amount);
+    void setOxygenCollectorEnergyConsumptionRate(int amount);
 
-    double refineryEnergyConsumptionRate();
+    int refineryEnergyConsumptionRate();
 
-    void setRefineryEnergyConsumptionRate(double amount);
+    void setRefineryEnergyConsumptionRate(int amount);
 
-    double electricFurnaceEnergyConsumptionRate();
+    int electricFurnaceEnergyConsumptionRate();
 
-    void setElectricFurnaceEnergyConsumptionRate(double amount);
+    void setElectricFurnaceEnergyConsumptionRate(int amount);
 
-    double energyStorageModuleStorageSize();
+    int energyStorageModuleStorageSize();
 
-    void setEnergyStorageModuleStorageSize(double amount);
+    void setEnergyStorageModuleStorageSize(int amount);
 
-    double machineEnergyStorageSize();
+    int machineEnergyStorageSize();
 
-    void setMachineEnergyStorageSize(double amount);
+    void setMachineEnergyStorageSize(int amount);
 
-    double oxygenCompressorEnergyConsumptionRate();
+    int oxygenCompressorEnergyConsumptionRate();
 
-    void setOxygenCompressorEnergyConsumptionRate(double amount);
+    void setOxygenCompressorEnergyConsumptionRate(int amount);
 
-    double oxygenDecompressorEnergyConsumptionRate();
+    int oxygenDecompressorEnergyConsumptionRate();
 
-    void setOxygenDecompressorEnergyConsumptionRate(double amount);
+    void setOxygenDecompressorEnergyConsumptionRate(int amount);
 }

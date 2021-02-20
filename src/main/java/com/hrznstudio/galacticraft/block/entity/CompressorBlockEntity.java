@@ -96,8 +96,8 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public double getMaxStored() {
-        return 0.0;
+    public int getEnergyCapacity() {
+        return 0;
     }
 
     @Override

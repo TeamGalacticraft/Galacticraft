@@ -58,7 +58,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public double getMaxStored() {
+    public int getEnergyCapacity() {
         return Galacticraft.configManager.get().energyStorageModuleStorageSize();
     }
 
@@ -83,7 +83,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    protected double getBatteryTransferRate() {
+    protected int getBatteryTransferRate() {
         return 100;
     }
 

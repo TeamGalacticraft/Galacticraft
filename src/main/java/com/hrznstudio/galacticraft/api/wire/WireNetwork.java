@@ -85,7 +85,7 @@ public interface WireNetwork {
      * @param simulate The simulate of action to perform
      * @return the amount of energy that failed to insert
      */
-    double insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, /*Positive*/ double amount, @NotNull Simulation simulate);
+    int insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, /*Positive*/ int amount, @NotNull Simulation simulate);
 
     /**
      * Returns the adjacent connections from a position

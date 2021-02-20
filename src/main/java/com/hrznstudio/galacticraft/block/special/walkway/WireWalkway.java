@@ -248,7 +248,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 return false;
         } catch (IllegalArgumentException ignored) {}
         // TODO: The WireBlockEntity will still connect on the top face of this block (there's no wire there)
-        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy(world, pos.offset(facing), facing.getOpposite());
+        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy(world.getBlockEntity(pos).getWorld(), pos.offset(facing), facing.getOpposite());
     }
 
     @Override
