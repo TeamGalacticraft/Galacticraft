@@ -44,7 +44,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
-        setStatus(MachineStatus.EMPTY);
+        setStatus(MachineStatus.NULL);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     protected MachineStatus getStatusById(int index) {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override
@@ -89,7 +89,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override

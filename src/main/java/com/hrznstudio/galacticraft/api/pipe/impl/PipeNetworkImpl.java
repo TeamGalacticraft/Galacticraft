@@ -77,7 +77,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             PipeConnectionType type = pipe.getConnection(direction, entity);
             if (type == PipeConnectionType.PIPE) {
                 if (((Pipe) entity).getNetwork() != this) {
-                    addPipe(conn, (Pipe)entity);
+                    this.addPipe(conn, (Pipe)entity);
                 }
                 edge(pos, conn, PipeConnectionType.PIPE);
                 edge(conn, pos, PipeConnectionType.PIPE);
@@ -149,9 +149,9 @@ public class PipeNetworkImpl implements PipeNetwork {
 
         removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos poss = updatedPos.subtract(adjacentToUpdated);
-        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        FluidInsertable insertable = FluidUtils.getInsertable(world, poss, opposite);
-        FluidExtractable extractable = FluidUtils.getExtractable(world, poss, opposite);
+        Direction direction = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
+        FluidInsertable insertable = FluidUtils.getInsertable(world, updatedPos, direction);
+        FluidExtractable extractable = FluidUtils.getExtractable(world, updatedPos, direction);
             if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
                 node(updatedPos);
                 edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);

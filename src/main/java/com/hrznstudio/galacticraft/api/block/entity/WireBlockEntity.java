@@ -89,10 +89,10 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
 
     @Override
     public @NotNull WireConnectionType getConnection(Direction direction, @Nullable BlockEntity entity) {
-        if (entity == null || !canConnect(direction)) return WireConnectionType.NONE;
-        if (entity instanceof Wire && ((Wire) entity).canConnect(direction.getOpposite())) return WireConnectionType.WIRE;
-        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, entity.getPos(), direction.getOpposite());
-        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, entity.getPos(), direction.getOpposite());
+        if (entity == null || !this.canConnect(direction.getOpposite())) return WireConnectionType.NONE;
+        if (entity instanceof Wire && ((Wire) entity).canConnect(direction)) return WireConnectionType.WIRE;
+        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, entity.getPos(), direction);
+        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, entity.getPos(), direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
             return WireConnectionType.ENERGY_IO;
         } else if (insertable != RejectingEnergyInsertable.NULL) {

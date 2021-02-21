@@ -50,7 +50,6 @@ public class FluidPipe extends Block implements BlockEntityProvider {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof FluidPipeBlockEntity) {
                 Galacticraft.logger.info(((FluidPipeBlockEntity) entity).getNetwork());
-                return ActionResult.SUCCESS;
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

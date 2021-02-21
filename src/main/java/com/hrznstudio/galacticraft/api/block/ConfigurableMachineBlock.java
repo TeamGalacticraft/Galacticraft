@@ -24,9 +24,13 @@ package com.hrznstudio.galacticraft.api.block;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -288,15 +292,18 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
 
     @Override
     public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
-        Direction direction = attributeList.getSearchDirection();
+        Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection().getOpposite();
         ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
-        attributeList.offer(machine.getInventory(blockState, direction == null ? null : direction.getOpposite()));
-        attributeList.offer(machine.getFluidInsertable(blockState, direction == null ? null : direction.getOpposite()));
-        attributeList.offer(machine.getFluidExtractable(blockState, direction == null ? null : direction.getOpposite()));
-        attributeList.offer(machine.getFluidTank(blockState, direction == null ? null : direction.getOpposite()));
-        attributeList.offer(machine.getEnergyExtractable(blockState, direction == null ? null : direction.getOpposite()));
-        attributeList.offer(machine.getEnergyInsertable(blockState, direction == null ? null : direction.getOpposite()));
-        attributeList.offer(machine.getCapacitor(blockState, direction == null ? null : direction.getOpposite()));
+        Object o = machine.getInventory(blockState, direction);
+        attributeList.offer(o);
+        o = machine.getFluidInsertable(blockState, direction);
+        if (o != null) attributeList.offer(((FluidInsertable) o).getPureInsertable());
+        o = machine.getFluidExtractable(blockState, direction);
+        if (o != null) attributeList.offer(((FluidExtractable) o).getPureExtractable());
+        o = machine.getEnergyExtractable(blockState, direction);
+        if (o != null) attributeList.offer(((EnergyExtractable) o).asPureExtractable());
+        o = machine.getEnergyInsertable(blockState, direction);
+        if (o != null) attributeList.offer(((EnergyInsertable) o).asPureInsertable());
     }
 }

@@ -75,13 +75,13 @@ public class PipeFixedFluidInv implements FixedFluidInv {
     @Override
     public FluidVolume insertFluid(int tank, FluidVolume volume, Simulation simulation) {
         if (pipe.getFluidData() == Pipe.FluidData.EMPTY) {
-            Pipe.FluidData data = pipe.getNetwork().insertFluid(pipe.getPos(), null, volume, simulation);
-            if (data != null) {
+            Pipe.FluidData data = pipe.getNetwork().insertFluid(pipe.getPos(), null, volume.copy(), simulation);
+            if (data != null && data != Pipe.FluidData.EMPTY) {
                 if (simulation == Simulation.ACTION) {
                     pipe.setFluidData(data);
                 }
 
-                return data.getFluid().getFluidKey().withAmount(volume.getAmount_F().sub(data.getFluid().getAmount_F()));
+                return volume.getFluidKey().withAmount(volume.getAmount_F().sub(data.getFluid().getAmount_F()));
             }
         }
         return volume;

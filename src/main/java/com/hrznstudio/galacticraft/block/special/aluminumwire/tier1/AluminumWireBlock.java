@@ -107,7 +107,7 @@ public class AluminumWireBlock extends WireBlock {
         for (Direction direction : Direction.values()) {
             BlockState block = context.getWorld().getBlockState(context.getBlockPos().offset(direction));
             state = state.with(getPropForDirection(direction), !block.isAir() && (block.getBlock() instanceof WireBlock
-                    || EnergyUtils.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction.getOpposite())));
+                    || EnergyUtils.canAccessEnergy(context.getWorld(), context.getBlockPos().offset(direction), direction)));
 
         }
 

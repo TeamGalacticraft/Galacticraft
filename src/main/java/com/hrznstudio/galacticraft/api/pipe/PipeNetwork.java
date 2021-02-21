@@ -44,7 +44,7 @@ public interface PipeNetwork {
     /**
      * Adds a pipe to the network
      * @param pos The position of the pipe being added
-     * @see #addPipe(BlockPos, Wire)
+     * @see #addPipe(BlockPos, Pipe)
      */
     default void addPipe(@NotNull BlockPos pos) {
         addPipe(pos, null);
@@ -83,7 +83,7 @@ public interface PipeNetwork {
      * @param fromPipe The pipe that received the energy
      * @param fromBlock The block that inserted the energy
      * @param amount The amount of fluid, in to insert
-     * @param type The type of action to perform
+     * @param simulation Whether to simulate the action or actually perform it
      * @return the amount of fluid that succeeded to insert
      */
     @Nullable Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull Simulation simulation);

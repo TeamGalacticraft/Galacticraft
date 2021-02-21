@@ -87,7 +87,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
 
-    private MachineStatus status = MachineStatus.EMPTY;
+    private MachineStatus status = MachineStatus.NULL;
     private RedstoneState redstone = RedstoneState.IGNORE;
     private boolean noDrop = false;
 
@@ -295,12 +295,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FixedItemInv getInventory(@NotNull BlockState state, @Nullable Direction direction) { //DIRECTION IS POINTING AWAY FROM MACHINE TO THE SEARCHER
         if (direction != null) {
-            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
-            if (sideOption.getOption().isItem()) {
-                if (sideOption.isWildcard()) {
+            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (cso.getOption().isItem()) {
+                if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
 
-                    if (sideOption.getOption().isInput()) {
+                    if (cso.getOption().isInput()) {
                         for (int i = 0; i < inventory.getSlotCount(); i++) {
                             if (this.canHopperInsert(i)) {
                                 list.add(i);
@@ -315,7 +315,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                     }
                     return this.getInventory().getMappedInv(list.toIntArray());
                 } else {
-                    return this.getInventory().getMappedInv(sideOption.getValue());
+                    return this.getInventory().getMappedInv(cso.getValue());
                 }
             }
             return null;
@@ -325,11 +325,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FixedFluidInv getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
-            if (sideOption.getOption().isFluid()) {
-                if (sideOption.isWildcard()) {
+            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (cso.getOption().isFluid()) {
+                if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
-                    if (sideOption.getOption().isInput()) {
+                    if (cso.getOption().isInput()) {
                         for (int i = 0; i < tank.getTankCount(); i++) {
                             if (this.canPipeInsertFluid(i)) {
                                 list.add(i);
@@ -344,7 +344,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                     }
                     return this.getFluidTank().getMappedInv(list.toIntArray());
                 } else {
-                    return this.getFluidTank().getMappedInv(sideOption.getValue());
+                    return this.getFluidTank().getMappedInv(cso.getValue());
                 }
             }
             return null;
@@ -354,19 +354,21 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FluidInsertable getFluidInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
-            if (sideOption.getOption().isFluid()) {
-                if (sideOption.isWildcard() && sideOption.getOption().isInput()) {
-                    IntArrayList list = new IntArrayList();
-                    for (int i = 0; i < tank.getTankCount(); i++) {
-                        if (this.canPipeInsertFluid(i)) {
-                            list.add(i);
+            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (cso.getOption().isFluid()) {
+                if (cso.getOption().isInput()) {
+                    if (cso.isWildcard()) {
+                        IntArrayList list = new IntArrayList();
+                        for (int i = 0; i < tank.getTankCount(); i++) {
+                            if (this.canPipeInsertFluid(i)) {
+                                list.add(i);
+                            }
                         }
-                    }
 
-                    return this.getFluidTank().getMappedInv(list.toIntArray()).getInsertable();
-                } else {
-                    return this.getFluidTank().getMappedInv(sideOption.getValue()).getInsertable();
+                        return this.getFluidTank().getMappedInv(list.toIntArray()).getInsertable();
+                    } else {
+                        return this.getFluidTank().getMappedInv(cso.getValue()).getInsertable();
+                    }
                 }
             }
             return null;
@@ -376,18 +378,20 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FluidExtractable getFluidExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption sideOption = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
-            if (sideOption.getOption().isFluid()) {
-                if (sideOption.isWildcard() && sideOption.getOption().isOutput()) {
-                    IntArrayList list = new IntArrayList();
-                    for (int i = 0; i < tank.getTankCount(); i++) {
-                        if (this.canPipeExtractFluid(i)) {
-                            list.add(i);
+            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            if (cso.getOption().isFluid()) {
+                if (cso.getOption().isOutput()) {
+                    if (cso.isWildcard()) {
+                        IntArrayList list = new IntArrayList();
+                        for (int i = 0; i < tank.getTankCount(); i++) {
+                            if (this.canPipeExtractFluid(i)) {
+                                list.add(i);
+                            }
                         }
+                        return this.getFluidTank().getMappedInv(list.toIntArray()).getExtractable();
+                    } else {
+                        return this.getFluidTank().getMappedInv(cso.getValue()).getExtractable();
                     }
-                    return this.getFluidTank().getMappedInv(list.toIntArray()).getExtractable();
-                } else {
-                    return this.getFluidTank().getMappedInv(sideOption.getValue()).getExtractable();
                 }
             }
             return null;
@@ -676,7 +680,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public interface MachineStatus {
-        MachineStatus EMPTY = new MachineStatus() {
+        MachineStatus NULL = new MachineStatus() {
             @Override
             public @NotNull Text getName() {
                 return Constants.Misc.EMPTY_TEXT;

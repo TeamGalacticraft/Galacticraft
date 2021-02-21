@@ -144,9 +144,9 @@ public class WireNetworkImpl implements WireNetwork {
 
         removeEdge(adjacentToUpdated, updatedPos, true);
         BlockPos poss = updatedPos.subtract(adjacentToUpdated);
-        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, opposite);
-        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, updatedPos, opposite);
+        Direction direction = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
+        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, direction);
+        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, updatedPos, direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
             node(updatedPos);
             edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
@@ -178,7 +178,7 @@ public class WireNetworkImpl implements WireNetwork {
                 if (visitedNodes.add(successor)) {
                     if (!(world.getBlockEntity(successor) instanceof Wire)) {
                         BlockPos poss = successor.subtract(currentNode);
-                        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
+                        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
                         EnergyInsertable handler = EnergyUtils.getEnergyInsertable(world, successor, opposite);
                         amount = handler.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
                         if (amount == 0) {

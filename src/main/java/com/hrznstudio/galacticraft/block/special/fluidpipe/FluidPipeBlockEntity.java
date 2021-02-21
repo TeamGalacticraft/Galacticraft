@@ -97,10 +97,10 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe,
 
     @Override
     public @NotNull PipeConnectionType getConnection(@NotNull Direction direction, @Nullable BlockEntity entity) {
-        if (entity == null || !canConnect(direction)) return PipeConnectionType.NONE;
-        if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction.getOpposite())) return PipeConnectionType.PIPE;
-        boolean insertable = FluidAttributes.INSERTABLE.getFromNeighbour(entity, direction) != RejectingFluidInsertable.NULL;
-        boolean extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(entity, direction) != EmptyFluidExtractable.NULL;
+        if (entity == null || !this.canConnect(direction.getOpposite())) return PipeConnectionType.NONE;
+        if (entity instanceof Pipe && ((Pipe) entity).canConnect(direction)) return PipeConnectionType.PIPE;
+        boolean insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, direction) != RejectingFluidInsertable.NULL;
+        boolean extractable = FluidAttributes.EXTRACTABLE.getFromNeighbour(this, direction) != EmptyFluidExtractable.NULL;
         if (insertable && extractable) {
             return PipeConnectionType.FLUID_IO;
         } else if (insertable) {

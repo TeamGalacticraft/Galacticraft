@@ -62,7 +62,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     protected MachineStatus getStatusById(int index) {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override
