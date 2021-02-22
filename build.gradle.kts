@@ -213,7 +213,7 @@ java {
     withSourcesJar()
 }
 
-tasks.create("javadocJar", type = Jar::class) {
+tasks.create<Jar>("javadocJar") {
     from(tasks.javadoc)
     archiveClassifier.set("javadoc")
 }
