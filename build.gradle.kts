@@ -152,12 +152,12 @@ dependencies {
         modImplementation(getFabricApiModule(it, fabricVersion)) { isTransitive = false}
     }
 
-    modImplementation("me.shedaniel.cloth:config-2:$clothConfigVersion") {
+    include(modImplementation("me.shedaniel.cloth:config-2:$clothConfigVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    }
+    })
     modImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
+    include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
 
     modImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
@@ -165,30 +165,20 @@ dependencies {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "org.jetbrains")
     }
-    modImplementation("dev.onyxstudios:FOML:$fomlVersion") {
+    include(modImplementation("dev.onyxstudios:FOML:$fomlVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
-    }
+    })
 
-    modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false }
-    modApi("io.github.cottonmc:UniversalComponents:$ucVersion") { isTransitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:$cardinalVersion") { isTransitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:$cardinalVersion") { isTransitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:$cardinalVersion") { isTransitive = false }
-    modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:$cardinalVersion") { isTransitive = false }
-    modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false }
+    include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
+    include(modApi("io.github.cottonmc:UniversalComponents:$ucVersion") { isTransitive = false })
+    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:$cardinalVersion") { isTransitive = false })
+    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:$cardinalVersion") { isTransitive = false })
+    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:$cardinalVersion") { isTransitive = false })
+    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:$cardinalVersion") { isTransitive = false })
+    include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
 
     //include everything mandatory inside the jar
-    include("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion")
-    include("me.shedaniel.cloth:config-2:$clothConfigVersion")
-    include("io.github.cottonmc:UniversalComponents:$ucVersion")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:$cardinalVersion")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:$cardinalVersion")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:$cardinalVersion")
-    include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:$cardinalVersion")
-    include("io.github.cottonmc:cotton-resources:$cottonResourcesVersion")
-    include("dev.onyxstudios:FOML:$fomlVersion")
-    include("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false }
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
     modImplementationMapped("com.google.code.findbugs:jsr305:3.0.1") { isTransitive = false }
 }
