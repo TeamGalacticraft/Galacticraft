@@ -46,10 +46,10 @@ val fomlVersion            = project.property("foml.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 
 plugins {
+    java
+    `maven-publish`
     id("fabric-loom") version("0.5-SNAPSHOT")
-    id("maven-publish")
     id("org.cadixdev.licenser") version("0.5.0")
-    id("java")
 }
 
 configure<JavaPluginConvention> {
