@@ -57,10 +57,11 @@ configure<JavaPluginConvention> {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+group = modGroup
+version = modVersion
+
 base {
     archivesBaseName = modName
-    group = modGroup
-    version = modVersion
 }
 
 loom {
@@ -185,10 +186,10 @@ dependencies {
 }
 
 tasks.processResources {
-    inputs.property("version", project.version)
+    inputs.property("version", modVersion)
 
     filesMatching("fabric.mod.json") {
-        expand(mapOf("version" to project.version))
+        expand(mutableMapOf("version" to modVersion))
     }
 
     // Minify json resources
