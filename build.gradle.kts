@@ -149,7 +149,7 @@ dependencies {
         "fabric-textures-v0",
         "fabric-tool-attribute-api-v1"
     ).forEach {
-        modImplementation(getFabricApiModule(it, fabricVersion)) { isTransitive = false}
+        modImplementation(getFabricApiModule(it, fabricVersion)) { isTransitive = false }
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
