@@ -247,8 +247,8 @@ license {
     header = project.file("LICENSE_HEADER.txt")
     include("**/com/hrznstudio/**/*.java")
     include("build.gradle.kts")
-    ext(mapOf(
-        "year" to Year.now().value,
-        "company" to "HRZN LTD"
-    ))
+    ext {
+        set("year", Year.now().value)
+        set("company", "HRZN LTD")
+    }
 }
