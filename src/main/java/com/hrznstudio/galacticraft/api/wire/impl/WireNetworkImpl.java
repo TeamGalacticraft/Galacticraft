@@ -142,20 +142,20 @@ public class WireNetworkImpl implements WireNetwork {
         //wires should call #removeWire before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(adjacentToUpdated, updatedPos, true);
-        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
+        this.removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos vector = adjacentToUpdated.subtract(updatedPos);
+        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
         EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, direction);
         EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, updatedPos, direction);
         if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
-            node(updatedPos);
-            edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
+            this.node(updatedPos);
+            this.edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
         } else if (insertable != RejectingEnergyInsertable.NULL) {
-            node(updatedPos);
-            edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
+            this.node(updatedPos);
+            this.edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
         } else if (extractable != EmptyEnergyExtractable.NULL) {
-            node(updatedPos);
-            edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
+            this.node(updatedPos);
+            this.edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
         }
     }
 
@@ -177,8 +177,8 @@ public class WireNetworkImpl implements WireNetwork {
             for (BlockPos successor : graph.successors(currentNode)) {
                 if (visitedNodes.add(successor)) {
                     if (!(world.getBlockEntity(successor) instanceof Wire)) {
-                        BlockPos poss = successor.subtract(currentNode);
-                        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
+                        BlockPos vector = currentNode.subtract(successor);
+                        Direction opposite = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
                         EnergyInsertable handler = EnergyUtils.getEnergyInsertable(world, successor, opposite);
                         amount = handler.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
                         if (amount == 0) {

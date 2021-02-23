@@ -70,7 +70,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
 
     public GlassFluidPipeBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtils.ATTACHED_NORTH, false).with(ConnectingBlockUtils.ATTACHED_EAST, false).with(ConnectingBlockUtils.ATTACHED_SOUTH, false).with(ConnectingBlockUtils.ATTACHED_WEST, false).with(ConnectingBlockUtils.ATTACHED_UP, false).with(ConnectingBlockUtils.ATTACHED_DOWN, false));
+        this.setDefaultState(this.getStateManager().getDefaultState().with(PULL, false).with(COLOR, DyeColor.WHITE).with(ConnectingBlockUtils.ATTACHED_NORTH, false).with(ConnectingBlockUtils.ATTACHED_EAST, false).with(ConnectingBlockUtils.ATTACHED_SOUTH, false).with(ConnectingBlockUtils.ATTACHED_WEST, false).with(ConnectingBlockUtils.ATTACHED_UP, false).with(ConnectingBlockUtils.ATTACHED_DOWN, false));
     }
 
     @Override
@@ -79,17 +79,9 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Direction.values()) {
             Block block = context.getWorld().getBlockState(pos.offset(direction)).getBlock();
-            if (block instanceof FluidPipe || FluidUtils.isAnythingRelatedToFluids(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            if (block instanceof FluidPipe || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
         }
         return state;
-    }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos updatedPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, updatedPos, notify);
-        Direction direction = Direction.fromVector(pos.getX() - updatedPos.getX(), pos.getY() - updatedPos.getY(), pos.getZ() - updatedPos.getZ());
-        assert direction != null;
-        world.setBlockState(pos, this.getStateForNeighborUpdate(state, direction.getOpposite(), world.getBlockState(updatedPos), world, pos, updatedPos));
     }
 
     @Override
@@ -119,6 +111,11 @@ public class GlassFluidPipeBlock extends FluidPipe {
     }
 
     @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos updatedPos, boolean notify) {
+        super.neighborUpdate(state, world, pos, block, updatedPos, notify);
+    }
+
+    @Override
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
         return ConnectingBlockUtils.getVoxelShape(blockState, NORTH, SOUTH, EAST, WEST, UP, DOWN, NONE);
     }
@@ -132,7 +129,7 @@ public class GlassFluidPipeBlock extends FluidPipe {
         return state.with(getPropForDirection(direction), (
                 !other.isAir()
                         && ((other.getBlock() instanceof FluidPipe && other.get(COLOR) == state.get(COLOR))
-                        || FluidUtils.isAnythingRelatedToFluids(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction)
+                        || FluidUtils.isExtractableOrInsertable(world.getBlockEntity(thisWire).getWorld(), otherConnectable, direction.getOpposite())
                 )
         ));
     }

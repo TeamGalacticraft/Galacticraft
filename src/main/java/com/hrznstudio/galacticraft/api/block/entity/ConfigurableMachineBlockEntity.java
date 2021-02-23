@@ -40,6 +40,7 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
@@ -67,6 +68,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -359,7 +361,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
                 if (cso.getOption().isInput()) {
                     if (cso.isWildcard()) {
                         IntArrayList list = new IntArrayList();
-                        for (int i = 0; i < tank.getTankCount(); i++) {
+                        for (int i = 0; i < this.getFluidTankSize(); i++) {
                             if (this.canPipeInsertFluid(i)) {
                                 list.add(i);
                             }
@@ -535,6 +537,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getSideConfigInfo().fromTag(tag);
         this.setRedstone(RedstoneState.fromTag(tag));
         this.noDrop = tag.getBoolean("NoDrop");
+        if (!world.isClient) this.sync();
     }
 
     @Override
@@ -642,7 +645,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     public void sync() {
         BlockEntityClientSerializable.super.sync();
-        this.world.updateNeighbors(pos, this.getCachedState().getBlock());
+        BlockState state = this.world.getBlockState(this.pos);
+        this.world.setBlockState(this.pos, state.with(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY, !state.get(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY)), 11);
     }
 
     public enum RedstoneState implements StringIdentifiable {
@@ -983,54 +987,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
         public int getBottomValue() {
             return bottom.getValue();
-        }
-
-        public int incrementFront() {
-            return front.increment();
-        }
-
-        public int incrementBack() {
-            return back.increment();
-        }
-
-        public int incrementLeft() {
-            return left.increment();
-        }
-
-        public int incrementRight() {
-            return right.increment();
-        }
-
-        public int incrementUp() {
-            return top.increment();
-        }
-
-        public int incrementDown() {
-            return bottom.increment();
-        }
-
-        public int decrementFront() {
-            return front.decrement();
-        }
-
-        public int decrementBack() {
-            return back.decrement();
-        }
-
-        public int decrementLeft() {
-            return left.decrement();
-        }
-
-        public int decrementRight() {
-            return right.decrement();
-        }
-
-        public int decrementUp() {
-            return top.decrement();
-        }
-
-        public int decrementDown() {
-            return bottom.decrement();
         }
 
         private int getMax(SideOption option) {

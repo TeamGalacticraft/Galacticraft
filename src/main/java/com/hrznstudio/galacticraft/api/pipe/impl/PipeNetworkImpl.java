@@ -147,20 +147,20 @@ public class PipeNetworkImpl implements PipeNetwork {
         //pipes should call #removePipe before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(adjacentToUpdated, updatedPos, true);
-        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
-        Direction direction = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
+        this.removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos vector = adjacentToUpdated.subtract(updatedPos);
+        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
         FluidInsertable insertable = FluidUtils.getInsertable(world, updatedPos, direction);
         FluidExtractable extractable = FluidUtils.getExtractable(world, updatedPos, direction);
             if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
+                this.node(updatedPos);
+                this.edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
             } else if (insertable != RejectingFluidInsertable.NULL) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
+                this.node(updatedPos);
+                this.edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
             } else if (extractable != EmptyFluidExtractable.NULL) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
+                this.node(updatedPos);
+                this.edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
             }
 
     }
@@ -183,8 +183,8 @@ public class PipeNetworkImpl implements PipeNetwork {
             if (visited.add(successor)) {
                 BlockEntity entity = world.getBlockEntity(successor);
                 if (!(entity instanceof Pipe)) {
-                    BlockPos poss = successor.subtract(pos);
-                    Direction dir = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ());
+                    BlockPos vector = pos.subtract(successor);
+                    Direction dir = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
                     FluidInsertable insertable = FluidUtils.getInsertable(world, successor, dir);
                     FluidVolume data = insertable.attemptInsertion(volume, simulation);
 

@@ -129,8 +129,7 @@ public class EnergyUtils {
     public static boolean canAccessEnergy(World world, BlockPos pos, Direction direction) {
         EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
         EnergyExtractable extractable = GalacticraftEnergy.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
-        CapacitorView capacitorView = GalacticraftEnergy.CAPACITOR_VIEW.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
-        return insertable != null || extractable != null || capacitorView != null;
+        return insertable != null || extractable != null;
     }
 
     public static int getEnergy(ItemStack stack) {

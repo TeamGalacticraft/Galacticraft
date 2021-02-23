@@ -58,6 +58,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -83,6 +84,8 @@ import java.util.function.Supplier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ConfigurableMachineBlock extends BlockWithEntity implements AttributeProvider {
+    public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
+
     private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
     private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
     private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
@@ -113,7 +116,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(Properties.HORIZONTAL_FACING);
+        builder.add(Properties.HORIZONTAL_FACING, ARBITRARY_BOOLEAN_PROPERTY);
     }
 
     @Override
@@ -123,7 +126,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite()).with(ARBITRARY_BOOLEAN_PROPERTY, false);
     }
 
     @Override
@@ -292,7 +295,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
 
     @Override
     public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
-        Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection().getOpposite();
+        Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection();
         ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
         Object o = machine.getInventory(blockState, direction);
