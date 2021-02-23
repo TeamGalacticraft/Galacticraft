@@ -63,19 +63,21 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
         if (this.isIn(group)) {
-            list.add(new ItemStack(this));
+            final ItemStack[] stack = new ItemStack[]{new ItemStack(this)};
+            stack[0].setDamage(stack[0].getMaxDamage());
+            list.add(stack[0]);
+            stack[0] = stack[0].copy();
 
             if (this.getMaxDamage() > 0) {
-                final ItemStack[] filled = new ItemStack[]{new ItemStack(this)};
                 GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(new Reference<ItemStack>() {
                     @Override
                     public ItemStack get() {
-                        return filled[0];
+                        return stack[0];
                     }
 
                     @Override
-                    public boolean set(ItemStack stack) {
-                        filled[0] = stack;
+                    public boolean set(ItemStack itemStack) {
+                        stack[0] = itemStack;
                         return true;
                     }
 
@@ -84,7 +86,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
                         return stack.getItem() instanceof OxygenTankItem;
                     }
                 }).setAmount(this.getMaxDamage());
-                list.add(filled[0]);
+                list.add(stack[0]);
             }
         }
     }
@@ -96,9 +98,9 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgb += 10)))));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgb += 0xff)))));
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-            if (rgb > 0xffffff) rgb = 0;
+            if (rgb > 0xffffff) rgb -= 0xffffff;
         }
         super.appendTooltip(stack, world, lines, context);
     }

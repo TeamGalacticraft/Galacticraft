@@ -298,15 +298,15 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
         Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection();
         ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
-        Object o = machine.getInventory(blockState, direction);
-        attributeList.offer(o);
-        o = machine.getFluidInsertable(blockState, direction);
-        if (o != null) attributeList.offer(((FluidInsertable) o).getPureInsertable());
-        o = machine.getFluidExtractable(blockState, direction);
-        if (o != null) attributeList.offer(((FluidExtractable) o).getPureExtractable());
-        o = machine.getEnergyExtractable(blockState, direction);
-        if (o != null) attributeList.offer(((EnergyExtractable) o).asPureExtractable());
-        o = machine.getEnergyInsertable(blockState, direction);
-        if (o != null) attributeList.offer(((EnergyInsertable) o).asPureInsertable());
+        Object attribute = machine.getInventory(blockState, direction);
+        attributeList.offer(attribute);
+        attribute = machine.getFluidInsertable(blockState, direction);
+        if (attribute != null) attributeList.offer(((FluidInsertable) attribute).getPureInsertable());
+        attribute = machine.getFluidExtractable(blockState, direction);
+        if (attribute != null) attributeList.offer(((FluidExtractable) attribute).getPureExtractable());
+        attribute = machine.getEnergyExtractable(blockState, direction);
+        if (attribute != null) attributeList.offer(((EnergyExtractable) attribute).asPureExtractable());
+        attribute = machine.getEnergyInsertable(blockState, direction);
+        if (attribute != null) attributeList.offer(((EnergyInsertable) attribute).asPureInsertable());
     }
 }

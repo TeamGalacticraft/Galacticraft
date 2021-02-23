@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -46,7 +47,7 @@ public class FluidPipe extends Block implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled()) {
+        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof FluidPipeBlockEntity) {
                 Galacticraft.logger.info(((FluidPipeBlockEntity) entity).getNetwork());
