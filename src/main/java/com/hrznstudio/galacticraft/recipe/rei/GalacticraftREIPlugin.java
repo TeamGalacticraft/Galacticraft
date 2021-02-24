@@ -98,8 +98,8 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
 
     @Override
     public void registerEntries(EntryRegistry entryRegistry) {
-        for (Item item : GalacticraftItems.HIDDEN_ITEMS) {
-            entryRegistry.removeEntry(EntryStack.create(item));
+        for (EntryStack entry : EntryStack.ofItems(GalacticraftItems.HIDDEN_ITEMS)) {
+            entryRegistry.removeEntry(entry);
         }
     }
 }
