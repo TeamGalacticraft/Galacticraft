@@ -22,17 +22,17 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
@@ -53,7 +53,7 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    public static final Fraction MAX_OXYGEN = Fraction.of(1, 1000).multiply(Fraction.ofWhole(10000));
+    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     private final Set<BlockPos> set = new HashSet<>();
     public static final byte SEAL_CHECK_TIME = 5 * 20;
@@ -69,7 +69,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public Fraction getFluidTankMaxCapacity() {
+    public FluidAmount getFluidTankCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -107,22 +107,22 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == BATTERY_SLOT) {
-            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils::isEnergyExtractable;
         }
-        return s -> false;
+        return Constants.Misc.alwaysFalse();
     }
 
     @Override
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().takeFluid(0, Fraction.of(set.size(), 2000), ActionType.PERFORM);
+        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Misc.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.getFluidTank().getInvFluid(0).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         return Status.SEALED;
     }
 
@@ -197,8 +197,8 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     }
 
     @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    public FluidFilter getFilterForTank(int tank) {
+        return Constants.Misc.LOX_ONLY;
     }
 
     /**

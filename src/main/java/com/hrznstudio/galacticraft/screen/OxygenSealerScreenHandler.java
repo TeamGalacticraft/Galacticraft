@@ -35,27 +35,12 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenSealerScreenHandler extends MachineScreenHandler<OxygenSealerBlockEntity> {
-    protected final Inventory inventory;
 
-    public OxygenSealerScreenHandler(int syncId, PlayerEntity playerEntity, OxygenSealerBlockEntity blockEntity) {
-        super(syncId, playerEntity, blockEntity, GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER);
-        this.inventory = blockEntity.getInventory().asInventory();
+    public OxygenSealerScreenHandler(int syncId, PlayerEntity player, OxygenSealerBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER);
+        this.addSlot(new ChargeSlot(machine.getWrappedInventory(), 0, 8, 62));
 
-        this.addSlot(new ChargeSlot(this.inventory, 0, 8, 62));
-
-        // Player inventory slots
-        int playerInvYOffset = 84;
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18, playerInvYOffset + 58));
-        }
-
+        this.addPlayerInventorySlots(0, 84);
     }
 
     public OxygenSealerScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
