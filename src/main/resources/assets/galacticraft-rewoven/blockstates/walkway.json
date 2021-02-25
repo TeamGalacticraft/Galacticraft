@@ -1,48 +1,17 @@
 {
   "multipart": [
-    {
-      "apply": {
-        "model": "galacticraft-rewoven:block/walkway"
-      }
-    },
-    {
-      "when": {
-        "north": "true"
-      },
-      "apply": {
-        "model": "galacticraft-rewoven:block/walkway_side",
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "east": "true"
-      },
-      "apply": {
-        "model": "galacticraft-rewoven:block/walkway_side",
-        "y": 90,
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "south": "true"
-      },
-      "apply": {
-        "model": "galacticraft-rewoven:block/walkway_side",
-        "y": 180,
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "west": "true"
-      },
-      "apply": {
-        "model": "galacticraft-rewoven:block/walkway_side",
-        "y": 270,
-        "uvlock": true
-      }
-    }
+    {"when": {"facing": "up"},    "apply": {"model": "galacticraft-rewoven:block/walkway"}},
+    {"when": {"facing": "down"},  "apply": {"model": "galacticraft-rewoven:block/walkway", "x": 180}},
+    {"when": {"facing": "north"}, "apply": {"model": "galacticraft-rewoven:block/walkway", "x": 90}},
+    {"when": {"facing": "south"}, "apply": {"model": "galacticraft-rewoven:block/walkway", "x": 270}},
+    {"when": {"facing": "east"},  "apply": {"model": "galacticraft-rewoven:block/walkway", "x": 90, "y": 90}},
+    {"when": {"facing": "west"},  "apply": {"model": "galacticraft-rewoven:block/walkway", "x": 90, "y": 270}},
+
+    {"when": {"north": "true"}, "apply": {"model": "galacticraft-rewoven:block/walkway_side"}},
+    {"when": {"east": "true"},  "apply": {"model": "galacticraft-rewoven:block/walkway_side", "y": 90}},
+    {"when": {"south": "true"}, "apply": {"model": "galacticraft-rewoven:block/walkway_side", "y": 180}},
+    {"when": {"west": "true"},  "apply": {"model": "galacticraft-rewoven:block/walkway_side", "y": 270}},
+    {"when": {"up": "true"},    "apply": {"model": "galacticraft-rewoven:block/walkway_side", "x": 270, "y": 90}},
+    {"when": {"down": "true"},  "apply": {"model": "galacticraft-rewoven:block/walkway_side", "x": 90, "y": 270}}
   ]
 }

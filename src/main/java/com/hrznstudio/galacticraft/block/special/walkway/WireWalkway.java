@@ -23,7 +23,10 @@
 package com.hrznstudio.galacticraft.block.special.walkway;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
+import com.hrznstudio.galacticraft.api.block.WireBlock;
+import io.github.cottonmc.component.api.ComponentHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.*;
@@ -47,7 +50,7 @@ import net.minecraft.world.WorldAccess;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class Walkway extends Block implements FluidLoggableBlock {
+public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     public static final BooleanProperty NORTH = Properties.NORTH;
     public static final BooleanProperty EAST = Properties.EAST;
     public static final BooleanProperty SOUTH = Properties.SOUTH;
@@ -58,9 +61,8 @@ public class Walkway extends Block implements FluidLoggableBlock {
     private static final VoxelShape[] shape = new VoxelShape[4096];
     private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
-    public Walkway(Settings settings) {
+    public WireWalkway(Settings settings) {
         super(settings);
-
         this.setDefaultState(this.getStateManager().getDefaultState()
                 .with(NORTH, false)
                 .with(EAST, false)
@@ -122,7 +124,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 break;
         }
 
-        int offset = 1;
+        int offset = 2;
         VoxelShape northC = Block.createCuboidShape(8 - offset, 8 - offset, 0, 8 + offset, 8 + offset, 8 + offset);
         VoxelShape eastC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 16, 8 + offset, 8 + offset);
         VoxelShape southC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 8 + offset, 8 + offset, 16);
@@ -239,30 +241,40 @@ public class Walkway extends Block implements FluidLoggableBlock {
         }
     }
 
-    public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos) {
+    public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos, WorldAccess world, Direction facing) {
         try {
             if (pos.offset(state.get(FACING)).equals(neighborPos))
                 return false;
             if (neighborPos.offset(neighborState.get(FACING)).equals(pos))
                 return false;
         } catch (IllegalArgumentException ignored) {}
-        return neighborState.getBlock() instanceof Walkway;
+        // TODO: The WireBlockEntity will still connect on the top face of this block (there's no wire there)
+        return neighborState.getBlock() instanceof WireBlock || ComponentHelper.CAPACITOR.hasComponent(world, pos.offset(facing), facing.getOpposite());
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
+        BlockState state = this.getDefaultState();
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        return this.getDefaultState()
+        for (Direction direction : Direction.values()) {
+            state = state.with(getPropForDir(direction), this.canConnect(state,
+                    context.getWorld().getBlockState(context.getBlockPos().offset(direction)),
+                    context.getBlockPos(),
+                    context.getBlockPos().offset(direction),
+                    context.getWorld(),
+                    direction));
+        }
+        return state
                 .with(FACING, context.getPlayerLookDirection().getOpposite())
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                 .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction facing, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
+           if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
-        return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos));
+        return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos, world, facing));
     }
 
     @Override
