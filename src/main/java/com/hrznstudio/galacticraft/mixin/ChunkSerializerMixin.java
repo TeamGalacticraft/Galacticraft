@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -47,23 +47,23 @@ public abstract class ChunkSerializerMixin {
     @Inject(method = "serialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/PalettedContainer;write(Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void serializeGCR(ServerWorld world, Chunk chunk, CallbackInfoReturnable<CompoundTag> cir, ChunkPos chunkPos, CompoundTag compoundTag, CompoundTag compoundTag2, ChunkSection[] chunkSections, ListTag listTag, LightingProvider lightingProvider, boolean bl, int i, int j, ChunkSection chunkSection, ChunkNibbleArray chunkNibbleArray, ChunkNibbleArray chunkNibbleArray2, CompoundTag compoundTag3) {
         CompoundTag tag = new CompoundTag();
-        tag.putBoolean("hasOxygen", ((ChunkSectionOxygenAccessor) chunkSection).hasOxygen());
-        if (((ChunkSectionOxygenAccessor) chunkSection).hasOxygen()) {
+        tag.putShort("TotalOxygen", ((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen());
+        if (((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen() > 0) {
             byte[] array = new byte[(16 * 16 * 16) / 8];
-            boolean[] arr = ((ChunkSectionOxygenAccessor) chunkSection).getArray();
-            for (int p = 0; p < arr.length - 8; p += 9) {
-                byte b = -128;
-                b += arr[p] ? 1 : 0;
-                b += arr[p + 1] ? 2 : 0;
-                b += arr[p + 2] ? 4 : 0;
-                b += arr[p + 3] ? 8 : 0;
-                b += arr[p + 4] ? 16 : 0;
-                b += arr[p + 5] ? 32 : 0;
-                b += arr[p + 6] ? 64 : 0;
-                b += arr[p + 7] ? 128 : 0;
-                array[p / 8] = b;
+            boolean[] oxygenValues = ((ChunkSectionOxygenAccessor) chunkSection).getArray();
+            for (int p = 0; p < oxygenValues.length - 8; p += 9) {
+                byte serialized = -128;
+                serialized += oxygenValues[p] ? 1 : 0;
+                serialized += oxygenValues[p + 1] ? 2 : 0;
+                serialized += oxygenValues[p + 2] ? 4 : 0;
+                serialized += oxygenValues[p + 3] ? 8 : 0;
+                serialized += oxygenValues[p + 4] ? 16 : 0;
+                serialized += oxygenValues[p + 5] ? 32 : 0;
+                serialized += oxygenValues[p + 6] ? 64 : 0;
+                serialized += oxygenValues[p + 7] ? 128 : 0;
+                array[p / 8] = serialized;
             }
-            compoundTag3.putByteArray("oxygen", array);
+            compoundTag3.putByteArray("Oxygen", array);
         }
         compoundTag3.put("gcr_data", tag);
     }
@@ -71,10 +71,10 @@ public abstract class ChunkSerializerMixin {
     @Inject(method = "deserialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/ChunkSection;calculateCounts()V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void deserializeGCR(ServerWorld world, StructureManager structureManager, PointOfInterestStorage poiStorage, ChunkPos pos, CompoundTag tag, CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator, BiomeSource biomeSource, CompoundTag compoundTag, BiomeArray biomeArray, UpgradeData upgradeData, ChunkTickScheduler chunkTickScheduler, ChunkTickScheduler chunkTickScheduler2, boolean bl, ListTag listTag, int i, ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager, LightingProvider lightingProvider, int j, CompoundTag compoundTag2, int k, ChunkSection chunkSection) {
         CompoundTag compound = compoundTag2.getCompound("gcr_data");
-        ((ChunkSectionOxygenAccessor) chunkSection).setHasOxygen(compound.getBoolean("hasOxygen"));
-        if (compound.getBoolean("hasOxygen")) {
+        ((ChunkSectionOxygenAccessor) chunkSection).setTotalOxygen(compound.getShort("TotalOxygen"));
+        if (compound.getShort("TotalOxygen") > 0) {
             boolean[] oxygen = ((ChunkSectionOxygenAccessor) chunkSection).getArray();
-            byte[] bytes = compound.getByteArray("oxygen");
+            byte[] bytes = compound.getByteArray("Oxygen");
             for (int p = 0; p < 4096 / 8; p++) {
                 short b = (short) (bytes[i] + 128);
                 oxygen[(p * 8)] = (b & 1) != 0;
@@ -86,7 +86,6 @@ public abstract class ChunkSerializerMixin {
                 oxygen[(p * 8) + 6] = (b & 64) != 0;
                 oxygen[(p * 8) + 7] = (b & 128) !=0 ;
             }
-
         }
     }
 }

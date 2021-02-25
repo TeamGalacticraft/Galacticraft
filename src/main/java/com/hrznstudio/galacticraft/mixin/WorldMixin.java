@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 HRZN LTD
+ * Copyright (c) 2019-2021 HRZN LTD
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -59,21 +59,19 @@ public abstract class WorldMixin implements WorldOxygenAccessor {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(MutableWorldProperties properties, RegistryKey<World> registryRef, DimensionType dimensionType, Supplier<Profiler> profiler, boolean isClient, boolean debugWorld, long seed, CallbackInfo ci) {
-        CelestialBodyType.getByDimType(this.registryKey).ifPresent(celestialBodyType -> breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
+        CelestialBodyType.getByDimType(this.registryKey).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
     }
 
     @Override
     public boolean isBreathable(BlockPos pos) {
-        if (isOutOfBuildLimitVertically(pos)) return false;
         if (breathable) return true;
-        Chunk chunk = getWorldChunk(pos);
-        return ((ChunkOxygenAccessor) chunk).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+        if (isOutOfBuildLimitVertically(pos)) return false;
+        return ((ChunkOxygenAccessor) this.getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
     }
 
     @Override
     public void setBreathable(BlockPos pos, boolean value) {
         if (isOutOfBuildLimitVertically(pos) || breathable) return;
-        Chunk chunk = getWorldChunk(pos);
-        ((ChunkOxygenAccessor) chunk).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
+        ((ChunkOxygenAccessor) this.getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
     }
 }
