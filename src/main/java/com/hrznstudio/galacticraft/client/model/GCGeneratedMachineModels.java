@@ -189,6 +189,13 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             }
         });
 
+        register(GalacticraftBlocks.OXYGEN_SEALER, (face, spriteFunction, view, state, pos) -> {
+            if (face == BlockFace.TOP) {
+                return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
+            }
+            return spriteFunction.apply(MACHINE_SIDE);
+        });
+
         register(GalacticraftBlocks.ELECTRIC_FURNACE, (face, spriteFunction, view, state, pos) -> {
             switch (face) {
                 case FRONT:

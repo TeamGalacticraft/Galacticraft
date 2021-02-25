@@ -93,27 +93,28 @@ dependencies {
     mappings("net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
-    modCompileOnly(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-command-api-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-content-registries-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-item-groups-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-models-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-networking-api-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-particles-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-registry-sync-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-renderer-api-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-renderer-indigo", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-renderer-registries-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-structure-api-v1", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-textures-v0", project.fabric_version)) { transitive = false }
-    modCompileOnly(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-api-base", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-blockrenderlayer-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-command-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-content-registries-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-item-groups-v0", project.fabric_version)) { transitive = false }
+//    modImplementation(fabricApi.module("fabric-lifecycle-events-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-models-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-networking-blockentity-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-object-builder-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-particles-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-registry-sync-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-renderer-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-renderer-indigo", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-renderer-registries-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-rendering-fluids-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-screen-handler-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-structure-api-v1", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-tag-extensions-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-textures-v0", project.fabric_version)) { transitive = false }
+    modImplementation(fabricApi.module("fabric-tool-attribute-api-v1", project.fabric_version)) { transitive = false }
 
     modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
         exclude group: 'net.fabricmc.fabric-api'

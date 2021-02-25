@@ -24,25 +24,24 @@ package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
-import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
+import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.tag.Tag;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Optional;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -55,17 +54,17 @@ public abstract class LivingEntityMixin extends Entity {
         super(type, world);
     }
 
-    private @Unique boolean noOxygen;
-
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
     private boolean checkOxygenAtmosphere_gcr(LivingEntity entity, Tag<Fluid> tag) {
-        Optional<CelestialBodyType> optional = CelestialBodyType.getByDimType(world.getRegistryKey());
-        noOxygen = (optional.isPresent() && !optional.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
-        return entity.isSubmergedIn(tag) || noOxygen;
+        return entity.isSubmergedIn(tag) || !((WorldOxygenAccessor) this.world).isBreathable(entity.getBlockPos().offset(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose()))));
     }
 
     @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
-    private void disableRespiration_gcr(int air, CallbackInfoReturnable<Integer> ci) {
+    private void overrideOxygen_gcr(int air, CallbackInfoReturnable<Integer> ci) {
+        EntityAttributeInstance attribute = ((LivingEntity)(Object)this).getAttributeInstance(GalacticraftEntityAttributes.CAN_BREATHE_IN_SPACE);
+        if (attribute != null && attribute.getValue() >= 0.99D) {
+            ci.setReturnValue(this.getNextAirOnLand(air));
+        }
         FixedItemInv gearInv = ((GearInventoryProvider)this).getGearInv();
 
         OxygenTank tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(6));
@@ -78,7 +77,5 @@ public abstract class LivingEntityMixin extends Entity {
             tank.setAmount(tank.getAmount() - 1);
             ci.setReturnValue(this.getNextAirOnLand(air));
         }
-
-        if (noOxygen) ci.setReturnValue(air - 1);
     }
 }

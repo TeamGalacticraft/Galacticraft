@@ -448,6 +448,7 @@ public class Constants {
         public static final String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
         public static final String OXYGEN_COMPRESSOR_SCREEN = "gui/oxygen_compressor_screen";
         public static final String OXYGEN_STORAGE_MODULE_SCREEN = "gui/oxygen_storage_module_screen";
+        public static final String OXYGEN_SEALER_SCREEN = "gui/oxygen_sealer_screen";
 
         public static String getRaw(String path) {
             return "textures/" + path + ".png";
@@ -579,6 +580,7 @@ public class Constants {
         public static final String OXYGEN_COMPRESSOR_SCREEN_HANDLER = "oxygen_compressor_screen_handler";
         public static final String OXYGEN_DECOMPRESSOR_SCREEN_HANDLER = "oxygen_decompressor_screen_handler";
         public static final String OXYGEN_STORAGE_MODULE_SCREEN_HANDLER = "oxygen_storage_module_screen_handler";
+        public static final String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer";
     }
 
     public static class Biomes {
