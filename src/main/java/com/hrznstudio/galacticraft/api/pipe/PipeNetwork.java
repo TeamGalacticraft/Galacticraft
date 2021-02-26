@@ -22,9 +22,9 @@
 
 package com.hrznstudio.galacticraft.api.pipe;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.api.pipe.impl.PipeNetworkImpl;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -44,7 +44,7 @@ public interface PipeNetwork {
     /**
      * Adds a pipe to the network
      * @param pos The position of the pipe being added
-     * @see #addPipe(BlockPos, Wire)
+     * @see #addPipe(BlockPos, Pipe)
      */
     default void addPipe(@NotNull BlockPos pos) {
         addPipe(pos, null);
@@ -83,10 +83,10 @@ public interface PipeNetwork {
      * @param fromPipe The pipe that received the energy
      * @param fromBlock The block that inserted the energy
      * @param amount The amount of fluid, in to insert
-     * @param type The type of action to perform
-     * @return the amount of energy that failed to insert
+     * @param simulation Whether to simulate the action or actually perform it
+     * @return the amount of fluid that succeeded to insert
      */
-    Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull ActionType type);
+    @Nullable Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, FluidVolume amount, @NotNull Simulation simulation);
 
     /**
      * Returns the adjacent connections from a position

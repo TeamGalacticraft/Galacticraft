@@ -30,15 +30,14 @@ import com.hrznstudio.galacticraft.util.EnergyUtils;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ConfigImpl implements Config {
-
     @Expose
     private boolean debugLog = false;
     @Expose
-    private int wireMaxTransferPerTick = 480;
+    private int wireMaxTransferPerTick = 128;
     @Expose
-    private int heavyWireMaxTransferPerTick = 1440;
+    private int heavyWireMaxTransferPerTick = 256;
     @Expose
-    private int coalGeneratorEnergyProductionRate = 120;
+    private int coalGeneratorEnergyProductionRate = 120; // /t
     @Expose
     private int solarPanelEnergyProductionRate = 44;
     @Expose
@@ -54,7 +53,7 @@ public class ConfigImpl implements Config {
     @Expose
     private int electricFurnaceEnergyConsumptionRate = EnergyUtils.Values.T2_MACHINE_ENERGY_USAGE;
     @Expose
-    private int energyStorageModuleStorageSize = 500_000;
+    private int energyStorageModuleStorageSize = 300_000;
     @Expose
     private int machineEnergyStorageSize = 30_000;
     @Expose

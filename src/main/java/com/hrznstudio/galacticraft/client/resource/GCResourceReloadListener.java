@@ -71,6 +71,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_FUEL, fuel);
-        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.OXYGEN, oxygen);
+        FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.LIQUID_OXYGEN, oxygen);
     }
 }

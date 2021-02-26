@@ -22,12 +22,13 @@
 
 package com.hrznstudio.galacticraft.client.gui.widget.machine;
 
+import alexiil.mc.lib.attributes.fluid.SingleFluidTankView;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resource.language.I18n;
@@ -43,53 +44,49 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Supplier;
 
+@Environment(EnvType.CLIENT)
 public class FluidTankWidget extends AbstractWidget {
-    private final TankComponent component;
+    private final SingleFluidTankView tankView;
     private final int x;
     private final int y;
-    private final int tank;
     private final World world;
     private final BlockPos pos;
     private final int[] data;
     private final int scale;
 
-    public FluidTankWidget(TankComponent component, int x, int y, int tank, World world, BlockPos pos) {
-        this(component, x, y, tank, world, pos, 1);
+    public FluidTankWidget(SingleFluidTankView tankView, int x, int y, World world, BlockPos pos) {
+        this(tankView, x, y, world, pos, 1);
     }
 
-    public FluidTankWidget(TankComponent component, int x, int y, int tank, World world, BlockPos pos, int scale) {
-        this.component = component;
+    public FluidTankWidget(SingleFluidTankView tankView, int x, int y, World world, BlockPos pos, int scale) {
+        this.tankView = tankView;
         this.x = x;
         this.y = y;
-        this.tank = tank;
         this.world = world == null ? this.client.world : world;
         this.pos = pos == null ? new BlockPos(0, 1, 0) : pos;
         this.scale = scale;
-        this.data = getData(getComponent().getMaxCapacity(this.tank));
+        this.data = this.getPositionData(getTankView().getMaxAmount_F());
     }
 
     @Override
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2])) {
-            FluidVolume volume = getComponent().getContents(this.tank);
+            FluidVolume volume = getTankView().get();
             if (volume.isEmpty()) {
                 this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
                 return;
             }
             MutableText amount;
             if (Screen.hasShiftDown()) {
-                amount = new LiteralText(volume.getAmount().toString() + "B");
+                amount = new LiteralText(volume.getAmount_F().toString() + "B");
             } else {
-                amount = new LiteralText((int)(volume.getAmount().doubleValue() * 1000.0d) + "mB");
+                amount = new LiteralText((int)(volume.getAmount_F().asInexactDouble() * 1000.0d) + "mB");
             }
 
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(getName(volume.getFluid())).setStyle(Style.EMPTY.withColor(Formatting.AQUA))));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Style.EMPTY.withColor(Formatting.AQUA))));
             lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
@@ -109,11 +106,11 @@ public class FluidTankWidget extends AbstractWidget {
         this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
         this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1] + Constants.TextureCoordinates.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
 
-        FluidVolume content = getComponent().getContents(this.tank);
+        FluidVolume content = getTankView().get();
         if (content.isEmpty()) return;
         matrices.push();
-        double scale = content.getAmount().divide(this.getComponent().getMaxCapacity(this.tank)).doubleValue();
-        Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getFluid()).getFluidSprites(world, pos, content.getFluid().getDefaultState())[0];
+        double scale = content.getAmount_F().div(this.getTankView().getMaxAmount_F()).asInexactDouble();
+        Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
         this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
         drawSprite(matrices, this.x + 1, ((this.y + 1) - (int)(this.data[2] * scale)) + this.data[2], 0, Constants.TextureCoordinates.FLUID_TANK_WIDTH - 2, (int)(this.data[2] * scale) - 2, sprite);
         matrices.pop();
@@ -126,11 +123,11 @@ public class FluidTankWidget extends AbstractWidget {
         drawTexture(matrices, x, y, u, v, width, height, 128, 128);
     }
 
-    protected int[] getData(Fraction tankCap) {
-        if (tankCap.doubleValue() != Math.floor(tankCap.doubleValue())) {
+    protected int[] getPositionData(FluidAmount tankCap) {
+        if (tankCap.asInexactDouble() != Math.floor(tankCap.asInexactDouble())) {
             throw new UnsupportedOperationException("NYI");
         }
-        int size = tankCap.intValue() * scale;
+        int size = tankCap.asInt(1) * scale;
 
         if (size < 1 || size > 16) {
             throw new UnsupportedOperationException("NYI");
@@ -192,7 +189,7 @@ public class FluidTankWidget extends AbstractWidget {
     }
 
 
-    public TankComponent getComponent() {
-        return component;
+    public SingleFluidTankView getTankView() {
+        return tankView;
     }
 }

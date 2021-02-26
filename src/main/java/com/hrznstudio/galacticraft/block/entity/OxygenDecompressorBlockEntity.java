@@ -22,24 +22,20 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
+import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.cottonmc.component.fluid.impl.SimpleTankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.block.BlockState;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
+import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -54,7 +50,7 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    public static final Fraction MAX_OXYGEN = Fraction.of(1, 100).multiply(Fraction.ofWhole(5000));
+    public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
     public static final int TANK_SLOT = 1;
 
@@ -68,7 +64,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public Fraction getFluidTankMaxCapacity() {
+    public FluidAmount getFluidTankCapacity() {
         return MAX_OXYGEN;
     }
 
@@ -90,9 +86,9 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) {
-            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         } else {
-            return OxygenUtils::isOxygenItem;
+            return OxygenTankUtils::isOxygenTank;
         }
     }
 
@@ -111,8 +107,9 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(TANK_SLOT));
-        if (component == null) return Status.EMPTY_CANISTER;
+        OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
+        if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
+        if (tank.getAmount() <= 0) return Status.EMPTY_CANISTER;
         if (this.isTankFull(0)) return Status.FULL;
         return Status.DECOMPRESSING;
     }
@@ -120,8 +117,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
-            TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(TANK_SLOT));
-            component.insertFluid(0, this.getFluidTank().insertFluid(0, component.takeFluid(0, Fraction.of(1, 50), ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
+            OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().insertFluid(0, OxygenTankUtils.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
         }
     }
 
@@ -146,8 +143,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    public FluidFilter getFilterForTank(int tank) {
+        return key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
     }
 
     /**

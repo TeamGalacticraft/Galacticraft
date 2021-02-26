@@ -36,7 +36,6 @@ import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAlum
 import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.block.special.walkway.WireWalkway;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.*;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -202,6 +201,7 @@ public class GalacticraftBlocks {
     public static final Block ELECTRIC_ARC_FURNACE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), ElectricArcFurnaceScreenHandler::new, blockView -> new ElectricArcFurnaceBlockEntity(),
             new TranslatableText("tooltip.galacticraft-rewoven.electric_arc_furnace").setStyle(Constants.Misc.TOOLTIP_STYLE)), Constants.Blocks.ELECTRIC_ARC_FURNACE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR);
+    public static final Block OXYGEN_SEALER = registerMachine(new OxygenSealerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_SEALER);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY);
     public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), BubbleDistributorScreenHandler::new, blockView -> new BubbleDistributorBlockEntity(),
             new TranslatableText("tooltip.galacticraft-rewoven.oxygen_bubble_distributor").setStyle(Constants.Misc.TOOLTIP_STYLE)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR);
@@ -249,7 +249,6 @@ public class GalacticraftBlocks {
     }
 
     private static <T extends Block> T registerMachine(T block, String id) {
-        GalacticraftComponents.MACHINE_BLOCKS.add(new Identifier(Constants.MOD_ID, id));
         return registerBlock(block, id, MACHINES_GROUP);
     }
 

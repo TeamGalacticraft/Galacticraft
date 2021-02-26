@@ -31,7 +31,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.*;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -56,8 +57,8 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
 
         this.drawOxygenBufferBar(stack);
 
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", (int)(this.handler.machine.getFluidTank().getContents(0).getAmount().doubleValue() * 1000.0D)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.machine.getFluidTank().getMaxCapacity(0).doubleValue() * 1000.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.current_oxygen", (int)(this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().asInexactDouble() * 1000.0D)), width / 2, y + 33, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.machine.max_oxygen", (int)(this.handler.machine.getFluidTank().getMaxAmount_F(0).asInexactDouble() * 1000.0D)), width / 2, y + 45, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override
@@ -68,7 +69,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     }
 
     private void drawOxygenBufferBar(MatrixStack stack) {
-        double oxygenScale = this.handler.machine.getFluidTank().getContents(0).getAmount().divide(this.handler.machine.getFluidTank().getMaxCapacity(0)).doubleValue();
+        double oxygenScale = this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().div(this.handler.machine.getFluidTank().getMaxAmount_F(0)).asInexactDouble();
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(stack, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);

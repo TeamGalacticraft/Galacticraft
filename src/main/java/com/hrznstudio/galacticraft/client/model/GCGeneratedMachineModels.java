@@ -129,7 +129,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + (int) (((double) entity.getCapacitor().getCurrentEnergy() / (double) entity.getMaxEnergy()) * 8.0D)));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + (int) (((double) entity.getCapacitor().getEnergy() / (double) entity.getEnergyCapacity()) * 8.0D)));
                 default:
                     return spriteFunction.apply(MACHINE);
             }
@@ -169,7 +169,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getContents(0).getAmount().divide(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxCapacity(0)).doubleValue() * 8.0D)));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getInvFluid(0).getAmount_F().div(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxAmount_F(0)).asInexactDouble() * 8.0D)));
                 default:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
             }
@@ -187,6 +187,13 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 default:
                     return spriteFunction.apply(MACHINE);
             }
+        });
+
+        register(GalacticraftBlocks.OXYGEN_SEALER, (face, spriteFunction, view, state, pos) -> {
+            if (face == BlockFace.TOP) {
+                return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
+            }
+            return spriteFunction.apply(MACHINE_SIDE);
         });
 
         register(GalacticraftBlocks.ELECTRIC_FURNACE, (face, spriteFunction, view, state, pos) -> {

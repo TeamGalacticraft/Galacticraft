@@ -22,8 +22,15 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import alexiil.mc.lib.attributes.AttributeList;
+import alexiil.mc.lib.attributes.AttributeProvider;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import io.netty.buffer.Unpooled;
@@ -51,6 +58,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
@@ -61,12 +69,12 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
@@ -75,7 +83,9 @@ import java.util.function.Supplier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class ConfigurableMachineBlock extends BlockWithEntity {
+public class ConfigurableMachineBlock extends BlockWithEntity implements AttributeProvider {
+    public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
+
     private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
     private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
     private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
@@ -106,7 +116,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
-        builder.add(Properties.HORIZONTAL_FACING);
+        builder.add(Properties.HORIZONTAL_FACING, ARBITRARY_BOOLEAN_PROPERTY);
     }
 
     @Override
@@ -116,7 +126,7 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, context.getPlayerFacing().getOpposite()).with(ARBITRARY_BOOLEAN_PROPERTY, false);
     }
 
     @Override
@@ -230,13 +240,16 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
         super.onBreak(world, pos, state, player);
         BlockEntity entity = world.getBlockEntity(pos);
         if (entity instanceof ConfigurableMachineBlockEntity) {
-            for (ItemStack stack : ((ConfigurableMachineBlockEntity) entity).getInventory().getStacks()) {
-                if (stack != null) {
+            FullFixedItemInv inv = ((ConfigurableMachineBlockEntity) entity).getInventory();
+            for (int i = 0; i < inv.getSlotCount(); i++) {
+                ItemStack stack = inv.getInvStack(i);
+                if (!stack.isEmpty()) {
                     world.spawnEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), stack));
+                    inv.forceSetInvStack(i, ItemStack.EMPTY);
                 }
             }
-            ((ConfigurableMachineBlockEntity) entity).getInventory().clear();
         }
+
         if (this instanceof MultiBlockBase) {
             for (BlockPos otherPart : ((MultiBlockBase) this).getOtherParts(state, pos)) {
                 world.setBlockState(otherPart, Blocks.AIR.getDefaultState(), 3);
@@ -278,5 +291,22 @@ public class ConfigurableMachineBlock extends BlockWithEntity {
 
     public Text machineInfo(ItemStack stack, BlockView view, boolean context) {
         return machineInfo.apply(stack, view, context);
+    }
+
+    @Override
+    public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
+        Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection();
+        ConfigurableMachineBlockEntity machine = (ConfigurableMachineBlockEntity) world.getBlockEntity(pos);
+        assert machine != null;
+        Object attribute = machine.getInventory(blockState, direction);
+        attributeList.offer(attribute);
+        attribute = machine.getFluidInsertable(blockState, direction);
+        if (attribute != null) attributeList.offer(((FluidInsertable) attribute).getPureInsertable());
+        attribute = machine.getFluidExtractable(blockState, direction);
+        if (attribute != null) attributeList.offer(((FluidExtractable) attribute).getPureExtractable());
+        attribute = machine.getEnergyExtractable(blockState, direction);
+        if (attribute != null) attributeList.offer(((EnergyExtractable) attribute).asPureExtractable());
+        attribute = machine.getEnergyInsertable(blockState, direction);
+        if (attribute != null) attributeList.offer(((EnergyInsertable) attribute).asPureInsertable());
     }
 }

@@ -23,12 +23,10 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
@@ -39,62 +37,52 @@ import net.minecraft.screen.slot.Slot;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CompressorScreenHandler extends MachineScreenHandler<CompressorBlockEntity> {
-    public final Property progress = Property.create();
-    public final Property fuelTime = Property.create();
-    protected final Inventory inventory;
+    public final Property progress = new Property() {
+        @Override
+        public int get() {
+            return CompressorScreenHandler.this.machine.progress;
+        }
 
-    public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
-        this.inventory = blockEntity.getInventory().asInventory();
-        addProperty(progress);
-        addProperty(fuelTime);
+        @Override
+        public void set(int value) {
+            CompressorScreenHandler.this.machine.progress = value;
+        }
+    };
+    public final Property fuelTime = new Property() {
+        @Override
+        public int get() {
+            return CompressorScreenHandler.this.machine.fuelTime;
+        }
+
+        @Override
+        public void set(int value) {
+            CompressorScreenHandler.this.machine.fuelTime = value;
+        }
+    };
+
+    public CompressorScreenHandler(int syncId, PlayerEntity player, CompressorBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
+        this.addProperty(progress);
+        this.addProperty(fuelTime);
 
         // 3x3 compressor input grid
         int slot = 0;
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                this.addSlot(new Slot(this.inventory, slot, x * 18 + 19, y * 18 + 18));
-                slot++;
+                this.addSlot(new Slot(this.machine.getWrappedInventory(), slot++, x * 18 + 19, y * 18 + 18));
             }
         }
 
         // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.inventory, CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
+        this.addSlot(new ItemSpecificSlot(this.machine.getWrappedInventory(), CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
 
         // Output slot
-        this.addSlot(new FurnaceOutputSlot(player, this.inventory, CompressorBlockEntity.OUTPUT_SLOT, 138, 38));
+        this.addSlot(new FurnaceOutputSlot(player, this.machine.getWrappedInventory(), CompressorBlockEntity.OUTPUT_SLOT, 138, 38));
 
-        // Player inventory slots
-        int playerInvYOffset = 110;
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, playerInvYOffset + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(player.inventory, i, 8 + i * 18, playerInvYOffset + 58));
-        }
-
+        this.addPlayerInventorySlots(0, 110);
     }
 
     public CompressorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
         this(syncId, inv.player, (CompressorBlockEntity) inv.player.world.getBlockEntity(buf.readBlockPos()));
-    }
-
-    @Override
-    public void sendContentUpdates() {
-        progress.set(machine.getProgress());
-        fuelTime.set(machine.fuelTime);
-        super.sendContentUpdates();
-    }
-
-
-    @Override
-    public void setProperty(int id, int value) {
-        super.setProperty(id, value);
-        machine.progress = progress.get();
-        machine.fuelTime = fuelTime.get();
     }
 }

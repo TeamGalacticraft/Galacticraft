@@ -22,13 +22,13 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.cottonmc.component.api.ActionType;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.item.Item;
@@ -62,7 +62,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     static {
         //noinspection unchecked
         SLOT_FILTERS = new Predicate[2];
-        SLOT_FILTERS[CHARGE_SLOT] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         SLOT_FILTERS[FUEL_SLOT] = stack -> FUEL_MAP.containsKey(stack.getItem());
     }
 
@@ -108,8 +108,8 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        if (this.fuelLength == 0 && this.getInventory().getStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
-        if (this.getCapacitor().getCurrentEnergy() >= this.getCapacitor().getMaxEnergy()) return Status.FULL;
+        if (this.fuelLength == 0 && this.getInventory().getInvStack(FUEL_SLOT).isEmpty() && heat <= 0) return Status.NOT_ENOUGH_FUEL;
+        if (this.getCapacitor().getEnergy() >= this.getCapacitor().getMaxCapacity()) return Status.FULL;
         if (this.heat < 1 && this.fuelLength > 0) return Status.WARMING;
         if (this.heat > 0 && this.fuelLength == 0) return Status.COOLING;
         return Status.ACTIVE;
@@ -144,7 +144,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
             }
             if (this.fuelLength == 0) {
                 this.fuelTime = 0;
-                this.fuelLength = FUEL_MAP.getOrDefault(getInventory().takeStack(FUEL_SLOT, 1, ActionType.PERFORM).getItem(), 0);
+                this.fuelLength = FUEL_MAP.getOrDefault(getInventory().extractStack(FUEL_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem(), 0);
                 if (this.fuelLength == 0) return;
             }
 

@@ -28,7 +28,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -47,7 +46,7 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
                 machine.collectionAmount = value;
             }
         });
-        this.addSlot(new FilteredSlot(blockEntity, blockEntity.getWrappedInventory(), OxygenCollectorBlockEntity.CHARGE_SLOT, 13, 69));
+        this.addSlot(new FilteredSlot(blockEntity, OxygenCollectorBlockEntity.CHARGE_SLOT, 13, 69));
         this.addPlayerInventorySlots(0, 99);
     }
 

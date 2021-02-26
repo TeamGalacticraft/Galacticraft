@@ -23,47 +23,25 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEntity> {
-    private final Inventory inventory;
 
-    public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity blockEntity) {
-        super(syncId, player, blockEntity, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
+    public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity machine) {
+        super(syncId, player, machine, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
 
-        this.inventory = blockEntity.getInventory().asInventory();
         // Energy slot
-        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 0, 8, 7));
-        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 1, 123, 7));
-        this.addSlot(new FilteredSlot(blockEntity, this.inventory, 2, 153, 7));
+        this.addSlot(new FilteredSlot(this.machine, 0, 8, 7));
+        this.addSlot(new FilteredSlot(this.machine, 1, 123, 7));
+        this.addSlot(new FilteredSlot(this.machine, 2, 153, 7));
 
-
-        // Player inventory slots
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + j * 18, 86 + i * 18));
-            }
-        }
-
-        // Hotbar slots
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(player.inventory, i, 8 + i * 18, 144));
-        }
-
+        this.addPlayerInventorySlots(0, 86);
     }
 
     public RefineryScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {
