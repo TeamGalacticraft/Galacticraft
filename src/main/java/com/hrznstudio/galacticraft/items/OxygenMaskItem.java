@@ -38,7 +38,7 @@ import net.minecraft.world.World;
  */
 public class OxygenMaskItem extends Item {
     public OxygenMaskItem(Settings settings) {
-        super(settings);
+        super(settings.maxCount(1));
     }
 
     @Override

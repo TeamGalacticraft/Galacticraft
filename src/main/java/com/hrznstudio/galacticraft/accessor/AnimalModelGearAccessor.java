@@ -20,31 +20,15 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft.accessor;
 
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
-import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.ModelPart;
 
-@Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin implements GearInventoryProvider {
-    private @Unique final FullFixedItemInv gearInv = new FullFixedItemInv(8);
+import java.util.List;
 
-    @Override
-    public FullFixedItemInv getGearInv() {
-        return gearInv;
-    }
-
-    @Override
-    public CompoundTag writeGearToNbt(CompoundTag tag) {
-        return getGearInv().toTag(tag);
-    }
-
-    @Override
-    public void readGearFromNbt(CompoundTag tag) {
-        getGearInv().fromTag(tag);
-    }
+@Environment(EnvType.CLIENT)
+public interface AnimalModelGearAccessor {
+    List<ModelPart> getOxygenMaskModels();
 }

@@ -30,3 +30,6 @@ mutable         field    net/minecraft/client/render/entity/model/VillagerResemb
 accessible      field    net/minecraft/village/VillagerType                                   BIOME_TO_TYPE     Ljava/util/Map;
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    NOISE_WEIGHT_TABLE [F
 accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
+accessible   field   net/minecraft/client/model/ModelPart   cuboids   Lit/unimi/dsi/fastutil/objects/ObjectList;
+accessible   field   net/minecraft/client/render/entity/model/QuadrupedEntityModel   head   Lnet/minecraft/client/model/ModelPart;
+accessible   field   net/minecraft/client/render/entity/model/QuadrupedEntityModel   torso   Lnet/minecraft/client/model/ModelPart;

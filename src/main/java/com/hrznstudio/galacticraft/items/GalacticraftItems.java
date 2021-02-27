@@ -194,6 +194,7 @@ public class GalacticraftItems {
     public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constants.Items.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(1620 * 20))); //32400 ticks
     public static final Item LARGE_OXYGEN_TANK = registerItem(Constants.Items.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(1620 * 30))); //48600 ticks
     public static final Item INFINITE_OXYGEN_TANK = registerItem(Constants.Items.INFINITE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item ANIMAL_THERMAL_PADDING = Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, Constants.Items.ANIMAL_THERMAL_PADDING), new AnimalThermalArmorItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item THERMAL_PADDING_HELMET = registerItem(Constants.Items.THERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.HEAD));
     public static final Item THERMAL_PADDING_CHESTPIECE = registerItem(Constants.Items.THERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.CHEST));
     public static final Item THERMAL_PADDING_LEGGINGS = registerItem(Constants.Items.THERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.LEGS));

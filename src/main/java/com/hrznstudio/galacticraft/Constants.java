@@ -396,6 +396,7 @@ public class Constants {
 
         public static final String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         public static final String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
+        public static final String ANIMAL_THERMAL_PADDING = "animal_thermal_padding";
 
         public static final String ROCKET_SCHEMATIC = "rocket_schematic";
         public static final String ROCKET = "rocket";
