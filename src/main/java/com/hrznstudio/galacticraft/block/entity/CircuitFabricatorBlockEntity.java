@@ -22,18 +22,20 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import io.github.cottonmc.component.api.ActionType;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
@@ -66,11 +68,17 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public static final int OUTPUT_SLOT = 6;
 
     private static final Predicate<ItemStack>[] SLOT_FILTERS;
+    private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return getWrappedInventory().canPlayerUse(player);
+        }
+    };
 
     static {
         //noinspection unchecked
         SLOT_FILTERS = new Predicate[6];
-        SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS[0] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         SLOT_FILTERS[1] = stack -> stack.getItem() == MANDATORY_MATERIALS[0];
         SLOT_FILTERS[2] = stack -> stack.getItem() == MANDATORY_MATERIALS[1];
         SLOT_FILTERS[3] = stack -> stack.getItem() == MANDATORY_MATERIALS[2];
@@ -124,11 +132,11 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         for (int i = 1; i < 6; i++) {
-            if (!this.getFilterForSlot(i).test(getInventory().getStack(i))) {
+            if (!this.getFilterForSlot(i).test(getInventory().getInvStack(i))) {
                 return Status.NOT_ENOUGH_RESOURCES;
             }
         }
-        Optional<FabricationRecipe> recipe = this.getRecipe(new SimpleInventory(getWrappedInventory().getStack(INPUT_SLOT)));
+        Optional<FabricationRecipe> recipe = this.getRecipe(recipeSlotInv);
         if (recipe.isPresent() && this.canInsert(OUTPUT_SLOT, recipe.get().getOutput())) return Status.FULL;
         return Status.PROCESSING;
     }
@@ -141,13 +149,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         }
         this.progress++;
         if (this.progress >= this.getMaxProgress()) {
-            if (!this.getInventory().takeStack(INPUT_SLOT_DIAMOND, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT_SILICON, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT_SILICON_2, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT_REDSTONE, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT, 1, ActionType.PERFORM).isEmpty()) return;
+            if (!this.getInventory().extractStack(INPUT_SLOT_DIAMOND, stack -> stack.getItem() == Items.DIAMOND, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (!this.getInventory().extractStack(INPUT_SLOT_SILICON, stack -> stack.getItem() == GalacticraftItems.RAW_SILICON, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (!this.getInventory().extractStack(INPUT_SLOT_SILICON_2, stack -> stack.getItem() == GalacticraftItems.RAW_SILICON, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (!this.getInventory().extractStack(INPUT_SLOT_REDSTONE, stack -> stack.getItem() == Items.REDSTONE, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (!this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             this.progress = 0;
-            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(new SimpleInventory(getWrappedInventory().getStack(INPUT_SLOT))).orElse(null).getOutput().copy(), ActionType.PERFORM);
+            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElse(null).getOutput().copy(), Simulation.ACTION);
         }
     }
 

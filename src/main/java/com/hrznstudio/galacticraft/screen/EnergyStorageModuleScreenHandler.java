@@ -23,13 +23,10 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.EnergyStorageModuleBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
 import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -37,8 +34,8 @@ import net.minecraft.screen.slot.Slot;
 public class EnergyStorageModuleScreenHandler extends MachineScreenHandler<EnergyStorageModuleBlockEntity> {
     public EnergyStorageModuleScreenHandler(int syncId, PlayerEntity player, EnergyStorageModuleBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ENERGY_STORAGE_MODULE_HANDLER);
-        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), 0, 18 * 6 - 6, 18 + 6));
-        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), 1, 18 * 6 - 6, 18 * 2 + 12));
+        this.addSlot(new FilteredSlot(machine, 0, 18 * 6 - 6, 18 + 6));
+        this.addSlot(new FilteredSlot(machine, 1, 18 * 6 - 6, 18 * 2 + 12));
         this.addPlayerInventorySlots(0, 84);
     }
 

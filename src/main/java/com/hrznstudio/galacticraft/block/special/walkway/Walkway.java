@@ -32,9 +32,10 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -47,11 +48,14 @@ import net.minecraft.world.WorldAccess;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class Walkway extends Block implements FluidLoggableBlock {
-    public static final BooleanProperty NORTH = ConnectingBlock.NORTH;
-    public static final BooleanProperty EAST = ConnectingBlock.EAST;
-    public static final BooleanProperty SOUTH = ConnectingBlock.SOUTH;
-    public static final BooleanProperty WEST = ConnectingBlock.WEST;
-    private static final VoxelShape[] shape = new VoxelShape[16];
+    public static final BooleanProperty NORTH = Properties.NORTH;
+    public static final BooleanProperty EAST = Properties.EAST;
+    public static final BooleanProperty SOUTH = Properties.SOUTH;
+    public static final BooleanProperty WEST = Properties.WEST;
+    public static final BooleanProperty UP = Properties.UP;
+    public static final BooleanProperty DOWN = Properties.DOWN;
+    public static final DirectionProperty FACING = Properties.FACING;
+    private static final VoxelShape[] shape = new VoxelShape[4096];
     private final Object2IntMap<BlockState> SHAPE_INDEX_CACHE = new Object2IntOpenHashMap<>();
 
     public Walkway(Settings settings) {
@@ -62,41 +66,84 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 .with(EAST, false)
                 .with(SOUTH, false)
                 .with(WEST, false)
+                .with(UP, false)
+                .with(DOWN, false)
+                .with(FACING, Direction.UP)
                 .with(FLUID, Constants.Misc.EMPTY)
                 .with(FlowableFluid.LEVEL, 8));
     }
 
     private static int getDirectionMask(Direction dir) {
-        return 1 << dir.getHorizontal();
+        return 1 << dir.getId();
     }
 
-    private static VoxelShape createShape(boolean north, boolean south, boolean east, boolean west) {
-        VoxelShape top1 = Block.createCuboidShape(0.0D, 13.0D, 0.0D, 2.0D, 16.0D, 16.0D);
-        VoxelShape top2 = Block.createCuboidShape(0.0D, 13.0D, 16.0D, 16.0D, 16.0D, 14.0D);
-        VoxelShape top3 = Block.createCuboidShape(16.0D, 13.0D, 16.0D, 14.0D, 16.0D, 0.0D);
-        VoxelShape top4 = Block.createCuboidShape(16.0D, 13.0D, 0.0D, 0.0D, 16.0D, 2.0D);
-        VoxelShape mTop1 = Block.createCuboidShape(6.0D, 15.0D, 2.0D, 16.0D - 6.0D, 14.0D, 16.0D - 2.0D);
-        VoxelShape mTop2 = Block.createCuboidShape(2.0D, 15.0D, 6.0D, 16.0D - 2.0D, 14.0D, 16.0D - 6.0D);
-        VoxelShape center = Block.createCuboidShape(6.0D, 15.0D, 6.0D, 10.0D, 6.0D, 10.0);
-        VoxelShape base = VoxelShapes.union(top1, top2, top3, top4, mTop1, mTop2, center);
+    private static int getFacingMask(Direction dir) {
+        return 1 << (dir.getId() + 6);
+    }
 
-        if (north) {
-            base = VoxelShapes.union(base, Block.createCuboidShape(7.0D, 9.0D, 7.0D, 9.0D, 7.0D, 0.0D));
+    private static VoxelShape createShape(Direction facing, boolean north, boolean south, boolean east, boolean west, boolean up, boolean down) {
+        VoxelShape base = Block.createCuboidShape(6.0D, 6.0D, 6.0D, 10.0D, 10.0D, 10.0D);
+        switch (facing) {
+            case UP:
+                base = VoxelShapes.union(
+                        base,
+                        Block.createCuboidShape(6.0D, 10.0D, 6.0D, 10.0D, 14.0D, 10.0D),
+                        Block.createCuboidShape(0.0D, 13.0D, 0.0D, 16.0D, 16.0D, 16.0D));
+                break;
+            case DOWN:
+                base = VoxelShapes.union(
+                        base,
+                        Block.createCuboidShape(6.0D, 2.0D, 6.0D, 10.0D, 6.0D, 10.0D),
+                        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D));
+                break;
+            case NORTH:
+                base = VoxelShapes.union(
+                        base,
+                        Block.createCuboidShape(6.0D, 6.0D, 2.0D, 10.0D, 10.0D, 6.0D),
+                        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D));
+                break;
+            case SOUTH:
+                base = VoxelShapes.union(
+                        base,
+                        Block.createCuboidShape(6.0D, 6.0D, 10.0D, 10.0D, 10.0D, 14.0D),
+                        Block.createCuboidShape(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D));
+                break;
+            case EAST:
+                base = VoxelShapes.union(
+                        base,
+                        Block.createCuboidShape(10.0D, 6.0D, 6.0D, 14.0D, 10.0D, 10.0D),
+                        Block.createCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D));
+                break;
+            case WEST:
+                base = VoxelShapes.union(
+                        base,
+                        Block.createCuboidShape(2.0D, 6.0D, 6.0D, 6.0D, 10.0D, 10.0D),
+                        Block.createCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D));
+                break;
         }
 
-        if (south) {
-            base = VoxelShapes.union(base, Block.createCuboidShape(7.0D, 9.0D, 9.0D, 9.0D, 7.0D, 16.0D));
-        }
+        int offset = 1;
+        VoxelShape northC = Block.createCuboidShape(8 - offset, 8 - offset, 0, 8 + offset, 8 + offset, 8 + offset);
+        VoxelShape eastC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 16, 8 + offset, 8 + offset);
+        VoxelShape southC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 8 + offset, 8 + offset, 16);
+        VoxelShape westC = Block.createCuboidShape(0, 8 - offset, 8 - offset, 8 + offset, 8 + offset, 8 + offset);
+        VoxelShape upC = Block.createCuboidShape(8 - offset, 8 - offset, 8 - offset, 8 + offset, 16, 8 + offset);
+        VoxelShape downC = Block.createCuboidShape(8 - offset, 0, 8 - offset, 8 + offset, 8 + offset, 8 + offset);
 
-        if (east) {
-            base = VoxelShapes.union(base, Block.createCuboidShape(9.0D, 9.0D, 7.0D, 16.0D, 7.0D, 9.0D));
-        }
+        if (north)
+            base = VoxelShapes.union(base, northC);
+        if (south)
+            base = VoxelShapes.union(base, southC);
+        if (east)
+            base = VoxelShapes.union(base, eastC);
+        if (west)
+            base = VoxelShapes.union(base, westC);
+        if (up)
+            base = VoxelShapes.union(base, upC);
+        if (down)
+            base = VoxelShapes.union(base, downC);
 
-        if (west) {
-            base = VoxelShapes.union(base, Block.createCuboidShape(7.0D, 9.0D, 7.0D, 0.0D, 7.0D, 9.0D));
-        }
-
-        return VoxelShapes.union(base);
+        return base;
     }
 
     @Override
@@ -114,28 +161,36 @@ public class Walkway extends Block implements FluidLoggableBlock {
         if (shape[index] != null) {
             return shape[index];
         }
-        return shape[index] = createShape(state.get(NORTH), state.get(SOUTH), state.get(EAST), state.get(WEST));
+        return shape[index] = createShape(state.get(FACING), state.get(NORTH), state.get(SOUTH), state.get(EAST), state.get(WEST), state.get(UP), state.get(DOWN));
     }
 
-    protected int getShapeIndex(BlockState state) {
+    private int getShapeIndex(BlockState state) {
         return this.SHAPE_INDEX_CACHE.computeIntIfAbsent(state, (blockState) -> {
             int i = 0;
-            if (blockState.get(NORTH)) {
+            if (blockState.get(NORTH))
                 i |= getDirectionMask(Direction.NORTH);
-            }
-
-            if (blockState.get(EAST)) {
+            if (blockState.get(EAST))
                 i |= getDirectionMask(Direction.EAST);
-            }
-
-            if (blockState.get(SOUTH)) {
+            if (blockState.get(SOUTH))
                 i |= getDirectionMask(Direction.SOUTH);
-            }
-
-            if (blockState.get(WEST)) {
+            if (blockState.get(WEST))
                 i |= getDirectionMask(Direction.WEST);
-            }
-
+            if (blockState.get(UP))
+                i |= getDirectionMask(Direction.UP);
+            if (blockState.get(DOWN))
+                i |= getDirectionMask(Direction.DOWN);
+            if (blockState.get(FACING).equals(Direction.NORTH))
+                i |= getFacingMask(Direction.NORTH);
+            if (blockState.get(FACING).equals(Direction.SOUTH))
+                i |= getFacingMask(Direction.SOUTH);
+            if (blockState.get(FACING).equals(Direction.EAST))
+                i |= getFacingMask(Direction.EAST);
+            if (blockState.get(FACING).equals(Direction.WEST))
+                i |= getFacingMask(Direction.WEST);
+            if (blockState.get(FACING).equals(Direction.UP))
+                i |= getFacingMask(Direction.UP);
+            if (blockState.get(FACING).equals(Direction.DOWN))
+                i |= getFacingMask(Direction.DOWN);
             return i;
         });
     }
@@ -150,6 +205,10 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 return EAST;
             case SOUTH:
                 return SOUTH;
+            case UP:
+                return UP;
+            case DOWN:
+                return DOWN;
         }
         throw new IllegalArgumentException();
     }
@@ -180,19 +239,21 @@ public class Walkway extends Block implements FluidLoggableBlock {
         }
     }
 
-    public boolean canConnect(BlockState state) {
-        return state.getBlock() instanceof Walkway;
+    public boolean canConnect(BlockState state, BlockState neighborState, BlockPos pos, BlockPos neighborPos) {
+        try {
+            if (pos.offset(state.get(FACING)).equals(neighborPos))
+                return false;
+            if (neighborPos.offset(neighborState.get(FACING)).equals(pos))
+                return false;
+        } catch (IllegalArgumentException ignored) {}
+        return neighborState.getBlock() instanceof Walkway;
     }
-
-//
-//    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
-//        return false;
-//    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
         return this.getDefaultState()
+                .with(FACING, context.getPlayerLookDirection().getOpposite())
                 .with(FLUID, Registry.FLUID.getId(fluidState.getFluid()))
                 .with(FlowableFluid.LEVEL, Math.max(fluidState.getLevel(), 1));
     }
@@ -201,7 +262,7 @@ public class Walkway extends Block implements FluidLoggableBlock {
         if (!state.get(FLUID).equals(Constants.Misc.EMPTY)) {
             world.getFluidTickScheduler().schedule(pos, Registry.FLUID.get(state.get(FLUID)), Registry.FLUID.get(state.get(FLUID)).getTickRate(world));
         }
-        return facing.getAxis().getType() == Direction.Type.HORIZONTAL ? state.with(getPropForDir(facing), this.canConnect(neighborState)) : super.getStateForNeighborUpdate(state, facing, neighborState, world, pos, neighborPos);
+        return state.with(getPropForDir(facing), this.canConnect(state, neighborState, pos, neighborPos));
     }
 
     @Override
@@ -220,6 +281,6 @@ public class Walkway extends Block implements FluidLoggableBlock {
 
     @Override
     public void appendProperties(StateManager.Builder<Block, BlockState> stateBuilder) {
-        stateBuilder.add(NORTH, EAST, WEST, SOUTH, FLUID, FlowableFluid.LEVEL);
+        stateBuilder.add(NORTH, EAST, WEST, SOUTH, UP, DOWN, FACING, FLUID, FlowableFluid.LEVEL);
     }
 }

@@ -26,9 +26,8 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +44,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
-        setStatus(MachineStatus.EMPTY);
+        setStatus(MachineStatus.NULL);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getMaxEnergy() {
+    public int getEnergyCapacity() {
         return Galacticraft.configManager.get().energyStorageModuleStorageSize();
     }
 
@@ -75,12 +74,12 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     protected MachineStatus getStatusById(int index) {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+        return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
     }
 
     @Override
@@ -90,7 +89,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override

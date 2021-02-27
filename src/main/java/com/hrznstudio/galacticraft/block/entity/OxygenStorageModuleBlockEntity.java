@@ -22,14 +22,14 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,13 +40,14 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEntity {
+    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
     public OxygenStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);
     }
 
     @Override
-    public Fraction getFluidTankMaxCapacity() {
-        return Fraction.of(1, 100).multiply(Fraction.ofWhole(30_000));
+    public FluidAmount getFluidTankCapacity() {
+        return MAX_CAPACITY;
     }
 
     @Override
@@ -61,12 +62,12 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     protected MachineStatus getStatusById(int index) {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return OxygenUtils::isOxygenItem;
+        return stack -> FluidUtils.canExtractFluids(stack, Constants.Misc.LOX_ONLY);
     }
 
     @Override
@@ -77,7 +78,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public @NotNull MachineStatus updateStatus() {
-        return MachineStatus.EMPTY;
+        return MachineStatus.NULL;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public int getMaxEnergy() {
+    public int getEnergyCapacity() {
         return 0;
     }
 
@@ -100,7 +101,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return volume.getFluid().isIn(GalacticraftTags.OXYGEN);
+    public FluidFilter getFilterForTank(int tank) {
+        return Constants.Misc.LOX_ONLY;
     }
 }

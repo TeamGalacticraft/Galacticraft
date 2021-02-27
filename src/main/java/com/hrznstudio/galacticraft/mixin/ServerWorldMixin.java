@@ -27,6 +27,7 @@ import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
+import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
@@ -50,7 +51,7 @@ import java.util.concurrent.Executor;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin {
+public abstract class ServerWorldMixin implements WorldOxygenAccessor {
     @Shadow @Final @Mutable private List<Spawner> spawners;
 
     @Inject(method = "<init>", at = @At("RETURN"))

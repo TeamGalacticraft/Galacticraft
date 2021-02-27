@@ -22,12 +22,12 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
+import alexiil.mc.lib.attributes.item.FixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.items.OxygenTankItem;
-import io.github.cottonmc.component.item.InventoryComponent;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -70,14 +70,14 @@ public abstract class InGameHudMixin extends DrawableHelper {
             this.drawTexture(stack, this.scaledWidth - 34, 5, OXYGEN_X, OXYGEN_Y, OXYGEN_WIDTH, OXYGEN_HEIGHT);
 
             if (!client.player.isCreative()) {
-                InventoryComponent gearInventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(this.client.player);
-                if (gearInventory.getStack(6).getItem() instanceof OxygenTankItem) {
-                    this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getStack(6).getMaxDamage() - (double) gearInventory.getStack(6).getDamage()) / (double) gearInventory.getStack(6).getMaxDamage()))));
+                FixedItemInv inv = ((GearInventoryProvider)client.player).getGearInv();
+                if (inv.getInvStack(6).getItem() instanceof OxygenTankItem) {
+                    this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(6).getMaxDamage() - (double) inv.getInvStack(6).getDamage()) / (double) inv.getInvStack(6).getMaxDamage()))));
                 } else if (client.player.isCreative()) {
                     this.drawTexture(stack, this.scaledWidth - 17 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
                 }
-                if (gearInventory.getStack(7).getItem() instanceof OxygenTankItem) {
-                    this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) gearInventory.getStack(7).getMaxDamage() - (double) gearInventory.getStack(7).getDamage()) / (double) gearInventory.getStack(7).getMaxDamage()))));
+                if (inv.getInvStack(7).getItem() instanceof OxygenTankItem) {
+                    this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, (int) -((double) OXYGEN_HEIGHT - ((double) OXYGEN_HEIGHT * (((double) inv.getInvStack(7).getMaxDamage() - (double) inv.getInvStack(7).getDamage()) / (double) inv.getInvStack(7).getMaxDamage()))));
                 } else if (client.player.isCreative()) {
                     this.drawTexture(stack, this.scaledWidth - 34 + OXYGEN_WIDTH, 5 + OXYGEN_HEIGHT, OXYGEN_OVERLAY_X, OXYGEN_OVERLAY_Y, -OXYGEN_WIDTH, -OXYGEN_HEIGHT);
                 }

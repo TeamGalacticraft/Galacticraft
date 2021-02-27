@@ -22,24 +22,17 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import com.hrznstudio.galacticraft.util.OxygenUtils;
-import dev.onyxstudios.cca.api.v3.item.ItemComponentFactoryRegistry;
-import dev.onyxstudios.cca.api.v3.item.ItemComponentInitializer;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
-import io.github.cottonmc.component.item.InventoryComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import dev.onyxstudios.cca.api.v3.component.ComponentContainer;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
-import nerdhub.cardinal.components.api.component.extension.CopyableComponent;
-import nerdhub.cardinal.components.api.event.ItemComponentCallback;
+import alexiil.mc.lib.attributes.AttributeProviderItem;
+import alexiil.mc.lib.attributes.ItemAttributeList;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
+import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
+import com.hrznstudio.galacticraft.attribute.GalacticraftAttributes;
+import com.hrznstudio.galacticraft.attribute.oxygen.InfiniteOxygenTank;
+import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
+import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTankImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.item.TooltipContext;
@@ -47,9 +40,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
@@ -60,7 +53,9 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenTankItem extends Item {
+public class OxygenTankItem extends Item implements AttributeProviderItem {
+    private int rgb = 0;
+
     public OxygenTankItem(Settings settings) {
         super(settings);
     }
@@ -68,31 +63,72 @@ public class OxygenTankItem extends Item {
     @Override
     public void appendStacks(ItemGroup group, DefaultedList<ItemStack> list) {
         if (this.isIn(group)) {
-            ItemStack stack = new ItemStack(this);
-            list.add(stack);
-            stack = stack.copy();
-            UniversalComponents.TANK_COMPONENT.get(stack).setFluid(0, new FluidVolume(GalacticraftFluids.OXYGEN, ComponentHelper.TANK.getComponent(stack).getMaxCapacity(0)));
-            list.add(stack);
+            final ItemStack[] stack = new ItemStack[]{new ItemStack(this)};
+            stack[0].setDamage(stack[0].getMaxDamage());
+            list.add(stack[0]);
+            stack[0] = stack[0].copy();
+
+            if (this.getMaxDamage() > 0) {
+                GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(new Reference<ItemStack>() {
+                    @Override
+                    public ItemStack get() {
+                        return stack[0];
+                    }
+
+                    @Override
+                    public boolean set(ItemStack itemStack) {
+                        stack[0] = itemStack;
+                        return true;
+                    }
+
+                    @Override
+                    public boolean isValid(ItemStack stack) {
+                        return stack.getItem() instanceof OxygenTankItem;
+                    }
+                }).setAmount(this.getMaxDamage());
+                list.add(stack[0]);
+            }
         }
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", ((int)(OxygenUtils.getOxygen(stack).doubleValue() * 100.0D) + "/" + (int)(OxygenUtils.getMaxOxygen(stack).doubleValue() * 100.0D))));
+        if (this.getMaxDamage() > 0){
+            OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
+        } else {
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgb += 0xff)))));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            if (rgb > 0xffffff) rgb -= 0xffffff;
+        }
         super.appendTooltip(stack, world, lines, context);
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) { //should sync with server
-        InventoryComponent component = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player);
-        if (component.getStack(6).isEmpty()) {
-            component.setStack(6, player.getStackInHand(hand).copy());
+        FixedItemInv inv = ((GearInventoryProvider)player).getGearInv();
+        if (inv.getInvStack(6).isEmpty()) {
+            inv.setInvStack(6, player.getStackInHand(hand).copy(), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
-        } else if (component.getStack(7).isEmpty()) {
-            component.setStack(7, player.getStackInHand(hand).copy());
+        } else if (inv.getInvStack(7).isEmpty()) {
+            inv.setInvStack(7, player.getStackInHand(hand).copy(), Simulation.ACTION);
             return new TypedActionResult<>(ActionResult.SUCCESS, ItemStack.EMPTY);
         }
         return new TypedActionResult<>(ActionResult.PASS, player.getStackInHand(hand));
+    }
+
+    @Override
+    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
+        if (reference.get().getMaxDamage() > 0) {
+            itemAttributeList.offer(new OxygenTankImpl(reference.get().getMaxDamage()).listen(tank -> {
+                        ItemStack stack = reference.get().copy();
+                        stack.setDamage(stack.getMaxDamage() - tank.getAmount());
+                        reference.set(stack);
+                    }
+            ));
+        } else {
+            itemAttributeList.offer(new InfiniteOxygenTank());
+        }
     }
 }

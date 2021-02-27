@@ -95,6 +95,13 @@ public class GalacticraftScreenHandlerTypes {
                     OxygenCompressorScreenHandler::new
             );
 
+    public static final Identifier OXYGEN_SEALER_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_SEALER_SCREEN_HANDLER);
+    public static final ScreenHandlerType<OxygenSealerScreenHandler> OXYGEN_SEALER_HANDLER =
+            ScreenHandlerRegistry.registerExtended(
+                    OXYGEN_SEALER_HANDLER_ID,
+                    OxygenSealerScreenHandler::new
+            );
+
     public static final Identifier OXYGEN_DECOMPRESSOR_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.OXYGEN_DECOMPRESSOR_SCREEN_HANDLER);
     public static final ScreenHandlerType<OxygenDecompressorScreenHandler> OXYGEN_DECOMPRESSOR_HANDLER =
             ScreenHandlerRegistry.registerExtended(

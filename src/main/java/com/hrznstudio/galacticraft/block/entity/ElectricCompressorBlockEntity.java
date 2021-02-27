@@ -22,17 +22,17 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
-import io.github.cottonmc.component.item.InventoryComponent;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -56,15 +56,10 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
 
-    private final InventoryWrapper craftingInv = new InventoryWrapper() {
+    private final Inventory craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
         @Override
-        public InventoryComponent getComponent() {
-            return getInventory();
-        }
-
-        @Override
-        public int size() {
-            return 9;
+        public boolean canPlayerUse(PlayerEntity player) {
+            return getWrappedInventory().canPlayerUse(player);
         }
     };
 
@@ -95,7 +90,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     @Override
     public Predicate<ItemStack> getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) {
-            return GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
         } else {
             return super.getFilterForSlot(slot);
         }
@@ -113,8 +108,8 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         if (!optional.isPresent()) return Status.INVALID_RECIPE;
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         if (!this.getInventory().insertStack(SECOND_OUTPUT_SLOT,
-                this.getInventory().insertStack(OUTPUT_SLOT, optional.get().getOutput().copy(), ActionType.TEST),
-                ActionType.TEST).isEmpty()) return Status.OUTPUT_FULL;
+                this.getInventory().insertStack(OUTPUT_SLOT, optional.get().getOutput().copy(), Simulation.SIMULATE),
+                Simulation.SIMULATE).isEmpty()) return Status.OUTPUT_FULL;
         return Status.COMPRESSING;
     }
 
@@ -149,7 +144,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         boolean canCraftTwo = true;
 
         for (int i = 0; i < 9; i++) {
-            ItemStack stack = getInventory().getStack(i);
+            ItemStack stack = getInventory().getInvStack(i);
             if (!stack.isEmpty() && stack.getCount() < 2) {
                 canCraftTwo = false;
                 break;
@@ -158,8 +153,8 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         if (canCraftTwo) {
             ItemStack res = craftingResult.copy();
             res.setCount(res.getCount() * 2);
-            res = this.getInventory().insertStack(OUTPUT_SLOT, res, ActionType.TEST);
-            res = this.getInventory().insertStack(SECOND_OUTPUT_SLOT, res, ActionType.TEST);
+            res = this.getInventory().insertStack(OUTPUT_SLOT, res, Simulation.SIMULATE);
+            res = this.getInventory().insertStack(SECOND_OUTPUT_SLOT, res, Simulation.SIMULATE);
             if (!res.isEmpty()) {
                 canCraftTwo = false;
             }
@@ -172,7 +167,7 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
         for (int i = 0; i < 9; i++) {
             this.decrement(i, canCraftTwo ? 2 : 1);
         }
-        this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, ActionType.PERFORM), ActionType.PERFORM);
+        this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION), Simulation.ACTION);
     }
 
     private Optional<CompressingRecipe> getRecipe(Inventory input) {
