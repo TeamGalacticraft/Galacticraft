@@ -22,16 +22,17 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,8 +45,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.util.Identifier;
-
 import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -68,10 +69,10 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     private RocketPart bottom = null;
     private RocketPart upgrade = null;
 
-    private final SimpleInventoryComponent inventory = new SimpleInventoryComponent(1) {
+    private final FullFixedItemInv inventory = new FullFixedItemInv(1) {
         @Override
-        public boolean isAcceptableStack(int slot, ItemStack stack) {
-            return stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC && slot == 0;
+        public ItemFilter getFilterForSlot(int slot) {
+            return stack -> stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
         }
     };
 
@@ -80,15 +81,15 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
     public RocketDesignerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_DESIGNER_TYPE);
 
-        this.inventory.listen(() -> {
-            if (!previous.getOrCreateTag().equals(inventory.getStack(0).getTag())) {
+        this.inventory.addListener((view, slot, prev, cur) -> {
+            if (!previous.getOrCreateTag().equals(inventory.getInvStack(0).getTag())) {
                 this.updateSchematic();
             }
-            previous = inventory.getStack(0).copy();
-        });
+            previous = inventory.getInvStack(0).copy();
+        }, () -> {});
     }
 
-    public SimpleInventoryComponent getInventory() {
+    public FullFixedItemInv getInventory() {
         return inventory;
     }
 
@@ -277,8 +278,8 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     public void updateSchematic() {
         if (this.world != null && !this.world.isClient) {
-            if (this.inventory.getStack(0).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
-                ItemStack stack = this.inventory.getStack(0).copy();
+            if (this.inventory.getInvStack(0).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+                ItemStack stack = this.inventory.getInvStack(0).copy();
                 CompoundTag tag = new CompoundTag();
                 tag.putInt("red", red);
                 tag.putInt("green", green);
@@ -300,7 +301,7 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 //                tag.putInt("tier", tier);
 
                 stack.setTag(tag);
-                if (!this.inventory.getStack(0).getOrCreateTag().equals(tag)) this.inventory.setStack(0, stack);
+                if (!this.inventory.getInvStack(0).getOrCreateTag().equals(tag)) this.inventory.setInvStack(0, stack, Simulation.ACTION);
             }
         }
     }

@@ -57,8 +57,6 @@ public class ConfigImpl implements Config {
     @Expose
     private int rocketAssemblerEnergyConsumptionRate = 60;
     @Expose
-    private int energyStorageModuleStorageSize = 500_000;
-    @Expose
     private int machineEnergyStorageSize = 30_000;
     @Expose
     private int oxygenCompressorEnergyConsumptionRate = EnergyUtils.Values.T1_MACHINE_ENERGY_USAGE;

@@ -23,11 +23,8 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.reaserch.ResearchNode;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
-import io.netty.buffer.Unpooled;
-import net.minecraft.advancement.AdvancementProgress;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -35,50 +32,15 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
 import net.minecraft.util.math.Matrix4f;
-import org.lwjgl.glfw.GLFW;
-
-import java.util.*;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class SpaceRaceScreen extends Screen {
-    private static final Identifier RESEARCH_TEX = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.RESEARCH_PANELS));
-    private static final Map<Integer, Float> TIER_TO_X_MAX_DIST = new HashMap<>();
-
-    public static final int BASE_RESEARCH_OFFSET = 25;
-
-    private static final int NODE_WIDTH = 90;
-    private static final int NODE_HEIGHT = 38;
-
-    private static final int NODE_X = 0;
-    private static final int NODE_UNLOCKABLE_Y = 0;
-    private static final int NODE_IN_PROGRESS_Y = 38;
-    private static final int NODE_COMPLETE_Y = 76;
-
-    private static final int NODE_DESC_ADDON_Y = 114;
-    private static final int NODE_DESC_ADDON_HEIGHT = 24;
-
-    private static final int SLOT_UNLOCKABLE_X = 0;
-    private static final int SLOT_IN_PROGRESS_X = 20;
-    private static final int SLOT_COMPLETE_X = 40;
-
-    private static final int SLOT_Y = 138;
-    private static final int SLOT_WIDTH = 20;
-    private static final int SLOT_HEIGHT = 20;
-
-    public double researchScrollX = 0;
-    public double researchScrollY = 0;
     private byte resetHoldTime = 0;
 
     private int widthSize = 0;
@@ -87,17 +49,6 @@ public class SpaceRaceScreen extends Screen {
 
     public SpaceRaceScreen() {
         super(new TranslatableText("ui." + Constants.MOD_ID + ".space_race_manager"));
-        TIER_TO_X_MAX_DIST.clear();
-        TIER_TO_X_MAX_DIST.put(0, 0F);
-//        for (ResearchNode root : /*MinecraftClient.getInstance().getNetworkHandler().getClientResearchManager().getManager().getRoots()*/) {
-//            float x = root.getDisplay().getX() + (root.getDisplay().getTier() > 1 ? TIER_TO_X_MAX_DIST.get(root.getDisplay().getTier() - 1) : 0);
-//            Queue<ResearchNode> queue = new LinkedList<>(root.getChildren());
-//            while (!queue.isEmpty()) {
-//                queue.addAll(queue.peek().getChildren());
-//                x += queue.poll().getDisplay().getX();
-//            }
-//            TIER_TO_X_MAX_DIST.put(root.getDisplay().getTier(), x);
-//        }
     }
 
     @Override
@@ -107,12 +58,6 @@ public class SpaceRaceScreen extends Screen {
 
     public static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
-    }
-
-    @Override
-    public void onClose() {
-        super.onClose();
-        client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "research_scroll"), new PacketByteBuf(Unpooled.buffer().writeDouble(researchScrollX).writeDouble(researchScrollY))));
     }
 
     @Override
@@ -201,11 +146,6 @@ public class SpaceRaceScreen extends Screen {
             } else {
                 renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
             }
-            if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 125, 100, 30)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.research"), this.getRight() - 100 - 10, this.getBottom() - 125, 100, 30);
-            } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.research"), this.getRight() - 100 - 10, this.getBottom() - 125, 100, 30);
-            }
         } else if (menu == Menu.ADD_PLAYERS) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
                 renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
@@ -230,126 +170,11 @@ public class SpaceRaceScreen extends Screen {
             } else {
                 renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
-        } else if (menu == Menu.RESEARCH) {
-            DrawableUtils.drawCenteredString(stack, font, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.research"), this.width / 2, getTop() + 2, 0xFFFFFF);
-
-            if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
-            }
-            fillSolid(stack.peek().getModel(), this.getLeft() + 10, this.getTop() + 25, this.getRight() - 10, this.getBottom() - 10, 0x0);
-
-            drawResearch(stack, mouseX, mouseY);
         }
-    }
-
-    private boolean areParentsComplete(ResearchNode node) {
-        if (node.getParents().size() > 0) {
-            for (Lazy<ResearchNode> parent : node.getParents()) {
-//                if (!MinecraftClient.getInstance().getNetworkHandler().isComplete(parent)) return false;
-                return false;
-            }
-        }
-        return true;
-    }
-
-
-    private void drawResearch(MatrixStack matrices, int mouseX, int mouseY) {
-//        matrices.push();
-//        List<Runnable> postRenderingThings = new ArrayList<>();
-//        for (ResearchNode root : (MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getManager().getRoots()) {
-//            Queue<ResearchNode> queue = new LinkedList<>();
-//            queue.add(root);
-//            while (!queue.isEmpty()) {
-//                ResearchNode node = queue.poll();
-//                if (areParentsComplete(node)) {
-//                    client.getTextureManager().bindTexture(RESEARCH_TEX);
-//                    int appTX = getAppropriateNodeTexX(node);
-//                    int appTY = getAppropriateNodeTexY(node);
-//                    int basePX = BASE_RESEARCH_OFFSET + (int) (researchScrollX + TIER_TO_X_MAX_DIST.get(node.getDisplay().getTier() - 1) + (node.getDisplay().getX() * (NODE_WIDTH + 5)));
-//                    int basePY = BASE_RESEARCH_OFFSET + (int) (researchScrollY + (node.getDisplay().getY() * (NODE_HEIGHT + 4)));
-//                    int posXFit = getPosXToFit(basePX);
-//                    int posYFit = getPosYToFit(basePY);
-//                    int texPosXFit = getTexPosXToFit(basePX, appTX, NODE_WIDTH);
-//                    int texPosYFit = getTexPosYToFit(basePY, appTY, NODE_HEIGHT);
-//                    int texWidthFit = getWidthToFit(basePX, NODE_WIDTH);
-//                    int texHeightFit = getHeightToFit(basePY, NODE_HEIGHT);
-//                    if (texWidthFit > 0 && texHeightFit > 0
-//                            && texPosXFit != appTX + NODE_WIDTH && texPosYFit != appTY + NODE_HEIGHT) {
-//                        this.drawTexture(matrices,
-//                                posXFit,
-//                                posYFit,
-//                                texPosXFit,
-//                                texPosYFit,
-//                                texWidthFit,
-//                                texHeightFit
-//                        );
-//
-//                        if (check(mouseX, mouseY, posXFit, posYFit, texWidthFit, texHeightFit)) {
-//                            postRenderingThings.add(() -> {
-//                                client.getTextureManager().bindTexture(RESEARCH_TEX);
-//                                drawTexture(matrices, posXFit, getPosYToFit(basePY + 36), texPosXFit, getTexPosYToFit(basePY + 36, NODE_DESC_ADDON_Y, NODE_DESC_ADDON_HEIGHT), texWidthFit, getHeightToFit(basePY + 36, NODE_DESC_ADDON_HEIGHT)); //X matches
-//                                drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 39, I18n.translate(node.getDisplay().getDescription().getKey(), node.getDisplay().getDescription().getArgs()), Formatting.GRAY.getColorValue(), NODE_WIDTH - 3, 0.5F);
-//                            });
-//                        }
-//
-//                        drawAndAutotrimTextScaleSplit(matrices, basePX + 3, basePY + 3, I18n.translate(node.getDisplay().getTitle().getKey(), node.getDisplay().getTitle().getArgs()), Formatting.DARK_GRAY.getColorValue(), 65536, 1.0F); //no matter what if the line is longer than the bod, it's gonna look bad, si i'll let it bleed out to the side rather than down
-//
-//                        for (int i = 0; i < node.getDisplay().getIcons().length && i < 4; i++) {
-//                            // 6, 31
-//                            // 43
-//
-//                            int baseX = 3 + ((SLOT_WIDTH + 2) * i) + basePX;
-//                            int baseY = 15 + basePY;
-//                            client.getTextureManager().bindTexture(RESEARCH_TEX);
-//                            this.drawTexture(matrices,
-//                                    getPosXToFit(baseX),
-//                                    getPosYToFit(baseY),
-//
-//                                    getTexPosXToFit(baseX, getSlotAppX(node), SLOT_WIDTH),
-//                                    getTexPosYToFit(baseY, getSlotAppY(node), SLOT_HEIGHT),
-//
-//                                    getWidthToFit(baseX, SLOT_WIDTH),
-//                                    getHeightToFit(baseY, SLOT_HEIGHT));
-//
-//                            //THIS CODE MAKES THE ITEM NOT RENDER IF IT BLEEDS OUT EVEN ONE PIXEL. I CAN'T TRIM THE ITEM RENDER LIKE THE BOX
-//                            if (getPosXToFit(baseX) == baseX && getPosYToFit(baseY) == baseY
-//                                    && baseX >= this.getLeft() + 10 && baseY >= this.getTop() + 25
-//                                    && baseX + SLOT_WIDTH <= this.getRight() - 10 && baseY + SLOT_WIDTH <= this.getBottom() - 10
-//                                    && baseX <= this.getRight() - 10 && baseY <= this.getBottom() - 10) {
-//                                itemRenderer.renderGuiItemIcon(node.getDisplay().getIcons()[i].asItem().getDefaultStack(), baseX + 2, baseY + 2);
-//                            }
-//                        }
-//                    }
-//
-//                    if (((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().isComplete(node)) {
-//                        //more than one parent is possible
-//                        for (ResearchNode child : node.getChildren()) {
-//                            if (areParentsComplete(child)) {
-//                                queue.add(child);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//        for (Runnable runnable : postRenderingThings) {
-//            runnable.run();
-//        }
-//        postRenderingThings.clear();
-//        matrices.pop();
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (menu == Menu.RESEARCH) {
-            if (mouseX > getLeft() && mouseX < getRight() && mouseY > getTop() && mouseY < getBottom()) {
-                researchScrollX += deltaX;
-                researchScrollY += deltaY;
-            }
-        }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
@@ -444,10 +269,6 @@ public class SpaceRaceScreen extends Screen {
             if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
                 //global stats
             }
-            if (check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 125, 100, 30)) {
-                setMenu(Menu.RESEARCH);
-                return true;
-            }
         } else if (menu == Menu.ADD_PLAYERS) {
             if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
                 setMenu(Menu.MAIN);
@@ -464,27 +285,12 @@ public class SpaceRaceScreen extends Screen {
             if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
                 setMenu(Menu.MAIN);
             }
-        } else if (menu == Menu.RESEARCH) {
-            if (check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                setMenu(Menu.MAIN);
-            }
         }
         return false;
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (menu == Menu.RESEARCH) {
-            if (keyCode == GLFW.GLFW_KEY_R) {
-                if (++resetHoldTime == 50) {
-                    researchScrollX = 0;
-                    researchScrollY = 0;
-                    resetHoldTime = 0;
-                }
-            } else {
-                resetHoldTime = 0;
-            }
-        }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
@@ -645,7 +451,6 @@ public class SpaceRaceScreen extends Screen {
         ADD_PLAYERS,
         REMOVE_PLAYERS,
         TEAM_COLOR,
-        TEAM_FLAG,
-        RESEARCH
+        TEAM_FLAG
     }
 }

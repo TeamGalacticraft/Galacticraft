@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.screen;
 
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import net.minecraft.entity.player.PlayerEntity;
@@ -41,10 +42,15 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
     protected Inventory inventory;
     public RocketDesignerBlockEntity blockEntity;
 
-    public RocketDesignerScreenHandler(int syncId, PlayerEntity playerEntity, RocketDesignerBlockEntity blockEntity) {
+    public RocketDesignerScreenHandler(int syncId, PlayerEntity player, RocketDesignerBlockEntity machine) {
         super(GalacticraftScreenHandlerTypes.ROCKET_DESIGNER_HANDLER, syncId);
-        this.blockEntity = blockEntity;
-        this.inventory = blockEntity.getInventory().asInventory();
+        this.blockEntity = machine;
+        this.inventory = new InventoryFixedWrapper(machine.getInventory()) {
+            @Override
+            public boolean canPlayerUse(PlayerEntity invPlayer) {
+                return invPlayer == player;
+            }
+        };
 
         int playerInvYOffset = 84;
         int playerInvXOffset = 148;
@@ -64,13 +70,13 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
 
         // Hotbar slots
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerEntity.inventory, i, 8 + i * 18 + playerInvXOffset, playerInvYOffset + 58));
+            this.addSlot(new Slot(player.inventory, i, 8 + i * 18 + playerInvXOffset, playerInvYOffset + 58));
         }
 
         // Player inventory slots
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerEntity.inventory, j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
+                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, 8 + (j * 18) + playerInvXOffset, playerInvYOffset + i * 18));
             }
         }
     }
@@ -92,7 +98,7 @@ public class RocketDesignerScreenHandler extends ScreenHandler {
                 return itemStack;
             }
 
-            if (slotId < this.blockEntity.getInventory().getSize()) {
+            if (slotId < this.blockEntity.getInventory().getSlotCount()) {
 
                 if (!this.insertItem(itemStack1, this.inventory.size(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;

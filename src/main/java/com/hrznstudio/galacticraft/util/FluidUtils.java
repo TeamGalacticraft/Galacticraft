@@ -22,12 +22,9 @@
 
 package com.hrznstudio.galacticraft.util;
 
-import alexiil.mc.lib.attributes.SearchOption;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.*;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFixedFluidInv;
@@ -124,8 +121,24 @@ public class FluidUtils {
         return FluidAttributes.FIXED_INV.get(stack) != EmptyFixedFluidInv.INSTANCE;
     }
 
+    public static boolean isExtractable(Reference<ItemStack> stack) {
+        return FluidAttributes.EXTRACTABLE.get(stack) != EmptyFluidExtractable.NULL;
+    }
+
+    public static boolean isExtractable(ItemStack stack) {
+        return isExtractable(new Ref<>(stack));
+    }
+
     public static boolean isFixedFluidInvView(Reference<ItemStack> stack) {
         return FluidAttributes.FIXED_INV_VIEW.get(stack) != EmptyFixedFluidInv.INSTANCE;
+    }
+
+    public static FixedFluidInv getFixedFluidInv(Reference<ItemStack> stack) {
+        return FluidAttributes.FIXED_INV.get(stack);
+    }
+
+    public static FixedFluidInvView getFixedFluidInvView(Reference<ItemStack> stack) {
+        return FluidAttributes.FIXED_INV_VIEW.get(stack);
     }
 
     public static FluidInsertable getInsertable(World world, BlockPos pos, Direction direction) {

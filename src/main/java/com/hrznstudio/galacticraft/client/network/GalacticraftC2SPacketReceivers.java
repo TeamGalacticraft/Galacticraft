@@ -89,13 +89,6 @@ public class GalacticraftC2SPacketReceivers {
             });
         }));
 
-        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "research_scroll"), ((client, handler, buf, responseSender) -> {
-            if (MinecraftClient.getInstance().currentScreen instanceof SpaceRaceScreen) {
-                ((SpaceRaceScreen) MinecraftClient.getInstance().currentScreen).researchScrollX = buf.readDouble();
-                ((SpaceRaceScreen) MinecraftClient.getInstance().currentScreen).researchScrollY = buf.readDouble();
-            }
-        }));
-
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "rocket_spawn"), ((client, handler, buf, responseSender) -> {
             EntityType<? extends RocketEntity> type = (EntityType<? extends RocketEntity>) Registry.ENTITY_TYPE.get(buf.readVarInt());
 

@@ -128,7 +128,7 @@
   "depends": {
     "minecraft": ">=1.16.2",
     "fabricloader": ">=0.9.0",
-    "galacticraft-api": ">=0.2.9-alpha+1.16.1",
+    "galacticraft-api": ">=0.3-prealpha",
     "libblockattributes_core": ">=0.8",
     "libblockattributes_items": ">=0.8",
     "libblockattributes_fluids": ">=0.8",

@@ -25,10 +25,9 @@ package com.hrznstudio.galacticraft.screen;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
 import com.hrznstudio.galacticraft.screen.property.BlockPosPropertyDelegate;
 import com.hrznstudio.galacticraft.screen.slot.ChargeSlot;
-import io.github.cottonmc.component.api.ComponentHelper;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.slot.Slot;
@@ -44,7 +43,7 @@ public class FuelLoaderScreenHandler extends MachineScreenHandler<FuelLoaderBloc
         this.addSlot(new Slot(machine.getWrappedInventory(), 1, 80, 53) {
             @Override
             public boolean canInsert(ItemStack stack) {
-                return ComponentHelper.TANK.hasComponent(stack) || stack.getItem() instanceof BucketItem;
+                return FluidUtils.isExtractable(stack);
             }
         });
 

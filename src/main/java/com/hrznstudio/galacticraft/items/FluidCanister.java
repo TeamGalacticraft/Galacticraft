@@ -22,10 +22,17 @@
 
 package com.hrznstudio.galacticraft.items;
 
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
+import alexiil.mc.lib.attributes.AttributeProviderItem;
+import alexiil.mc.lib.attributes.ItemAttributeList;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
+import alexiil.mc.lib.attributes.misc.Ref;
+import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -58,9 +65,9 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class FluidCanister extends Item {
+public class FluidCanister extends Item implements AttributeProviderItem {
     public FluidCanister(Settings settings) {
-        super(settings.maxDamage(1000));
+        super(settings.maxDamage(1620));
     }
 
     @Override
@@ -77,26 +84,26 @@ public class FluidCanister extends Item {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         super.appendTooltip(stack, world, tooltip, context);
-        TankComponent component = ComponentHelper.TANK.getComponent(stack);
-        if (component.getContents(0).isEmpty()) {
+        FixedFluidInvView inv = FluidUtils.getFixedFluidInvView(new Ref<>(stack));
+        if (inv.getInvFluid(0).isEmpty()) {
             tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid"));
         } else {
-            Fraction fraction = component.getContents(0).getAmount().multiply(Fraction.ONE);
+            FluidAmount amount = inv.getInvFluid(0).getAmount_F().mul(FluidAmount.ONE);
             if (!Screen.hasShiftDown()) {
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", amount.numerator, amount.denominator));
             } else {
-                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", amount.asInexactDouble()));
             }
-            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid", Registry.FLUID.getId(component.getContents(0).getFluid())));
+            tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid", Registry.FLUID.getId(inv.getInvFluid(0).getRawFluid())));
         }
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack stack = user.getStackInHand(hand);
-        TankComponent tank = ComponentHelper.TANK.getComponent(stack);
+        FixedFluidInvView inv = FluidUtils.getFixedFluidInvView(new Ref<>(stack));
 
-        if (tank.isEmpty()) {
+        if (inv.getInvFluid(0).isEmpty()) {
             BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
             if (hitResult.getType() == HitResult.Type.MISS) {
                 return TypedActionResult.pass(stack);
@@ -108,25 +115,51 @@ public class FluidCanister extends Item {
                 BlockPos blockPos2 = blockPos.offset(direction);
                 if (world.canPlayerModifyAt(user, blockPos) && user.canPlaceOn(blockPos2, direction, stack)) {
                     BlockState blockState;
-                    if (tank.isEmpty()) {
-                        blockState = world.getBlockState(blockPos);
-                        if (blockState.getBlock() instanceof FluidDrainable) {
-                            Fluid fluid = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
-                            if (fluid != Fluids.EMPTY) {
-                                user.incrementStat(Stats.USED.getOrCreateStat(this));
-                                user.playSound(fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
-                                ItemStack stack1 = stack.copy();
-                                ComponentHelper.TANK.getComponent(stack1).setFluid(0, new FluidVolume(fluid, Fraction.ONE));
+                    blockState = world.getBlockState(blockPos);
+                    if (blockState.getBlock() instanceof FluidDrainable) {
+                        Fluid fluid = ((FluidDrainable) blockState.getBlock()).tryDrainFluid(world, blockPos, blockState);
+                        if (fluid != Fluids.EMPTY) {
+                            user.incrementStat(Stats.USED.getOrCreateStat(this));
+                            user.playSound(fluid.isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, 1.0F, 1.0F);
+                            final ItemStack[] stack1 = {stack.copy()};
+                            FluidUtils.getFixedFluidInv(new Reference<ItemStack>() {
+                                @Override
+                                public ItemStack get() {
+                                    return stack1[0];
+                                }
 
-                                return TypedActionResult.success(stack1, world.isClient());
-                            }
+                                @Override
+                                public boolean set(ItemStack stack) {
+                                    stack1[0] = stack;
+                                    return true;
+                                }
+
+                                @Override
+                                public boolean isValid(ItemStack stack) {
+                                    return stack != null;
+                                }
+                            }).setInvFluid(0, FluidKeys.get(fluid).withAmount(FluidAmount.ONE), Simulation.ACTION);
+                            return TypedActionResult.success(stack1[0], world.isClient());
                         }
-
-                        return TypedActionResult.fail(stack);
                     }
+
+                    return TypedActionResult.fail(stack);
                 }
             }
         }
         return TypedActionResult.fail(stack);
+    }
+
+    @Override
+    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
+        SimpleFixedFluidInv inv = new SimpleFixedFluidInv(1, FluidAmount.ONE);
+        inv.fromTag(reference.get().getTag());
+        inv.addListener((view, slot, prev, cur) -> {
+            ItemStack stack = reference.get().copy();
+            stack.setDamage(1620 - inv.getInvFluid(0).getAmount_F().as1620());
+            inv.toTag(stack.getOrCreateTag());
+            reference.set(stack);
+        }, () -> {});
+        itemAttributeList.offer(inv);
     }
 }

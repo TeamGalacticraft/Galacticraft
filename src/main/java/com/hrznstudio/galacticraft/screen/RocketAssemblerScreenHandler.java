@@ -22,9 +22,7 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
-import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
@@ -37,7 +35,6 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -50,7 +47,12 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
     public RocketAssemblerScreenHandler(int syncId, PlayerEntity playerEntity, RocketAssemblerBlockEntity assembler) {
         super(GalacticraftScreenHandlerTypes.ROCKET_ASSEMBLER_HANDLER, syncId);
         this.assembler = assembler;
-        this.inventory = assembler.getInventory().asInventory();
+        this.inventory = new InventoryFixedWrapper(assembler.getInventory()) {
+            @Override
+            public boolean canPlayerUse(PlayerEntity player) {
+                return player == playerEntity;
+            }
+        };
 
         final int playerInvYOffset = 94;
         final int playerInvXOffset = 148;
@@ -91,7 +93,7 @@ public class RocketAssemblerScreenHandler extends ScreenHandler {
         this.addSlot(new Slot(this.inventory, RocketAssemblerBlockEntity.ENERGY_INPUT_SLOT, 156, 72) {
             @Override
             public boolean canInsert(ItemStack itemStack_1) {
-                return EnergyUtils.isEnergyItem(itemStack_1) && this.getStack().isEmpty();
+                return EnergyUtils.isEnergyExtractable(itemStack_1) && this.getStack().isEmpty();
             }
 
             @Override

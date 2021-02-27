@@ -19,7 +19,6 @@
     "LivingEntityMixin",
     "LootTablesAccessor",
     "RecipeManagerMixin",
-    "ServerPlayerEntityMixin",
     "ProtoChunkMixin",
     "ServerWorldMixin",
     "SkyPropertiesAccessor",

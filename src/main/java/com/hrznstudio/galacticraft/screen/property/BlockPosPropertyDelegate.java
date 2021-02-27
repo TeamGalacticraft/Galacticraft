@@ -39,6 +39,7 @@ public class BlockPosPropertyDelegate implements PropertyDelegate {
 
     @Override
     public int get(int index) {
+        if (supplier.get() == null) return 0;
         if (index == 0) return supplier.get().getX();
         if (index == 1) return supplier.get().getY();
         return supplier.get().getZ();

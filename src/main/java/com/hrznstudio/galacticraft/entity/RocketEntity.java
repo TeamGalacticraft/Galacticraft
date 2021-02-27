@@ -22,7 +22,10 @@
 
 package com.hrznstudio.galacticraft.entity;
 
-import com.google.common.collect.Lists;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -33,10 +36,6 @@ import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPad
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlanetSelectScreen;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -181,6 +180,7 @@ public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.
     }
 
     private BlockPos linkedPad = new BlockPos(0, 0, 0);
+    private final SimpleFixedFluidInv tank = new SimpleFixedFluidInv(1, FluidAmount.ofWhole(10));
 
     public RocketEntity(EntityType<RocketEntity> type, World world) {
         super(type, world);
@@ -459,14 +459,14 @@ public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.
             }
 
             if (getStage() == LaunchStage.IGNITED) {
-                if (this.getTank().getContents(0).isEmpty() && !debugMode) {
+                if (this.getTank().getInvFluid(0).isEmpty() && !debugMode) {
                     this.setStage(LaunchStage.IDLE);
                     if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                         ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.no_fuel"), false);
                     }
                     return;
                 }
-                this.getTank().takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
+                this.getTank().extractFluid(0, key -> GalacticraftTags.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
                 if (timeAsState >= 400) {
                     this.setStage(LaunchStage.LAUNCHED);
                     if (!(new BlockPos(0, 0, 0)).equals(this.getLinkedPad())) {
@@ -482,10 +482,10 @@ public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.
                     this.setSpeed(0.0D);
                 }
             } else if (getStage() == LaunchStage.LAUNCHED) {
-                if (!debugMode && (this.getTank().isEmpty() || !this.getTank().getContents(0).getFluid().isIn(GalacticraftTags.FUEL))) {
+                if (!debugMode && (this.getTank().getInvFluid(0).isEmpty() || !GalacticraftTags.FUEL.contains(this.getTank().getInvFluid(0).getRawFluid())) && FabricLoader.getInstance().isDevelopmentEnvironment()) {
                     this.setStage(LaunchStage.FAILED);
                 } else {
-                    this.getTank().takeFluid(0, Fraction.of(1, 100), ActionType.PERFORM); //todo find balanced values
+                    this.getTank().extractFluid(0, key -> GalacticraftTags.FUEL.contains(key.getRawFluid()), FluidVolumeUtil.EMPTY, FluidAmount.of(1, 100), Simulation.ACTION); //todo find balanced values
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
                     ((ServerWorld) world).spawnParticles(ParticleTypes.FLAME, this.getX() + (world.random.nextDouble() - 0.5), this.getY(), this.getZ() + (world.random.nextDouble() - 0.5), 0, (world.random.nextDouble() - 0.5), -1, world.random.nextDouble() - 0.5, 0.12000000596046448D);
@@ -558,8 +558,8 @@ public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.
         }
     }
 
-    public TankComponent getTank() {
-        return UniversalComponents.TANK_COMPONENT.get(this);
+    public SimpleFixedFluidInv getTank() {
+        return this.tank;
     }
 
     @Override
@@ -697,7 +697,7 @@ public class RocketEntity extends Entity implements com.hrznstudio.galacticraft.
         if (!this.getPassengerList().isEmpty() && ticksSinceJump > 10) {
             if (this.getPassengerList().get(0) instanceof ServerPlayerEntity) {
                 if (getStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    if (!this.getTank().getContents(0).isEmpty()) {
+                    if (!this.getTank().getInvFluid(0).isEmpty()) {
                         this.setStage(this.getStage().next());
                         if (getStage() == LaunchStage.WARNING) {
                             ((ServerPlayerEntity) this.getPassengerList().get(0)).sendMessage(new TranslatableText("chat.galacticraft-rewoven.rocket.warning"), true);

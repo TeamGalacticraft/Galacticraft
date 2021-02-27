@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
@@ -31,7 +32,6 @@ import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.entity.RocketEntity;
 import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
@@ -92,12 +92,12 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
 
         this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        if (this.fuelLoader.getFluidTank().getContents(0).getFluid() != null
-        && this.fuelLoader.getFluidTank().getContents(0).getFluid() != Fluids.EMPTY) {
+        if (this.fuelLoader.getFluidTank().getInvFluid(0).getRawFluid() != null
+        && this.fuelLoader.getFluidTank().getInvFluid(0).getRawFluid() != Fluids.EMPTY) {
             stack.push();
-            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.fuelLoader.getFluidTank().getContents(0).getFluid()).getFluidSprites(null, null, this.fuelLoader.getFluidTank().getContents(0).getFluid().getDefaultState())[0];
+            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(this.fuelLoader.getFluidTank().getInvFluid(0).getRawFluid()).getFluidSprites(null, null, this.fuelLoader.getFluidTank().getInvFluid(0).getRawFluid().getDefaultState())[0];
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (fuelLoader.getFluidTank().getContents(0).getAmount().doubleValue() / fuelLoader.getFluidTank().getMaxCapacity(0).doubleValue())), sprite);
+            drawSprite(stack, x + 106, y + 46, getZOffset(), -TANK_OVERLAY_WIDTH, (int)-(((double)TANK_OVERLAY_HEIGHT) * (fuelLoader.getFluidTank().getInvFluid(0).getAmount_F().asInexactDouble() / fuelLoader.getFluidTank().getMaxAmount_F(0).asInexactDouble())), sprite);
             stack.pop();
             this.client.getTextureManager().bindTexture(BACKGROUND);
             drawTexture(stack, x + 68, y + 8, TANK_OVERLAY_X, TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT);
@@ -115,11 +115,11 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                     if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
                         Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity) {
-                            if (!((RocketEntity) entity).getTank().getContents(0).isEmpty()) {
-                                double amount = ((RocketEntity) entity).getTank().getContents(0).getAmount().doubleValue();
-                                double max = ((RocketEntity) entity).getTank().getMaxCapacity(0).doubleValue();
+                            if (!((RocketEntity) entity).getTank().getInvFluid(0).isEmpty()) {
+                                double amount = ((RocketEntity) entity).getTank().getInvFluid(0).getAmount_F().asInexactDouble();
+                                double max = ((RocketEntity) entity).getTank().getMaxAmount_F(0).asInexactDouble();
                                 stack.push();
-                                Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(((RocketEntity) entity).getTank().getContents(0).getFluid()).getFluidSprites(null, null, ((RocketEntity) entity).getTank().getContents(0).getFluid().getDefaultState())[0];
+                                Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(((RocketEntity) entity).getTank().getInvFluid(0).getRawFluid()).getFluidSprites(null, null, ((RocketEntity) entity).getTank().getInvFluid(0).getRawFluid().getDefaultState())[0];
                                 this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
                                 DrawableHelper.drawSprite(stack, x + 159, y + 64, getZOffset(), -ROCKET_FACE_WIDTH, (int) -(((double) ROCKET_FACE_HEIGHT) * (amount / max)), sprite);
                                 stack.pop();
@@ -147,27 +147,27 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
         super.drawMouseoverTooltip(stack, mouseX, mouseY);
         List<OrderedText> list = new ArrayList<>();
         if (check(mouseX, mouseY, x + 69, y + 9, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
-            if (fuelLoader.getFluidTank().getContents(0).isEmpty()) {
+            if (fuelLoader.getFluidTank().getInvFluid(0).isEmpty()) {
                 list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
             } else {
-                Fraction fraction = fuelLoader.getFluidTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
-                if (fraction.getDenominator() == 1) {
-                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                FluidAmount fraction = fuelLoader.getFluidTank().getInvFluid(0).getAmount_F().mul(FluidAmount.ONE); //every action forces simplification of the fraction
+                if (fraction.denominator == 1) {
+                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.numerator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                 } else {
                     if (!Screen.hasShiftDown()) {
-                        if (fraction.doubleValue() > 1.0D) {
-                            int whole = (int) (fraction.doubleValue() - (fraction.doubleValue() % 1));
-                            int numerator = fraction.getNumerator() % fraction.getDenominator();
-                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                        if (fraction.asInexactDouble() > 1.0D) {
+                            long whole = fraction.whole;
+                            int numerator = (int) (fraction.numerator % fraction.denominator);
+                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.denominator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                         } else {
-                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.numerator, fraction.denominator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                         }
                     } else {
-                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.asInexactDouble()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                     }
                 }
                 if (Screen.hasControlDown()) {
-                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(fuelLoader.getFluidTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
+                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(fuelLoader.getFluidTank().getInvFluid(0).getRawFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                 }
             }
             this.renderOrderedTooltip(stack, list, mouseX, mouseY);
@@ -181,27 +181,27 @@ public class FuelLoaderScreen extends MachineHandledScreen<FuelLoaderScreenHandl
                     if (((RocketLaunchPadBlockEntity) be).hasRocket()) {
                         Entity entity = world.getEntityById(((RocketLaunchPadBlockEntity) be).getRocketEntityId());
                         if (entity instanceof RocketEntity) {
-                            if (((RocketEntity) entity).getTank().isEmpty()) {
+                            if (((RocketEntity) entity).getTank().getInvFluid(0).isEmpty()) {
                                 list.add(new TranslatableText("tooltip.galacticraft-rewoven.no_fluid").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                             } else {
-                                Fraction fraction = ((RocketEntity) entity).getTank().getContents(0).getAmount().multiply(Fraction.ONE); //every action forces simplification of the fraction
-                                if (fraction.getDenominator() == 1) {
-                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.getNumerator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                                FluidAmount fraction = ((RocketEntity) entity).getTank().getInvFluid(0).getAmount_F();
+                                if (fraction.denominator == 1) {
+                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.numerator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                 } else {
                                     if (!Screen.hasShiftDown()) {
-                                        if (fraction.doubleValue() > 1.0D) {
-                                            int whole = (int) (fraction.doubleValue() - (fraction.doubleValue() % 1));
-                                            int numerator = fraction.getNumerator() % fraction.getDenominator();
-                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                                        if (fraction.asInexactDouble() > 1.0D) {
+                                            long whole = fraction.whole;
+                                            int numerator = (int) (fraction.numerator % fraction.denominator);
+                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_mixed_number", whole, numerator, fraction.denominator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                         } else {
-                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.getNumerator(), fraction.getDenominator()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                                            list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets_fraction", fraction.numerator, fraction.denominator).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                         }
                                     } else {
-                                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.doubleValue()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
+                                        list.add(new TranslatableText("tooltip.galacticraft-rewoven.buckets", fraction.asInexactDouble()).setStyle(Style.EMPTY.withColor(Formatting.GOLD)).asOrderedText());
                                     }
                                 }
                                 if (Screen.hasControlDown()) {
-                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(((RocketEntity) entity).getTank().getContents(0).getFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
+                                    list.add(new TranslatableText("tooltip.galacticraft-rewoven.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(Registry.FLUID.getId(((RocketEntity) entity).getTank().getInvFluid(0).getRawFluid()).toString()).setStyle(Style.EMPTY.withColor(Formatting.AQUA))).asOrderedText());
                                 }
                             }
                         }

@@ -22,6 +22,9 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.GCRecipeAccessor;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
@@ -29,7 +32,8 @@ import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.RocketEntity;
@@ -37,9 +41,6 @@ import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.recipe.RocketAssemblerRecipe;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -53,28 +54,22 @@ import net.minecraft.util.Tickable;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable {
-
+    private static final FullFixedItemInv EMPTY_INV = new FullFixedItemInv(0);
     public static final int SCHEMATIC_INPUT_SLOT = 0;
     public static final int ROCKET_OUTPUT_SLOT = 1;
     public static final int ENERGY_INPUT_SLOT = 2;
 
-    private final SimpleInventoryComponent inventory = new SimpleInventoryComponent(3) {
-        @Override
-        public boolean isAcceptableStack(int slot, ItemStack item) {
-            return getFilterForSlot(slot).test(item);
-        }
-
-        public Predicate<ItemStack> getFilterForSlot(int slot) {
+    private final FullFixedItemInv inventory = new FullFixedItemInv(3) {
+        public ItemFilter getFilterForSlot(int slot) {
             if (slot == SCHEMATIC_INPUT_SLOT) {
                 return (itemStack -> itemStack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC);
             } else if (slot == ENERGY_INPUT_SLOT) {
-                return (EnergyUtils::isEnergyItem);
+                return (EnergyUtils::isEnergyExtractable);
             } else {
                 return (stack) -> stack.getItem() == GalacticraftItems.ROCKET;
             }
@@ -82,30 +77,23 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     };
     public RocketData data = RocketData.EMPTY;
     public Map<Identifier, RocketAssemblerRecipe> recipes = new HashMap<>();
-    private final SimpleCapacitorComponent energy = new SimpleCapacitorComponent(Galacticraft.configManager.get().machineEnergyStorageSize(), GalacticraftEnergy.GALACTICRAFT_JOULES);
-    private SimpleInventoryComponent extendedInventory = new SimpleInventoryComponent(0) {
-        @Override
-        public boolean isAcceptableStack(int slot, ItemStack item) {
-            return false;
-        }
-    };
+    private final SimpleCapacitor energy = new SimpleCapacitor(DefaultEnergyType.INSTANCE, Galacticraft.configManager.get().machineEnergyStorageSize());
+    private FullFixedItemInv extendedInv = EMPTY_INV;
     private float progress = 0.0F;
     public RocketEntity fakeEntity;
     private boolean ready = false;
     private boolean building = false;
     private boolean queuedUpdate = false;
-    private ItemStack previous = ItemStack.EMPTY;
 
     public RocketAssemblerBlockEntity() {
         super(GalacticraftBlockEntities.ROCKET_ASSEMBLER_TYPE);
-        inventory.listen(() -> {
-            if (!world.isClient) {
-                if (!inventory.getStack(SCHEMATIC_INPUT_SLOT).getOrCreateTag().equals(previous.getOrCreateTag())) {
-                    schematicUpdate(previous.copy(), inventory.getStack(SCHEMATIC_INPUT_SLOT));
-                }
+        inventory.addListener((view, i, previous, current) -> {
+            if (!world.isClient && i == SCHEMATIC_INPUT_SLOT) {
+                schematicUpdate(previous, current);
                 markDirty();
-                previous = inventory.getStack(SCHEMATIC_INPUT_SLOT).copy();
             }
+        }, () -> {
+
         });
         
         fakeEntity = new RocketEntity(GalacticraftEntityTypes.ROCKET, null);
@@ -135,27 +123,21 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             this.data = RocketData.fromItem(current);
         }
 
-        for (int i = 0; i < extendedInventory.getSize(); i++) {
-            ItemStack stack = extendedInventory.getStack(i);
-            extendedInventory.setStack(i, ItemStack.EMPTY);
+        for (int i = 0; i < extendedInv.getSlotCount(); i++) {
+            ItemStack stack = extendedInv.getInvStack(i);
+            extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
             ItemEntity entity = new ItemEntity(this.world, this.pos.getX(), this.pos.getY() + 1, this.pos.getZ(), stack);
             this.world.spawnEntity(entity);
         }
 
         if (current.isEmpty()) {
             this.data = RocketData.EMPTY;
-            this.extendedInventory = new SimpleInventoryComponent(0) {
-                @Override
-                public boolean isAcceptableStack(int slot, ItemStack item) {
-                    return false;
-                }
-            };
-
+            this.extendedInv = EMPTY_INV;
             return;
         }
 
         int slots = 0;
-        Map<Integer, Predicate<ItemStack>> filters = new HashMap<>();
+        Map<Integer, ItemFilter> filters = new HashMap<>();
         RocketPartType[] values = RocketPartType.values();
         for (RocketPartType type : values) {
             if (this.data.getPartForType(type).hasRecipe()) {
@@ -166,14 +148,14 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         }
 
-        extendedInventory = new SimpleInventoryComponent(slots) {
+        extendedInv = new FullFixedItemInv(slots) {
             @Override
-            public boolean isAcceptableStack(int slot, ItemStack item) {
-                return filters.get(slot).test(item);
+            public ItemFilter getFilterForSlot(int slot) {
+                return filters.get(slot);
             }
 
             @Override
-            public int getMaxStackSize(int slot) { //ignore default 
+            public int getMaxAmount(int slot, ItemStack stack) {
                 if (data != RocketData.EMPTY) {
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
@@ -205,18 +187,18 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             fakeEntity.setColor(this.data.getRed(), this.data.getGreen(), this.data.getBlue(), this.data.getAlpha());
         }
 
-        extendedInventory.listen(() -> {
+        extendedInv.addListener((view) -> {
             boolean success = true;
-            for (int i = 0; i < extendedInventory.getSize(); i++) {
-                if (extendedInventory.isAcceptableStack(i, extendedInventory.getStack(i)) &&
-                        extendedInventory.getMaxStackSize(i) == extendedInventory.getStack(i).getCount()) {
+            for (int i = 0; i < extendedInv.getSlotCount(); i++) {
+                if (extendedInv.getFilterForSlot(i).matches(extendedInv.getInvStack(i)) &&
+                        extendedInv.getMaxAmount(i, extendedInv.getInvStack(i)) == extendedInv.getInvStack(i).getCount()) {
                     continue;
                 }
                 success = false;
                 break;
             }
             this.ready = success;
-        });
+        }, () -> {});
     }
 
     public float getProgress() {
@@ -231,23 +213,23 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         }
 
-        if (this.data.isEmpty() && this.inventory.getStack(SCHEMATIC_INPUT_SLOT).isEmpty()) {
+        if (this.data.isEmpty() && this.inventory.getInvStack(SCHEMATIC_INPUT_SLOT).isEmpty()) {
             return;
         }
 
-        if ((!this.data.isEmpty() && inventory.getStack(SCHEMATIC_INPUT_SLOT).isEmpty()) || (this.data.isEmpty() && !inventory.getStack(SCHEMATIC_INPUT_SLOT).isEmpty())) {
+        if ((!this.data.isEmpty() && inventory.getInvStack(SCHEMATIC_INPUT_SLOT).isEmpty()) || (this.data.isEmpty() && !inventory.getInvStack(SCHEMATIC_INPUT_SLOT).isEmpty())) {
             throw new RuntimeException("Error loading schematic!");
         }
 
-        if (inventory.getStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
-            if (!this.data.equals(RocketData.fromItem(inventory.getStack(SCHEMATIC_INPUT_SLOT)))) {
-                schematicUpdate(data.toSchematic(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC)), inventory.getStack(SCHEMATIC_INPUT_SLOT));
+        if (inventory.getInvStack(SCHEMATIC_INPUT_SLOT).getItem() == GalacticraftItems.ROCKET_SCHEMATIC) {
+            if (!this.data.equals(RocketData.fromItem(inventory.getInvStack(SCHEMATIC_INPUT_SLOT)))) {
+                schematicUpdate(data.toSchematic(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC)), inventory.getInvStack(SCHEMATIC_INPUT_SLOT));
                 return;
             }
         }
 
         int slots = 0;
-        Map<Integer, Predicate<ItemStack>> filters = new HashMap<>();
+        Map<Integer, ItemFilter> filters = new HashMap<>();
         RocketPartType[] values = RocketPartType.values();
         for (RocketPartType type : values) {
             if (this.data.getPartForType(type).hasRecipe()) {
@@ -258,14 +240,14 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         }
 
-        SimpleInventoryComponent inv = new SimpleInventoryComponent(slots) {
+        FullFixedItemInv inv = new FullFixedItemInv(slots) {
             @Override
-            public boolean isAcceptableStack(int slot, ItemStack stack) {
-                return filters.get(slot).test(stack);
+            public ItemFilter getFilterForSlot(int slot) {
+                return filters.get(slot);
             }
 
             @Override
-            public int getMaxStackSize(int slot) {
+            public int getMaxAmount(int slot, ItemStack stack) {
                 if (data != RocketData.EMPTY) {
                     int a = 0;
                     for (int i = 0; i < RocketPartType.values().length; i++) {
@@ -288,11 +270,11 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         };
         CompoundTag tag = new CompoundTag();
-        extendedInventory.writeToNbt(tag);
-        inv.readFromNbt(tag);
+        extendedInv.toTag(tag);
+        inv.fromTag(tag);
 
 
-        extendedInventory = inv;
+        extendedInv = inv;
 
         if (!data.isEmpty()) {
             for (RocketPart part : data.getParts()) {
@@ -302,13 +284,13 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             }
         }
 
-        extendedInventory.listen(() -> {
-            if (extendedInventory.getSize() == 0) {
+        extendedInv.addListener((view, slot, prev, cur) -> {
+            if (extendedInv.getSlotCount() > 0) {
 
                 boolean success = true;
-                for (int i = 0; i < extendedInventory.getSize(); i++) {
-                    if (extendedInventory.isAcceptableStack(i, extendedInventory.getStack(i)) &&
-                            extendedInventory.getMaxStackSize(i) == extendedInventory.getStack(i).getCount()) {
+                for (int i = 0; i < extendedInv.getSlotCount(); i++) {
+                    if (extendedInv.getFilterForSlot(i).matches(extendedInv.getInvStack(i)) &&
+                            extendedInv.getMaxAmount(i, extendedInv.getInvStack(i)) == extendedInv.getInvStack(i).getCount()) {
                         continue;
                     }
                     success = false;
@@ -318,24 +300,24 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             } else {
                 this.ready = false;
             }
-        });
+        }, () -> {});
     }
 
-    public SimpleInventoryComponent getInventory() {
+    public FullFixedItemInv getInventory() {
         return inventory;
     }
 
-    public SimpleInventoryComponent getExtendedInventory() {
-        return extendedInventory;
+    public FullFixedItemInv getExtendedInv() {
+        return extendedInv;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag compoundTag) {
         super.fromTag(state, compoundTag);
-        this.inventory.readFromNbt(compoundTag);
+        this.inventory.fromTag(compoundTag);
         this.data = RocketData.fromTag(compoundTag.getCompound("data"));
-        this.extendedInventory = new SimpleInventoryComponent(compoundTag.getInt("slots"));
-        this.extendedInventory.readFromNbt(compoundTag);
+        this.extendedInv = new FullFixedItemInv(compoundTag.getInt("slots"));
+        this.extendedInv.fromTag(compoundTag);
         this.schematicUpdateFromTag();
     }
 
@@ -343,9 +325,9 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
     public CompoundTag toTag(CompoundTag compoundTag) {
         super.toTag(compoundTag);
         compoundTag.put("data", data.toTag());
-        compoundTag.putInt("slots", extendedInventory.getSize());
-        inventory.writeToNbt(compoundTag);
-        extendedInventory.writeToNbt(compoundTag);
+        compoundTag.putInt("slots", extendedInv.getSlotCount());
+        inventory.toTag(compoundTag);
+        extendedInv.toTag(compoundTag);
         return compoundTag;
     }
 
@@ -365,20 +347,18 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             queuedUpdate = false;
             this.schematicUpdateFromTag();
         }
-        if (getEnergyAttribute().getCurrentEnergy() >= getEnergyAttribute().getMaxEnergy()) {
+        if (getEnergyAttribute().getEnergy() >= getEnergyAttribute().getMaxCapacity()) {
             return;
         }
-        ItemStack stack = inventory.getStack(ENERGY_INPUT_SLOT).copy();
-        int neededEnergy = Math.min(50, getEnergyAttribute().getMaxEnergy() - getEnergyAttribute().getCurrentEnergy());
-        if (EnergyUtils.isEnergyItem(stack)) {
-            int amountFailedToExtract = EnergyUtils.extractEnergy(stack, neededEnergy, ActionType.PERFORM);
-            this.getEnergyAttribute().insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, neededEnergy - amountFailedToExtract, ActionType.PERFORM);
-            inventory.setStack(ENERGY_INPUT_SLOT, stack);
+        int neededEnergy = Math.min(50, getEnergyAttribute().getMaxCapacity() - getEnergyAttribute().getEnergy());
+        if (EnergyUtils.isEnergyExtractable(this.getInventory().getSlot(ENERGY_INPUT_SLOT))) {
+            int amountFailedToExtract = EnergyUtils.extractEnergy(this.getInventory().getSlot(ENERGY_INPUT_SLOT), neededEnergy, Simulation.ACTION);
+            this.getEnergyAttribute().insert(DefaultEnergyType.INSTANCE, neededEnergy - amountFailedToExtract, Simulation.ACTION);
         }
 
         if (this.building) { //out of 600 ticks
-            if (this.energy.getCurrentEnergy() >= 20) {
-                this.energy.extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, Galacticraft.configManager.get().rocketAssemblerEnergyConsumptionRate(), ActionType.PERFORM);
+            if (this.energy.getEnergy() >= 20) {
+                this.energy.extract(DefaultEnergyType.INSTANCE, Galacticraft.configManager.get().rocketAssemblerEnergyConsumptionRate(), Simulation.ACTION);
             } else {
                 this.building = false;
             }
@@ -386,12 +366,12 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             if (progress++ >= Galacticraft.configManager.get().rocketAssemblerProcessTime()) {
                 this.building = false;
                 this.progress = 0;
-                for (int i = 0; i < extendedInventory.getSize(); i++) {
-                    extendedInventory.setStack(i, ItemStack.EMPTY);
+                for (int i = 0; i < extendedInv.getSlotCount(); i++) {
+                    extendedInv.setInvStack(i, ItemStack.EMPTY, Simulation.ACTION);
                 }
                 ItemStack stack1 = new ItemStack(GalacticraftItems.ROCKET);
                 stack1.setTag(data.toTag());
-                this.inventory.setStack(ROCKET_OUTPUT_SLOT, stack1);
+                this.inventory.setInvStack(ROCKET_OUTPUT_SLOT, stack1, Simulation.ACTION);
             }
         } else {
             if (this.progress > 0) {
@@ -400,7 +380,7 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
         }
     }
 
-    public SimpleCapacitorComponent getEnergyAttribute() {
+    public SimpleCapacitor getEnergyAttribute() {
         return energy;
     }
 

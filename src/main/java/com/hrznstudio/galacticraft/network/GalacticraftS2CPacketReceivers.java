@@ -22,9 +22,9 @@
 
 package com.hrznstudio.galacticraft.network;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
@@ -36,7 +36,6 @@ import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
-import io.github.cottonmc.component.item.impl.SimpleInventoryComponent;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
@@ -49,15 +48,12 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -262,31 +258,31 @@ public class GalacticraftS2CPacketReceivers {
                 ServerWorld world = ((ServerPlayerEntity) player).getServerWorld();
                 if (((ServerPlayerEntity) player).getServerWorld().isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
                     if (player.world.getBlockEntity(pos) instanceof RocketAssemblerBlockEntity) {
-                        SimpleInventoryComponent inventory = ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInventory();
-                        if (slot < inventory.getSize()) {
+                        FullFixedItemInv inventory = ((RocketAssemblerBlockEntity) world.getBlockEntity(pos)).getExtendedInv();
+                        if (slot < inventory.getSlotCount()) {
                             if (player.inventory.getCursorStack().isEmpty()) {
                                 success = true;
-                                player.inventory.setCursorStack(inventory.getStack(slot));
-                                inventory.setStack(slot, ItemStack.EMPTY);
+                                player.inventory.setCursorStack(inventory.getInvStack(slot));
+                                inventory.setInvStack(slot, ItemStack.EMPTY, Simulation.ACTION);
                             } else {
-                                if (inventory.isAcceptableStack(slot, player.inventory.getCursorStack().copy())) {
-                                    if (inventory.getStack(slot).isEmpty()) {
-                                        if (inventory.getMaxStackSize(slot) >= player.inventory.getCursorStack().getCount()) {
-                                            inventory.setStack(slot, player.inventory.getCursorStack().copy());
+                                if (inventory.getFilterForSlot(slot).matches(player.inventory.getCursorStack().copy())) {
+                                    if (inventory.getInvStack(slot).isEmpty()) {
+                                        if (inventory.getMaxAmount(slot, player.inventory.getCursorStack()) >= player.inventory.getCursorStack().getCount()) {
+                                            inventory.setInvStack(slot, player.inventory.getCursorStack().copy(), Simulation.ACTION);
                                             player.inventory.setCursorStack(ItemStack.EMPTY);
                                         } else {
                                             ItemStack stack = player.inventory.getCursorStack().copy();
                                             ItemStack stack1 = player.inventory.getCursorStack().copy();
-                                            stack.setCount(inventory.getMaxStackSize(slot));
-                                            stack1.setCount(stack1.getCount() - inventory.getMaxStackSize(slot));
-                                            inventory.setStack(slot, stack);
+                                            stack.setCount(inventory.getMaxAmount(slot, player.inventory.getCursorStack()));
+                                            stack1.setCount(stack1.getCount() - inventory.getMaxAmount(slot, player.inventory.getCursorStack()));
+                                            inventory.setInvStack(slot, stack, Simulation.ACTION);
                                             player.inventory.setCursorStack(stack1);
                                         }
                                     } else { // IMPOSSIBLE FOR THE 2 STACKS TO BE DIFFERENT AS OF RIGHT NOW. THIS MAY CHANGE.
                                         // SO... IF IT DOES, YOU NEED TO UPDATE THIS.
                                         ItemStack stack = player.inventory.getCursorStack().copy();
-                                        int max = inventory.getMaxStackSize(slot);
-                                        stack.setCount(stack.getCount() + inventory.getStack(slot).getCount());
+                                        int max = inventory.getMaxAmount(slot, player.inventory.getCursorStack());
+                                        stack.setCount(stack.getCount() + inventory.getInvStack(slot).getCount());
                                         if (stack.getCount() <= max) {
                                             player.inventory.setCursorStack(ItemStack.EMPTY);
                                         } else {
@@ -295,7 +291,7 @@ public class GalacticraftS2CPacketReceivers {
                                             stack1.setCount(stack1.getCount() - max);
                                             player.inventory.setCursorStack(stack1);
                                         }
-                                        inventory.setStack(slot, stack);
+                                        inventory.setInvStack(slot, stack, Simulation.ACTION);
                                     }
                                     success = true;
                                 }
@@ -320,13 +316,6 @@ public class GalacticraftS2CPacketReceivers {
                     }
                 }
             });
-        }));
-
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "assembler_build"), ((server, player, handler, buf, responseSender) -> server.execute(() -> ((ServerPlayerEntity) player).networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "research_scroll"), new PacketByteBuf(Unpooled.buffer().writeDouble(((ServerPlayerEntityAccessor) player).getResearchScrollX()).writeDouble(((ServerPlayerEntityAccessor) player).getResearchScrollY())))))));
-
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "research_scroll"), ((server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            server.execute(() -> ((ServerPlayerEntityAccessor) player).setResearchScroll(buffer.readDouble(), buffer.readDouble()));
         }));
     }
 
