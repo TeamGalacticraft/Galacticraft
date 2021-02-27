@@ -42,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AnimalEntity.class)
-public class AnimalEntityMixin implements AnimalGearAccessor {
+public abstract class AnimalEntityMixin implements AnimalGearAccessor {
     @Unique
     private FullFixedItemInv gearInv = new FullFixedItemInv(5);
 

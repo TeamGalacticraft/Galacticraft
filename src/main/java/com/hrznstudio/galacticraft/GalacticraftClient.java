@@ -30,6 +30,7 @@ import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPacketReceivers
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.*;
+import com.hrznstudio.galacticraft.client.render.entity.feature.AnimalSpaceGearFeatureRenderer;
 import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.client.render.entity.rocket.RocketEntityRenderer;
@@ -49,16 +50,20 @@ import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.event.client.ClientSpriteRegistryCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.entity.feature.FeatureRendererContext;
+import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
@@ -210,6 +215,12 @@ public class GalacticraftClient implements ClientModInitializer {
                 };
             }
             return null;
+        });
+
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, livingEntityRenderer, registrationHelper) -> {
+            if (livingEntityRenderer.getModel() instanceof AnimalModel) {
+                registrationHelper.register(new AnimalSpaceGearFeatureRenderer<>((FeatureRendererContext<AnimalEntity, AnimalModel<AnimalEntity>>) livingEntityRenderer));
+            }
         });
 
         OBJLoader.INSTANCE.registerDomain(Constants.MOD_ID);

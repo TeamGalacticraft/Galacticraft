@@ -27,8 +27,17 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Environment(EnvType.CLIENT)
 public interface AnimalModelGearAccessor {
-    List<ModelPart> getOxygenMaskModels();
+    Iterable<ModelPart> getAnimalHeadParts();
+    
+    float getChildHeadYOffset();
+
+    float getChildHeadZOffset();
+
+    float getInvertedChildHeadScale();
+
+    boolean isHeadScaled();
 }

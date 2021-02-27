@@ -38,7 +38,6 @@
     "client.ClientWorldMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
-    "client.MobEntityRendererMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerInventoryScreenMixin",
     "client.WorldRendererMixin"

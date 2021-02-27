@@ -42,6 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Mixin(AnimalModel.class)
 @Environment(EnvType.CLIENT)
@@ -52,53 +53,29 @@ public abstract class AnimalModelMixin<E extends Entity> extends EntityModel<E> 
     @Shadow @Final private float childHeadZOffset;
     @Shadow @Final private float invertedChildHeadScale;
     @Shadow @Final private boolean headScaled;
-    @Unique
-    private final List<ModelPart> maskModels = new ArrayList<>();
 
-    @Inject(method = "render", at = @At("RETURN"))
-    private void renderGearGC(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha, CallbackInfo ci) {
-        if (getOxygenMaskModels().get(0).visible) {
-            if (!child) {
-                for (ModelPart oxygenMaskModel : getOxygenMaskModels()) {
-                    oxygenMaskModel.render(matrices, vertices, light, overlay, red, green, blue, alpha);
-                }
-            } else {
-                matrices.push();
-                float g;
-                if (this.headScaled) {
-                    g = 1.5F / this.invertedChildHeadScale;
-                    matrices.scale(g, g, g);
-                }
-
-                matrices.translate(0.0D, (this.childHeadYOffset / 16.0F), (this.childHeadZOffset / 16.0F));
-                for (ModelPart oxygenMaskModel : getOxygenMaskModels()) {
-                    oxygenMaskModel.render(matrices, vertices, light, overlay, red, green, blue, alpha);
-                }
-                matrices.pop();
-            }
-        }
+    @Override
+    public float getChildHeadYOffset() {
+        return childHeadYOffset;
     }
 
     @Override
-    public List<ModelPart> getOxygenMaskModels() {
-        if (maskModels.isEmpty()) {
-            for (ModelPart head : this.getHeadParts()) {
-                ModelPart modelPart = new ModelPart(this, 0, 0);
-                modelPart.setPivot(head.pivotX, head.pivotY, head.pivotZ);
-                modelPart.mirror = head.mirror;
-                for (ModelPart.Cuboid cuboid : head.cuboids) {
-                    modelPart.cuboids.add(new ModelPart.Cuboid(0, 0, cuboid.minX, cuboid.minY, cuboid.minZ, cuboid.maxX - cuboid.minX, cuboid.maxY - cuboid.minY, cuboid.maxZ - cuboid.minZ, 1.0F, 1.0F, 1.0F, head.mirror, textureWidth, textureHeight));
-                }
-                maskModels.add(modelPart);
-            }
-        }
-        Iterator<ModelPart> headParts = this.getHeadParts().iterator();
-        for (ModelPart modelPart : maskModels) {
-            ModelPart head = headParts.next();
-            modelPart.pitch = head.pitch;
-            modelPart.yaw = head.yaw;
-            modelPart.roll = head.roll;
-        }
-        return maskModels;
+    public float getChildHeadZOffset() {
+        return childHeadZOffset;
+    }
+
+    @Override
+    public float getInvertedChildHeadScale() {
+        return invertedChildHeadScale;
+    }
+
+    @Override
+    public boolean isHeadScaled() {
+        return headScaled;
+    }
+
+    @Override
+    public Iterable<ModelPart> getAnimalHeadParts() {
+        return this.getHeadParts();
     }
 }
