@@ -49,12 +49,13 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenTankItem extends Item implements AttributeProviderItem {
-    private int rgb = 0;
+    private float hue = 0;
 
     public OxygenTankItem(Settings settings) {
         super(settings);
@@ -98,9 +99,9 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(rgb += 0xff)))));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(HSBtoRGB(hue += 0.005))))));
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-            if (rgb > 0xffffff) rgb -= 0xffffff;
+            if (hue > 1.0f) hue -= 1.0f;
         }
         super.appendTooltip(stack, world, lines, context);
     }
@@ -120,15 +121,69 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
 
     @Override
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
-        if (reference.get().getMaxDamage() > 0) {
-            itemAttributeList.offer(new OxygenTankImpl(reference.get().getMaxDamage()).listen(tank -> {
+        ItemStack ref = reference.get().copy();
+        if (ref.getMaxDamage() > 0) {
+            OxygenTankImpl tank = new OxygenTankImpl(ref.getMaxDamage());
+            tank.fromTag(ref.getOrCreateTag());
+            tank.toTag(ref.getOrCreateTag());
+            ref.setDamage(ref.getMaxDamage() - tank.getAmount());
+            reference.set(ref);
+            itemAttributeList.offer(tank.listen(view -> {
                         ItemStack stack = reference.get().copy();
-                        stack.setDamage(stack.getMaxDamage() - tank.getAmount());
+                        stack.setDamage(stack.getMaxDamage() - view.getAmount());
+                        tank.toTag(stack.getOrCreateTag());
                         reference.set(stack);
                     }
             ));
         } else {
             itemAttributeList.offer(new InfiniteOxygenTank());
         }
+    }
+
+    /**@see java.awt.Color#HSBtoRGB*/
+    private static int HSBtoRGB(float hue) {
+        int r = 0, g = 0, b = 0;
+        if ((float) 1 == 0) {
+            r = g = b = (int) (255.0f + 0.5f);
+        } else {
+            float h = (hue - (float)Math.floor(hue)) * 6.0f;
+            float f = h - (float)java.lang.Math.floor(h);
+            float p = 0.0f;
+            float q = (1.0f - f);
+            float t = (1.0f - ((1.0f - f)));
+            switch ((int) h) {
+                case 0:
+                    r = (int) (255.0f + 0.5f);
+                    g = (int) (t * 255.0f + 0.5f);
+                    b = (int) (p * 255.0f + 0.5f);
+                    break;
+                case 1:
+                    r = (int) (q * 255.0f + 0.5f);
+                    g = (int) (255.0f + 0.5f);
+                    b = (int) (p * 255.0f + 0.5f);
+                    break;
+                case 2:
+                    r = (int) (p * 255.0f + 0.5f);
+                    g = (int) (255.0f + 0.5f);
+                    b = (int) (t * 255.0f + 0.5f);
+                    break;
+                case 3:
+                    r = (int) (p * 255.0f + 0.5f);
+                    g = (int) (q * 255.0f + 0.5f);
+                    b = (int) (255.0f + 0.5f);
+                    break;
+                case 4:
+                    r = (int) (t * 255.0f + 0.5f);
+                    g = (int) (p * 255.0f + 0.5f);
+                    b = (int) (255.0f + 0.5f);
+                    break;
+                case 5:
+                    r = (int) (255.0f + 0.5f);
+                    g = (int) (p * 255.0f + 0.5f);
+                    b = (int) (q * 255.0f + 0.5f);
+                    break;
+            }
+        }
+        return 0xff000000 | (r << 16) | (g << 8) | (b << 0);
     }
 }
