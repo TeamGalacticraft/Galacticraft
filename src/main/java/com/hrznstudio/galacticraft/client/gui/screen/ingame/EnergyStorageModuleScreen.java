@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -57,9 +58,9 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float v) {
-        super.render(matrices, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.energy_storage_module").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft-rewoven.energy_storage_module"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

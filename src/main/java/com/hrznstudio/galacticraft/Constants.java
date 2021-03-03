@@ -496,7 +496,7 @@ public interface Constants {
 
         int FLUID_TANK_WIDTH = 18;
 
-        private int BASE_FLUID_TANK_Y = 49;
+        int BASE_FLUID_TANK_Y = 49;
 
         int FLUID_TANK_8_16_X = 32;
         int FLUID_TANK_8_16_Y = BASE_FLUID_TANK_Y;

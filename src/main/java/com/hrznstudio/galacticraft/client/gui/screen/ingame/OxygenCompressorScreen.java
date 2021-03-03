@@ -30,6 +30,7 @@ import com.hrznstudio.galacticraft.screen.OxygenCompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -68,9 +69,9 @@ public class OxygenCompressorScreen extends MachineHandledScreen<OxygenCompresso
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float v) {
-        super.render(matrices, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_compressor").getString(), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_compressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

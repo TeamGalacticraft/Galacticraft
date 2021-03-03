@@ -30,6 +30,7 @@ import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -61,19 +62,19 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float v) {
-        super.render(matrices, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_collector").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        String statusText = new TranslatableText("ui.galacticraft-rewoven.machine.status").getString();
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        String statusText = I18n.translate("ui.galacticraft-rewoven.machine.status");
 
         int statusX = this.x + 38;
         int statusY = this.y + 64;
 
-        this.client.textRenderer.draw(matrices, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
+        this.textRenderer.draw(matrices, statusText, statusX, statusY, Formatting.DARK_GRAY.getColorValue());
 
-        this.client.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.client.textRenderer.getWidth(statusText), statusY, 0);
+        this.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.textRenderer.getWidth(statusText), statusY, 0);
 
-        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

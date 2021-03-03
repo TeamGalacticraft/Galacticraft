@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -81,12 +82,12 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     protected String getContainerDisplayName() {
-        return new TranslatableText("block.galacticraft-rewoven.compressor").getString();
+        return I18n.translate("block.galacticraft-rewoven.compressor");
     }
 
     protected void drawFuelProgressBar(MatrixStack matrices) {
