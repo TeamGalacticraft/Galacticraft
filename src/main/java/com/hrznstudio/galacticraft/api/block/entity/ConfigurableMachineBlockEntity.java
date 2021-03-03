@@ -91,6 +91,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     private MachineStatus status = MachineStatus.NULL;
     private RedstoneState redstone = RedstoneState.IGNORE;
     private boolean noDrop = false;
+    private boolean loaded = false;
 
     private final @NotNull SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getEnergyCapacity());
 
@@ -536,7 +537,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.getSideConfiguration().fromTag(tag);
         this.setRedstone(RedstoneState.fromTag(tag));
         this.noDrop = tag.getBoolean("NoDrop");
-        if (!world.isClient) this.sync();
+        if (loaded && !world.isClient) this.sync();
+        if (!loaded) loaded = true;
     }
 
     @Override
