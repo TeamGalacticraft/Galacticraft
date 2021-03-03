@@ -28,10 +28,8 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -60,9 +58,9 @@ public class CapacitorWidget extends AbstractWidget {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
-            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
+            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Constants.Styles.GRAY_STYLE).append(status.getName()));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Constants.Styles.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Constants.Styles.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Styles.BLUE_STYLE)));
             lines.addAll(tooltipSupplier.get());
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);

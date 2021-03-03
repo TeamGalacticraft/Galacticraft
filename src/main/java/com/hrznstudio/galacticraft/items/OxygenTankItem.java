@@ -28,6 +28,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.attribute.GalacticraftAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.InfiniteOxygenTank;
@@ -40,22 +41,23 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.*;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenTankItem extends Item implements AttributeProviderItem {
-    private float hue = 0;
+    private int ticks = 0;
 
     public OxygenTankItem(Settings settings) {
         super(settings);
@@ -99,10 +101,10 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
             OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(HSBtoRGB(hue += 0.005))))));
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Style.EMPTY.withColor(Formatting.RED)));
-            if (hue > 1.0f) hue -= 1.0f;
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }
+        if (ticks >= 500) ticks -= 500;
         super.appendTooltip(stack, world, lines, context);
     }
 
@@ -138,52 +140,5 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
         } else {
             itemAttributeList.offer(new InfiniteOxygenTank());
         }
-    }
-
-    /**@see java.awt.Color#HSBtoRGB*/
-    private static int HSBtoRGB(float hue) {
-        int r = 0, g = 0, b = 0;
-        if ((float) 1 == 0) {
-            r = g = b = (int) (255.0f + 0.5f);
-        } else {
-            float h = (hue - (float)Math.floor(hue)) * 6.0f;
-            float f = h - (float)java.lang.Math.floor(h);
-            float p = 0.0f;
-            float q = (1.0f - f);
-            float t = (1.0f - ((1.0f - f)));
-            switch ((int) h) {
-                case 0:
-                    r = (int) (255.0f + 0.5f);
-                    g = (int) (t * 255.0f + 0.5f);
-                    b = (int) (p * 255.0f + 0.5f);
-                    break;
-                case 1:
-                    r = (int) (q * 255.0f + 0.5f);
-                    g = (int) (255.0f + 0.5f);
-                    b = (int) (p * 255.0f + 0.5f);
-                    break;
-                case 2:
-                    r = (int) (p * 255.0f + 0.5f);
-                    g = (int) (255.0f + 0.5f);
-                    b = (int) (t * 255.0f + 0.5f);
-                    break;
-                case 3:
-                    r = (int) (p * 255.0f + 0.5f);
-                    g = (int) (q * 255.0f + 0.5f);
-                    b = (int) (255.0f + 0.5f);
-                    break;
-                case 4:
-                    r = (int) (t * 255.0f + 0.5f);
-                    g = (int) (p * 255.0f + 0.5f);
-                    b = (int) (255.0f + 0.5f);
-                    break;
-                case 5:
-                    r = (int) (255.0f + 0.5f);
-                    g = (int) (p * 255.0f + 0.5f);
-                    b = (int) (q * 255.0f + 0.5f);
-                    break;
-            }
-        }
-        return 0xff000000 | (r << 16) | (g << 8) | (b << 0);
     }
 }

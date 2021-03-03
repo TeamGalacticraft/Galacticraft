@@ -65,17 +65,17 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float var1, int var2, int var3) {
-        this.renderBackground(stack);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
         updateProgressDisplay();
 
         //this.drawTexturedRect(...)
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        this.drawFuelProgressBar(stack);
-        this.drawCraftProgressBar(stack);
+        this.drawFuelProgressBar(matrices);
+        this.drawCraftProgressBar(matrices);
     }
 
     @Override
@@ -89,24 +89,24 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         return new TranslatableText("block.galacticraft-rewoven.compressor").getString();
     }
 
-    protected void drawFuelProgressBar(MatrixStack stack) {
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    protected void drawFuelProgressBar(MatrixStack matrices) {
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int fuelUsageScale;
 
         if (this.handler.machine.getStatus().getType() != ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_ENERGY) {
             fuelUsageScale = getFuelProgress();
-            this.drawTexture(stack, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
+            this.drawTexture(matrices, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }
     }
 
-    protected void drawCraftProgressBar(MatrixStack stack) {
+    protected void drawCraftProgressBar(MatrixStack matrices) {
         float progress = this.handler.machine.getProgress();
         float maxProgress = this.handler.machine.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(stack, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.drawTexture(matrices, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
     private int getFuelProgress() {

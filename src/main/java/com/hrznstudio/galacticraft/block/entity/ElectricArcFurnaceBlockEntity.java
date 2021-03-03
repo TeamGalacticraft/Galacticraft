@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -47,7 +49,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public int cookTime = 0;
@@ -98,10 +99,10 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isCapacitor;
+    public ItemFilter getFilterForSlot(int slot) {
+        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
         if (slot == INPUT_SLOT) return (stack) -> world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
-        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? Constants.Misc.alwaysTrue() : Constants.Misc.alwaysFalse();
+        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? ConstantItemFilter.ANYTHING : ConstantItemFilter.NOTHING;
     }
 
     @Override

@@ -43,11 +43,53 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.text.WordUtils;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class FluidTankWidget extends AbstractWidget {
+    private static final int[] FLUID_TANK_8_16_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_8_16_X,
+            Constants.TextureCoordinates.FLUID_TANK_8_16_Y,
+            Constants.TextureCoordinates.FLUID_TANK_8_16_HEIGHT
+    };
+    private static final int[] FLUID_TANK_7_14_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_7_14_X,
+            Constants.TextureCoordinates.FLUID_TANK_7_14_Y,
+            Constants.TextureCoordinates.FLUID_TANK_7_14_HEIGHT
+    };
+    private static final int[] FLUID_TANK_6_12_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_6_12_X,
+            Constants.TextureCoordinates.FLUID_TANK_6_12_Y,
+            Constants.TextureCoordinates.FLUID_TANK_6_12_HEIGHT
+    };
+    private static final int[] FLUID_TANK_5_10_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_5_10_X,
+            Constants.TextureCoordinates.FLUID_TANK_5_10_Y,
+            Constants.TextureCoordinates.FLUID_TANK_5_10_HEIGHT
+    };
+    private static final int[] FLUID_TANK_4_8_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_4_8_X,
+            Constants.TextureCoordinates.FLUID_TANK_4_8_Y,
+            Constants.TextureCoordinates.FLUID_TANK_4_8_HEIGHT
+    };
+    private static final int[] FLUID_TANK_3_6_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_3_6_X,
+            Constants.TextureCoordinates.FLUID_TANK_3_6_Y,
+            Constants.TextureCoordinates.FLUID_TANK_3_6_HEIGHT
+    };
+    private static final int[] FLUID_TANK_2_4_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_2_4_X,
+            Constants.TextureCoordinates.FLUID_TANK_2_4_Y,
+            Constants.TextureCoordinates.FLUID_TANK_2_4_HEIGHT
+    };
+    private static final int[] FLUID_TANK_1_2_DATA = new int[]{
+            Constants.TextureCoordinates.FLUID_TANK_1_2_X,
+            Constants.TextureCoordinates.FLUID_TANK_1_2_Y,
+            Constants.TextureCoordinates.FLUID_TANK_1_2_HEIGHT
+    };
+
     private final SingleFluidTankView tankView;
     private final int x;
     private final int y;
@@ -67,27 +109,27 @@ public class FluidTankWidget extends AbstractWidget {
         this.world = world == null ? this.client.world : world;
         this.pos = pos == null ? new BlockPos(0, 1, 0) : pos;
         this.scale = scale;
-        this.data = this.getPositionData(getTankView().getMaxAmount_F());
+        this.data = this.getPositionData(this.getTankView().getMaxAmount_F());
     }
 
     @Override
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2])) {
-            FluidVolume volume = getTankView().get();
+            FluidVolume volume = this.getTankView().get();
             if (volume.isEmpty()) {
-                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Style.EMPTY.withColor(Formatting.GRAY)), mouseX, mouseY);
+                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
                 return;
             }
             MutableText amount;
             if (Screen.hasShiftDown()) {
                 amount = new LiteralText(volume.getAmount_F().toString() + "B");
             } else {
-                amount = new LiteralText((int)(volume.getAmount_F().asInexactDouble() * 1000.0d) + "mB");
+                amount = new LiteralText((volume.getAmount_F().asInt(1000, RoundingMode.HALF_DOWN)) + "mB");
             }
 
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Style.EMPTY.withColor(Formatting.AQUA))));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Constants.Styles.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Constants.Styles.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
@@ -123,11 +165,11 @@ public class FluidTankWidget extends AbstractWidget {
         drawTexture(matrices, x, y, u, v, width, height, 128, 128);
     }
 
-    protected int[] getPositionData(FluidAmount tankCap) {
-        if (tankCap.asInexactDouble() != Math.floor(tankCap.asInexactDouble())) {
+    protected int[] getPositionData(FluidAmount capacity) {
+        if (capacity.asInexactDouble() != Math.floor(capacity.asInexactDouble())) {
             throw new UnsupportedOperationException("NYI");
         }
-        int size = tankCap.asInt(1) * scale;
+        int size = capacity.asInt(1) * scale;
 
         if (size < 1 || size > 16) {
             throw new UnsupportedOperationException("NYI");
@@ -137,55 +179,23 @@ public class FluidTankWidget extends AbstractWidget {
         }
 
         if (size == 8 || size == 16) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_8_16_X,
-                    Constants.TextureCoordinates.FLUID_TANK_8_16_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_8_16_HEIGHT
-            };
+            return FLUID_TANK_8_16_DATA;
         } else if (size == 7 || size == 14) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_7_14_X,
-                    Constants.TextureCoordinates.FLUID_TANK_7_14_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_7_14_HEIGHT
-            };
+            return FLUID_TANK_7_14_DATA;
         } else if (size == 6 || size == 12) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_6_12_X,
-                    Constants.TextureCoordinates.FLUID_TANK_6_12_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_6_12_HEIGHT
-            };
+            return FLUID_TANK_6_12_DATA;
         } else if (size == 5 || size == 10) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_5_10_X,
-                    Constants.TextureCoordinates.FLUID_TANK_5_10_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_5_10_HEIGHT
-            };
+            return FLUID_TANK_5_10_DATA;
         } else if (size == 4) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_4_8_X,
-                    Constants.TextureCoordinates.FLUID_TANK_4_8_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_4_8_HEIGHT
-            };
+            return FLUID_TANK_4_8_DATA;
         } else if (size == 3) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_3_6_X,
-                    Constants.TextureCoordinates.FLUID_TANK_3_6_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_3_6_HEIGHT
-            };
+            return FLUID_TANK_3_6_DATA;
         } else if (size == 2) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_2_4_X,
-                    Constants.TextureCoordinates.FLUID_TANK_2_4_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_2_4_HEIGHT
-            };
+            return FLUID_TANK_2_4_DATA;
         } else if (size == 1) {
-            return new int[]{
-                    Constants.TextureCoordinates.FLUID_TANK_1_2_X,
-                    Constants.TextureCoordinates.FLUID_TANK_1_2_Y,
-                    Constants.TextureCoordinates.FLUID_TANK_1_2_HEIGHT
-            };
+            return FLUID_TANK_1_2_DATA;
         }
-        throw new RuntimeException();
+        throw new AssertionError();
     }
 
 

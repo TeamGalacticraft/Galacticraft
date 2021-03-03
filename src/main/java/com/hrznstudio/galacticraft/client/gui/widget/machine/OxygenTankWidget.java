@@ -29,11 +29,10 @@ import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,8 +76,8 @@ public class OxygenTankWidget extends AbstractWidget {
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getView().get().getAmount_F().toString() + "B" : (((int) (getView().get().getAmount_F().asInexactDouble() * 1000.0D)) + "mB")).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.asInexactDouble() * 1000.0D))).setStyle(Style.EMPTY.withColor(Formatting.BLUE))).setStyle(Style.EMPTY.withColor(Formatting.RED)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_oxygen", new LiteralText(Screen.hasShiftDown() ? getView().get().getAmount_F().toString() + "B" : (getView().get().getAmount_F().asInt(1000, RoundingMode.HALF_DOWN) + "mB")).setStyle(Constants.Styles.BLUE_STYLE)).setStyle(Constants.Styles.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_oxygen", new LiteralText(String.valueOf((int)(OxygenCollectorBlockEntity.MAX_OXYGEN.asInt(1000, RoundingMode.HALF_DOWN)))).setStyle(Constants.Styles.BLUE_STYLE)).setStyle(Constants.Styles.RED_STYLE));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }

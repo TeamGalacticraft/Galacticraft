@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -43,13 +44,11 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    private static final Predicate<ItemStack>[] SLOT_FILTERS;
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
@@ -58,13 +57,6 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
 
     public static final int CHARGE_SLOT = 0;
     public static final int FUEL_SLOT = 1;
-
-    static {
-        //noinspection unchecked
-        SLOT_FILTERS = new Predicate[2];
-        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
-        SLOT_FILTERS[FUEL_SLOT] = stack -> FUEL_MAP.containsKey(stack.getItem());
-    }
 
     public Status status = Status.FULL;
     public int fuelLength;
@@ -102,8 +94,8 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return SLOT_FILTERS[slot];
+    public ItemFilter getFilterForSlot(int slot) {
+        return slot == CHARGE_SLOT ? EnergyUtils.IS_INSERTABLE : stack -> FUEL_MAP.containsKey(stack.getItem());
     }
 
     @Override

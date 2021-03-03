@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -39,7 +40,6 @@ import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -50,7 +50,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -96,8 +95,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
+    public ItemFilter getFilterForSlot(int slot) {
+        return EnergyUtils.IS_EXTRACTABLE;
     }
 
     private int collectOxygen() {

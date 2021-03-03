@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -50,7 +51,7 @@ import java.util.function.Predicate;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    private static final Predicate<ItemStack>[] SLOT_FILTERS;
+    private static final ItemFilter[] SLOT_FILTERS;
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
@@ -59,9 +60,8 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     public static final int FLUID_OUTPUT_SLOT = 2;
 
     static {
-        //noinspection unchecked
-        SLOT_FILTERS = new Predicate[3];
-        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS = new ItemFilter[3];
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
         SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL);
         SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL);
     }
@@ -91,7 +91,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         return SLOT_FILTERS[slot];
     }
 

@@ -42,7 +42,7 @@ public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements Mu
     public BasicSolarPanelBlock(Settings settings) {
         super(settings, BasicSolarPanelScreenHandler::new, BasicSolarPanelBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @NotNull

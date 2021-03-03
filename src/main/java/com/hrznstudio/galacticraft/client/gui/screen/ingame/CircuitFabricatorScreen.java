@@ -44,48 +44,71 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
 
     private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
 
-    private static final int PROGRESS_X = 206;
-    private static final int PROGRESS_Y = 0;
-    private static final int PROGRESS_WIDTH = 50;
-    private static final int PROGRESS_HEIGHT = 10;
-
-    private int progressDisplayX;
-    private int progressDisplayY;
+    private static final int PROGRESS_SIZE = 4;
+    private static final int INITIAL_PROGRESS_X = 0;
+    private static final int INITIAL_PROGRESS_Y = 186;
+    private static final int INITIAL_PROGRESS_U = 48;
+    private static final int INITIAL_PROGRESS_V = 21;
+    private static final int INITIAL_PROGRESS_WIDTH = 24;
+    private static final int INITIAL_PROGRESS_HEIGHT = 24;
+    private static final int SECONDARY_PROGRESS_X = 31;
+    private static final int SECONDARY_PROGRESS_Y = 216;
+    private static final int SECONDARY_PROGRESS_U = 79;
+    private static final int SECONDARY_PROGRESS_V = 51;
+    private static final int SECONDARY_PROGRESS_WIDTH = 18;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_X = 31;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_Y = 237;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_U = 79;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_V = 72;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_WIDTH = 24;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_INITIAL_HEIGHT = -4;
+    private static final int SECONDARY_CONCURRENT_PROGRESS_HEIGHT = -22;
+    private static final int TERTIARY_PROGRESS_X = 48;
+    private static final int TERTIARY_PROGRESS_Y = 216;
+    private static final int TERTIARY_PROGRESS_U = 97;
+    private static final int TERTIARY_PROGRESS_V = 72;
+    private static final int TERTIARY_PROGRESS_WIDTH = 65;
+    private static final int QUATERNARY_PROGRESS_X = 65;
+    private static final int QUATERNARY_PROGRESS_Y = 220;
+    private static final int QUATERNARY_PROGRESS_U = 113;
+    private static final int QUATERNARY_PROGRESS_V = 56;
+    private static final int QUATERNARY_PROGRESS_HEIGHT = 65;
+    private static final int QUINARY_PROGRESS_X = 92;
+    private static final int QUINARY_PROGRESS_Y = 215;
+    private static final int QUINARY_PROGRESS_U = 140;
+    private static final int QUINARY_PROGRESS_V = 50;
+    private static final int QUINARY_PROGRESS_HEIGHT = -19;
+    private static final int SENARY_PROGRESS_X = 110;
+    private static final int SENARY_PROGRESS_Y = 220;
+    private static final int SENARY_PROGRESS_U = 158;
+    private static final int SENARY_PROGRESS_V = 55;
+    private static final int SENARY_PROGRESS_HEIGHT = 14;
 
     public CircuitFabricatorScreen(CircuitFabricatorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
-        this.backgroundHeight = 192;
+        this.backgroundHeight = 176;
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 15, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
-        this.renderBackground(stack);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
-        int leftPos = this.x;
-        int topPos = this.y;
-
-        progressDisplayX = leftPos + 90;
-        progressDisplayY = topPos + 89;
-
-        this.drawTexture(stack, leftPos, topPos, 0, 0, this.backgroundWidth, this.backgroundHeight + 26);
-        this.drawProgressBar(stack);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawProgressBar(matrices, delta);
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.circuit_fabricator").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float v) {
+        super.render(matrices, mouseX, mouseY, v);
+        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.circuit_fabricator").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
-    private void drawProgressBar(MatrixStack stack) {
-        float progress = this.handler.progress.get();
-        float maxProgress = this.handler.machine.getMaxProgress();
-        float progressScale = (progress / maxProgress);
+    //24+20+18+65+14
+    private void drawProgressBar(MatrixStack stack, float delta) {
+        double progressScale = (((double)this.handler.machine.getProgress()) / ((double)this.handler.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(stack, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }

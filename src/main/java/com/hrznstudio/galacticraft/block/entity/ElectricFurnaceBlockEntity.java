@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -47,7 +49,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
@@ -97,10 +98,10 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isCapacitor;
+    public ItemFilter getFilterForSlot(int slot) {
+        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
         if (slot == INPUT_SLOT) return stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent();
-        return Constants.Misc.alwaysTrue();
+        return ConstantItemFilter.NOTHING;
     }
 
     @Override

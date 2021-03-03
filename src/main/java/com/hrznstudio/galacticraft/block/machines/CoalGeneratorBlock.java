@@ -51,7 +51,7 @@ public class CoalGeneratorBlock extends ConfigurableMachineBlock {
                 (view) -> new CoalGeneratorBlockEntity(),
                 (itemStack, blockView, tooltipContext) ->
                         new TranslatableText("tooltip.galacticraft-rewoven.coal_generator")
-                                .setStyle(Constants.Misc.TOOLTIP_STYLE)
+                                .setStyle(Constants.Styles.TOOLTIP_STYLE)
         );
     }
 

@@ -75,7 +75,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float v, int mouseX, int mouseY) {
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
@@ -123,7 +123,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
         this.textField.y = this.y + 59;
 
         if (handler.machine.getStatus().getType().isActive()) {
-            this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.machine.getSize()))).setStyle(Constants.Misc.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
+            this.client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.bubble_distributor.current_size", String.valueOf((int) Math.floor(handler.machine.getSize()))).setStyle(Constants.Styles.TOOLTIP_STYLE), this.x + 60, this.y + 42, Formatting.DARK_GRAY.getColorValue());
         }
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }

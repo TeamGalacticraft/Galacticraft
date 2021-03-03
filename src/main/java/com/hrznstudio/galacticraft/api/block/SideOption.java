@@ -24,10 +24,9 @@ package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
+import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,23 +35,23 @@ import java.util.List;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum SideOption implements Comparable<SideOption> {
-    DEFAULT(false, false, false, false, false),
-    POWER_INPUT(true, false, false, true, false),
-    POWER_OUTPUT(true, false, false, false, true),
-//    OXYGEN_INPUT(false, false, false, true),
-//    OXYGEN_OUTPUT(false, false, false, true),
-    FLUID_INPUT(false, true, false, true, false),
-    FLUID_OUTPUT(false, true, false, false, true),
-    ITEM_INPUT(false, false, true, true, false),
-    ITEM_OUTPUT(false, false, true, false, true);
+    DEFAULT(new TranslatableText("ui.galacticraft-rewoven.side_option.default").setStyle(Constants.Styles.TOOLTIP_STYLE), false, false, false, false, false),
+    POWER_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), true, false, false, true, false),
+    POWER_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), true, false, false, false, true),
+    FLUID_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.fluids").setStyle(Constants.Styles.GREEN_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), false, true, false, true, false),
+    FLUID_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.fluids").setStyle(Constants.Styles.GREEN_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), false, true, false, false, true),
+    ITEM_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Styles.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Styles.GREEN_STYLE)), false, false, true, true, false),
+    ITEM_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Styles.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Styles.DARK_RED_STYLE)), false, false, true, false, true);
 
+    private final MutableText name;
     private final boolean energy;
     private final boolean fluid;
     private final boolean item;
     private final boolean input;
     private final boolean output;
 
-    SideOption(boolean energy, boolean fluid, boolean item, boolean input, boolean output) {
+    SideOption(MutableText name, boolean energy, boolean fluid, boolean item, boolean input, boolean output) {
+        this.name = name;
         this.energy = energy;
         this.fluid = fluid;
         this.item = item;
@@ -66,10 +65,6 @@ public enum SideOption implements Comparable<SideOption> {
 
     public boolean isItem() {
         return item;
-    }
-
-    public boolean isOxygen() {
-        return false; //todo gas api maybe?
     }
 
     public boolean isFluid() {
@@ -105,26 +100,6 @@ public enum SideOption implements Comparable<SideOption> {
     }
 
     public Text getFormattedName() {
-        switch (this) {
-            case DEFAULT:
-                return new LiteralText("Blank").setStyle(Constants.Misc.TOOLTIP_STYLE);
-//            case OXYGEN_INPUT:
-//                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-//            case OXYGEN_OUTPUT:
-//                return new LiteralText("Oxygen").setStyle(Style.EMPTY.withColor(Formatting.AQUA)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-            case POWER_INPUT:
-                return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-            case POWER_OUTPUT:
-                return new LiteralText("Energy").setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-            case FLUID_INPUT:
-                return new LiteralText("Fluids").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-            case FLUID_OUTPUT:
-                return new LiteralText("Fluids").setStyle(Style.EMPTY.withColor(Formatting.GREEN)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-            case ITEM_INPUT:
-                return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" in").setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-            case ITEM_OUTPUT:
-                return new LiteralText("Items").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(new LiteralText(" out").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        }
-        return Constants.Misc.EMPTY_TEXT;
+        return this.name;
     }
 }

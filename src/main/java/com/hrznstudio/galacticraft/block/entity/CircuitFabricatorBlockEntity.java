@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -67,7 +69,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private static final Predicate<ItemStack>[] SLOT_FILTERS;
+    private static final ItemFilter[] SLOT_FILTERS;
     private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
@@ -76,14 +78,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     };
 
     static {
-        //noinspection unchecked
-        SLOT_FILTERS = new Predicate[6];
-        SLOT_FILTERS[0] = EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
+        SLOT_FILTERS = new ItemFilter[6];
+        SLOT_FILTERS[0] = EnergyUtils.IS_EXTRACTABLE;
         SLOT_FILTERS[1] = stack -> stack.getItem() == MANDATORY_MATERIALS[0];
         SLOT_FILTERS[2] = stack -> stack.getItem() == MANDATORY_MATERIALS[1];
         SLOT_FILTERS[3] = stack -> stack.getItem() == MANDATORY_MATERIALS[2];
         SLOT_FILTERS[4] = stack -> stack.getItem() == MANDATORY_MATERIALS[3];
-        SLOT_FILTERS[5] = Constants.Misc.alwaysTrue();
+        SLOT_FILTERS[5] = ConstantItemFilter.ANYTHING;
     }
 
 
@@ -115,9 +116,9 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         if (slot == 5) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
-        if (slot == 6) return Constants.Misc.alwaysTrue();
+        if (slot == 6) return ConstantItemFilter.ANYTHING;
 
         return SLOT_FILTERS[slot];
     }
@@ -132,7 +133,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         for (int i = 1; i < 6; i++) {
-            if (!this.getFilterForSlot(i).test(getInventory().getInvStack(i))) {
+            if (!this.getFilterForSlot(i).matches(getInventory().getInvStack(i))) {
                 return Status.NOT_ENOUGH_RESOURCES;
             }
         }

@@ -41,7 +41,7 @@ public class AdvancedSolarPanelBlock extends ConfigurableMachineBlock implements
         super(settings, AdvancedSolarPanelScreenHandler::new,
                 AdvancedSolarPanelBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.advanced_solar_panel")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override

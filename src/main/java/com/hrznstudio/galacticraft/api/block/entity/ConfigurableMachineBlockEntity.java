@@ -35,6 +35,7 @@ import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.Constants;
@@ -68,7 +69,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -80,14 +80,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable {
     private final SecurityInfo security = new SecurityInfo();
-    private final SideConfigInfo sideConfigInfo = new SideConfigInfo(this, validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
+    private final SideConfiguration sideConfiguration = new SideConfiguration(this, this.validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
 
     private MachineStatus status = MachineStatus.NULL;
     private RedstoneState redstone = RedstoneState.IGNORE;
@@ -187,7 +186,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     public FluidFilter getFilterForTank(int tank) {
-        return fluidKey -> false;
+        return ConstantFluidFilter.NOTHING;
     }
 
     public int getInventorySize() {
@@ -232,10 +231,10 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     }
 
     /**
-     * @return The {@link Predicate} for the given slot of {@link #getInventory()}.
+     * @return The {@link ItemFilter} for the given slot of {@link #getInventory()}.
      */
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return Constants.Misc.alwaysTrue();
+    public ItemFilter getFilterForSlot(int slot) {
+        return ConstantItemFilter.ANYTHING;
     }
 
     /**
@@ -260,7 +259,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable EnergyExtractable getEnergyExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isEnergy()) {
                 if (cso.getOption().isOutput()) {
                     return this.getCapacitor().getExtractable();
@@ -273,7 +272,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable EnergyInsertable getEnergyInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isEnergy()) {
                 if (cso.getOption().isInput()) {
                     return this.getCapacitor().getInsertable();
@@ -286,7 +285,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable Capacitor getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isEnergy()) {
                 return this.getCapacitor();
             }
@@ -297,7 +296,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FixedItemInv getInventory(@NotNull BlockState state, @Nullable Direction direction) { //DIRECTION IS POINTING AWAY FROM MACHINE TO THE SEARCHER
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isItem()) {
                 if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
@@ -327,7 +326,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FixedFluidInv getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isFluid()) {
                 if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
@@ -356,7 +355,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FluidInsertable getFluidInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isFluid()) {
                 if (cso.getOption().isInput()) {
                     if (cso.isWildcard()) {
@@ -380,7 +379,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public final @Nullable FluidExtractable getFluidExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getOption().isFluid()) {
                 if (cso.getOption().isOutput()) {
                     if (cso.isWildcard()) {
@@ -409,8 +408,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         return redstone;
     }
 
-    public final @NotNull SideConfigInfo getSideConfigInfo() {
-        return sideConfigInfo;
+    public final @NotNull ConfigurableMachineBlockEntity.SideConfiguration getSideConfiguration() {
+        return sideConfiguration;
     }
 
     public final boolean canUse(PlayerEntity player) {
@@ -521,7 +520,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (this.getInventorySize() > 0) this.getInventory().toTag(tag);
         if (this.getFluidTankSize() > 0) this.getFluidTank().toTag(tag);
         this.getSecurity().toTag(tag);
-        this.getSideConfigInfo().toTag(tag);
+        this.getSideConfiguration().toTag(tag);
         this.getRedstone().toTag(tag);
         tag.putBoolean("NoDrop", this.noDrop);
         return tag;
@@ -534,7 +533,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         if (this.getInventorySize() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidTankSize() > 0) this.getFluidTank().fromTag(tag);
         this.getSecurity().fromTag(tag);
-        this.getSideConfigInfo().fromTag(tag);
+        this.getSideConfiguration().fromTag(tag);
         this.setRedstone(RedstoneState.fromTag(tag));
         this.noDrop = tag.getBoolean("NoDrop");
         if (!world.isClient) this.sync();
@@ -543,13 +542,13 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
     @Override
     @Environment(EnvType.CLIENT)
     public void fromClientTag(CompoundTag tag) {
-        this.sideConfigInfo.fromTag(tag);
+        this.sideConfiguration.fromTag(tag);
         ((WorldRendererAccessor) MinecraftClient.getInstance().worldRenderer).addChunkToRebuild(pos);
     }
 
     @Override
     public CompoundTag toClientTag(CompoundTag tag) {
-        this.sideConfigInfo.toTag(tag);
+        this.sideConfiguration.toTag(tag);
         return tag;
     }
 
@@ -567,11 +566,11 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public void trySpreadEnergy() {
         if (this.canExtractEnergy()) {
-            for (BlockFace face : BlockFace.values()) {
-                ConfiguredSideOption option = this.getSideConfigInfo().get(face);
+            for (BlockFace face : Constants.Misc.BLOCK_FACES) {
+                ConfiguredSideOption option = this.getSideConfiguration().get(face);
                 if (option.getOption() == SideOption.POWER_OUTPUT) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
-                    EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir));
+                    EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir.getOpposite()));
                     if (insertable != RejectingEnergyInsertable.NULL) {
                         this.getCapacitor().insert(insertable.tryInsert(DefaultEnergyType.INSTANCE, this.getCapacitor().extract(2048), Simulation.ACTION));
                     }
@@ -582,8 +581,8 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
     public void trySpreadFluids(int tank) {
         if (this.canPipeExtractFluid(tank) && !this.getFluidTank().getInvFluid(tank).isEmpty()) {
-            for (BlockFace face : BlockFace.values()) {
-                ConfiguredSideOption option = this.getSideConfigInfo().get(face);
+            for (BlockFace face : Constants.Misc.BLOCK_FACES) {
+                ConfiguredSideOption option = this.getSideConfiguration().get(face);
                 if (option.getOption().isFluid() && option.getOption().isOutput()) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);
@@ -881,7 +880,7 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         }
     }
 
-    public static class SideConfigInfo {
+    public static class SideConfiguration {
         private final ConfiguredSideOption front;
         private final ConfiguredSideOption back;
         private final ConfiguredSideOption left;
@@ -892,16 +891,16 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         private final int capacitors;
         private final int invSize;
         private final int tanks;
-        private final ConfigurableMachineBlockEntity blockEntity;
+        private final ConfigurableMachineBlockEntity machine;
 
-        public SideConfigInfo(ConfigurableMachineBlockEntity blockEntity, List<SideOption> values, int capacitors, int invSize, int tanks) {
+        public SideConfiguration(ConfigurableMachineBlockEntity machine, List<SideOption> values, int capacitors, int invSize, int tanks) {
             if (!values.contains(SideOption.DEFAULT)) throw new RuntimeException();
             this.values = new ArrayList<>(values);
             this.values.sort(Enum::compareTo);
             this.capacitors = capacitors;
             this.invSize = invSize;
             this.tanks = tanks;
-            this.blockEntity = blockEntity;
+            this.machine = machine;
 
             this.front = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
             this.back = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
@@ -937,32 +936,32 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
 
         public void setFrontOption(SideOption option) {
             front.setOption(option, this.getMax(option));
-            if (!blockEntity.world.isClient()) blockEntity.sync();
+            if (!machine.world.isClient()) machine.sync();
         }
 
         public void setBackOption(SideOption option) {
             back.setOption(option, this.getMax(option));
-            if (!blockEntity.world.isClient()) blockEntity.sync();
+            if (!machine.world.isClient()) machine.sync();
         }
 
         public void setLeftOption(SideOption option) {
             left.setOption(option, this.getMax(option));
-            if (!blockEntity.world.isClient()) blockEntity.sync();
+            if (!machine.world.isClient()) machine.sync();
         }
 
         public void setRightOption(SideOption option) {
             right.setOption(option, this.getMax(option));
-            if (!blockEntity.world.isClient()) blockEntity.sync();
+            if (!machine.world.isClient()) machine.sync();
         }
 
         public void setTopOption(SideOption option) {
             top.setOption(option, this.getMax(option));
-            if (!blockEntity.world.isClient()) blockEntity.sync();
+            if (!machine.world.isClient()) machine.sync();
         }
 
         public void setBottomOption(SideOption option) {
             bottom.setOption(option, this.getMax(option));
-            if (!blockEntity.world.isClient()) blockEntity.sync();
+            if (!machine.world.isClient()) machine.sync();
         }
 
         public int getFrontValue() {

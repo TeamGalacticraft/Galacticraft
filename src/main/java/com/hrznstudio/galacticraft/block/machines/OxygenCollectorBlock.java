@@ -42,7 +42,7 @@ public class OxygenCollectorBlock extends ConfigurableMachineBlock {
     public OxygenCollectorBlock(Settings settings) {
         super(settings, OxygenCollectorScreenHandler::new, OxygenCollectorBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override

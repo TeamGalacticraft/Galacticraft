@@ -43,7 +43,7 @@ public class RefineryBlock extends ConfigurableMachineBlock {
     public RefineryBlock(Settings settings) {
         super(settings, RefineryScreenHandler::new, RefineryBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.refinery")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override

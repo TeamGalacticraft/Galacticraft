@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.util;
 
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Ref;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
@@ -44,7 +45,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Predicate;
 
 public class EnergyUtils {
-    public static final Predicate<ItemStack> ENERGY_HOLDER_ITEM_FILTER = EnergyUtils::isCapacitor;
+    public static final ItemFilter IS_EXTRACTABLE = EnergyUtils::isEnergyExtractable;
+    public static final ItemFilter IS_INSERTABLE = EnergyUtils::isEnergyInsertable;
 
     public static boolean isEnergyExtractable(Reference<ItemStack> reference) {
         return GalacticraftEnergy.EXTRACTABLE.getFirstOrNull(reference) != null;

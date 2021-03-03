@@ -27,15 +27,25 @@ import alexiil.mc.lib.attributes.ItemAttributeList;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
+    private int ticks = 0;
+
     public InfiniteBatteryItem(Settings settings) {
         super(settings.maxCount(1));
     }
@@ -43,6 +53,14 @@ public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
     @Override
     public boolean hasGlint(ItemStack stack) {
         return true;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
+        tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+        if (ticks >= 500) ticks -= 500;
+        super.appendTooltip(stack, world, tooltip, context);
     }
 
     @Override

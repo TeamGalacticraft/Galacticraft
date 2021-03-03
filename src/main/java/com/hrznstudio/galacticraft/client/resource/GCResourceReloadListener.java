@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.client.resource;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,13 +33,9 @@ import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasHolder;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -61,8 +58,9 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
     }
 
     @Override
-    public void apply(ResourceManager var1) {
+    public void apply(ResourceManager resourceManager) {
         Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        GCGeneratedMachineModels.setAtlas(atlas);
         FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen"))};

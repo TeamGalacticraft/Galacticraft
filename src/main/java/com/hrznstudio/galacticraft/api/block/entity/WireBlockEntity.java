@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.api.block.entity;
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProviderBlockEntity;
 import alexiil.mc.lib.attributes.Simulation;
-import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
@@ -63,7 +63,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, AttributeProvi
     public @NotNull WireNetwork getNetwork() {
         if (this.network == null) {
             if (!this.world.isClient()) {
-                for (Direction direction : Direction.values()) {
+                for (Direction direction : Constants.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
                     if (entity instanceof Wire) {
                         //noinspection ConstantConditions

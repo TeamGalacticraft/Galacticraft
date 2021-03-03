@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -45,7 +46,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -88,9 +88,9 @@ public class ElectricCompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) {
-            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.IS_EXTRACTABLE;
         } else {
             return super.getFilterForSlot(slot);
         }

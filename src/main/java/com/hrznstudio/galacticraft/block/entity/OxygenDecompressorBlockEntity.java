@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -35,7 +36,6 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -44,7 +44,6 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -84,9 +83,9 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         if (slot == CHARGE_SLOT) {
-            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
+            return EnergyUtils.IS_EXTRACTABLE;
         } else {
             return OxygenTankUtils::isOxygenTank;
         }

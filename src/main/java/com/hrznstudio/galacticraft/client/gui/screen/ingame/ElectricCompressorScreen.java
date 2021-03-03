@@ -71,36 +71,36 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float delta, int mouseX, int mouseY) {
-        this.renderBackground(stack);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
         updateProgressDisplay();
 
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        this.drawCraftProgressBar(stack);
+        this.drawCraftProgressBar(matrices);
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float v) {
+        super.render(matrices, mouseX, mouseY, v);
+        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
-    protected void drawCraftProgressBar(MatrixStack stack) {
+    protected void drawCraftProgressBar(MatrixStack matrices) {
         float progress = this.handler.machine.getProgress();
         float maxProgress = this.handler.machine.getMaxProgress();
         float progressScale = (progress / maxProgress);
         // Progress confirmed to be working properly, below code is the problem.
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(stack, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.drawTexture(matrices, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
     @Override
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
+        super.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

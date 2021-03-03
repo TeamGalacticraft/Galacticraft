@@ -396,21 +396,21 @@ public class SpaceRaceScreen extends Screen {
         return (int) (this.width * this.getMarginPercent());
     }
 
-    private void renderButton(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int width, int height) {
+    private void renderButton(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int width, int height) {
         RenderSystem.disableBlend();
-        stack.push();
+        matrices.push();
 
-        fillSolid(stack.peek().getModel(), x, y, x + width, y + height, 0x0);
+        fillSolid(matrices.peek().getModel(), x, y, x + width, y + height, 0x0);
 
-        drawHorizontalLineSolid(stack, x, x + width, y, 0x2d2d2d);
-        drawVerticalLineSolid(stack, x + width, y, y + height, 0x2d2d2d);
-        drawHorizontalLineSolid(stack, x + width, x, y + height, 0x2d2d2d);
-        drawVerticalLineSolid(stack, x, y, y + height, 0x2d2d2d);
+        drawHorizontalLineSolid(matrices, x, x + width, y, 0x2d2d2d);
+        drawVerticalLineSolid(matrices, x + width, y, y + height, 0x2d2d2d);
+        drawHorizontalLineSolid(matrices, x + width, x, y + height, 0x2d2d2d);
+        drawVerticalLineSolid(matrices, x, y, y + height, 0x2d2d2d);
 
-        stack.pop();
+        matrices.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text.asOrderedText(), x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(matrices, text.asOrderedText(), x + (width / 2F) - (textRenderer.getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private enum Menu {

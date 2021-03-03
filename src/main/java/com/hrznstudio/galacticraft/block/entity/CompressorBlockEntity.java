@@ -24,6 +24,8 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.SideOption;
@@ -47,7 +49,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -88,11 +89,11 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         if (slot == FUEL_INPUT_SLOT) {
             return stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null;
         }
-        return Constants.Misc.alwaysTrue();
+        return ConstantItemFilter.ANYTHING;
     }
 
     @Override

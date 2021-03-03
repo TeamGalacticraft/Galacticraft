@@ -28,6 +28,8 @@ import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -42,7 +44,6 @@ import com.hrznstudio.galacticraft.util.FluidUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -57,7 +58,6 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -108,14 +108,13 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == 0) {
-            return EnergyUtils.ENERGY_HOLDER_ITEM_FILTER;
-        } else if (slot == 1) {
+    public ItemFilter getFilterForSlot(int slot) {
+        if (slot == BATTERY_SLOT) {
+            return EnergyUtils.IS_EXTRACTABLE;
+        } else if (slot == OXYGEN_TANK_SLOT) {
             return stack -> FluidUtils.canExtractFluids(stack, GalacticraftFluids.LIQUID_OXYGEN);
-        } else {
-            return Constants.Misc.alwaysFalse();
         }
+        return ConstantItemFilter.NOTHING;
     }
 
     @Override

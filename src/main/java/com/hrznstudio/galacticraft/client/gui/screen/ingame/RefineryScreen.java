@@ -54,16 +54,16 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
-        this.renderBackground(stack);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.refinery").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float v) {
+        super.render(matrices, mouseX, mouseY, v);
+        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.refinery").getString(), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

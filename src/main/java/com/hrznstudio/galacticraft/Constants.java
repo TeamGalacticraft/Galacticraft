@@ -23,13 +23,17 @@
 package com.hrznstudio.galacticraft;
 
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
+import com.hrznstudio.galacticraft.util.ColorUtils;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 
 import java.util.function.Predicate;
 
@@ -601,11 +605,12 @@ public class Constants {
 
     public static class Misc {
         public static final Text EMPTY_TEXT = new LiteralText("");
-        public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
         public static final Identifier EMPTY = new Identifier("empty");
         public static final Predicate<?> ALWAYS_FALSE = o -> false;
         public static final Predicate<?> ALWAYS_TRUE = o -> true;
         public static final FluidFilter LOX_ONLY = key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
+        public static final Direction[] DIRECTIONS = Direction.values();
+        public static final BlockFace[] BLOCK_FACES = BlockFace.values();
 
         @SuppressWarnings("unchecked")
         public static <T> Predicate<T> alwaysFalse() {
@@ -615,6 +620,26 @@ public class Constants {
         @SuppressWarnings("unchecked")
         public static <T> Predicate<T> alwaysTrue() {
             return (Predicate<T>) ALWAYS_TRUE;
+        }
+    }
+
+    public static class Styles {
+        public static final Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
+        public static final Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
+        public static final Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
+        public static final Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
+        public static final Style BLUE_STYLE = Style.EMPTY.withColor(Formatting.BLUE);
+        public static final Style AQUA_STYLE = Style.EMPTY.withColor(Formatting.AQUA);
+        public static final Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
+        public static final Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
+        public static final Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
+
+        public static Style getStorageLevelColor(double scale) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
+        }
+
+        public static Style getRainbow(int ticks) {
+            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtils.HSBtoRGB(ticks / 500.0f, 1, 1)));
         }
     }
 

@@ -22,6 +22,8 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -30,7 +32,6 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -40,7 +41,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -68,8 +68,8 @@ public class BasicSolarPanelBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        return slot == CHARGE_SLOT ? EnergyUtils.ENERGY_HOLDER_ITEM_FILTER : Constants.Misc.alwaysFalse();
+    public ItemFilter getFilterForSlot(int slot) {
+        return slot == CHARGE_SLOT ? EnergyUtils.IS_INSERTABLE : ConstantItemFilter.NOTHING;
     }
 
     @Override

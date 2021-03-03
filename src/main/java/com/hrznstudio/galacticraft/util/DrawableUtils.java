@@ -33,11 +33,11 @@ import net.minecraft.text.Text;
  */
 @Environment(EnvType.CLIENT)
 public class DrawableUtils {
-    public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, String text, int x, int y, int color) {
-        textRenderer.draw(stack, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+    public static void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, String text, int x, int y, int color) {
+        textRenderer.draw(matrices, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 
-    public static void drawCenteredString(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int color) {
-        textRenderer.draw(stack, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+    public static void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
+        textRenderer.draw(matrices, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
     }
 }
