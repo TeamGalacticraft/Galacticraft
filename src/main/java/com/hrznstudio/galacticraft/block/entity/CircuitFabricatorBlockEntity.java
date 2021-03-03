@@ -27,7 +27,6 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
@@ -40,7 +39,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
@@ -52,13 +50,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity {
-    private static final Item[] MANDATORY_MATERIALS = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     public static final int MAX_PROGRESS = 300;
 
     public static final int CHARGE_SLOT = 0;
@@ -78,13 +74,12 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     };
 
     static {
-        SLOT_FILTERS = new ItemFilter[6];
-        SLOT_FILTERS[0] = EnergyUtils.IS_EXTRACTABLE;
-        SLOT_FILTERS[1] = stack -> stack.getItem() == MANDATORY_MATERIALS[0];
-        SLOT_FILTERS[2] = stack -> stack.getItem() == MANDATORY_MATERIALS[1];
-        SLOT_FILTERS[3] = stack -> stack.getItem() == MANDATORY_MATERIALS[2];
-        SLOT_FILTERS[4] = stack -> stack.getItem() == MANDATORY_MATERIALS[3];
-        SLOT_FILTERS[5] = ConstantItemFilter.ANYTHING;
+        SLOT_FILTERS = new ItemFilter[5];
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
+        SLOT_FILTERS[INPUT_SLOT_DIAMOND] = stack -> stack.getItem() == Items.DIAMOND;
+        SLOT_FILTERS[INPUT_SLOT_SILICON] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
+        SLOT_FILTERS[INPUT_SLOT_SILICON_2] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
+        SLOT_FILTERS[INPUT_SLOT_REDSTONE] = stack -> stack.getItem() == Items.REDSTONE;
     }
 
 
@@ -117,8 +112,8 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public ItemFilter getFilterForSlot(int slot) {
-        if (slot == 5) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
-        if (slot == 6) return ConstantItemFilter.ANYTHING;
+        if (slot == INPUT_SLOT) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
+        if (slot == OUTPUT_SLOT) return ConstantItemFilter.ANYTHING;
 
         return SLOT_FILTERS[slot];
     }
@@ -126,7 +121,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public void updateComponents() {
         super.updateComponents();
-        attemptChargeFromStack(CHARGE_SLOT);
+        this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
@@ -138,7 +133,7 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
             }
         }
         Optional<FabricationRecipe> recipe = this.getRecipe(recipeSlotInv);
-        if (recipe.isPresent() && this.canInsert(OUTPUT_SLOT, recipe.get().getOutput())) return Status.FULL;
+        if (recipe.isPresent() && !this.canInsert(OUTPUT_SLOT, recipe.get().getOutput())) return Status.FULL;
         return Status.PROCESSING;
     }
 
@@ -150,13 +145,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         }
         this.progress++;
         if (this.progress >= this.getMaxProgress()) {
-            if (!this.getInventory().extractStack(INPUT_SLOT_DIAMOND, stack -> stack.getItem() == Items.DIAMOND, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (!this.getInventory().extractStack(INPUT_SLOT_SILICON, stack -> stack.getItem() == GalacticraftItems.RAW_SILICON, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (!this.getInventory().extractStack(INPUT_SLOT_SILICON_2, stack -> stack.getItem() == GalacticraftItems.RAW_SILICON, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (!this.getInventory().extractStack(INPUT_SLOT_REDSTONE, stack -> stack.getItem() == Items.REDSTONE, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
-            if (!this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             this.progress = 0;
-            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElse(null).getOutput().copy(), Simulation.ACTION);
+            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
         }
     }
 
