@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
@@ -41,8 +40,6 @@ import net.minecraft.util.math.Matrix4f;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class SpaceRaceScreen extends Screen {
-    private byte resetHoldTime = 0;
-
     private int widthSize = 0;
     private int heightSize = 0;
     private Menu menu = Menu.MAIN;
@@ -116,58 +113,58 @@ public class SpaceRaceScreen extends Screen {
         fill(stack, getLeft(), getTop(), getRight(), getBottom(), 0x80000000);
     }
 
-    private void renderForeground(MatrixStack stack, int mouseX, int mouseY) {
-        DrawableUtils.drawCenteredString(stack, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+    private void renderForeground(MatrixStack matrices, int mouseX, int mouseY) {
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.exit"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
             if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 85, 100, 30)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.add_players"), this.getLeft() + 10, this.getBottom() - 85, 100, 30);
             }
             if (!check(mouseX, mouseY, this.getLeft() + 10, this.getBottom() - 45, 100, 30)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.remove_players"), this.getLeft() + 10, this.getBottom() - 45, 100, 30);
             }
             if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.server_stats"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.server_stats"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 85, 100, 30);
             }
             if (!check(mouseX, mouseY, this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.global_stats"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.global_stats"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.coming_soon"), this.getRight() - 100 - 10, this.getBottom() - 45, 100, 30);
             }
         } else if (menu == Menu.ADD_PLAYERS) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
         } else if (menu == Menu.REMOVE_PLAYERS) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
         } else if (menu == Menu.TEAM_COLOR) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
         } else if (menu == Menu.TEAM_FLAG) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
-                renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             } else {
-                renderHoveredButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
+                this.renderHoveredButton(matrices, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);
             }
         }
     }
@@ -192,61 +189,31 @@ public class SpaceRaceScreen extends Screen {
                     if (charArray[j] == ' ') {
                         break;
                     }
-                    dist += textRenderer.getTextHandler().getWidth(String.valueOf(charArray[j]));
+                    dist += this.textRenderer.getTextHandler().getWidth(String.valueOf(charArray[j]));
                 }
                 if (xOffset + dist >= maxLength) {
-                    yOffset += textRenderer.fontHeight * scale;
+                    yOffset += this.textRenderer.fontHeight * scale;
                     xOffset = 0;
                     continue;
                 }
-                xOffset = xOffset + (textRenderer.getTextHandler().getWidth(" ") * scale);
+                xOffset = xOffset + (this.textRenderer.getTextHandler().getWidth(" ") * scale);
                 continue;
             }
 
             if (xOffset + x >= this.getLeft() + 10) {
-                if (xOffset + x + textRenderer.getTextHandler().getWidth(String.valueOf(c)) < this.getRight() - 10) {
-                    if (yOffset + y - (textRenderer.fontHeight * scale) >= this.getTop() + 10 && yOffset + y + (textRenderer.fontHeight * scale) <= this.getBottom() - 10) {
+                if (xOffset + x + this.textRenderer.getTextHandler().getWidth(String.valueOf(c)) < this.getRight() - 10) {
+                    if (yOffset + y - (this.textRenderer.fontHeight * scale) >= this.getTop() + 10 && yOffset + y + (this.textRenderer.fontHeight * scale) <= this.getBottom() - 10) {
                         matrices.push();
                         matrices.translate(x + xOffset, y + yOffset, getZOffset());
                         matrices.scale(scale, scale, scale);
-                        textRenderer.draw(matrices, String.valueOf(c), 0, 0, color);
+                        this.textRenderer.draw(matrices, String.valueOf(c), 0, 0, color);
                         matrices.pop();
                     }
                 }
             }
-            xOffset = xOffset + (textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale);
+            xOffset = xOffset + (this.textRenderer.getTextHandler().getWidth(String.valueOf(c)) * scale);
         }
     }
-//
-//    private int getSlotAppY(ResearchNode node) {
-//        return SLOT_Y;
-//    }
-//
-//    private int getSlotAppX(ResearchNode node) {
-//        AdvancementProgress progress = ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getProgress(node);
-//        if (progress.isDone()) {
-//            return SLOT_COMPLETE_X;
-//        } else if (progress.isAnyObtained()) {
-//            return SLOT_IN_PROGRESS_X;
-//        } else {
-//            return SLOT_UNLOCKABLE_X;
-//        }
-//    }
-//
-//    private int getAppropriateNodeTexY(ResearchNode node) {
-//        AdvancementProgress progress = ((ClientPlayNetworkHandlerAccessor) MinecraftClient.getInstance().getNetworkHandler()).getClientResearchManager().getProgress(node);
-//        if (progress.isDone()) {
-//            return NODE_COMPLETE_Y;
-//        } else if (progress.isAnyObtained()) {
-//            return NODE_IN_PROGRESS_Y;
-//        } else {
-//            return NODE_UNLOCKABLE_Y;
-//        }
-//    }
-//
-//    private int getAppropriateNodeTexX(ResearchNode node) {
-//        return NODE_X;
-//    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -303,13 +270,6 @@ public class SpaceRaceScreen extends Screen {
         }
 
         super.render(stack, x, y, delta);
-
-//        this.mouseX = (float) x;
-//        this.mouseY = (float)/*y*/ minecraft.window.getScaledHeight() / 2;
-//
-//        DiffuseLighting.enableForItems();
-//        this.itemRenderer.renderGuiItem(Items.GRASS_BLOCK.getDefaultStack(), this.x + 6, this.y - 20);
-//        this.itemRenderer.renderGuiItem(GalacticraftItems.OXYGEN_FAN.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
     private void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
@@ -366,36 +326,6 @@ public class SpaceRaceScreen extends Screen {
         return Math.max(y, this.getTop() + 25);
     }
 
-    private int getTexPosXToFit(int x, int texPosX, int texWidth) {
-        int rX = getPosXToFit(x);
-        if (rX - x == 0) return texPosX;
-        if (rX - x > texWidth) return  texPosX + texWidth;
-        return texPosX + (rX - x);
-    }
-
-    private int getTexPosYToFit(int y, int texPosY, int texHeight) {
-        int rY = getPosYToFit(y);
-        if (rY - y == 0) return texPosY;
-        if (rY - y > texHeight) return  texPosY + texHeight;
-        return texPosY + (rY - y);
-    }
-
-    private int getWidthToFit(int x, int width) {
-        if (x >= this.getRight() - 10) return 0; //too far past
-        if (x < this.getLeft() + 10) return width - Math.abs(x - (this.getLeft() + 10));
-        if (x + width >= this.getRight() - 10) return width - (width - Math.abs(x - (this.getRight() - 10)));
-
-        return width;
-    }
-
-    private int getHeightToFit(int y, int height) {
-        if (y >= this.getBottom() - 10) return 0; //too far past
-        if (y < this.getTop() + 25) return height - Math.abs(y - (this.getTop() + 25));
-        if (y + height >= this.getBottom() - 10) return getBottom() - 10 - y;
-
-        return height;
-    }
-
     private boolean isAnimationComplete() {
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
         int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
@@ -403,7 +333,7 @@ public class SpaceRaceScreen extends Screen {
         return widthSize >= maxWidth && heightSize >= maxHeight;
     }
 
-    private void renderHoveredButton(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int width, int height) {
+    private void renderHoveredButton(MatrixStack stack, Text text, int x, int y, int width, int height) {
         RenderSystem.disableBlend();
         stack.push();
 
@@ -417,7 +347,7 @@ public class SpaceRaceScreen extends Screen {
         stack.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        this.textRenderer.draw(stack, text, x + (width / 2F) - (this.textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private int getYMargins() {
@@ -428,7 +358,7 @@ public class SpaceRaceScreen extends Screen {
         return (int) (this.width * this.getMarginPercent());
     }
 
-    private void renderButton(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int width, int height) {
+    private void renderButton(MatrixStack matrices, Text text, int x, int y, int width, int height) {
         RenderSystem.disableBlend();
         matrices.push();
 
@@ -442,7 +372,7 @@ public class SpaceRaceScreen extends Screen {
         matrices.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(matrices, text, x + (width / 2F) - (textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        this.textRenderer.draw(matrices, text, x + (width / 2F) - (this.textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private enum Menu {
