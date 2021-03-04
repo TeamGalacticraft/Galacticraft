@@ -38,6 +38,7 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
+import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
@@ -58,18 +59,24 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -84,7 +91,7 @@ import java.util.*;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable {
+public abstract class ConfigurableMachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory {
     private final SecurityInfo security = new SecurityInfo();
     private final SideConfiguration sideConfiguration = new SideConfiguration(this, this.validSideOptions(), 1, this.getInventorySize(), this.getFluidTankSize());
 
@@ -650,6 +657,16 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         this.world.setBlockState(this.pos, state.with(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY, !state.get(ConfigurableMachineBlock.ARBITRARY_BOOLEAN_PROPERTY)), 11);
     }
 
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.getPos());
+    }
+
+    @Override
+    public Text getDisplayName() {
+        return LiteralText.EMPTY;
+    }
+
     public enum RedstoneState implements StringIdentifiable {
         /**
          * Ignores redstone entirely.
@@ -889,16 +906,12 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
         private final ConfiguredSideOption right;
         private final ConfiguredSideOption top;
         private final ConfiguredSideOption bottom;
-        private final List<SideOption> values;
         private final int capacitors;
         private final int invSize;
         private final int tanks;
         private final ConfigurableMachineBlockEntity machine;
 
         public SideConfiguration(ConfigurableMachineBlockEntity machine, List<SideOption> values, int capacitors, int invSize, int tanks) {
-            if (!values.contains(SideOption.DEFAULT)) throw new RuntimeException();
-            this.values = new ArrayList<>(values);
-            this.values.sort(Enum::compareTo);
             this.capacitors = capacitors;
             this.invSize = invSize;
             this.tanks = tanks;
@@ -910,30 +923,6 @@ public abstract class ConfigurableMachineBlockEntity extends BlockEntity impleme
             this.right = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
             this.top = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
             this.bottom = new ConfiguredSideOption(SideOption.DEFAULT, 0, 1);
-        }
-
-        public SideOption getFrontOption() {
-            return front.getOption();
-        }
-
-        public SideOption getBackOption() {
-            return back.getOption();
-        }
-
-        public SideOption getLeftOption() {
-            return left.getOption();
-        }
-
-        public SideOption getRightOption() {
-            return right.getOption();
-        }
-
-        public SideOption getUpOption() {
-            return top.getOption();
-        }
-
-        public SideOption getDownOption() {
-            return bottom.getOption();
         }
 
         public void setFrontOption(SideOption option) {

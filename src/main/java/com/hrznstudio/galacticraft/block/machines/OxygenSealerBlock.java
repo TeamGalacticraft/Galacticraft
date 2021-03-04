@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.block.entity.OxygenSealerBlockEntity;
-import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.text.TranslatableText;
@@ -37,7 +36,7 @@ import net.minecraft.world.World;
  */
 public class OxygenSealerBlock extends ConfigurableMachineBlock {
     public OxygenSealerBlock(Settings settings) {
-        super(settings, OxygenSealerScreenHandler::new, OxygenSealerBlockEntity::new,
+        super(settings, OxygenSealerBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.oxygen_sealer")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }

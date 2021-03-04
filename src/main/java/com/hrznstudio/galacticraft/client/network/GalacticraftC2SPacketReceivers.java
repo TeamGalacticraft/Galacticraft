@@ -80,5 +80,9 @@ public class GalacticraftC2SPacketReceivers {
             ChunkOxygenAccessor accessor = ((ChunkOxygenAccessor) clientPlayNetworkHandler.getWorld().getChunk(packetByteBuf.readInt(), packetByteBuf.readInt()));
             accessor.readOxygenUpdate(b, packetByteBuf);
         });
+
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_screen"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+
+        });
     }
 }

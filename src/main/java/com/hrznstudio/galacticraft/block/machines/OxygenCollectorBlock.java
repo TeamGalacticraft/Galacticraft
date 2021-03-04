@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.block.machines;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.DustParticleEffect;
@@ -40,7 +39,7 @@ import java.util.Random;
  */
 public class OxygenCollectorBlock extends ConfigurableMachineBlock {
     public OxygenCollectorBlock(Settings settings) {
-        super(settings, OxygenCollectorScreenHandler::new, OxygenCollectorBlockEntity::new,
+        super(settings, OxygenCollectorBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }

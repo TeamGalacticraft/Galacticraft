@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
-import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.particle.ParticleTypes;
@@ -41,7 +40,7 @@ import java.util.Random;
  */
 public class RefineryBlock extends ConfigurableMachineBlock {
     public RefineryBlock(Settings settings) {
-        super(settings, RefineryScreenHandler::new, RefineryBlockEntity::new,
+        super(settings, RefineryBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.refinery")
                         .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }

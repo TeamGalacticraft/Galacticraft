@@ -37,7 +37,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAccessor {
     @Inject(method = "fromPacket", at = @At("RETURN"))
     private void fromPacket(PacketByteBuf packetByteBuf, CallbackInfo ci) {
-        if (!packetByteBuf.readBoolean()) return;
+        this.setTotalOxygen(packetByteBuf.readShort());
+        if (this.getTotalOxygen() == 0) return;
         boolean[] oxygen = this.getArray();
         for (int i = 0; i < (16 * 16 * 16) / 8; i++) {
             short b = (short) (packetByteBuf.readByte() + 128);
@@ -50,28 +51,5 @@ public abstract class ClientChunkSectionMixin implements ChunkSectionOxygenAcces
             oxygen[(i * 8) + 6] = (b & 64) != 0;
             oxygen[(i * 8) + 7] = (b & 128) !=0 ;
         }
-
-//        boolean state = packetByteBuf.readBoolean();
-//        boolean[] array = this.getInternalArray();
-//        short curIdx = 0;
-//        short s;
-//        while (true) {
-//            if (packetByteBuf.readBoolean()) {
-//                s = (short) (packetByteBuf.readByte() + 128);
-//            } else {
-//                s = packetByteBuf.readShort();
-//                if (s == Short.MIN_VALUE) {
-//                    for (int i = curIdx; i < array.length; i++) {
-//                        array[i] = state;
-//                    }
-//                    break;
-//                }
-//            }
-//            for (int i = curIdx; i < curIdx + s; i++) {
-//                array[i] = state;
-//            }
-//            state = !state;
-//            curIdx += s;
-//        }
     }
 }

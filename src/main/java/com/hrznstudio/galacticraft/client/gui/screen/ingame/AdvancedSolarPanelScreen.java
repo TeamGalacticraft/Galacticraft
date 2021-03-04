@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -75,7 +76,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     @Override
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
-        List<Text> lines = new ArrayList<>();
+        List<Text> lines = new LinkedList<>();
         if (this.handler.machine.getStatus().getType().isActive()) {
             long time = world.getTimeOfDay() % 24000;
             if (time > 6000) {

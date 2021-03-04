@@ -39,6 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -73,7 +74,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @Override
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
-        List<Text> lines = new ArrayList<>();
+        List<Text> lines = new LinkedList<>();
         if (this.handler.machine.getStatus().getType().isActive()) {
             lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }

@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.entity.attribute.GalacticraftEntityAttributes;
@@ -32,6 +33,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.math.Direction;
@@ -56,7 +58,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @Redirect(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;isSubmergedIn(Lnet/minecraft/tag/Tag;)Z", ordinal = 0))
     private boolean checkOxygenAtmosphere_gcr(LivingEntity entity, Tag<Fluid> tag) {
-        return entity.isSubmergedIn(tag) || !((WorldOxygenAccessor) this.world).isBreathable(entity.getBlockPos().offset(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose()))));
+        return entity.isSubmergedIn(tag) || !((WorldOxygenAccessor) this.world).isBreathable(entity.getBlockPos().offset(Direction.UP, (int)Math.floor(entity.getEyeHeight(entity.getPose(), entity.getDimensions(entity.getPose())))));
     }
 
     @Inject(method = "getNextAirUnderwater", at = @At(value = "INVOKE", target = "Lnet/minecraft/enchantment/EnchantmentHelper;getRespiration(Lnet/minecraft/entity/LivingEntity;)I"), cancellable = true)
@@ -65,17 +67,20 @@ public abstract class LivingEntityMixin extends Entity {
         if (attribute != null && attribute.getValue() >= 0.99D) {
             ci.setReturnValue(this.getNextAirOnLand(air));
         }
-        FixedItemInv gearInv = ((GearInventoryProvider)this).getGearInv();
 
-        OxygenTank tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(6));
-        if (tank.getAmount() > 0) {
-            tank.setAmount(tank.getAmount() - 1);
-            ci.setReturnValue(this.getNextAirOnLand(air));
-        }
-        tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(7));
-        if (tank.getAmount() > 0) {
-            tank.setAmount(tank.getAmount() - 1);
-            ci.setReturnValue(this.getNextAirOnLand(air));
+        FixedItemInv gearInv = ((GearInventoryProvider) this).getGearInv();
+        if (gearInv != EmptyFixedItemInv.INSTANCE) {
+
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(6));
+            if (tank.getAmount() > 0) {
+                tank.setAmount(tank.getAmount() - 1);
+                ci.setReturnValue(this.getNextAirOnLand(air));
+            }
+            tank = OxygenTankUtils.getOxygenTank(gearInv.getSlot(7));
+            if (tank.getAmount() > 0) {
+                tank.setAmount(tank.getAmount() - 1);
+                ci.setReturnValue(this.getNextAirOnLand(air));
+            }
         }
     }
 }

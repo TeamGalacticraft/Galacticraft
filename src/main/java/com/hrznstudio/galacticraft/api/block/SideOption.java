@@ -28,7 +28,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,8 +78,8 @@ public enum SideOption implements Comparable<SideOption> {
         return output;
     }
 
-    public SideOption nextValidOption(ConfigurableMachineBlockEntity blockEntity) {
-        List<SideOption> values = new ArrayList<>(blockEntity.validSideOptions());
+    public SideOption nextValidOption(ConfigurableMachineBlockEntity machine) {
+        List<SideOption> values = machine.validSideOptions();
         int i = values.indexOf(this);
         if (++i == values.size()) {
             return values.get(0);
@@ -89,8 +88,8 @@ public enum SideOption implements Comparable<SideOption> {
         }
     }
 
-    public SideOption prevValidOption(ConfigurableMachineBlockEntity blockEntity) {
-        List<SideOption> values = new ArrayList<>(blockEntity.validSideOptions());
+    public SideOption prevValidOption(ConfigurableMachineBlockEntity machine) {
+        List<SideOption> values = machine.validSideOptions();
         int i = values.indexOf(this);
         if (i-- == 0) {
             return values.get(values.size() - 1);

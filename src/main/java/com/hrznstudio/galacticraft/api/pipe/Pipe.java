@@ -32,10 +32,7 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public interface Pipe {
     /**
@@ -130,11 +127,12 @@ public interface Pipe {
 
             this.fluid.toTag(compoundTag);
             compoundTag.putLong("source", this.source.asLong());
-            List<Long> list = new ArrayList<>(this.path.size());
-            for (BlockPos pos : this.path) {
-                list.add(pos.asLong());
+            long[] path = new long[this.path.size()];
+            Iterator<BlockPos> iterator = this.path.iterator();
+            for (int i = 0; i < this.path.size(); i++) {
+                path[i] = iterator.next().asLong();
             }
-            compoundTag.putLongArray("path", list);
+            compoundTag.putLongArray("path", path);
             compoundTag.putBoolean("hasDir", this.endDir != null);
             if (this.endDir != null) {
                 compoundTag.putInt("dir", this.endDir.ordinal());
