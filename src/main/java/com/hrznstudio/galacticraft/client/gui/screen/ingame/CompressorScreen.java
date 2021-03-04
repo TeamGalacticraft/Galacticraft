@@ -46,22 +46,11 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
-    protected int progressDisplayX;
-    protected int progressDisplayY;
+    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN));
 
     public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
         super(electricCompressorContainer, inv, title);
         this.backgroundHeight = 192;
-    }
-
-    protected String getBackgroundLocation() {
-        return Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN);
-    }
-
-    protected void updateProgressDisplay() {
-        progressDisplayX = this.x + 77;
-        progressDisplayY = this.y + 28;
     }
 
     @Override
@@ -69,9 +58,6 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
-        updateProgressDisplay();
-
-        //this.drawTexturedRect(...)
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawFuelProgressBar(matrices);
@@ -100,13 +86,10 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progress = this.handler.machine.getProgress();
-        float maxProgress = this.handler.machine.getMaxProgress();
-        float progressScale = (progress / maxProgress);
-        // Progress confirmed to be working properly, below code is the problem.
+        float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(matrices, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
+        this.drawTexture(matrices, this.x + 77, this.x + 28, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 
     private int getFuelProgress() {

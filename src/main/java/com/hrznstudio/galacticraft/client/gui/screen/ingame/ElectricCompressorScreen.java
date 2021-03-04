@@ -45,25 +45,11 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
-    private final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, getBackgroundLocation());
-
-    private int progressDisplayX;
-    private int progressDisplayY;
+    private final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_COMPRESSOR_SCREEN));
 
     public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 199;
-    }
-
-    protected void updateProgressDisplay() {
-        progressDisplayX = this.x + 77;
-        progressDisplayY = this.y + 28;
-//        progressDisplayX = left + 105;
-        progressDisplayY = this.y + 29;
-    }
-
-    protected String getBackgroundLocation() {
-        return Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_COMPRESSOR_SCREEN);
     }
 
     private String getContainerDisplayName() {
@@ -74,8 +60,6 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
-
-        updateProgressDisplay();
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
@@ -90,17 +74,9 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     }
 
     protected void drawCraftProgressBar(MatrixStack matrices) {
-        float progress = this.handler.machine.getProgress();
-        float maxProgress = this.handler.machine.getMaxProgress();
-        float progressScale = (progress / maxProgress);
-        // Progress confirmed to be working properly, below code is the problem.
+        float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(matrices, progressDisplayX, progressDisplayY, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
-    }
-
-    @Override
-    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        super.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }
