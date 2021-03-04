@@ -24,21 +24,14 @@ package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.world.biome.source.MoonBiomeSource;
 import com.hrznstudio.galacticraft.world.gen.chunk.MoonChunkGenerator;
-import com.mojang.serialization.Lifecycle;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.*;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.source.HorizontalVoronoiBiomeAccessType;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.*;
-
-import java.util.OptionalLong;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

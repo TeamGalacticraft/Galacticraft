@@ -23,11 +23,11 @@
 package com.hrznstudio.galacticraft.mixin;
 
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.hrznstudio.galacticraft.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
-import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;

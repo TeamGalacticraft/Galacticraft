@@ -30,6 +30,8 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.registry.Registry;
 
+import java.math.RoundingMode;
+
 public class FluidTankPropertyDelegate implements PropertyDelegate {
     private final FixedFluidInv inv;
     private final Fluid[] fluids;
@@ -44,7 +46,7 @@ public class FluidTankPropertyDelegate implements PropertyDelegate {
         if (index % 2 == 0) {
             return Registry.FLUID.getRawId(inv.getInvFluid(index / 2).getRawFluid());
         } else {
-            return (int) (inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInexactDouble() * 1000.0D);
+            return (int) (inv.getInvFluid(((index + 1) / 2) - 1).getAmount_F().asInt(1000, RoundingMode.HALF_DOWN));
         }
     }
 

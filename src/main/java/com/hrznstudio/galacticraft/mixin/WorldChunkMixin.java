@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.mixin;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
-import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;

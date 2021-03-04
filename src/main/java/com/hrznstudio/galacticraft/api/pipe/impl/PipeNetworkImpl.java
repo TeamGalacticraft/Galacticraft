@@ -22,9 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.pipe.impl;
 
-import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
@@ -33,11 +31,11 @@ import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
-import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -71,7 +69,7 @@ public class PipeNetworkImpl implements PipeNetwork {
             if (pipe == null) throw new RuntimeException("Tried to add a pipe that didn't exist!");
         }
         pipe.setNetwork(this);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             BlockPos conn = pos.offset(direction);
             BlockEntity entity = world.getBlockEntity(conn);
             PipeConnectionType type = pipe.getConnection(direction, entity);
@@ -95,7 +93,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     public void removePipe(@NotNull BlockPos pos) {
         if (contains(pos)) {
             Deque<BlockPos> pipes = new LinkedList<>();
-            for (Direction direction : Direction.values()) {
+            for (Direction direction : Constants.Misc.DIRECTIONS) {
                 BlockPos conn = pos.offset(direction);
                 PipeConnectionType type = getConnection(pos, conn);
                 if (type != PipeConnectionType.NONE) {
@@ -210,7 +208,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     @Override
     public @NotNull Map<Direction, @NotNull PipeConnectionType> getAdjacent(BlockPos from) {
         Map<Direction, PipeConnectionType> map = new EnumMap<>(Direction.class);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             map.put(direction, getConnection(from, from.offset(direction)));
         }
 

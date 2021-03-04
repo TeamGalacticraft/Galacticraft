@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;

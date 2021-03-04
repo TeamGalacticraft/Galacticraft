@@ -36,7 +36,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -73,12 +72,12 @@ public class GalacticraftS2CPacketReceivers {
                 ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
                 if (blockEntity != null) {
                     if (buffer.readBoolean()) {
-                        blockEntity.getSideConfigInfo().set(buffer.readEnumConstant(BlockFace.class), buffer.readEnumConstant(SideOption.class));
+                        blockEntity.getSideConfiguration().set(buffer.readEnumConstant(BlockFace.class), buffer.readEnumConstant(SideOption.class));
                     } else {
                         if (buffer.readBoolean()) {
-                            blockEntity.getSideConfigInfo().increment(buffer.readEnumConstant(BlockFace.class));
+                            blockEntity.getSideConfiguration().increment(buffer.readEnumConstant(BlockFace.class));
                         } else {
-                            blockEntity.getSideConfigInfo().decrement(buffer.readEnumConstant(BlockFace.class));
+                            blockEntity.getSideConfiguration().decrement(buffer.readEnumConstant(BlockFace.class));
                         }
                     }
                 }

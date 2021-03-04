@@ -58,7 +58,7 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
         this.addSlot(new FilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT, 134, 15));
         this.addSlot(new OutputSlot(machine.getWrappedInventory(), CircuitFabricatorBlockEntity.OUTPUT_SLOT, 152, 70));
 
-        this.addPlayerInventorySlots(0, 110);
+        this.addPlayerInventorySlots(0, 94);
     }
 
     public CircuitFabricatorScreenHandler(int syncId, PlayerInventory inv, PacketByteBuf buf) {

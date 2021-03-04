@@ -31,15 +31,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -57,26 +56,26 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
-        this.renderBackground(stack);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
         this.client.getTextureManager().bindTexture(BACKGROUND);
 
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v) {
-        super.render(stack, mouseX, mouseY, v);
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
+        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.basic_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
     @NotNull
     protected Collection<? extends Text> getEnergyTooltipLines() {
-        List<Text> lines = new ArrayList<>();
+        List<Text> lines = new LinkedList<>();
         if (this.handler.machine.getStatus().getType().isActive()) {
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Style.EMPTY.withColor(Formatting.LIGHT_PURPLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

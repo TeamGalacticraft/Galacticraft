@@ -22,16 +22,15 @@
 
 package com.hrznstudio.galacticraft.block.environment;
 
+import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.world.BlockView;
 
 import java.util.List;
@@ -49,9 +48,9 @@ public class GlowstoneLanternBlock extends LanternBlock {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, BlockView blockView, List<Text> list, TooltipContext tooltipContext) {
         if (Screen.hasShiftDown()) {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.glowstone_lantern").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            list.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

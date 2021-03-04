@@ -47,9 +47,11 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -69,10 +71,10 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constants.MOD_ID, "block/machine_item_output");
 
     private static Function<Identifier, Sprite> atlas;
-    private static final Map<Block, ModelTextureProvider> textureProviders = new HashMap<>();
+    private static final Map<Block, ModelTextureProvider> TEXTURE_PROVIDERS = new HashMap<>();
 
     public static void register(Block block, ModelTextureProvider provider) {
-        textureProviders.put(block, provider);
+        TEXTURE_PROVIDERS.put(block, provider);
     }
 
     public static void registerDefaults() {
@@ -169,7 +171,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getInvFluid(0).getAmount_F().div(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxAmount_F(0)).asInexactDouble() * 8.0D)));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getInvFluid(0).getAmount_F().div(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxAmount_F(0)).asInt(8, RoundingMode.DOWN))));
                 default:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
             }
@@ -223,6 +225,11 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
         });
     }
 
+    @ApiStatus.Internal
+    public static void setAtlas(Function<Identifier, Sprite> function) {
+        atlas = function;
+    }
+
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -233,15 +240,13 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
         ConfigurableMachineBlockEntity blockEntity = ((ConfigurableMachineBlockEntity) blockView.getBlockEntity(pos));
         if (blockEntity == null) throw new RuntimeException("Failed to grab block entity!");
         if (atlas == null) {
-            atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+            setAtlas(MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE));
         }
         context.pushTransform(quad -> {
-            SideOption option = blockEntity.getSideConfigInfo().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getOption();
+            SideOption option = blockEntity.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getOption();
             switch (option) {
                 case DEFAULT:
-                    Sprite sprite = textureProviders.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos);
-                    //noinspection ConstantConditions
-                    if (sprite == null) throw new RuntimeException("Missing default sprite for block: " + state.getBlock());
+                    Sprite sprite = TEXTURE_PROVIDERS.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos);
                     quad.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_INPUT:
@@ -250,18 +255,12 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
                 case POWER_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_POWER_IN), MutableQuadView.BAKE_LOCK_UV);
                     break;
-//                case OXYGEN_INPUT:
-//                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_IN), MutableQuadView.BAKE_LOCK_UV);
-//                    break;
                 case POWER_OUTPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_POWER_OUT), MutableQuadView.BAKE_LOCK_UV);
                     break;
                 case FLUID_OUTPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_FLUID_OUT), MutableQuadView.BAKE_LOCK_UV);
                     break;
-//                case OXYGEN_OUTPUT:
-//                    quad.spriteBake(0, atlas.apply(MACHINE_OXYGEN_OUT), MutableQuadView.BAKE_LOCK_UV);
-//                    break;
                 case ITEM_INPUT:
                     quad.spriteBake(0, atlas.apply(MACHINE_ITEM_IN), MutableQuadView.BAKE_LOCK_UV);
                     break;

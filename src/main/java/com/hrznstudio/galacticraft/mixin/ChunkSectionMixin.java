@@ -63,7 +63,7 @@ public abstract class ChunkSectionMixin implements ChunkSectionOxygenAccessor {
 
     @Inject(method = "getPacketSize", at = @At("RETURN"), cancellable = true)
     private void addOxygenSize(CallbackInfoReturnable<Integer> cir) {
-        cir.setReturnValue(cir.getReturnValueI() + (this.oxygenated == 0 ? 0 : (4096 / 8)) + 2);
+        cir.setReturnValue(cir.getReturnValueI() + (this.oxygenated == 0 ? 0 : (4096 / 8)) + 2 + 1);
     }
 
     @Inject(method = "toPacket", at = @At("RETURN"))
