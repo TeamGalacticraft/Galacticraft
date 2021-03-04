@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.util;
 
-import alexiil.mc.lib.attributes.SearchOption;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;

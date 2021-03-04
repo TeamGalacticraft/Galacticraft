@@ -33,16 +33,12 @@ import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.function.Predicate;
 
 public class EnergyUtils {
     public static final ItemFilter IS_EXTRACTABLE = EnergyUtils::isEnergyExtractable;

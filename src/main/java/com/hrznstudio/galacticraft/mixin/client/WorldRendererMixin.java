@@ -23,9 +23,7 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.accessor.GCBiomePropertyAccessor;
 import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
-import com.hrznstudio.galacticraft.api.biome.GalacticraftBiomeProperties;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;

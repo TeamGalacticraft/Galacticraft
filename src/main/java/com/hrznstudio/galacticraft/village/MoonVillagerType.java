@@ -24,10 +24,8 @@ package com.hrznstudio.galacticraft.village;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerProfessionBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.villager.VillagerTypeHelper;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerType;
 
 public class MoonVillagerType {

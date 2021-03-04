@@ -23,7 +23,10 @@
 package com.hrznstudio.galacticraft.world.biome.layer;
 
 import com.hrznstudio.galacticraft.world.biome.GalacticraftBiomes;
-import com.hrznstudio.galacticraft.world.biome.layer.moon.*;
+import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonHighlandsBiomeLayer;
+import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonMareBiomeLayer;
+import com.hrznstudio.galacticraft.world.biome.layer.moon.MoonMergeLayer;
+import com.hrznstudio.galacticraft.world.biome.layer.moon.ValleyCrossSamplingLayer;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.layer.ScaleLayer;

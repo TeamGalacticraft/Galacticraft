@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.Wire;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
