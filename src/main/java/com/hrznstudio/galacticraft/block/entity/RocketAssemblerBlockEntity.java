@@ -74,6 +74,11 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
                 return (stack) -> stack.getItem() == GalacticraftItems.ROCKET;
             }
         }
+
+        @Override
+        public boolean isItemValidForSlot(int slot, ItemStack item) {
+            return this.getFilterForSlot(slot).matches(item);
+        }
     };
     public RocketData data = RocketData.EMPTY;
     public Map<Identifier, RocketAssemblerRecipe> recipes = new HashMap<>();
@@ -152,6 +157,11 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             @Override
             public ItemFilter getFilterForSlot(int slot) {
                 return filters.get(slot);
+            }
+
+            @Override
+            public boolean isItemValidForSlot(int slot, ItemStack item) {
+                return this.getFilterForSlot(slot).matches(item);
             }
 
             @Override
@@ -244,6 +254,11 @@ public class RocketAssemblerBlockEntity extends BlockEntity implements BlockEnti
             @Override
             public ItemFilter getFilterForSlot(int slot) {
                 return filters.get(slot);
+            }
+
+            @Override
+            public boolean isItemValidForSlot(int slot, ItemStack item) {
+                return this.getFilterForSlot(slot).matches(item);
             }
 
             @Override

@@ -26,10 +26,8 @@ import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.FuelLoaderBlockEntity;
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlock;
-import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -47,7 +45,7 @@ public class FuelLoaderBlock extends ConfigurableMachineBlock {
     public static final BooleanProperty CONNECTED = BooleanProperty.of("connected");
 
     public FuelLoaderBlock(Settings settings) {
-        super(settings, FuelLoaderScreenHandler::new);
+        super(settings);
         setDefaultState(getStateManager().getDefaultState().with(CONNECTED, false));
     }
 

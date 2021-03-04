@@ -71,6 +71,11 @@ public class RocketDesignerBlockEntity extends BlockEntity implements BlockEntit
 
     private final FullFixedItemInv inventory = new FullFixedItemInv(1) {
         @Override
+        public boolean isItemValidForSlot(int slot, ItemStack item) {
+            return this.getFilterForSlot(slot).matches(item);
+        }
+
+        @Override
         public ItemFilter getFilterForSlot(int slot) {
             return stack -> stack.getItem() == GalacticraftItems.ROCKET_SCHEMATIC;
         }

@@ -29,8 +29,9 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
@@ -38,6 +39,7 @@ import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPad
 import com.hrznstudio.galacticraft.block.special.rocketlaunchpad.RocketLaunchPadBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.RocketEntity;
+import com.hrznstudio.galacticraft.screen.FuelLoaderScreenHandler;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.fabricmc.api.EnvType;
@@ -45,8 +47,10 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -57,7 +61,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -108,13 +111,13 @@ public class FuelLoaderBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         if (slot == 0) {
-            return EnergyUtils::isEnergyExtractable;
+            return EnergyUtils.IS_EXTRACTABLE;
         } else if (slot == 1) {
             return stack -> FluidAttributes.EXTRACTABLE.getFirstOrNull(stack) != null;
         }
-        return Constants.Misc.alwaysFalse();
+        return ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -200,6 +203,12 @@ public class FuelLoaderBlockEntity extends ConfigurableMachineBlockEntity {
     @Environment(EnvType.CLIENT)
     public void setConnectionPos(BlockPos connectionPos) {
         this.connectionPos = connectionPos;
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        return new FuelLoaderScreenHandler(syncId, player, this);
     }
 
     /**
