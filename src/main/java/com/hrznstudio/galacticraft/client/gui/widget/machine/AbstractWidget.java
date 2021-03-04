@@ -31,7 +31,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public abstract class AbstractWidget extends DrawableHelper implements Drawable, Element {
     protected final MinecraftClient client = MinecraftClient.getInstance();
 
-    public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
     }
 
     protected static boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {

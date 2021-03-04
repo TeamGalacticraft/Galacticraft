@@ -20,6 +20,7 @@ accessible      method   net/minecraft/world/poi/PointOfInterestType            
 accessible      method   net/minecraft/world/poi/PointOfInterestType                          setup             (Lnet/minecraft/world/poi/PointOfInterestType;)Lnet/minecraft/world/poi/PointOfInterestType;
 accessible      method   net/minecraft/village/VillagerType                                   <init>            (Ljava/lang/String;)V
 accessible      method   net/minecraft/village/VillagerProfession                             <init>            (Ljava/lang/String;Lnet/minecraft/world/poi/PointOfInterestType;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lnet/minecraft/sound/SoundEvent;)V
+accessible      method   net/minecraft/entity/LivingEntity                                    getEyeHeight      (Lnet/minecraft/entity/EntityPose;Lnet/minecraft/entity/EntityDimensions;)F
 accessible      class    net/minecraft/village/TradeOffers$BuyForOneEmeraldFactory
 accessible      class    net/minecraft/village/TradeOffers$SellItemFactory
 accessible      class    net/minecraft/village/TradeOffers$SellMapFactory

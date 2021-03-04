@@ -31,10 +31,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
 
 public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricFurnaceBlockEntity> {
-    private final Property time = Property.create();
-    private final Property maxTime = Property.create();
-
-    protected ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
+    public ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
 
         this.addSlot(new FilteredSlot(machine, ElectricFurnaceBlockEntity.CHARGE_SLOT, 8, 7)); //charge

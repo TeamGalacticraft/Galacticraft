@@ -117,8 +117,7 @@ public class SpaceRaceScreen extends Screen {
     }
 
     private void renderForeground(MatrixStack stack, int mouseX, int mouseY) {
-        TextRenderer font = this.client.textRenderer;
-        DrawableUtils.drawCenteredString(stack, font, new TranslatableText("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+        DrawableUtils.drawCenteredString(stack, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
@@ -429,21 +428,21 @@ public class SpaceRaceScreen extends Screen {
         return (int) (this.width * this.getMarginPercent());
     }
 
-    private void renderButton(MatrixStack stack, TextRenderer textRenderer, Text text, int x, int y, int width, int height) {
+    private void renderButton(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int width, int height) {
         RenderSystem.disableBlend();
-        stack.push();
+        matrices.push();
 
-        fillSolid(stack.peek().getModel(), x, y, x + width, y + height, 0x0);
+        fillSolid(matrices.peek().getModel(), x, y, x + width, y + height, 0x0);
 
-        drawHorizontalLineSolid(stack, x, x + width, y, 0x2d2d2d);
-        drawVerticalLineSolid(stack, x + width, y, y + height, 0x2d2d2d);
-        drawHorizontalLineSolid(stack, x + width, x, y + height, 0x2d2d2d);
-        drawVerticalLineSolid(stack, x, y, y + height, 0x2d2d2d);
+        drawHorizontalLineSolid(matrices, x, x + width, y, 0x2d2d2d);
+        drawVerticalLineSolid(matrices, x + width, y, y + height, 0x2d2d2d);
+        drawHorizontalLineSolid(matrices, x + width, x, y + height, 0x2d2d2d);
+        drawVerticalLineSolid(matrices, x, y, y + height, 0x2d2d2d);
 
-        stack.pop();
+        matrices.pop();
         RenderSystem.enableBlend();
 
-        textRenderer.draw(stack, text, x + (width / 2F) - (textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
+        textRenderer.draw(matrices, text, x + (width / 2F) - (textRenderer.getTextHandler().getWidth(text) / 2F), y + (height / 2F) - 4F, 0xffffff);
     }
 
     private enum Menu {

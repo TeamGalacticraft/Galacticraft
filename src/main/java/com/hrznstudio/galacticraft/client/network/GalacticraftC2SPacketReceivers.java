@@ -39,9 +39,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.chunk.EmptyChunk;
 
 import java.util.UUID;
 
@@ -125,6 +123,10 @@ public class GalacticraftC2SPacketReceivers {
             byte b = packetByteBuf.readByte();
             ChunkOxygenAccessor accessor = ((ChunkOxygenAccessor) clientPlayNetworkHandler.getWorld().getChunk(packetByteBuf.readInt(), packetByteBuf.readInt()));
             accessor.readOxygenUpdate(b, packetByteBuf);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_screen"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+
         });
     }
 }

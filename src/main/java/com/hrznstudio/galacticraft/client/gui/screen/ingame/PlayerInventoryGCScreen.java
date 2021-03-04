@@ -32,9 +32,7 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -57,36 +55,36 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     }
 
     @Override
-    protected void drawMouseoverTooltip(MatrixStack stack, int x, int y) {
+    protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
         if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 1, tank.getAmount(), tank.getCapacity()), x, y);
+            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 1, tank.getAmount(), tank.getCapacity()), x, y);
         } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
                 && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
-            this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 2, tank.getAmount(), tank.getCapacity()), x, y);
+            this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 2, tank.getAmount(), tank.getCapacity()), x, y);
         }
-        super.drawMouseoverTooltip(stack, x, y);
+        super.drawMouseoverTooltip(matrices, x, y);
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        this.renderBackground(stack);
-        super.render(stack, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 
         DiffuseLighting.enableGuiDepthLighting();
         this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
         this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);
     }
 
-    public void drawOxygenBufferBar(MatrixStack stack, double currentOxygen, double maxOxygen, int oxygenDisplayX, int oxygenDisplayY) {
+    public void drawOxygenBufferBar(MatrixStack matrices, double currentOxygen, double maxOxygen, int oxygenDisplayX, int oxygenDisplayY) {
         double oxygenScale = (currentOxygen / maxOxygen);
 
         this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(stack, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
-        this.drawTexture(stack, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
+        this.drawTexture(matrices, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
+        this.drawTexture(matrices, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
     }
 
     @Override
@@ -101,17 +99,17 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     }
 
     @Override
-    public void drawBackground(MatrixStack stack, float v, int mouseX, int mouseY) {
+    public void drawBackground(MatrixStack matrices, float v, int mouseX, int mouseY) {
         this.client.getTextureManager().bindTexture(BACKGROUND);
-        this.drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         OxygenTank tank1 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
         OxygenTank tank2 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
 
-        this.drawOxygenBufferBar(stack, tank1.getAmount(), tank1.getCapacity(), this.x + 138, this.y + 8);
-        this.drawOxygenBufferBar(stack, tank2.getAmount(), tank2.getCapacity(), this.x + 156, this.y + 8);
+        this.drawOxygenBufferBar(matrices, tank1.getAmount(), tank1.getCapacity(), this.x + 138, this.y + 8);
+        this.drawOxygenBufferBar(matrices, tank2.getAmount(), tank2.getCapacity(), this.x + 156, this.y + 8);
 
         InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
         this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
-        this.drawTexture(stack, this.x, this.y - 28, 0, 32, 57, 62);
+        this.drawTexture(matrices, this.x, this.y - 28, 0, 32, 57, 62);
     }
 }

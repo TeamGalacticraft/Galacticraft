@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
@@ -66,7 +67,7 @@ public class WireNetworkImpl implements WireNetwork {
             if (wire == null) throw new RuntimeException("Tried to add wire that didn't exist!");
         }
         wire.setNetwork(this);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             BlockPos conn = pos.offset(direction);
             BlockEntity entity = world.getBlockEntity(conn);
             WireConnectionType type = wire.getConnection(direction, entity);
@@ -90,7 +91,7 @@ public class WireNetworkImpl implements WireNetwork {
     public void removeWire(@NotNull BlockPos pos) {
         if (contains(pos)) {
             Deque<BlockPos> wires = new LinkedList<>();
-            for (Direction direction : Direction.values()) {
+            for (Direction direction : Constants.Misc.DIRECTIONS) {
                 BlockPos conn = pos.offset(direction);
                 WireConnectionType type = getConnection(pos, conn);
                 if (type != WireConnectionType.NONE) {
@@ -196,7 +197,7 @@ public class WireNetworkImpl implements WireNetwork {
     @Override
     public @NotNull Map<Direction, @NotNull WireConnectionType> getAdjacent(BlockPos from) {
         Map<Direction, WireConnectionType> map = new EnumMap<>(Direction.class);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             map.put(direction, getConnection(from, from.offset(direction)));
         }
 

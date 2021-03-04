@@ -26,6 +26,8 @@ import alexiil.mc.lib.attributes.AttributeProviderItem;
 import alexiil.mc.lib.attributes.ItemAttributeList;
 import alexiil.mc.lib.attributes.misc.LimitedConsumer;
 import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -37,10 +39,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -64,14 +64,8 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     @Override
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
-        int charge = EnergyUtils.getCapacitorView(stack).getEnergy();
-        if (charge < (MAX_ENERGY / 3.0)) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(charge)).setStyle(Style.EMPTY.withColor(Formatting.DARK_RED)));
-        } else if (charge < (MAX_ENERGY / 3.0) * 2.0) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(charge)).setStyle(Style.EMPTY.withColor(Formatting.GOLD)));
-        } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(charge)).setStyle(Style.EMPTY.withColor(Formatting.GREEN)));
-        }
+        CapacitorView view = EnergyUtils.getCapacitorView(stack);
+        lines.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", EnergyUtils.getDisplay(view.getEnergy())).setStyle(Constants.Styles.getStorageLevelColor(1.0 - ((double)view.getEnergy()) / ((double)view.getMaxCapacity()))));
         super.appendTooltip(stack, world, lines, context);
     }
 
@@ -113,11 +107,18 @@ public class BatteryItem extends Item implements AttributeProviderItem {
 
     @Override
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
+        ItemStack ref = reference.get().copy();
         SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getMaxCapacity());
-        itemAttributeList.offer(capacitor.addListener(capacitorView -> {
+        capacitor.fromTag(ref.getOrCreateTag());
+        capacitor.toTag(ref.getOrCreateTag());
+        ref.setDamage(capacitor.getMaxCapacity() - capacitor.getEnergy());
+        reference.set(ref);
+        capacitor.addListener(capacitorView -> {
             ItemStack stack = reference.get().copy();
             stack.setDamage(capacitorView.getMaxCapacity() - capacitorView.getEnergy());
+            capacitor.toTag(stack.getOrCreateTag());
             reference.set(stack);
-        }, () -> {}));
+        }, () -> {});
+        itemAttributeList.offer(capacitor);
     }
 }

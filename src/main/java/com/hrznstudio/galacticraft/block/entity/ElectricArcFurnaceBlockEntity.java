@@ -24,30 +24,34 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.screen.ElectricArcFurnaceScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public int cookTime = 0;
@@ -98,10 +102,10 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isCapacitor;
+    public ItemFilter getFilterForSlot(int slot) {
+        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
         if (slot == INPUT_SLOT) return (stack) -> world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
-        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? Constants.Misc.alwaysTrue() : Constants.Misc.alwaysFalse();
+        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? ConstantItemFilter.ANYTHING : ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -145,6 +149,13 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
         } else {
             if (this.cookTime > 0) this.cookTime--;
         }
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        if (this.getSecurity().hasAccess(player)) return new ElectricArcFurnaceScreenHandler(syncId, player, this);
+        return null;
     }
 
     private enum Status implements MachineStatus {

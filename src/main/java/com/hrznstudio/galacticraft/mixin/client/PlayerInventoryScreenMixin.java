@@ -64,13 +64,13 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
     }
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
-    public void drawBackground(MatrixStack stack, float v, int i, int i1, CallbackInfo callbackInfo) {
+    public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
         this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
-        this.drawTexture(stack, this.x, this.y - 28, 0, 0, 57, 32);
+        this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack stack, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         DiffuseLighting.enable();
         this.itemRenderer.renderInGuiWithOverrides(Items.CRAFTING_TABLE.getDefaultStack(), this.x + 6, this.y - 20);
         this.itemRenderer.renderInGuiWithOverrides(GalacticraftItems.OXYGEN_MASK.getDefaultStack(), this.x + 35, this.y - 20);

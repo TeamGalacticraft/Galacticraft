@@ -27,7 +27,6 @@ import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.items.ThermalArmorItem;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;

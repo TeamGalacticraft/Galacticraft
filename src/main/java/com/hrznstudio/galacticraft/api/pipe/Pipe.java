@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.api.pipe;
 
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
@@ -32,9 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
+import java.util.Iterator;
 
 public interface Pipe {
     /**
@@ -115,7 +115,7 @@ public interface Pipe {
             }
             Direction dir = null;
             if (compoundTag.getBoolean("hasDir")) {
-                dir = Direction.values()[compoundTag.getInt("dir")];
+                dir = Constants.Misc.DIRECTIONS[compoundTag.getInt("dir")];
             }
             return new FluidData(BlockPos.fromLong(compoundTag.getLong("source")), queue, FluidVolume.fromTag(compoundTag), dir);
         }
@@ -129,11 +129,12 @@ public interface Pipe {
 
             this.fluid.toTag(compoundTag);
             compoundTag.putLong("source", this.source.asLong());
-            List<Long> list = new ArrayList<>(this.path.size());
-            for (BlockPos pos : this.path) {
-                list.add(pos.asLong());
+            long[] path = new long[this.path.size()];
+            Iterator<BlockPos> iterator = this.path.iterator();
+            for (int i = 0; i < this.path.size(); i++) {
+                path[i] = iterator.next().asLong();
             }
-            compoundTag.putLongArray("path", list);
+            compoundTag.putLongArray("path", path);
             compoundTag.putBoolean("hasDir", this.endDir != null);
             if (this.endDir != null) {
                 compoundTag.putInt("dir", this.endDir.ordinal());

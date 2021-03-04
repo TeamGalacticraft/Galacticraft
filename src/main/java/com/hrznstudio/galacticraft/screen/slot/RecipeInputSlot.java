@@ -30,8 +30,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
-import java.util.Arrays;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */

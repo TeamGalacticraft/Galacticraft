@@ -32,12 +32,8 @@ import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEnti
 import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -48,24 +44,19 @@ import net.minecraft.client.resource.language.I18n;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.LiteralText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -86,31 +77,29 @@ import java.util.function.Supplier;
 public class ConfigurableMachineBlock extends BlockWithEntity implements AttributeProvider {
     public static final BooleanProperty ARBITRARY_BOOLEAN_PROPERTY = BooleanProperty.of("update");
 
-    private final ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory;
     private final Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc;
     private final TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo;
 
-    protected ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory) {
-        this(settings, factory, (view) -> null, Constants.Misc.EMPTY_TEXT);
+    protected ConfigurableMachineBlock(Settings settings) {
+        this(settings, (view) -> null, Constants.Misc.EMPTY_TEXT);
     }
 
-    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
+    public ConfigurableMachineBlock(Settings settings, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
         super(settings);
-        this.factory = factory;
         this.blockEntityFunc = blockEntityFunc;
         this.machineInfo = machineInfo;
     }
 
-    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, Text machineInfo) {
-        this(settings, factory, blockEntityFunc, (itemStack, blockView, tooltipContext) -> machineInfo);
+    public ConfigurableMachineBlock(Settings settings, Function<BlockView, ? extends ConfigurableMachineBlockEntity> blockEntityFunc, Text machineInfo) {
+        this(settings, blockEntityFunc, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
-    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
-        this(settings, factory, (view) -> blockEntitySupplier.get(), machineInfo);
+    public ConfigurableMachineBlock(Settings settings, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, TriFunction<ItemStack, BlockView, Boolean, Text> machineInfo) {
+        this(settings, (view) -> blockEntitySupplier.get(), machineInfo);
     }
 
-    public ConfigurableMachineBlock(Settings settings, ScreenHandlerRegistry.ExtendedClientHandlerFactory<? extends MachineScreenHandler<? extends ConfigurableMachineBlockEntity>> factory, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, Text machineInfo) {
-        this(settings, factory, blockEntitySupplier, (itemStack, blockView, tooltipContext) -> machineInfo);
+    public ConfigurableMachineBlock(Settings settings, Supplier<? extends ConfigurableMachineBlockEntity> blockEntitySupplier, Text machineInfo) {
+        this(settings, blockEntitySupplier, (itemStack, blockView, tooltipContext) -> machineInfo);
     }
 
     @Override
@@ -164,38 +153,38 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
                 }
                 lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
             } else {
-                lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Misc.TOOLTIP_STYLE));
+                lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.TOOLTIP_STYLE));
             }
         }
 
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
             CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
             lines.add(Constants.Misc.EMPTY_TEXT);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Style.EMPTY.withColor(Formatting.AQUA)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Style.EMPTY.withColor(Formatting.BLUE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Constants.Styles.AQUA_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Constants.Styles.BLUE_STYLE));
             if (tag.getBoolean("Public")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
-                        .withColor(Formatting.GRAY)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public_2")
-                        .setStyle(Style.EMPTY.withColor(Formatting.GREEN))));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
+                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public_2")
+                        .setStyle(Constants.Styles.GREEN_STYLE)));
 
             } else if (tag.getBoolean("Party")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
-                        .withColor(Formatting.GRAY)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race_2")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE)));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
+                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race_2")
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE)));
 
             } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Style.EMPTY
-                        .withColor(Formatting.GRAY)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private_2")
-                        .setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Styles.GRAY_STYLE)
+                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private_2")
+                        .setStyle(Constants.Styles.DARK_RED_STYLE)));
 
             }
 
             if (tag.getString("Redstone").equals("DISABLED")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Style.EMPTY.withColor(Formatting.GRAY))));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Constants.Styles.GRAY_STYLE)));
             } else if (tag.getString("Redstone").equals("OFF")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Constants.Styles.DARK_RED_STYLE)));
             } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Style.EMPTY.withColor(Formatting.DARK_RED))));
+                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Styles.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Constants.Styles.DARK_RED_STYLE)));
             }
 
         }
@@ -209,26 +198,10 @@ public class ConfigurableMachineBlock extends BlockWithEntity implements Attribu
     @Override
     public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            if (((ConfigurableMachineBlockEntity) world.getBlockEntity(pos)).getSecurity().isOwner(player) || (((ConfigurableMachineBlockEntity) world.getBlockEntity(pos))).canUse(player)) {
-                player.openHandledScreen(new ExtendedScreenHandlerFactory() {
-                    @Override
-                    public void writeScreenOpeningData(ServerPlayerEntity player, PacketByteBuf buf) {
-                        buf.writeBlockPos(pos);
-                    }
+            NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
 
-                    @Override
-                    public Text getDisplayName() {
-                        return Constants.Misc.EMPTY_TEXT;
-                    }
-
-                    @Override
-                    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-                        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                        buf.writeBlockPos(pos); // idk why we have to do this again, might want to look into it
-                        //TODO: Look into why we have to create a new PacketByteBuf.
-                        return factory.create(syncId, inv, buf);
-                    }
-                });
+            if (factory != null) {
+                player.openHandledScreen(factory);
             }
         }
 

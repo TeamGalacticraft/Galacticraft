@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ClientWorld.class)

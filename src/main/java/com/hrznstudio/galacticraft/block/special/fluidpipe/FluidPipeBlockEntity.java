@@ -31,6 +31,7 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
 import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
@@ -72,7 +73,7 @@ public class FluidPipeBlockEntity extends BlockEntity implements Tickable, Pipe,
     public @NotNull PipeNetwork getNetwork() {
         if (!world.isClient()) {
             if (this.network == null) {
-                for (Direction direction : Direction.values()) {
+                for (Direction direction : Constants.Misc.DIRECTIONS) {
                     BlockEntity entity = world.getBlockEntity(pos.offset(direction));
                     if (entity instanceof Pipe) {
                         if (((Pipe) entity).getNetworkNullable() != null) {

@@ -24,28 +24,21 @@ package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
-import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.OxygenSealerBlockEntity;
-import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
-import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenSealerBlock extends ConfigurableMachineBlock {
     public OxygenSealerBlock(Settings settings) {
-        super(settings, OxygenSealerScreenHandler::new, OxygenSealerBlockEntity::new,
+        super(settings, OxygenSealerBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.oxygen_sealer")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @Override

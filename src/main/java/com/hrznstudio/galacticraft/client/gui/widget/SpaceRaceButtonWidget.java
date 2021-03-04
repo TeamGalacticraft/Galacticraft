@@ -55,7 +55,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
     }
 
     @Override
-    public void renderButton(MatrixStack stack, int mouseX, int mouseY, float delta) {
+    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         int screenWidth = this.screenWidth;
         int screenHeight = this.screenHeight;
         int buttonWidth = 100;
@@ -67,11 +67,11 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         int lineHeight = textRenderer.fontHeight;
         int textYOffset = 9;
 
-        this.fillGradient(stack, x, y, x + buttonWidth, y + buttonHeight, 0xF0151515, 0xF00C0C0C);
-        this.drawHorizontalLine(stack, x, screenWidth, y, 0xFF000000);
-        this.drawVerticalLine(stack, x, screenHeight, y, 0xFF000000);
+        this.fillGradient(matrices, x, y, x + buttonWidth, y + buttonHeight, 0xF0151515, 0xF00C0C0C);
+        this.drawHorizontalLine(matrices, x, screenWidth, y, 0xFF000000);
+        this.drawVerticalLine(matrices, x, screenHeight, y, 0xFF000000);
 
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        DrawableUtils.drawCenteredString(stack, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }
