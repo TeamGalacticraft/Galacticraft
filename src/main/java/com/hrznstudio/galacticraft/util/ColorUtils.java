@@ -69,4 +69,12 @@ public class ColorUtils {
         }
         return 0xff000000 | (r << 16) | (g << 8) | (b << 0);
     }
+
+    public static int to32BitColor(int a, int r, int g, int b) {
+        r = r << 24;
+        g = g << 16;
+        b = b << 8;
+
+        return a | r | g | b;
+    }
 }

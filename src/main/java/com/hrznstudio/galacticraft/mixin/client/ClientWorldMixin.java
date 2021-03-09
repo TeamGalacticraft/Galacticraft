@@ -22,13 +22,48 @@
 
 package com.hrznstudio.galacticraft.mixin.client;
 
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.profiler.Profiler;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.Supplier;
 
 @Mixin(ClientWorld.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientWorldMixin implements WorldOxygenAccessor {
+public abstract class ClientWorldMixin implements WorldOxygenAccessor{
+    private @Unique boolean breathable = true;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void init(ClientPlayNetworkHandler networkHandler, ClientWorld.Properties properties, RegistryKey<World> registryRef, DimensionType dimensionType, int loadDistance, Supplier<Profiler> profiler, WorldRenderer worldRenderer, boolean debugWorld, long seed, CallbackInfo ci) {
+        CelestialBodyType.getByDimType(networkHandler.getRegistryManager(), ((World)(Object)this).getRegistryKey()).ifPresent(celestialBodyType -> this.breathable = celestialBodyType.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN));
+    }
+
+    @Override
+    public boolean isBreathable(BlockPos pos) {
+        if (breathable) return true;
+        if (((World)(Object)this).isOutOfBuildLimitVertically(pos)) return false;
+        return ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).isBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+    }
+
+    @Override
+    public void setBreathable(BlockPos pos, boolean value) {
+        if (((World)(Object)this).isOutOfBuildLimitVertically(pos) || breathable) return;
+        ((ChunkOxygenAccessor) ((World)(Object)this).getWorldChunk(pos)).setBreathable(pos.getX() & 15, pos.getY(), pos.getZ() & 15, value);
+    }
 }

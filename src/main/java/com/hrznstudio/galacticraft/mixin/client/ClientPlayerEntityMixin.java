@@ -42,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
 @Environment(EnvType.CLIENT)
-public class ClientPlayerEntityMixin {
+public abstract class ClientPlayerEntityMixin {
     @Shadow public Input input;
 
     @Inject(at=@At("RETURN"), method = "tickMovement")

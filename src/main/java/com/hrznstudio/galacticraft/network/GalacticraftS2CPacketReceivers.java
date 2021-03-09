@@ -25,9 +25,14 @@ package com.hrznstudio.galacticraft.network;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialObjectType;
+import com.hrznstudio.galacticraft.api.celestialbodies.satellite.Satellite;
+import com.hrznstudio.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
 import com.hrznstudio.galacticraft.api.entity.RocketEntity;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
@@ -36,12 +41,11 @@ import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketAssemblerBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -54,6 +58,9 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -316,6 +323,50 @@ public class GalacticraftS2CPacketReceivers {
                     }
                 }
             });
+        }));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "create_satellite"), ((server, player, handler, buf, responseSender) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() >= 0) {
+                server.execute(() -> {
+                    CelestialBodyType parent = CelestialBodyType.getById(server.getRegistryManager(), buffer.readIdentifier());
+                    if (parent != null) {
+                        if (parent.getType() != CelestialObjectType.SATELLITE) {
+                            if (parent.getAccessWeight() <= ((ServerPlayerEntityAccessor) player).getCelestialScreenState()) {
+                                if (parent.getSatelliteRecipe() != null) {
+                                    SatelliteRecipe recipe = parent.getSatelliteRecipe();
+                                    if (recipe.test(player.inventory) || player.isCreative()) {
+                                        if (!player.isCreative()) {
+                                            List<ItemStack> ingredients = new ArrayList<>(recipe.getIngredients());
+                                            for (ItemStack stack : ingredients) {
+                                                assert stack.getCount() == Inventories.remove(player.inventory, stack1 -> stack1.getItem() == stack.getItem(), stack.getCount(), false) : "Inventory had enough items, but cannot extract said items?!?";
+                                            }
+                                        }
+                                        Satellite.create(server, player, parent);
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        player.networkHandler.disconnect(new LiteralText("Invalid satellite packet received."));
+                    }
+                });
+            }
+        }));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "planet_tp"), ((server, player, handler, buf, responseSender) -> {
+            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
+            if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() >= 0) {
+                server.execute(() -> {
+                    CelestialBodyType body = AddonRegistry.CELESTIAL_BODIES.get(buffer.readIdentifier());
+                    if (body != null && body.getAccessWeight() <= ((ServerPlayerEntityAccessor) player).getCelestialScreenState()) {
+                        if (body.getWorld() != null) {
+                            player.teleport(server.getWorld(body.getWorld()), player.getX(), 500, player.getZ(), player.yaw, player.pitch);
+                            ((ServerPlayerEntityAccessor) player).setCelestialScreenState(-1);
+                        }
+                    } else {
+                        player.networkHandler.disconnect(new LiteralText("Invalid planet tp packet received."));
+                    }
+                });
+            }
         }));
     }
 

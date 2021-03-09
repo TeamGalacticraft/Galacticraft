@@ -25,10 +25,14 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialObjectType;
 import com.hrznstudio.galacticraft.api.celestialbodies.SolarSystemType;
-import com.hrznstudio.galacticraft.api.celestialbody.Satellite;
+import com.hrznstudio.galacticraft.api.celestialbodies.satellite.Satellite;
+import com.hrznstudio.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
+import com.hrznstudio.galacticraft.api.internal.accessor.SatelliteAccessor;
 import com.hrznstudio.galacticraft.api.math.Matrix4;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
+import com.hrznstudio.galacticraft.util.ColorUtils;
 import com.ibm.icu.text.ArabicShaping;
 import com.ibm.icu.text.ArabicShapingException;
 import com.ibm.icu.text.Bidi;
@@ -37,11 +41,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.options.Perspective;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.language.I18n;
@@ -68,30 +72,29 @@ import java.nio.FloatBuffer;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("SpellCheckingInspection")
 @Environment(EnvType.CLIENT)
 public class PlanetSelectScreen extends Screen {
     protected static final int MAX_SPACE_STATION_NAME_LENGTH = 32;
     // String colours
-    protected static final int WHITE = to32BitColor(255, 255, 255, 255);
-    protected static final int GREY5 = to32BitColor(255, 150, 150, 150);
-    protected static final int GREY4 = to32BitColor(255, 140, 140, 140);
-    protected static final int GREY3 = to32BitColor(255, 120, 120, 120);
-    protected static final int GREY2 = to32BitColor(255, 100, 100, 100);
-    protected static final int GREY1 = to32BitColor(255, 80, 80, 80);
-    protected static final int GREY0 = to32BitColor(255, 40, 40, 40);
-    protected static final int GREEN = to32BitColor(255, 0, 255, 0);
-    protected static final int RED = to32BitColor(255, 255, 0, 0);
-    protected static final int RED3 = to32BitColor(255, 255, 100, 100);
-    protected static final int CYAN = to32BitColor(255, 150, 200, 255);
+    protected static final int WHITE = ColorUtils.to32BitColor(255, 255, 255, 255);
+    protected static final int GREY5 = ColorUtils.to32BitColor(255, 150, 150, 150);
+    protected static final int GREY4 = ColorUtils.to32BitColor(255, 140, 140, 140);
+    protected static final int GREY3 = ColorUtils.to32BitColor(255, 120, 120, 120);
+    protected static final int GREY2 = ColorUtils.to32BitColor(255, 100, 100, 100);
+    protected static final int GREY1 = ColorUtils.to32BitColor(255, 80, 80, 80);
+    protected static final int GREY0 = ColorUtils.to32BitColor(255, 40, 40, 40);
+    protected static final int GREEN = ColorUtils.to32BitColor(255, 0, 255, 0);
+    protected static final int RED = ColorUtils.to32BitColor(255, 255, 0, 0);
+    protected static final int RED3 = ColorUtils.to32BitColor(255, 255, 100, 100);
+    protected static final int CYAN = ColorUtils.to32BitColor(255, 150, 200, 255);
     protected static Identifier guiMain0 = new Identifier(Constants.MOD_ID, "textures/gui/celestialselection.png");
     protected static Identifier guiMain1 = new Identifier(Constants.MOD_ID, "textures/gui/celestialselection1.png");
     protected static int BORDER_SIZE = 0;
     protected static int BORDER_EDGE_SIZE = 0;
     protected final boolean mapMode;
     private final int tier;
-    // Each home planet has a map of owner's names linked with their station data:
-    public Map<RegistryKey<World>, Map<String, StationDataGUI>> spaceStationMap = new HashMap<>();
-    public boolean canCreateStations = false;
+    public boolean canCreateStations;
     protected float zoom = 0.0F;
     protected float planetZoom = 0.0F;
     protected boolean doneZooming = false;
@@ -102,25 +105,19 @@ public class PlanetSelectScreen extends Screen {
     protected float ticksSinceMenuOpenF = 0;
     protected float ticksTotalF = 0;
     @Deprecated
-    protected int ticksSinceSelection = 0;
-    @Deprecated
     protected int ticksSinceUnselection = -1;
-    @Deprecated
-    protected int ticksSinceMenuOpen = 0;
-    @Deprecated
-    protected int ticksTotal = 0;
     protected int animateGrandchildren = 0;
     protected Vec2f position = new Vec2f(0, 0);
     protected Map<CelestialBodyType, Vector3d> planetPosMap = new HashMap<>();
     @Deprecated
     protected Map<CelestialBodyType, Integer> celestialBodyTicks = new HashMap<>();
-    protected CelestialBodyType selectedBody;
+    protected CelestialBodyType selectedBody = CelestialBodyType.THE_SUN;
     protected CelestialBodyType lastSelectedBody;
     protected int canCreateOffset = 24;
     protected EnumView viewState = EnumView.PREVIEW;
     protected EnumSelection selectionState = EnumSelection.UNSELECTED;
     protected int zoomTooltipPos = 0;
-    protected Object selectedParent = CelestialBodyType.THE_SUN;
+    protected CelestialBodyType selectedParent = CelestialBodyType.THE_SUN;
     protected String selectedStationOwner = "";
     protected int spaceStationListOffset = 0;
     protected boolean renamingSpaceStation;
@@ -139,14 +136,6 @@ public class PlanetSelectScreen extends Screen {
         this.canCreateStations = canCreateStations;
     }
 
-    private static int to32BitColor(int a, int r, int g, int b) {
-        r = r << 24;
-        g = g << 16;
-        b = b << 8;
-
-        return a | r | g | b;
-    }
-
     protected static float lerp(float v0, float v1, float t) {
         return v0 + t * (v1 - v0);
     }
@@ -159,31 +148,32 @@ public class PlanetSelectScreen extends Screen {
     public void init() {
         PlanetSelectScreen.BORDER_SIZE = this.width / 65;
         PlanetSelectScreen.BORDER_EDGE_SIZE = PlanetSelectScreen.BORDER_SIZE / 4;
-        bodiesToRender = AddonRegistry.CELESTIAL_BODIES.stream().collect(Collectors.toList());
+        bodiesToRender = CelestialBodyType.getAll(this.client.getNetworkHandler().getRegistryManager()).stream().collect(Collectors.toList());
     }
 
-    protected String getGrandparentName() {
-        if (this.selectedParent instanceof CelestialBodyType && ((CelestialBodyType) this.selectedParent).getParentSystem() != null) {
-            if (isStar(this.selectedParent)) {
-                return I18n.translate(((CelestialBodyType) this.selectedParent).getParentSystem().getGalaxyTranslationKey());
-            }
-            return I18n.translate(((CelestialBodyType) this.selectedParent).getParentSystem().getTranslationKey());
-        } else if (this.selectedParent instanceof SolarSystemType) {
-            return I18n.translate(((SolarSystemType) this.selectedParent).getGalaxyTranslationKey());
+    protected String getGalaxyName() {
+        if (this.selectedParent != null) {
+//            if (isStar(this.selectedParent)) {
+//                return I18n.translate(this.selectedParent.getParentSystem().getGalaxyTranslationKey());
+//            }
+            return I18n.translate(this.selectedParent.getParentSystem().getGalaxyTranslationKey());
         }
+//        else if (this.selectedParent instanceof SolarSystemType) {
+//            return I18n.translate(((SolarSystemType) this.selectedParent).getGalaxyTranslationKey());
+//        }
         return "null";
     }
 
-    private boolean isChildBody(Object type) {
-        return type instanceof CelestialBodyType && ((CelestialBodyType) type).getParent() != null && ((CelestialBodyType) type).getParent().getParent() != null;
+    private boolean isChildBody(CelestialBodyType type) {
+        return type != null && type.getType() == CelestialObjectType.MOON;
     }
 
-    private boolean isPlanet(Object type) {
-        return type instanceof CelestialBodyType && ((CelestialBodyType) type).getParent() != null && ((CelestialBodyType) type).getParent().getParent() == null;
+    private boolean isPlanet(CelestialBodyType type) {
+        return type != null && type.getType() == CelestialObjectType.PLANET;
     }
 
-    private boolean isStar(Object type) {
-        return type instanceof CelestialBodyType && ((CelestialBodyType) type).getParent() == null;
+    private boolean isStar(CelestialBodyType type) {
+        return type != null && type.getType() == CelestialObjectType.STAR;
     }
 
     protected RegistryKey<World> getSatelliteParentID(Satellite satellite) {
@@ -199,11 +189,11 @@ public class PlanetSelectScreen extends Screen {
             return I18n.translate(this.selectedBody.getParent().getTranslationKey());
         }
 
-        if (this.selectedParent != null) {
-            if (this.selectedParent instanceof SolarSystemType) {
-                return I18n.translate(((SolarSystemType) this.selectedParent).getTranslationKey());
-            }
-        }
+//        if (this.selectedParent != null) {
+//            if (this.selectedParent instanceof SolarSystemType) {
+//                return I18n.translate(((SolarSystemType) this.selectedParent).getTranslationKey());
+//            }
+//        }
 
         return "null";
     }
@@ -227,7 +217,7 @@ public class PlanetSelectScreen extends Screen {
                     }
                 }
             }
-        } else if (isChildBody(celestialBody)) {
+        } else if (isChildBody(celestialBody) || isSatellite(celestialBody)) {
             CelestialBodyType planet = celestialBody.getParent();
 
             for (CelestialBodyType moon : AddonRegistry.CELESTIAL_BODIES) {
@@ -235,21 +225,14 @@ public class PlanetSelectScreen extends Screen {
                     bodyList.add(moon);
                 }
             }
-
-            //..TODO satellites
         }
 
         return bodyList;
     }
 
-    protected List<CelestialBodyType> getChildren(Object object) {
-        if (isPlanet(object)) {
-            return AddonRegistry.CELESTIAL_BODIES.stream().filter(celestialBodyType -> celestialBodyType.getParent() == object).collect(Collectors.toList());
-        } else if (object instanceof SolarSystemType) {
-            return AddonRegistry.CELESTIAL_BODIES.stream().filter(celestialBodyType -> celestialBodyType.getParentSystem() == object && isPlanet(celestialBodyType)).collect(Collectors.toList());
-        }
-
-        return new ArrayList<>();
+    protected List<CelestialBodyType> getChildren(CelestialBodyType celestialBody) {
+        if (celestialBody != null) return CelestialBodyType.getAll(this.client.getNetworkHandler().getRegistryManager()).stream().filter(celestialBodyType -> celestialBodyType.getParent() == celestialBody).collect(Collectors.toList());
+        return Collections.emptyList();
     }
 
     protected float getZoomAdvanced() {
@@ -400,7 +383,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     protected boolean canCreateSpaceStation(CelestialBodyType atBody) {
-        if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get() || !this.canCreateStations*/) //todo SSconfig
+        if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get()*/ || !this.canCreateStations) //todo SSconfig
         {
             return false;
         }
@@ -410,27 +393,21 @@ public class PlanetSelectScreen extends Screen {
             return false;
         }
 
-        boolean foundRecipe = false;
-//        for (Satellite type : client.world.getRegistryManager().get()) //todo DYNAMIC REG
-//        {
-//            if (type.getWorld() == atBody.getWorld())
-//            {
-//                foundRecipe = true;
-//            }
-//        }
+        boolean foundSatellite = false;
+        assert client != null;
+        assert client.world != null;
+        for (Satellite type : ((SatelliteAccessor) client.getNetworkHandler()).getSatellites())
+        {
+            if (type.getParent() == atBody && type.getOwnershipData().getOwner() == this.client.player.getUuid())
+            {
+                foundSatellite = true;
+            }
+        }
 
-        if (!foundRecipe) {
+        if (foundSatellite) {
             return false;
         }
-        return false; //todo
-//        if (!ClientProxyCore.clientSpaceStationID.containsKey(atBody.getWorld()))
-//        {
-//            return true;
-//        }
-//
-//        RegistryKey<World> resultID = ClientProxyCore.clientSpaceStationID.get(atBody.getWorld());
-//
-//        return !(resultID != RegistryKey<World>.OVERWORLD && resultID != RegistryKey<World>.THE_NETHER)
+        return atBody.getSatelliteRecipe() != null;
     }
 
     protected void unselectCelestialBodyType() {
@@ -438,7 +415,7 @@ public class PlanetSelectScreen extends Screen {
         this.ticksSinceUnselectionF = 0;
         this.ticksSinceUnselection = 0;
         this.lastSelectedBody = this.selectedBody;
-        this.selectedBody = null;
+        this.selectedBody = CelestialBodyType.THE_SUN;
         this.doneZooming = false;
         this.selectedStationOwner = "";
         this.animateGrandchildren = 0;
@@ -446,18 +423,6 @@ public class PlanetSelectScreen extends Screen {
 
     @Override
     public void tick() {
-        this.ticksSinceMenuOpen++;
-        this.ticksTotal++;
-
-//        if (this.ticksSinceMenuOpen < 20)
-//        {
-//            Mouse.setGrabbed(false);
-//        }
-
-        if (this.selectedBody != null) {
-            this.ticksSinceSelection++;
-        }
-
         if (this.selectedBody == null && this.ticksSinceUnselection >= 0) {
             this.ticksSinceUnselection++;
         }
@@ -482,41 +447,11 @@ public class PlanetSelectScreen extends Screen {
     }
 
     protected void teleportToSelectedBody() {
-        if (this.selectedBody != null) {
+        if (this.selectedBody != null && this.selectedBody.getWorld() != null) {
             if (this.selectedBody.getAccessWeight() <= this.tier) {
                 try {
-                    RegistryKey<World> dimensionID;
-
-                    if (isSatellite(this.selectedBody)) {
-                        if (this.spaceStationMap == null) {
-                            throw new RuntimeException("Please report as a BUG: spaceStationIDs was null.");
-                        }
-                        Satellite selectedSatellite = (Satellite) this.selectedBody;
-                        RegistryKey<World> mapping = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(this.selectedStationOwner).getStationDimensionID();
-                        //No need to check lowercase as selectedStationOwner is taken from keys.
-                        if (mapping == null) {
-                            throw new RuntimeException("Problem matching player name in space station check: " + this.selectedStationOwner);
-                        }
-                        dimensionID = mapping;
-//                        Dimension spacestation = WorldUtil.getProviderForDimensionClient(dimensionID);
-//                        if (spacestation != null)
-//                        {
-//                            dimension = spacestation.getType().getId();
-////                            dimension = "Space Station " + mapping;
-//                        }
-//                        else
-//                        {
-//                            GCLog.severe("Failed to find a spacestation with dimension " + dimensionID);
-//                            return;
-//                        }
-
-                        this.client.options.perspective = Perspective.FIRST_PERSON;
-                    } else {
-                        dimensionID = this.selectedBody.getWorld();
-//                        dimension = WorldUtil.getDimensionName(WorldUtil.getProviderForDimensionClient(dimensionID));
-                    }
-                    client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(dimensionID.getValue())));
-                    client.openScreen(new DownloadingTerrainScreen()); //todo custom screen
+                    client.getNetworkHandler().sendPacket(new CustomPayloadC2SPacket(new Identifier(Constants.MOD_ID, "planet_tp"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId())));
+                    client.openScreen(new SpaceTravelScreen(this.selectedBody.getTranslationKey(), this.selectedBody.getWorld()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -529,20 +464,20 @@ public class PlanetSelectScreen extends Screen {
         if (mouseDragging && lastMovePosX != -1 && activeButton == 0) {
             double deltaX = x - lastMovePosX;
             double deltaY = y - lastMovePosY;
-            float scollMultiplier = -Math.abs(this.zoom);
+            float scrollMultiplier = -Math.abs(this.zoom);
 
             if (this.zoom == -1.0F) {
-                scollMultiplier = -1.5F;
+                scrollMultiplier = -1.5F;
             }
 
             if (this.zoom >= -0.25F && this.zoom <= 0.15F) {
-                scollMultiplier = -0.2F;
+                scrollMultiplier = -0.2F;
             }
 
             if (this.zoom >= 0.15F) {
-                scollMultiplier = -0.15F;
+                scrollMultiplier = -0.15F;
             }
-            translation = new Vec2f(translation.x + (float) (deltaX - deltaY) * scollMultiplier * 0.2F, translation.y + (float) (deltaY + deltaX) * scollMultiplier * 0.2F);
+            translation = new Vec2f(translation.x + (float) (deltaX - deltaY) * scrollMultiplier * 0.2F, translation.y + (float) (deltaY + deltaX) * scrollMultiplier * 0.2F);
         }
 
         lastMovePosX = x;
@@ -586,30 +521,30 @@ public class PlanetSelectScreen extends Screen {
 
         if (!this.mapMode) {
             if (x >= RHS - 95 && x < RHS && y > TOP + 181 + canCreateOffset && y < TOP + 182 + 12 + canCreateOffset) {
-//                if (this.selectedBody != null && this.selectedBody.getWorld() != null) //todo space station
-//                {
-//                    SpaceStationRecipe recipe = WorldUtil.getSpaceStationRecipe(this.selectedBody.getWorld());
-//                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
-//                    {
-//                        if (recipe.matches(this.client.player, false) || this.client.player.abilities.isCreativeMode)
-//                        {
+                if (this.selectedBody != null && this.selectedBody.getWorld() != null)
+                {
+                    SatelliteRecipe recipe = this.selectedBody.getSatelliteRecipe();
+                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody))
+                    {
+                        if (recipe.test(this.client.player.inventory) || this.client.player.abilities.creativeMode)
+                        {
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.client.world), new Object[]{this.selectedBody.getWorld()}));
-//                            //Zoom in on Overworld to show the new SpaceStation if not already zoomed
-//                            if (!this.isZoomed())
-//                            {
-//                                this.selectionState = EnumSelection.ZOOMED;
-//                                this.preSelectZoom = this.zoom;
-//                                this.preSelectPosition = this.position;
-//                                this.ticksSinceSelectionF = 0;
-//                                this.ticksSinceSelection = 0;
-//                                this.doneZooming = false;
-//                            }
-//                            return true;
-//                        }
-//
-//                        clickHandled = true;
-//                    }
-//                }
+                            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "create_satellite"), new PacketByteBuf(Unpooled.buffer()).writeIdentifier(this.selectedBody.getId()));
+                            //Zoom in on planet to show the new SpaceStation if not already zoomed
+                            if (!this.isZoomed())
+                            {
+                                this.selectionState = EnumSelection.ZOOMED;
+                                this.preSelectZoom = this.zoom;
+                                this.preSelectPosition = this.position;
+                                this.ticksSinceSelectionF = 0;
+                                this.doneZooming = false;
+                            }
+                            return true;
+                        }
+
+                        clickHandled = true;
+                    }
+                }
             }
         }
 
@@ -638,22 +573,18 @@ public class PlanetSelectScreen extends Screen {
 
         if (isSatellite(this.selectedBody)) {
             if (this.renamingSpaceStation) {
-                if (x >= width / 2 - 90 && x <= width / 2 + 90 && y >= this.height / 2 - 38 && y <= this.height / 2 + 38) {
+                if (x >= width / 2f - 90 && x <= width / 2f + 90 && y >= this.height / 2f - 38 && y <= this.height / 2f + 38) {
                     // Apply
-                    if (x >= width / 2 - 90 + 17 && x <= width / 2 - 90 + 17 + 72 && y >= this.height / 2 - 38 + 59 && y <= this.height / 2 - 38 + 59 + 12) {
+                    if (x >= width / 2f - 90 + 17 && x <= width / 2f - 90 + 17 + 72 && y >= this.height / 2f - 38 + 59 && y <= this.height / 2f - 38 + 59 + 12) {
                         String strName = this.client.player.getName().getString();
 //                        Integer spacestationID = this.spaceStationIDs.get(strName);
 //                        if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
                         Satellite selectedSatellite = (Satellite) this.selectedBody;
-                        RegistryKey<World> spacestationID = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).getStationDimensionID();
-                        if (spacestationID == null) {
-                            spacestationID = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName.toLowerCase()).getStationDimensionID();
-                        }
-                        if (spacestationID != null) {
-                            this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
+                        selectedSatellite.setName(this.renamingString);
+//                        RegistryKey<World> spacestationID = selectedSatellite.getWorld();
+//                        this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
 //	                    	this.spaceStationNames.put(strName, this.renamingString);
 //                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_RENAME_SPACE_STATION, GCCoreUtil.getWorld(this.client.world), new Object[]{this.renamingString, spacestationID})); //TODO SS ID PACKET
-                        }
                         this.renamingSpaceStation = false;
                     }
                     // Cancel
@@ -674,7 +605,7 @@ public class PlanetSelectScreen extends Screen {
                 }
 
                 Satellite selectedSatellite = (Satellite) this.selectedBody;
-                int stationListSize = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).size();
+                int stationListSize = ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().size();
                 int max = Math.min((this.height / 2) / 14, stationListSize);
 
                 int xPos;
@@ -702,15 +633,15 @@ public class PlanetSelectScreen extends Screen {
                     clickHandled = true;
                 }
 
-                Iterator<Map.Entry<String, StationDataGUI>> it = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).entrySet().iterator();
+                Iterator<Satellite> it = ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().iterator();
                 int i = 0;
                 int j = 0;
                 while (it.hasNext() && i < max) {
-                    Map.Entry<String, StationDataGUI> e = it.next();
+                    Satellite satellite = it.next();
                     if (j >= this.spaceStationListOffset) {
                         int xOffset = 0;
 
-                        if (e.getKey().equalsIgnoreCase(this.selectedStationOwner)) {
+                        if (satellite.getOwnershipData().getUsername().equalsIgnoreCase(this.selectedStationOwner)) {
                             xOffset -= 5;
                         }
 
@@ -718,7 +649,7 @@ public class PlanetSelectScreen extends Screen {
                         yPos = TOP + 50 + i * 14;
 
                         if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
-                            this.selectedStationOwner = e.getKey();
+                            this.selectedStationOwner = satellite.getOwnershipData().getUsername();
                             clickHandled = true;
                         }
                         i++;
@@ -734,7 +665,7 @@ public class PlanetSelectScreen extends Screen {
         boolean planetZoomedMoon = this.isZoomed() && isPlanet(this.selectedParent);
 
         // Top yellow button e.g. Sol
-        if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12 && this.selectedParent instanceof CelestialBodyType) {
+        if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12 && this.selectedParent != null) {
             if (this.selectedBody == null) {
                 this.preSelectZoom = this.zoom;
                 this.preSelectPosition = this.position;
@@ -750,13 +681,11 @@ public class PlanetSelectScreen extends Screen {
                 this.selectionState = EnumSelection.SELECTED;
             }
 
-            this.selectedBody = (CelestialBodyType) this.selectedParent;
+            this.selectedBody = this.selectedParent;
             this.ticksSinceSelectionF = 0;
-            this.ticksSinceSelection = 0;
             this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
             if (this.isZoomed() && !planetZoomedMoon) {
                 this.ticksSinceMenuOpenF = 0;
-                this.ticksSinceMenuOpen = 0;
             }
             clickHandled = true;
         }
@@ -779,9 +708,8 @@ public class PlanetSelectScreen extends Screen {
                     this.selectionState = EnumSelection.SELECTED;
                 }
 
-                this.selectedBody = (CelestialBodyType) this.selectedParent;
+                this.selectedBody = this.selectedParent;
                 this.ticksSinceSelectionF = 0;
-                this.ticksSinceSelection = 0;
                 this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
             }
             clickHandled = true;
@@ -857,7 +785,6 @@ public class PlanetSelectScreen extends Screen {
 
                         this.selectedBody = bodyClicked;
                         this.ticksSinceSelectionF = 0;
-                        this.ticksSinceSelection = 0;
                         this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
 
                         if (isChildBody(bodyClicked)) {
@@ -866,13 +793,11 @@ public class PlanetSelectScreen extends Screen {
 
                         if (this.isZoomed()) {
                             this.ticksSinceMenuOpenF = 0;
-                            this.ticksSinceMenuOpen = 0;
                         }
 
                         //Auto select if it's a spacestation and there is only a single entry
-                        if (isSatellite(this.selectedBody) && this.spaceStationMap.get(this.getSatelliteParentID((Satellite) this.selectedBody)).size() == 1) {
-                            Iterator<Map.Entry<String, StationDataGUI>> it = this.spaceStationMap.get(this.getSatelliteParentID((Satellite) this.selectedBody)).entrySet().iterator();
-                            this.selectedStationOwner = it.next().getKey();
+                        if (isSatellite(this.selectedBody) && ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().stream().filter(s -> s.getParent() == this.selectedBody.getParent()).count() == 1) {
+                            this.selectedStationOwner = ((Satellite) this.selectedBody).getOwnershipData().getUsername();
                         }
 
                         clickHandled = true;
@@ -891,14 +816,14 @@ public class PlanetSelectScreen extends Screen {
             mouseDragging = true;
         }
 
-        Object selectedParent = this.selectedParent;
+        CelestialBodyType selectedParent = this.selectedParent;
 
-        if (isChildBody(this.selectedBody)) {
+        if (isChildBody(this.selectedBody) || isPlanet(this.selectedBody)) {
             selectedParent = this.selectedBody.getParent();
-        } else if (isPlanet(this.selectedBody)) {
-            selectedParent = this.selectedBody.getParentSystem();
+//        } else if (isPlanet(this.selectedBody)) {
+//            selectedParent = this.selectedBody.getParentSystem();
         } else if (this.selectedBody == null) {
-            selectedParent = SolarSystemType.SOL;
+            selectedParent = CelestialBodyType.THE_SUN; //SOL
         }
 
         if (this.selectedParent != selectedParent) {
@@ -971,13 +896,11 @@ public class PlanetSelectScreen extends Screen {
 
                 this.selectedBody = body;
                 this.ticksSinceSelectionF = 0;
-                this.ticksSinceSelection = 0;
                 if (grandchild) {
                     this.selectionState = EnumSelection.ZOOMED;
                 }
                 if (this.isZoomed()) {
                     this.ticksSinceMenuOpenF = 0;
-                    this.ticksSinceMenuOpen = 0;
                 }
                 this.animateGrandchildren = 0;
                 return true;
@@ -992,6 +915,23 @@ public class PlanetSelectScreen extends Screen {
     }
 
     @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+        double wheel = amount / (this.selectedBody == null ? 500.0 : 250.0);
+
+        if (wheel != 0) {
+            if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed())) {
+                //Minimum zoom increased from 0.55F to 1F to allow zoom out to see other solar systems
+                this.zoom = (float) Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0)) / 10.0, -1.0), 3);
+            } else {
+                this.planetZoom = (float) Math.min(Math.max(this.planetZoom + wheel, -4.9), 5);
+            }
+            return true;
+        }
+        return false;
+    }
+
+
+    @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.ticksSinceMenuOpenF += delta;
         this.ticksTotalF += delta;
@@ -1003,24 +943,6 @@ public class PlanetSelectScreen extends Screen {
         if (this.selectedBody == null && this.ticksSinceUnselectionF >= 0) {
             this.ticksSinceUnselectionF += delta;
         }
-
-//        if (Mouse.hasWheel())
-//        {
-//            float wheel = Mouse.getDWheel() / (this.selectedBody == null ? 500.0F : 250.0F);
-//
-//            if (wheel != 0)
-//            {
-//                if (this.selectedBody == null || (this.viewState == EnumView.PREVIEW && !this.isZoomed()))
-//                {
-//                    //Minimum zoom increased from 0.55F to 1F to allow zoom out to see other solar systems
-//                    this.zoom = Math.min(Math.max(this.zoom + wheel * ((this.zoom + 2.0F)) / 10.0F, -1.0F), 3);
-//                }
-//                else
-//                {
-//                    this.planetZoom = Math.min(Math.max(this.planetZoom + wheel, -4.9F), 5);
-//                }
-//            }
-//        } TODO Celestial zoom
 
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
@@ -1145,7 +1067,7 @@ public class PlanetSelectScreen extends Screen {
                     float scale = Math.max(0.3F, 1.5F / (this.ticksSinceSelectionF / 5.0F)) * 2.0F / div;
                     GL11.glScalef(scale, scale, 1);
                     this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
-                    float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF / 1.0F) * 0.5F + 0.5F) : 1.0F;
+                    float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF) * 0.5F + 0.5F) : 1.0F;
                     RenderSystem.color4f(0.4F, 0.8F, 1.0F, 1 * colMod);
                     int width = getWidthForCelestialBodyType(this.selectedBody) * 13;
                     this.blit(-width, -width, width * 2, width * 2, 266, 29, 100, 100, false, false);
@@ -1255,7 +1177,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public void drawButtons(int mousePosX, int mousePosY) {
-        MatrixStack stack = new MatrixStack();
+        MatrixStack matrices = new MatrixStack();
 
         this.setZOffset(0);
         boolean handledSliderPos = false;
@@ -1270,7 +1192,7 @@ public class PlanetSelectScreen extends Screen {
             RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
             this.blit(width / 2 - 43, TOP, 86, 15, 266, 0, 172, 29, false, false);
             String str = I18n.translate("gui.message.catalog").toUpperCase();
-            this.textRenderer.draw(stack, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + this.textRenderer.fontHeight / 2f, WHITE);
+            this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + this.textRenderer.fontHeight / 2f, WHITE);
 
             if (this.selectedBody != null) {
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
@@ -1283,7 +1205,7 @@ public class PlanetSelectScreen extends Screen {
 
                 this.blit(LHS, TOP, 88, 13, 0, 392, 148, 22, false, false);
                 str = I18n.translate("gui.message.back").toUpperCase();
-                this.textRenderer.draw(stack, str, LHS + 45 - this.textRenderer.getWidth(str) / 2f, TOP + this.textRenderer.fontHeight / 2f - 2, WHITE);
+                this.textRenderer.draw(matrices, str, LHS + 45 - this.textRenderer.getWidth(str) / 2f, TOP + this.textRenderer.fontHeight / 2f - 2, WHITE);
 
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                 if (mousePosX > RHS - 88 && mousePosX < RHS && mousePosY > TOP && mousePosY < TOP + 13) {
@@ -1304,51 +1226,51 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(posX, menuTopLeft + 12, 133, 196, 0, 0, 266, 392, false, false);
 
 //			str = this.selectedBody.getLocalizedName();
-//			this.textRenderer.draw(stack, str, posX + 20, textRendererPosY, GCCoreUtil.to32BitColor(255, 255, 255, 255));
+//			this.textRenderer.draw(matrices, str, posX + 20, textRendererPosY, GCCoreUtil.to32BitColor(255, 255, 255, 255));
 
                 str = I18n.translate("gui.message.daynightcycle") + ":";
-                this.textRenderer.draw(stack, str, posX + 5, textRendererPosY + 14, CYAN);
+                this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 14, CYAN);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".daynightcycle.0");
-                this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 25, WHITE);
+                this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 25, WHITE);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".daynightcycle.1");
                 if (!str.isEmpty()) {
-                    this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 36, WHITE);
+                    this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 36, WHITE);
                 }
 
                 str = I18n.translate("gui.message.surfacegravity") + ":";
-                this.textRenderer.draw(stack, str, posX + 5, textRendererPosY + 50, CYAN);
+                this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 50, CYAN);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".surfacegravity.0");
-                this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 61, WHITE);
+                this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 61, WHITE);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".surfacegravity.1");
                 if (!str.isEmpty()) {
-                    this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 72, WHITE);
+                    this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 72, WHITE);
                 }
 
                 str = I18n.translate("gui.message.surfacecomposition") + ":";
-                this.textRenderer.draw(stack, str, posX + 5, textRendererPosY + 88, CYAN);
+                this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 88, CYAN);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".surfacecomposition.0");
-                this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 99, WHITE);
+                this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 99, WHITE);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".surfacecomposition.1");
                 if (!str.isEmpty()) {
-                    this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 110, WHITE);
+                    this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 110, WHITE);
                 }
 
                 str = I18n.translate("gui.message.atmosphere") + ":";
-                this.textRenderer.draw(stack, str, posX + 5, textRendererPosY + 126, CYAN);
+                this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 126, CYAN);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".atmosphere.0");
-                this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 137, WHITE);
+                this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 137, WHITE);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".atmosphere.1");
                 if (!str.isEmpty()) {
-                    this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 148, WHITE);
+                    this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 148, WHITE);
                 }
 
                 str = I18n.translate("gui.message.meansurfacetemp") + ":";
-                this.textRenderer.draw(stack, str, posX + 5, textRendererPosY + 165, CYAN);
+                this.textRenderer.draw(matrices, str, posX + 5, textRendererPosY + 165, CYAN);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".meansurfacetemp.0");
-                this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 176, WHITE);
+                this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 176, WHITE);
                 str = I18n.translate("gui.message." + this.selectedBody.getTranslationKey() + ".meansurfacetemp.1");
                 if (!str.isEmpty()) {
-                    this.textRenderer.draw(stack, str, posX + 10, textRendererPosY + 187, WHITE);
+                    this.textRenderer.draw(matrices, str, posX + 10, textRendererPosY + 187, WHITE);
                 }
 
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
@@ -1364,7 +1286,7 @@ public class PlanetSelectScreen extends Screen {
             this.blit(LHS, TOP, 74, 11, 0, 392, 148, 22, false, false);
             str = I18n.translate("gui.message.catalog").toUpperCase();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.textRenderer.draw(stack, str, LHS + 40 - textRenderer.getWidth(str) / 2, TOP + 1, WHITE);
+            this.textRenderer.draw(matrices, str, LHS + 40 - textRenderer.getWidth(str) / 2, TOP + 1, WHITE);
 
             int scale = (int) Math.min(95, this.ticksSinceMenuOpenF * 12.0F);
             boolean planetZoomedNotMoon = this.isZoomed() && !(isPlanet(this.selectedParent));
@@ -1375,15 +1297,15 @@ public class PlanetSelectScreen extends Screen {
             this.blit(LHS - 95 + scale, TOP + 12, 95, 41, 0, 436, 95, 41, false, false);
             str = planetZoomedNotMoon ? I18n.translate(this.selectedBody.getTranslationKey()) : this.getParentName();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.textRenderer.draw(stack, str, LHS + 9 - 95 + scale, TOP + 34, WHITE);
+            this.textRenderer.draw(matrices, str, LHS + 9 - 95 + scale, TOP + 34, WHITE);
             RenderSystem.color4f(1, 1, 0, 1);
             this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
 
             // Grandparent frame:
             this.blit(LHS + 2 - 95 + scale, TOP + 14, 93, 17, 95, 436, 93, 17, false, false);
-            str = planetZoomedNotMoon ? this.getParentName() : this.getGrandparentName();
+            str = planetZoomedNotMoon ? this.getParentName() : this.getGalaxyName();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-            this.textRenderer.draw(stack, str, LHS + 7 - 95 + scale, TOP + 16, GREY3);
+            this.textRenderer.draw(matrices, str, LHS + 7 - 95 + scale, TOP + 16, GREY3);
             RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
 
             List<CelestialBodyType> children = this.getChildren(planetZoomedNotMoon ? this.selectedBody : this.selectedParent);
@@ -1395,7 +1317,7 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(RHS - 74, TOP, 74, 11, 0, 392, 148, 22, true, false);
                 str = I18n.translate("gui.message.exit").toUpperCase();
                 RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                this.textRenderer.draw(stack, str, RHS - 40 - textRenderer.getWidth(str) / 2, TOP + 1, WHITE);
+                this.textRenderer.draw(matrices, str, RHS - 40 - textRenderer.getWidth(str) / 2, TOP + 1, WHITE);
             }
 
             if (this.selectedBody != null) {
@@ -1405,7 +1327,7 @@ public class PlanetSelectScreen extends Screen {
 
                 if (isSatellite(this.selectedBody)) {
                     Satellite selectedSatellite = (Satellite) this.selectedBody;
-                    int stationListSize = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).size();
+                    int stationListSize = (int) ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().stream().filter(s -> s.getParent() == this.selectedBody.getParent()).count();
 
                     int max = Math.min((this.height / 2) / 14, stationListSize);
                     this.blit(RHS - 95, TOP, 95, 53, this.selectedStationOwner.length() == 0 ? 95 : 0, 186, 95, 53, false, false);
@@ -1423,34 +1345,34 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(RHS - 85, TOP + 49 + max * 14, 61, 4, 0, 239, 61, 4, false, true);
                     RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
 
-                    if (this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(this.selectedStationOwner) == null) {
+                    if (!((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().stream().anyMatch(s -> s.getParent() == this.selectedBody.getParent() && s.getOwnershipData().canAccess(client.player))) {
                         str = I18n.translate("gui.message.select_ss");
                         this.drawSplitString(str, RHS - 47, TOP + 20, 91, WHITE, false, false);
                     } else {
                         str = I18n.translate("gui.message.ss_owner");
-                        this.textRenderer.draw(stack, str, RHS - 85, TOP + 18, WHITE);
+                        this.textRenderer.draw(matrices, str, RHS - 85, TOP + 18, WHITE);
                         str = this.selectedStationOwner;
-                        this.textRenderer.draw(stack, str, RHS - 47 - this.textRenderer.getWidth(str) / 2, TOP + 30, WHITE);
+                        this.textRenderer.draw(matrices, str, RHS - 47 - this.textRenderer.getWidth(str) / 2, TOP + 30, WHITE);
                     }
 
-                    Iterator<Map.Entry<String, StationDataGUI>> it = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).entrySet().iterator();
+                    Iterator<Satellite> it = ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites().stream().filter(s -> s.getParent() == this.selectedBody.getParent() && s.getOwnershipData().canAccess(client.player)).iterator();
                     int i = 0;
                     int j = 0;
                     while (it.hasNext() && i < max) {
-                        Map.Entry<String, StationDataGUI> e = it.next();
+                        Satellite e = it.next();
 
                         if (j >= this.spaceStationListOffset) {
                             this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                             RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
                             int xOffset = 0;
 
-                            if (e.getKey().equalsIgnoreCase(this.selectedStationOwner)) {
+                            if (e.getOwnershipData().getUsername().equalsIgnoreCase(this.selectedStationOwner)) {
                                 xOffset -= 5;
                             }
 
                             this.blit(RHS - 95 + xOffset, TOP + 50 + i * 14, 93, 12, 95, 464, 93, 12, true, false);
                             str = "";
-                            String str0 = e.getValue().getStationName();
+                            String str0 = e.getName();
                             int point = 0;
                             while (this.textRenderer.getWidth(str) < 80 && point < str0.length()) {
                                 str = str + str0.charAt(point);
@@ -1460,7 +1382,7 @@ public class PlanetSelectScreen extends Screen {
                                 str = str.substring(0, str.length() - 3);
                                 str = str + "...";
                             }
-                            this.textRenderer.draw(stack, str, RHS - 88 + xOffset, TOP + 52 + i * 14, WHITE);
+                            this.textRenderer.draw(matrices, str, RHS - 88 + xOffset, TOP + 52 + i * 14, WHITE);
                             i++;
                         }
                         j++;
@@ -1468,224 +1390,132 @@ public class PlanetSelectScreen extends Screen {
                 } else {
                     this.blit(RHS - 96, TOP, 96, 139, 63, 0, 96, 139, false, false);
                 }
-//todo space station
-//                if (this.canCreateSpaceStation(this.selectedBody) && (!(isSatellite(this.selectedBody))))
-//                {
-//                    RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
-//                    this.client.getTextureManager().bindTexture(GuiCelestialSelection.guiMain1);
-//                    int canCreateLength = Math.max(0, this.drawSplitString(I18n.translate("gui.message.can_create_space_station"), 0, 0, 91, 0, true, true) - 2);
-//                    canCreateOffset = canCreateLength * this.textRenderer.fontHeight;
-//
-//                    this.blit(RHS - 95, TOP + 134, 93, 4, 159, 102, 93, 4, false, false);
-//                    for (int barY = 0; barY < canCreateLength; ++barY)
-//                    {
-//                        this.blit(RHS - 95, TOP + 138 + barY * this.textRenderer.fontHeight, 93, this.textRenderer.fontHeight, 159, 106, 93, this.textRenderer.fontHeight, false, false);
-//                    }
-//                    this.blit(RHS - 95, TOP + 138 + canCreateOffset, 93, 43, 159, 106, 93, 43, false, false);
-//                    this.blit(RHS - 79, TOP + 129, 61, 4, 0, 170, 61, 4, false, false);
-//
-//                    SpaceStationRecipe recipe = WorldUtil.getSpaceStationRecipe(this.selectedBody.getWorld());
-//                    if (recipe != null)
-//                    {
-//                        RenderSystem.color4f(0.0F, 1.0F, 0.1F, 1);
-//                        boolean validInputMaterials = true;
-//
-//                        int i = 0;
-//                        for (Map.Entry<Object, Integer> e : recipe.getInput().entrySet())
-//                        {
-//                            Object next = e.getKey();
-//                            int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.getInput().size() + 5);
-//                            int yPos = TOP + 154 + canCreateOffset;
-//
-//                            if (next instanceof ItemStack)
-//                            {
-//                                int amount = getAmountInInventory((ItemStack) next);
-//                                RenderHelper.enableStandardItemLighting();
-//                                ItemStack toRender = ((ItemStack) next).copy();
-//                                this.itemRenderer.renderItemAndEffectIntoGUI(toRender, xPos, yPos);
-//                                this.itemRenderer.renderItemOverlayIntoGUI(textRenderer, toRender, xPos, yPos, null);
-//                                RenderHelper.disableStandardItemLighting();
-//                                GL11.glEnable(GL11.GL_BLEND);
-//
-//                                if (mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16)
-//                                {
-//                                    GL11.glDepthMask(true);
-//                                    GL11.glEnable(GL11.GL_DEPTH_TEST);
-//                                    GL11.glPushMatrix();
-//                                    GL11.glTranslatef(0, 0, 300);
-//                                    int k = this.textRenderer.getWidth(((ItemStack) next).getDisplayName().getFormattedText());
-//                                    int j2 = mousePosX - k / 2;
-//                                    int k2 = mousePosY - 12;
-//                                    int i1 = 8;
-//
-//                                    if (j2 + k > this.width)
-//                                    {
-//                                        j2 -= (j2 - this.width + k);
-//                                    }
-//
-//                                    if (k2 + i1 + 6 > this.height)
-//                                    {
-//                                        k2 = this.height - i1 - 6;
-//                                    }
-//
-//                                    int j1 = to32BitColor(190, 0, 153, 255);
-//                                    this.fillGradient(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-//                                    this.fillGradient(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-//                                    this.fillGradient(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-//                                    this.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-//                                    this.fillGradient(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-//                                    int k1 = to32BitColor(170, 0, 153, 255);
-//                                    int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
-//                                    this.fillGradient(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-//                                    this.fillGradient(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-//                                    this.fillGradient(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-//                                    this.fillGradient(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
-//
-//                                    this.textRenderer.draw(stack, ((ItemStack) next).getDisplayName().getFormattedText(), j2, k2, WHITE);
-//
-//                                    GL11.glPopMatrix();
-//                                }
-//
-//                                str = "" + e.getValue();
-//                                boolean valid = amount >= e.getValue();
-//                                if (!valid && validInputMaterials)
-//                                {
-//                                    validInputMaterials = false;
-//                                }
-//                                int color = valid | this.client.player.abilities.isCreativeMode ? GREEN : RED;
-//                                this.textRenderer.draw(stack, str, xPos + 8 - this.textRenderer.getWidth(str) / 2, TOP + 170 + canCreateOffset, color);
-//                            }
-//                            else if (next instanceof Collection)
-//                            {
-//                                Collection<ItemStack> items = (Collection<ItemStack>) next;
-//
-//                                int amount = 0;
-//
-//                                for (ItemStack stack : items)
-//                                {
-//                                    amount += getAmountInInventory(stack);
-//                                }
-//
-//                                RenderHelper.enableStandardItemLighting();
-//
-//                                Iterator<ItemStack> it = items.iterator();
-//                                int count = 0;
-//                                int toRenderIndex = ((int) this.ticksSinceMenuOpenF / 20) % items.size();
-//                                ItemStack toRender = null;
-//                                while (it.hasNext())
-//                                {
-//                                    ItemStack stack = it.next();
-//                                    if (count == toRenderIndex)
-//                                    {
-//                                        toRender = stack;
-//                                        break;
-//                                    }
-//                                    count++;
-//                                }
-//
-//                                if (toRender == null)
-//                                {
-//                                    continue;
-//                                }
-//
-//                                this.itemRenderer.renderItemAndEffectIntoGUI(toRender, xPos, yPos);
-//                                this.itemRenderer.renderItemOverlayIntoGUI(this.textRenderer, toRender, xPos, yPos, null);
-//                                RenderHelper.disableStandardItemLighting();
-//                                GL11.glEnable(GL11.GL_BLEND);
-//
-//                                if (mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16)
-//                                {
-//                                    GL11.glDepthMask(true);
-//                                    GL11.glEnable(GL11.GL_DEPTH_TEST);
-//                                    GL11.glPushMatrix();
-//                                    GL11.glTranslatef(0, 0, 300);
-//                                    int k = this.textRenderer.getWidth(toRender.getDisplayName().getFormattedText());
-//                                    int j2 = mousePosX - k / 2;
-//                                    int k2 = mousePosY - 12;
-//                                    int i1 = 8;
-//
-//                                    if (j2 + k > this.width)
-//                                    {
-//                                        j2 -= (j2 - this.width + k);
-//                                    }
-//
-//                                    if (k2 + i1 + 6 > this.height)
-//                                    {
-//                                        k2 = this.height - i1 - 6;
-//                                    }
-//
-//                                    int j1 = to32BitColor(190, 0, 153, 255);
-//                                    this.fillGradient(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-//                                    this.fillGradient(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-//                                    this.fillGradient(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-//                                    this.fillGradient(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-//                                    this.fillGradient(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-//                                    int k1 = to32BitColor(170, 0, 153, 255);
-//                                    int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
-//                                    this.fillGradient(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-//                                    this.fillGradient(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-//                                    this.fillGradient(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-//                                    this.fillGradient(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
-//
-//                                    this.textRenderer.draw(stack, toRender.getName().getString(), j2, k2, WHITE);
-//
-//                                    GL11.glPopMatrix();
-//                                }
-//
-//                                str = "" + e.getValue();
-//                                boolean valid = amount >= e.getValue();
-//                                if (!valid && validInputMaterials)
-//                                {
-//                                    validInputMaterials = false;
-//                                }
-//                                int color = valid | this.client.player.abilities.creativeMode ? GREEN : RED;
-//                                this.textRenderer.draw(stack, str, xPos + 8 - this.textRenderer.getWidth(str) / 2, TOP + 170 + canCreateOffset, color);
-//                            }
-//
-//                            i++;
-//                        }
-//
-//                        if (validInputMaterials || this.client.player.abilities.creativeMode)
-//                        {
-//                            RenderSystem.color4f(0.0F, 1.0F, 0.1F, 1);
-//                        }
-//                        else
-//                        {
-//                            RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1);
-//                        }
-//
-//                        this.client.getTextureManager().bindTexture(GuiCelestialSelection.guiMain1);
-//
-//                        if (!this.mapMode)
-//                        {
-//                            if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= TOP + 182 + canCreateOffset && mousePosY <= TOP + 182 + 12 + canCreateOffset)
-//                            {
-//                                this.blit(RHS - 95, TOP + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
-//                            }
-//                        }
-//
-//                        this.blit(RHS - 95, TOP + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
-//
-//                        int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-//                        this.drawSplitString(I18n.translate("gui.message.can_create_space_station"), RHS - 48, TOP + 137, 91, to32BitColor(255, color, 255, color), true, false);
-//
-//                        if (!mapMode)
-//                        {
-//                            this.drawSplitString(I18n.translate("gui.message.create_ss").toUpperCase(), RHS - 48, TOP + 185 + canCreateOffset, 91, WHITE, false, false);
-//                        }
-//                    }
-//                    else
-//                    {
-//                        this.drawSplitString(I18n.translate("gui.message.cannot_create_space_station"), RHS - 48, TOP + 138, 91, WHITE, true, false);
-//                    }
-//                }
+
+                if (this.canCreateSpaceStation(this.selectedBody) && (!(isSatellite(this.selectedBody))))
+                {
+                    RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
+                    this.client.getTextureManager().bindTexture(guiMain1);
+                    int canCreateLength = Math.max(0, this.drawSplitString(I18n.translate("gui.message.can_create_space_station"), 0, 0, 91, 0, true, true) - 2);
+                    canCreateOffset = canCreateLength * this.textRenderer.fontHeight;
+
+                    this.blit(RHS - 95, TOP + 134, 93, 4, 159, 102, 93, 4, false, false);
+                    for (int barY = 0; barY < canCreateLength; ++barY)
+                    {
+                        this.blit(RHS - 95, TOP + 138 + barY * this.textRenderer.fontHeight, 93, this.textRenderer.fontHeight, 159, 106, 93, this.textRenderer.fontHeight, false, false);
+                    }
+                    this.blit(RHS - 95, TOP + 138 + canCreateOffset, 93, 43, 159, 106, 93, 43, false, false);
+                    this.blit(RHS - 79, TOP + 129, 61, 4, 0, 170, 61, 4, false, false);
+
+                    SatelliteRecipe recipe = this.selectedBody.getSatelliteRecipe();
+                    if (recipe != null)
+                    {
+                        RenderSystem.color4f(0.0F, 1.0F, 0.1F, 1);
+                        boolean validInputMaterials = true;
+
+                        int i = 0;
+                        for (ItemStack ingredient : recipe.getIngredients())
+                        {
+                            int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.getIngredients().size() + 5);
+                            int yPos = TOP + 154 + canCreateOffset;
+
+                            boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
+                            int amount = getAmountInInventory(ingredient);
+                            DiffuseLighting.enable();
+                            this.itemRenderer.renderGuiItemIcon(ingredient, xPos, yPos);
+                            this.itemRenderer.renderGuiItemOverlay(textRenderer, ingredient, xPos, yPos, null);
+                            DiffuseLighting.disable();
+                            GL11.glEnable(GL11.GL_BLEND);
+
+                            if (b) {
+                                GL11.glDepthMask(true);
+                                GL11.glEnable(GL11.GL_DEPTH_TEST);
+                                GL11.glPushMatrix();
+                                GL11.glTranslatef(0, 0, 300);
+                                int k = this.textRenderer.getWidth(ingredient.getName());
+                                int j2 = mousePosX - k / 2;
+                                int k2 = mousePosY - 12;
+                                int i1 = 8;
+
+                                if (j2 + k > this.width)
+                                {
+                                    j2 -= (j2 - this.width + k);
+                                }
+
+                                if (k2 + i1 + 6 > this.height)
+                                {
+                                    k2 = this.height - i1 - 6;
+                                }
+
+                                int j1 = ColorUtils.to32BitColor(190, 0, 153, 255);
+                                this.fillGradient(matrices, j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
+                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
+                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
+                                this.fillGradient(matrices, j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
+                                this.fillGradient(matrices, j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
+                                int k1 = ColorUtils.to32BitColor(170, 0, 153, 255);
+                                int l1 = (k1 & 16711422) >> 1 | k1 & -16777216;
+                                this.fillGradient(matrices, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
+                                this.fillGradient(matrices, j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
+                                this.fillGradient(matrices, j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
+                                this.fillGradient(matrices, j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
+
+                                this.textRenderer.draw(matrices, ingredient.getName(), j2, k2, WHITE);
+
+                                GL11.glPopMatrix();
+                            }
+
+                            str = "" + ingredient.getCount();
+                            boolean valid = amount >= ingredient.getCount();
+                            if (!valid && validInputMaterials) {
+                                validInputMaterials = false;
+                            }
+                            int color = valid | this.client.player.abilities.creativeMode ? GREEN : RED;
+                            this.textRenderer.draw(matrices, str, xPos + 8 - this.textRenderer.getWidth(str) / 2f, TOP + 170 + canCreateOffset, color);
+
+                            i++;
+                        }
+
+                        if (validInputMaterials || this.client.player.abilities.creativeMode)
+                        {
+                            RenderSystem.color4f(0.0F, 1.0F, 0.1F, 1);
+                        }
+                        else
+                        {
+                            RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1);
+                        }
+
+                        this.client.getTextureManager().bindTexture(guiMain1);
+
+                        if (!this.mapMode)
+                        {
+                            if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= TOP + 182 + canCreateOffset && mousePosY <= TOP + 182 + 12 + canCreateOffset)
+                            {
+                                this.blit(RHS - 95, TOP + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+                            }
+                        }
+
+                        this.blit(RHS - 95, TOP + 182 + canCreateOffset, 93, 12, 0, 174, 93, 12, false, false);
+
+                        int color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+                        this.drawSplitString(I18n.translate("gui.message.can_create_space_station"), RHS - 48, TOP + 137, 91, ColorUtils.to32BitColor(255, color, 255, color), true, false);
+
+                        if (!mapMode)
+                        {
+                            this.drawSplitString(I18n.translate("gui.message.create_ss").toUpperCase(), RHS - 48, TOP + 185 + canCreateOffset, 91, WHITE, false, false);
+                        }
+                    }
+                    else
+                    {
+                        this.drawSplitString(I18n.translate("gui.message.cannot_create_space_station"), RHS - 48, TOP + 138, 91, WHITE, true, false);
+                    }
+                }
 
                 // Catalog overlay
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                 RenderSystem.color4f(1.0F, 1.0F, 1.0F, 0.3F - Math.min(0.3F, this.ticksSinceSelectionF / 50.0F));
                 this.blit(LHS, TOP, 74, 11, 0, 392, 148, 22, false, false);
                 str = I18n.translate("gui.message.catalog").toUpperCase();
-                this.textRenderer.draw(stack, str, LHS + 40 - textRenderer.getWidth(str) / 2, TOP + 1, WHITE);
+                this.textRenderer.draw(matrices, str, LHS + 40 - textRenderer.getWidth(str) / 2f, TOP + 1, WHITE);
 
                 // Top bar title:
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
@@ -1712,7 +1542,7 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(width / 2 - 30, TOP + 11, 30, 11, 0, 414, 60, 22, false, false);
                     this.blit(width / 2, TOP + 11, 30, 11, 128, 414, 60, 22, false, false);
                     str = I18n.translate("gui.message.tier", this.selectedBody.getAccessWeight() == 0 ? "?" : this.selectedBody.getAccessWeight());
-                    this.textRenderer.draw(stack, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + 13, canReach ? GREY4 : RED3);
+                    this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + 13, canReach ? GREY4 : RED3);
                 }
 
                 str = I18n.translate(this.selectedBody.getTranslationKey());
@@ -1721,7 +1551,7 @@ public class PlanetSelectScreen extends Screen {
                     str = I18n.translate("gui.message.r").toUpperCase();
                 }
 
-                this.textRenderer.draw(stack, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + 2, WHITE);
+                this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, TOP + 2, WHITE);
 
                 // Catalog wedge:
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
@@ -1729,7 +1559,7 @@ public class PlanetSelectScreen extends Screen {
                 this.blit(LHS + 4, TOP, 83, 12, 0, 477, 83, 12, false, false);
 
                 if (!this.mapMode) {
-                    if (!(this.selectedBody.getAccessWeight() <= this.tier) /*|| (isSatellite(this.selectedBody) && this.selectedStationOwner.equals(""))*/) //todo sat
+                    if (!(this.selectedBody.getAccessWeight() <= this.tier) || (isSatellite(this.selectedBody) && ((Satellite) this.selectedBody).getOwnershipData().canAccess(this.client.player)))
                     {
                         RenderSystem.color4f(1.0F, 0.0F, 0.0F, 1);
                     } else {
@@ -1740,7 +1570,7 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(RHS - 74, TOP, 74, 11, 0, 392, 148, 22, true, false);
                     str = I18n.translate("gui.message.launch").toUpperCase();
                     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-                    this.textRenderer.draw(stack, str, RHS - 40 - textRenderer.getWidth(str) / 2f, TOP + 2, WHITE);
+                    this.textRenderer.draw(matrices, str, RHS - 40 - textRenderer.getWidth(str) / 2f, TOP + 2, WHITE);
                 }
 
                 if (this.selectionState == EnumSelection.SELECTED && !(isSatellite(this.selectedBody))) {
@@ -1756,7 +1586,7 @@ public class PlanetSelectScreen extends Screen {
                     this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                     this.blit(RHS - 182, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE - sliderPos, 83, 38, 512 - 166, 512 - 76, 166, 76, true, false);
 
-                    boolean flag0 = false;//GalaxyRegistry.getSatellitesForCelestialBodyType(this.selectedBody).size() > 0; //todo sat
+                    boolean flag0 = getVisibleSatellitesForCelestialBodyType(this.selectedBody).size() > 0;
                     boolean flag1 = isPlanet(this.selectedBody) && getChildren(this.selectedBody).size() > 0;
                     if (flag0 && flag1) {
                         this.drawSplitString(I18n.translate("gui.message.click_again.0"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 2 - sliderPos, 79, GREY5, false, false);
@@ -1767,7 +1597,6 @@ public class PlanetSelectScreen extends Screen {
                     } else {
                         this.drawSplitString(I18n.translate("gui.message.click_again.3"), RHS - 182 + 41, height - PlanetSelectScreen.BORDER_SIZE - PlanetSelectScreen.BORDER_EDGE_SIZE + 11 - sliderPos, 79, GREY5, false, false);
                     }
-
                 }
 
                 if (isSatellite(this.selectedBody) && renamingSpaceStation) {
@@ -1780,18 +1609,18 @@ public class PlanetSelectScreen extends Screen {
                     this.blit(width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, true, false);
                     this.blit(width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, false, false);
                     str = I18n.translate("gui.message.assign");
-                    this.textRenderer.draw(stack, str, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 35, WHITE);
+                    this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 35, WHITE);
                     str = I18n.translate("gui.message.apply");
-                    this.textRenderer.draw(stack, str, width / 2f - this.textRenderer.getWidth(str) / 2f - 36, this.height / 2f + 23, WHITE);
+                    this.textRenderer.draw(matrices, str, width / 2f - this.textRenderer.getWidth(str) / 2f - 36, this.height / 2f + 23, WHITE);
                     str = I18n.translate("gui.message.cancel");
-                    this.textRenderer.draw(stack, str, width / 2f + 36 - this.textRenderer.getWidth(str) / 2f, this.height / 2f + 23, WHITE);
+                    this.textRenderer.draw(matrices, str, width / 2f + 36 - this.textRenderer.getWidth(str) / 2f, this.height / 2f + 23, WHITE);
 
                     if (this.renamingString == null) {
                         Satellite selectedSatellite = (Satellite) this.selectedBody;
                         String playerName = this.client.player.getName().getString();
-                        this.renamingString = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(playerName).getStationName();
+                        this.renamingString = selectedSatellite.getName();
                         if (this.renamingString == null) {
-                            this.renamingString = this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(playerName.toLowerCase()).getStationName();
+                            this.renamingString = selectedSatellite.getName();
                         }
                         if (this.renamingString == null) {
                             this.renamingString = "";
@@ -1805,10 +1634,10 @@ public class PlanetSelectScreen extends Screen {
                         str0 += "_";
                     }
 
-                    this.textRenderer.draw(stack, str0, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 17, WHITE);
+                    this.textRenderer.draw(matrices, str0, width / 2f - this.textRenderer.getWidth(str) / 2f, this.height / 2f - 17, WHITE);
                 }
 
-//                this.client.getTextureManager().bindTexture(GuiCelestialSelection.guiMain0);
+//                this.client.getTextureManager().bindTexture(guiMain0);
 //                RenderSystem.color4f(0.0F, 0.6F, 1.0F, 1);
             }
         }
@@ -1818,8 +1647,19 @@ public class PlanetSelectScreen extends Screen {
         }
     }
 
+    private List<Satellite> getVisibleSatellitesForCelestialBodyType(CelestialBodyType selectedBody) {
+        if (selectedBody == null || selectedBody.getType() != CelestialObjectType.SATELLITE) return Collections.emptyList();
+        List<Satellite> list = new LinkedList<>();
+        for (Satellite satellite : ((SatelliteAccessor) this.client.getNetworkHandler()).getSatellites()) {
+            if (satellite.getParent() == selectedBody && satellite.getOwnershipData().canAccess(this.client.player)) {
+                list.add(satellite);
+            }
+        }
+        return list;
+    }
+
     private boolean isSatellite(CelestialBodyType selectedBody) {
-        return false; //todo satellites
+        return selectedBody != null && selectedBody.getType() == CelestialObjectType.SATELLITE;
     }
 
     /**
@@ -1875,8 +1715,16 @@ public class PlanetSelectScreen extends Screen {
         return yOffset;
     }
 
-    protected int getAmountInInventory(ItemStack stack) {
-        return this.client.player.inventory.count(stack.getItem());
+    protected int getAmountInInventory(ItemStack ingredient) {
+        int i = 0;
+
+        for(int j = 0; j < this.client.player.inventory.size(); ++j) {
+            ItemStack stack = this.client.player.inventory.getStack(j);
+            if (ingredient.isItemEqual(stack)) {
+                i += stack.getCount();
+            }
+        }
+        return i;
     }
 
     public int drawSplitString(String par1Str, int par2, int par3, int par4, int par5, boolean small, boolean simulate) {
@@ -2146,27 +1994,5 @@ public class PlanetSelectScreen extends Screen {
         UNSELECTED,
         SELECTED,
         ZOOMED
-    }
-
-    public static class StationDataGUI {
-        private final RegistryKey<World> stationDimensionID;
-        private String stationName;
-
-        public StationDataGUI(String stationName, RegistryKey<World> stationDimensionID) {
-            this.stationName = stationName;
-            this.stationDimensionID = stationDimensionID;
-        }
-
-        public String getStationName() {
-            return stationName;
-        }
-
-        public void setStationName(String stationName) {
-            this.stationName = stationName;
-        }
-
-        public RegistryKey<World> getStationDimensionID() {
-            return stationDimensionID;
-        }
     }
 }

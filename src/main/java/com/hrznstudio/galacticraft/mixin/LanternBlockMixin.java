@@ -49,7 +49,7 @@ public abstract class LanternBlockMixin extends Block {
     @Deprecated
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moved) {
         super.onBlockAdded(state, world, pos, oldState, moved);
-        if (CelestialBodyType.getByDimType(world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
+        if (CelestialBodyType.getByDimType(world.getRegistryManager(), world.getRegistryKey()).isPresent() && !CelestialBodyType.getByDimType(world.getRegistryManager(), world.getRegistryKey()).get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)) {
             if (state.getBlock() == Blocks.LANTERN) {
                 world.setBlockState(pos, GalacticraftBlocks.UNLIT_LANTERN.getDefaultState().with(LanternBlock.HANGING, state.get(LanternBlock.HANGING)).with(LanternBlock.field_26441, state.get(LanternBlock.field_26441)));
             }

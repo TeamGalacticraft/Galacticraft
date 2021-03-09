@@ -20,19 +20,24 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.api.celestialbody;
+package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
+import net.minecraft.server.network.ServerPlayerEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 
-import java.util.List;
+@Mixin(ServerPlayerEntity.class)
+public abstract class ServerPlayerEntityMixin implements ServerPlayerEntityAccessor {
+    private @Unique int celestialScreenState;
 
-public interface Satellite {
-    @Nullable RegistryKey<World> getWorld();
+    @Override
+    public int getCelestialScreenState() {
+        return this.celestialScreenState;
+    }
 
-    @NotNull CelestialBodyType getParent();
+    @Override
+    public void setCelestialScreenState(int state) {
+        this.celestialScreenState = state;
+    }
 }

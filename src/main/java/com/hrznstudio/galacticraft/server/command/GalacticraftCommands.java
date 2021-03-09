@@ -23,22 +23,27 @@
 package com.hrznstudio.galacticraft.server.command;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.accessor.ServerPlayerEntityAccessor;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.block.Block;
 import net.minecraft.command.argument.BlockPosArgumentType;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -50,8 +55,7 @@ import java.util.UUID;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class GalacticraftCommands {
-
-    private static final HashMap<UUID,Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
+    private static final HashMap<UUID, Integer> GCR_HOUSTON_TIMERS = new HashMap<>();
     private static final int GCR_HOUSTON_TIMER_LENGTH = 12 * 20; // seconds * tps
 
     public static void register() {
@@ -67,25 +71,21 @@ public class GalacticraftCommands {
              * teleporting multiple non-player entities for some reason. So, I made it where you can pick
              * teleporting entities OR setting a custom position to go to, but not both :P
              */
+            LiteralCommandNode<ServerCommandSource> dimtp_gui = commandDispatcher.register(
+                    CommandManager.literal("dimensiontp")
+                            .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                            .executes(context -> {
+                                context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
+                                ((ServerPlayerEntityAccessor) context.getSource().getPlayer()).setCelestialScreenState(Integer.MAX_VALUE);
+                                return 1;
+                            })
+            );
+
             LiteralCommandNode<ServerCommandSource> dimensiontp_root = commandDispatcher.register(
                     CommandManager.literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                     .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
                     .executes(GalacticraftCommands::teleport)));
-            // TODO: either fix this or remove it
-            /* LiteralCommandNode<ServerCommandSource> dimensiontp_entities = commandDispatcher.register(
-                    LiteralArgumentBuilder.<ServerCommandSource>literal("dimensiontp")
-                    .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                    .executes(context -> {
-                        if (context.getSource().getPlayer() != null) {
-                            context.getSource().getPlayer().networkHandler.sendPacket(new CustomPayloadS2CPacket(new Identifier(Constants.MOD_ID, "planet_menu_open"), new PacketByteBuf(Unpooled.buffer().writeInt(Integer.MAX_VALUE))));
-                            return 1;
-                        }
-                        return 0;
-                    })
-                    .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-                    .then(CommandManager.argument("entities", EntityArgumentType.entities())
-                    .executes(((GalacticraftCommands::teleportMultiple)))))); */
             LiteralCommandNode<ServerCommandSource> dimensiontp_pos = commandDispatcher.register(
                     CommandManager.literal("dimensiontp")
                     .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
@@ -93,9 +93,8 @@ public class GalacticraftCommands {
                     .then(CommandManager.argument("pos", BlockPosArgumentType.blockPos())
                     .executes(GalacticraftCommands::teleportToCoords))));
 
-            // Because I don't like to type
+            commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimtp_gui));
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_root));
-            //commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_entities));
             commandDispatcher.register(CommandManager.literal("dimtp").redirect(dimensiontp_pos));
 
             commandDispatcher.register(
@@ -114,7 +113,7 @@ public class GalacticraftCommands {
         }
         context.getSource().getMinecraftServer().execute(() -> {
             try {
-                if (!CelestialBodyType.getByDimType(context.getSource().getWorld().getRegistryKey()).isPresent()) {
+                if (!CelestialBodyType.getByDimType(context.getSource().getRegistryManager(), context.getSource().getWorld().getRegistryKey()).isPresent()) {
                     context.getSource().sendError(new TranslatableText("commands.galacticraft-rewoven.gcrhouston.cannot_detect_signal").setStyle(Constants.Styles.RED_STYLE));
                     retval[0] = -1;
                     return;
@@ -262,7 +261,7 @@ public class GalacticraftCommands {
 
     private static int listBodies(CommandContext<ServerCommandSource> context) {
         StringBuilder builder = new StringBuilder();
-        CelestialBodyType.getAll().forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
+        CelestialBodyType.getAll(context.getSource().getRegistryManager()).forEach(celestialBodyType -> builder.append(celestialBodyType.getTranslationKey()).append("\n"));
         context.getSource().sendFeedback(new LiteralText(builder.toString()), true);
         return Command.SINGLE_SUCCESS;
     }

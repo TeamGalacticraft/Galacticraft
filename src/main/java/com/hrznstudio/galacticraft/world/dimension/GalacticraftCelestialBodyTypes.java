@@ -24,7 +24,11 @@ package com.hrznstudio.galacticraft.world.dimension;
 
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyDisplayInfo;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialObjectType;
+import com.hrznstudio.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
+import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -35,6 +39,7 @@ public class GalacticraftCelestialBodyTypes {
     public static final CelestialBodyType THE_MOON = new CelestialBodyType.Builder(new Identifier("galacticraft-rewoven", "the_moon"))
             .translationKey("ui.galacticraft-rewoven.bodies.the_moon")
             .world(GalacticraftDimensions.MOON)
+            .type(CelestialObjectType.MOON)
             .parent(CelestialBodyType.EARTH)
             .weight(1)
             .gravity(0.16f)
@@ -47,6 +52,7 @@ public class GalacticraftCelestialBodyTypes {
                             .time(648000) // 27 mc days in ticks
                             .build()
             )
+            .recipe(new SatelliteRecipe(new ItemStack(GalacticraftItems.BASIC_WAFER, 100)))
             .build();
 
     public static void register() {
