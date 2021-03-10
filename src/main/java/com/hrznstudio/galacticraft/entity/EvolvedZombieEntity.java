@@ -23,13 +23,8 @@
 package com.hrznstudio.galacticraft.entity;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.brain.Activity;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.ZombieEntity;
-import net.minecraft.util.Arm;
 import net.minecraft.world.World;
-
-import java.util.HashSet;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

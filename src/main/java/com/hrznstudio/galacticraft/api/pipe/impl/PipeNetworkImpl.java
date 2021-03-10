@@ -22,19 +22,21 @@
 
 package com.hrznstudio.galacticraft.api.pipe.impl;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FluidExtractable;
+import alexiil.mc.lib.attributes.fluid.FluidInsertable;
+import alexiil.mc.lib.attributes.fluid.impl.EmptyFluidExtractable;
+import alexiil.mc.lib.attributes.fluid.impl.RejectingFluidInsertable;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.pipe.Pipe;
 import com.hrznstudio.galacticraft.api.pipe.PipeConnectionType;
 import com.hrznstudio.galacticraft.api.pipe.PipeNetwork;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.FluidPipeBlockEntity;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Util;
@@ -67,13 +69,13 @@ public class PipeNetworkImpl implements PipeNetwork {
             if (pipe == null) throw new RuntimeException("Tried to add a pipe that didn't exist!");
         }
         pipe.setNetwork(this);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             BlockPos conn = pos.offset(direction);
             BlockEntity entity = world.getBlockEntity(conn);
             PipeConnectionType type = pipe.getConnection(direction, entity);
             if (type == PipeConnectionType.PIPE) {
                 if (((Pipe) entity).getNetwork() != this) {
-                    addPipe(conn, (Pipe)entity);
+                    this.addPipe(conn, (Pipe)entity);
                 }
                 edge(pos, conn, PipeConnectionType.PIPE);
                 edge(conn, pos, PipeConnectionType.PIPE);
@@ -91,7 +93,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     public void removePipe(@NotNull BlockPos pos) {
         if (contains(pos)) {
             Deque<BlockPos> pipes = new LinkedList<>();
-            for (Direction direction : Direction.values()) {
+            for (Direction direction : Constants.Misc.DIRECTIONS) {
                 BlockPos conn = pos.offset(direction);
                 PipeConnectionType type = getConnection(pos, conn);
                 if (type != PipeConnectionType.NONE) {
@@ -143,22 +145,22 @@ public class PipeNetworkImpl implements PipeNetwork {
         //pipes should call #removePipe before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(adjacentToUpdated, updatedPos, true);
-        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
-        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
-        if (component != null) {
-            if (component.canInsertEnergy() && component.canExtractEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
-            } else if (component.canInsertEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
-            } else if (component.canExtractEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
+        this.removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos vector = adjacentToUpdated.subtract(updatedPos);
+        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+        FluidInsertable insertable = FluidUtils.getInsertable(world, updatedPos, direction);
+        FluidExtractable extractable = FluidUtils.getExtractable(world, updatedPos, direction);
+            if (insertable != RejectingFluidInsertable.NULL && extractable != EmptyFluidExtractable.NULL) {
+                this.node(updatedPos);
+                this.edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_IO);
+            } else if (insertable != RejectingFluidInsertable.NULL) {
+                this.node(updatedPos);
+                this.edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_INPUT);
+            } else if (extractable != EmptyFluidExtractable.NULL) {
+                this.node(updatedPos);
+                this.edge(adjacentToUpdated, updatedPos, PipeConnectionType.FLUID_OUTPUT);
             }
-        }
+
     }
 
     @Override
@@ -167,37 +169,36 @@ public class PipeNetworkImpl implements PipeNetwork {
     }
 
     @Override
-    public Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, @NotNull FluidVolume amount, @NotNull ActionType type) {
+    public Pipe.FluidData insertFluid(@NotNull BlockPos fromPipe, @Nullable BlockPos fromBlock, @NotNull FluidVolume amount, @NotNull Simulation simulation) {
         if (!graph.nodes().contains(fromPipe)) throw new RuntimeException("Inserted energy from non-existent pipe?!");
-        return successor(fromPipe, Util.make(new LinkedHashSet<>(), (l) -> l.add(fromPipe)), new LinkedList<>(), amount, type);
+        return successor(fromPipe, Util.make(new LinkedHashSet<>(), (l) -> l.add(fromPipe)), new LinkedList<>(), amount, simulation);
     }
 
-    public FluidPipeBlockEntity.FluidData successor(BlockPos pos, LinkedHashSet<BlockPos> visited, LinkedList<BlockPos> steps, FluidVolume amount, ActionType actionType) {
+    public FluidPipeBlockEntity.FluidData successor(BlockPos pos, LinkedHashSet<BlockPos> visited, LinkedList<BlockPos> steps, FluidVolume volume, Simulation simulation) {
         steps.push(pos);
         List<BlockPos> other = new LinkedList<>();
         for (BlockPos successor : graph.successors(pos)) {
             if (visited.add(successor)) {
                 BlockEntity entity = world.getBlockEntity(successor);
-                BlockPos poss = successor.subtract(pos);
-                Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-                TankComponent component = TankComponentHelper.INSTANCE.getComponent(world, successor, opposite);
-                if (component != null && !(entity instanceof Pipe)) {
-                    if (component.canInsert(0)) {
-                        FluidVolume data = component.insertFluid(amount, actionType);
+                if (!(entity instanceof Pipe)) {
+                    BlockPos vector = pos.subtract(successor);
+                    Direction dir = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+                    FluidInsertable insertable = FluidUtils.getInsertable(world, successor, dir);
+                    FluidVolume data = insertable.attemptInsertion(volume, simulation);
 
-                        if (!(data.getAmount().equals(amount.getAmount()))) {
-                            steps.push(successor);
-                            Direction direction = Direction.fromVector(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
-                            return new FluidPipeBlockEntity.FluidData(pos, steps, new FluidVolume(amount.getFluid(), amount.getAmount().subtract(data.getAmount())), direction);
-                        }
+                    if (!(data.getAmount_F().equals(volume.getAmount_F()))) {
+                        steps.push(successor);
+                        Direction direction = Direction.fromVector(pos.getX() - successor.getX(), pos.getY() - successor.getY(), pos.getZ() - successor.getZ()).getOpposite();
+                        return new FluidPipeBlockEntity.FluidData(pos, steps, data, direction);
                     }
+
                 } else {
                     other.add(successor);
                 }
             }
         }
         for (BlockPos successor : other) {
-            FluidPipeBlockEntity.FluidData data = successor(successor, visited, steps, amount, actionType);
+            FluidPipeBlockEntity.FluidData data = successor(successor, visited, steps, volume, simulation);
             if (data != null) return data;
         }
         steps.pop();
@@ -207,7 +208,7 @@ public class PipeNetworkImpl implements PipeNetwork {
     @Override
     public @NotNull Map<Direction, @NotNull PipeConnectionType> getAdjacent(BlockPos from) {
         Map<Direction, PipeConnectionType> map = new EnumMap<>(Direction.class);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             map.put(direction, getConnection(from, from.offset(direction)));
         }
 

@@ -23,8 +23,6 @@
 package com.hrznstudio.galacticraft.tag;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.fabricmc.fabric.api.tag.TagRegistry;
 import net.fabricmc.fabric.mixin.tag.extension.AccessorFluidTags;
 import net.minecraft.block.Block;
@@ -32,9 +30,6 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>

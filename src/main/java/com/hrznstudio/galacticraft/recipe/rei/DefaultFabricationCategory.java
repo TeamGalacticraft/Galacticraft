@@ -42,7 +42,6 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,16 +76,16 @@ public class DefaultFabricationCategory implements RecipeCategory<DefaultFabrica
             private BaseWidget() {
             }
 
-            public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-                //super.render(mouseX, mouseY, delta);
+            public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+                //super.render(matrices, mouseX, mouseY, delta);
                 DiffuseLighting.disable();
                 MinecraftClient.getInstance().getTextureManager().bindTexture(DefaultFabricationCategory.DISPLAY_TEXTURE);
-                this.drawTexture(stack, startPoint.x, startPoint.y, 0, 0, 162, 82);
+                this.drawTexture(matrices, startPoint.x, startPoint.y, 0, 0, 162, 82);
 
                 int height = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-                this.drawTexture(stack, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
+                this.drawTexture(matrices, startPoint.x + 2, startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
                 int width = MathHelper.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-                this.drawTexture(stack, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
+                this.drawTexture(matrices, startPoint.x + 24, startPoint.y + 18, 82, 91, width, 17);
             }
 
             @Override

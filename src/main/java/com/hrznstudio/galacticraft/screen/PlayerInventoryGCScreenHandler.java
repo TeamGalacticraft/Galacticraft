@@ -22,12 +22,14 @@
 
 package com.hrznstudio.galacticraft.screen;
 
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.items.OxygenTankItem;
 import com.hrznstudio.galacticraft.items.ThermalArmorItem;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
+import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,7 +56,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
     public static final int OXYGEN_TANK_1_SLOT = 6;
     public static final int OXYGEN_TANK_2_SLOT = 7;
 
-    public final Inventory inventory;
+    public final FixedItemInv inventory;
 
     private final PlayerEntity player;
 
@@ -62,12 +64,18 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
 
         this.player = player;
-        this.inventory = GalacticraftComponents.GEAR_INVENTORY_COMPONENT.get(player).asInventory();
+        this.inventory = ((GearInventoryProvider)player).getGearInv();
+        Inventory inventory = new InventoryFixedWrapper(this.inventory) {
+            @Override
+            public boolean canPlayerUse(PlayerEntity player) {
+                return PlayerInventoryGCScreenHandler.this.player == player;
+            }
+        };
 
         for (int slotY = 0; slotY < 4; ++slotY) {
             EquipmentSlot slot = EQUIPMENT_SLOT_ORDER[slotY];
             int finalSlotY = slotY;
-            this.addSlot(new Slot(this.inventory, finalSlotY, 8, 8 + slotY * 18) {
+            this.addSlot(new Slot(inventory, finalSlotY, 8, 8 + slotY * 18) {
                 @Override
                 public int getMaxItemCount() {
                     return 1;
@@ -80,7 +88,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
                 @Override
                 public boolean canTakeItems(PlayerEntity player) {
-                    return player.getUuid() == player.getUuid();
+                    return PlayerInventoryGCScreenHandler.this.player == player;
                 }
 
                 @Override
@@ -90,7 +98,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
             });
         }
 
-        this.addSlot(new ItemSpecificSlot(this.inventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
+        this.addSlot(new ItemSpecificSlot(inventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
                 return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
@@ -98,11 +106,11 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
             @Override
             public boolean canTakeItems(PlayerEntity player) {
-                return player.getUuid() == player.getUuid();
+                return PlayerInventoryGCScreenHandler.this.player == player;
             }
         });
 
-        this.addSlot(new ItemSpecificSlot(this.inventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR) {
+        this.addSlot(new ItemSpecificSlot(inventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
                 return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
@@ -110,15 +118,15 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
             @Override
             public boolean canTakeItems(PlayerEntity player) {
-                return player.getUuid() == player.getUuid();
+                return PlayerInventoryGCScreenHandler.this.player == player;
             }
         });
-        this.addSlot(new OxygenTankSlot(this.inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
-        this.addSlot(new OxygenTankSlot(this.inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
+        this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
+        this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_2_SLOT, 80, 8 + 3 * 18));
 
         int accessorySlot = 0;
         for (int i = 8; i < 12; i++) {
-            this.addSlot(new Slot(this.inventory, i, 80 + 18, 8 + accessorySlot * 18));
+            this.addSlot(new Slot(inventory, i, 80 + 18, 8 + accessorySlot * 18));
             accessorySlot++;
         }
 
@@ -153,7 +161,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
         @Override
         public boolean canInsert(ItemStack stack) {
-            return stack.getItem() instanceof OxygenTankItem;
+            return OxygenTankUtils.isOxygenTank(stack);
         }
 
         @Override
@@ -168,6 +176,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         }
     }
 
+    @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
         ItemStack stack = ItemStack.EMPTY;
         Slot slotFrom = this.slots.get(index);

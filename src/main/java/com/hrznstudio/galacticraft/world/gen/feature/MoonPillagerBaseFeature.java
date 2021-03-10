@@ -24,9 +24,7 @@ package com.hrznstudio.galacticraft.world.gen.feature;
 
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import com.mojang.serialization.Codec;
-import net.minecraft.entity.EntityType;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.SpawnSettings;

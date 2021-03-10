@@ -22,32 +22,36 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.component.SubInventoryComponent;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.screen.ElectricFurnaceScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
@@ -56,7 +60,12 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     
     public int cookTime = 0;
     public int cookLength = 0;
-    private final Inventory craftingInv = InventoryWrapper.of(new SubInventoryComponent(this.getInventory(), new int[]{INPUT_SLOT}));
+    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return getWrappedInventory().canPlayerUse(player);
+        }
+    };
 
     public ElectricFurnaceBlockEntity(BlockEntityType<? extends ElectricFurnaceBlockEntity> blockEntityType) {
         super(blockEntityType);
@@ -92,10 +101,10 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyItem;
+    public ItemFilter getFilterForSlot(int slot) {
+        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
         if (slot == INPUT_SLOT) return stack -> this.getRecipe(RecipeType.SMELTING, new SimpleInventory(stack)).isPresent();
-        return Constants.Misc.alwaysTrue();
+        return ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -123,10 +132,10 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
             }
             if (this.cookTime++ >= this.cookLength) {
                 SmeltingRecipe recipe = this.getRecipe(RecipeType.SMELTING, craftingInv).orElseThrow(AssertionError::new);
-                if (this.getInventory().takeStack(INPUT_SLOT, 1, ActionType.PERFORM).isEmpty()) return;
+                if (this.getInventory().extractStack(INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
                 this.cookTime = 0;
                 this.cookLength = 0;
-                this.getInventory().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), ActionType.PERFORM);
+                this.getInventory().insertStack(OUTPUT_SLOT, recipe.getOutput().copy(), Simulation.ACTION);
             }
 
         } else {
@@ -142,6 +151,13 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        if (this.getSecurity().hasAccess(player)) return new ElectricFurnaceScreenHandler(syncId, player, this);
+        return null;
     }
 
     private enum Status implements MachineStatus {

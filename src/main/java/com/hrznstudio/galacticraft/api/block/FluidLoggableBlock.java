@@ -38,8 +38,8 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,13 +53,15 @@ public interface FluidLoggableBlock extends FluidDrainable, FluidFillable {
     String COLON_REP = "__2_211_23";
 
     Property<Identifier> FLUID = new Property<Identifier>("fluid", Identifier.class) {
-        private final List<Identifier> VALUES = new ArrayList<>();
+        private final List<Identifier> VALUES = new LinkedList<>();
 
         @Override
         public Collection<Identifier> getValues() {
             if (VALUES.isEmpty()) {
                 for (Fluid f : Registry.FLUID) {
-                    VALUES.add(Registry.FLUID.getId(f));
+                    if (f instanceof FlowableFluid) {
+                        VALUES.add(Registry.FLUID.getId(f));
+                    }
                 }
                 VALUES.add(Constants.Misc.EMPTY);
             }

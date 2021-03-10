@@ -23,13 +23,15 @@
 package com.hrznstudio.galacticraft.block.special.walkway;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.FluidLoggableBlock;
 import com.hrznstudio.galacticraft.api.block.WireBlock;
-import io.github.cottonmc.component.api.ComponentHelper;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.fluid.FlowableFluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
@@ -249,7 +251,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
                 return false;
         } catch (IllegalArgumentException ignored) {}
         // TODO: The WireBlockEntity will still connect on the top face of this block (there's no wire there)
-        return neighborState.getBlock() instanceof WireBlock || ComponentHelper.CAPACITOR.hasComponent(world, pos.offset(facing), facing.getOpposite());
+        return neighborState.getBlock() instanceof WireBlock || EnergyUtils.canAccessEnergy(world.getBlockEntity(pos).getWorld(), pos.offset(facing), facing.getOpposite());
     }
 
     @Override

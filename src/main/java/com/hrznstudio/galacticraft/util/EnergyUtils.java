@@ -22,76 +22,175 @@
 
 package com.hrznstudio.galacticraft.util;
 
+import alexiil.mc.lib.attributes.SearchOptions;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
+import alexiil.mc.lib.attributes.misc.Ref;
+import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
-import dev.onyxstudios.cca.api.v3.component.ComponentProvider;
+import com.hrznstudio.galacticraft.energy.api.Capacitor;
+import com.hrznstudio.galacticraft.energy.api.CapacitorView;
+import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.MutableText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class EnergyUtils {
-    public static boolean isEnergyItem(ItemStack stack) {
-        return ComponentHelper.CAPACITOR.hasComponent(stack);
+    public static final ItemFilter IS_EXTRACTABLE = EnergyUtils::isEnergyExtractable;
+    public static final ItemFilter IS_INSERTABLE = EnergyUtils::isEnergyInsertable;
+
+    public static boolean isEnergyExtractable(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.EXTRACTABLE.getFirstOrNull(reference) != null;
+    }
+
+    public static boolean isEnergyInsertable(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.INSERTABLE.getFirstOrNull(reference) != null;
+    }
+
+    public static boolean isCapacitorView(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.CAPACITOR_VIEW.getFirstOrNull(reference) != null;
+    }
+
+    public static boolean isCapacitor(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.CAPACITOR.getFirstOrNull(reference) != null;
+    }
+
+    public static boolean isEnergyExtractable(ItemStack stack) {
+        return isEnergyExtractable(new Ref<>(stack));
+    }
+
+    public static boolean isEnergyInsertable(ItemStack stack) {
+        return isEnergyInsertable(new Ref<>(stack));
+    }
+
+    public static boolean isCapacitorView(ItemStack stack) {
+        return isCapacitorView(new Ref<>(stack));
+    }
+
+    public static boolean isCapacitor(ItemStack stack) {
+        return isCapacitor(new Ref<>(stack));
+    }
+
+    public static EnergyExtractable getEnergyExtractable(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.EXTRACTABLE.getFirst(reference);
+    }
+
+    public static EnergyInsertable getEnergyInsertable(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.INSERTABLE.getFirst(reference);
+    }
+
+    public static CapacitorView getCapacitorView(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.CAPACITOR_VIEW.getFirst(reference);
+    }
+
+    public static Capacitor getCapacitor(Reference<ItemStack> reference) {
+        return GalacticraftEnergy.CAPACITOR.getFirst(reference);
+    }
+
+    public static EnergyExtractable getEnergyExtractable(ItemStack stack) {
+        return getEnergyExtractable(new Ref<>(stack));
+    }
+
+    public static EnergyInsertable getEnergyInsertable(ItemStack stack) {
+        return getEnergyInsertable(new Ref<>(stack));
+    }
+
+    public static CapacitorView getCapacitorView(ItemStack stack) {
+        return getCapacitorView(new Ref<>(stack));
+    }
+
+    public static Capacitor getCapacitor(ItemStack stack) {
+        return getCapacitor(new Ref<>(stack));
+    }
+
+    public static EnergyExtractable getEnergyExtractable(World world, BlockPos pos, Direction direction) {
+        return GalacticraftEnergy.EXTRACTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static EnergyInsertable getEnergyInsertable(World world, BlockPos pos, Direction direction) {
+        return GalacticraftEnergy.INSERTABLE.getFirst(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static CapacitorView getCapacitorView(World world, BlockPos pos, Direction direction) {
+        return GalacticraftEnergy.CAPACITOR_VIEW.getFirst(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static Capacitor getCapacitor(World world, BlockPos pos, Direction direction) {
+        return GalacticraftEnergy.CAPACITOR.getFirst(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static boolean canAccessEnergy(World world, BlockPos pos, Direction direction) {
+        EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
+        EnergyExtractable extractable = GalacticraftEnergy.EXTRACTABLE.getFirstOrNull(world, pos, SearchOptions.inDirection(direction));
+        return insertable != null || extractable != null;
     }
 
     public static int getEnergy(ItemStack stack) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).getCurrentEnergy();
+        assert isCapacitor(stack);
+        return getCapacitorView(stack).getEnergy();
     }
 
     /**
      * @param stack  The battery/energy item to extract energy from
      * @param amount The amount of energy, in Galacticraft Joules to extract from the battery
-     * @param action The action
+     * @param simulation Whether to actually change values or not.
      * @return The amount of energy that was extracted
      */
-    public static int extractEnergy(ItemStack stack, int amount, ActionType action) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).extractEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+    public static int extractEnergy(Reference<ItemStack> stack, int amount, Simulation simulation) {
+        return getEnergyHandler(stack).extract(amount, simulation);
+    }
+
+    public static int extractEnergy(Reference<ItemStack> stack, int amount) {
+        return extractEnergy(stack, amount, Simulation.ACTION);
     }
 
     /**
      * @param stack  The battery/energy item to insert energy into
      * @param amount The amount of energy, in Galacticraft Joules, to inset into the battery
-     * @param action The action
+     * @param simulation Whether to actually change values or not
      * @return The amount of energy that could not be inserted
      */
-    public static int insertEnergy(ItemStack stack, int amount, ActionType action) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).insertEnergy(GalacticraftEnergy.GALACTICRAFT_JOULES, amount, action);
+    public static int insert(Reference<ItemStack> stack, int amount, Simulation simulation) {
+        return getEnergyHandler(stack).insert(amount, simulation);
+    }
+
+    public static int insert(Reference<ItemStack> stack, int amount) {
+        return insert(stack, amount, Simulation.ACTION);
     }
 
     /**
      * @param stack The battery/energy item in question
      * @return The max amount of energy the battery can hold
      */
-    public static int getMaxEnergy(ItemStack stack) {
-        assert isEnergyItem(stack);
-        return ComponentHelper.CAPACITOR.getComponent(stack).getMaxEnergy();
+    public static int getMaxCapacity(ItemStack stack) {
+        assert isCapacitor(stack);
+        return getEnergyHandler(new Ref<>(stack)).getMaxCapacity();
     }
 
     public static void setEnergy(ItemStack stack, int amount) {
-        assert isEnergyItem(stack);
-        CapacitorComponent component = ComponentHelper.CAPACITOR.getComponent(stack);
-        if (component instanceof SimpleCapacitorComponent) ((SimpleCapacitorComponent) component).setCurrentEnergy(amount);
-        else throw new UnsupportedOperationException();
+        assert isCapacitor(stack);
+        getEnergyHandler(new Ref<>(stack)).setEnergy(amount);
+    }
+
+    public static Capacitor getEnergyHandler(Reference<ItemStack> stackReference) {
+        return GalacticraftEnergy.CAPACITOR.getFirst(stackReference);
+    }
+
+    public static Capacitor getEnergyHandler(World world, BlockPos pos, @Nullable Direction direction) {
+        return GalacticraftEnergy.CAPACITOR.getFirst(world, pos, SearchOptions.inDirection(direction));
+    }
+
+    public static MutableText getDisplay(int value) {
+        return DefaultEnergyType.INSTANCE.display(value);
     }
 
     public static class Values {
         public static final int T1_MACHINE_ENERGY_USAGE = 30;
         public static final int T2_MACHINE_ENERGY_USAGE = 60;
-
-        private static long tick = 0;
-
-        public static void incrementTick() {
-            tick++;
-        }
-
-        public static long getTick() {
-            return tick;
-        }
     }
 }

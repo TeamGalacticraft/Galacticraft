@@ -20,23 +20,19 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.component;
+package com.hrznstudio.galacticraft.accessor;
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import io.github.cottonmc.component.UniversalComponents;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.impl.ItemTankComponent;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 
-public class AutoSyncedItemTankComponent extends ItemTankComponent implements AutoSyncedComponent {
-    public AutoSyncedItemTankComponent(int size, Fraction maxCapacity, ItemStack provider) {
-        this(size, maxCapacity, UniversalComponents.TANK_COMPONENT, provider);
-    }
+import java.util.List;
 
-    public AutoSyncedItemTankComponent(int size, Fraction maxCapacity, ComponentKey<TankComponent> type, ItemStack provider) {
-        super(size, maxCapacity, type);
-        this.listen(() -> type.sync(provider));
-    }
+public interface ChunkOxygenAccessor {
+    boolean isBreathable(int x, int y, int z);
+
+    void setBreathable(int x, int y, int z, boolean value);
+
+    List<CustomPayloadS2CPacket> syncToClient();
+
+    void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf);
 }

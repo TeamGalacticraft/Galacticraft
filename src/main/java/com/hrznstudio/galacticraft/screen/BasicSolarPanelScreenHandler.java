@@ -35,7 +35,7 @@ public class BasicSolarPanelScreenHandler extends MachineScreenHandler<BasicSola
     public BasicSolarPanelScreenHandler(int syncId, PlayerEntity player, BasicSolarPanelBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER);
 
-        this.addSlot(new FilteredSlot(machine, machine.getWrappedInventory(), BasicSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
+        this.addSlot(new FilteredSlot(machine, BasicSolarPanelBlockEntity.CHARGE_SLOT, 8, 62));
         this.addPlayerInventorySlots(0, 84);
     }
 

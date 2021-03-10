@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.client.network;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -41,7 +42,7 @@ import java.util.UUID;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public class GalacticraftC2SPackets {
+public class GalacticraftC2SPacketReceivers {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "entity_spawn"), (client, handler, buf, responseSender) -> { //todo(marcus): 1.17?
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
@@ -70,6 +71,16 @@ public class GalacticraftC2SPackets {
                     }
                 }
             });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "oxygen_update"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+            byte b = packetByteBuf.readByte();
+            ChunkOxygenAccessor accessor = ((ChunkOxygenAccessor) clientPlayNetworkHandler.getWorld().getChunk(packetByteBuf.readInt(), packetByteBuf.readInt()));
+            accessor.readOxygenUpdate(b, packetByteBuf);
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_screen"), (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+
         });
     }
 }

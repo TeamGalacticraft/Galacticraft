@@ -22,39 +22,43 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import io.github.cottonmc.component.api.ActionType;
+import com.hrznstudio.galacticraft.screen.CircuitFabricatorScreenHandler;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity {
-    private static final Item[] MANDATORY_MATERIALS = new Item[]{Items.DIAMOND, GalacticraftItems.RAW_SILICON, GalacticraftItems.RAW_SILICON, Items.REDSTONE};
     public static final int MAX_PROGRESS = 300;
 
     public static final int CHARGE_SLOT = 0;
@@ -65,17 +69,21 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private static final Predicate<ItemStack>[] SLOT_FILTERS;
+    private static final ItemFilter[] SLOT_FILTERS;
+    private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+        @Override
+        public boolean canPlayerUse(PlayerEntity player) {
+            return getWrappedInventory().canPlayerUse(player);
+        }
+    };
 
     static {
-        //noinspection unchecked
-        SLOT_FILTERS = new Predicate[6];
-        SLOT_FILTERS[0] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
-        SLOT_FILTERS[1] = stack -> stack.getItem() == MANDATORY_MATERIALS[0];
-        SLOT_FILTERS[2] = stack -> stack.getItem() == MANDATORY_MATERIALS[1];
-        SLOT_FILTERS[3] = stack -> stack.getItem() == MANDATORY_MATERIALS[2];
-        SLOT_FILTERS[4] = stack -> stack.getItem() == MANDATORY_MATERIALS[3];
-        SLOT_FILTERS[5] = Constants.Misc.alwaysTrue();
+        SLOT_FILTERS = new ItemFilter[5];
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
+        SLOT_FILTERS[INPUT_SLOT_DIAMOND] = stack -> stack.getItem() == Items.DIAMOND;
+        SLOT_FILTERS[INPUT_SLOT_SILICON] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
+        SLOT_FILTERS[INPUT_SLOT_SILICON_2] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
+        SLOT_FILTERS[INPUT_SLOT_REDSTONE] = stack -> stack.getItem() == Items.REDSTONE;
     }
 
 
@@ -107,9 +115,9 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
-        if (slot == 5) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
-        if (slot == 6) return Constants.Misc.alwaysTrue();
+    public ItemFilter getFilterForSlot(int slot) {
+        if (slot == INPUT_SLOT) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
+        if (slot == OUTPUT_SLOT) return ConstantItemFilter.ANYTHING;
 
         return SLOT_FILTERS[slot];
     }
@@ -117,19 +125,19 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public void updateComponents() {
         super.updateComponents();
-        attemptChargeFromStack(CHARGE_SLOT);
+        this.attemptChargeFromStack(CHARGE_SLOT);
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         for (int i = 1; i < 6; i++) {
-            if (!this.getFilterForSlot(i).test(getInventory().getStack(i))) {
+            if (!this.getFilterForSlot(i).matches(getInventory().getInvStack(i))) {
                 return Status.NOT_ENOUGH_RESOURCES;
             }
         }
-        Optional<FabricationRecipe> recipe = this.getRecipe(new SimpleInventory(getWrappedInventory().getStack(INPUT_SLOT)));
-        if (recipe.isPresent() && this.canInsert(OUTPUT_SLOT, recipe.get().getOutput())) return Status.FULL;
+        Optional<FabricationRecipe> recipe = this.getRecipe(recipeSlotInv);
+        if (recipe.isPresent() && !this.canInsert(OUTPUT_SLOT, recipe.get().getOutput())) return Status.FULL;
         return Status.PROCESSING;
     }
 
@@ -141,13 +149,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
         }
         this.progress++;
         if (this.progress >= this.getMaxProgress()) {
-            if (!this.getInventory().takeStack(INPUT_SLOT_DIAMOND, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT_SILICON, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT_SILICON_2, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT_REDSTONE, 1, ActionType.PERFORM).isEmpty()) return;
-            if (!this.getInventory().takeStack(INPUT_SLOT, 1, ActionType.PERFORM).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_DIAMOND, this.getFilterForSlot(INPUT_SLOT_DIAMOND), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_SILICON, this.getFilterForSlot(INPUT_SLOT_SILICON), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_SILICON_2, this.getFilterForSlot(INPUT_SLOT_SILICON_2), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT_REDSTONE, this.getFilterForSlot(INPUT_SLOT_REDSTONE), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
+            if (this.getInventory().extractStack(INPUT_SLOT, this.getFilterForSlot(INPUT_SLOT), ItemStack.EMPTY, 1, Simulation.ACTION).isEmpty()) return;
             this.progress = 0;
-            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(new SimpleInventory(getWrappedInventory().getStack(INPUT_SLOT))).orElse(null).getOutput().copy(), ActionType.PERFORM);
+            this.getInventory().insertStack(OUTPUT_SLOT, this.getRecipe(recipeSlotInv).orElseThrow(RuntimeException::new).getOutput().copy(), Simulation.ACTION);
         }
     }
 
@@ -190,6 +198,13 @@ public class CircuitFabricatorBlockEntity extends ConfigurableMachineBlockEntity
     @Override
     public boolean canHopperInsert(int slot) {
         return slot != CHARGE_SLOT && slot != OUTPUT_SLOT;
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        if (this.getSecurity().hasAccess(player)) return new CircuitFabricatorScreenHandler(syncId, player, this);
+        return null;
     }
 
     /**

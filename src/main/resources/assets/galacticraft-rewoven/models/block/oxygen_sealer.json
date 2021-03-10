@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up": "galacticraft-rewoven:block/oxygen_sealer_top",
+    "down": "galacticraft-rewoven:block/machine",
+    "north": "galacticraft-rewoven:block/machine_side",
+    "south": "galacticraft-rewoven:block/machine_side",
+    "east": "galacticraft-rewoven:block/machine_power_input",
+    "west": "galacticraft-rewoven:block/machine_fluid_input",
+    "particle": "galacticraft-rewoven:block/machine"
+  }
+}

@@ -22,8 +22,12 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
+import alexiil.mc.lib.attributes.item.FixedItemInv;
+import alexiil.mc.lib.attributes.item.impl.EmptyFixedItemInv;
+import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
 import com.hrznstudio.galacticraft.world.dimension.GalacticraftDimensions;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -34,10 +38,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements GearInventoryProvider {
     @Shadow
     public abstract Vec3d getVelocity();
 
@@ -56,5 +61,29 @@ public abstract class EntityMixin {
             BlockPos pos = destination.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, destination.getSpawnPos());
             cir.setReturnValue(new TeleportTarget(new Vec3d((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getVelocity(), this.yaw, this.pitch));
         }
+    }
+
+    @Override
+    public FixedItemInv getGearInv() {
+        return EmptyFixedItemInv.INSTANCE;
+    }
+
+    @Inject(method = "toTag", at = @At("HEAD"))
+    private void writeGear_gc(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
+        this.writeGearToNbt(tag);
+    }
+
+    @Inject(method = "fromTag", at = @At("HEAD"))
+    private void readGear_gc(CompoundTag tag, CallbackInfo ci) {
+        this.readGearFromNbt(tag);
+    }
+
+    @Override
+    public CompoundTag writeGearToNbt(CompoundTag tag) {
+        return tag;
+    }
+
+    @Override
+    public void readGearFromNbt(CompoundTag tag) {
     }
 }

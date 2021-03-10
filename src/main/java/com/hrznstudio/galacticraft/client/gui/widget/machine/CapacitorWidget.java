@@ -23,16 +23,13 @@
 package com.hrznstudio.galacticraft.client.gui.widget.machine;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity.MachineStatus;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.energy.CapacitorComponent;
+import com.hrznstudio.galacticraft.energy.api.CapacitorView;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -40,15 +37,15 @@ import java.util.List;
 import java.util.function.Supplier;
 
 public class CapacitorWidget extends AbstractWidget {
-    private final CapacitorComponent component;
+    private final CapacitorView view;
     private final int x;
     private final int y;
     private final int height;
     private final Supplier<Collection<? extends Text>> tooltipSupplier;
     private final Supplier<MachineStatus> statusSupplier;
 
-    public CapacitorWidget(CapacitorComponent component, int x, int y, int height, Supplier<Collection<? extends Text>> tooltipSupplier, Supplier<MachineStatus> statusSupplier) {
-        this.component = component;
+    public CapacitorWidget(CapacitorView view, int x, int y, int height, Supplier<Collection<? extends Text>> tooltipSupplier, Supplier<MachineStatus> statusSupplier) {
+        this.view = view;
         this.x = x;
         this.y = y;
         this.height = height;
@@ -61,9 +58,9 @@ public class CapacitorWidget extends AbstractWidget {
         if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT)) {
             List<Text> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
-            if (status != MachineStatus.EMPTY) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Style.EMPTY.withColor(Formatting.GRAY)).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Style.EMPTY.withColor(Formatting.GOLD)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.getComponent().getCurrentEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Style.EMPTY.withColor(Formatting.RED)).append(GalacticraftEnergy.GALACTICRAFT_JOULES.getDisplayAmount(this.getComponent().getMaxEnergy()).setStyle(Style.EMPTY.withColor(Formatting.BLUE))));
+            if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Constants.Styles.GRAY_STYLE).append(status.getName()));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Constants.Styles.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Styles.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Constants.Styles.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Styles.BLUE_STYLE)));
             lines.addAll(tooltipSupplier.get());
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
@@ -73,17 +70,17 @@ public class CapacitorWidget extends AbstractWidget {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
-        float scale = ((float)getComponent().getCurrentEnergy() / (float)getComponent().getMaxEnergy());
+        double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());
 
         int height = this.height;
         while (height != 0) {
             int renderHeight = Math.min(height, Constants.TextureCoordinates.OVERLAY_HEIGHT);
-            render(matrices, height, scale);
+            this.render(matrices, height, scale);
             height -= renderHeight;
         }
     }
 
-    private void render(MatrixStack matrices, int height, float scale) {
+    private void render(MatrixStack matrices, int height, double scale) {
         this.drawTexture(matrices, this.x, this.y, Constants.TextureCoordinates.ENERGY_DARK_X, Constants.TextureCoordinates.ENERGY_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, height);
         this.drawTexture(matrices, this.x, (int) ((this.y - (height * scale)) + height), Constants.TextureCoordinates.ENERGY_LIGHT_X, Constants.TextureCoordinates.ENERGY_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (height * scale));
     }
@@ -93,7 +90,7 @@ public class CapacitorWidget extends AbstractWidget {
         drawTexture(matrices, x, y, u, v, width, height, 128, 128);
     }
 
-    public CapacitorComponent getComponent() {
-        return component;
+    public CapacitorView getView() {
+        return this.view;
     }
 }

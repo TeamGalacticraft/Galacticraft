@@ -22,9 +22,8 @@
 
 package com.hrznstudio.galacticraft.api.wire;
 
+import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.api.wire.impl.WireNetworkImpl;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.type.EnergyType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -82,12 +81,11 @@ public interface WireNetwork {
      * Inserts energy into the network
      * @param fromWire The wire that received the energy
      * @param fromBlock The block that inserted the energy
-     * @param energyType The type of energy being inserted
-     * @param amount The amount of energy, in {@code energyType} to insert
-     * @param type The type of action to perform
+     * @param amount The amount of energy, to insert
+     * @param simulate The simulate of action to perform
      * @return the amount of energy that failed to insert
      */
-    int insertEnergy(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, @NotNull EnergyType energyType, /*Positive*/ int amount, @NotNull ActionType type);
+    int insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, /*Positive*/ int amount, @NotNull Simulation simulate);
 
     /**
      * Returns the adjacent connections from a position
