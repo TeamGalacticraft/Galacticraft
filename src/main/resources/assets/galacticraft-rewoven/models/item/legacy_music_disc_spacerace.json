@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "minecraft:item/music_disc_strad"
+    "layer0": "galacticraft-rewoven:item/legacy_music_disc_spacerace"
   }
 }
