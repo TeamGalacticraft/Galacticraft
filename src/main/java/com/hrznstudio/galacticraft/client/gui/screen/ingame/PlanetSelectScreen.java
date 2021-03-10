@@ -958,8 +958,8 @@ public class PlanetSelectScreen extends Screen {
             this.ticksSinceUnselectionF += delta;
         }
 
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
+        RenderSystem.pushMatrix();
+        RenderSystem.enableBlend();
 
         Matrix4 camMatrix = new Matrix4();
         Matrix4.translate(new Vector3f(0.0F, 0.0F, -9000.0F), camMatrix, camMatrix); // See EntityRenderer.java:setupOverlayRendering
@@ -971,31 +971,31 @@ public class PlanetSelectScreen extends Screen {
         viewMatrix.m31 = 1.0F;
         viewMatrix.m32 = -2.0F;
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
+        RenderSystem.matrixMode(GL11.GL_PROJECTION);
+        RenderSystem.loadIdentity();
         FloatBuffer fb = BufferUtils.createFloatBuffer(16 * Float.SIZE);
         fb.rewind();
         viewMatrix.store(fb);
         fb.flip();
-        GL11.glMultMatrixf(fb);
-        fb.clear();
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glLoadIdentity();
+        GL11.glLoadMatrixf(fb);
+//        fb.clear();
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+//        RenderSystem.loadIdentity();
         fb.rewind();
         camMatrix.store(fb);
         fb.flip();
         fb.clear();
-        GL11.glMultMatrixf(fb);
+        GL11.glLoadMatrixf(fb);
 
         this.setBlackBackground();
 
-        GL11.glPushMatrix();
+        RenderSystem.pushMatrix();
         Matrix4 worldMatrix = this.setIsometric(delta);
         float gridSize = 7000F; //194.4F;
         //TODO: Add dynamic map sizing, to allow the map to be small by default and expand when more distant solar systems are added.
         this.drawGrid(gridSize, height / 3f / 3.5F);
         this.drawCircles();
-        GL11.glPopMatrix();
+        RenderSystem.popMatrix();
 
         HashMap<CelestialBodyType, Matrix4> matrixMap = this.drawCelestialBodies(worldMatrix);
 
@@ -1029,16 +1029,16 @@ public class PlanetSelectScreen extends Screen {
         }
 
         this.drawBorder();
-        GL11.glPopMatrix();
+        RenderSystem.popMatrix();
 
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glMatrixMode(GL11.GL_MODELVIEW);
-        GL11.glLoadIdentity();
+        RenderSystem.matrixMode(GL11.GL_PROJECTION);
+        RenderSystem.loadIdentity();
+        RenderSystem.matrixMode(GL11.GL_MODELVIEW);
+        RenderSystem.loadIdentity();
     }
 
     protected void drawSelectionCursor(FloatBuffer fb, Matrix4 worldMatrix) {
-        GL11.glPushMatrix();
+        RenderSystem.pushMatrix();
         switch (this.selectionState) {
             case SELECTED:
                 if (this.selectedBody != null) {
@@ -1054,7 +1054,7 @@ public class PlanetSelectScreen extends Screen {
 //                GL11.glMultMatrixf(fb);
                     setupMatrix(this.selectedBody, worldMatrix, fb);
                     fb.clear();
-                    GL11.glScalef(1 / 15.0F, 1 / 15.0F, 1);
+                    RenderSystem.scalef(1 / 15.0F, 1 / 15.0F, 1);
                     this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                     float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF / 2.0F) * 0.5F + 0.5F) : 1.0F;
                     RenderSystem.color4f(1.0F, 1.0F, 0.0F, 1 * colMod);
@@ -1079,7 +1079,7 @@ public class PlanetSelectScreen extends Screen {
                     fb.clear();
                     float div = (this.zoom + 1.0F - this.planetZoom);
                     float scale = Math.max(0.3F, 1.5F / (this.ticksSinceSelectionF / 5.0F)) * 2.0F / div;
-                    GL11.glScalef(scale, scale, 1);
+                    RenderSystem.scalef(scale, scale, 1);
                     this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                     float colMod = this.getZoomAdvanced() < 4.9F ? (float) (Math.sin(this.ticksSinceSelectionF) * 0.5F + 0.5F) : 1.0F;
                     RenderSystem.color4f(0.4F, 0.8F, 1.0F, 1 * colMod);
@@ -1090,7 +1090,7 @@ public class PlanetSelectScreen extends Screen {
             default:
                 break;
         }
-        GL11.glPopMatrix();
+        RenderSystem.popMatrix();
     }
 
     protected Vector3f getCelestialBodyTypePosition(CelestialBodyType cBody) {
@@ -1138,7 +1138,7 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public HashMap<CelestialBodyType, Matrix4> drawCelestialBodies(Matrix4 worldMatrix) {
-        GL11.glColor3f(1.0F, 1.0F, 1.0F);
+        RenderSystem.color3f(1.0F, 1.0F, 1.0F);
         FloatBuffer fb = BufferUtils.createFloatBuffer(16 * Float.SIZE);
         HashMap<CelestialBodyType, Matrix4> matrixMap = new HashMap<>();
 
@@ -1162,7 +1162,7 @@ public class PlanetSelectScreen extends Screen {
 //                if (!preEvent.isCanceled())
 //                {
                 int size = getWidthForCelestialBodyType(body);
-                this.blit(-size / 2f, -size / 2f, size, size, body.getDisplayInfo().getIconX(), body.getDisplayInfo().getIconY(), body.getDisplayInfo().getIconW(), body.getDisplayInfo().getIconH(), false, false, GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH), GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT));
+                this.blit(-size / 2f, -size / 2f, size, size, body.getDisplayInfo().getIconX(), body.getDisplayInfo().getIconY(), body.getDisplayInfo().getIconW(), body.getDisplayInfo().getIconH(), false, false, GlStateManager.getTexLevelParameter(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH), GlStateManager.getTexLevelParameter(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT));
                 matrixMap.put(body, worldMatrixLocal);
 //                }
 
@@ -1212,9 +1212,9 @@ public class PlanetSelectScreen extends Screen {
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
 
                 if (mousePosX > LHS && mousePosX < LHS + 88 && mousePosY > TOP && mousePosY < TOP + 13) {
-                    GL11.glColor3f(3.0F, 0.0F, 0.0F);
+                    RenderSystem.color3f(3.0F, 0.0F, 0.0F);
                 } else {
-                    GL11.glColor3f(0.9F, 0.2F, 0.2F);
+                    RenderSystem.color3f(0.9F, 0.2F, 0.2F);
                 }
 
                 this.blit(LHS, TOP, 88, 13, 0, 392, 148, 22, false, false);
@@ -1223,9 +1223,9 @@ public class PlanetSelectScreen extends Screen {
 
                 this.client.getTextureManager().bindTexture(PlanetSelectScreen.guiMain0);
                 if (mousePosX > RHS - 88 && mousePosX < RHS && mousePosY > TOP && mousePosY < TOP + 13) {
-                    GL11.glColor3f(0.0F, 3.0F, 0.0F);
+                    RenderSystem.color3f(0.0F, 3.0F, 0.0F);
                 } else {
-                    GL11.glColor3f(0.2F, 0.9F, 0.2F);
+                    RenderSystem.color3f(0.2F, 0.9F, 0.2F);
                 }
 
                 this.blit(RHS - 88, TOP, 88, 13, 0, 392, 148, 22, true, false);
@@ -1438,13 +1438,13 @@ public class PlanetSelectScreen extends Screen {
                             this.itemRenderer.renderGuiItemIcon(ingredient, xPos, yPos);
                             this.itemRenderer.renderGuiItemOverlay(textRenderer, ingredient, xPos, yPos, null);
                             DiffuseLighting.disable();
-                            GL11.glEnable(GL11.GL_BLEND);
+                            RenderSystem.enableBlend();
 
                             if (b) {
-                                GL11.glDepthMask(true);
-                                GL11.glEnable(GL11.GL_DEPTH_TEST);
-                                GL11.glPushMatrix();
-                                GL11.glTranslatef(0, 0, 300);
+                                RenderSystem.depthMask(true);
+                                RenderSystem.enableDepthTest();
+                                RenderSystem.pushMatrix();
+                                RenderSystem.translatef(0, 0, 300);
                                 int k = this.textRenderer.getWidth(ingredient.getName());
                                 int j2 = mousePosX - k / 2;
                                 int k2 = mousePosY - 12;
@@ -1475,7 +1475,7 @@ public class PlanetSelectScreen extends Screen {
 
                                 this.textRenderer.draw(matrices, ingredient.getName(), j2, k2, WHITE);
 
-                                GL11.glPopMatrix();
+                                RenderSystem.popMatrix();
                             }
 
                             str = "" + ingredient.getCount();
@@ -1784,10 +1784,11 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public void blit(float x, float y, float width, float height, float u, float v, float uWidth, float vHeight, boolean invertX, boolean invertY, float texSizeX, float texSizeY) {
-        GL11.glShadeModel(GL11.GL_FLAT);
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        RenderSystem.shadeModel(GL11.GL_FLAT);
+        RenderSystem.enableBlend();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.activeTexture(GL11.GL_TEXTURE_2D);
+        RenderSystem.enableTexture();
         float texModX = 1F / texSizeX;
         float texModY = 1F / texSizeY;
         Tessellator tessellator = Tessellator.getInstance();
@@ -1805,11 +1806,12 @@ public class PlanetSelectScreen extends Screen {
     }
 
     public void setBlackBackground() {
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(false);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        RenderSystem.disableDepthTest();
+        RenderSystem.depthMask(false);
+        RenderSystem.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.disableAlphaTest();
+        RenderSystem.activeTexture(GL11.GL_TEXTURE_2D);
+        RenderSystem.disableTexture();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder worldRenderer = tessellator.getBuffer();
         RenderSystem.color4f(0.0F, 0.0F, 0.0F, 1.0F);
@@ -1819,9 +1821,9 @@ public class PlanetSelectScreen extends Screen {
         worldRenderer.vertex(width, 0.0D, -90.0D).next();
         worldRenderer.vertex(0.0D, 0.0D, -90.0D).next();
         tessellator.draw();
-        GL11.glDepthMask(true);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        RenderSystem.depthMask(true);
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableAlphaTest();
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
@@ -1871,7 +1873,7 @@ public class PlanetSelectScreen extends Screen {
      */
     public void drawCircles() {
         RenderSystem.color4f(1, 1, 1, 1);
-        GL11.glLineWidth(3);
+        RenderSystem.lineWidth(3);
         int count = 0;
 
         final float theta = (float) (2 * Math.PI / 90);
@@ -1906,7 +1908,7 @@ public class PlanetSelectScreen extends Screen {
 
 //                if (!preEvent.isCanceled())
 //                {
-                GL11.glTranslatef(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
+                RenderSystem.translatef(systemOffset.getX(), systemOffset.getY(), systemOffset.getZ());
 
                 GL11.glBegin(GL11.GL_LINE_LOOP);
 
@@ -1921,7 +1923,7 @@ public class PlanetSelectScreen extends Screen {
 
                 GL11.glEnd();
 
-                GL11.glTranslatef(-systemOffset.getX(), -systemOffset.getY(), -systemOffset.getZ());
+                RenderSystem.translatef(-systemOffset.getX(), -systemOffset.getY(), -systemOffset.getZ());
 
                 count++;
 //                }
@@ -1931,7 +1933,7 @@ public class PlanetSelectScreen extends Screen {
             }
         }
 
-        GL11.glLineWidth(1);
+        RenderSystem.lineWidth(1);
     }
 
     /**
