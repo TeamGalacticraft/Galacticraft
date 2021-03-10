@@ -170,5 +170,37 @@
         "stream": false
       }
     ]
+  },
+  "music.legacy.mars": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/legacy/mars",
+        "stream": true
+      }
+    ]
+  },
+  "music.legacy.minmas": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/legacy/minmas",
+        "stream": true
+      }
+    ]
+  },
+  "music.legacy.orbit": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/legacy/orbit",
+        "stream": true
+      }
+    ]
+  },
+  "music.legacy.spacerace": {
+    "sounds": [
+      {
+        "name": "galacticraft-rewoven:music/legacy/spacerace",
+        "stream": true
+      }
+    ]
   }
 }

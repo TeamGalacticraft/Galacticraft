@@ -388,6 +388,11 @@ public interface Constants {
         String ROCKET_SPAWN_EGG_T1 = "rocket_spawn_egg_t1";
         String MOON_VILLAGER_SPAWN_EGG = "moon_villager_spawn_egg";
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
+      
+        String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
+        String LEGACY_MUSIC_DISC_MINMAS = "legacy_music_disc_minmas";
+        String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
+        String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
     }
 
     interface Particles {
