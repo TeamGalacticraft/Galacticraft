@@ -34,6 +34,7 @@ import com.hrznstudio.galacticraft.api.celestialbodies.CelestialObjectType;
 import com.hrznstudio.galacticraft.api.celestialbodies.satellite.Satellite;
 import com.hrznstudio.galacticraft.api.celestialbodies.satellite.SatelliteRecipe;
 import com.hrznstudio.galacticraft.api.entity.RocketEntity;
+import com.hrznstudio.galacticraft.api.internal.accessor.SatelliteAccessor;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.LaunchStage;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
@@ -356,7 +357,10 @@ public class GalacticraftS2CPacketReceivers {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
             if (((ServerPlayerEntityAccessor) player).getCelestialScreenState() >= 0) {
                 server.execute(() -> {
-                    CelestialBodyType body = AddonRegistry.CELESTIAL_BODIES.get(buffer.readIdentifier());
+                    Identifier id = buffer.readIdentifier();
+                    CelestialBodyType body = ((SatelliteAccessor) server).getSatellites().stream().filter(satellite -> satellite.getId().equals(id)).findFirst().orElse(null);
+                    if (body == null) body = AddonRegistry.CELESTIAL_BODIES.get(id);
+
                     if (body != null && body.getAccessWeight() <= ((ServerPlayerEntityAccessor) player).getCelestialScreenState()) {
                         if (body.getWorld() != null) {
                             player.teleport(server.getWorld(body.getWorld()), player.getX(), 500, player.getZ(), player.yaw, player.pitch);
