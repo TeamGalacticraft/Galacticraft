@@ -961,7 +961,9 @@ public class PlanetSelectScreen extends Screen {
 
         Matrix4f camMatrix = new Matrix4f();
         camMatrix.loadIdentity();
-        camMatrix.multiply(Matrix4f.translate(0, 0, -9000));
+        Matrix4f temp = Matrix4f.translate(0, 0, -9000);
+        temp.transpose();
+        camMatrix.multiply(temp);
         Matrix4f viewMatrix = new Matrix4f();
         viewMatrix.loadIdentity();
         viewMatrix.a00 = 2.0F / width;
@@ -970,7 +972,8 @@ public class PlanetSelectScreen extends Screen {
         viewMatrix.a30 = -1.0F;
         viewMatrix.a31 = 1.0F;
         viewMatrix.a32 = -2.0F;
-
+        viewMatrix.transpose();
+        camMatrix.transpose();
         RenderSystem.matrixMode(GL11.GL_PROJECTION);
         RenderSystem.loadIdentity();
         RenderSystem.multMatrix(viewMatrix);
@@ -1787,16 +1790,20 @@ public class PlanetSelectScreen extends Screen {
     public Matrix4f setIsometric(float partialTicks) {
         Matrix4f mat0 = new Matrix4f();
         mat0.loadIdentity();
-        mat0.multiply(Matrix4f.translate(width / 2f, height / 2, 0));
-        mat0.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(55));
-        mat0.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(45));
+        Matrix4f temp = Matrix4f.translate(width / 2f, height / 2f, 0);
+        temp.transpose();
+        mat0.multiply(temp);
+        mat0.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(-55));
+        mat0.multiply(Vector3f.NEGATIVE_Z.getDegreesQuaternion(-45));
         float zoomLocal = this.getZoomAdvanced();
         this.zoom = zoomLocal;
 
         mat0.multiply(Matrix4f.scale(1.1f + zoomLocal, 1.1F + zoomLocal, 1.1F + zoomLocal));
         Vec2f cBodyPos = this.getTranslationAdvanced(partialTicks);
         this.position = this.getTranslationAdvanced(partialTicks);
-        mat0.multiply(Matrix4f.translate(-cBodyPos.x, -cBodyPos.y, 0));
+        temp = Matrix4f.translate(-cBodyPos.x, -cBodyPos.y, 0);
+        temp.transpose();
+        mat0.multiply(temp);
         RenderSystem.multMatrix(mat0);
         return mat0;
     }
@@ -1938,15 +1945,18 @@ public class PlanetSelectScreen extends Screen {
     protected Matrix4f setupMatrix(CelestialBodyType body, Matrix4f worldMatrix, float scaleXZ) {
         Matrix4f worldMatrix0 = new Matrix4f(worldMatrix);
         Vector3f vec = this.getCelestialBodyTypePosition(body);
-        worldMatrix0.multiply(Matrix4f.translate(vec.getX(), vec.getY(), vec.getZ()));
+        Matrix4f temp = Matrix4f.translate(vec.getX(), vec.getY(), vec.getZ());
+        temp.transpose();
+        worldMatrix0.multiply(temp);
         Matrix4f worldMatrix1 = new Matrix4f();
         worldMatrix1.loadIdentity();
-        worldMatrix1.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(45));
+        worldMatrix1.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(-45));
         worldMatrix1.multiply(Vector3f.NEGATIVE_X.getDegreesQuaternion(-55));
         if (scaleXZ != 1.0F) {
             worldMatrix1.multiply(Matrix4f.scale(scaleXZ, scaleXZ, 1.0F));
         }
         worldMatrix1.multiply(worldMatrix0);
+//        worldMatrix1.transpose();
         RenderSystem.multMatrix(worldMatrix1);
         return worldMatrix1;
     }
