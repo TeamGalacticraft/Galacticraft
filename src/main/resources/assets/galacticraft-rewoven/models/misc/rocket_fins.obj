@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'GCRocketBottom1.blend'
 # www.blender.org
-mtllib rocket/rocket_fins.mtl
+mtllib rocket_fins.mtl
 o RocketFins_Cube.014
 v 0.518306 -0.250000 -0.606694
 v 0.518306 0.562500 -0.606694

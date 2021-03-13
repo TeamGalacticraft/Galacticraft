@@ -1,5 +1,7 @@
 {
-  "parent": "galacticraft-rewoven:block/rocket_assembler.obj",
+  "parent": "minecraft:block/block",
+  "model": "galacticraft-rewoven:block/rocket_assembler",
+  "gui_light": "side",
   "display": {
     "gui": {
       "rotation": [

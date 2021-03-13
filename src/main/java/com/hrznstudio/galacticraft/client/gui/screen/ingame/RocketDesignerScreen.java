@@ -23,9 +23,10 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.client.rocket.part.RocketPartRendererRegistry;
+import com.hrznstudio.galacticraft.api.rocket.part.GalacticraftRocketParts;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPart;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
-import com.hrznstudio.galacticraft.api.rocket.part.GCRocketParts;
 import com.hrznstudio.galacticraft.block.entity.RocketDesignerBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.entity.RocketEntity;
@@ -37,6 +38,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
@@ -130,6 +132,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
     private static final int COLOUR_PICKER_END_WIDTH = 2;
     private static final int COLOUR_PICKER_END_HEIGHT = 5;
+    
+    private static final RocketPartType[] ROCKET_PART_TYPES = RocketPartType.values();
 
     private int page = 0;
     private int maxPage = 0;
@@ -144,7 +148,7 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         this.backgroundHeight = 164;
         this.blockEntity = screenHandler.blockEntity;
         this.entity = new RocketEntity(GalacticraftEntityTypes.ROCKET, inv.player.world);
-        this.validParts.addAll(GCRocketParts.getUnlockedParts(inv.player, currentType));
+        this.validParts.addAll(GalacticraftRocketParts.getUnlockedParts(inv.player, currentType));
     }
 
     public static void drawEntity(int x, int y, RocketEntity entity) {
@@ -164,38 +168,39 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
         entityRenderDispatcher.setRotation(quaternion2);
         entityRenderDispatcher.setRenderShadows(false);
         VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
-        RenderSystem.runAsFancy(() -> {
-            entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880);
-        });
+        RenderSystem.runAsFancy(() -> entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack, immediate, 15728880));
         immediate.draw();
         entityRenderDispatcher.setRenderShadows(true);
         RenderSystem.popMatrix();
     }
 
     @Override
-    protected void drawBackground(MatrixStack stack, float var1, int var2, int var3) {
-        this.renderBackground(stack);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
 
         DiffuseLighting.enableGuiDepthLighting();
 
         this.client.getTextureManager().bindTexture(TEXTURE);
 
-        drawTexture(stack, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        for (int i = 0; i < RocketPartType.values().length; i++) {
+        for (int i = 0; i < ROCKET_PART_TYPES.length; i++) {
             this.client.getTextureManager().bindTexture(TEXTURE);
-            if (RocketPartType.values()[i] != currentType) {
-                drawTexture(stack, this.x - 27, this.y + 3 + (27 * i), DEFAULT_TAB_X, DEFAULT_TAB_Y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
+            if (ROCKET_PART_TYPES[i] != currentType) {
+                drawTexture(matrices, this.x - 27, this.y + 3 + (27 * i), DEFAULT_TAB_X, DEFAULT_TAB_Y, DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT);
             } else {
-                drawTexture(stack, this.x - 29, this.y + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+                drawTexture(matrices, this.x - 29, this.y + 3 + (27 * i), SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
             }
-            this.itemRenderer.renderGuiItemIcon(GCRocketParts.getPartToRenderForType(RocketPartType.values()[i]).getRenderStack(), (this.x - 31) + 13, this.y + 3 + ((27) * i) + 4);
+            matrices.push();
+            matrices.translate((this.x - 31) + 13, this.y + 3 + ((27) * i) + 4, 0);
+            GalacticraftRocketParts.getPartToRenderForType(ROCKET_PART_TYPES[i]).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
         }
     }
 
     @Override
-    public void render(MatrixStack stack, int mouseX, int mouseY, float delta) {
-        super.render(stack, mouseX, mouseY, delta);
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        super.render(matrices, mouseX, mouseY, delta);
 
         DiffuseLighting.enableGuiDepthLighting();
         RenderSystem.disableDepthTest();
@@ -208,8 +213,14 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
             RocketPart part = validParts.get(i);
 
             this.client.getTextureManager().bindTexture(TEXTURE);
-            drawTexture(stack, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_X, WHITE_BOX_Y, BOX_WIDTH, BOX_HEIGHT);
-            this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y));
+            drawTexture(matrices, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), WHITE_BOX_X, WHITE_BOX_Y, BOX_WIDTH, BOX_HEIGHT);
+
+            if (part != null) {
+                matrices.push();
+                matrices.translate(this.x + 13 + ((BOX_WIDTH + 2) * x), this.y + 13 + ((BOX_HEIGHT + 2) * y), 0);
+                RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+                matrices.pop();
+            }
             if (++x == 5) {
                 x = 0;
                 if (++y == 5) {
@@ -227,85 +238,114 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
         if (maxPage > 0) {
             if (page < maxPage) {
-                drawTexture(stack, this.x + 60, this.y + 145, ARROW_X, ARROW_Y, ARROW_WIDTH, ARROW_HEIGHT);
+                drawTexture(matrices, this.x + 60, this.y + 145, ARROW_X, ARROW_Y, ARROW_WIDTH, ARROW_HEIGHT);
             }
 
             if (page - 1 > 0) {
-                drawTexture(stack, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_X, BACK_ARROW_Y, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
+                drawTexture(matrices, this.x + 40 - BACK_ARROW_HEIGHT, this.y + 145 - BACK_ARROW_WIDTH, BACK_ARROW_X, BACK_ARROW_Y, BACK_ARROW_WIDTH, BACK_ARROW_HEIGHT);
             }
         }
         RocketPart part = this.blockEntity.getPart(RocketPartType.CONE);
-        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 8);
+        if (part != null) {
+            matrices.push();
+            matrices.translate(this.x + 156, this.y + 8, 0);
+            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
+        }
         part = this.blockEntity.getPart(RocketPartType.BODY);
-        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 24);
+        if (part != null) {
+            matrices.push();
+            matrices.translate(this.x + 156, this.y + 24, 0);
+            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
+        }
         part = this.blockEntity.getPart(RocketPartType.FIN);
-        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 156, this.y + 40);
+        if (part != null) {
+            matrices.push();
+            matrices.translate(this.x + 156, this.y + 40, 0);
+            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
+        }
         part = this.blockEntity.getPart(RocketPartType.UPGRADE);
-        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 26);
+        if (part != null) {
+            matrices.push();
+            matrices.translate(this.x + 156, this.y + 26, 0);
+            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
+        }
         part = this.blockEntity.getPart(RocketPartType.BOOSTER);
-        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 44);
+        if (part != null) {
+            matrices.push();
+            matrices.translate(this.x + 156, this.y + 44, 0);
+            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
+        }
         part = this.blockEntity.getPart(RocketPartType.BOTTOM);
-        if (part != null) this.itemRenderer.renderGuiItemIcon(part.getRenderStack(), this.x + 225, this.y + 60);
-
+        if (part != null) {
+            matrices.push();
+            matrices.translate(this.x + 156, this.y + 60, 0);
+            RocketPartRendererRegistry.getRenderer(part).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+            matrices.pop();
+        }
         this.client.getTextureManager().bindTexture(TEXTURE);
 
         int red = (int) (56.0F * (this.blockEntity.getRed() / 255.0F));
         if (red >= 3 && red != 255) {
-            this.drawTexture(stack, this.x + (257 + red - 2), this.y + 9, RED_END_COLOUR_X, RED_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + red - 2), this.y + 9, RED_END_COLOUR_X, RED_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             red -= 2;
         }
 
-        this.drawTexture(stack, this.x + 257, this.y + 9, RED_COLOUR_X, RED_COLOUR_Y, red, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 9, RED_COLOUR_X, RED_COLOUR_Y, red, COLOUR_PICKER_HEIGHT);
 
         int green = (int) (56.0F * (this.blockEntity.getGreen() / 255.0F));
         if (green >= 3 && green != 255) {
-            this.drawTexture(stack, this.x + (257 + green - 2), this.y + 19, GREEN_END_COLOUR_X, GREEN_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + green - 2), this.y + 19, GREEN_END_COLOUR_X, GREEN_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             green -= 2;
         }
 
-        this.drawTexture(stack, this.x + 257, this.y + 19, GREEN_COLOUR_X, GREEN_COLOUR_Y, green, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 19, GREEN_COLOUR_X, GREEN_COLOUR_Y, green, COLOUR_PICKER_HEIGHT);
 
         int blue = (int) (56.0F * (this.blockEntity.getBlue() / 255.0F));
         if (blue >= 3 && blue != 255) {
-            this.drawTexture(stack, this.x + (257 + blue - 2), this.y + 29, BLUE_END_COLOUR_X, BLUE_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + blue - 2), this.y + 29, BLUE_END_COLOUR_X, BLUE_END_COLOUR_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             blue -= 2;
         }
 
-        this.drawTexture(stack, this.x + 257, this.y + 29, BLUE_COLOUR_X, BLUE_COLOUR_Y, blue, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 29, BLUE_COLOUR_X, BLUE_COLOUR_Y, blue, COLOUR_PICKER_HEIGHT);
 
         int alpha = (int) (56.0F * (this.blockEntity.getAlpha() / 255.0F));
         if (alpha >= 3 && alpha != 255) {
-            this.drawTexture(stack, this.x + (257 + alpha - 2), this.y + 39, ALPHA_END_X, ALPHA_END_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
+            this.drawTexture(matrices, this.x + (257 + alpha - 2), this.y + 39, ALPHA_END_X, ALPHA_END_Y, COLOUR_PICKER_END_WIDTH, COLOUR_PICKER_END_HEIGHT);
             alpha -= 2;
         }
 
-        this.drawTexture(stack, this.x + 257, this.y + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
+        this.drawTexture(matrices, this.x + 257, this.y + 39, ALPHA_X, ALPHA_Y, alpha, COLOUR_PICKER_HEIGHT);
 
-        for (RocketPartType type : RocketPartType.values()) {
+        for (RocketPartType type : ROCKET_PART_TYPES) {
             if (this.blockEntity.getPart(type) != null) this.entity.setPart(this.blockEntity.getPart(type));
         }
         this.entity.setColor(this.blockEntity.getRed(), this.blockEntity.getGreen(), this.blockEntity.getBlue(), this.blockEntity.getAlpha());
 
         drawEntity(this.x + 172 + 24, this.y + 64, entity);
 
-        DrawableUtils.drawCenteredString(stack, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
+        DrawableUtils.drawCenteredString(matrices, this.client.textRenderer, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.name").asString(), (this.width / 2), this.y + 6 - 15, Formatting.WHITE.getColorValue());
 
-        client.textRenderer.draw(stack, "R", this.x + 245 + 3, this.y + 8, Formatting.RED.getColorValue());
-        client.textRenderer.draw(stack, "G", this.x + 245 + 3, this.y + 18, Formatting.GREEN.getColorValue());
-        client.textRenderer.draw(stack, "B", this.x + 245 + 3, this.y + 28, Formatting.BLUE.getColorValue());
-        client.textRenderer.draw(stack, "A", this.x + 245 + 3, this.y + 38, Formatting.WHITE.getColorValue());
+        client.textRenderer.draw(matrices, "R", this.x + 245 + 3, this.y + 8, Formatting.RED.getColorValue());
+        client.textRenderer.draw(matrices, "G", this.x + 245 + 3, this.y + 18, Formatting.GREEN.getColorValue());
+        client.textRenderer.draw(matrices, "B", this.x + 245 + 3, this.y + 28, Formatting.BLUE.getColorValue());
+        client.textRenderer.draw(matrices, "A", this.x + 245 + 3, this.y + 38, Formatting.WHITE.getColorValue());
 
-        client.textRenderer.draw(stack, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.rocket_info").asString(), this.x + 245, this.y + 62 - 9, Formatting.DARK_GRAY.getColorValue());
-        client.textRenderer.draw(stack, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.rocket_info").asString(), this.x + 245, this.y + 62 - 9, Formatting.DARK_GRAY.getColorValue());
+        client.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.rocket_designer.tier", this.entity.getTier()).asString(), this.x + 245, this.y + 62, Formatting.DARK_GRAY.getColorValue());
 
-        this.drawMouseoverTooltip(stack, mouseX, mouseY);
+        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
     @Override
     public void drawMouseoverTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        for (int i = 0; i < RocketPartType.values().length; i++) {
+        for (int i = 0; i < ROCKET_PART_TYPES.length; i++) {
             if (check(mouseX, mouseY, this.x - 27, this.y + 3 + ((27) * i), DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
-                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.part_type." + RocketPartType.values()[i].asString()), mouseX, mouseY);
+                this.renderTooltip(stack, new TranslatableText("ui.galacticraft-rewoven.part_type." + ROCKET_PART_TYPES[i].asString()), mouseX, mouseY);
                 break;
             }
         }
@@ -405,12 +445,12 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
 
     public boolean tabClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            for (int i = 0; i < RocketPartType.values().length; i++) {
-                if (RocketPartType.values()[i] != currentType) {
+            for (int i = 0; i < ROCKET_PART_TYPES.length; i++) {
+                if (ROCKET_PART_TYPES[i] != currentType) {
                     if (check(mouseX, mouseY, this.x - 27, this.y + 3 + ((27) * i), DEFAULT_TAB_WIDTH, DEFAULT_TAB_HEIGHT)) {
-                        currentType = RocketPartType.values()[i];
+                        currentType = ROCKET_PART_TYPES[i];
                         validParts.clear();
-                        validParts.addAll(GCRocketParts.getUnlockedParts(playerInventory.player, currentType));
+                        validParts.addAll(GalacticraftRocketParts.getUnlockedParts(playerInventory.player, currentType));
                         page = 0;
                         return true;
                     }
@@ -444,8 +484,8 @@ public class RocketDesignerScreen extends HandledScreen<RocketDesignerScreenHand
                     }
                 }
             } else {
-                for (int i = page * 25; i < GCRocketParts.getUnlockedParts(playerInventory.player).size(); i++) {
-                    RocketPart part = GCRocketParts.getUnlockedParts(playerInventory.player).get(i);
+                for (int i = page * 25; i < GalacticraftRocketParts.getUnlockedParts(playerInventory.player).size(); i++) {
+                    RocketPart part = GalacticraftRocketParts.getUnlockedParts(playerInventory.player).get(i);
                     if (check(mouseX, mouseY, this.x + 9 + ((BOX_WIDTH + 2) * x), this.y + 9 + ((BOX_HEIGHT + 2) * y), BOX_WIDTH, BOX_HEIGHT)) {
                         this.blockEntity.setPartClient(part);
                         break;

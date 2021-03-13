@@ -30,9 +30,9 @@ import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPacketReceivers
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.*;
+import com.hrznstudio.galacticraft.client.render.entity.rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.client.render.entity.rocket.RocketEntityRenderer;
 import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
 import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
 import com.hrznstudio.galacticraft.mixin.SkyPropertiesAccessor;
@@ -160,16 +160,6 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_LAUNCH_PAD, RenderLayer.getCutout());
-
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_BODY_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_CONE_BASIC_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_CONE_ADVANCED_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_CONE_SLOPED_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_BOTTOM_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_FINS_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_BOOSTER_TIER_1_RENDER_BLOCK, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.ROCKET_BOOSTER_TIER_2_RENDER_BLOCK, RenderLayer.getTranslucent());
-
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
 

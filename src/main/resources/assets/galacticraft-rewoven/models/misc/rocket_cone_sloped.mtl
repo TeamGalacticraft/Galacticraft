@@ -1,4 +1,4 @@
-# Blender MTL File: 'rocketbottomFinalV2.blend'
+# Blender MTL File: 'rockettoptest.blend'
 # Material Count: 1
 
 newmtl RocketTexture
@@ -10,4 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd galacticraft-rewoven:model/rocket/rocket_tex
+texture galacticraft-rewoven:model/rocket/rocket_tex

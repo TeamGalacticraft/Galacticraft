@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'rocketthrustertier2FinalV2.0.blend'
 # www.blender.org
-mtllib rocket/rocket_thruster_tier_2.mtl
+mtllib rocket_thruster_tier_2.mtl
 o Cube.010_Cube.009
 v -0.187500 -0.375000 1.125000
 v -0.187500 -0.187500 1.125000

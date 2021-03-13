@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'rocketmidFinalV2.0.blend'
 # www.blender.org
-mtllib rocket/rocket_body.mtl
+mtllib rocket_body.mtl
 o RocketBody.001_Cube.025
 v -0.500000 -0.875000 0.625000
 v -0.500000 1.375000 0.625000

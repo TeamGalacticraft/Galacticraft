@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'rockettoptest.blend'
 # www.blender.org
-mtllib rocket/rocket_cone_advanced.mtl
+mtllib rocket_cone_advanced.mtl
 o RocketTop.002_Cube.004
 v -0.062500 1.125000 0.062500
 v -0.062500 1.250000 0.062500

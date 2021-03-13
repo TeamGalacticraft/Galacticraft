@@ -23,12 +23,11 @@
 package com.hrznstudio.galacticraft.api.rocket.part;
 
 import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.client.rocket.part.RocketPartRendererRegistry;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
-import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import net.minecraft.block.Blocks;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -37,77 +36,63 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GCRocketParts {
+public class GalacticraftRocketParts {
     public static final RocketPart DEFAULT_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_cone"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_cone"))
             .type(RocketPartType.CONE)
-            .renderState(GalacticraftBlocks.ROCKET_CONE_BASIC_RENDER_BLOCK.getDefaultState())
             .build());
 
     public static final RocketPart DEFAULT_BODY = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_body"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_body"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_body"))
             .type(RocketPartType.BODY)
-            .renderState(GalacticraftBlocks.ROCKET_BODY_RENDER_BLOCK.getDefaultState())
             .build());
 
     public static final RocketPart DEFAULT_FIN = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_fin"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_fin"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_fin"))
             .type(RocketPartType.FIN)
-            .renderState(GalacticraftBlocks.ROCKET_FINS_RENDER_BLOCK.getDefaultState())
             .build());
 
     public static final RocketPart NO_BOOSTER = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_booster"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_booster"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_booster"))
             .type(RocketPartType.BOOSTER)
-            .renderState(Blocks.AIR.getDefaultState())
-            .renderItem(new ItemStack(Items.BARRIER))
             .recipe(false)
             .build());
 
     public static final RocketPart DEFAULT_BOTTOM = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_bottom"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_bottom"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_bottom"))
             .type(RocketPartType.BOTTOM)
-            .renderState(GalacticraftBlocks.ROCKET_BOTTOM_RENDER_BLOCK.getDefaultState())
             .build());
 
     public static final RocketPart ADVANCED_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "advanced_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "advanced_cone"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.advanced_cone"))
             .type(RocketPartType.CONE)
-            .renderState(GalacticraftBlocks.ROCKET_CONE_ADVANCED_RENDER_BLOCK.getDefaultState())
             .build());
 
     public static final RocketPart SLOPED_CONE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "sloped_cone"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "sloped_cone"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.cone_sloped"))
             .type(RocketPartType.CONE)
-            .renderState(GalacticraftBlocks.ROCKET_CONE_SLOPED_RENDER_BLOCK.getDefaultState())
             .build());
 
     public static final RocketPart BOOSTER_TIER_1 = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_1"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "booster_1"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.booster_1"))
             .type(RocketPartType.BOOSTER)
-            .renderState(GalacticraftBlocks.ROCKET_BOOSTER_TIER_1_RENDER_BLOCK.getDefaultState())
             .tier(1)
             .build());
 
     public static final RocketPart BOOSTER_TIER_2 = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "booster_2"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "booster_2"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.booster_2"))
             .type(RocketPartType.BOOSTER)
-            .renderState(GalacticraftBlocks.ROCKET_BOOSTER_TIER_2_RENDER_BLOCK.getDefaultState())
             .tier(2)
             .build());
 
     public static final RocketPart NO_UPGRADE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "default_upgrade"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "default_upgrade"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.default_upgrade"))
             .type(RocketPartType.UPGRADE)
-            .renderState(Blocks.AIR.getDefaultState())
-            .renderItem(new ItemStack(Items.BARRIER))
             .build());
 
     public static final RocketPart STORAGE_UPGRADE = Registry.register(AddonRegistry.ROCKET_PARTS, new Identifier(Constants.MOD_ID, "storage_upgrade"), RocketPart.Builder.create(new Identifier(Constants.MOD_ID, "storage_upgrade"))
             .name(new TranslatableText("rocket_part.galacticraft-rewoven.storage_upgrade"))
             .type(RocketPartType.UPGRADE)
-            .renderState(Blocks.AIR.getDefaultState())
-            .renderItem(new ItemStack(Items.CHEST))
             .build());
 
     public static void register() {
@@ -134,23 +119,23 @@ public class GCRocketParts {
     }
 
     @NotNull
-    public static RocketPart getPartToRenderForType(RocketPartType type) {
+    @Environment(EnvType.CLIENT)
+    public static RocketPartRendererRegistry.RocketPartRenderer getPartToRenderForType(@NotNull RocketPartType type) {
         switch (type) {
             case BODY:
-                return DEFAULT_BODY;
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_BODY);
             case CONE:
-                return DEFAULT_CONE;
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_CONE);
             case FIN:
-                return DEFAULT_FIN;
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_FIN);
             case BOTTOM:
-                return DEFAULT_BOTTOM;
+                return RocketPartRendererRegistry.getRenderer(DEFAULT_BOTTOM);
             case BOOSTER:
-                return BOOSTER_TIER_1;
+                return RocketPartRendererRegistry.getRenderer(BOOSTER_TIER_1);
             case UPGRADE:
-                return STORAGE_UPGRADE;
-            default:
-                throw new IllegalArgumentException("invalid part type");
+                return RocketPartRendererRegistry.getRenderer(STORAGE_UPGRADE);
         }
+        throw new AssertionError();
     }
 
     public static List<RocketPart> getUnlockedParts(PlayerEntity player, RocketPartType type) {

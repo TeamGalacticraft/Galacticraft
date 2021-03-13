@@ -1,6 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'rockettoptest.blend'
 # www.blender.org
-mtllib rocket/rocket_thruster_tier_1.mtl
+mtllib rocket_thruster_tier_1.mtl
 o Cube.024_Cube.041
 v -0.093750 -0.250000 -0.812500
 v -0.093750 -0.125000 -0.812500

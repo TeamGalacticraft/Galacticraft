@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import alexiil.mc.lib.attributes.Simulation;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.client.rocket.part.RocketPartRendererRegistry;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.api.rocket.RocketData;
 import com.hrznstudio.galacticraft.api.rocket.part.RocketPartType;
@@ -41,6 +42,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.InputUtil;
@@ -141,21 +143,21 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrix, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrix);
+    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+        this.renderBackground(matrices);
         DiffuseLighting.enableGuiDepthLighting();
         this.client.getTextureManager().bindTexture(TEXTURE);
-        drawTexture(matrix, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        drawTexture(matrix, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxCapacity()))));
+        drawTexture(matrices, this.x + ENERGY_OVERLAY_RENDER_X, this.y + ENERGY_OVERLAY_RENDER_Y, ENERGY_OVERLAY_X, ENERGY_OVERLAY_Y, ENERGY_OVERLAY_WIDTH, (int) (((float) ENERGY_OVERLAY_HEIGHT) * (((float) this.blockEntity.getEnergyAttribute().getEnergy() / (float) this.blockEntity.getEnergyAttribute().getMaxCapacity()))));
 
         if (blockEntity.ready() && !blockEntity.building()) {
-            drawTexture(matrix, this.x + 257, this.y + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
+            drawTexture(matrices, this.x + 257, this.y + 18, BUILD_X, BUILD_Y, BUILD_WIDTH, BUILD_HEIGHT);
         }
 
         if (tab == Tab.ROCKET) {
-            drawTexture(matrix, this.x - 29, this.y + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
-            drawTexture(matrix, this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            drawTexture(matrices, this.x - 29, this.y + 3, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            drawTexture(matrices, this.x - 27, this.y + 30, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
 
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.MOON_TURF), this.x - 20, this.y + 35);
@@ -164,8 +166,8 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                 drawEntity(this.x + 186 + 17, this.y + 73, this.blockEntity.fakeEntity);
             }
         } else if (tab == Tab.LANDER) {
-            drawTexture(matrix, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
-            drawTexture(matrix, this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
+            drawTexture(matrices, this.x - 27, this.y + 3, TAB_X, TAB_Y, TAB_WIDTH, TAB_HEIGHT);
+            drawTexture(matrices, this.x - 29, this.y + 30, SELECTED_TAB_X, SELECTED_TAB_Y, SELECTED_TAB_WIDTH, SELECTED_TAB_HEIGHT);
 
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftItems.ROCKET_SCHEMATIC), this.x - 20, this.y + 8);
             itemRenderer.renderGuiItemIcon(new ItemStack(GalacticraftBlocks.MOON_TURF), this.x - 20, this.y + 35);
@@ -176,9 +178,9 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
             this.client.getTextureManager().bindTexture(TEXTURE);//OUT OF 600 //133 / 140
             final float maxProgress = Galacticraft.configManager.get().rocketAssemblerProcessTime();
             if (progress < ((maxProgress / 140F) * 133F)) {
-                drawTexture(matrix, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
+                drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, (int) (((float) PROGRESS_ARROW_WIDTH) * (progress / ((maxProgress / 140F) * 133F))), PROGRESS_ARROW_HEIGHT);
             } else {
-                drawTexture(matrix, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) ((PROGRESS_ARROW_HEIGHT) + (7 * ((progress - ((maxProgress / 140F) * 133F)) / (maxProgress - ((maxProgress / 140F) * 133F))))));
+                drawTexture(matrices, this.x + 176, this.y + 7, PROGRESS_ARROW_X, PROGRESS_ARROW_Y, PROGRESS_ARROW_WIDTH_MAX, (int) ((PROGRESS_ARROW_HEIGHT) + (7 * ((progress - ((maxProgress / 140F) * 133F)) / (maxProgress - ((maxProgress / 140F) * 133F))))));
             }
         }
 
@@ -203,9 +205,9 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                             this.client.getTextureManager().bindTexture(TEXTURE);
 
                             if (this.blockEntity.getExtendedInv().getInvStack(slot).getCount() == stack.getCount()) {
-                                drawTexture(matrix, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+                                drawTexture(matrices, this.x + 9 + ((GREEN_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                             } else {
-                                drawTexture(matrix, this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
+                                drawTexture(matrices, this.x + 9 + ((RED_BOX_WIDTH + 2) * offsetX), this.y + 9 + ((RED_BOX_HEIGHT + 2) * offsetY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                                 aG = false;
                             }
 
@@ -217,7 +219,7 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
                                 int n = (this.x + 9 + ((GREEN_BOX_WIDTH) + 2) * offsetX) + 2;
                                 int r = (this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * offsetY)) + 2;
                                 RenderSystem.colorMask(true, true, true, false);
-                                this.fillGradient(matrix, n, r, n + GREEN_BOX_WIDTH - 4, r + GREEN_BOX_HEIGHT - 4, -2130706433, -2130706433);
+                                this.fillGradient(matrices, n, r, n + GREEN_BOX_WIDTH - 4, r + GREEN_BOX_HEIGHT - 4, -2130706433, -2130706433);
                                 RenderSystem.colorMask(true, true, true, true);
                                 RenderSystem.enableDepthTest();
                             }
@@ -230,17 +232,19 @@ public class RocketAssemblerScreen extends HandledScreen<RocketAssemblerScreenHa
 
                         this.client.getTextureManager().bindTexture(TEXTURE);
                         if (aG) {
-                            drawTexture(matrix, this.x + 9, this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
+                            drawTexture(matrices, this.x + 9, this.y + 9 + ((GREEN_BOX_HEIGHT + 2) * baOY), GREEN_BOX_X, GREEN_BOX_Y, GREEN_BOX_WIDTH, GREEN_BOX_HEIGHT);
                         } else {
-                            drawTexture(matrix, this.x + 9, this.y + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
+                            drawTexture(matrices, this.x + 9, this.y + 9 + ((RED_BOX_HEIGHT + 2) * baOY), RED_BOX_X, RED_BOX_Y, RED_BOX_WIDTH, RED_BOX_HEIGHT);
                         }
-                        itemRenderer.renderGuiItemIcon(blockEntity.data.getPartForType(RocketPartType.values()[i]).getRenderStack(), this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY));
-
+                        matrices.push();
+                        matrices.translate(this.x + 13, this.y + 13 + ((GREEN_BOX_HEIGHT + 2) * baOY), 0);
+                        RocketPartRendererRegistry.getRenderer(blockEntity.data.getPartForType(RocketPartType.values()[i])).renderGUI(client.world, matrices, VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer()), delta);
+                        matrices.pop();
                     }
                 }
             }
         } else if (tab == Tab.LANDER) {
-            drawCenteredString(matrix, client.textRenderer, "WIP - TO BE DESIGNED", this.x / 2, this.y + (height) / 2, Integer.MAX_VALUE);
+            drawCenteredString(matrices, client.textRenderer, "WIP - TO BE DESIGNED", this.x / 2, this.y + (height) / 2, Integer.MAX_VALUE);
         }
     }
 
