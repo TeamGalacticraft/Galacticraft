@@ -46,6 +46,7 @@ public class OxygenTankUtils {
     }
 
     public static FluidVolume insertLiquidOxygen(OxygenTank tank, int oxygen) {
+
         tank.setAmount(Math.min(tank.getAmount() + oxygen, tank.getCapacity()));
         return oxygenToLOX(Math.max(0, (tank.getCapacity() - (tank.getAmount() + oxygen)) * -1));
     }
@@ -64,10 +65,9 @@ public class OxygenTankUtils {
 
     public static FluidVolume extractLiquidOxygen(OxygenTank tank, int amount) {
         if (tank.getAmount() == 0 || amount == 0) return FluidVolumeUtil.EMPTY;
-        int exa = tank.getAmount();
-        tank.setAmount(Math.max(0, tank.getAmount() - amount));
-        assert exa - tank.getAmount() >= 0;
-        return oxygenToLOX(exa - tank.getAmount());
+        amount = Math.min(amount, tank.getAmount());
+        tank.setAmount(tank.getAmount() - amount);
+        return oxygenToLOX(amount);
     }
 
     public static FluidVolume extractLiquidOxygen(OxygenTank tank, FluidVolume amount) {
