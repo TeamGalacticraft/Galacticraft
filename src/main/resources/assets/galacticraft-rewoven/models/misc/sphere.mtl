@@ -1,0 +1,11 @@
+newmtl sprite
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+d 1
+texture galacticraft-rewoven:model/sphere
+
+newmtl bubble
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+d 1
+texture galacticraft-rewoven:model/sphere
