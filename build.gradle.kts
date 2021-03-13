@@ -37,12 +37,12 @@ val modGroup               = project.property("mod.group").toString()
 val fabricVersion          = project.property("fabric.version").toString()
 val clothConfigVersion     = project.property("cloth.config.version").toString()
 val modMenuVersion         = project.property("modmenu.version").toString()
-val ucVersion              = project.property("uc.version").toString()
-val cardinalVersion        = project.property("cardinal.version").toString()
+val lbaVersion             = project.property("lba.version").toString()
+val energyVersion          = project.property("energy.version").toString()
 val galacticraftApiVersion = project.property("galacticraft.api.version").toString()
 val reiVersion             = project.property("rei.version").toString()
 val cottonResourcesVersion = project.property("cotton.resources.version").toString()
-val fomlVersion            = project.property("foml.version").toString()
+val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
 
 plugins {
@@ -71,36 +71,31 @@ loom {
 
 repositories {
     mavenLocal()
-    maven {
-        setUrl("https://maven.shedaniel.me/")
+    maven("https://maven.shedaniel.me/") {
         content {
             includeGroup("me.shedaniel.cloth")
             includeGroup("me.shedaniel")
         }
     }
-    maven {
-        setUrl("https://server.bbkr.space/artifactory/libs-release/")
+    maven("https://server.bbkr.space/artifactory/libs-release/") {
         content {
             includeGroup("io.github.cottonmc")
             includeGroup("io.github.fablabsmc")
         }
     }
-    maven {
-        setUrl("https://maven.terraformersmc.com/")
+    maven("https://alexiil.uk/maven") {
+        content {
+            includeGroup("alexiil.mc.lib")
+        }
+    }
+    maven("https://maven.terraformersmc.com/") {
         content {
             includeGroup("com.terraformersmc")
         }
     }
-    maven {
-        setUrl("https://dl.bintray.com/ladysnake/libs/")
+    maven("https://hephaestus.dev/release") {
         content {
-            includeGroup("io.github.onyxstudios.Cardinal-Components-API")
-        }
-    }
-    maven {
-        setUrl("https://maven.abusedmaster.xyz/")
-        content {
-            includeGroup("dev.onyxstudios")
+            includeGroup("dev.monarkhes")
         }
     }
     maven {
@@ -154,7 +149,7 @@ dependencies {
     }
 
     // Mandatory Dependencies (Included with Jar-In-Jar)
-    include(modImplementation("dev.onyxstudios:FOML:$fomlVersion") {
+    include(modImplementation("dev.monarkhes:myron:$myronVersion") {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
@@ -162,14 +157,14 @@ dependencies {
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
     })
+    include(modImplementation("com.hrznstudio:Galacticraft-Energy:$energyVersion") {
+        exclude(group = "net.fabricmc")
+        exclude(group = "net.fabricmc.fabric-api")
+    })
     include(modApi("com.hrznstudio:GalacticraftAPI:$galacticraftApiVersion") { isTransitive = false })
     include(modImplementation("io.github.fablabsmc:bannerpp:$bannerppVersion") { isTransitive = false })
     include(modApi("io.github.cottonmc:cotton-resources:$cottonResourcesVersion") { isTransitive = false })
-    include(modApi("io.github.cottonmc:UniversalComponents:$ucVersion") { isTransitive = false })
-    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:$cardinalVersion") { isTransitive = false })
-    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-block:$cardinalVersion") { isTransitive = false })
-    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-item:$cardinalVersion") { isTransitive = false })
-    include(modApi("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:$cardinalVersion") { isTransitive = false })
+    include(modApi("alexiil.mc.lib:libblockattributes-all:$lbaVersion") { })
 
     // Optional Dependencies
     modImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
