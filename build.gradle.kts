@@ -226,7 +226,7 @@ publishing {
             groupId = "com.hrznstudio"
             artifactId = "galacticraft"
 
-            artifact(tasks.jar) { builtBy(tasks.remapJar) }
+            artifact(tasks.remapJar) { builtBy(tasks.remapJar) }
             artifact(tasks.getByName("sourcesJar", Jar::class)) { builtBy(tasks.remapSourcesJar) }
             artifact(tasks.getByName("javadocJar", Jar::class))
         }
