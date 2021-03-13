@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.items;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
@@ -207,6 +208,11 @@ public class GalacticraftItems {
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = registerItem(Constants.Items.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = registerItem(Constants.Items.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
+
+    public static final Item LEGACY_MUSIC_DISC_MARS = registerItem(Constants.Items.LEGACY_MUSIC_DISC_MARS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MARS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_MINMAS = registerItem(Constants.Items.LEGACY_MUSIC_DISC_MINMAS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MINMAS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_ORBIT = registerItem(Constants.Items.LEGACY_MUSIC_DISC_ORBIT, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_ORBIT, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_SPACERACE = registerItem(Constants.Items.LEGACY_MUSIC_DISC_SPACERACE, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_SPACERACE, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
 
     private static <T extends Item> T registerItem(String id, T item) {
         return Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), item);

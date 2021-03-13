@@ -48,3 +48,5 @@ accessible      field    net/minecraft/util/math/Matrix4f                       
 accessible      field    net/minecraft/util/math/Matrix4f                                     a31                F
 accessible      field    net/minecraft/util/math/Matrix4f                                     a32                F
 accessible      field    net/minecraft/util/math/Matrix4f                                     a33                F
+
+accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V

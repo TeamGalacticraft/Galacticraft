@@ -74,9 +74,9 @@ repositories {
         }
     }
     maven {
-        url "https://maven.abusedmaster.xyz/"
+        url "https://hephaestus.dev/release/"
         content {
-            includeGroup "dev.onyxstudios"
+            includeGroup "dev.monarkhes"
         }
     }
     maven {
@@ -129,7 +129,7 @@ dependencies {
         exclude group: 'net.fabricmc'
         exclude group: 'org.jetbrains'
     }
-    modImplementation("dev.onyxstudios:FOML:${project.foml_version}") {
+    modImplementation("dev.monarkhes:myron:${project.myron_version}") {
         exclude group: 'net.fabricmc.fabric-api'
         exclude group: 'net.fabricmc'
     }
@@ -159,7 +159,7 @@ dependencies {
     include("alexiil.mc.lib:libblockattributes-items:${project.lba_version}")
     include("com.hrznstudio:Galacticraft-Energy:${project.energy_version}")
     include("io.github.cottonmc:cotton-resources:${project.cotton_resources_version}")
-    include("dev.onyxstudios:FOML:${project.foml_version}")
+    include("dev.monarkhes:myron:${project.myron_version}")
     include("io.github.fablabsmc:bannerpp:${project.bannerpp_version}") { transitive = false }
     modRuntime("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 }

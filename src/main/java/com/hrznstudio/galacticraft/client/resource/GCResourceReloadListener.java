@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.client.resource;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
+import com.hrznstudio.galacticraft.client.render.entity.BubbleEntityRenderer;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,5 +71,6 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GalacticraftFluids.LIQUID_OXYGEN, oxygen);
+        BubbleEntityRenderer.bubbleModel = null;
     }
 }

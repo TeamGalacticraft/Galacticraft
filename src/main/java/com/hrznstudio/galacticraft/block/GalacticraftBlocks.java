@@ -183,6 +183,7 @@ public class GalacticraftBlocks {
     public static final Block MOON_CHEESE_LOG = registerBlock(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.YELLOW).strength(2.0F).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.MOON_CHEESE_LOG);
 
     // DUMMY
+    public static final Block SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constants.Blocks.SOLAR_PANEL_PART);
     public static final Block ROCKET_BODY_RENDER_BLOCK = registerBlockWithHiddenItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BODY);
     public static final Block ROCKET_CONE_BASIC_RENDER_BLOCK = registerBlockWithHiddenItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_BASIC);
     public static final Block ROCKET_CONE_ADVANCED_RENDER_BLOCK = registerBlockWithHiddenItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_CONE_ADVANCED);
@@ -191,8 +192,6 @@ public class GalacticraftBlocks {
     public static final Block ROCKET_FINS_RENDER_BLOCK = registerBlockWithHiddenItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_FINS);
     public static final Block ROCKET_BOOSTER_TIER_1_RENDER_BLOCK = registerBlockWithHiddenItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_1);
     public static final Block ROCKET_BOOSTER_TIER_2_RENDER_BLOCK = registerBlockWithHiddenItem(new DummyRenderBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.GRAY).dropsNothing().sounds(BlockSoundGroup.STONE)), Constants.Blocks.ROCKET_BOOSTER_TIER_2);
-    public static final Block OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = registerBlockWithHiddenItem(new Block(FabricBlockSettings.of(Material.AIR)), Constants.Blocks.OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK);
-    public static final Block SOLAR_PANEL_PART = registerBlockWithHiddenItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constants.Blocks.SOLAR_PANEL_PART);
 
     // MACHINES
     public static final Block CIRCUIT_FABRICATOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CircuitFabricatorBlockEntity(),
