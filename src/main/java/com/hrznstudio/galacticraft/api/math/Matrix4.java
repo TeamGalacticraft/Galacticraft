@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.api.math;
 
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.util.math.Matrix4f;
 
 import java.nio.FloatBuffer;
 
@@ -40,6 +41,24 @@ public class Matrix4
     public float m20, m21, m22, m23;
     public float m30, m31, m32, m33;
 
+    public Matrix4(Matrix4f matrix4f) {
+        this.m00 = matrix4f.a00;
+        this.m01 = matrix4f.a01;
+        this.m02 = matrix4f.a02;
+        this.m03 = matrix4f.a03;
+        this.m10 = matrix4f.a10;
+        this.m11 = matrix4f.a11;
+        this.m12 = matrix4f.a12;
+        this.m13 = matrix4f.a13;
+        this.m20 = matrix4f.a20;
+        this.m21 = matrix4f.a21;
+        this.m22 = matrix4f.a22;
+        this.m23 = matrix4f.a23;
+        this.m30 = matrix4f.a30;
+        this.m31 = matrix4f.a31;
+        this.m32 = matrix4f.a32;
+        this.m33 = matrix4f.a33;
+    }
     /**
      * Creates a 4x4 identity matrix.
      */
