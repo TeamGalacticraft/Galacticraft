@@ -73,6 +73,7 @@ repositories {
     mavenLocal()
     maven("https://maven.shedaniel.me/") {
         content {
+            includeGroup("me.shedaniel.cloth.api")
             includeGroup("me.shedaniel.cloth")
             includeGroup("me.shedaniel")
         }
@@ -104,6 +105,7 @@ repositories {
             includeGroup("com.hrznstudio")
         }
     }
+    jcenter()
 }
 
 /**
