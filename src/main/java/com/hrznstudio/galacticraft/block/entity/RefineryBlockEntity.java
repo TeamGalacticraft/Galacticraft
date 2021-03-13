@@ -22,43 +22,40 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
+import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.api.ComponentHelper;
-import io.github.cottonmc.component.fluid.TankComponent;
-import io.github.cottonmc.component.fluid.TankComponentHelper;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.FluidVolume;
-import io.github.fablabsmc.fablabs.api.fluidvolume.v1.Fraction;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
+import com.hrznstudio.galacticraft.util.FluidUtils;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    private static final Predicate<ItemStack>[] SLOT_FILTERS;
-    private static final Fraction MAX_CAPACITY = Fraction.ofWhole(8);
+    private static final ItemFilter[] SLOT_FILTERS;
+    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
     public static final int CHARGE_SLOT = 0;
@@ -66,23 +63,10 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     public static final int FLUID_OUTPUT_SLOT = 2;
 
     static {
-        //noinspection unchecked
-        SLOT_FILTERS = new Predicate[3];
-        SLOT_FILTERS[CHARGE_SLOT] = GalacticraftEnergy.ENERGY_HOLDER_ITEM_FILTER;
-        SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> {
-            if (stack.getItem() instanceof BucketItem && (((BucketItem) stack.getItem()).fluid.isIn(GalacticraftTags.OIL) || stack.getItem() == Items.BUCKET)) return true;
-            TankComponent component = ComponentHelper.TANK.getComponent(stack, "refinery-filter");
-            if (component != null) return component.getContents(0).getFluid().equals(GalacticraftFluids.CRUDE_OIL);
-            return false;
-        };
-        SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> {
-            if (stack.getItem() instanceof BucketItem && (((BucketItem) stack.getItem()).fluid == Fluids.EMPTY || ((BucketItem) stack.getItem()).fluid.isIn(GalacticraftTags.FUEL))) return true;
-            TankComponent component = ComponentHelper.TANK.getComponent(stack, "refinery-filter-e");
-            if (component != null) {
-                return component.getContents(0).isEmpty();
-            }
-            return false;
-        };
+        SLOT_FILTERS = new ItemFilter[3];
+        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
+        SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL);
+        SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL);
     }
 
     public RefineryBlockEntity() {
@@ -100,7 +84,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public Fraction getFluidTankMaxCapacity() {
+    public FluidAmount getFluidTankCapacity() {
         return MAX_CAPACITY;
     }
 
@@ -110,7 +94,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         return SLOT_FILTERS[slot];
     }
 
@@ -134,39 +118,20 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getContents(OIL_TANK).getAmount().compareTo(Fraction.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.getFluidTank().getInvFluid(OIL_TANK).getAmount_F().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }
 
     @Override
     public void tickWork() {
-        TankComponent component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(FLUID_INPUT_SLOT));
-        if (component != null && component.getContents(0).getFluid().isIn(GalacticraftTags.OIL)) {
-            component.insertFluid(0, this.getFluidTank().insertFluid(OIL_TANK, component.takeFluid(0, Fraction.ONE, ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
-        }
-        if (this.getInventory().getStack(FLUID_INPUT_SLOT).getItem() instanceof BucketItem) {
-            if (this.getFluidTank().insertFluid(new FluidVolume(GalacticraftFluids.CRUDE_OIL, Fraction.ONE), ActionType.TEST).isEmpty()) {
-                if (((BucketItem) this.getInventory().getStack(FLUID_INPUT_SLOT).getItem()).fluid.isIn(GalacticraftTags.OIL)) {
-                    this.getInventory().setStack(FLUID_INPUT_SLOT, new ItemStack(Items.BUCKET));
-                    this.getFluidTank().insertFluid(OIL_TANK, new FluidVolume(GalacticraftFluids.CRUDE_OIL, Fraction.ONE), ActionType.PERFORM);
-                }
-            }
-        }
+        this.getFluidTank().insertFluid(OIL_TANK, FluidUtils.extractFluid(this.getInventory().getSlot(FLUID_INPUT_SLOT), this.getFluidTank().getMaxAmount_F(OIL_TANK).sub(this.getFluidTank().getInvFluid(OIL_TANK).getAmount_F()), key -> GalacticraftTags.OIL.contains(key.getRawFluid())), Simulation.ACTION);
+        this.getFluidTank().insertFluid(FUEL_TANK, FluidUtils.insertFluid(this.getInventory().getSlot(FLUID_OUTPUT_SLOT), this.getFluidTank().extractFluid(FUEL_TANK, null, null, FluidAmount.ONE, Simulation.ACTION)), Simulation.ACTION);
+
         if (this.getStatus().getType().isActive()) {
-            Fraction f = this.getFluidTank().takeFluid(OIL_TANK, Fraction.of(5, 1000), ActionType.PERFORM).getAmount();
-            f = this.getFluidTank().insertFluid(FUEL_TANK, new FluidVolume(GalacticraftFluids.FUEL, f), ActionType.PERFORM).getAmount();
-            this.getFluidTank().insertFluid(OIL_TANK, new FluidVolume(this.getFluidTank().getContents(OIL_TANK).getFluid(), f), ActionType.PERFORM);
-        }
-        component = ComponentHelper.TANK.getComponent(this.getInventory().getStack(FLUID_OUTPUT_SLOT));
-        if (component != null && (component.getContents(0).getFluid().isIn(GalacticraftTags.FUEL) || component.getContents(0).isEmpty())) {
-            this.getFluidTank().insertFluid(FUEL_TANK, component.insertFluid(0, this.getFluidTank().takeFluid(FUEL_TANK, Fraction.ONE, ActionType.PERFORM), ActionType.PERFORM), ActionType.PERFORM);
-        }
-        if (this.getInventory().getStack(FLUID_OUTPUT_SLOT).getItem() == Items.BUCKET) {
-            if (this.getFluidTank().getContents(FUEL_TANK).getAmount().compareTo(Fraction.ONE) >= 0) {
-                this.getFluidTank().takeFluid(FUEL_TANK, Fraction.ONE, ActionType.PERFORM);
-                this.getInventory().setStack(FLUID_OUTPUT_SLOT, new ItemStack(GalacticraftItems.FUEL_BUCKET));
-            }
+            FluidAmount amount = this.getFluidTank().extractFluid(OIL_TANK, key -> GalacticraftTags.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).getAmount_F();
+            amount = this.getFluidTank().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluids.FUEL).withAmount(amount), Simulation.ACTION).getAmount_F();
+            this.getFluidTank().insertFluid(OIL_TANK, this.getFluidTank().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }
     }
 
@@ -186,13 +151,18 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public int getMaxCountPerStack() {
-        return 1;
+    public FluidFilter getFilterForTank(int tank) {
+        if (tank == OIL_TANK) {
+            return key -> GalacticraftTags.OIL.contains(key.getRawFluid());
+        }
+        return key -> GalacticraftTags.FUEL.contains(key.getRawFluid());
     }
 
+    @Nullable
     @Override
-    public boolean isAcceptableFluid(int tank, FluidVolume volume) {
-        return (tank == OIL_TANK && volume.getFluid().isIn(GalacticraftTags.OIL)) || (tank == FUEL_TANK && volume.getFluid().isIn(GalacticraftTags.FUEL));
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        if (this.getSecurity().hasAccess(player)) return new RefineryScreenHandler(syncId, player, this);
+        return null;
     }
 
     /**

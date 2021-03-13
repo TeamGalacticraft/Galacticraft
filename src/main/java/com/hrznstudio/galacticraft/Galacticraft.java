@@ -26,16 +26,14 @@ import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
-import com.hrznstudio.galacticraft.component.GalacticraftComponents;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
 import com.hrznstudio.galacticraft.items.GalacticraftItems;
 import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
 import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
-import com.hrznstudio.galacticraft.network.GalacticraftS2CPackets;
+import com.hrznstudio.galacticraft.network.GalacticraftS2CPacketReceivers;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
@@ -80,7 +78,6 @@ public class Galacticraft implements ModInitializer {
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
         logger.info("[Galacticraft] Starting initialization.");
-        GalacticraftComponents.register();
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftBlockEntities.init();
@@ -99,8 +96,7 @@ public class Galacticraft implements ModInitializer {
         GalacticraftScreenHandlerTypes.register();
         GalacticraftParticles.register();
         GalacticraftCommands.register();
-        GalacticraftEnergy.register();
-        GalacticraftS2CPackets.register();
+        GalacticraftS2CPacketReceivers.register();
         GalacticraftSounds.register();
         GalacticraftBannerPatterns.register();
         GalacticraftPointOfInterestType.register();
@@ -115,7 +111,6 @@ public class Galacticraft implements ModInitializer {
 //        CelestialBodyRegistryCallback.EVENT.register(registry -> {
             Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
 //        });
-
         logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

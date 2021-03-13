@@ -100,6 +100,6 @@ public class SpaceGearFeatureRenderer<T extends Entity, M extends EntityModel<T>
 
     @FunctionalInterface
     public interface ModelTransformer<T extends Entity> {
-        void transformModel(MatrixStack stack, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch);
+        void transformModel(MatrixStack matrices, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch);
     }
 }

@@ -22,17 +22,20 @@
 
 package com.hrznstudio.galacticraft.api.wire.impl;
 
+import alexiil.mc.lib.attributes.Simulation;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableValueGraph;
 import com.google.common.graph.ValueGraphBuilder;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.wire.Wire;
 import com.hrznstudio.galacticraft.api.wire.WireConnectionType;
 import com.hrznstudio.galacticraft.api.wire.WireNetwork;
-import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.energy.CapacitorComponent;
-import io.github.cottonmc.component.energy.CapacitorComponentHelper;
-import io.github.cottonmc.component.energy.type.EnergyType;
+import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
+import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import com.hrznstudio.galacticraft.energy.impl.EmptyEnergyExtractable;
+import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
+import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -64,7 +67,7 @@ public class WireNetworkImpl implements WireNetwork {
             if (wire == null) throw new RuntimeException("Tried to add wire that didn't exist!");
         }
         wire.setNetwork(this);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             BlockPos conn = pos.offset(direction);
             BlockEntity entity = world.getBlockEntity(conn);
             WireConnectionType type = wire.getConnection(direction, entity);
@@ -88,7 +91,7 @@ public class WireNetworkImpl implements WireNetwork {
     public void removeWire(@NotNull BlockPos pos) {
         if (contains(pos)) {
             Deque<BlockPos> wires = new LinkedList<>();
-            for (Direction direction : Direction.values()) {
+            for (Direction direction : Constants.Misc.DIRECTIONS) {
                 BlockPos conn = pos.offset(direction);
                 WireConnectionType type = getConnection(pos, conn);
                 if (type != WireConnectionType.NONE) {
@@ -140,21 +143,20 @@ public class WireNetworkImpl implements WireNetwork {
         //wires should call #removeWire before all the other blocks get updated
         //so we just need to check for machine block changes
 
-        removeEdge(adjacentToUpdated, updatedPos, true);
-        BlockPos poss = updatedPos.subtract(adjacentToUpdated);
-        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, updatedPos, opposite);
-        if (component != null) {
-            if (component.canInsertEnergy() && component.canExtractEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
-            } else if (component.canInsertEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
-            } else if (component.canExtractEnergy()) {
-                node(updatedPos);
-                edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
-            }
+        this.removeEdge(adjacentToUpdated, updatedPos, true);
+        BlockPos vector = adjacentToUpdated.subtract(updatedPos);
+        Direction direction = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+        EnergyInsertable insertable = EnergyUtils.getEnergyInsertable(world, updatedPos, direction);
+        EnergyExtractable extractable = EnergyUtils.getEnergyExtractable(world, updatedPos, direction);
+        if (insertable != RejectingEnergyInsertable.NULL && extractable != EmptyEnergyExtractable.NULL) {
+            this.node(updatedPos);
+            this.edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_IO);
+        } else if (insertable != RejectingEnergyInsertable.NULL) {
+            this.node(updatedPos);
+            this.edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_INPUT);
+        } else if (extractable != EmptyEnergyExtractable.NULL) {
+            this.node(updatedPos);
+            this.edge(adjacentToUpdated, updatedPos, WireConnectionType.ENERGY_OUTPUT);
         }
     }
 
@@ -164,7 +166,7 @@ public class WireNetworkImpl implements WireNetwork {
     }
 
     @Override
-    public int insertEnergy(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, @NotNull EnergyType energyType, int amount, @NotNull ActionType type) {
+    public int insert(@NotNull BlockPos fromWire, @Nullable BlockPos fromBlock, int amount, @NotNull Simulation simulate) {
         if (!graph.nodes().contains(fromWire)) throw new RuntimeException("Inserted energy from non-existent wire?!");
         if (amount <= 0) return amount;
         Set<BlockPos> visitedNodes = new HashSet<>();
@@ -176,15 +178,14 @@ public class WireNetworkImpl implements WireNetwork {
             for (BlockPos successor : graph.successors(currentNode)) {
                 if (visitedNodes.add(successor)) {
                     if (!(world.getBlockEntity(successor) instanceof Wire)) {
-                        BlockPos poss = successor.subtract(currentNode);
-                        Direction opposite = Direction.fromVector(poss.getX(), poss.getY(), poss.getZ()).getOpposite();
-                        CapacitorComponent component = CapacitorComponentHelper.INSTANCE.getComponent(world, successor, opposite);
-                        if (component != null && component.canInsertEnergy()) {
-                            amount = component.insertEnergy(energyType, amount, type);
-                            if (amount == 0) {
-                                return 0;
-                            }
+                        BlockPos vector = currentNode.subtract(successor);
+                        Direction opposite = Direction.fromVector(vector.getX(), vector.getY(), vector.getZ());
+                        EnergyInsertable handler = EnergyUtils.getEnergyInsertable(world, successor, opposite);
+                        amount = handler.tryInsert(DefaultEnergyType.INSTANCE, amount, simulate);
+                        if (amount == 0) {
+                            return 0;
                         }
+
                     }
                     queuedNodes.add(successor);
                 }
@@ -196,7 +197,7 @@ public class WireNetworkImpl implements WireNetwork {
     @Override
     public @NotNull Map<Direction, @NotNull WireConnectionType> getAdjacent(BlockPos from) {
         Map<Direction, WireConnectionType> map = new EnumMap<>(Direction.class);
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             map.put(direction, getConnection(from, from.offset(direction)));
         }
 

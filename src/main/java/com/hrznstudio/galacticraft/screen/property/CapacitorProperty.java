@@ -22,22 +22,27 @@
 
 package com.hrznstudio.galacticraft.screen.property;
 
-import io.github.cottonmc.component.energy.impl.SimpleCapacitorComponent;
+import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import net.minecraft.screen.Property;
 
 public class CapacitorProperty extends Property {
-    private final SimpleCapacitorComponent component;
-    public CapacitorProperty(SimpleCapacitorComponent component) {
-        this.component = component;
+    private final Capacitor capacitor;
+
+    public CapacitorProperty(Capacitor capacitor) {
+        this.capacitor = capacitor;
+    }
+
+    public Capacitor getCapacitor() {
+        return capacitor;
     }
 
     @Override
     public int get() {
-        return component.getCurrentEnergy();
+        return this.capacitor.getEnergy();
     }
 
     @Override
     public void set(int value) {
-        component.setCurrentEnergy(value);
+        this.capacitor.setEnergy(value);
     }
 }

@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
-import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -47,11 +46,11 @@ import java.util.Random;
  */
 public class CoalGeneratorBlock extends ConfigurableMachineBlock {
     public CoalGeneratorBlock(Settings settings) {
-        super(settings, CoalGeneratorScreenHandler::new,
+        super(settings,
                 (view) -> new CoalGeneratorBlockEntity(),
                 (itemStack, blockView, tooltipContext) ->
                         new TranslatableText("tooltip.galacticraft-rewoven.coal_generator")
-                                .setStyle(Constants.Misc.TOOLTIP_STYLE)
+                                .setStyle(Constants.Styles.TOOLTIP_STYLE)
         );
     }
 

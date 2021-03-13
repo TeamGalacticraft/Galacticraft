@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.WireBlockEntity;
 import com.hrznstudio.galacticraft.api.wire.Wire;
-import com.hrznstudio.galacticraft.api.wire.WireNetwork;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -51,9 +51,11 @@ public class WireBlock extends BlockWithEntity {
     @Override
     @Deprecated
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled()) {
-            Galacticraft.logger.info(((Wire) world.getBlockEntity(pos)).getNetwork());
-            return ActionResult.SUCCESS;
+        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof Wire) {
+                Galacticraft.logger.info(((Wire) entity).getNetwork());
+            }
         }
         return super.onUse(state, world, pos, player, hand, hit);
     }

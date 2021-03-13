@@ -22,13 +22,30 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import alexiil.mc.lib.attributes.AttributeProviderItem;
+import alexiil.mc.lib.attributes.ItemAttributeList;
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.misc.LimitedConsumer;
+import alexiil.mc.lib.attributes.misc.Reference;
+import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
+import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class InfiniteBatteryItem extends Item {
+public class InfiniteBatteryItem extends Item implements AttributeProviderItem {
+    private int ticks = 0;
+
     public InfiniteBatteryItem(Settings settings) {
         super(settings.maxCount(1));
     }
@@ -39,17 +56,30 @@ public class InfiniteBatteryItem extends Item {
     }
 
     @Override
-    public boolean isEnchantable(ItemStack stack) {
-        return false;
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.energy_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Styles.getRainbow(++ticks))));
+        tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+        if (ticks >= 500) ticks -= 500;
+        super.appendTooltip(stack, world, tooltip, context);
     }
 
     @Override
-    public int getEnchantability() {
-        return -1;
-    }
+    public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
+        itemAttributeList.offer(new SimpleCapacitor(DefaultEnergyType.INSTANCE, 4096) {
+            @Override
+            public int getEnergy() {
+                return getMaxCapacity();
+            }
 
-    @Override
-    public boolean canRepair(ItemStack stack, ItemStack repairMaterial) {
-        return false;
+            @Override
+            public int insert(int amount, Simulation simulation) {
+                return amount;
+            }
+
+            @Override
+            public int extract(int amount, Simulation simulation) {
+                return amount;
+            }
+        });
     }
 }

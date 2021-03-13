@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.entity.BasicSolarPanelBlockEntity;
-import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
@@ -40,9 +39,9 @@ import java.util.List;
  */
 public class BasicSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
     public BasicSolarPanelBlock(Settings settings) {
-        super(settings, BasicSolarPanelScreenHandler::new, BasicSolarPanelBlockEntity::new,
+        super(settings, BasicSolarPanelBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.basic_solar_panel")
-                        .setStyle(Constants.Misc.TOOLTIP_STYLE));
+                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
     }
 
     @NotNull

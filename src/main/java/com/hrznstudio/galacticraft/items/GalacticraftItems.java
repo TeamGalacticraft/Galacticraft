@@ -25,8 +25,9 @@ package com.hrznstudio.galacticraft.items;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.*;
@@ -190,9 +191,10 @@ public class GalacticraftItems {
     public static final Item OXYGEN_GEAR = registerItem(Constants.Items.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SHIELD_CONTROLLER = registerItem(Constants.Items.SHIELD_CONTROLLER, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item FREQUENCY_MODULE = registerItem(Constants.Items.FREQUENCY_MODULE, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item SMALL_OXYGEN_TANK = registerItem(Constants.Items.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(900)));
-    public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constants.Items.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(1800)));
-    public static final Item LARGE_OXYGEN_TANK = registerItem(Constants.Items.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(2700)));
+    public static final Item SMALL_OXYGEN_TANK = registerItem(Constants.Items.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(1620 * 10))); // 16200 ticks
+    public static final Item MEDIUM_OXYGEN_TANK = registerItem(Constants.Items.MEDIUM_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(1620 * 20))); //32400 ticks
+    public static final Item LARGE_OXYGEN_TANK = registerItem(Constants.Items.LARGE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP).maxDamage(1620 * 30))); //48600 ticks
+    public static final Item INFINITE_OXYGEN_TANK = registerItem(Constants.Items.INFINITE_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item THERMAL_PADDING_HELMET = registerItem(Constants.Items.THERMAL_PADDING_HELMET, new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.HEAD));
     public static final Item THERMAL_PADDING_CHESTPIECE = registerItem(Constants.Items.THERMAL_PADDING_CHESTPIECE, new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.CHEST));
     public static final Item THERMAL_PADDING_LEGGINGS = registerItem(Constants.Items.THERMAL_PADDING_LEGGINGS, new ThermalArmorItem(new Item.Settings().group(ITEMS_GROUP), EquipmentSlot.LEGS));
@@ -208,6 +210,11 @@ public class GalacticraftItems {
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = registerItem(Constants.Items.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item HOT_THROWABLE_METEOR_CHUNK = registerItem(Constants.Items.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
+
+    public static final Item LEGACY_MUSIC_DISC_MARS = registerItem(Constants.Items.LEGACY_MUSIC_DISC_MARS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MARS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_MINMAS = registerItem(Constants.Items.LEGACY_MUSIC_DISC_MINMAS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MINMAS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_ORBIT = registerItem(Constants.Items.LEGACY_MUSIC_DISC_ORBIT, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_ORBIT, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_SPACERACE = registerItem(Constants.Items.LEGACY_MUSIC_DISC_SPACERACE, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_SPACERACE, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
 
     private static <T extends Item> T registerItem(String id, T item) {
         return Registry.register(Registry.ITEM, new Identifier(Constants.MOD_ID, id), item);

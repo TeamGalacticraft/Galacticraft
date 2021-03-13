@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.items;
 
+import com.hrznstudio.galacticraft.Constants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -35,11 +36,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Property;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -93,9 +92,9 @@ public class StandardWrenchItem extends Item {
     @Environment(EnvType.CLIENT)
     public void appendTooltip(ItemStack stack, World world, List<Text> lines, TooltipContext context) {
         if (Screen.hasShiftDown()) {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.standard_wrench").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.standard_wrench").setStyle(Constants.Styles.GRAY_STYLE));
         } else {
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Styles.GRAY_STYLE));
         }
     }
 }

@@ -22,22 +22,25 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
+import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.SideOption;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
-import io.github.cottonmc.component.api.ActionType;
-import io.github.cottonmc.component.compat.vanilla.InventoryWrapper;
-import io.github.cottonmc.component.item.InventoryComponent;
+import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
@@ -45,10 +48,10 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -58,22 +61,17 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     public static final int OUTPUT_SLOT = 10;
 
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
-    private final InventoryWrapper craftingInv;
+    private final Inventory craftingInv;
     public int fuelTime;
     public int fuelLength;
     public int progress;
 
     public CompressorBlockEntity() {
         super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
-        this.craftingInv = new InventoryWrapper() {
+        this.craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
             @Override
-            public InventoryComponent getComponent() {
-                return getInventory();
-            }
-
-            @Override
-            public int size() {
-                return 9;
+            public boolean canPlayerUse(PlayerEntity player) {
+                return getWrappedInventory().canPlayerUse(player);
             }
         };
     }
@@ -94,22 +92,22 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public Predicate<ItemStack> getFilterForSlot(int slot) {
+    public ItemFilter getFilterForSlot(int slot) {
         if (slot == FUEL_INPUT_SLOT) {
             return stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null;
         }
-        return Constants.Misc.alwaysTrue();
+        return ConstantItemFilter.ANYTHING;
     }
 
     @Override
-    public int getMaxEnergy() {
+    public int getEnergyCapacity() {
         return 0;
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         Optional<CompressingRecipe> optional = this.getRecipe(this.craftingInv);
-        if ((this.fuelLength > 0 || !this.getInventory().getStack(FUEL_INPUT_SLOT).isEmpty()) && optional.isPresent()) {
+        if ((this.fuelLength > 0 || !this.getInventory().getInvStack(FUEL_INPUT_SLOT).isEmpty()) && optional.isPresent()) {
             if (this.canInsert(OUTPUT_SLOT, optional.get().getOutput())) {
                 return Status.PROCESSING;
             } else {
@@ -124,7 +122,7 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             if (this.fuelLength == 0) {
-                this.fuelLength = FuelRegistry.INSTANCE.get(this.getInventory().takeStack(FUEL_INPUT_SLOT, 1, ActionType.PERFORM).getItem());
+                this.fuelLength = FuelRegistry.INSTANCE.get(this.getInventory().extractStack(FUEL_INPUT_SLOT, null, ItemStack.EMPTY, 1, Simulation.ACTION).getItem());
                 this.fuelTime = this.fuelLength;
                 if (this.fuelLength == 0) return;
             }
@@ -188,6 +186,13 @@ public class CompressorBlockEntity extends ConfigurableMachineBlockEntity {
     @Override
     public boolean canHopperInsert(int slot) {
         return slot < 9;
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
+        if (this.getSecurity().hasAccess(player)) return new CompressorScreenHandler(syncId, player, this);
+        return null;
     }
 
     /**

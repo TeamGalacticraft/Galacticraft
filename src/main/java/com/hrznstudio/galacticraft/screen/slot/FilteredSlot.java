@@ -22,23 +22,21 @@
 
 package com.hrznstudio.galacticraft.screen.slot;
 
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
-import java.util.function.Predicate;
-
 public class FilteredSlot extends Slot {
-    private final Predicate<ItemStack> predicate;
+    private final ItemFilter filter;
 
-    public FilteredSlot(ConfigurableMachineBlockEntity entity, Inventory inventory, int index, int x, int y) {
-        super(inventory, index, x, y);
-        predicate = entity.getFilterForSlot(index);
+    public FilteredSlot(ConfigurableMachineBlockEntity machine, int index, int x, int y) {
+        super(machine.getWrappedInventory(), index, x, y);
+        this.filter = machine.getFilterForSlot(index);
     }
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return predicate.test(stack);
+        return this.filter.matches(stack);
     }
 }
