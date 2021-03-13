@@ -1,4 +1,4 @@
-mtllib block/sphere.mtl
+mtllib sphere.mtl
 o Sphere
 v -0.809017 0.587785 0.000000
 v -0.587785 0.809017 0.000000
