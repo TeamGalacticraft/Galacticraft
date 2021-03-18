@@ -258,7 +258,7 @@ public class WireWalkway extends WireBlock implements FluidLoggableBlock {
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState state = this.getDefaultState();
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-        for (Direction direction : Direction.values()) {
+        for (Direction direction : Constants.Misc.DIRECTIONS) {
             state = state.with(getPropForDir(direction), this.canConnect(state,
                     context.getWorld().getBlockState(context.getBlockPos().offset(direction)),
                     context.getBlockPos(),

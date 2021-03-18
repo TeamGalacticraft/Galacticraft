@@ -22,15 +22,15 @@
 
 package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.api.biome.BiomePropertyType;
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.hrznstudio.galacticraft.api.regisry.AddonRegistry;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.config.ConfigManagerImpl;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
+import com.hrznstudio.galacticraft.item.GalacticraftItems;
+import com.hrznstudio.galacticraft.log.GalacticraftPrependingMessageFactory;
 import com.hrznstudio.galacticraft.loot.GalacticraftLootTables;
 import com.hrznstudio.galacticraft.misc.banner.GalacticraftBannerPatterns;
 import com.hrznstudio.galacticraft.network.GalacticraftS2CPacketReceivers;
@@ -38,7 +38,7 @@ import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.GalacticraftScreenHandlerTypes;
 import com.hrznstudio.galacticraft.server.command.GalacticraftCommands;
-import com.hrznstudio.galacticraft.sounds.GalacticraftSounds;
+import com.hrznstudio.galacticraft.sound.GalacticraftSounds;
 import com.hrznstudio.galacticraft.structure.GalacticraftStructures;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.village.GalacticraftVillagerProfessions;
@@ -66,18 +66,16 @@ import org.apache.logging.log4j.Logger;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class Galacticraft implements ModInitializer {
-
     public static final Registry<VillagerProfession> MOON_VILLAGER_PROFESSION_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "moon_villager_profession")), Lifecycle.stable());
-    public static final Registry<BiomePropertyType<?>> BIOME_PROPERTY_TYPE_REGISTRY = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "biome_property_type")), Lifecycle.stable());
 
-    public static final Logger logger = LogManager.getLogger("Galacticraft-Rewoven");
+    public static final Logger LOGGER = LogManager.getLogger("Galacticraft-Rewoven", new GalacticraftPrependingMessageFactory());
 
-    public static final ConfigManager configManager = new ConfigManagerImpl();
+    public static final ConfigManager CONFIG_MANAGER = new ConfigManagerImpl();
 
     @Override
     public void onInitialize() {
         long startInitTime = System.currentTimeMillis();
-        logger.info("[Galacticraft] Starting initialization.");
+        LOGGER.info("Starting initialization.");
         GalacticraftFluids.register();
         GalacticraftBlocks.register();
         GalacticraftBlockEntities.init();
@@ -111,6 +109,6 @@ public class Galacticraft implements ModInitializer {
 //        CelestialBodyRegistryCallback.EVENT.register(registry -> {
             Registry.register(AddonRegistry.CELESTIAL_BODIES, GalacticraftCelestialBodyTypes.THE_MOON.getId(), GalacticraftCelestialBodyTypes.THE_MOON);
 //        });
-        logger.info("[Galacticraft] Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        LOGGER.info("Initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

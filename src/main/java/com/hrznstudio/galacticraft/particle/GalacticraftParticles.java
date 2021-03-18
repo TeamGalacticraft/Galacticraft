@@ -33,8 +33,8 @@ import net.minecraft.util.registry.Registry;
  */
 public class GalacticraftParticles {
 
-    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
-    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particles.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
+    public static final DefaultParticleType DRIPPING_FUEL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_CRUDE_OIL_PARTICLE), FabricParticleTypes.simple());
+    public static final DefaultParticleType DRIPPING_CRUDE_OIL_PARTICLE = Registry.register(Registry.PARTICLE_TYPE, new Identifier(Constants.MOD_ID, Constants.Particle.DRIPPING_FUEL_PARTICLE), FabricParticleTypes.simple());
 
     public static void register() {
     }

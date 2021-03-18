@@ -26,15 +26,11 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.ColorUtils;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-
-import java.util.function.Predicate;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -214,7 +210,7 @@ public interface Constants {
     }
 
     // Fluids
-    interface Fluids {
+    interface Fluid {
         String CRUDE_OIL_FLOWING = "crude_oil_flowing";
         String CRUDE_OIL_STILL = "crude_oil_still";
         String FUEL_FLOWING = "fuel_flowing";
@@ -232,7 +228,7 @@ public interface Constants {
     }
 
     //Items
-    interface Items {
+    interface Item {
         String ITEM_GROUP = "items";
         String LEAD_INGOT = "lead_ingot";
         String RAW_SILICON = "raw_silicon";
@@ -395,7 +391,7 @@ public interface Constants {
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
     }
 
-    interface Particles {
+    interface Particle {
         String DRIPPING_FUEL_PARTICLE = "dripping_fuel_particle";
         String DRIPPING_CRUDE_OIL_PARTICLE = "dripping_crude_oil_particle";
     }
@@ -431,7 +427,7 @@ public interface Constants {
         String GALACTICRAFT_JOULES = "galacticraft_joules";
     }
 
-    interface ScreenTextures {
+    interface ScreenTexture {
         String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
         String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
         String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
@@ -461,7 +457,7 @@ public interface Constants {
         }
     }
 
-    interface SlotSprites {
+    interface SlotSprite {
         String THERMAL_HEAD = "slot/thermal_helmet";
         String THERMAL_CHEST = "slot/thermal_chestpiece";
         String THERMAL_PANTS = "slot/thermal_leggings";
@@ -471,7 +467,7 @@ public interface Constants {
         String OXYGEN_TANK = "slot/oxygen_tank";
     }
 
-    interface Entities {
+    interface Entity {
         String MOON_VILLAGER = "moon_villager";
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
@@ -484,7 +480,7 @@ public interface Constants {
         String EVOLVED_VINDICATOR = "evolved_vindicator";
     }
 
-    interface TextureCoordinates {
+    interface TextureCoordinate {
         int OVERLAY_WIDTH = 16;
         int OVERLAY_HEIGHT = 48;
 
@@ -589,7 +585,7 @@ public interface Constants {
         String OXYGEN_SEALER_SCREEN_HANDLER = "oxygen_sealer";
     }
 
-    interface Biomes {
+    interface Biome {
         interface Moon {
             String HIGHLANDS_PLAINS = "moon_highlands_plains";
             String HIGHLANDS_ROCKS = "moon_highlands_rocks";
@@ -601,32 +597,24 @@ public interface Constants {
 
     }
 
-    interface LootTables {
+    interface LootTable {
         String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
     }
 
-    interface Misc {
-        Text EMPTY_TEXT = new LiteralText("");
-        Identifier EMPTY = new Identifier("empty");
-        Predicate<?> ALWAYS_FALSE = o -> false;
-        Predicate<?> ALWAYS_TRUE = o -> true;
-        FluidFilter LOX_ONLY = key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
-        Direction[] DIRECTIONS = Direction.values();
-        BlockFace[] BLOCK_FACES = BlockFace.values();
-
-        @SuppressWarnings("unchecked")
-        static <T> Predicate<T> alwaysFalse() {
-            return (Predicate<T>) ALWAYS_FALSE;
-        }
-
-        @SuppressWarnings("unchecked")
-        static <T> Predicate<T> alwaysTrue() {
-            return (Predicate<T>) ALWAYS_TRUE;
-        }
+    interface Filter {
+        FluidFilter LOX_ONLY = key -> GalacticraftTags.LIQUID_OXYGEN.contains(key.getRawFluid());
+        FluidFilter OIL = key -> GalacticraftTags.OIL.contains(key.getRawFluid());
+        FluidFilter FUEL = key -> GalacticraftTags.FUEL.contains(key.getRawFluid());
     }
 
-    interface Styles {
-        Style TOOLTIP_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
+    interface Misc {
+        Identifier EMPTY = new Identifier("empty");
+        Direction[] DIRECTIONS = Direction.values();
+        BlockFace[] BLOCK_FACES = BlockFace.values();
+    }
+
+    interface Text {
+        Style DARK_GRAY_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
         Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
         Style GREEN_STYLE = Style.EMPTY.withColor(Formatting.GREEN);
         Style RED_STYLE = Style.EMPTY.withColor(Formatting.RED);
@@ -635,13 +623,14 @@ public interface Constants {
         Style GRAY_STYLE = Style.EMPTY.withColor(Formatting.GRAY);
         Style DARK_RED_STYLE = Style.EMPTY.withColor(Formatting.DARK_RED);
         Style LIGHT_PURPLE_STYLE = Style.EMPTY.withColor(Formatting.LIGHT_PURPLE);
+        Style YELLOW_STYLE = Style.EMPTY.withColor(Formatting.YELLOW);
 
         static Style getStorageLevelColor(double scale) {
             return Style.EMPTY.withColor(TextColor.fromRgb(((int)(255 * scale) << 16) + (((int)(255 * ( 1.0 - scale))) << 8)));
         }
 
         static Style getRainbow(int ticks) {
-            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtils.HSBtoRGB(ticks / 500.0f, 1, 1)));
+            return Style.EMPTY.withColor(TextColor.fromRgb(ColorUtils.hsbToRGB(ticks / 500.0f, 1, 1)));
         }
     }
 

@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
@@ -46,7 +46,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COMPRESSOR_SCREEN));
+    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.COMPRESSOR_SCREEN));
 
     public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
         super(electricCompressorContainer, inv, title);
@@ -79,7 +79,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int fuelUsageScale;
 
-        if (this.handler.machine.getStatus().getType() != ConfigurableMachineBlockEntity.MachineStatus.StatusType.MISSING_ENERGY) {
+        if (this.handler.machine.getStatus().getType() != MachineStatus.StatusType.MISSING_ENERGY) {
             fuelUsageScale = getFuelProgress();
             this.drawTexture(matrices, this.x + 80, this.y + 29 + 12 - fuelUsageScale, 203, 39 - fuelUsageScale, 14, fuelUsageScale + 1);
         }

@@ -28,8 +28,9 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.ElectricArcFurnaceScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -53,7 +54,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
+public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
     public int cookTime = 0;
     public int cookLength = 0;
     private final Inventory subInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
@@ -83,7 +84,7 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     protected int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().electricArcFurnaceEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate();
     }
 
     @Override
@@ -109,8 +110,8 @@ public class ElectricArcFurnaceBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.ITEM_INPUT, AutomationType.ITEM_OUTPUT);
     }
 
     @Override

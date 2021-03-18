@@ -42,7 +42,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.COAL_GENERATOR_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.COAL_GENERATOR_SCREEN));
 
     public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);

@@ -23,8 +23,14 @@
 package com.hrznstudio.galacticraft.util;
 
 public class ColorUtils {
-    /**@see java.awt.Color#HSBtoRGB*/
-    public static int HSBtoRGB(float hue, float saturation, float brightness) {
+    public static final int WHITE = 0xffffff;
+
+    public static int rgb(int red, int green, int blue) {
+        return (red << 16) + (green << 8) + blue;
+    }
+
+    /*@see java.awt.Color#HSBtoRGB*/
+    public static int hsbToRGB(float hue, float saturation, float brightness) {
         int r = 0, g = 0, b = 0;
         if (saturation == 0) {
             r = g = b = (int) (brightness * 255.0f + 0.5f);

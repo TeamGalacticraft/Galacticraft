@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,11 +37,11 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorBlock extends ConfigurableMachineBlock {
+public class OxygenCollectorBlock extends MachineBlock {
     public OxygenCollectorBlock(Settings settings) {
         super(settings, OxygenCollectorBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.oxygen_collector")
-                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
+                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
     }
 
     @Override

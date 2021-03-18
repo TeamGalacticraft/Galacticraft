@@ -24,12 +24,15 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.OxygenStorageModuleScreenHandler;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -43,8 +46,17 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEntity {
+public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
+    private static final int LOX_INPUT = 0;
+    private static final int LOX_OUTPUT = 1;
+    private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
+
+    static {
+        SLOT_FILTERS[LOX_INPUT] = stack -> FluidUtils.canExtractFluids(stack, Constants.Filter.LOX_ONLY);
+        SLOT_FILTERS[LOX_OUTPUT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.LIQUID_OXYGEN);
+    }
+
     public OxygenStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);
     }
@@ -60,8 +72,8 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.FLUID_INPUT, AutomationType.FLUID_OUTPUT);
     }
 
     @Override
@@ -71,7 +83,8 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public ItemFilter getFilterForSlot(int slot) {
-        return stack -> FluidUtils.canExtractFluids(stack, Constants.Misc.LOX_ONLY);
+        if (slot < 2) return SLOT_FILTERS[slot];
+        return ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -106,7 +119,7 @@ public class OxygenStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
+        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable

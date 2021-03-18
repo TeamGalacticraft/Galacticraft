@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.MultiBlockBase;
 import com.hrznstudio.galacticraft.block.entity.AdvancedSolarPanelBlockEntity;
 import net.minecraft.block.BlockState;
@@ -35,12 +35,12 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class AdvancedSolarPanelBlock extends ConfigurableMachineBlock implements MultiBlockBase {
+public class AdvancedSolarPanelBlock extends MachineBlock implements MultiBlockBase {
     public AdvancedSolarPanelBlock(Settings settings) {
         super(settings,
                 AdvancedSolarPanelBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.advanced_solar_panel")
-                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
+                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
     }
 
     @Override

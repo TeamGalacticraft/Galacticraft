@@ -26,9 +26,10 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -49,7 +50,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class AdvancedSolarPanelBlockEntity extends MachineBlockEntity implements Tickable {
     public static final int CHARGE_SLOT = 0;
     
     public AdvancedSolarPanelBlockEntity() {
@@ -62,8 +63,8 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_OUTPUT);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class AdvancedSolarPanelBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public int getBaseEnergyGenerated() {
-        return Galacticraft.configManager.get().solarPanelEnergyProductionRate();
+        return Galacticraft.CONFIG_MANAGER.get().solarPanelEnergyProductionRate();
     }
 
     @Override

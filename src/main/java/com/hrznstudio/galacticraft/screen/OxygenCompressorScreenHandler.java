@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenCompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
+import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OxygenTankSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -35,7 +35,7 @@ import net.minecraft.network.PacketByteBuf;
 public class OxygenCompressorScreenHandler extends MachineScreenHandler<OxygenCompressorBlockEntity> {
     public OxygenCompressorScreenHandler(int syncId, PlayerEntity player, OxygenCompressorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.OXYGEN_COMPRESSOR_HANDLER);
-        this.addSlot(new FilteredSlot(machine, 0, 8, 62));
+        this.addSlot(new AutoFilteredSlot(machine, 0, 8, 62));
         this.addSlot(new OxygenTankSlot(machine.getWrappedInventory(), 1, 80, 27));
         this.addPlayerInventorySlots(0, 84);
     }

@@ -34,7 +34,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.ELECTRIC_FURNACE_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.ELECTRIC_FURNACE_SCREEN));
 
     private static final int ARROW_X = 78;
     private static final int ARROW_Y = 24;

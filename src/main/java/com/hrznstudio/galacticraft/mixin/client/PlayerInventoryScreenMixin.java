@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -65,7 +65,7 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
+        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.PLAYER_INVENTORY_TABS)));
         this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 

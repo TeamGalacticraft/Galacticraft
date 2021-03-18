@@ -23,9 +23,7 @@
 package com.hrznstudio.galacticraft.network;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
-import com.hrznstudio.galacticraft.api.block.util.BlockFace;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -34,6 +32,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -45,53 +44,14 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GalacticraftS2CPacketReceivers {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            server.execute(() -> {
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
-                if (blockEntity != null) {
-                    blockEntity.setRedstone(buffer.readEnumConstant(ConfigurableMachineBlockEntity.RedstoneState.class));
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "security"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            server.execute(() -> {
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, true);
-                if (blockEntity != null) {
-                    ConfigurableMachineBlockEntity.SecurityInfo.Publicity publicity = buffer.readEnumConstant(ConfigurableMachineBlockEntity.SecurityInfo.Publicity.class);
-                    blockEntity.getSecurity().setPublicity(publicity);
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "side_config"), (server, player, handler, buf, responseSender) -> {
-            PacketByteBuf buffer = new PacketByteBuf(buf.copy());
-            server.execute(() -> {
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
-                if (blockEntity != null) {
-                    if (buffer.readBoolean()) {
-                        blockEntity.getSideConfiguration().set(buffer.readEnumConstant(BlockFace.class), buffer.readEnumConstant(SideOption.class));
-                    } else {
-                        if (buffer.readBoolean()) {
-                            blockEntity.getSideConfiguration().increment(buffer.readEnumConstant(BlockFace.class));
-                        } else {
-                            blockEntity.getSideConfiguration().decrement(buffer.readEnumConstant(BlockFace.class));
-                        }
-                    }
-                }
-            });
-        });
-
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, pl) -> new PlayerInventoryGCScreenHandler(inv, pl), Constants.Misc.EMPTY_TEXT))));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, pl) -> new PlayerInventoryGCScreenHandler(inv, pl), LiteralText.EMPTY))));
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());
 
             server.execute(() -> {
                 byte max = buffer.readByte();
-                ConfigurableMachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
+                MachineBlockEntity blockEntity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
                 if (blockEntity instanceof BubbleDistributorBlockEntity) {
                     if (max > 0) {
                         ((BubbleDistributorBlockEntity) blockEntity).setTargetSize(max);
@@ -105,7 +65,7 @@ public class GalacticraftS2CPacketReceivers {
 
             server.execute(() -> {
                 boolean visible = buffer.readBoolean();
-                ConfigurableMachineBlockEntity entity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
+                MachineBlockEntity entity = doBasicChecksAndGrabEntity(buffer.readBlockPos(), player.getServerWorld(), player, false);
 
                 if (entity instanceof BubbleDistributorBlockEntity) {
                     ((BubbleDistributorBlockEntity) entity).bubbleVisible = visible;
@@ -114,18 +74,18 @@ public class GalacticraftS2CPacketReceivers {
         });
     }
 
-    private static @Nullable ConfigurableMachineBlockEntity doBasicChecksAndGrabEntity(@NotNull BlockPos pos, ServerWorld world, ServerPlayerEntity player, boolean strictAccess) {
+    private static @Nullable MachineBlockEntity doBasicChecksAndGrabEntity(@NotNull BlockPos pos, ServerWorld world, ServerPlayerEntity player, boolean strictAccess) {
         if (world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ConfigurableMachineBlockEntity) {
+            if (entity instanceof MachineBlockEntity) {
                 if (player.getPos().distanceTo(Vec3d.ofCenter(entity.getPos())) < 6.5D) {
                     if (strictAccess) {
-                        if (((ConfigurableMachineBlockEntity) entity).getSecurity().isOwner(player)) {
-                            return (ConfigurableMachineBlockEntity) entity;
+                        if (((MachineBlockEntity) entity).getSecurity().isOwner(player)) {
+                            return (MachineBlockEntity) entity;
                         }
                     } else {
-                        if (((ConfigurableMachineBlockEntity) entity).getSecurity().hasAccess(player)) {
-                            return (ConfigurableMachineBlockEntity) entity;
+                        if (((MachineBlockEntity) entity).getSecurity().hasAccess(player)) {
+                            return (MachineBlockEntity) entity;
                         }
                     }
                 }

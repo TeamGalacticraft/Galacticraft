@@ -47,7 +47,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.SOLAR_PANEL_SCREEN));
 
     public BasicSolarPanelScreen(BasicSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
@@ -75,7 +75,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     protected Collection<? extends Text> getEnergyTooltipLines() {
         List<Text> lines = new LinkedList<>();
         if (this.handler.machine.getStatus().getType().isActive()) {
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", this.handler.machine.getEnergyGenerated()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

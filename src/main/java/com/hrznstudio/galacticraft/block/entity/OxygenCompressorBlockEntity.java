@@ -29,8 +29,9 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -53,7 +54,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenCompressorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
 
@@ -77,8 +78,8 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT);
     }
 
     @Override
@@ -120,13 +121,13 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
-            this.getFluidTank().insertFluid(0, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().attemptExtraction(Constants.Misc.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
+            this.getFluidTank().insertFluid(0, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate();
     }
 
     @Override
@@ -146,7 +147,7 @@ public class OxygenCompressorBlockEntity extends ConfigurableMachineBlockEntity 
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
+        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable

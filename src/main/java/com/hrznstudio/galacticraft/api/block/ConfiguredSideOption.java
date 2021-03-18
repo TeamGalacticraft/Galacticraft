@@ -22,79 +22,79 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import com.mojang.datafixers.util.Either;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+import java.util.stream.IntStream;
 
 public class ConfiguredSideOption {
-    @NotNull
-    private SideOption option;
-    private int value;
-    private int size;
+    private AutomationType automationType;
+    private Either<Integer, SlotType> matching;
 
-    public ConfiguredSideOption(@NotNull SideOption option, int size) {
-        this(option, -1, size);
+    public ConfiguredSideOption(@NotNull AutomationType automationType) {
+        this.automationType = automationType;
+        this.matching = Either.right(SlotType.WILDCARD);
     }
 
-    public ConfiguredSideOption(@NotNull SideOption option, int value, int size) {
-        this.option = option;
-        this.value = Math.max(value, -1);
-        this.size = Math.max(size, 0);
+    public void setOption(@NotNull AutomationType option, @Nullable Either<Integer, SlotType> matching) {
+        this.automationType = option;
+        this.matching = matching == null ? Either.right(SlotType.WILDCARD) : matching;
     }
 
-    public void setOption(@NotNull SideOption option, int size) {
-        this.option = option;
-        this.value = -1;
-        this.size = Math.max(size, 0);
+    public void setMatching(@Nullable Either<Integer, SlotType> matching) {
+        this.matching = matching == null ? Either.right(SlotType.WILDCARD) : matching;
     }
 
-    public @NotNull SideOption getOption() {
-        return option;
+    public @NotNull AutomationType getAutomationType() {
+        return automationType;
     }
 
-    public int getValue() {
-        return value;
-    }
+    public int[] getMatching(MachineScreenHandler<?> screenHandler) {
+        if (matching.left().isPresent()) {
+            return new int[]{matching.left().get()};
+        }
+        SlotType type = matching.right().orElseThrow(RuntimeException::new);
+        if (type == SlotType.WILDCARD) {
+            return IntStream.range(0, screenHandler.slots.size() - 1).toArray();
+        }
 
-    public boolean isWildcard() {
-        return getValue() == -1;
-    }
+        if (automationType.isItem()) {
+            return IntStream.range(0, screenHandler.getMachineSlots().get(type).size() - 1).toArray();
+        }
 
-    public int increment() {
-        if (++this.value == this.size) this.value = 0;
-        return this.value;
-    }
-    public int decrement() {
-        if (this.value-- == 0) this.value = this.size - 1;
-        return this.value;
-    }
+        if (automationType.isFluid()) {
+            return IntStream.range(0, screenHandler.getMachineTanks().get(type).size() - 1).toArray();
+        }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ConfiguredSideOption that = (ConfiguredSideOption) o;
-        return getValue() == that.getValue() &&
-                getOption() == that.getOption();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getOption(), getValue());
+        if (automationType.isEnergy()) {
+            return IntStream.range(0, screenHandler.getMachineCapacitors().get(type).size() - 1).toArray();
+        }
+        return new int[0];
     }
 
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putString("option", option.name());
-        tag.putInt("value", value);
-        tag.putInt("size", size);
+        tag.putString("option", automationType.name());
+        tag.putBoolean("left", this.matching.left().isPresent());
+        if (this.matching.left().isPresent()) {
+            tag.putInt("value", this.matching.left().get());
+        } else {
+            tag.putString("value", this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
+        }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-        this.option = SideOption.valueOf(tag.getString("option"));
-        this.value = tag.getInt("value");
-        this.size = tag.getInt("size");
+        this.automationType = AutomationType.valueOf(tag.getString("option"));
+        if (tag.getBoolean("left")) {
+            this.matching = Either.left(tag.getInt("value"));
+        } else {
+            this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString("value"))));
+        }
     }
 
 }

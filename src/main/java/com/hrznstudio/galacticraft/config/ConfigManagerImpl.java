@@ -63,7 +63,7 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
             org.apache.commons.io.FileUtils.writeStringToFile(this.file, this.gson.toJson(this.config), Charset.defaultCharset());
         } catch (IOException e) {
-            Galacticraft.logger.error("[Galacticraft] Failed to save config.", e);
+            Galacticraft.LOGGER.error("Failed to save config.", e);
         }
     }
 
@@ -72,14 +72,14 @@ public class ConfigManagerImpl implements ConfigManager {
         try {
             this.file.getParentFile().mkdirs();
             if (!this.file.exists()) {
-                Galacticraft.logger.info("[Galacticraft] Failed to find config file, creating one.");
+                Galacticraft.LOGGER.info("Failed to find config file, creating one.");
                 this.save();
             } else {
                 byte[] bytes = Files.readAllBytes(Paths.get(this.file.getPath()));
                 this.config = this.gson.fromJson(new String(bytes, Charset.defaultCharset()), ConfigImpl.class);
             }
         } catch (IOException e) {
-            Galacticraft.logger.error("[Galacticraft] Failed to load config.", e);
+            Galacticraft.LOGGER.error("Failed to load config.", e);
         }
     }
 

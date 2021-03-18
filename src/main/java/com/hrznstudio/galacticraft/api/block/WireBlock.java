@@ -51,10 +51,10 @@ public class WireBlock extends BlockWithEntity {
     @Override
     @Deprecated
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient() && Galacticraft.configManager.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
+        if (!world.isClient() && Galacticraft.CONFIG_MANAGER.get().isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity instanceof Wire) {
-                Galacticraft.logger.info(((Wire) entity).getNetwork());
+                Galacticraft.LOGGER.info(((Wire) entity).getNetwork());
             }
         }
         return super.onUse(state, world, pos, player, hand, hit);

@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.ElectricFurnaceBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
+import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -34,8 +34,8 @@ public class ElectricFurnaceScreenHandler extends MachineScreenHandler<ElectricF
     public ElectricFurnaceScreenHandler(int syncId, PlayerEntity player, ElectricFurnaceBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.ELECTRIC_FURNACE_HANDLER);
 
-        this.addSlot(new FilteredSlot(machine, ElectricFurnaceBlockEntity.CHARGE_SLOT, 8, 7)); //charge
-        this.addSlot(new FilteredSlot(machine, ElectricFurnaceBlockEntity.INPUT_SLOT, 56, 25)); //in
+        this.addSlot(new AutoFilteredSlot(machine, ElectricFurnaceBlockEntity.CHARGE_SLOT, 8, 7)); //charge
+        this.addSlot(new AutoFilteredSlot(machine, ElectricFurnaceBlockEntity.INPUT_SLOT, 56, 25)); //in
         this.addSlot(new OutputSlot(machine.getWrappedInventory(), ElectricFurnaceBlockEntity.OUTPUT_SLOT, 109, 25)); //out
         this.addPlayerInventorySlots(0, 84);
 

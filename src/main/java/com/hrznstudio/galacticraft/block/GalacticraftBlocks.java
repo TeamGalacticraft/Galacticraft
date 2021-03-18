@@ -23,8 +23,8 @@
 package com.hrznstudio.galacticraft.block;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
 import com.hrznstudio.galacticraft.api.block.FluidBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.block.decoration.GratingBlock;
 import com.hrznstudio.galacticraft.block.decoration.LightPanelBlock;
 import com.hrznstudio.galacticraft.block.decoration.LunarCartographyTableBlock;
@@ -39,7 +39,7 @@ import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAlum
 import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.block.special.walkway.WireWalkway;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricMaterialBuilder;
@@ -177,7 +177,7 @@ public class GalacticraftBlocks {
 
     // MISC WORLD GEN
     public static final Block CAVERNOUS_VINE = registerBlock(new CavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(0).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constants.Blocks.CAVERNOUS_VINE);
-    public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new CavernousVineBlockPoisonous(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
+    public static final Block POISONOUS_CAVERNOUS_VINE = registerBlock(new PoisonousCavernousVineBlock(FabricBlockSettings.of(Material.CACTUS, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.GRASS).ticksRandomly()), Constants.Blocks.POISONOUS_CAVERNOUS_VINE);
     public static final Block MOON_BERRY_BUSH = registerBlock(new MoonBerryBushBlock(FabricBlockSettings.of(Material.PLANT, MaterialColor.GREEN).dropsNothing().noCollision().lightLevel(3).sounds(BlockSoundGroup.SWEET_BERRY_BUSH).ticksRandomly()), Constants.Blocks.MOON_BERRY_BUSH);
     public static final Block MOON_CHEESE_LEAVES = registerBlock(new LeavesBlock(FabricBlockSettings.of(Material.LEAVES).strength(0.2F, 0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque()), Constants.Blocks.MOON_CHEESE_LEAVES);
     public static final Block MOON_CHEESE_LOG = registerBlock(new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.YELLOW).strength(2.0F).sounds(BlockSoundGroup.WOOD)), Constants.Blocks.MOON_CHEESE_LOG);
@@ -186,32 +186,32 @@ public class GalacticraftBlocks {
     public static final Block SOLAR_PANEL_PART = registerBlockWithoutItem(new SolarPanelPartBlock(FabricBlockSettings.of(Material.METAL).strength(-1.0F, 5.0F).dropsNothing().sounds(BlockSoundGroup.METAL)), Constants.Blocks.SOLAR_PANEL_PART);
 
     // MACHINES
-    public static final Block CIRCUIT_FABRICATOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CircuitFabricatorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.CIRCUIT_FABRICATOR);
-    public static final Block COMPRESSOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.compressor").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.COMPRESSOR);
-    public static final Block ELECTRIC_COMPRESSOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricCompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.ELECTRIC_COMPRESSOR);
+    public static final Block CIRCUIT_FABRICATOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CircuitFabricatorBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.circuit_fabricator").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.CIRCUIT_FABRICATOR);
+    public static final Block COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new CompressorBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.compressor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.COMPRESSOR);
+    public static final Block ELECTRIC_COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricCompressorBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.electric_compressor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.ELECTRIC_COMPRESSOR);
     public static final Block COAL_GENERATOR = registerMachine(new CoalGeneratorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.COAL_GENERATOR);
     public static final Block BASIC_SOLAR_PANEL = registerMachine(new BasicSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.BASIC_SOLAR_PANEL);
     public static final Block ADVANCED_SOLAR_PANEL = registerMachine(new AdvancedSolarPanelBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.ADVANCED_SOLAR_PANEL);
-    public static final Block ENERGY_STORAGE_MODULE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new EnergyStorageModuleBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.ENERGY_STORAGE_MODULE);
-    public static final Block ELECTRIC_FURNACE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricFurnaceBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.electric_furnace").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.ELECTRIC_FURNACE);
-    public static final Block ELECTRIC_ARC_FURNACE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricArcFurnaceBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.electric_arc_furnace").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.ELECTRIC_ARC_FURNACE);
+    public static final Block ENERGY_STORAGE_MODULE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new EnergyStorageModuleBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.energy_storage_module").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.ENERGY_STORAGE_MODULE);
+    public static final Block ELECTRIC_FURNACE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricFurnaceBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.electric_furnace").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.ELECTRIC_FURNACE);
+    public static final Block ELECTRIC_ARC_FURNACE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new ElectricArcFurnaceBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.electric_arc_furnace").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.ELECTRIC_ARC_FURNACE);
     public static final Block OXYGEN_COLLECTOR = registerMachine(new OxygenCollectorBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_COLLECTOR);
     public static final Block OXYGEN_SEALER = registerMachine(new OxygenSealerBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.OXYGEN_SEALER);
     public static final Block REFINERY = registerMachine(new RefineryBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL)), Constants.Blocks.REFINERY);
-    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new BubbleDistributorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_bubble_distributor").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR);
-    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenDecompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_decompressor").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.OXYGEN_DECOMPRESSOR);
-    public static final Block OXYGEN_COMPRESSOR = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenCompressorBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_compressor").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.OXYGEN_COMPRESSOR);
-    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(new ConfigurableMachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenStorageModuleBlockEntity(),
-            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_storage_module").setStyle(Constants.Styles.TOOLTIP_STYLE)), Constants.Blocks.OXYGEN_STORAGE_MODULE);
+    public static final Block BUBBLE_DISTRIBUTOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new BubbleDistributorBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_bubble_distributor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.OXYGEN_BUBBLE_DISTRIBUTOR);
+    public static final Block OXYGEN_DECOMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenDecompressorBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_decompressor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.OXYGEN_DECOMPRESSOR);
+    public static final Block OXYGEN_COMPRESSOR = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenCompressorBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_compressor").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.OXYGEN_COMPRESSOR);
+    public static final Block OXYGEN_STORAGE_MODULE = registerMachine(new MachineBlock(FabricBlockSettings.of(Material.METAL).strength(3.0F, 5.0F).sounds(BlockSoundGroup.METAL), blockView -> new OxygenStorageModuleBlockEntity(),
+            new TranslatableText("tooltip.galacticraft-rewoven.oxygen_storage_module").setStyle(Constants.Text.DARK_GRAY_STYLE)), Constants.Blocks.OXYGEN_STORAGE_MODULE);
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

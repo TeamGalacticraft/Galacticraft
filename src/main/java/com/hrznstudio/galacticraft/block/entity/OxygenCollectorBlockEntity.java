@@ -31,11 +31,12 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
@@ -59,7 +60,7 @@ import java.util.Optional;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
 
@@ -85,8 +86,8 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_OUTPUT);
     }
 
     @Override
@@ -196,7 +197,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     @Override
@@ -216,7 +217,7 @@ public class OxygenCollectorBlockEntity extends ConfigurableMachineBlockEntity i
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
+        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable

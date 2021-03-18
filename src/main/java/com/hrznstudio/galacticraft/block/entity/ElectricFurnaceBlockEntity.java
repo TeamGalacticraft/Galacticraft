@@ -28,8 +28,9 @@ import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.ElectricFurnaceScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -53,7 +54,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
+public class ElectricFurnaceBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
@@ -82,7 +83,7 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
 
     @Override
     protected int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().electricCompressorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate();
     }
 
     @Override
@@ -144,8 +145,8 @@ public class ElectricFurnaceBlockEntity extends ConfigurableMachineBlockEntity {
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.ITEM_INPUT, SideOption.ITEM_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.ITEM_INPUT, AutomationType.ITEM_OUTPUT);
     }
 
     @Override

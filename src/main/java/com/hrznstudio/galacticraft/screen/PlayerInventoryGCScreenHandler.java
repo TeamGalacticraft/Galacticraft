@@ -26,8 +26,8 @@ import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.GearInventoryProvider;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
-import com.hrznstudio.galacticraft.items.ThermalArmorItem;
+import com.hrznstudio.galacticraft.item.GalacticraftItems;
+import com.hrznstudio.galacticraft.item.ThermalArmorItem;
 import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import com.mojang.datafixers.util.Pair;
@@ -48,10 +48,10 @@ import org.jetbrains.annotations.Nullable;
  */
 public class PlayerInventoryGCScreenHandler extends ScreenHandler {
     private static final Identifier[] EMPTY_ARMOR_SLOT_IDS = new Identifier[]{
-            new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_BOOTS),
-            new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_PANTS),
-            new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_CHEST),
-            new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_HEAD)};
+            new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_BOOTS),
+            new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_PANTS),
+            new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_CHEST),
+            new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_HEAD)};
     private static final EquipmentSlot[] EQUIPMENT_SLOT_ORDER = new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
     public static final int OXYGEN_TANK_1_SLOT = 6;
     public static final int OXYGEN_TANK_2_SLOT = 7;
@@ -101,7 +101,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         this.addSlot(new ItemSpecificSlot(inventory, 4, 80, 8, GalacticraftItems.OXYGEN_MASK) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
+                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_MASK));
             }
 
             @Override
@@ -113,7 +113,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         this.addSlot(new ItemSpecificSlot(inventory, 5, 80, 8 + 18, GalacticraftItems.OXYGEN_GEAR) {
             @Override
             public Pair<Identifier, Identifier> getBackgroundSprite() {
-                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
+                return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_GEAR));
             }
 
             @Override
@@ -172,7 +172,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         @Nullable
         @Override
         public Pair<Identifier, Identifier> getBackgroundSprite() {
-            return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
+            return Pair.of(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_TANK));
         }
     }
 

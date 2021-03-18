@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.block.entity.OxygenSealerBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -34,11 +34,11 @@ import net.minecraft.world.World;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenSealerBlock extends ConfigurableMachineBlock {
+public class OxygenSealerBlock extends MachineBlock {
     public OxygenSealerBlock(Settings settings) {
         super(settings, OxygenSealerBlockEntity::new,
                 new TranslatableText("tooltip.galacticraft-rewoven.oxygen_sealer")
-                        .setStyle(Constants.Styles.TOOLTIP_STYLE));
+                        .setStyle(Constants.Text.DARK_GRAY_STYLE));
     }
 
     @Override

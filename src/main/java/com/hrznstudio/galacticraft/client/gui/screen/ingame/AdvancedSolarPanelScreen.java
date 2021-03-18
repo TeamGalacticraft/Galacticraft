@@ -47,7 +47,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolarPanelScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.SOLAR_PANEL_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.SOLAR_PANEL_SCREEN));
 
     public AdvancedSolarPanelScreen(AdvancedSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
@@ -82,7 +82,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
                 time = 6000 - (time - 6000);
             }
 
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constants.Styles.LIGHT_PURPLE_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.gj_per_t", (int) this.handler.machine.getEnergyConsumption()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE));
         }
         return lines;
     }

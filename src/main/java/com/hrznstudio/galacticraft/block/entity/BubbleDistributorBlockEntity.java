@@ -33,12 +33,13 @@ import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
@@ -67,7 +68,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class BubbleDistributorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int OXYGEN_TANK_SLOT = 1;
@@ -88,8 +89,8 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT);
     }
 
     @Override
@@ -212,7 +213,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCollectorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 
     @Override
@@ -230,7 +231,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
+        return Constants.Filter.LOX_ONLY;
     }
 
     protected void drainOxygenFromStack(int slot) {
@@ -239,7 +240,7 @@ public class BubbleDistributorBlockEntity extends ConfigurableMachineBlockEntity
         }
         if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidTank().insertFluid(0, extractable.attemptExtraction(Constants.Misc.LOX_ONLY, this.getFluidTank().getMaxAmount_F(0).sub(this.getFluidTank().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
+            this.getFluidTank().insertFluid(0, extractable.attemptExtraction(Constants.Filter.LOX_ONLY, this.getFluidTank().getMaxAmount_F(0).sub(this.getFluidTank().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

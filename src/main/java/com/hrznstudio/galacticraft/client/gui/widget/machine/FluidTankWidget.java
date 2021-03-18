@@ -50,44 +50,44 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class FluidTankWidget extends AbstractWidget {
     private static final int[] FLUID_TANK_8_16_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_8_16_X,
-            Constants.TextureCoordinates.FLUID_TANK_8_16_Y,
-            Constants.TextureCoordinates.FLUID_TANK_8_16_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_8_16_X,
+            Constants.TextureCoordinate.FLUID_TANK_8_16_Y,
+            Constants.TextureCoordinate.FLUID_TANK_8_16_HEIGHT
     };
     private static final int[] FLUID_TANK_7_14_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_7_14_X,
-            Constants.TextureCoordinates.FLUID_TANK_7_14_Y,
-            Constants.TextureCoordinates.FLUID_TANK_7_14_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_7_14_X,
+            Constants.TextureCoordinate.FLUID_TANK_7_14_Y,
+            Constants.TextureCoordinate.FLUID_TANK_7_14_HEIGHT
     };
     private static final int[] FLUID_TANK_6_12_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_6_12_X,
-            Constants.TextureCoordinates.FLUID_TANK_6_12_Y,
-            Constants.TextureCoordinates.FLUID_TANK_6_12_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_6_12_X,
+            Constants.TextureCoordinate.FLUID_TANK_6_12_Y,
+            Constants.TextureCoordinate.FLUID_TANK_6_12_HEIGHT
     };
     private static final int[] FLUID_TANK_5_10_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_5_10_X,
-            Constants.TextureCoordinates.FLUID_TANK_5_10_Y,
-            Constants.TextureCoordinates.FLUID_TANK_5_10_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_5_10_X,
+            Constants.TextureCoordinate.FLUID_TANK_5_10_Y,
+            Constants.TextureCoordinate.FLUID_TANK_5_10_HEIGHT
     };
     private static final int[] FLUID_TANK_4_8_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_4_8_X,
-            Constants.TextureCoordinates.FLUID_TANK_4_8_Y,
-            Constants.TextureCoordinates.FLUID_TANK_4_8_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_4_8_X,
+            Constants.TextureCoordinate.FLUID_TANK_4_8_Y,
+            Constants.TextureCoordinate.FLUID_TANK_4_8_HEIGHT
     };
     private static final int[] FLUID_TANK_3_6_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_3_6_X,
-            Constants.TextureCoordinates.FLUID_TANK_3_6_Y,
-            Constants.TextureCoordinates.FLUID_TANK_3_6_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_3_6_X,
+            Constants.TextureCoordinate.FLUID_TANK_3_6_Y,
+            Constants.TextureCoordinate.FLUID_TANK_3_6_HEIGHT
     };
     private static final int[] FLUID_TANK_2_4_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_2_4_X,
-            Constants.TextureCoordinates.FLUID_TANK_2_4_Y,
-            Constants.TextureCoordinates.FLUID_TANK_2_4_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_2_4_X,
+            Constants.TextureCoordinate.FLUID_TANK_2_4_Y,
+            Constants.TextureCoordinate.FLUID_TANK_2_4_HEIGHT
     };
     private static final int[] FLUID_TANK_1_2_DATA = new int[]{
-            Constants.TextureCoordinates.FLUID_TANK_1_2_X,
-            Constants.TextureCoordinates.FLUID_TANK_1_2_Y,
-            Constants.TextureCoordinates.FLUID_TANK_1_2_HEIGHT
+            Constants.TextureCoordinate.FLUID_TANK_1_2_X,
+            Constants.TextureCoordinate.FLUID_TANK_1_2_Y,
+            Constants.TextureCoordinate.FLUID_TANK_1_2_HEIGHT
     };
 
     private final SingleFluidTankView tankView;
@@ -114,10 +114,10 @@ public class FluidTankWidget extends AbstractWidget {
 
     @Override
     public void drawMouseoverTooltip(MatrixStack matrices, int mouseX, int mouseY) {
-        if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2])) {
+        if (check(mouseX, mouseY, this.x, this.y, Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.data[2])) {
             FluidVolume volume = this.getTankView().get();
             if (volume.isEmpty()) {
-                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Constants.Styles.GRAY_STYLE), mouseX, mouseY);
+                this.client.currentScreen.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.fluid_widget.empty").setStyle(Constants.Text.GRAY_STYLE), mouseX, mouseY);
                 return;
             }
             MutableText amount;
@@ -128,8 +128,8 @@ public class FluidTankWidget extends AbstractWidget {
             }
 
             List<Text> lines = new ArrayList<>(2);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Constants.Styles.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Styles.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Constants.Styles.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.fluid").setStyle(Constants.Text.GRAY_STYLE).append(new LiteralText(getName(volume.getRawFluid())).setStyle(Constants.Text.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.fluid_widget.amount").setStyle(Constants.Text.GRAY_STYLE).append(amount.setStyle(Style.EMPTY.withColor(Formatting.WHITE))));
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
@@ -146,7 +146,7 @@ public class FluidTankWidget extends AbstractWidget {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
-        this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1] + Constants.TextureCoordinates.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
+        this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.data[2]);
 
         FluidVolume content = getTankView().get();
         if (content.isEmpty()) return;
@@ -154,10 +154,10 @@ public class FluidTankWidget extends AbstractWidget {
         double scale = content.getAmount_F().div(this.getTankView().getMaxAmount_F()).asInexactDouble();
         Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
         this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
-        drawSprite(matrices, this.x + 1, ((this.y + 1) - (int)(this.data[2] * scale)) + this.data[2], 0, Constants.TextureCoordinates.FLUID_TANK_WIDTH - 2, (int)(this.data[2] * scale) - 2, sprite);
+        drawSprite(matrices, this.x + 1, ((this.y + 1) - (int)(this.data[2] * scale)) + this.data[2], 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(this.data[2] * scale) - 2, sprite);
         matrices.pop();
         this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
-        this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1], Constants.TextureCoordinates.FLUID_TANK_WIDTH, this.data[2]);
+        this.drawTexture(matrices, this.x, this.y, this.data[0], this.data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, this.data[2]);
     }
 
     @Override

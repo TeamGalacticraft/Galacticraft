@@ -42,7 +42,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorScreenHandler> {
 
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.CIRCUIT_FABRICATOR_SCREEN));
+    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN));
 
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;

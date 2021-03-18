@@ -28,8 +28,9 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
@@ -53,7 +54,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
     public static final int TANK_SLOT = 1;
@@ -78,8 +79,8 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.FLUID_OUTPUT, SideOption.POWER_INPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.FLUID_OUTPUT, AutomationType.POWER_INPUT);
     }
 
     @Override
@@ -128,7 +129,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenDecompressorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().oxygenDecompressorEnergyConsumptionRate();
     }
 
     @Override
@@ -148,7 +149,7 @@ public class OxygenDecompressorBlockEntity extends ConfigurableMachineBlockEntit
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return key -> GalacticraftTags.OXYGEN.contains(key.getRawFluid());
+        return key -> GalacticraftTags.LIQUID_OXYGEN.contains(key.getRawFluid());
     }
 
     @Nullable

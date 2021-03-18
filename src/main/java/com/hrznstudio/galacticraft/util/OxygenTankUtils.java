@@ -30,7 +30,7 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.attribute.GalacticraftAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import net.minecraft.item.ItemStack;
 
@@ -91,7 +91,7 @@ public class OxygenTankUtils {
     }
 
     public static int loxToOxygen(FluidVolume volume) {
-        assert GalacticraftTags.OXYGEN.contains(volume.getFluidKey().getRawFluid());
+        assert GalacticraftTags.LIQUID_OXYGEN.contains(volume.getFluidKey().getRawFluid());
         return volume.getAmount_F().as1620();
     }
 

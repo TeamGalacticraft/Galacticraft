@@ -22,10 +22,18 @@
 
 package com.hrznstudio.galacticraft.screen;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import alexiil.mc.lib.attributes.fluid.SingleFluidTank;
+import com.hrznstudio.galacticraft.Galacticraft;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import com.hrznstudio.galacticraft.screen.property.CapacitorProperty;
 import com.hrznstudio.galacticraft.screen.property.FluidTankPropertyDelegate;
 import com.hrznstudio.galacticraft.screen.property.StatusProperty;
+import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
+import com.hrznstudio.galacticraft.screen.slot.MachineComponent;
+import com.hrznstudio.galacticraft.screen.slot.MachineSlotComponent;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.Property;
@@ -34,25 +42,28 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
+import java.util.*;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEntity> extends ScreenHandler {
+public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends ScreenHandler {
     public final PlayerEntity player;
     public final T machine;
+
+    private final Map<SlotType, List<MachineComponent<Slot>>> machineSlots = new HashMap<>();
+    private final Map<SlotType, List<MachineComponent<SingleFluidTank>>> machineTanks = new HashMap<>();
+    private final Map<SlotType, List<MachineComponent<Capacitor>>> machineCapacitors = new HashMap<>();
+    private final PropertyDelegate tankProperty;
 
     protected MachineScreenHandler(int syncId, PlayerEntity player, T machine, ScreenHandlerType<? extends MachineScreenHandler<T>> handlerType) {
         super(handlerType, syncId);
         this.player = player;
         this.machine = machine;
+        this.tankProperty = new FluidTankPropertyDelegate(machine.getFluidTank());
 
         this.addProperty(new StatusProperty(machine));
         this.addProperty(new CapacitorProperty(machine.getCapacitor()));
-
-        PropertyDelegate tankDelegate = new FluidTankPropertyDelegate(machine.getFluidTank());
-        for (int i = 0; i < machine.getFluidTankSize() * 2; i++) {
-            this.addProperty(Property.create(tankDelegate, i));
-        }
     }
 
     @Override
@@ -87,27 +98,89 @@ public abstract class MachineScreenHandler<T extends ConfigurableMachineBlockEnt
     protected void addPlayerInventorySlots(int x, int y) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(player.inventory, j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
+                super.addSlot(new Slot(player.inventory, j + i * 9 + 9, x + 8 + j * 18, y + i * 18));
             }
         }
 
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(player.inventory, i, x + 8 + i * 18, y + 58));
+            super.addSlot(new Slot(player.inventory, i, x + 8 + i * 18, y + 58));
         }
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.PUBLIC
-                || !machine.getSecurity().hasOwner()
-                || machine.getSecurity().getOwner().equals(player.getUuid())
-                || (machine.getSecurity().hasTeam() && machine.getSecurity().getPublicity() == ConfigurableMachineBlockEntity.SecurityInfo.Publicity.SPACE_RACE && false
-//        && blockEntity.getSecurity().getTeam() == player
-        );
+    @Deprecated
+    protected Slot addSlot(Slot slot) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment() && slot.inventory == this.machine.getWrappedInventory()) {
+            Galacticraft.LOGGER.warn("You shouldn't add normal slots to this ScreenHandler!");
+            assert false;
+        }
+        return super.addSlot(slot);
+    }
+
+    protected void addSlot(MachineComponent<Slot> slot, SlotType type) {
+        assert type.getType().isItem();
+        super.addSlot(slot.getComponent());
+        this.machineSlots.putIfAbsent(type, new LinkedList<>());
+        this.machineSlots.get(type).add(slot);
+    }
+
+    protected void addSlot(int index, int x, int y, SlotType type) {
+        this.addSlot(new MachineSlotComponent(new AutoFilteredSlot(this.machine, index, x, y)), type);
+    }
+
+    protected void addTank(SlotType type, MachineComponent<SingleFluidTank> tank) {
+        assert type.getType().isFluid();
+        this.machineTanks.putIfAbsent(type, new LinkedList<>());
+        this.machineTanks.get(type).add(tank);
+        this.addProperty(Property.create(this.tankProperty, (tank.getComponent().getIndex() * 2)));
+        this.addProperty(Property.create(this.tankProperty, (tank.getComponent().getIndex() * 2) + 1));
+    }
+
+    protected void addTank(int index, int x, int y, SlotType type) {
+        this.addTank(type, new MachineComponent<>(this.machine.getFluidTank().getTank(index), x, y));
+    }
+
+    protected void addCapacitor(SlotType type, int x, int y) {
+        this.addCapacitor(type, new MachineComponent<>(this.machine.getCapacitor(), x, y));
+    }
+
+    protected void addCapacitor(SlotType type, MachineComponent<Capacitor> capacitor) {
+        assert type.getType().isEnergy();
+        this.machineCapacitors.putIfAbsent(type, new LinkedList<>());
+        this.machineCapacitors.get(type).add(capacitor);
+        this.addProperty(new CapacitorProperty(capacitor.getComponent()));
+    }
+
+    public Set<SlotType> getItemSlotTypes() {
+        return this.machineSlots.keySet();
+    }
+
+    public Set<SlotType> getTankTypes() {
+        return this.machineTanks.keySet();
+    }
+
+    public Set<SlotType> getCapacitorTypes() {
+        return this.machineCapacitors.keySet();
+    }
+
+    public Map<SlotType, List<MachineComponent<Slot>>> getMachineSlots() {
+        return machineSlots;
+    }
+
+    public Map<SlotType, List<MachineComponent<SingleFluidTank>>> getMachineTanks() {
+        return machineTanks;
+    }
+
+    public Map<SlotType, List<MachineComponent<Capacitor>>> getMachineCapacitors() {
+        return machineCapacitors;
+    }
+
+    public Set<SlotType> getSlotTypes() {
+        return this.machineSlots.keySet();
     }
 
     @Override
-    public Property addProperty(Property property) {
-        return super.addProperty(property);
+    public boolean canUse(PlayerEntity player) {
+        return machine.getSecurity().hasAccess(player);
     }
 }

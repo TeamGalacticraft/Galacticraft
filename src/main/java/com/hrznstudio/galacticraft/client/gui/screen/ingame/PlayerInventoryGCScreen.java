@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
-import com.hrznstudio.galacticraft.items.GalacticraftItems;
+import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -41,11 +41,11 @@ import net.minecraft.util.Identifier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScreenHandler> {
-    public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_SCREEN));
-    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.OVERLAY));
+    public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.PLAYER_INVENTORY_SCREEN));
+    private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OVERLAY));
 
     public PlayerInventoryGCScreen(PlayerInventoryGCScreenHandler handler, PlayerInventory inv, Text title) {
-        super(handler, inv, Constants.Misc.EMPTY_TEXT);
+        super(handler, inv, LiteralText.EMPTY);
     }
 
     public static boolean isCoordinateBetween(int coordinate, int min, int max) {
@@ -83,8 +83,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         double oxygenScale = (currentOxygen / maxOxygen);
 
         this.client.getTextureManager().bindTexture(OVERLAY);
-        this.drawTexture(matrices, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinates.OXYGEN_DARK_X, Constants.TextureCoordinates.OXYGEN_DARK_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, Constants.TextureCoordinates.OVERLAY_HEIGHT);
-        this.drawTexture(matrices, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinates.OVERLAY_HEIGHT, Constants.TextureCoordinates.OXYGEN_LIGHT_X, Constants.TextureCoordinates.OXYGEN_LIGHT_Y, Constants.TextureCoordinates.OVERLAY_WIDTH, (int) (Constants.TextureCoordinates.OVERLAY_HEIGHT * oxygenScale));
+        this.drawTexture(matrices, oxygenDisplayX, oxygenDisplayY, Constants.TextureCoordinate.OXYGEN_DARK_X, Constants.TextureCoordinate.OXYGEN_DARK_Y, Constants.TextureCoordinate.OVERLAY_WIDTH, Constants.TextureCoordinate.OVERLAY_HEIGHT);
+        this.drawTexture(matrices, oxygenDisplayX, (oxygenDisplayY - (int) (Constants.TextureCoordinate.OVERLAY_HEIGHT * oxygenScale)) + Constants.TextureCoordinate.OVERLAY_HEIGHT, Constants.TextureCoordinate.OXYGEN_LIGHT_X, Constants.TextureCoordinate.OXYGEN_LIGHT_Y, Constants.TextureCoordinate.OVERLAY_WIDTH, (int) (Constants.TextureCoordinate.OVERLAY_HEIGHT * oxygenScale));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
         this.drawOxygenBufferBar(matrices, tank2.getAmount(), tank2.getCapacity(), this.x + 156, this.y + 8);
 
         InventoryScreen.drawEntity(this.x + 51, this.y + 75, 30, (float) (this.x + 51) - mouseX, (float) (this.y + 75 - 50) - mouseY, this.client.player);
-        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
+        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.PLAYER_INVENTORY_TABS)));
         this.drawTexture(matrices, this.x, this.y - 28, 0, 32, 57, 62);
     }
 }

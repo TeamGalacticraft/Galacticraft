@@ -26,8 +26,9 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -53,7 +54,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tickable {
     private static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
         map.put(Items.COAL_BLOCK, 320 * 10);
         map.put(Items.COAL, 320);
@@ -94,8 +95,8 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_OUTPUT, SideOption.ITEM_INPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_OUTPUT, AutomationType.ITEM_INPUT);
     }
 
     @Override
@@ -120,7 +121,7 @@ public class CoalGeneratorBlockEntity extends ConfigurableMachineBlockEntity imp
 
     @Override
     public int getBaseEnergyGenerated() {
-        return Galacticraft.configManager.get().coalGeneratorEnergyProductionRate();
+        return Galacticraft.CONFIG_MANAGER.get().coalGeneratorEnergyProductionRate();
     }
 
     @Override

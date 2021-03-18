@@ -28,11 +28,13 @@ import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
+import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -53,8 +55,8 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
-    private static final ItemFilter[] SLOT_FILTERS;
+public class RefineryBlockEntity extends MachineBlockEntity implements Tickable {
+    private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[3];
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
@@ -63,7 +65,6 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     public static final int FLUID_OUTPUT_SLOT = 2;
 
     static {
-        SLOT_FILTERS = new ItemFilter[3];
         SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
         SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL);
         SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL);
@@ -89,8 +90,8 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT, SideOption.FLUID_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT, AutomationType.FLUID_OUTPUT);
     }
 
     @Override
@@ -137,7 +138,7 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
 
     @Override
     public int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().refineryEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate();
     }
 
     @Override
@@ -153,9 +154,9 @@ public class RefineryBlockEntity extends ConfigurableMachineBlockEntity implemen
     @Override
     public FluidFilter getFilterForTank(int tank) {
         if (tank == OIL_TANK) {
-            return key -> GalacticraftTags.OIL.contains(key.getRawFluid());
+            return Constants.Filter.OIL;
         }
-        return key -> GalacticraftTags.FUEL.contains(key.getRawFluid());
+        return Constants.Filter.FUEL;
     }
 
     @Nullable

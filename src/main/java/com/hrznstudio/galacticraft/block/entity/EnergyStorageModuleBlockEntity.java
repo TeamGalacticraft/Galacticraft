@@ -25,8 +25,9 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
@@ -42,7 +43,7 @@ import java.util.List;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implements Tickable {
     public static final int CHARGE_BATTERY_SLOT = 0;
     public static final int DRAIN_BATTERY_SLOT = 1;
 
@@ -63,7 +64,7 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
 
     @Override
     public int getEnergyCapacity() {
-        return Galacticraft.configManager.get().energyStorageModuleStorageSize();
+        return Galacticraft.CONFIG_MANAGER.get().energyStorageModuleStorageSize();
     }
 
     @Override
@@ -72,8 +73,8 @@ public class EnergyStorageModuleBlockEntity extends ConfigurableMachineBlockEnti
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.POWER_OUTPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.POWER_OUTPUT);
     }
 
     @Override

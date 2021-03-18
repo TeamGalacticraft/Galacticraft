@@ -22,13 +22,13 @@
 
 package com.hrznstudio.galacticraft.screen.property;
 
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import net.minecraft.screen.Property;
 
 public class StatusProperty extends Property {
-    private final ConfigurableMachineBlockEntity blockEntity;
+    private final MachineBlockEntity blockEntity;
 
-    public StatusProperty(ConfigurableMachineBlockEntity blockEntity) {
+    public StatusProperty(MachineBlockEntity blockEntity) {
         this.blockEntity = blockEntity;
     }
 

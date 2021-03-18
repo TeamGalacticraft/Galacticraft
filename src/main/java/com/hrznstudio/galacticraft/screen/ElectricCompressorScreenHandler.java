@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.FilteredSlot;
+import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -60,7 +60,7 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
 
         this.addSlot(new FurnaceOutputSlot(this.player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.OUTPUT_SLOT, 138, 29));
         this.addSlot(new FurnaceOutputSlot(player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, 138, 47));
-        this.addSlot(new FilteredSlot(machine, ElectricCompressorBlockEntity.CHARGE_SLOT, 3 * 18 + 1, 75));
+        this.addSlot(new AutoFilteredSlot(machine, ElectricCompressorBlockEntity.CHARGE_SLOT, 3 * 18 + 1, 75));
 
         this.addPlayerInventorySlots(0, 117);
     }

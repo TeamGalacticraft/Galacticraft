@@ -23,8 +23,8 @@
 package com.hrznstudio.galacticraft.block.machines;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.ConfigurableMachineBlock;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.MachineBlock;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,13 +44,13 @@ import java.util.Random;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class CoalGeneratorBlock extends ConfigurableMachineBlock {
+public class CoalGeneratorBlock extends MachineBlock {
     public CoalGeneratorBlock(Settings settings) {
         super(settings,
                 (view) -> new CoalGeneratorBlockEntity(),
                 (itemStack, blockView, tooltipContext) ->
                         new TranslatableText("tooltip.galacticraft-rewoven.coal_generator")
-                                .setStyle(Constants.Styles.TOOLTIP_STYLE)
+                                .setStyle(Constants.Text.DARK_GRAY_STYLE)
         );
     }
 
@@ -58,7 +58,7 @@ public class CoalGeneratorBlock extends ConfigurableMachineBlock {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random rand) {
         BlockEntity entity = world.getBlockEntity(pos);
-        if (entity instanceof ConfigurableMachineBlockEntity && ((ConfigurableMachineBlockEntity) entity).getStatus().getType().isActive()) {
+        if (entity instanceof MachineBlockEntity && ((MachineBlockEntity) entity).getStatus().getType().isActive()) {
             double x = (double) pos.getX() + 0.5D;
             double y = pos.getY();
             double z = (double) pos.getZ() + 0.5D;

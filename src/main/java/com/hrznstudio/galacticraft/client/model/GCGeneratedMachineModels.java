@@ -23,8 +23,8 @@
 package com.hrznstudio.galacticraft.client.model;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import net.fabricmc.api.EnvType;
@@ -127,7 +127,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
         });
 
         register(GalacticraftBlocks.ENERGY_STORAGE_MODULE, (face, spriteFunction, view, state, pos) -> {
-            ConfigurableMachineBlockEntity entity = (ConfigurableMachineBlockEntity)view.getBlockEntity(pos);
+            MachineBlockEntity entity = (MachineBlockEntity)view.getBlockEntity(pos);
             switch (face) {
                 case FRONT:
                 case BACK:
@@ -171,7 +171,7 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
             switch (face) {
                 case FRONT:
                 case BACK:
-                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getInvFluid(0).getAmount_F().div(((ConfigurableMachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxAmount_F(0)).asInt(8, RoundingMode.DOWN))));
+                    return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + (int)(((MachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getInvFluid(0).getAmount_F().div(((MachineBlockEntity) view.getBlockEntity(pos)).getFluidTank().getMaxAmount_F(0)).asInt(8, RoundingMode.DOWN))));
                 default:
                     return spriteFunction.apply(new Identifier(Constants.MOD_ID, "block/machine"));
             }
@@ -237,15 +237,15 @@ public enum GCGeneratedMachineModels implements FabricBakedModel, BakedModel {
 
     @Override
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        ConfigurableMachineBlockEntity blockEntity = ((ConfigurableMachineBlockEntity) blockView.getBlockEntity(pos));
+        MachineBlockEntity blockEntity = ((MachineBlockEntity) blockView.getBlockEntity(pos));
         if (blockEntity == null) throw new RuntimeException("Failed to grab block entity!");
         if (atlas == null) {
             setAtlas(MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE));
         }
         context.pushTransform(quad -> {
-            SideOption option = blockEntity.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getOption();
+            AutomationType option = blockEntity.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getAutomationType();
             switch (option) {
-                case DEFAULT:
+                case NONE:
                     Sprite sprite = TEXTURE_PROVIDERS.getOrDefault(state.getBlock(), ModelTextureProvider.DEFAULT).getSpritesForState(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), atlas, blockView, state, pos);
                     quad.spriteBake(0, sprite, MutableQuadView.BAKE_LOCK_UV);
                     break;

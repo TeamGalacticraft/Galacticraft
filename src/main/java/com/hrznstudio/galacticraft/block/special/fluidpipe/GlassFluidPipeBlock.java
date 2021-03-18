@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.block.special.fluidpipe;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.FluidPipe;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
-import com.hrznstudio.galacticraft.items.StandardWrenchItem;
+import com.hrznstudio.galacticraft.item.StandardWrenchItem;
 import com.hrznstudio.galacticraft.util.ConnectingBlockUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.fabricmc.api.EnvType;

@@ -32,8 +32,8 @@ import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockE
 import com.hrznstudio.galacticraft.client.render.entity.*;
 import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.misc.capes.CapeLoader;
-import com.hrznstudio.galacticraft.misc.capes.JsonCapes;
+import com.hrznstudio.galacticraft.misc.cape.CapeLoader;
+import com.hrznstudio.galacticraft.misc.cape.JsonCapes;
 import com.hrznstudio.galacticraft.mixin.SkyPropertiesAccessor;
 import com.hrznstudio.galacticraft.particle.GalacticraftParticles;
 import com.hrznstudio.galacticraft.particle.fluid.DrippingCrudeOilParticle;
@@ -78,7 +78,7 @@ public class GalacticraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
-        Galacticraft.logger.info("[Galacticraft] Starting client initialization.");
+        Galacticraft.LOGGER.info("Starting client initialization.");
         capeLoader = new CapeLoader();
         jsonCapes = new JsonCapes();
         capeLoader.register(jsonCapes);
@@ -90,19 +90,19 @@ public class GalacticraftClient implements ClientModInitializer {
                 registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
             }
 
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_HEAD));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_CHEST));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_PANTS));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.THERMAL_BOOTS));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_HEAD));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_CHEST));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_PANTS));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_BOOTS));
 
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_MASK));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_GEAR));
-            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprites.OXYGEN_TANK));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_MASK));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_GEAR));
+            registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.OXYGEN_TANK));
 
-            registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_STILL));
-            registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.CRUDE_OIL_FLOWING));
-            registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.FUEL_STILL));
-            registry.register(Constants.Fluids.getIdentifier(Constants.Fluids.FUEL_FLOWING));
+            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.CRUDE_OIL_STILL));
+            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.CRUDE_OIL_FLOWING));
+            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.FUEL_STILL));
+            registry.register(Constants.Fluid.getIdentifier(Constants.Fluid.FUEL_FLOWING));
         });
 
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.BASIC_SOLAR_PANEL_HANDLER, BasicSolarPanelScreen::new);
@@ -179,7 +179,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
                     @Override
                     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-                        Galacticraft.logger.info("Generating model for: {}", modelId);
+                        Galacticraft.LOGGER.info("Generating model for: {}", modelId);
                         return GCGeneratedMachineModels.INSTANCE;
                     }
                 };
@@ -189,6 +189,6 @@ public class GalacticraftClient implements ClientModInitializer {
 
         SkyPropertiesAccessor.getBY_IDENTIFIER().put(new Identifier(Constants.MOD_ID, "moon"), new MoonSkyProperties());
 
-        Galacticraft.logger.info("[Galacticraft] Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
+        Galacticraft.LOGGER.info("Client initialization complete. (Took {}ms.)", System.currentTimeMillis() - startInitTime);
     }
 }

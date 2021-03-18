@@ -31,11 +31,15 @@ import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
-import com.hrznstudio.galacticraft.api.block.SideOption;
-import com.hrznstudio.galacticraft.api.block.entity.ConfigurableMachineBlockEntity;
+import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
+import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
+import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
+import com.hrznstudio.galacticraft.util.FluidUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,6 +49,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Pair;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -57,12 +62,20 @@ import java.util.*;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity implements Tickable {
+public class OxygenSealerBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
+    public static final int LOX_INPUT = 1;
+    public static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
     private final Set<BlockPos> set = new HashSet<>();
     public static final byte SEAL_CHECK_TIME = 5 * 20;
     private byte sealCheckTime;
+    private Optional<CelestialBodyType> type = Optional.empty();
+
+    static {
+        SLOT_FILTERS[BATTERY_SLOT] = EnergyUtils.IS_EXTRACTABLE;
+        SLOT_FILTERS[LOX_INPUT] = stack -> FluidUtils.canExtractFluids(stack, Constants.Filter.LOX_ONLY);
+    }
 
     public OxygenSealerBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
@@ -70,7 +83,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
 
     @Override
     public int getInventorySize() {
-        return 1;
+        return 2;
     }
 
     @Override
@@ -86,22 +99,18 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
-        sealCheckTime = SEAL_CHECK_TIME;
+        this.sealCheckTime = SEAL_CHECK_TIME;
+        this.type = CelestialBodyType.getByDimType(world.getRegistryKey());;
     }
 
     @Override
-    public List<SideOption> validSideOptions() {
-        return ImmutableList.of(SideOption.DEFAULT, SideOption.POWER_INPUT, SideOption.FLUID_INPUT);
+    public List<AutomationType> validSideOptions() {
+        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT);
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public boolean canExtractEnergy() {
-        return false;
     }
 
     @Override
@@ -121,7 +130,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Misc.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override
@@ -140,22 +149,38 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
             if (sealCheckTime == 0) {
                 sealCheckTime = SEAL_CHECK_TIME;
                 BlockPos pos = this.getPos();
-                Queue<BlockPos> queue = new LinkedList<>();
-                if (set.isEmpty() && ((WorldOxygenAccessor) world).isBreathable(pos.up())) {
-                    setStatus(Status.ALREADY_SEALED);
+                if (!this.type.isPresent()
+                        || this.type.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)
+                        || (set.isEmpty()
+                        && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
+                    this.setStatus(Status.ALREADY_SEALED);
                     return;
                 }
                 set.clear();
-                {
-                    BlockPos pos1 = pos.offset(Direction.UP);
-                    BlockState state = world.getBlockState(pos1);
-                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), Direction.DOWN)) {
-                        queue.add(pos1);
+                Queue<Pair<BlockPos, Direction>> queue = new LinkedList<>();
+                List<BlockPos> checked = new LinkedList<>();
+                BlockPos pos1 = pos.offset(Direction.UP);
+                BlockState state;
+                Pair<BlockPos, Direction> pair;
+                BlockPos.Mutable mutable = new BlockPos.Mutable();
+                queue.add(new Pair<>(pos1, Direction.UP));
+                while (!queue.isEmpty()){
+                    pair = queue.poll();
+                    pos1 = pair.getLeft();
+                    state = world.getBlockState(pos1);
+                    checked.add(pos1);
+                    if (state.isAir() || !Block.isFaceFullSquare(state.getCollisionShape(world, pos1), pair.getRight().getOpposite())) {
                         set.add(pos1);
+                        for (Direction direction : Constants.Misc.DIRECTIONS) {
+                            mutable.set(pos1).offset(direction);
+                            if (!checked.contains(mutable)) {
+                                queue.add(new Pair<>(mutable.toImmutable(), direction));
+                            }
+                        }
                     }
                 }
-                for (BlockPos pos1 : set) {
-                    ((WorldOxygenAccessor) world).setBreathable(pos1, true);
+                for (BlockPos pos2 : set) {
+                    ((WorldOxygenAccessor) world).setBreathable(pos2, true);
                 }
                 setStatus(Status.SEALED);
             }
@@ -175,7 +200,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
 
     @Override
     protected int getBaseEnergyConsumption() {
-        return Galacticraft.configManager.get().oxygenCompressorEnergyConsumptionRate();
+        return Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate();
     }
 
     @Override
@@ -203,7 +228,7 @@ public class OxygenSealerBlockEntity extends ConfigurableMachineBlockEntity impl
 
     @Override
     public FluidFilter getFilterForTank(int tank) {
-        return Constants.Misc.LOX_ONLY;
+        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable
