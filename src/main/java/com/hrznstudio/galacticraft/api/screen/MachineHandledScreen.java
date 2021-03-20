@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.api.screen;
 
 import alexiil.mc.lib.attributes.fluid.SingleFluidTank;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
@@ -35,13 +36,16 @@ import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.MachineComponent;
+import com.hrznstudio.galacticraft.screen.tank.Tank;
 import com.hrznstudio.galacticraft.util.ColorUtils;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
+import it.unimi.dsi.fastutil.ints.*;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -56,11 +60,13 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -751,6 +757,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         super.render(matrices, mouseX, mouseY, delta);
 
         this.drawConfigTabs(matrices, mouseX, mouseY, delta);
+        this.drawTanks(matrices, mouseX, mouseY, delta);
         this.handleSlotHighlight(matrices, mouseX, mouseY, delta);
         matrices.push();
         matrices.translate(this.x, this.y, 0);
@@ -760,8 +767,154 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         matrices.pop();
     }
 
-    protected void handleSlotHighlight(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        Int2IntMap color = getColor(matrices, mouseX, mouseY);
+        for (Tank tank : this.handler.tanks) {
+            if (tank.scale == 0) continue;
+            int[] data = tank.getPositionData();
+            this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
+            int i = color.get(tank.index);
+            this.drawTextureColor(matrices, this.x, this.y, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], , color[1], color[2]);
 
+            FluidVolume content = tank.getFluid();
+            if (content.isEmpty()) return;
+            matrices.push();
+            double scale = content.getAmount_F().div(tank.getCapacity()).asInexactDouble();
+            Sprite sprite = FluidRenderHandlerRegistry.INSTANCE.get(content.getRawFluid()).getFluidSprites(world, pos, content.getRawFluid().getDefaultState())[0];
+            this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
+            drawSprite(matrices, this.x + 1, ((this.y + 1) - (int)(data[2] * scale)) + data[2], 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
+            matrices.pop();
+            this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
+            this.drawTexture(matrices, this.x, this.y, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
+        }
+    }
+
+    protected Int2IntMap getColor(MatrixStack matrices, int mouseX, int mouseY) {
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX -= (PANEL_WIDTH + this.x);
+            mouseY -= (this.y + TAB_HEIGHT + SPACING);
+            Int2IntMap out = new Int2IntArrayMap();
+            if (check(mouseX, mouseY, 33, 24, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidTank()));
+                group(out, list);
+            }
+            if (check(mouseX, mouseY, 14, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidTank()));
+                group(out, list);
+            }
+            if (check(mouseX, mouseY, 33, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidTank()));
+                group(out, list);
+            }
+            if (check(mouseX, mouseY, 52, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidTank()));
+                group(out, list);
+            }
+            if (check(mouseX, mouseY, 71, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidTank()));
+                group(out, list);
+            }
+            if (check(mouseX, mouseY, 33, 22, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidTank()));
+                group(out, list);
+            }
+            out.defaultReturnValue(ColorUtils.WHITE);
+            return out;
+        }
+        return Int2IntMaps.EMPTY_MAP;
+    }
+
+    private void group(Int2IntMap out, IntList list) {
+        for (Tank tank : this.handler.tanks) {
+            if (list.contains(tank.index)) {
+                out.put(tank.index, this.handler.machine.getFluidTank().getTypes().get(tank.index).getColor().getRgb());
+            }
+        }
+    }
+
+    protected void handleSlotHighlight(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX -= (PANEL_WIDTH + this.x);
+            mouseY -= (this.y + TAB_HEIGHT + SPACING);
+            if (check(mouseX, mouseY, 33, 24, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (check(mouseX, mouseY, 14, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (check(mouseX, mouseY, 33, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (check(mouseX, mouseY, 52, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (check(mouseX, mouseY, 71, 43, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+            if (check(mouseX, mouseY, 33, 22, 16, 16)) {
+                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                groupStack(matrices, list);
+            }
+        }
+    }
+
+    private void groupStack(MatrixStack matrices, IntList list) {
+        for (Slot slot : this.handler.slots) {
+            if (list.contains(slot.index)) {
+                drawSlotOverlay(matrices, slot);
+            }
+        }
+    }
+
+    private void drawSlotOverlay(MatrixStack matrices, Slot slot) {
+        RenderSystem.disableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlphaTest();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.shadeModel(7425);
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferBuilder = tessellator.getBuffer();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x - 1, slot.y - 1,
+                slot.x - 1, slot.y + 17,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+        tessellator.draw();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x - 1, slot.y + 17,
+                slot.x + 17, slot.y - 1,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+        tessellator.draw();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x + 17, slot.y + 17,
+                slot.x + 17, slot.y - 1,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+        tessellator.draw();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+        fillGradient(matrices.peek().getModel(), bufferBuilder,
+                slot.x + 17, slot.y - 1,
+                slot.x - 1, slot.y - 1,
+                this.getZOffset(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb(),
+                this.handler.machine.getInventory().getTypes().get(slot.index).getColor().getRgb());
+        tessellator.draw();
+        RenderSystem.shadeModel(7424);
+        RenderSystem.disableBlend();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableTexture();
     }
 
     @Override
@@ -881,6 +1034,30 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).texture(u1, v1).next();
         bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).texture(u2, v2).next();
         bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).texture(u3, v3).next();
+        bufferBuilder.end();
+        RenderSystem.enableAlphaTest();
+        BufferRenderer.draw(bufferBuilder);
+    }
+
+    public void drawTextureColor(MatrixStack matrices, int x, int y, int u, int v, int width, int height, int red, int green, int blue) {
+        drawTextureColor(matrices, x, y, this.getZOffset(), (float)u, (float)v, width, height, 256, 256, red, green, blue);
+    }
+
+    public static void drawTextureColor(MatrixStack matrices, int x, int y, int z, float u, float v, int width, int height, int textureHeight, int textureWidth, int red, int green, int blue) {
+        drawTextureColor(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight, red, green, blue);
+    }
+
+    private static void drawTextureColor(MatrixStack matrices, int x0, int y0, int x1, int y1, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight, int red, int green, int blue) {
+        drawTexturedQuadColor(matrices.peek().getModel(), x0, y0, x1, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue);
+    }
+
+    private static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue) {
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        bufferBuilder.begin(7, VertexFormats.POSITION_COLOR_TEXTURE);
+        bufferBuilder.vertex(matrices, (float)x0, (float)y1, (float)z).color(red, green, blue, 255).texture(u0, v1).next();
+        bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).color(red, green, blue, 255).texture(u1, v1).next();
+        bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).color(red, green, blue, 255).texture(u1, v0).next();
+        bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).color(red, green, blue, 255).texture(u0, v0).next();
         bufferBuilder.end();
         RenderSystem.enableAlphaTest();
         BufferRenderer.draw(bufferBuilder);

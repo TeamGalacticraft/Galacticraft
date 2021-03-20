@@ -25,7 +25,6 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -67,7 +66,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, this.textRenderer, getContainerDisplayName(), (this.width / 2), this.y + 6, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 

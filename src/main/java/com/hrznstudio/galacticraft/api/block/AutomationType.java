@@ -40,8 +40,8 @@ public enum AutomationType implements Comparable<AutomationType> {
     FLUID_IO(new TranslatableText("ui.galacticraft-rewoven.side_option.fluids").setStyle(Constants.Text.GREEN_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), false, true, false, true, true),
     ITEM_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Text.GREEN_STYLE)), false, false, true, true, false),
     ITEM_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Text.DARK_RED_STYLE)), false, false, true, false, true),
-    ITEM_IO(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), false, false, true, true, true),
-    ANY(new TranslatableText("ui.galacticraft-rewoven.side_option.any").setStyle(Constants.Text.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), true, true, true, true, true);
+    ITEM_IO(new TranslatableText("ui.galacticraft-rewoven.side_option.items").setStyle(Constants.Text.GOLD_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), false, false, true, true, true);
+//    ANY(new TranslatableText("ui.galacticraft-rewoven.side_option.any").setStyle(Constants.Text.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), true, true, true, true, true);
 
     private final MutableText name;
     private final boolean energy;
@@ -77,6 +77,16 @@ public enum AutomationType implements Comparable<AutomationType> {
 
     public boolean isOutput() {
         return output;
+    }
+
+    public boolean canPassAs(AutomationType other) {
+        if (other == this) return true;
+        if (other.isEnergy()) if (!this.isEnergy()) return false;
+        if (other.isFluid()) if (!this.isFluid()) return false;
+        if (other.isItem()) if (!this.isItem()) return false;
+        if (other.isInput()) if (!this.isInput()) return false;
+        if (other.isOutput()) return this.isOutput();
+        return true;
     }
 
     public Text getFormattedName() {

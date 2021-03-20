@@ -27,7 +27,6 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -112,7 +111,7 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
         textField.setText(String.valueOf(handler.machine.getTargetSize()));
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_bubble_distributor").asString(), (this.width / 2) + 28, this.y + 5, Formatting.DARK_GRAY.getColorValue());
 
         this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.status").append(handler.machine.getStatus().getName()), this.x + 60, this.y + 30, Formatting.DARK_GRAY.getColorValue());
 

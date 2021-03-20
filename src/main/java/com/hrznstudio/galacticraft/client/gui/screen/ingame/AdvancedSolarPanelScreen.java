@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.AdvancedSolarPanelScreenHandler;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
@@ -68,7 +67,7 @@ public class AdvancedSolarPanelScreen extends MachineHandledScreen<AdvancedSolar
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.advanced_solar_panel"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 

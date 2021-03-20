@@ -23,12 +23,12 @@
 package com.hrznstudio.galacticraft.client.gui.widget;
 
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.SpaceRaceScreen;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.LiteralText;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -62,7 +62,7 @@ public class SpaceRaceButtonWidget extends ButtonWidget {
         this.drawHorizontalLine(matrices, x, screenWidth, y, 0xFF000000);
         this.drawVerticalLine(matrices, x, screenHeight, y, 0xFF000000);
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button"), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
+        drawCenteredString(matrices, textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.button_2"), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

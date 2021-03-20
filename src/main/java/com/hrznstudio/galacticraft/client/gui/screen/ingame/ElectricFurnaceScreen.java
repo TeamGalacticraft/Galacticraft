@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.ElectricFurnaceScreenHandler;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -56,7 +55,7 @@ public class ElectricFurnaceScreen extends MachineHandledScreen<ElectricFurnaceS
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, this.title, this.width / 2, this.y + 5, Formatting.GRAY.getColorValue());
 
         if (handler.machine.cookLength != 0 && handler.machine.cookTime != 0) {
             double scale = ((double)handler.machine.cookTime) / ((double)handler.machine.cookLength);

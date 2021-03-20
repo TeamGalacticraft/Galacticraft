@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -32,6 +31,7 @@ import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -115,7 +115,7 @@ public class SpaceRaceScreen extends Screen {
 
 
     private void renderForeground(MatrixStack stack, int mouseX, int mouseY) {
-        DrawableUtils.drawCenteredString(stack, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
+        drawCenteredString(stack, this.textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager"), this.width / 2, getTop() - 20, 0xFFFFFF);
 
         if (menu == Menu.MAIN) {
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
@@ -183,7 +183,7 @@ public class SpaceRaceScreen extends Screen {
             }
 
         } else if (menu == Menu.RESEARCH) {
-            DrawableUtils.drawCenteredString(stack, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.research"), this.width / 2, getTop() + 2, 0xFFFFFF);
+            drawCenteredString(stack, this.textRenderer, I18n.translate("ui.galacticraft-rewoven.space_race_manager.research"), this.width / 2, getTop() + 2, 0xFFFFFF);
 
             if (!check(mouseX, mouseY, this.getLeft() + 5, this.getTop() + 5, 40, 14)) {
                 renderButton(stack, textRenderer, new TranslatableText("ui.galacticraft-rewoven.space_race_manager.back"), this.getLeft() + 5, this.getTop() + 5, 40, 14);

@@ -26,7 +26,6 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.screen.ElectricArcFurnaceScreenHandler;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
@@ -62,7 +61,7 @@ public class ElectricArcFurnaceScreen extends MachineHandledScreen<ElectricArcFu
             this.drawTexture(matrices, this.x + ARROW_X, this.y + ARROW_Y, LIT_ARROW_X, LIT_ARROW_Y, (int) (((double)ARROW_WIDTH) * scale), ARROW_HEIGHT);
         }
 
-        DrawableUtils.drawCenteredString(matrices, textRenderer, new TranslatableText("block.galacticraft-rewoven.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, new TranslatableText("block.galacticraft-rewoven.electric_arc_furnace"), this.width / 2, this.y + 5, Formatting.DARK_GRAY.getColorValue());
     }
 
     @Override

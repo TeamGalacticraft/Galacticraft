@@ -30,14 +30,10 @@ import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
-import alexiil.mc.lib.attributes.fluid.volume.FluidKey;
 import alexiil.mc.lib.attributes.item.FixedItemInv;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
@@ -46,6 +42,8 @@ import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.machine.*;
+import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
 import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
@@ -95,14 +93,9 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     private final @NotNull SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getEnergyCapacity());
 
-    private final @NotNull FullFixedItemInv inventory = new FullFixedItemInv(this.getInventorySize());
+    private final @NotNull MachineItemInv inventory = new MachineItemInv();
 
-    private final @NotNull SimpleFixedFluidInv tank = new SimpleFixedFluidInv(this.getFluidTankSize(), this.getFluidTankCapacity()) {
-        @Override
-        public FluidFilter getFilterForTank(int tank) {
-            return MachineBlockEntity.this.getFilterForTank(tank).or(FluidKey::isEmpty);
-        }
-    };
+    private final @NotNull MachineFluidInv tank = new MachineFluidInv(this.getFluidTankCapacity());
 
     private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.getInventory()) {
         @Override
@@ -111,8 +104,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         }
     };
 
-    public MachineBlockEntity(BlockEntityType<? extends MachineBlockEntity> blockEntityType) {
-        super(blockEntityType);
+    public MachineBlockEntity(BlockEntityType<? extends MachineBlockEntity> type) {
+        super(type);
     }
 
     /**
@@ -170,32 +163,20 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
      * @param slot The slot to test
      * @return whether a hopper may extract items from the given slot.
      */
-    public boolean canHopperExtract(int slot) {
-        return false;
+    public final boolean canHopperExtract(int slot) {
+        return this.getInventory().getTypes().get(slot).getType().isOutput();
     }
 
-    public boolean canHopperInsert(int slot) {
-        return false;
+    public final boolean canHopperInsert(int slot) {
+        return this.getInventory().getTypes().get(slot).getType().isOutput();
     }
 
-    public boolean canPipeExtractFluid(int tank) {
-        return false;
+    public final boolean canPipeExtractFluid(int tank) {
+        return this.getFluidTank().getTypes().get(tank).getType().isOutput();
     }
 
-    public boolean canPipeInsertFluid(int tank) {
-        return false;
-    }
-
-    public FluidFilter getFilterForTank(int tank) {
-        return ConstantFluidFilter.NOTHING;
-    }
-
-    public int getInventorySize() {
-        return 0;
-    }
-
-    public int getFluidTankSize() {
-        return 0;
+    public final boolean canPipeInsertFluid(int tank) {
+        return this.getFluidTank().getTypes().get(tank).getType().isInput();
     }
 
     public FluidAmount getFluidTankCapacity() {
@@ -206,15 +187,15 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         this.configuration.setRedstone(redstone);
     }
 
-    public final @NotNull MachineStatus getStatus() {
+    public @NotNull MachineStatus getStatus() {
         return this.configuration.getStatus();
     }
 
-    public final void setStatus(MachineStatus status) {
+    public void setStatus(MachineStatus status) {
         this.configuration.setStatus(status);
     }
 
-    public final void setStatusById(int index) {
+    public void setStatusById(int index) {
         this.setStatus(this.getStatusById(index));
     }
 
@@ -233,7 +214,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
      * @return The {@link ItemFilter} for the given slot of {@link #getInventory()}.
      */
     public ItemFilter getFilterForSlot(int slot) {
-        return ConstantItemFilter.ANYTHING;
+        return this.getInventory().getFilterForSlot(slot);
     }
 
     /**
@@ -241,18 +222,18 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
      * {@link #attemptChargeFromStack(int)} or {@link #attemptDrainPowerToStack(int)}
      */
     protected int getBatteryTransferRate() {
-        return 50;
+        return 500;
     }
 
     public final @NotNull SimpleCapacitor getCapacitor() {
         return this.capacitor;
     }
 
-    public final @NotNull FullFixedItemInv getInventory() {
+    public final @NotNull MachineItemInv getInventory() {
         return this.inventory;
     }
 
-    public final @NotNull SimpleFixedFluidInv getFluidTank() {
+    public final @NotNull MachineFluidInv getFluidTank() {
         return this.tank;
     }
 
@@ -297,7 +278,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (direction != null) {
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isItem()) {
-                if (cso.isWildcard()) {
+                if (cso.getMatching()) {
                     IntArrayList list = new IntArrayList();
 
                     if (cso.getAutomationType().isInput()) {
@@ -327,7 +308,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (direction != null) {
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
-                cso.getMatching(this)
+                cso.getMatching(getFluidTank())
                 if (cso.isWildcard()) {
                     IntArrayList list = new IntArrayList();
                     if (cso.getAutomationType().isInput()) {

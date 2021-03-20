@@ -22,7 +22,8 @@
 
 package com.hrznstudio.galacticraft.util;
 
-public class ColorUtils {
+public enum ColorUtils {
+    ;
     public static final int WHITE = 0xffffff;
 
     public static int rgb(int red, int green, int blue) {

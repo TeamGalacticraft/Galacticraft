@@ -38,7 +38,7 @@ import java.util.Objects;
 
 public class SlotType implements StringIdentifiable {
     public static final Registry<SlotType> SLOT_TYPES = new SimpleRegistry<>(RegistryKey.ofRegistry(new Identifier(Constants.MOD_ID, "slot_type")), Lifecycle.experimental());
-    public static final SlotType WILDCARD = new SlotType(new Identifier(Constants.MOD_ID, "any"), TextColor.fromRgb(ColorUtils.rgb(0, 160, 7)), new TranslatableText("ui.galacticraft-rewoven.io_config.any"), AutomationType.ANY);
+//    public static final SlotType WILDCARD = new SlotType(new Identifier(Constants.MOD_ID, "any"), TextColor.fromRgb(ColorUtils.rgb(0, 160, 7)), new TranslatableText("ui.galacticraft-rewoven.io_config.any"), AutomationType.ANY);
     public static final SlotType INPUT = new SlotType(new Identifier(Constants.MOD_ID, "input"), TextColor.fromRgb(ColorUtils.rgb(0, 160, 7)), new TranslatableText("ui.galacticraft-rewoven.io_config.input"), AutomationType.ITEM_INPUT);
     public static final SlotType FLUID_TANK_INPUT = new SlotType(new Identifier(Constants.MOD_ID, "fluid_input"), TextColor.fromRgb(ColorUtils.rgb(2, 121, 3)), new TranslatableText("ui.galacticraft-rewoven.io_config.fluid_input"), AutomationType.ITEM_INPUT);
     public static final SlotType OUTPUT = new SlotType(new Identifier(Constants.MOD_ID, "output"), TextColor.fromRgb(ColorUtils.rgb(187, 16, 18)), new TranslatableText("ui.galacticraft-rewoven.io_config.output"), AutomationType.ITEM_OUTPUT);
@@ -46,6 +46,10 @@ public class SlotType implements StringIdentifiable {
     public static final SlotType CHARGE = new SlotType(new Identifier(Constants.MOD_ID, "charge"), TextColor.fromRgb(ColorUtils.rgb(220, 196, 57)), new TranslatableText("ui.galacticraft-rewoven.io_config.charge"), AutomationType.ITEM_IO);
     public static final SlotType OXYGEN_TANK = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_tank"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen_tank"), AutomationType.ITEM_IO);
     public static final SlotType OTHER = new SlotType(new Identifier(Constants.MOD_ID, "other"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.other"), AutomationType.ITEM_IO);
+
+    public static final SlotType WILDCARD_ITEM = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_item"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_item"), AutomationType.ITEM_IO);
+    public static final SlotType WILDCARD_FLUID = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_fluid"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_fluid"), AutomationType.ITEM_IO);
+    public static final SlotType WILDCARD_ENERGY = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_energy"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_energy"), AutomationType.ITEM_IO);
 
     public static final SlotType OIL = new SlotType(new Identifier(Constants.MOD_ID, "oil"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft-rewoven.io_config.oil"), AutomationType.FLUID_INPUT);
     public static final SlotType FUEL = new SlotType(new Identifier(Constants.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.fuel"), AutomationType.FLUID_OUTPUT);
@@ -107,7 +111,9 @@ public class SlotType implements StringIdentifiable {
     }
 
     static {
-        Registry.register(SLOT_TYPES, WILDCARD.getId(), WILDCARD);
+        Registry.register(SLOT_TYPES, WILDCARD_ITEM.getId(), WILDCARD_ITEM);
+        Registry.register(SLOT_TYPES, WILDCARD_ENERGY.getId(), WILDCARD_ENERGY);
+        Registry.register(SLOT_TYPES, WILDCARD_FLUID.getId(), WILDCARD_FLUID);
         Registry.register(SLOT_TYPES, INPUT.getId(), INPUT);
         Registry.register(SLOT_TYPES, FLUID_TANK_INPUT.getId(), FLUID_TANK_INPUT);
         Registry.register(SLOT_TYPES, OUTPUT.getId(), OUTPUT);

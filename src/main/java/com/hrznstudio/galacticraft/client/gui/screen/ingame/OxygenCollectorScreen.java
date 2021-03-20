@@ -27,7 +27,6 @@ import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.CapacitorWidget;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
-import com.hrznstudio.galacticraft.util.DrawableUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.resource.language.I18n;
@@ -64,7 +63,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        DrawableUtils.drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_collector"), (this.width / 2), this.y + 5, Formatting.DARK_GRAY.getColorValue());
         String statusText = I18n.translate("ui.galacticraft-rewoven.machine.status");
 
         int statusX = this.x + 38;
@@ -74,7 +73,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
 
         this.textRenderer.draw(matrices, handler.machine.getStatus().getName(), statusX + this.textRenderer.getWidth(statusText), statusY, 0);
 
-        DrawableUtils.drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, this.textRenderer, new TranslatableText("ui.galacticraft-rewoven.machine.collecting", this.handler.machine.collectionAmount).getString(), (this.width / 2) + 10, statusY + 12, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

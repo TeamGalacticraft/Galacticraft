@@ -22,9 +22,12 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
-import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
+import com.hrznstudio.galacticraft.attribute.Automatable;
+import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.mojang.datafixers.util.Either;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
@@ -33,48 +36,61 @@ import org.jetbrains.annotations.Nullable;
 import java.util.stream.IntStream;
 
 public class ConfiguredSideOption {
-    private AutomationType automationType;
+    private AutomationType automationType; //input, output, fluid
     private Either<Integer, SlotType> matching;
 
     public ConfiguredSideOption(@NotNull AutomationType automationType) {
         this.automationType = automationType;
-        this.matching = Either.right(SlotType.WILDCARD);
+        this.matching = null;
     }
 
     public void setOption(@NotNull AutomationType option, @Nullable Either<Integer, SlotType> matching) {
         this.automationType = option;
-        this.matching = matching == null ? Either.right(SlotType.WILDCARD) : matching;
+        this.matching = matching;
     }
 
     public void setMatching(@Nullable Either<Integer, SlotType> matching) {
-        this.matching = matching == null ? Either.right(SlotType.WILDCARD) : matching;
+        this.matching = matching;
     }
 
     public @NotNull AutomationType getAutomationType() {
         return automationType;
     }
 
-    public int[] getMatching(MachineScreenHandler<?> screenHandler) {
+    public int[] getMatchingFluid(MachineFluidInv machineFluidInv, AutomationType automationType) {
+        assert this.automationType.isFluid();
         if (matching.left().isPresent()) {
             return new int[]{matching.left().get()};
         }
         SlotType type = matching.right().orElseThrow(RuntimeException::new);
-        if (type == SlotType.WILDCARD) {
-            return IntStream.range(0, screenHandler.slots.size() - 1).toArray();
+
+        if (type == null) {
+            IntList intList = new IntArrayList();
+            for (int i = 0; i < machineFluidInv.getTankCount(); i++) {
+                if (machineFluidInv.getTypes().get(i).getType().canPassAs(automationType)) {
+                    intList.add(i);
+                }
+            }
+            return intList.toIntArray();
         }
 
-        if (automationType.isItem()) {
-            return IntStream.range(0, screenHandler.getMachineSlots().get(type).size() - 1).toArray();
-        }
+    }
 
-        if (automationType.isFluid()) {
-            return IntStream.range(0, screenHandler.getMachineTanks().get(type).size() - 1).toArray();
+    public int[] getMatching(Automatable automatable) {
+        if (matching.left().isPresent()) {
+            return new int[]{matching.left().get()};
         }
+        SlotType type = matching.right().orElseThrow(RuntimeException::new);
+        if (type == null) {
+            return IntStream.range(0, automatable.getTypes().size() - 1).toArray();
+        }
+        if (type.getType() == AutomationType.NONE) return new int[0];
 
-        if (automationType.isEnergy()) {
-            return IntStream.range(0, screenHandler.getMachineCapacitors().get(type).size() - 1).toArray();
+        IntList intList = new IntArrayList(1);
+        for (int i = 0; i < automatable.getTypes().size(); i++) {
+            if (automatable.getTypes().get(i) == type) intList.add(i);
         }
-        return new int[0];
+        return intList.toIntArray();
     }
 
     public CompoundTag toTag(CompoundTag tag) {
