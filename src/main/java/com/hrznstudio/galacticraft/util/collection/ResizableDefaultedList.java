@@ -20,12 +20,15 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.attribute;
+package com.hrznstudio.galacticraft.util.collection;
 
-import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import net.minecraft.util.collection.DefaultedList;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public interface Automatable {
-    List<SlotType> getTypes();
+public class ResizableDefaultedList<T> extends DefaultedList<T> {
+    public ResizableDefaultedList(List<T> delegate, @Nullable T initialElement) {
+        super(delegate, initialElement);
+    }
 }

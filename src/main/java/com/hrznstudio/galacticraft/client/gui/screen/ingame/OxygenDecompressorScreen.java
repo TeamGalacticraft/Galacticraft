@@ -29,10 +29,10 @@ import com.hrznstudio.galacticraft.client.gui.widget.machine.OxygenTankWidget;
 import com.hrznstudio.galacticraft.screen.OxygenDecompressorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
@@ -68,7 +68,7 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        drawCenteredString(matrices, this.textRenderer, new TranslatableText("block.galacticraft-rewoven.oxygen_decompressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
+        drawCenteredString(matrices, this.textRenderer, I18n.translate("block.galacticraft-rewoven.oxygen_decompressor"), (this.width / 2) + 20, this.y + 5, Formatting.DARK_GRAY.getColorValue());
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 }

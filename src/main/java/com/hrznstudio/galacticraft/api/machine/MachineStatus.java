@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.machine;
 
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 

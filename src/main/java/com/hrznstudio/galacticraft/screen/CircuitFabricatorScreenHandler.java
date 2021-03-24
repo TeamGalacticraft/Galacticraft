@@ -23,8 +23,6 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CircuitFabricatorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
-import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -49,15 +47,6 @@ public class CircuitFabricatorScreenHandler extends MachineScreenHandler<Circuit
     public CircuitFabricatorScreenHandler(int syncId, PlayerEntity player, CircuitFabricatorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.CIRCUIT_FABRICATOR_HANDLER);
         this.addProperty(this.progress);
-
-        this.addSlot(new AutoFilteredSlot(machine, CircuitFabricatorBlockEntity.CHARGE_SLOT, 8, 70));
-        this.addSlot(new AutoFilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT_DIAMOND, 31, 15));
-        this.addSlot(new AutoFilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON, 62, 45));
-        this.addSlot(new AutoFilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT_SILICON_2, 62, 63));
-        this.addSlot(new AutoFilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT_REDSTONE, 107, 70));
-        this.addSlot(new AutoFilteredSlot(machine, CircuitFabricatorBlockEntity.INPUT_SLOT, 134, 15));
-        this.addSlot(new OutputSlot(machine.getWrappedInventory(), CircuitFabricatorBlockEntity.OUTPUT_SLOT, 152, 70));
-
         this.addPlayerInventorySlots(0, 94);
     }
 

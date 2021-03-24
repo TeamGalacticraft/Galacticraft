@@ -25,14 +25,13 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.ElectricArcFurnaceScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,7 +50,6 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
@@ -71,6 +69,10 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
 
     public ElectricArcFurnaceBlockEntity(BlockEntityType<? extends ElectricArcFurnaceBlockEntity> blockEntityType) {
         super(blockEntityType);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
+        this.getInventory().addSlot(SlotType.INPUT, stack -> this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent(), 56, 25);
+        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(109, 25));
+        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(127, 25));
     }
 
     public ElectricArcFurnaceBlockEntity() {
@@ -85,33 +87,6 @@ public class ElectricArcFurnaceBlockEntity extends MachineBlockEntity {
     @Override
     protected int getBaseEnergyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().electricArcFurnaceEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot == INPUT_SLOT;
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 4;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) return EnergyUtils::isEnergyExtractable;
-        if (slot == INPUT_SLOT) return (stack) -> world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, new SimpleInventory(stack), world).isPresent();
-        return (slot == OUTPUT_SLOT_1 || slot == OUTPUT_SLOT_2) ? ConstantItemFilter.ANYTHING : ConstantItemFilter.NOTHING;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.ITEM_INPUT, AutomationType.ITEM_OUTPUT);
     }
 
     @Override

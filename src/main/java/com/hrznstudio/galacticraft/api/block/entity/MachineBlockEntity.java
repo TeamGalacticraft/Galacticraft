@@ -52,7 +52,6 @@ import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -213,7 +212,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     /**
      * @return The {@link ItemFilter} for the given slot of {@link #getInventory()}.
      */
-    public ItemFilter getFilterForSlot(int slot) {
+    public final ItemFilter getFilterForSlot(int slot) {
         return this.getInventory().getFilterForSlot(slot);
     }
 
@@ -278,26 +277,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (direction != null) {
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isItem()) {
-                if (cso.getMatching()) {
-                    IntArrayList list = new IntArrayList();
-
-                    if (cso.getAutomationType().isInput()) {
-                        for (int i = 0; i < inventory.getSlotCount(); i++) {
-                            if (this.canHopperInsert(i)) {
-                                list.add(i);
-                            }
-                        }
-                    } else {
-                        for (int i = 0; i < inventory.getSlotCount(); i++) {
-                            if (this.canHopperExtract(i)) {
-                                list.add(i);
-                            }
-                        }
-                    }
-                    return this.getInventory().getMappedInv(list.toIntArray());
-                } else {
-                    return this.getInventory().getMappedInv(cso.getValue());
-                }
+                return this.getInventory().getMappedInv(cso.getMatching(getInventory()));
             }
             return null;
         }
@@ -308,26 +288,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (direction != null) {
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
-                cso.getMatching(getFluidTank())
-                if (cso.isWildcard()) {
-                    IntArrayList list = new IntArrayList();
-                    if (cso.getAutomationType().isInput()) {
-                        for (int i = 0; i < tank.getTankCount(); i++) {
-                            if (this.canPipeInsertFluid(i)) {
-                                list.add(i);
-                            }
-                        }
-                    } else {
-                        for (int i = 0; i < tank.getTankCount(); i++) {
-                            if (this.canPipeExtractFluid(i)) {
-                                list.add(i);
-                            }
-                        }
-                    }
-                    return this.getFluidTank().getMappedInv(list.toIntArray());
-                } else {
-                    return this.getFluidTank().getMappedInv(cso.getValue());
-                }
+                return this.getFluidTank().getMappedInv(cso.getMatching(getFluidTank()));
             }
             return null;
         }
@@ -339,18 +300,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isInput()) {
-                    if (cso.isWildcard()) {
-                        IntArrayList list = new IntArrayList();
-                        for (int i = 0; i < this.getFluidTankSize(); i++) {
-                            if (this.canPipeInsertFluid(i)) {
-                                list.add(i);
-                            }
-                        }
-
-                        return this.getFluidTank().getMappedInv(list.toIntArray()).getInsertable();
-                    } else {
-                        return this.getFluidTank().getMappedInv(cso.getValue()).getInsertable();
-                    }
+                    return this.getFluidTank().getMappedInv(cso.getMatching(getFluidTank())).getInsertable();
                 }
             }
             return null;
@@ -363,17 +313,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isOutput()) {
-                    if (cso.isWildcard()) {
-                        IntArrayList list = new IntArrayList();
-                        for (int i = 0; i < tank.getTankCount(); i++) {
-                            if (this.canPipeExtractFluid(i)) {
-                                list.add(i);
-                            }
-                        }
-                        return this.getFluidTank().getMappedInv(list.toIntArray()).getExtractable();
-                    } else {
-                        return this.getFluidTank().getMappedInv(cso.getValue()).getExtractable();
-                    }
+                    return this.getFluidTank().getMappedInv(cso.getMatching(getFluidTank())).getExtractable();
                 }
             }
             return null;
@@ -498,8 +438,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().toTag(tag);
-        if (this.getInventorySize() > 0) this.getInventory().toTag(tag);
-        if (this.getFluidTankSize() > 0) this.getFluidTank().toTag(tag);
+        if (this.getInventory().getSlotCount()> 0) this.getInventory().toTag(tag);
+        if (this.getFluidTank().getTankCount() > 0) this.getFluidTank().toTag(tag);
         this.getSecurity().toTag(tag);
         this.getSideConfiguration().toTag(tag);
         this.getRedstone().toTag(tag);
@@ -511,8 +451,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().fromTag(tag);
-        if (this.getInventorySize() > 0) this.getInventory().fromTag(tag);
-        if (this.getFluidTankSize() > 0) this.getFluidTank().fromTag(tag);
+        if (this.getInventory().getSlotCount() > 0) this.getInventory().fromTag(tag);
+        if (this.getFluidTank().getTankCount() > 0) this.getFluidTank().fromTag(tag);
         this.getSecurity().fromTag(tag);
         this.getSideConfiguration().fromTag(tag);
         this.setRedstone(RedstoneState.fromTag(tag));

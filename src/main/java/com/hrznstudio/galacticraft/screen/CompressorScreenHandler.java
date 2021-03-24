@@ -23,15 +23,10 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.ItemSpecificSlot;
-import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -64,21 +59,6 @@ public class CompressorScreenHandler extends MachineScreenHandler<CompressorBloc
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.COMPRESSOR_HANDLER);
         this.addProperty(progress);
         this.addProperty(fuelTime);
-
-        // 3x3 compressor input grid
-        int slot = 0;
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                this.addSlot(new Slot(this.machine.getWrappedInventory(), slot++, x * 18 + 19, y * 18 + 18));
-            }
-        }
-
-        // Fuel slot
-        this.addSlot(new ItemSpecificSlot(this.machine.getWrappedInventory(), CompressorBlockEntity.FUEL_INPUT_SLOT, 3 * 18 + 1, 75, AbstractFurnaceBlockEntity.createFuelTimeMap().keySet().toArray(new Item[0])));
-
-        // Output slot
-        this.addSlot(new FurnaceOutputSlot(player, this.machine.getWrappedInventory(), CompressorBlockEntity.OUTPUT_SLOT, 138, 38));
-
         this.addPlayerInventorySlots(0, 110);
     }
 

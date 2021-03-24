@@ -1,13 +1,38 @@
+/*
+ * Copyright (c) 2019-2021 HRZN LTD
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package com.hrznstudio.galacticraft.attribute.item;
 
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.accessor.DefaultedListAccessor;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.attribute.Automatable;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
+import com.hrznstudio.galacticraft.screen.slot.OutputSlot;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import com.hrznstudio.galacticraft.util.collection.ResizableDefaultedList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -22,6 +47,7 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
 
     public MachineItemInv() {
         super(0);
+        ((DefaultedListAccessor<ItemStack>)this).setDefaultedList_gcr(new ResizableDefaultedList<>(new ArrayList<>(), ItemStack.EMPTY));
     }
 
     @Override
@@ -39,12 +65,14 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         this.positions.add(this.getSlotCount(), new DefaultSlotFunction(x, y));
         this.slotTypes.add(this.getSlotCount(), type);
         this.filters.add(this.getSlotCount(), filter);
+        this.slots.add(this.getSlotCount(), ItemStack.EMPTY);
     }
 
-    public void addSlot(SlotType type, ItemFilter filter) {
-        this.positions.add(this.getSlotCount(), null);
+    public void addSlot(SlotType type, ItemFilter filter, SlotFunction function) {
+        this.positions.add(this.getSlotCount(), function);
         this.slotTypes.add(this.getSlotCount(), type);
         this.filters.add(this.getSlotCount(), filter);
+        this.slots.add(this.getSlotCount(), ItemStack.EMPTY);
     }
 
     public void createSlots(MachineScreenHandler<?> screenHandler) {
@@ -87,6 +115,29 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
             return new AutoFilteredSlot(machineBlockEntity, index, this.x, this.y);
+        }
+    }
+
+    public static class OutputSlotFunction implements SlotFunction {
+        private final int x;
+        private final int y;
+
+        public OutputSlotFunction(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        @Override
+        public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
+            return new OutputSlot(machineBlockEntity.getWrappedInventory(), index, this.x, this.y);
         }
     }
 }

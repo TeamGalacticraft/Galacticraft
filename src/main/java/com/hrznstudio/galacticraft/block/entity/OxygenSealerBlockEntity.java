@@ -24,22 +24,20 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
+import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -70,7 +68,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     private final Set<BlockPos> set = new HashSet<>();
     public static final byte SEAL_CHECK_TIME = 5 * 20;
     private byte sealCheckTime;
-    private Optional<CelestialBodyType> type = Optional.empty();
+    private CelestialBodyType type = null;
 
     static {
         SLOT_FILTERS[BATTERY_SLOT] = EnergyUtils.IS_EXTRACTABLE;
@@ -79,11 +77,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
 
     public OxygenSealerBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 2;
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
+        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -92,20 +88,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
-    }
-
-    @Override
     public void setLocation(World world, BlockPos pos) {
         super.setLocation(world, pos);
         this.sealCheckTime = SEAL_CHECK_TIME;
-        this.type = CelestialBodyType.getByDimType(world.getRegistryKey());;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT);
+        this.type = CelestialBodyType.getByDimType(world.getRegistryKey()).orElse(null);
     }
 
     @Override
@@ -116,14 +102,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == BATTERY_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        }
-        return ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -149,8 +127,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
             if (sealCheckTime == 0) {
                 sealCheckTime = SEAL_CHECK_TIME;
                 BlockPos pos = this.getPos();
-                if (!this.type.isPresent()
-                        || this.type.get().getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)
+                if (this.type == null
+                        || this.type.getAtmosphere().getComposition().containsKey(AtmosphericGas.OXYGEN)
                         || (set.isEmpty()
                         && ((WorldOxygenAccessor) world).isBreathable(pos.up()))) {
                     this.setStatus(Status.ALREADY_SEALED);
@@ -209,26 +187,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
         for (BlockPos pos : set) {
             ((WorldOxygenAccessor) world).setBreathable(pos, false);
         }
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable

@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.RefineryBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -35,12 +34,6 @@ public class RefineryScreenHandler extends MachineScreenHandler<RefineryBlockEnt
 
     public RefineryScreenHandler(int syncId, PlayerEntity player, RefineryBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.REFINERY_HANDLER);
-
-        // Energy slot
-        this.addSlot(new AutoFilteredSlot(this.machine, 0, 8, 7));
-        this.addSlot(new AutoFilteredSlot(this.machine, 1, 123, 7));
-        this.addSlot(new AutoFilteredSlot(this.machine, 2, 153, 7));
-
         this.addPlayerInventorySlots(0, 86);
     }
 

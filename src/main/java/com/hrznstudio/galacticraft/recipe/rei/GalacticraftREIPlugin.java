@@ -86,7 +86,7 @@ public class GalacticraftREIPlugin implements REIPluginV0 {
             HandledScreenHooks screenHooks = (HandledScreenHooks) machineScreen;
             List<Rectangle> l = Lists.newArrayList();
 
-            if (machineScreen.securityOpen) {
+            if (MachineHandledScreen.Tab.SECURITY.isOpen()) {
                 l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.PANEL_WIDTH, MachineHandledScreen.PANEL_HEIGHT));
             } else {
                 l.add(new Rectangle(screenHooks.gc_getX() + screenHooks.gc_getBackgroundWidth(), screenHooks.gc_getY(), MachineHandledScreen.TAB_WIDTH, MachineHandledScreen.TAB_HEIGHT));

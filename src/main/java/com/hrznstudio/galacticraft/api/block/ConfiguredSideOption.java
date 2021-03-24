@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.api.block;
 
 import com.hrznstudio.galacticraft.attribute.Automatable;
-import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.mojang.datafixers.util.Either;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -37,7 +36,7 @@ import java.util.stream.IntStream;
 
 public class ConfiguredSideOption {
     private AutomationType automationType; //input, output, fluid
-    private Either<Integer, SlotType> matching;
+    private @Nullable Either<Integer, SlotType> matching;
 
     public ConfiguredSideOption(@NotNull AutomationType automationType) {
         this.automationType = automationType;
@@ -57,59 +56,54 @@ public class ConfiguredSideOption {
         return automationType;
     }
 
-    public int[] getMatchingFluid(MachineFluidInv machineFluidInv, AutomationType automationType) {
-        assert this.automationType.isFluid();
-        if (matching.left().isPresent()) {
-            return new int[]{matching.left().get()};
-        }
-        SlotType type = matching.right().orElseThrow(RuntimeException::new);
+    public int[] getMatching(Automatable automatable) {
+        if (matching != null) {
+            if (matching.left().isPresent()) {
+                return new int[]{matching.left().get()};
+            }
+            SlotType type = matching.right().orElseThrow(RuntimeException::new);
+            if (type == null) {
+                return IntStream.range(0, automatable.getTypes().size() - 1).toArray();
+            }
+            if (type.getType() == AutomationType.NONE) return new int[0];
 
-        if (type == null) {
-            IntList intList = new IntArrayList();
-            for (int i = 0; i < machineFluidInv.getTankCount(); i++) {
-                if (machineFluidInv.getTypes().get(i).getType().canPassAs(automationType)) {
-                    intList.add(i);
-                }
+            IntList intList = new IntArrayList(1);
+            for (int i = 0; i < automatable.getTypes().size(); i++) {
+                if (automatable.getTypes().get(i) == type) intList.add(i);
             }
             return intList.toIntArray();
         }
-
-    }
-
-    public int[] getMatching(Automatable automatable) {
-        if (matching.left().isPresent()) {
-            return new int[]{matching.left().get()};
-        }
-        SlotType type = matching.right().orElseThrow(RuntimeException::new);
-        if (type == null) {
-            return IntStream.range(0, automatable.getTypes().size() - 1).toArray();
-        }
-        if (type.getType() == AutomationType.NONE) return new int[0];
-
         IntList intList = new IntArrayList(1);
         for (int i = 0; i < automatable.getTypes().size(); i++) {
-            if (automatable.getTypes().get(i) == type) intList.add(i);
+            if (automatable.getTypes().get(i).getType().canPassAs(this.automationType)) intList.add(i);
         }
         return intList.toIntArray();
     }
 
     public CompoundTag toTag(CompoundTag tag) {
         tag.putString("option", automationType.name());
-        tag.putBoolean("left", this.matching.left().isPresent());
-        if (this.matching.left().isPresent()) {
-            tag.putInt("value", this.matching.left().get());
-        } else {
-            tag.putString("value", this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
+        tag.putBoolean("match", this.matching != null);
+        if (this.matching != null) {
+            tag.putBoolean("left", this.matching.left().isPresent());
+            if (this.matching.left().isPresent()) {
+                tag.putInt("value", this.matching.left().get());
+            } else {
+                tag.putString("value", this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
+            }
         }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
         this.automationType = AutomationType.valueOf(tag.getString("option"));
-        if (tag.getBoolean("left")) {
-            this.matching = Either.left(tag.getInt("value"));
+        if (tag.getBoolean("match")) {
+            if (tag.getBoolean("left")) {
+                this.matching = Either.left(tag.getInt("value"));
+            } else {
+                this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString("value"))));
+            }
         } else {
-            this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString("value"))));
+            this.matching = null;
         }
     }
 

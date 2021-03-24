@@ -47,8 +47,6 @@ public class RefineryScreen extends MachineHandledScreen<RefineryScreenHandler> 
         this.backgroundHeight = 192;
 
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 8, 29, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-        this.addWidget(new FluidTankWidget(handler.machine.getFluidTank().getTank(0), 122, 28, handler.machine.getWorld(), handler.machine.getPos()));
-        this.addWidget(new FluidTankWidget(handler.machine.getFluidTank().getTank(1), 152, 28, handler.machine.getWorld(), handler.machine.getPos()));
     }
 
     @Override

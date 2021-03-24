@@ -25,17 +25,17 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import com.hrznstudio.galacticraft.recipe.FabricationRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.CircuitFabricatorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -53,7 +53,6 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -70,7 +69,6 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private static final ItemFilter[] SLOT_FILTERS;
     private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
@@ -78,21 +76,18 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
         }
     };
 
-    static {
-        SLOT_FILTERS = new ItemFilter[5];
-        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
-        SLOT_FILTERS[INPUT_SLOT_DIAMOND] = stack -> stack.getItem() == Items.DIAMOND;
-        SLOT_FILTERS[INPUT_SLOT_SILICON] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
-        SLOT_FILTERS[INPUT_SLOT_SILICON_2] = stack -> stack.getItem() == GalacticraftItems.RAW_SILICON;
-        SLOT_FILTERS[INPUT_SLOT_REDSTONE] = stack -> stack.getItem() == Items.REDSTONE;
-    }
-
-
     public Status status = Status.NOT_ENOUGH_RESOURCES;
     public int progress;
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 70);
+        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(Items.DIAMOND), 31, 15);
+        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(GalacticraftItems.RAW_SILICON), 62, 45);
+        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(GalacticraftItems.RAW_SILICON), 62, 63);
+        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(Items.REDSTONE), 107, 70);
+        this.getInventory().addSlot(SlotType.INPUT, stack -> this.getRecipe(new SimpleInventory(stack)).isPresent(), 134, 15);
+        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));
     }
 
     @Override
@@ -103,24 +98,6 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 7;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.ITEM_INPUT, AutomationType.ITEM_OUTPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == INPUT_SLOT) return stack -> this.getRecipe(new SimpleInventory(stack)).isPresent();
-        if (slot == OUTPUT_SLOT) return ConstantItemFilter.ANYTHING;
-
-        return SLOT_FILTERS[slot];
     }
 
     @Override
@@ -189,16 +166,6 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     @Override
     public int getBaseEnergyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().circuitFabricatorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot != CHARGE_SLOT && slot != OUTPUT_SLOT;
     }
 
     @Nullable

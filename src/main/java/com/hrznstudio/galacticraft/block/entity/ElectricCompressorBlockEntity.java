@@ -24,16 +24,16 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
+import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.ElectricCompressorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -49,7 +49,6 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,7 +60,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
 
-    private final Inventory craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+    private final Inventory craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(0, 9)) {
         @Override
         public boolean canPlayerUse(PlayerEntity player) {
             return getWrappedInventory().canPlayerUse(player);
@@ -72,33 +71,24 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
 
     public ElectricCompressorBlockEntity() {
         super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
-    }
 
-    @Override
-    public int getInventorySize() {
-        return 12;
-    }
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 3 * 18 + 1, 75);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                this.getInventory().addSlot(SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+            }
+        }
 
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.ITEM_INPUT, AutomationType.ITEM_OUTPUT);
+        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 29));
+        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 47));
     }
 
     public int getProgress() {
-        return progress;
+        return this.progress;
     }
 
     public int getMaxProgress() {
         return MAX_PROGRESS;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == CHARGE_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        } else {
-            return super.getFilterForSlot(slot);
-        }
     }
 
     @Override
@@ -183,16 +173,6 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     @Override
     public int getBaseEnergyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().electricCompressorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return !(slot == OUTPUT_SLOT || slot == SECOND_OUTPUT_SLOT);
     }
 
     @Nullable

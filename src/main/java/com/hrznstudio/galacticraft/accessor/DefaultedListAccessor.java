@@ -20,12 +20,10 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.attribute;
+package com.hrznstudio.galacticraft.accessor;
 
-import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import net.minecraft.util.collection.DefaultedList;
 
-import java.util.List;
-
-public interface Automatable {
-    List<SlotType> getTypes();
+public interface DefaultedListAccessor<E> {
+    void setDefaultedList_gcr(DefaultedList<E> list);
 }

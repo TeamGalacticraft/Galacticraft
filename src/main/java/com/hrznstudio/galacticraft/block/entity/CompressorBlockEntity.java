@@ -25,15 +25,14 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
+import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.recipe.CompressingRecipe;
 import com.hrznstudio.galacticraft.recipe.GalacticraftRecipes;
 import com.hrznstudio.galacticraft.screen.CompressorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -51,7 +50,6 @@ import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -69,35 +67,29 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
     public CompressorBlockEntity() {
         super(GalacticraftBlockEntities.COMPRESSOR_TYPE);
-        this.craftingInv = new InventoryFixedWrapper(getInventory().getSubInv(0, 9)) {
+        this.craftingInv = new InventoryFixedWrapper(this.getInventory().getSubInv(0, 9)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
                 return getWrappedInventory().canPlayerUse(player);
             }
         };
+
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                this.getInventory().addSlot(SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+            }
+        }
+
+        // Fuel slot
+        this.getInventory().addSlot(SlotType.FUEL_OUT, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 3 * 18 + 1, 75);
+
+        // Output slot
+        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 11;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.ITEM_INPUT, AutomationType.ITEM_OUTPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == FUEL_INPUT_SLOT) {
-            return stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null;
-        }
-        return ConstantItemFilter.ANYTHING;
     }
 
     @Override
@@ -177,16 +169,6 @@ public class CompressorBlockEntity extends MachineBlockEntity {
         super.fromTag(state, tag);
         this.progress = tag.getInt("Progress");
         this.fuelTime = tag.getInt("FuelTime");
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return slot == OUTPUT_SLOT;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot < 9;
     }
 
     @Nullable

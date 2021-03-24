@@ -24,18 +24,15 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.RefineryScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
@@ -50,13 +47,10 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class RefineryBlockEntity extends MachineBlockEntity implements Tickable {
-    private static final ItemFilter[] SLOT_FILTERS = new ItemFilter[3];
     private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(8);
     public static final int OIL_TANK = 0;
     public static final int FUEL_TANK = 1;
@@ -64,39 +58,20 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     public static final int FLUID_INPUT_SLOT = 1;
     public static final int FLUID_OUTPUT_SLOT = 2;
 
-    static {
-        SLOT_FILTERS[CHARGE_SLOT] = EnergyUtils.IS_EXTRACTABLE;
-        SLOT_FILTERS[FLUID_INPUT_SLOT] = stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL);
-        SLOT_FILTERS[FLUID_OUTPUT_SLOT] = stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL);
-    }
 
     public RefineryBlockEntity() {
         super(GalacticraftBlockEntities.REFINERY_TYPE);
-    }
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
+        this.getInventory().addSlot(SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
+        this.getInventory().addSlot(SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
 
-    @Override
-    public int getInventorySize() {
-        return 3;
-    }
-
-    @Override
-    public int getFluidTankSize() {
-        return 2;
+        this.getFluidTank().addSlot(SlotType.OIL, Constants.Filter.OIL, 122, 28, 0);
+        this.getFluidTank().addSlot(SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 0);
     }
 
     @Override
     public FluidAmount getFluidTankCapacity() {
         return MAX_CAPACITY;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT, AutomationType.FLUID_OUTPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return SLOT_FILTERS[slot];
     }
 
     @Override
@@ -139,24 +114,6 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Override
     public int getBaseEnergyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().refineryEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canPipeExtractFluid(int tank) {
-        return tank == FUEL_TANK;
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return tank == OIL_TANK;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        if (tank == OIL_TANK) {
-            return Constants.Filter.OIL;
-        }
-        return Constants.Filter.FUEL;
     }
 
     @Nullable

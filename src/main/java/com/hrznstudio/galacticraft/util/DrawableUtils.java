@@ -33,9 +33,9 @@ import net.minecraft.text.Text;
  */
 @Environment(EnvType.CLIENT)
 public interface DrawableUtils {
-    default void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, String text, int x, int y, int color) {
-        textRenderer.draw(matrices, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
-    }
+//    default void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, String text, int x, int y, int color) {
+//        textRenderer.draw(matrices, text, (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
+//    }
 
     default void drawCenteredString(MatrixStack matrices, TextRenderer textRenderer, Text text, int x, int y, int color) {
         textRenderer.draw(matrices, text.asOrderedText(), (float) (x - textRenderer.getWidth(text) / 2), (float) y, color);
@@ -43,5 +43,9 @@ public interface DrawableUtils {
 
     default boolean check(double mouseX, double mouseY, int x, int y, int width, int height) {
         return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
+    }
+
+    default void recompilemeplease() {
+
     }
 }

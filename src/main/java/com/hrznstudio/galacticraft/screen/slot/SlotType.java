@@ -52,7 +52,11 @@ public class SlotType implements StringIdentifiable {
     public static final SlotType WILDCARD_ENERGY = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_energy"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_energy"), AutomationType.ITEM_IO);
 
     public static final SlotType OIL = new SlotType(new Identifier(Constants.MOD_ID, "oil"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft-rewoven.io_config.oil"), AutomationType.FLUID_INPUT);
-    public static final SlotType FUEL = new SlotType(new Identifier(Constants.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.fuel"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType OXYGEN_IN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_in"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen_in"), AutomationType.FLUID_INPUT);
+    public static final SlotType OXYGEN_OUT = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_out"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen_out"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType OXYGEN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen"), AutomationType.FLUID_IO);
+    public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constants.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.fuel"), AutomationType.FLUID_OUTPUT);
+    public static final SlotType SOLID_FUEL = new SlotType(new Identifier(Constants.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(2, 2, 2)), new TranslatableText("ui.galacticraft-rewoven.io_config.coal"), AutomationType.ITEM_INPUT);
 
     private final Identifier id;
     private final TextColor color;
@@ -122,6 +126,6 @@ public class SlotType implements StringIdentifiable {
         Registry.register(SLOT_TYPES, CHARGE.getId(), CHARGE);
         Registry.register(SLOT_TYPES, OTHER.getId(), OTHER);
         Registry.register(SLOT_TYPES, OIL.getId(), OIL);
-        Registry.register(SLOT_TYPES, FUEL.getId(), FUEL);
+        Registry.register(SLOT_TYPES, FUEL_OUT.getId(), FUEL_OUT);
     }
 }

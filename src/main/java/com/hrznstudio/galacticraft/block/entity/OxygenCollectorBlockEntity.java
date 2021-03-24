@@ -24,20 +24,17 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.atmosphere.AtmosphericGas;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.celestialbodies.CelestialBodyType;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.OxygenCollectorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -54,7 +51,6 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -68,26 +64,13 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 1;
-    }
-
-    @Override
-    public int getFluidTankSize() {
-        return 1;
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 13, 69);
+        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
     public FluidAmount getFluidTankCapacity() {
         return MAX_OXYGEN;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_OUTPUT);
     }
 
     @Override
@@ -98,11 +81,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return EnergyUtils.IS_EXTRACTABLE;
     }
 
     private int collectOxygen() {
@@ -198,26 +176,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     @Override
     public int getBaseEnergyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeExtractFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable

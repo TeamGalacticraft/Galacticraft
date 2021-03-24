@@ -49,6 +49,8 @@ public abstract class MachineScreenHandler<T extends MachineBlockEntity> extends
         super(handlerType, syncId);
         this.player = player;
         this.machine = machine;
+        this.machine.getInventory().createSlots(this);
+        this.machine.getFluidTank().createTanks(this);
         this.addProperties(new FluidTankPropertyDelegate(machine.getFluidTank()));
 
         this.addProperty(new StatusProperty(machine));

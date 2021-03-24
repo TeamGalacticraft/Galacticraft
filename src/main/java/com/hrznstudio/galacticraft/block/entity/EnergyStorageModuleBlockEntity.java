@@ -22,14 +22,12 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.EnergyStorageModuleScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -37,8 +35,6 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -49,7 +45,9 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
 
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
-        setStatus(MachineStatus.NULL);
+        this.setStatus(MachineStatus.NULL);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 102, 24);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 102, 48);
     }
 
     @Override
@@ -68,23 +66,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     }
 
     @Override
-    public int getInventorySize() {
-        return 2;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.POWER_OUTPUT);
-    }
-
-    @Override
     protected MachineStatus getStatusById(int index) {
         return MachineStatus.NULL;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return slot == CHARGE_BATTERY_SLOT ? EnergyUtils.IS_INSERTABLE : EnergyUtils.IS_EXTRACTABLE;
     }
 
     @Override
@@ -106,16 +89,6 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
         super.updateComponents();
         this.attemptChargeFromStack(DRAIN_BATTERY_SLOT);
         this.attemptDrainPowerToStack(CHARGE_BATTERY_SLOT);
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
     }
 
     @Nullable

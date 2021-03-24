@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft;
 
 import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
+import alexiil.mc.lib.attributes.fluid.filter.RawFluidTagFilter;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import com.hrznstudio.galacticraft.util.ColorUtils;
@@ -602,9 +603,9 @@ public interface Constants {
     }
 
     interface Filter {
-        FluidFilter LOX_ONLY = key -> GalacticraftTags.LIQUID_OXYGEN.contains(key.getRawFluid());
-        FluidFilter OIL = key -> GalacticraftTags.OIL.contains(key.getRawFluid());
-        FluidFilter FUEL = key -> GalacticraftTags.FUEL.contains(key.getRawFluid());
+        FluidFilter LOX_ONLY = new RawFluidTagFilter(GalacticraftTags.LIQUID_OXYGEN);
+        FluidFilter OIL = new RawFluidTagFilter(GalacticraftTags.OIL);
+        FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTags.FUEL);
     }
 
     interface Misc {

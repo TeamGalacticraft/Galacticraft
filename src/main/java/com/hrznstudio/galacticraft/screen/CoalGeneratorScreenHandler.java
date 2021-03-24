@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.CoalGeneratorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -35,8 +34,6 @@ public class CoalGeneratorScreenHandler extends MachineScreenHandler<CoalGenerat
 
     public CoalGeneratorScreenHandler(int syncId, PlayerEntity player, CoalGeneratorBlockEntity machine) {
         super(syncId, player, machine, GalacticraftScreenHandlerTypes.COAL_GENERATOR_HANDLER);
-        this.addSlot(new AutoFilteredSlot(machine, CoalGeneratorBlockEntity.FUEL_SLOT, 8, 74));
-        this.addSlot(new AutoFilteredSlot(machine, CoalGeneratorBlockEntity.CHARGE_SLOT, 8, 8));
         this.addPlayerInventorySlots(0, 94);
     }
 

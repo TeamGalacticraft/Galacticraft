@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.screen;
 
-import alexiil.mc.lib.attributes.fluid.SingleFluidTank;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.AutomationType;
@@ -32,10 +31,8 @@ import com.hrznstudio.galacticraft.api.machine.RedstoneState;
 import com.hrznstudio.galacticraft.api.machine.SecurityInfo;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
-import com.hrznstudio.galacticraft.energy.api.Capacitor;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
-import com.hrznstudio.galacticraft.screen.slot.MachineComponent;
 import com.hrznstudio.galacticraft.screen.tank.Tank;
 import com.hrznstudio.galacticraft.util.ColorUtils;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
@@ -88,7 +85,7 @@ import java.util.function.Consumer;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
-public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtils{
+public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtils {
     public static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.MACHINE_CONFIG_PANELS));
     public static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OVERLAY));
 
@@ -289,19 +286,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             config.put(face, handler.machine.getSideConfiguration().get(face).getAutomationType());
         }
 
-        for (List<MachineComponent<Capacitor>> components : handler.getMachineCapacitors().values()) {
-            for (MachineComponent<Capacitor> component : components) {
-                this.addWidget(component.createWidget(handler.machine));
-            }
-        }
+//        for (List<MachineComponent<Capacitor>> components : handler.getMachineCapacitors().values()) {
+//            for (MachineComponent<Capacitor> component : components) {
+//                this.addWidget(component.createWidget(handler.machine));
+//            }
+//        }
+//
+//        for (List<MachineComponent<SingleFluidTank>> components : handler.getMachineTanks().values()) {
+//            for (MachineComponent<SingleFluidTank> component : components) {
+//                this.addWidget(component.createWidget(handler.machine));
+//            }
+//        }
 
-        for (List<MachineComponent<SingleFluidTank>> components : handler.getMachineTanks().values()) {
-            for (MachineComponent<SingleFluidTank> component : components) {
-                this.addWidget(component.createWidget(handler.machine));
-            }
-        }
-
-        this.client.getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
+        MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN) {
                 MachineHandledScreen.this.ownerSkin = identifier;
             }
@@ -774,7 +771,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             int[] data = tank.getPositionData();
             this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
             int i = color.get(tank.index);
-            this.drawTextureColor(matrices, this.x, this.y, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2], , color[1], color[2]);
+            this.drawTextureColor(matrices, this.x, this.y, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, height,i >> 16 & 0xFF, i >> 8 & 0xFF, i & 0xFF);
 
             FluidVolume content = tank.getFluid();
             if (content.isEmpty()) return;
@@ -1063,7 +1060,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         BufferRenderer.draw(bufferBuilder);
     }
 
-    private enum Tab {
+    public enum Tab {
         REDSTONE(TAB_REDSTONE_U, TAB_REDSTONE_V, PANEL_REDSTONE_U, PANEL_REDSTONE_V, true),
         CONFIGURATION(TAB_CONFIG_U, TAB_CONFIG_V, PANEL_CONFIG_U, PANEL_CONFIG_V, true),
         STATS(TAB_STATS_U, TAB_STATS_V, PANEL_STATS_U, PANEL_STATS_V, false),

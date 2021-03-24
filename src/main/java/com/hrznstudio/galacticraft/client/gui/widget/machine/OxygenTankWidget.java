@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 
 import java.math.RoundingMode;
@@ -80,6 +81,11 @@ public class OxygenTankWidget extends AbstractWidget {
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
+    }
+
+    @Override
+    public void renderOutline(TextColor color) {
+//todo
     }
 
     public SingleFluidTankView getView() {

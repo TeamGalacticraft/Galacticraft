@@ -29,6 +29,7 @@ import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 
 import java.util.Collection;
@@ -65,6 +66,11 @@ public class CapacitorWidget extends AbstractWidget {
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);
         }
+    }
+
+    @Override
+    public void renderOutline(TextColor color) {
+
     }
 
     @Override

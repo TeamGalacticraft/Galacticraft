@@ -23,7 +23,6 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.OxygenCollectorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
@@ -46,7 +45,6 @@ public class OxygenCollectorScreenHandler extends MachineScreenHandler<OxygenCol
                 machine.collectionAmount = value;
             }
         });
-        this.addSlot(new AutoFilteredSlot(blockEntity, OxygenCollectorBlockEntity.CHARGE_SLOT, 13, 69));
         this.addPlayerInventorySlots(0, 99);
     }
 

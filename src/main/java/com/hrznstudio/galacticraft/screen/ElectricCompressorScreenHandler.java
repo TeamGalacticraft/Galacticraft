@@ -23,13 +23,10 @@
 package com.hrznstudio.galacticraft.screen;
 
 import com.hrznstudio.galacticraft.block.entity.ElectricCompressorBlockEntity;
-import com.hrznstudio.galacticraft.screen.slot.AutoFilteredSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.Property;
-import net.minecraft.screen.slot.FurnaceOutputSlot;
-import net.minecraft.screen.slot.Slot;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -48,19 +45,6 @@ public class ElectricCompressorScreenHandler extends MachineScreenHandler<Electr
                 machine.progress = value;
             }
         });
-
-        // 3x3 compressor input grid
-        int slot = 0;
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 3; x++) {
-                this.addSlot(new Slot(machine.getWrappedInventory(), slot, x * 18 + 19, y * 18 + 18));
-                slot++;
-            }
-        }
-
-        this.addSlot(new FurnaceOutputSlot(this.player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.OUTPUT_SLOT, 138, 29));
-        this.addSlot(new FurnaceOutputSlot(player, machine.getWrappedInventory(), ElectricCompressorBlockEntity.SECOND_OUTPUT_SLOT, 138, 47));
-        this.addSlot(new AutoFilteredSlot(machine, ElectricCompressorBlockEntity.CHARGE_SLOT, 3 * 18 + 1, 75));
 
         this.addPlayerInventorySlots(0, 117);
     }

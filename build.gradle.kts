@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-import java.time.format.DateTimeFormatter
 import java.time.Year
+import java.time.format.DateTimeFormatter
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion       = project.property("minecraft.version").toString()
@@ -66,7 +66,7 @@ base {
 
 loom {
     refmapName = "galacticraft-rewoven.refmap.json"
-    accessWidener = File("src/main/resources/galacticraft_rewoven.accesswidener")
+    accessWidener = rootProject.file("src/main/resources/galacticraft_rewoven.accesswidener")
 }
 
 repositories {

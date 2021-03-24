@@ -27,22 +27,18 @@ import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.BubbleEntity;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
-import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.screen.BubbleDistributorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.FluidUtils;
+import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -63,8 +59,6 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -81,26 +75,14 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
 
     public BubbleDistributorBlockEntity() {
         super(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE);
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 2;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 31, 62);
+        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getFluidTankSize() {
-        return 1;
     }
 
     @Override
@@ -111,16 +93,6 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == BATTERY_SLOT) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        } else if (slot == OXYGEN_TANK_SLOT) {
-            return stack -> FluidUtils.canExtractFluids(stack, GalacticraftFluids.LIQUID_OXYGEN);
-        }
-        return ConstantItemFilter.NOTHING;
     }
 
     @Override
@@ -216,22 +188,12 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
         return Galacticraft.CONFIG_MANAGER.get().oxygenCollectorEnergyConsumptionRate();
     }
 
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return true;
-    }
-
     public double getSize() {
         return size;
     }
 
     public void setSize(double size) {
         this.size = size;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Filter.LOX_ONLY;
     }
 
     protected void drainOxygenFromStack(int slot) {

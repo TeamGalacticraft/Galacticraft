@@ -22,16 +22,13 @@
 
 package com.hrznstudio.galacticraft.block.entity;
 
-import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.BasicSolarPanelScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -55,26 +52,12 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
 
     public BasicSolarPanelBlockEntity() {
         super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE);
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 1;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_OUTPUT);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 62);
     }
 
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return slot == CHARGE_SLOT ? EnergyUtils.IS_INSERTABLE : ConstantItemFilter.NOTHING;
     }
 
     @Override

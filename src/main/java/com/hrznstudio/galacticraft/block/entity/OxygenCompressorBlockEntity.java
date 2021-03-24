@@ -24,18 +24,15 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.fluid.filter.FluidFilter;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenCompressorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,8 +46,6 @@ import net.minecraft.util.Tickable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
@@ -60,11 +55,10 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
 
     public OxygenCompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
-    }
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
+        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY); //80, 27
 
-    @Override
-    public int getInventorySize() {
-        return 2;
     }
 
     @Override
@@ -73,27 +67,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     }
 
     @Override
-    public int getFluidTankSize() {
-        return 1;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_INPUT, AutomationType.FLUID_INPUT);
-    }
-
-    @Override
     public boolean canInsertEnergy() {
         return true;
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        if (slot == 0) {
-            return EnergyUtils.IS_EXTRACTABLE;
-        } else {
-            return OxygenTankUtils::isOxygenTank;
-        }
     }
 
     @Override
@@ -128,26 +103,6 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     @Override
     public int getBaseEnergyConsumption() {
         return Galacticraft.CONFIG_MANAGER.get().oxygenCompressorEnergyConsumptionRate();
-    }
-
-    @Override
-    public boolean canHopperExtract(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return true;
-    }
-
-    @Override
-    public boolean canPipeInsertFluid(int tank) {
-        return true;
-    }
-
-    @Override
-    public FluidFilter getFilterForTank(int tank) {
-        return Constants.Filter.LOX_ONLY;
     }
 
     @Nullable

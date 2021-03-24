@@ -23,14 +23,12 @@
 package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.Galacticraft;
-import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.CoalGeneratorScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -48,8 +46,6 @@ import net.minecraft.util.Tickable;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -77,6 +73,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
+        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 74);
+        this.getInventory().addSlot(SlotType.SOLID_FUEL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
     }
 
     @Override
@@ -87,21 +85,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     @Override
     protected MachineStatus getStatusById(int index) {
         return Status.values()[index];
-    }
-
-    @Override
-    public int getInventorySize() {
-        return 2;
-    }
-
-    @Override
-    public List<AutomationType> validSideOptions() {
-        return ImmutableList.of(AutomationType.NONE, AutomationType.POWER_OUTPUT, AutomationType.ITEM_INPUT);
-    }
-
-    @Override
-    public ItemFilter getFilterForSlot(int slot) {
-        return slot == CHARGE_SLOT ? EnergyUtils.IS_INSERTABLE : stack -> FUEL_MAP.containsKey(stack.getItem());
     }
 
     @Override
@@ -150,11 +133,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
                 this.heat = Math.min(1, this.heat + 0.02d);
             }
         }
-    }
-
-    @Override
-    public boolean canHopperInsert(int slot) {
-        return slot == FUEL_SLOT;
     }
 
     @Nullable

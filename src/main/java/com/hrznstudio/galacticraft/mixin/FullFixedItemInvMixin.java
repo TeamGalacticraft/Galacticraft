@@ -20,12 +20,23 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.attribute;
+package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
+import com.hrznstudio.galacticraft.accessor.DefaultedListAccessor;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.collection.DefaultedList;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.List;
+@Mixin(value = FullFixedItemInv.class, remap = false)
+public abstract class FullFixedItemInvMixin implements DefaultedListAccessor<ItemStack> {
+    @Mutable @Shadow @Final protected DefaultedList<ItemStack> slots;
 
-public interface Automatable {
-    List<SlotType> getTypes();
+    @Override
+    public void setDefaultedList_gcr(DefaultedList<ItemStack> list) {
+        this.slots = list;
+    }
 }

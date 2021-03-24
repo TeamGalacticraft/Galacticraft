@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.fluid.FluidVolumeUtil;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.volume.FluidKeys;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.attribute.GalacticraftAttributes;
 import com.hrznstudio.galacticraft.attribute.oxygen.EmptyOxygenTank;
@@ -34,8 +35,13 @@ import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import com.hrznstudio.galacticraft.tag.GalacticraftTags;
 import net.minecraft.item.ItemStack;
 
-public class OxygenTankUtils {
-    private OxygenTankUtils() {}
+public enum OxygenTankUtils {
+    ;
+    public static final ItemFilter OXYGEN_TANK_EXTRACTABLE = stack -> canExtractLOX(stack);
+
+    private static boolean canExtractLOX(ItemStack stack) {
+        return isOxygenTank(stack) && getOxygenTank(stack).getCapacity() > 0;
+    }
 
     public static FluidVolume insertLiquidOxygen(Reference<ItemStack> stackRef, FluidVolume volume) {
         return insertLiquidOxygen(stackRef, loxToOxygen(volume));
@@ -46,7 +52,6 @@ public class OxygenTankUtils {
     }
 
     public static FluidVolume insertLiquidOxygen(OxygenTank tank, int oxygen) {
-
         tank.setAmount(Math.min(tank.getAmount() + oxygen, tank.getCapacity()));
         return oxygenToLOX(Math.max(0, (tank.getCapacity() - (tank.getAmount() + oxygen)) * -1));
     }

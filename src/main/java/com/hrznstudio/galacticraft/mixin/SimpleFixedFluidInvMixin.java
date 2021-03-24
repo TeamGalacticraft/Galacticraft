@@ -20,12 +20,23 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.attribute;
+package com.hrznstudio.galacticraft.mixin;
 
-import com.hrznstudio.galacticraft.screen.slot.SlotType;
+import alexiil.mc.lib.attributes.fluid.impl.SimpleFixedFluidInv;
+import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
+import com.hrznstudio.galacticraft.accessor.DefaultedListAccessor;
+import net.minecraft.util.collection.DefaultedList;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.List;
+@Mixin(value = SimpleFixedFluidInv.class, remap = false)
+public abstract class SimpleFixedFluidInvMixin implements DefaultedListAccessor<FluidVolume> {
+    @Mutable @Shadow @Final protected DefaultedList<FluidVolume> tanks;
 
-public interface Automatable {
-    List<SlotType> getTypes();
+    @Override
+    public void setDefaultedList_gcr(DefaultedList<FluidVolume> list) {
+        this.tanks = list;
+    }
 }
