@@ -31,7 +31,7 @@ import net.minecraft.text.TranslatableText;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public enum AutomationType implements Comparable<AutomationType> {
-    NONE(new TranslatableText("ui.galacticraft-rewoven.side_option.default").setStyle(Constants.Text.DARK_GRAY_STYLE), false, false, false, false, false),
+    NONE(new TranslatableText("ui.galacticraft-rewoven.side_option.none").setStyle(Constants.Text.DARK_GRAY_STYLE), false, false, false, false, false),
     POWER_INPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Text.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.in").setStyle(Constants.Text.GREEN_STYLE)), true, false, false, true, false),
     POWER_OUTPUT(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Text.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.out").setStyle(Constants.Text.DARK_RED_STYLE)), true, false, false, false, true),
     POWER_IO(new TranslatableText("ui.galacticraft-rewoven.side_option.energy").setStyle(Constants.Text.LIGHT_PURPLE_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.side_option.io").setStyle(Constants.Text.BLUE_STYLE)), true, false, false, true, true),

@@ -22,16 +22,29 @@
 
 package com.hrznstudio.galacticraft.api.block.util;
 
+import com.hrznstudio.galacticraft.Constants;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
 public enum BlockFace {
-    FRONT,
-    RIGHT,
-    BACK,
-    LEFT,
-    TOP,
-    BOTTOM;
+    FRONT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.front")),
+    RIGHT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.right")),
+    BACK(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.back")),
+    LEFT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.left")),
+    TOP(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.top")),
+    BOTTOM(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.bottom"));
+
+    private final MutableText name;
+
+    BlockFace(MutableText name) {
+        this.name = name.setStyle(Constants.Text.GOLD_STYLE);
+    }
+
+    public MutableText getName() {
+        return name;
+    }
 
     @NotNull
     public static BlockFace toFace(Direction facing, Direction target) {
