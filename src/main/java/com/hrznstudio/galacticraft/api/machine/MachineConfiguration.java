@@ -28,12 +28,11 @@ import net.minecraft.nbt.CompoundTag;
 public class MachineConfiguration implements Saveable {
     private MachineStatus status = MachineStatus.NULL;
     private RedstoneState redstone = RedstoneState.IGNORE;
-    private final SideConfiguration configuration;
-    private final SecurityInfo security;
+    private final SideConfiguration configuration = new SideConfiguration();
+    private final SecurityInfo security = new SecurityInfo();
 
-    public MachineConfiguration(SideConfiguration configuration, SecurityInfo security) {
-        this.configuration = configuration;
-        this.security = security;
+    public MachineConfiguration() {
+
     }
 
     public void setStatus(MachineStatus status) {

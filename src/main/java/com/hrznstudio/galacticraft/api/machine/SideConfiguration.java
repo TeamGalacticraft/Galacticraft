@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.api.machine;
 
 import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
-import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
@@ -36,11 +35,8 @@ public class SideConfiguration {
     private final ConfiguredSideOption right;
     private final ConfiguredSideOption top;
     private final ConfiguredSideOption bottom;
-    private final MachineBlockEntity machine;
 
-    public SideConfiguration(MachineBlockEntity machine) {
-        this.machine = machine;
-
+    public SideConfiguration() {
         this.front = new ConfiguredSideOption(AutomationType.NONE);
         this.back = new ConfiguredSideOption(AutomationType.NONE);
         this.left = new ConfiguredSideOption(AutomationType.NONE);

@@ -85,7 +85,7 @@ import java.util.Optional;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public abstract class MachineBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Tickable, ExtendedScreenHandlerFactory {
-    private final MachineConfiguration configuration = new MachineConfiguration(new SideConfiguration(this), new SecurityInfo());
+    private final MachineConfiguration configuration = new MachineConfiguration();
 
     private boolean noDrop = false;
     private boolean loaded = false;
@@ -440,9 +440,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (this.getEnergyCapacity() > 0) this.getCapacitor().toTag(tag);
         if (this.getInventory().getSlotCount()> 0) this.getInventory().toTag(tag);
         if (this.getFluidTank().getTankCount() > 0) this.getFluidTank().toTag(tag);
-        this.getSecurity().toTag(tag);
-        this.getSideConfiguration().toTag(tag);
-        this.getRedstone().toTag(tag);
+        this.configuration.toTag(tag);
         tag.putBoolean("NoDrop", this.noDrop);
         return tag;
     }
@@ -453,12 +451,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (this.getEnergyCapacity() > 0) this.getCapacitor().fromTag(tag);
         if (this.getInventory().getSlotCount() > 0) this.getInventory().fromTag(tag);
         if (this.getFluidTank().getTankCount() > 0) this.getFluidTank().fromTag(tag);
-        this.getSecurity().fromTag(tag);
-        this.getSideConfiguration().fromTag(tag);
-        this.setRedstone(RedstoneState.fromTag(tag));
+        this.configuration.fromTag(tag);
         this.noDrop = tag.getBoolean("NoDrop");
-        if (loaded && !world.isClient) this.sync();
-        if (!loaded) loaded = true;
+        if (loaded && !world.isClient) {
+            this.sync();
+        } else {
+            loaded = true;
+        }
     }
 
     @Override
@@ -580,4 +579,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return LiteralText.EMPTY;
     }
 
+    public MachineConfiguration getConfiguration() {
+        return this.configuration;
+    }
 }

@@ -357,47 +357,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
                 BlockState state = this.world.getBlockState(this.pos);
                 BakedModel model = this.client.getBakedModelManager().getBlockModels().getModel(state);
-//                if (((FabricBakedModel) model).isVanillaAdapter()) {
-                    VertexConsumer consumer = VertexConsumerProvider.immediate(this.client.getBufferBuilders().getBlockBufferBuilders().get(RenderLayers.getEntityBlockLayer(state, false))).getBuffer(RenderLayers.getEntityBlockLayer(state, false));
-                    matrices.push();
-                    matrices.translate(33, 24, 0);
-                    for (BakedQuad quad : model.getQuads(state, Direction.UP, this.world.getRandom())) {
-                        consumer.quad(matrices.peek(), quad, 1, 1, 1, 15728880, OverlayTexture.DEFAULT_UV);
-                    }
-                    matrices.pop();
-                    matrices.push();
-                    matrices.translate(14, 43, 0);
-                    for (BakedQuad quad : model.getQuads(state, Direction.WEST, this.world.getRandom())) {
-                        consumer.quad(matrices.peek(), quad, 1, 1, 1, 15728880, OverlayTexture.DEFAULT_UV);
-                    }
-                    matrices.pop();
-                    matrices.push();
-                    matrices.translate(33, 43, 0);
-                    for (BakedQuad quad : model.getQuads(state, Direction.NORTH, this.world.getRandom())) {
-                        consumer.quad(matrices.peek(), quad, 1, 1, 1, 15728880, OverlayTexture.DEFAULT_UV);
-                    }
-                    matrices.pop();
-                    matrices.push();
-                    matrices.translate(52, 43, 0);
-                    for (BakedQuad quad : model.getQuads(state, Direction.EAST, this.world.getRandom())) {
-                        consumer.quad(matrices.peek(), quad, 1, 1, 1, 15728880, OverlayTexture.DEFAULT_UV);
-                    }
-                    matrices.pop();
-                    matrices.push();
-                    matrices.translate(71, 43, 0);
-                    for (BakedQuad quad : model.getQuads(state, Direction.SOUTH, this.world.getRandom())) {
-                        consumer.quad(matrices.peek(), quad, 1, 1, 1, 15728880, OverlayTexture.DEFAULT_UV);
-                    }
-                    matrices.pop();
-                    matrices.push();
-                    matrices.translate(33, 22, 0);
-                    for (BakedQuad quad : model.getQuads(state, Direction.DOWN, this.world.getRandom())) {
-                        consumer.quad(matrices.peek(), quad, 1, 1, 1, 15728880, OverlayTexture.DEFAULT_UV);
-                    }
-                    matrices.pop();
-//                } else {
-//                    ((FabricBakedModel) model).emitBlockQuads(world, state, pos, world::getRandom, this.renderContext);
-//                }
+
                 matrices.pop();
             }
             if (Tab.STATS.isOpen()) {

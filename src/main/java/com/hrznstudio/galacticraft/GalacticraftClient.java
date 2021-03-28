@@ -25,12 +25,13 @@ package com.hrznstudio.galacticraft;
 import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
-import com.hrznstudio.galacticraft.client.model.GCGeneratedMachineModels;
+import com.hrznstudio.galacticraft.client.model.GalacticraftMachineBakedModel;
 import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPacketReceivers;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
 import com.hrznstudio.galacticraft.client.render.block.entity.GalacticraftBlockEntityRenderers;
 import com.hrznstudio.galacticraft.client.render.entity.*;
-import com.hrznstudio.galacticraft.client.resource.GCResourceReloadListener;
+import com.hrznstudio.galacticraft.client.resource.GalacticraftResourceReloadListener;
+import com.hrznstudio.galacticraft.client.util.SpriteUtil;
 import com.hrznstudio.galacticraft.entity.GalacticraftEntityTypes;
 import com.hrznstudio.galacticraft.misc.cape.CapeLoader;
 import com.hrznstudio.galacticraft.misc.cape.JsonCapes;
@@ -135,7 +136,7 @@ public class GalacticraftClient implements ClientModInitializer {
 
         GalacticraftBlockEntityRenderers.register();
         GalacticraftC2SPacketReceivers.register();
-        GCGeneratedMachineModels.registerDefaults();
+        GalacticraftMachineBakedModel.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
@@ -148,13 +149,13 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLOWSTONE_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.UNLIT_LANTERN, RenderLayer.getCutout());
 
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GCResourceReloadListener());
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
 
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_FUEL_PARTICLE, (effect1, world1, x1, y1, z1, velX1, velY1, velZ1) -> new DrippingFuelParticle(world1, x1, y1, z1, velX1, velY1, velZ1));
         ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE, (effect, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
-            if (resourceId.equals(GCGeneratedMachineModels.MACHINE_MARKER)) {
+            if (GalacticraftMachineBakedModel.MACHINE_MARKER.equals(resourceId)) {
                 return new UnbakedModel() {
                     @Override
                     public Collection<Identifier> getModelDependencies() {
@@ -164,23 +165,22 @@ public class GalacticraftClient implements ClientModInitializer {
                     @Override
                     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
                         ImmutableList.Builder<SpriteIdentifier> builder = ImmutableList.builder();
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_side")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_power_output")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_oxygen_output")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_fluid_output")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_item_input")));
-                        builder.add(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, new Identifier(Constants.MOD_ID, "block/machine_item_output")));
+                        builder.add(SpriteUtil.identifier("block/machine"));
+                        builder.add(SpriteUtil.identifier("block/machine_side"));
+                        builder.add(SpriteUtil.identifier("block/machine_power_input"));
+                        builder.add(SpriteUtil.identifier("block/machine_power_output"));
+                        builder.add(SpriteUtil.identifier("block/machine_oxygen_input"));
+                        builder.add(SpriteUtil.identifier("block/machine_oxygen_output"));
+                        builder.add(SpriteUtil.identifier("block/machine_fluid_input"));
+                        builder.add(SpriteUtil.identifier("block/machine_fluid_output"));
+                        builder.add(SpriteUtil.identifier("block/machine_item_input"));
+                        builder.add(SpriteUtil.identifier("block/machine_item_output"));
                         return builder.build();
                     }
 
                     @Override
                     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-                        Galacticraft.LOGGER.info("Generating model for: {}", modelId);
-                        return GCGeneratedMachineModels.INSTANCE;
+                        return GalacticraftMachineBakedModel.INSTANCE;
                     }
                 };
             }

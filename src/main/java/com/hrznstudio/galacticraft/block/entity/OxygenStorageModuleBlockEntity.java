@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
-    private static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
+    public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
 
     public OxygenStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_STORAGE_MODULE_TYPE);

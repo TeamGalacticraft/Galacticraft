@@ -29,17 +29,21 @@ import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
 
 public enum BlockFace {
-    FRONT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.front")),
-    RIGHT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.right")),
-    BACK(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.back")),
-    LEFT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.left")),
-    TOP(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.top")),
-    BOTTOM(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.bottom"));
+    FRONT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.front"), true, false),
+    RIGHT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.right"), true, false),
+    BACK(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.back"), true, false),
+    LEFT(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.left"), true, false),
+    TOP(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.top"), false, true),
+    BOTTOM(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.bottom"), false, true);
 
     private final MutableText name;
+    private final boolean horizontal;
+    private final boolean vertical;
 
-    BlockFace(MutableText name) {
+    BlockFace(MutableText name, boolean horizontal, boolean vertical) {
         this.name = name.setStyle(Constants.Text.GOLD_STYLE);
+        this.horizontal = horizontal;
+        this.vertical = vertical;
     }
 
     public MutableText getName() {
@@ -190,5 +194,13 @@ public enum BlockFace {
                 return BACK;
         }
         throw new RuntimeException();
+    }
+
+    public boolean isHorizontal() {
+        return horizontal;
+    }
+
+    public boolean isVertical() {
+        return vertical;
     }
 }
