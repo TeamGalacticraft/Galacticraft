@@ -390,7 +390,7 @@ public interface Constants {
         String EVOLVED_ZOMBIE_SPAWN_EGG = "evolved_zombie_spawn_egg";
       
         String LEGACY_MUSIC_DISC_MARS = "legacy_music_disc_mars";
-        String LEGACY_MUSIC_DISC_MINMAS = "legacy_music_disc_minmas";
+        String LEGACY_MUSIC_DISC_MIMAS = "legacy_music_disc_mimas";
         String LEGACY_MUSIC_DISC_ORBIT = "legacy_music_disc_orbit";
         String LEGACY_MUSIC_DISC_SPACERACE = "legacy_music_disc_spacerace";
     }
