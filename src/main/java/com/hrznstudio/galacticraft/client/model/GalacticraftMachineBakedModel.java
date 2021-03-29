@@ -80,7 +80,7 @@ public enum GalacticraftMachineBakedModel implements FabricBakedModel, BakedMode
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constants.MOD_ID, "block/machine_item_output");
 
     private static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
-    private static final Map<Block, SpriteProvider> TEXTURE_PROVIDERS = new HashMap<>();
+    public static final Map<Block, SpriteProvider> TEXTURE_PROVIDERS = new HashMap<>();
     private static final MachineConfiguration CONFIGURATION = new MachineConfiguration();
 
     public static void register(Block block, SpriteProvider provider) {
