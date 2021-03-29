@@ -212,7 +212,7 @@ public class GalacticraftItems {
     public static final Item HOT_THROWABLE_METEOR_CHUNK = registerItem(Constants.Item.HOT_THROWABLE_METEOR_CHUNK, new HotThrowableMeteorChunkItem(new Item.Settings().group(ITEMS_GROUP)));
 
     public static final Item LEGACY_MUSIC_DISC_MARS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MARS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MARS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
-    public static final Item LEGACY_MUSIC_DISC_MINMAS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MINMAS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MINMAS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
+    public static final Item LEGACY_MUSIC_DISC_MIMAS = registerItem(Constants.Item.LEGACY_MUSIC_DISC_MIMAS, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_MIMAS, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
     public static final Item LEGACY_MUSIC_DISC_ORBIT = registerItem(Constants.Item.LEGACY_MUSIC_DISC_ORBIT, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_ORBIT, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
     public static final Item LEGACY_MUSIC_DISC_SPACERACE = registerItem(Constants.Item.LEGACY_MUSIC_DISC_SPACERACE, new MusicDiscItem(15, GalacticraftSounds.MUSIC_LEGACY_SPACERACE, new Item.Settings().maxCount(1).group(ITEMS_GROUP).rarity(Rarity.RARE)));
 

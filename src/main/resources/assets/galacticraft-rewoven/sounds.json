@@ -179,10 +179,10 @@
       }
     ]
   },
-  "music.legacy.minmas": {
+  "music.legacy.mimas": {
     "sounds": [
       {
-        "name": "galacticraft-rewoven:music/legacy/minmas",
+        "name": "galacticraft-rewoven:music/legacy/mimas",
         "stream": true
       }
     ]
