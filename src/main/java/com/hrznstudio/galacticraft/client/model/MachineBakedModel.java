@@ -245,7 +245,10 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
     @FunctionalInterface
     public interface SpriteProvider {
-        SpriteProvider DEFAULT = (machine, config, face, atlas, view, state, pos) -> atlas.apply(MACHINE);
+        SpriteProvider DEFAULT = (machine, config, face, atlas, view, state, pos) -> {
+            if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
+            return atlas.apply(MACHINE);
+        };
 
         /**
          * @param machine The machine block entity instance. Will be null in item contexts.
@@ -324,7 +327,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             quad.spriteBake(0, TEXTURE_PROVIDERS.getOrDefault(state.getBlock(), SpriteProvider.DEFAULT)
                     .getSpritesForState(null, new CompoundTag(), BlockFace.toFace(Direction.NORTH, quad.nominalFace()), CACHING_SPRITE_ATLAS, null, state, null), MutableQuadView.BAKE_LOCK_UV);
         }
-        quad.spriteColor(0, 16777215, 16777215, 16777215, 16777215);
+        quad.spriteColor(0, -1, -1, -1, -1);
         return true;
     }
 

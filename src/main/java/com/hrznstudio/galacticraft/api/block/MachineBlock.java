@@ -34,6 +34,7 @@ import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.util.NbtType;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.piston.PistonBehavior;
@@ -164,7 +165,7 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
             CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
             lines.add(LiteralText.EMPTY);
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Constants.Text.AQUA_STYLE));
+            if (tag.contains("Energy", NbtType.INT)) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Constants.Text.AQUA_STYLE));
             lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Constants.Text.BLUE_STYLE));
             MutableText text1 = new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Text.GRAY_STYLE);
             if (tag.getBoolean("Public")) {
