@@ -24,7 +24,7 @@ package com.hrznstudio.galacticraft;
 
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.screen.ingame.*;
-import com.hrznstudio.galacticraft.client.model.GalacticraftMachineBakedModel;
+import com.hrznstudio.galacticraft.client.model.MachineBakedModel;
 import com.hrznstudio.galacticraft.client.model.MachineUnbakedModel;
 import com.hrznstudio.galacticraft.client.network.GalacticraftC2SPacketReceivers;
 import com.hrznstudio.galacticraft.client.render.MoonSkyProperties;
@@ -54,23 +54,23 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
+import java.util.Collections;
+
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
-    public static JsonCapes jsonCapes;
-    public static CapeLoader capeLoader;
+    public static final JsonCapes JSON_CAPES = new JsonCapes();
+    public static final CapeLoader CAPE_LOADER = new CapeLoader();
 
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Galacticraft.LOGGER.info("Starting client initialization.");
-        capeLoader = new CapeLoader();
-        jsonCapes = new JsonCapes();
-        capeLoader.register(jsonCapes);
-        capeLoader.load();
+        CAPE_LOADER.register(JSON_CAPES);
+        CAPE_LOADER.load();
 
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register((spriteAtlasTexture, registry) -> {
             for (int i = 0; i < 8; i++) {
@@ -78,6 +78,7 @@ public class GalacticraftClient implements ClientModInitializer {
                 registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_storage_module_" + i));
             }
 
+            registry.register(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_HEAD));
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_CHEST));
             registry.register(new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_PANTS));
@@ -111,19 +112,19 @@ public class GalacticraftClient implements ClientModInitializer {
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_STORAGE_MODULE_HANDLER, OxygenStorageModuleScreen::new);
         ScreenRegistry.register(GalacticraftScreenHandlerTypes.OXYGEN_SEALER_HANDLER, OxygenSealerScreen::new);
 
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (entityRenderDispatcher, context) -> new MoonVillagerEntityRenderer(entityRenderDispatcher, context.getResourceManager()));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (entityRenderDispatcher, context) -> new EvolvedZombieRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (entityRenderDispatcher, context) -> new EvolvedCreeperEntityRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (entityRenderDispatcher, context) -> new EvolvedSkeletonEntityRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (entityRenderDispatcher, context) -> new EvolvedSpiderEntityRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_EVOKER, (entityRenderDispatcher, context) -> new EvolvedEvokerEntityRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_PILLAGER, (entityRenderDispatcher, context) -> new EvolvedPillagerEntityRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (entityRenderDispatcher, context) -> new EvolvedVindicatorEntityRenderer(entityRenderDispatcher));
-        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (entityRenderDispatcher, context) -> new BubbleEntityRenderer(entityRenderDispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.MOON_VILLAGER, (dispatcher, context) -> new MoonVillagerEntityRenderer(dispatcher, context.getResourceManager()));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_ZOMBIE, (dispatcher, context) -> new EvolvedZombieRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_CREEPER, (dispatcher, context) -> new EvolvedCreeperEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SKELETON, (dispatcher, context) -> new EvolvedSkeletonEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_SPIDER, (dispatcher, context) -> new EvolvedSpiderEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_EVOKER, (dispatcher, context) -> new EvolvedEvokerEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_PILLAGER, (dispatcher, context) -> new EvolvedPillagerEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.EVOLVED_VINDICATOR, (dispatcher, context) -> new EvolvedVindicatorEntityRenderer(dispatcher));
+        EntityRendererRegistry.INSTANCE.register(GalacticraftEntityTypes.BUBBLE, (dispatcher, context) -> new BubbleEntityRenderer(dispatcher));
 
         GalacticraftBlockEntityRenderers.register();
         GalacticraftC2SPacketReceivers.register();
-        GalacticraftMachineBakedModel.registerDefaults();
+        MachineBakedModel.registerDefaults();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.TIN_LADDER, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GalacticraftBlocks.GLASS_FLUID_PIPE, RenderLayer.getTranslucent());
@@ -138,11 +139,18 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new GalacticraftResourceReloadListener());
 
-        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_FUEL_PARTICLE, (effect1, world1, x1, y1, z1, velX1, velY1, velZ1) -> new DrippingFuelParticle(world1, x1, y1, z1, velX1, velY1, velZ1));
-        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE, (effect, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_FUEL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingFuelParticle(world, x, y, z, velX, velY, velZ));
+        ParticleFactoryRegistry.getInstance().register(GalacticraftParticles.DRIPPING_CRUDE_OIL_PARTICLE, (type, world, x, y, z, velX, velY, velZ) -> new DrippingCrudeOilParticle(world, x, y, z, velX, velY, velZ));
 
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(resourceManager -> (resourceId, context) -> {
-            if (GalacticraftMachineBakedModel.MACHINE_MARKER.equals(resourceId)) {
+            if (MachineBakedModel.MACHINE_MARKER.equals(resourceId)) {
+                return MachineUnbakedModel.INSTANCE;
+            }
+            return null;
+        });
+
+        ModelLoadingRegistry.INSTANCE.registerVariantProvider(resourceManager -> (modelId, context) -> {
+            if (modelId.getVariant().equals("inventory") && MachineBakedModel.IDENTIFIERS.getOrDefault(modelId.getNamespace(), Collections.emptySet()).contains(modelId.getPath())) {
                 return MachineUnbakedModel.INSTANCE;
             }
             return null;

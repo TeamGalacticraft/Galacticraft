@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.client.resource;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.client.model.GalacticraftMachineBakedModel;
+import com.hrznstudio.galacticraft.client.model.MachineBakedModel;
 import com.hrznstudio.galacticraft.client.render.entity.BubbleEntityRenderer;
 import com.hrznstudio.galacticraft.fluid.GalacticraftFluids;
 import net.fabricmc.api.EnvType;
@@ -61,7 +61,7 @@ public class GalacticraftResourceReloadListener implements SimpleSynchronousReso
     @Override
     public void apply(ResourceManager resourceManager) {
         Function<Identifier, Sprite> atlas = MinecraftClient.getInstance().getSpriteAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-        GalacticraftMachineBakedModel.setSpriteAtlas(atlas);
+        MachineBakedModel.setSpriteAtlas(atlas);
         FluidRenderHandler oil = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/crude_oil_flowing"))};
         FluidRenderHandler fuel = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_still")), atlas.apply(new Identifier(Constants.MOD_ID, "block/fuel_flowing"))};
         FluidRenderHandler oxygen = (view, pos, state) -> new Sprite[]{atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen")), atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen"))};

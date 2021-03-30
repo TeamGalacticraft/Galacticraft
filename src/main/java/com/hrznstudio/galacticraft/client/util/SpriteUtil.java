@@ -27,6 +27,9 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
+import java.util.Iterator;
+import java.util.List;
+
 public enum SpriteUtil {
     ;
     public static SpriteIdentifier identifier(String path) {
@@ -35,5 +38,9 @@ public enum SpriteUtil {
 
     public static SpriteIdentifier identifier(Identifier id) {
         return new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, id);
+    }
+
+    public static Iterator<SpriteIdentifier> identifiers(List<Identifier> textureDependencies) {
+        return textureDependencies.stream().map(SpriteUtil::identifier).iterator();
     }
 }

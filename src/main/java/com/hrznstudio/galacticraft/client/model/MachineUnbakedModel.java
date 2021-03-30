@@ -49,21 +49,20 @@ public class MachineUnbakedModel implements UnbakedModel {
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         ImmutableList.Builder<SpriteIdentifier> builder = ImmutableList.builder();
-        builder.add(SpriteUtil.identifier("block/machine"));
-        builder.add(SpriteUtil.identifier("block/machine_side"));
-        builder.add(SpriteUtil.identifier("block/machine_power_input"));
-        builder.add(SpriteUtil.identifier("block/machine_power_output"));
-        builder.add(SpriteUtil.identifier("block/machine_oxygen_input"));
-        builder.add(SpriteUtil.identifier("block/machine_oxygen_output"));
-        builder.add(SpriteUtil.identifier("block/machine_fluid_input"));
-        builder.add(SpriteUtil.identifier("block/machine_fluid_output"));
-        builder.add(SpriteUtil.identifier("block/machine_item_input"));
-        builder.add(SpriteUtil.identifier("block/machine_item_output"));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_SIDE));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_POWER_IN));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_POWER_OUT));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_FLUID_IN));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_FLUID_OUT));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_ITEM_IN));
+        builder.add(SpriteUtil.identifier(MachineBakedModel.MACHINE_ITEM_OUT));
+        builder.addAll(SpriteUtil.identifiers(MachineBakedModel.TEXTURE_DEPENDENCIES));
         return builder.build();
     }
 
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return GalacticraftMachineBakedModel.INSTANCE;
+        return MachineBakedModel.INSTANCE;
     }
 }
