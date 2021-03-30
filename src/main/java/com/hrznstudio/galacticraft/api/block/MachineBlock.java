@@ -29,9 +29,12 @@ import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
+import com.hrznstudio.galacticraft.api.machine.RedstoneState;
+import com.hrznstudio.galacticraft.api.machine.SecurityInfo;
 import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.util.NbtType;
@@ -50,6 +53,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.loot.context.LootContext;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -138,7 +142,7 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public final void appendTooltip(ItemStack stack, BlockView view, List<Text> lines, TooltipContext context) {
+    public final void appendTooltip(ItemStack stack, BlockView view, List<Text> tooltip, TooltipContext context) {
         Text text = machineInfo(stack, view, context.isAdvanced());
         if (text != null) {
             if (Screen.hasShiftDown()) {
@@ -150,49 +154,35 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
                     len += MinecraftClient.getInstance().textRenderer.getWidth(String.valueOf(c));
                     if (c == ' ' && len >= maxLength) {
                         len = 0;
-                        lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
+                        tooltip.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
                         builder = new StringBuilder();
                         continue;
                     }
                     builder.append(c);
                 }
-                lines.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
+                tooltip.add(new LiteralText(builder.toString()).setStyle(text.getStyle()));
             } else {
-                lines.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Text.DARK_GRAY_STYLE));
+                tooltip.add(new TranslatableText("tooltip.galacticraft-rewoven.press_shift").setStyle(Constants.Text.DARK_GRAY_STYLE));
             }
         }
 
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
             CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
-            lines.add(LiteralText.EMPTY);
-            if (tag.contains("Energy", NbtType.INT)) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", tag.getInt("Energy")).setStyle(Constants.Text.AQUA_STYLE));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.owner", tag.getString("OwnerUsername")).setStyle(Constants.Text.BLUE_STYLE));
-            MutableText text1 = new TranslatableText("ui.galacticraft-rewoven.tabs.security_config_2").setStyle(Constants.Text.GRAY_STYLE);
-            if (tag.getBoolean("Public")) {
-                lines.add(text1
-                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.public_2")
-                        .setStyle(Constants.Text.GREEN_STYLE)));
-
-            } else if (tag.getBoolean("Party")) {
-                lines.add(text1
-                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.space_race_2")
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE)));
-
-            } else {
-                lines.add(text1
-                        .append(new TranslatableText("ui.galacticraft-rewoven.tabs.security_config.private_2")
-                        .setStyle(Constants.Text.DARK_RED_STYLE)));
-
+            tooltip.add(LiteralText.EMPTY);
+            if (tag.contains("Energy", NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new LiteralText(String.valueOf(tag.getInt("Energy"))).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
+            if (tag.contains("security", NbtType.COMPOUND)) {
+                CompoundTag security = tag.getCompound("security");
+                if (security.contains("owner", NbtType.COMPOUND)) {
+                    GameProfile profile = NbtHelper.toGameProfile(security.getCompound("owner"));
+                    MutableText text1 = new TranslatableText("ui.galacticraft-rewoven.machine.security.owner", new LiteralText(profile.getName()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE)).setStyle(Constants.Text.GRAY_STYLE);
+                    if (Screen.hasControlDown()) {
+                        text1.append(new LiteralText(" (" + profile.getId().toString() + ")").setStyle(Constants.Text.AQUA_STYLE));
+                    }
+                    tooltip.add(text1);
+                    tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility", SecurityInfo.Accessibility.valueOf(security.getString("accessibility")).getName()).setStyle(Constants.Text.GREEN_STYLE));
+                }
             }
-
-            if (tag.getString("Redstone").equals("DISABLED")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Text.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.ignore_2").setStyle(Constants.Text.GRAY_STYLE)));
-            } else if (tag.getString("Redstone").equals("OFF")) {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Text.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_off_2").setStyle(Constants.Text.DARK_RED_STYLE)));
-            } else {
-                lines.add(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config_2").setStyle(Constants.Text.RED_STYLE).append(new TranslatableText("ui.galacticraft-rewoven.tabs.redstone_activation_config.redstone_means_on_2").setStyle(Constants.Text.DARK_RED_STYLE)));
-            }
-
+            tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.redstone.redstone", RedstoneState.fromTag(tag).getName()).setStyle(Constants.Text.DARK_RED_STYLE));
         }
     }
 

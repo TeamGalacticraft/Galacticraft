@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.api.block.util;
 
 import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.NotNull;
@@ -46,7 +47,7 @@ public enum BlockFace {
         this.vertical = vertical;
     }
 
-    public MutableText getName() {
+    public Text getName() {
         return name;
     }
 

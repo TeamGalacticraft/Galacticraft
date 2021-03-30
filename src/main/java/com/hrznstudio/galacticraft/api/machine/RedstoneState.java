@@ -26,6 +26,7 @@ import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.StringIdentifiable;
 
@@ -57,7 +58,7 @@ public enum RedstoneState implements StringIdentifiable {
         return RedstoneState.valueOf(string.toUpperCase(Locale.ROOT));
     }
 
-    public MutableText getName() {
+    public Text getName() {
         return name;
     }
 

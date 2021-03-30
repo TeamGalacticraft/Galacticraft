@@ -60,8 +60,8 @@ public class CapacitorWidget extends AbstractWidget {
             List<Text> lines = new LinkedList<>();
             MachineStatus status = statusSupplier.get();
             if (status != MachineStatus.NULL) lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.status").setStyle(Constants.Text.GRAY_STYLE).append(status.getName()));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy").setStyle(Constants.Text.GOLD_STYLE).append(EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Text.BLUE_STYLE)));
-            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy").setStyle(Constants.Text.RED_STYLE).append(EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Text.BLUE_STYLE)));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", EnergyUtils.getDisplay(this.getView().getEnergy()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
+            lines.add(new TranslatableText("ui.galacticraft-rewoven.machine.max_energy", EnergyUtils.getDisplay(this.getView().getMaxCapacity()).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.RED_STYLE));
             lines.addAll(tooltipSupplier.get());
 
             this.client.currentScreen.renderTooltip(matrices, lines, mouseX, mouseY);

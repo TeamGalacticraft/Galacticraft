@@ -27,16 +27,18 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtHelper;
-import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class SecurityInfo {
-    private GameProfile owner;
-    private Identifier team;
-    private Accessibility accessibility;
+    private @Nullable GameProfile owner;
+    private @Nullable Identifier team;
+    private @NotNull Accessibility accessibility;
 
     public SecurityInfo() {
         this.accessibility = Accessibility.PUBLIC;
@@ -50,6 +52,7 @@ public class SecurityInfo {
 
     @Contract(pure = true)
     public boolean isOwner(GameProfile profile) {
+        if (this.owner == null) return false;
         return this.owner.equals(profile);
     }
 
@@ -66,57 +69,47 @@ public class SecurityInfo {
         return false;
     }
 
-    public Accessibility getAccessibility() {
+    public @NotNull Accessibility getAccessibility() {
         return accessibility;
     }
 
-    public void setAccessibility(Accessibility accessibility) {
+    public void setAccessibility(@NotNull Accessibility accessibility) {
         this.accessibility = accessibility;
     }
 
-    public boolean hasOwner() {
-        return this.owner != null;
-    }
 
-    public GameProfile getOwner() {
+    public @Nullable GameProfile getOwner() {
         return this.owner;
     }
 
-    public void setOwner(PlayerEntity owner) {
-        if (!this.hasOwner()) {
+    public void setOwner(@NotNull PlayerEntity owner) {
+        if (this.getOwner() == null) {
             this.owner = owner.getGameProfile();
         }
     }
 
-    public Identifier getTeam() {
+    public @Nullable Identifier getTeam() {
         return team;
     }
 
-    public boolean hasTeam() {
-        return team != null;
-    }
-
     public CompoundTag toTag(CompoundTag tag) {
-        if (this.hasOwner()) {
+        if (this.getOwner() != null) {
             tag.put("owner", NbtHelper.fromGameProfile(new CompoundTag(), this.getOwner()));
         }
-        tag.putString("accessibility", this.accessibility.asString());
-        if (this.hasTeam()) {
+        tag.putString("accessibility", this.accessibility.name());
+        if (this.getTeam() != null) {
             tag.putString("team", team.toString());
         }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-
         if (tag.contains("owner")) {
             this.owner = NbtHelper.toGameProfile(tag.getCompound("owner"));
         }
 
         if (tag.contains("team")) {
-            if (!this.hasTeam()) {
-                this.team = new Identifier(tag.getString("team"));
-            }
+            this.team = new Identifier(tag.getString("team"));
         }
 
         this.accessibility = Accessibility.valueOf(tag.getString("accessibility"));
@@ -124,9 +117,9 @@ public class SecurityInfo {
 
 
     public enum Accessibility implements StringIdentifiable {
-        PUBLIC(new TranslatableText("ui.galacticraft-rewoven.accessibility.public")),
-        TEAM(new TranslatableText("ui.galacticraft-rewoven.accessibility.team")),
-        PRIVATE(new TranslatableText("ui.galacticraft-rewoven.accessibility.private"));
+        PUBLIC(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility.public")),
+        TEAM(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility.team")),
+        PRIVATE(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility.private"));
 
         private final TranslatableText name;
 
@@ -139,7 +132,7 @@ public class SecurityInfo {
             return this.toString();
         }
 
-        public MutableText getName() {
+        public Text getName() {
             return this.name;
         }
     }

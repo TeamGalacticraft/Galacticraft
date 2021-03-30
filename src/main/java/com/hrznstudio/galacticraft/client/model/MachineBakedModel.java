@@ -336,6 +336,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
         public FrontFaceSpriteProvider(Identifier sprite) {
             this.sprite = sprite;
+            TEXTURE_DEPENDENCIES.add(sprite);
         }
 
         @Override
