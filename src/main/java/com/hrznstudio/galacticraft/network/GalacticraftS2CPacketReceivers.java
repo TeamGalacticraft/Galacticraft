@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.network;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.block.entity.BubbleDistributorBlockEntity;
-import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
+import com.hrznstudio.galacticraft.screen.GalacticraftPlayerInventoryScreenHandler;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -44,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class GalacticraftS2CPacketReceivers {
     public static void register() {
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory((syncId, inv, pl) -> new PlayerInventoryGCScreenHandler(inv, pl), LiteralText.EMPTY))));
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "open_gc_inv"), (server, player, handler, buf, responseSender) -> server.execute(() -> player.openHandledScreen(new SimpleNamedScreenHandlerFactory(GalacticraftPlayerInventoryScreenHandler::new, LiteralText.EMPTY))));
 
         ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "bubble_max"), (server, player, handler, buf, responseSender) -> {
             PacketByteBuf buffer = new PacketByteBuf(buf.copy());

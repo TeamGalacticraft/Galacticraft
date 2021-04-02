@@ -24,15 +24,12 @@ package com.hrznstudio.galacticraft.api.block;
 
 import alexiil.mc.lib.attributes.AttributeList;
 import alexiil.mc.lib.attributes.AttributeProvider;
-import alexiil.mc.lib.attributes.fluid.FluidExtractable;
-import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.item.impl.FullFixedItemInv;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
-import com.hrznstudio.galacticraft.api.machine.RedstoneState;
+import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
+import com.hrznstudio.galacticraft.api.machine.RedstoneInteractionType;
 import com.hrznstudio.galacticraft.api.machine.SecurityInfo;
-import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
-import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
 import com.hrznstudio.galacticraft.misc.TriFunction;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.api.EnvType;
@@ -55,6 +52,7 @@ import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -131,7 +129,7 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
             ((MultiBlockBase) this).onMultiblockPlaced(world, pos, state);
         }
         if (!world.isClient && placer instanceof PlayerEntity) {
-            ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(((PlayerEntity) placer));
+            ((MachineBlockEntity) world.getBlockEntity(pos)).getSecurity().setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), ((PlayerEntity) placer));
         }
     }
 
@@ -182,7 +180,7 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
                     tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility", SecurityInfo.Accessibility.valueOf(security.getString("accessibility")).getName()).setStyle(Constants.Text.GREEN_STYLE));
                 }
             }
-            tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.redstone.redstone", RedstoneState.fromTag(tag).getName()).setStyle(Constants.Text.DARK_RED_STYLE));
+            tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.redstone.redstone", RedstoneInteractionType.fromTag(tag).getName()).setStyle(Constants.Text.DARK_RED_STYLE));
         }
     }
 
@@ -194,10 +192,19 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
     @Override
     public final ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
+            BlockEntity machine = world.getBlockEntity(pos);
+            if (machine instanceof MachineBlockEntity) {
+                SecurityInfo security = ((MachineBlockEntity) machine).getSecurity();
+                if (security.getOwner() == null) security.setOwner(((MinecraftServerTeamsGetter) world.getServer()).getSpaceRaceTeams(), player);
+                if (security.isOwner(player.getGameProfile())) {
+                    security.sendPacket(pos, (ServerPlayerEntity) player);
+                    ((MachineBlockEntity) machine).getRedstoneInteraction().sendPacket(pos, (ServerPlayerEntity) player);
+                    NamedScreenHandlerFactory factory = state.createScreenHandlerFactory(world, pos);
 
-            if (factory != null) {
-                player.openHandledScreen(factory);
+                    if (factory != null) {
+                        player.openHandledScreen(factory);
+                    }
+                }
             }
         }
 
@@ -263,19 +270,14 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
     }
 
     @Override
-    public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributeList) {
-        Direction direction = attributeList.getSearchDirection() == null ? null : attributeList.getSearchDirection();
+    public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributes) {
+        Direction direction = attributes.getSearchDirection() == null ? null : attributes.getSearchDirection();
         MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
-        Object attribute = machine.getInventory(blockState, direction);
-        attributeList.offer(attribute);
-        attribute = machine.getFluidInsertable(blockState, direction);
-        attributeList.offer(((FluidInsertable) attribute).getPureInsertable());
-        attribute = machine.getFluidExtractable(blockState, direction);
-        attributeList.offer(((FluidExtractable) attribute).getPureExtractable());
-        attribute = machine.getEnergyExtractable(blockState, direction);
-        attributeList.offer(((EnergyExtractable) attribute).asPureExtractable());
-        attribute = machine.getEnergyInsertable(blockState, direction);
-        attributeList.offer(((EnergyInsertable) attribute).asPureInsertable());
+        attributes.offer(machine.getInventory(blockState, direction));
+        attributes.offer(machine.getFluidInsertable(blockState, direction));
+        attributes.offer(machine.getFluidExtractable(blockState, direction));
+        attributes.offer(machine.getEnergyExtractable(blockState, direction));
+        attributes.offer(machine.getEnergyInsertable(blockState, direction));
     }
 }

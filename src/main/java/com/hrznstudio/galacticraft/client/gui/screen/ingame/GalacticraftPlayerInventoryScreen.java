@@ -25,7 +25,7 @@ package com.hrznstudio.galacticraft.client.gui.screen.ingame;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.attribute.oxygen.OxygenTank;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
-import com.hrznstudio.galacticraft.screen.PlayerInventoryGCScreenHandler;
+import com.hrznstudio.galacticraft.screen.GalacticraftPlayerInventoryScreenHandler;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -41,11 +41,11 @@ import net.minecraft.util.Identifier;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScreenHandler> {
+public class GalacticraftPlayerInventoryScreen extends HandledScreen<GalacticraftPlayerInventoryScreenHandler> {
     public static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.PLAYER_INVENTORY_SCREEN));
     private static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OVERLAY));
 
-    public PlayerInventoryGCScreen(PlayerInventoryGCScreenHandler handler, PlayerInventory inv, Text title) {
+    public GalacticraftPlayerInventoryScreen(GalacticraftPlayerInventoryScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, LiteralText.EMPTY);
     }
 
@@ -57,13 +57,13 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
 
     @Override
     protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
-                && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
-            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
+        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween(x, this.x + 138, this.x + 138 + 12)
+                && GalacticraftPlayerInventoryScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT));
             this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 1, tank.getAmount(), tank.getCapacity()), x, y);
-        } else if (PlayerInventoryGCScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
-                && PlayerInventoryGCScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
-            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
+        } else if (GalacticraftPlayerInventoryScreen.isCoordinateBetween(x, this.x + 156, this.x + 156 + 12)
+                && GalacticraftPlayerInventoryScreen.isCoordinateBetween(y, this.y + 8, this.y + 8 + 40)) {
+            OxygenTank tank = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT));
             this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.player_inv_screen.oxygen_tank_level", 2, tank.getAmount(), tank.getCapacity()), x, y);
         }
         super.drawMouseoverTooltip(matrices, x, y);
@@ -90,8 +90,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
+        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), this.x, this.x + 29)
+                && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), this.y - 26, this.y)) {
             this.client.openScreen(new InventoryScreen(playerInventory.player));
             return true;
         }
@@ -103,8 +103,8 @@ public class PlayerInventoryGCScreen extends HandledScreen<PlayerInventoryGCScre
     public void drawBackground(MatrixStack matrices, float v, int mouseX, int mouseY) {
         this.client.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        OxygenTank tank1 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_1_SLOT));
-        OxygenTank tank2 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(PlayerInventoryGCScreenHandler.OXYGEN_TANK_2_SLOT));
+        OxygenTank tank1 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_1_SLOT));
+        OxygenTank tank2 = OxygenTankUtils.getOxygenTank(this.handler.inventory.getSlot(GalacticraftPlayerInventoryScreenHandler.OXYGEN_TANK_2_SLOT));
 
         this.drawOxygenBufferBar(matrices, tank1.getAmount(), tank1.getCapacity(), this.x + 138, this.y + 8);
         this.drawOxygenBufferBar(matrices, tank2.getAmount(), tank2.getCapacity(), this.x + 156, this.y + 8);

@@ -22,15 +22,24 @@
 
 package com.hrznstudio.galacticraft.api.machine;
 
+import com.hrznstudio.galacticraft.Constants;
+import com.hrznstudio.galacticraft.api.internal.data.ClientWorldTeamsGetter;
 import com.hrznstudio.galacticraft.api.internal.data.MinecraftServerTeamsGetter;
+import com.hrznstudio.galacticraft.api.teams.Teams;
+import com.hrznstudio.galacticraft.api.teams.data.Team;
 import com.mojang.authlib.GameProfile;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtHelper;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -61,10 +70,17 @@ public class SecurityInfo {
         if (accessibility == Accessibility.PUBLIC) {
             return true;
         } else if (accessibility == Accessibility.TEAM) {
-            return (((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUuid()) != null)
-                    && ((MinecraftServerTeamsGetter) player.getServer()).getSpaceRaceTeams().getTeam(player.getUuid()).players.containsKey(owner);
+            if (this.owner == null || this.isOwner(player)) return false;
+            Team team;
+            if (!player.world.isClient()) {
+                team = ((MinecraftServerTeamsGetter) player.world.getServer()).getSpaceRaceTeams().getTeam(this.owner.getId());
+            } else {
+                team = ((ClientWorldTeamsGetter) player.world).getSpaceRaceTeams().getTeam(this.owner.getId());
+            }
+            if (team == null) return false;
+            return team.players.containsKey(player.getUuid());
         } else if (accessibility == Accessibility.PRIVATE) {
-            return isOwner(player);
+            return this.isOwner(player);
         }
         return false;
     }
@@ -82,9 +98,14 @@ public class SecurityInfo {
         return this.owner;
     }
 
-    public void setOwner(@NotNull PlayerEntity owner) {
+    public void setOwner(@NotNull Teams teams, @NotNull PlayerEntity owner) {
+        this.setOwner(teams, owner.getGameProfile());
+    }
+
+    public void setOwner(@NotNull Teams teams, @NotNull GameProfile owner) {
         if (this.getOwner() == null) {
-            this.owner = owner.getGameProfile();
+            this.owner = owner;
+            this.team = teams.getTeam(owner.getId()).id;
         }
     }
 
@@ -115,6 +136,14 @@ public class SecurityInfo {
         this.accessibility = Accessibility.valueOf(tag.getString("accessibility"));
     }
 
+    public void sendPacket(BlockPos pos, ServerPlayerEntity player) {
+        assert this.owner != null;
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeByte(this.accessibility.ordinal());
+        buf.writeCompoundTag(NbtHelper.fromGameProfile(new CompoundTag(), this.owner));
+        ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "security_update"), buf);
+    }
 
     public enum Accessibility implements StringIdentifiable {
         PUBLIC(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility.public")),

@@ -23,16 +23,22 @@
 package com.hrznstudio.galacticraft.api.machine;
 
 import com.hrznstudio.galacticraft.Constants;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Locale;
 
-public enum RedstoneState implements StringIdentifiable {
+public enum RedstoneInteractionType implements StringIdentifiable {
     /**
      * Ignores redstone entirely.
      */
@@ -50,12 +56,19 @@ public enum RedstoneState implements StringIdentifiable {
 
     private final MutableText name;
 
-    RedstoneState(TranslatableText name, Style style) {
+    RedstoneInteractionType(TranslatableText name, Style style) {
         this.name = name.setStyle(style);
     }
 
-    public static RedstoneState fromString(String string) {
-        return RedstoneState.valueOf(string.toUpperCase(Locale.ROOT));
+    public static RedstoneInteractionType fromString(String string) {
+        return RedstoneInteractionType.valueOf(string.toUpperCase(Locale.ROOT));
+    }
+
+    public void sendPacket(BlockPos pos, ServerPlayerEntity player) {
+        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        buf.writeBlockPos(pos);
+        buf.writeByte(this.ordinal());
+        ServerPlayNetworking.send(player, new Identifier(Constants.MOD_ID, "redstone_update"), buf);
     }
 
     public Text getName() {
@@ -71,7 +84,7 @@ public enum RedstoneState implements StringIdentifiable {
         tag.putString("Redstone", this.asString());
     }
 
-    public static RedstoneState fromTag(CompoundTag tag) {
+    public static RedstoneInteractionType fromTag(CompoundTag tag) {
         return fromString(tag.getString("Redstone"));
     }
 }

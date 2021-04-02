@@ -110,10 +110,10 @@ public class GalacticraftScreenHandlerTypes {
             );
 
     public static final Identifier PLAYER_INVENTORY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.PLAYER_INVENTORY_SCREEN_HANDLER);
-    public static final ScreenHandlerType<PlayerInventoryGCScreenHandler> PLAYER_INV_GC_HANDLER =
+    public static final ScreenHandlerType<GalacticraftPlayerInventoryScreenHandler> PLAYER_INV_GC_HANDLER =
             ScreenHandlerRegistry.registerSimple(
                     PLAYER_INVENTORY_HANDLER_ID,
-                    (syncId, inv) -> new PlayerInventoryGCScreenHandler(inv, inv.player)
+                    GalacticraftPlayerInventoryScreenHandler::new
             );
 
     public static final Identifier REFINERY_HANDLER_ID = new Identifier(Constants.MOD_ID, Constants.ScreenHandler.REFINERY_SCREEN_HANDLER);

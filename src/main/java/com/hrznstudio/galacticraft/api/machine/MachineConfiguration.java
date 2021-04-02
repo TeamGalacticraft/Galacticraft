@@ -27,7 +27,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public class MachineConfiguration implements Saveable {
     private MachineStatus status = MachineStatus.NULL;
-    private RedstoneState redstone = RedstoneState.IGNORE;
+    private RedstoneInteractionType redstone = RedstoneInteractionType.IGNORE;
     private final SideConfiguration configuration = new SideConfiguration();
     private final SecurityInfo security = new SecurityInfo();
 
@@ -39,7 +39,7 @@ public class MachineConfiguration implements Saveable {
         this.status = status;
     }
 
-    public void setRedstone(RedstoneState redstone) {
+    public void setRedstone(RedstoneInteractionType redstone) {
         this.redstone = redstone;
     }
 
@@ -55,7 +55,7 @@ public class MachineConfiguration implements Saveable {
         return status;
     }
 
-    public RedstoneState getRedstone() {
+    public RedstoneInteractionType getRedstoneInteraction() {
         return redstone;
     }
 
@@ -71,6 +71,6 @@ public class MachineConfiguration implements Saveable {
     public void fromTag(CompoundTag tag) {
         this.getSecurity().fromTag(tag.getCompound("security"));
         this.getConfiguration().fromTag(tag.getCompound("configuration"));
-        this.redstone = RedstoneState.fromTag(tag);
+        this.redstone = RedstoneInteractionType.fromTag(tag);
     }
 }

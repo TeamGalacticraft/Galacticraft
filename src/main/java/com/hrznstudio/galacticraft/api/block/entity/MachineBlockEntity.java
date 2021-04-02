@@ -182,7 +182,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return FluidAmount.ZERO;
     }
 
-    public void setRedstone(@NotNull RedstoneState redstone) {
+    public void setRedstone(@NotNull RedstoneInteractionType redstone) {
         this.configuration.setRedstone(redstone);
     }
 
@@ -241,12 +241,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isEnergy()) {
                 if (cso.getAutomationType().isOutput()) {
-                    return this.getCapacitor().getExtractable();
+                    return this.getCapacitor().getExtractable().asPureExtractable();
                 }
             }
             return null;
         }
-        return this.getCapacitor().getExtractable();
+        return this.getCapacitor().getExtractable().asPureExtractable();
     }
 
     public final @Nullable EnergyInsertable getEnergyInsertable(@NotNull BlockState state, @Nullable Direction direction) {
@@ -254,12 +254,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isEnergy()) {
                 if (cso.getAutomationType().isInput()) {
-                    return this.getCapacitor().getInsertable();
+                    return this.getCapacitor().getInsertable().asPureInsertable();
                 }
             }
             return null;
         }
-        return this.getCapacitor().getInsertable();
+        return this.getCapacitor().getInsertable().asPureInsertable();
     }
 
     public final @Nullable Capacitor getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
@@ -277,7 +277,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (direction != null) {
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isItem()) {
-                return this.getInventory().getMappedInv(cso.getMatching(getInventory()));
+                return this.getInventory().getMappedInv(cso.getMatching(this.getInventory()));
             }
             return null;
         }
@@ -288,7 +288,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         if (direction != null) {
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
-                return this.getFluidTank().getMappedInv(cso.getMatching(getFluidTank()));
+                return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank()));
             }
             return null;
         }
@@ -300,12 +300,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isInput()) {
-                    return this.getFluidTank().getMappedInv(cso.getMatching(getFluidTank())).getInsertable();
+                    return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank())).getInsertable().getPureInsertable();
                 }
             }
             return null;
         }
-        return this.getFluidTank().getInsertable();
+        return this.getFluidTank().getInsertable().getPureInsertable();
     }
 
     public final @Nullable FluidExtractable getFluidExtractable(@NotNull BlockState state, @Nullable Direction direction) {
@@ -313,7 +313,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isOutput()) {
-                    return this.getFluidTank().getMappedInv(cso.getMatching(getFluidTank())).getExtractable();
+                    return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank())).getExtractable().getPureExtractable();
                 }
             }
             return null;
@@ -325,16 +325,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return this.configuration.getSecurity();
     }
 
-    public final @NotNull RedstoneState getRedstone() {
-        return this.configuration.getRedstone();
+    public final @NotNull RedstoneInteractionType getRedstoneInteraction() {
+        return this.configuration.getRedstoneInteraction();
     }
 
     public final @NotNull SideConfiguration getSideConfiguration() {
         return this.configuration.getConfiguration();
-    }
-
-    public final boolean canUse(PlayerEntity player) {
-        return this.getSecurity().hasAccess(player);
     }
 
     protected ItemStack decrement(int slot, int amount) {
@@ -347,7 +343,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
      * @return The state of the machine
      */
     public boolean disabled() {
-        switch (this.getRedstone()) {
+        switch (this.getRedstoneInteraction()) {
             case LOW:
                 return this.getWorld().isReceivingRedstonePower(pos);
             case HIGH:

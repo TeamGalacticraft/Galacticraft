@@ -46,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
-public class PlayerInventoryGCScreenHandler extends ScreenHandler {
+public class GalacticraftPlayerInventoryScreenHandler extends ScreenHandler {
     private static final Identifier[] EMPTY_ARMOR_SLOT_IDS = new Identifier[]{
             new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_BOOTS),
             new Identifier(Constants.MOD_ID, Constants.SlotSprite.THERMAL_PANTS),
@@ -60,15 +60,15 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
     private final PlayerEntity player;
 
-    public PlayerInventoryGCScreenHandler(PlayerInventory playerInventory, PlayerEntity player) {
-        super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, 1);
+    public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory playerInventory, PlayerEntity player) {
+        super(GalacticraftScreenHandlerTypes.PLAYER_INV_GC_HANDLER, syncId);
 
         this.player = player;
         this.inventory = ((GearInventoryProvider)player).getGearInv();
         Inventory inventory = new InventoryFixedWrapper(this.inventory) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
-                return PlayerInventoryGCScreenHandler.this.player == player;
+                return GalacticraftPlayerInventoryScreenHandler.this.player == player;
             }
         };
 
@@ -88,7 +88,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
                 @Override
                 public boolean canTakeItems(PlayerEntity player) {
-                    return PlayerInventoryGCScreenHandler.this.player == player;
+                    return GalacticraftPlayerInventoryScreenHandler.this.player == player;
                 }
 
                 @Override
@@ -106,7 +106,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
             @Override
             public boolean canTakeItems(PlayerEntity player) {
-                return PlayerInventoryGCScreenHandler.this.player == player;
+                return GalacticraftPlayerInventoryScreenHandler.this.player == player;
             }
         });
 
@@ -118,7 +118,7 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
 
             @Override
             public boolean canTakeItems(PlayerEntity player) {
-                return PlayerInventoryGCScreenHandler.this.player == player;
+                return GalacticraftPlayerInventoryScreenHandler.this.player == player;
             }
         });
         this.addSlot(new OxygenTankSlot(inventory, OXYGEN_TANK_1_SLOT, 80, 8 + 2 * 18));
@@ -142,6 +142,10 @@ public class PlayerInventoryGCScreenHandler extends ScreenHandler {
         for (int slotY = 0; slotY < 9; ++slotY) {
             this.addSlot(new Slot(playerInventory, slotY, 8 + slotY * 18, 142));
         }
+    }
+
+    public GalacticraftPlayerInventoryScreenHandler(int syncId, PlayerInventory inv) {
+        this(syncId, inv, inv.player);
     }
 
     private EquipmentSlot getPreferredEquipmentSlot(ItemStack stack) {

@@ -23,7 +23,7 @@
 package com.hrznstudio.galacticraft.mixin.client;
 
 import com.hrznstudio.galacticraft.Constants;
-import com.hrznstudio.galacticraft.client.gui.screen.ingame.PlayerInventoryGCScreen;
+import com.hrznstudio.galacticraft.client.gui.screen.ingame.GalacticraftPlayerInventoryScreen;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -57,8 +57,8 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        if (PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
-                && PlayerInventoryGCScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
+        if (GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseX), x + 30, x + 59)
+                && GalacticraftPlayerInventoryScreen.isCoordinateBetween((int) Math.floor(mouseY), y - 26, y)) {
             ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "open_gc_inv"), new PacketByteBuf(Unpooled.buffer(0)));
         }
     }
