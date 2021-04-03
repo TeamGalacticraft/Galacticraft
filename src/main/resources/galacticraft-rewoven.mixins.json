@@ -6,7 +6,6 @@
   "mixins": [
     "BaseFluidMixin",
     "BiomeMixin",
-    "BlockStateProviderTypeAccessor",
     "BuiltinBiomesAccessor",
     "ChunkGeneratorAccessor",
     "ChunkHolderMixin",
