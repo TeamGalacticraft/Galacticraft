@@ -31,6 +31,7 @@ import com.hrznstudio.galacticraft.api.machine.RedstoneInteractionType;
 import com.hrznstudio.galacticraft.api.machine.SecurityInfo;
 import com.hrznstudio.galacticraft.block.GalacticraftBlocks;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
+import com.hrznstudio.galacticraft.client.model.MachineBakedModel;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
 import com.hrznstudio.galacticraft.screen.tank.Tank;
@@ -42,7 +43,6 @@ import it.unimi.dsi.fastutil.ints.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
-import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.*;
@@ -89,6 +89,9 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     public static final int PANEL_HEIGHT = 93;
     public static final int TAB_WIDTH = 22;
     public static final int TAB_HEIGHT = 22;
+    
+    public static final int PANEL_ICON_X = 3;
+    public static final int PANEL_ICON_Y = 3;
 
     private static final int SPACING = 4;
 
@@ -142,6 +145,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private final Map<BlockFace, AutomationType> config = new EnumMap<>(BlockFace.class);
 
     private Identifier ownerSkin = null;
+    private final MachineBakedModel.SpriteProvider spriteProvider;
 
     public MachineHandledScreen(C handler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
         super(handler, playerInventory, textComponent);
@@ -152,17 +156,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             config.put(face, handler.machine.getSideConfiguration().get(face).getAutomationType());
         }
 
-//        for (List<MachineComponent<Capacitor>> components : handler.getMachineCapacitors().values()) {
-//            for (MachineComponent<Capacitor> component : components) {
-//                this.addWidget(component.createWidget(handler.machine));
-//            }
-//        }
-//
-//        for (List<MachineComponent<SingleFluidTank>> components : handler.getMachineTanks().values()) {
-//            for (MachineComponent<SingleFluidTank> component : components) {
-//                this.addWidget(component.createWidget(handler.machine));
-//            }
-//        }
+        this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(world.getBlockState(pos).getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
         MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN) {
@@ -197,7 +191,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.drawButton(matrices, 18, 33, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.IGNORE);
                 this.drawButton(matrices, 43, 33, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.LOW);
                 this.drawButton(matrices, 68, 33, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.HIGH);
-                this.renderItemIcon(matrices, 3, 3, REDSTONE);
+                this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, REDSTONE);
                 this.renderItemIcon(matrices, 18, 33, REDSTONE);
                 this.renderItemIcon(matrices, 43, 33 - 2, UNLIT_TORCH);
                 this.renderItemIcon(matrices, 68, 33 - 2, REDSTONE_TORCH);
@@ -216,20 +210,23 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (Tab.CONFIGURATION.isOpen()) {
                 matrices.push();
                 matrices.translate(-PANEL_WIDTH, TAB_HEIGHT + SPACING + SPACING, 0);
-                this.renderItemIcon(matrices, 3, 3, WRENCH);
+                this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, WRENCH);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.configuration")
                         .setStyle(Constants.Text.GRAY_STYLE), 19, 6, ColorUtils.WHITE);
 
                 this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-                BlockState state = this.world.getBlockState(this.pos);
-                BakedModel model = this.client.getBakedModelManager().getBlockModels().getModel(state);
-
+                drawSprite(matrices, 33, 24, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.TOP, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.TOP).getAutomationType()));
+                drawSprite(matrices, 14, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.LEFT, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.LEFT).getAutomationType()));
+                drawSprite(matrices, 33, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.FRONT, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.FRONT).getAutomationType()));
+                drawSprite(matrices, 52, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.RIGHT, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.RIGHT).getAutomationType()));
+                drawSprite(matrices, 71, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BACK, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.BACK).getAutomationType()));
+                drawSprite(matrices, 33, 62, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BOTTOM, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.BOTTOM).getAutomationType()));
                 matrices.pop();
             }
             if (Tab.STATS.isOpen()) {
                 matrices.push();
                 matrices.translate(this.backgroundWidth, SPACING, 0);
-                this.renderItemIcon(matrices, 3, 3, ALUMINUM_WIRE);
+                this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, ALUMINUM_WIRE);
                 if (this.ownerSkin != null) {
                     this.client.getTextureManager().bindTexture(this.ownerSkin);
                     drawTexture(matrices, 11, 25, 24, 24, 8, 8, 8, 8, 64, 64);
@@ -260,7 +257,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 matrices.push();
                 matrices.translate(this.backgroundWidth, TAB_HEIGHT + SPACING + SPACING, 0);
                 this.client.getTextureManager().bindTexture(TEXTURE);
-                this.drawTexture(matrices, 3, 3, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
+                this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
                 this.drawButton(matrices, 18, 33, mouseX, mouseY, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
                 this.drawButton(matrices, 43, 33, mouseX, mouseY, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(playerInventory.player));

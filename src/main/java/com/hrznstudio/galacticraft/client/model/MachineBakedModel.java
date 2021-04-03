@@ -60,6 +60,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,8 +83,11 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public static final Identifier MACHINE_ITEM_IN = new Identifier(Constants.MOD_ID, "block/machine_item_input");
     public static final Identifier MACHINE_ITEM_OUT = new Identifier(Constants.MOD_ID, "block/machine_item_output");
 
-    private static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
-    public static final Map<Block, SpriteProvider> TEXTURE_PROVIDERS = new HashMap<>();
+    @ApiStatus.Internal
+    public static final CachingSpriteAtlas CACHING_SPRITE_ATLAS = new CachingSpriteAtlas(null);
+    @ApiStatus.Internal
+    public static final Map<Block, SpriteProvider> SPRITE_PROVIDERS = new HashMap<>();
+    @ApiStatus.Internal
     public static final Map<String, Set<String>> IDENTIFIERS = new HashMap<>();
     public static final List<Identifier> TEXTURE_DEPENDENCIES = new LinkedList<>();
     private static final MachineConfiguration CONFIGURATION = new MachineConfiguration();
@@ -91,7 +95,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     protected MachineBakedModel() {}
 
     public static void register(Block block, SpriteProvider provider) {
-        TEXTURE_PROVIDERS.put(block, provider);
+        SPRITE_PROVIDERS.put(block, provider);
         Identifier id = Registry.BLOCK.getId(block);
         IDENTIFIERS.putIfAbsent(id.getNamespace(), new HashSet<>());
         IDENTIFIERS.get(id.getNamespace()).add(id.getPath());
@@ -108,13 +112,17 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
         register(GalacticraftBlocks.COAL_GENERATOR, new FrontFaceSpriteProvider(new Identifier(Constants.MOD_ID, "block/coal_generator")));
 
-        register(GalacticraftBlocks.ENERGY_STORAGE_MODULE, (machine, tag, face, atlas, view, state, pos) -> {
+        register(GalacticraftBlocks.ENERGY_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 double energy;
                 if (machine != null) {
                     energy = machine.getCapacitor().getEnergy();
                 } else {
-                    energy = tag.getInt("Energy");
+                    if (stack.getTag() != null && stack.getTag().contains("Energy", NbtType.COMPOUND)) {
+                        energy = stack.getTag().getInt("Energy");
+                    } else {
+                        energy = 0;
+                    }
                 }
                 return atlas.apply(new Identifier(Constants.MOD_ID, "block/energy_storage_module_" + (int) ((energy / (double) Galacticraft.CONFIG_MANAGER.get().energyStorageModuleStorageSize()) * 8.0D)));
             }
@@ -127,17 +135,21 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         
         register(GalacticraftBlocks.OXYGEN_DECOMPRESSOR, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/oxygen_decompressor"), new Identifier(Constants.MOD_ID, "block/oxygen_decompressor_back"), true));
 
-        register(GalacticraftBlocks.OXYGEN_STORAGE_MODULE, (machine, tag, face, atlas, view, state, pos) -> {
+        register(GalacticraftBlocks.OXYGEN_STORAGE_MODULE, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 FluidVolume volume;
                 if (machine != null) {
                     volume = machine.getFluidTank().getInvFluid(0);
                 } else {
-                    if (tag.contains("tanks", NbtType.LIST)) {
-                        ListTag tag1 = tag.getList("tanks", NbtType.COMPOUND);
-                        if (tag1.size() > 0) {
-                            volume = FluidVolume.fromTag(tag1.getCompound(0));
-                        }  else {
+                    if (stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
+                        if (stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {
+                            ListTag tag1 = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG).getList("tanks", NbtType.COMPOUND);
+                            if (tag1.size() > 0) {
+                                volume = FluidVolume.fromTag(tag1.getCompound(0));
+                            } else {
+                                volume = FluidVolumeUtil.EMPTY;
+                            }
+                        } else {
                             volume = FluidVolumeUtil.EMPTY;
                         }
                     } else {
@@ -151,7 +163,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
         register(GalacticraftBlocks.REFINERY, new ZAxisSpriteProvider(new Identifier(Constants.MOD_ID, "block/refinery_front"), new Identifier(Constants.MOD_ID, "block/refinery_back"), true));
 
-        register(GalacticraftBlocks.OXYGEN_SEALER, (machine, tag, face, atlas, view, state, pos) -> {
+        register(GalacticraftBlocks.OXYGEN_SEALER, (machine, stack, face, atlas, view, pos) -> {
             if (face == BlockFace.TOP) return atlas.apply(new Identifier(Constants.MOD_ID, "block/oxygen_sealer_top"));
             if (face.isHorizontal()) atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
@@ -176,7 +188,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         MachineBlockEntity machine = ((MachineBlockEntity) blockView.getBlockEntity(pos));
         assert machine != null;
-        context.pushTransform(quad -> transform(machine, state, blockView, pos, quad));
+        context.pushTransform(quad -> transform(machine, state, quad));
         for (Direction direction : Constants.Misc.DIRECTIONS) {
             context.getEmitter().square(direction, 0, 0, 1, 1, 0).emit();
         }
@@ -245,90 +257,73 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
 
     @FunctionalInterface
     public interface SpriteProvider {
-        SpriteProvider DEFAULT = (machine, config, face, atlas, view, state, pos) -> {
+        SpriteProvider DEFAULT = (machine, stack, face, atlas, view, pos) -> {
             if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
         };
 
         /**
          * @param machine The machine block entity instance. Will be null in item contexts.
-         * @param tag The machine serialized as a {@link CompoundTag}. May be empty.
+         * @param stack The machine stack being rendered. Will be null in block contexts. DO NOT MODIFY THE STACK
          * @param face The face that is being textured.
          * @param atlas The texture atlas.
          * @param view The position of the machine about to be rendered. Will be null in item contexts.
-         * @param state The state of the machine about to be rendered.
-         * @param pos The position of the machine about to be rendered. Will be null in item contexts.
+         * @param pos The position of the machine about to be rendered or t. Will be null in item contexts.
          * @return The appropriate sprite to render for the given face.
          */
-        @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @NotNull CompoundTag tag, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @NotNull BlockState state, @Nullable BlockPos pos);
+        @Contract(pure = true, value = "null,null,_,_,_,_->fail;!null,_,_,_,null,_->fail;")
+        @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos);
     }
 
-    public static boolean transform(MachineBlockEntity machine, BlockState state, BlockRenderView renderView, BlockPos pos, MutableQuadView quad) {
-        AutomationType type = machine.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace())).getAutomationType();
-        switch (type) {
-            case NONE:
-                quad.spriteBake(0, TEXTURE_PROVIDERS.getOrDefault(state.getBlock(), SpriteProvider.DEFAULT)
-                        .getSpritesForState(machine, machine.toTag(new CompoundTag()), BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace()), CACHING_SPRITE_ATLAS, renderView, state, pos), MutableQuadView.BAKE_LOCK_UV);
-                break;
-            case FLUID_INPUT:
-                quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN), MutableQuadView.BAKE_LOCK_UV);
-                break;
-            case POWER_INPUT:
-                quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN), MutableQuadView.BAKE_LOCK_UV);
-                break;
-            case POWER_OUTPUT:
-                quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT), MutableQuadView.BAKE_LOCK_UV);
-                break;
-            case FLUID_OUTPUT:
-                quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT), MutableQuadView.BAKE_LOCK_UV);
-                break;
-            case ITEM_INPUT:
-                quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN), MutableQuadView.BAKE_LOCK_UV);
-                break;
-            case ITEM_OUTPUT:
-                quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT), MutableQuadView.BAKE_LOCK_UV);
-                break;
-        }
+    public static boolean transform(MachineBlockEntity machine, BlockState state, MutableQuadView quad) {
+        BlockFace face = BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), quad.nominalFace());
+        quad.spriteBake(0,
+                getSprite(face,
+                        machine,
+                        null,
+                        SPRITE_PROVIDERS.getOrDefault(state.getBlock(), SpriteProvider.DEFAULT),
+                        machine.getSideConfiguration().get(face).getAutomationType()),
+                MutableQuadView.BAKE_LOCK_UV);
         quad.spriteColor(0, -1, -1, -1, -1);
         return true;
     }
 
     public static boolean transformItem(ItemStack stack, MutableQuadView quad) {
         CompoundTag tag = stack.getTag();
-        BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
         if (tag != null && tag.contains(Constants.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
             CONFIGURATION.fromTag(tag.getCompound(Constants.Nbt.BLOCK_ENTITY_TAG));
-            AutomationType type = CONFIGURATION.getConfiguration().get(BlockFace.toFace(Direction.NORTH, quad.nominalFace())).getAutomationType();
-            switch (type) {
-                case NONE:
-                    quad.spriteBake(0, TEXTURE_PROVIDERS.getOrDefault(state.getBlock(), SpriteProvider.DEFAULT)
-                            .getSpritesForState(null, tag.getCompound(Constants.Nbt.BLOCK_ENTITY_TAG), BlockFace.toFace(Direction.NORTH, quad.nominalFace()), CACHING_SPRITE_ATLAS, null, state, null), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-                case FLUID_INPUT:
-                    quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-                case POWER_INPUT:
-                    quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-                case POWER_OUTPUT:
-                    quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-                case FLUID_OUTPUT:
-                    quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-                case ITEM_INPUT:
-                    quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-                case ITEM_OUTPUT:
-                    quad.spriteBake(0, CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT), MutableQuadView.BAKE_LOCK_UV);
-                    break;
-            }
+            quad.spriteBake(0,
+                    getSprite(BlockFace.toFace(Direction.NORTH, quad.nominalFace()),
+                            null,
+                            stack,
+                            SPRITE_PROVIDERS.getOrDefault(((BlockItem) stack.getItem()).getBlock(), SpriteProvider.DEFAULT),
+                            CONFIGURATION.getConfiguration().get(BlockFace.toFace(Direction.NORTH, quad.nominalFace())).getAutomationType()),
+                    MutableQuadView.BAKE_LOCK_UV);
         } else {
-            quad.spriteBake(0, TEXTURE_PROVIDERS.getOrDefault(state.getBlock(), SpriteProvider.DEFAULT)
-                    .getSpritesForState(null, new CompoundTag(), BlockFace.toFace(Direction.NORTH, quad.nominalFace()), CACHING_SPRITE_ATLAS, null, state, null), MutableQuadView.BAKE_LOCK_UV);
+            quad.spriteBake(0, SPRITE_PROVIDERS.getOrDefault(((BlockItem) stack.getItem()).getBlock(), SpriteProvider.DEFAULT)
+                    .getSpritesForState(null, stack, BlockFace.toFace(Direction.NORTH, quad.nominalFace()), CACHING_SPRITE_ATLAS, null, null), MutableQuadView.BAKE_LOCK_UV);
         }
         quad.spriteColor(0, -1, -1, -1, -1);
         return true;
+    }
+
+    public static Sprite getSprite(BlockFace face, MachineBlockEntity machine, ItemStack stack, SpriteProvider provider, AutomationType type) {
+        switch (type) {
+            case FLUID_INPUT:
+                return CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_IN);
+            case POWER_INPUT:
+                return CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_IN);
+            case POWER_OUTPUT:
+                return CACHING_SPRITE_ATLAS.apply(MACHINE_POWER_OUT);
+            case FLUID_OUTPUT:
+                return CACHING_SPRITE_ATLAS.apply(MACHINE_FLUID_OUT);
+            case ITEM_INPUT:
+                return CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_IN);
+            case ITEM_OUTPUT:
+                return CACHING_SPRITE_ATLAS.apply(MACHINE_ITEM_OUT);
+            default:
+                return provider.getSpritesForState(machine, stack, face, CACHING_SPRITE_ATLAS, null, null);
+        }
     }
 
     public static class FrontFaceSpriteProvider implements SpriteProvider {
@@ -340,7 +335,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @NotNull CompoundTag tag, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @NotNull BlockState state, @Nullable BlockPos pos) {
+        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(sprite);
             if (face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
             return atlas.apply(MACHINE);
@@ -356,7 +351,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @NotNull CompoundTag tag, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @NotNull BlockState state, @Nullable BlockPos pos) {
+        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             return atlas.apply(sprite);
         }
     }
@@ -379,7 +374,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
         }
 
         @Override
-        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @NotNull CompoundTag tag, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @NotNull BlockState state, @Nullable BlockPos pos) {
+        public @NotNull Sprite getSpritesForState(@Nullable MachineBlockEntity machine, @Nullable ItemStack stack, @NotNull BlockFace face, @NotNull Function<Identifier, Sprite> atlas, @Nullable BlockRenderView view, @Nullable BlockPos pos) {
             if (face == BlockFace.FRONT) return atlas.apply(this.front);
             if (face == BlockFace.BACK) return atlas.apply(this.back);
             if (this.sided && face.isHorizontal()) return atlas.apply(MACHINE_SIDE);
