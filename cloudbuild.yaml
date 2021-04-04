@@ -1,5 +1,5 @@
 steps:
-- name: 'adoptopenjdk/openjdk8-openj9'
+- name: 'adoptopenjdk/openjdk8-openj9:ubi'
   args:
     - './gradlew'
     - 'checkLicenses'
