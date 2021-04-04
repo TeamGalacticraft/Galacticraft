@@ -268,7 +268,7 @@ fun getVersionDecoration(): String {
 }
 
 // from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/5
-fun String.execute(workingDir: File = projectDir): String {
+fun String.execute(workingDir: File = project.file("./")): String {
     val parts = this.split("\\s".toRegex())
     val proc = ProcessBuilder(*parts.toTypedArray())
         .directory(workingDir)
