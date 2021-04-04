@@ -58,7 +58,7 @@ configure<JavaPluginConvention> {
 }
 
 group = modGroup
-version = modVersion
+version = modVersion + getVersionDecoration()
 
 base {
     archivesBaseName = modName
@@ -183,10 +183,10 @@ dependencies {
 }
 
 tasks.processResources {
-    inputs.property("version", modVersion)
+    inputs.property("version", project.version)
 
     filesMatching("fabric.mod.json") {
-        expand(mutableMapOf("version" to modVersion))
+        expand(mutableMapOf("version" to project.version))
     }
 
     // Minify json resources
@@ -212,10 +212,10 @@ tasks.jar {
     manifest {
         attributes(mapOf(
             "Implementation-Title"     to modName,
-            "Implementation-Version"   to modVersion,
+            "Implementation-Version"   to project.version,
             "Implementation-Vendor"    to "HRZN LTD",
             "Implementation-Timestamp" to DateTimeFormatter.ISO_DATE_TIME,
-            "Maven-Artifact"           to "$modGroup:$modName:$modVersion"
+            "Maven-Artifact"           to "$modGroup:$modName:$project.version"
         ))
     }
 }
@@ -249,4 +249,33 @@ license {
         set("year", Year.now().value)
         set("company", "HRZN LTD")
     }
+}
+
+// inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
+fun getVersionDecoration(): String {
+    if(project.hasProperty("release")) return ""
+
+    var version = "+build"
+    val branch = "git branch --show-current".execute()
+    if(branch.isNotEmpty() && branch != "main") {
+        version += ".${branch}"
+    }
+    val commitHashLines = "git rev-parse --short HEAD".execute()
+    if(commitHashLines.isNotEmpty()) {
+        version += ".${commitHashLines}"
+    }
+    return version
+}
+
+// from https://discuss.gradle.org/t/how-to-run-execute-string-as-a-shell-command-in-kotlin-dsl/32235/5
+fun String.execute(workingDir: File = projectDir): String {
+    val parts = this.split("\\s".toRegex())
+    val proc = ProcessBuilder(*parts.toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+
+    proc.waitFor(1, TimeUnit.MINUTES)
+    return proc.inputStream.bufferedReader().readText().trim()
 }
