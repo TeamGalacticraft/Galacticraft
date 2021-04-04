@@ -47,7 +47,7 @@ import java.util.function.Supplier;
 public abstract class WorldMixin implements WorldOxygenAccessor {
     @Shadow
     public static boolean isOutOfBuildLimitVertically(BlockPos pos) {
-        return false;
+        throw new UnsupportedOperationException("Shadowed method was not transformed!");
     }
 
     @Shadow public abstract WorldChunk getWorldChunk(BlockPos pos);

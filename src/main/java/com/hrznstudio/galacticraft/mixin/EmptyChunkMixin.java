@@ -35,7 +35,7 @@ import java.util.List;
 public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
     @Override
     public boolean isBreathable(int x, int y, int z) {
-        return false;
+        return true;
     }
 
     @Override

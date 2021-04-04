@@ -39,6 +39,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -99,7 +100,7 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
     @Inject(at = @At("HEAD"), method = "renderSky", cancellable = true)
     private void renderSkyGC(MatrixStack matrices, float delta, CallbackInfo ci) {
         if (this.world.getRegistryKey() == GalacticraftDimensions.MOON) {
-            this.client.getProfiler().push("gc-r_sky_render");
+            this.client.getProfiler().push("moon_sky_render");
             RenderSystem.disableTexture();
             RenderSystem.disableFog();
             RenderSystem.disableRescaleNormal();
@@ -216,7 +217,8 @@ public abstract class WorldRendererMixin implements WorldRendererAccessor {
         Random random = new Random(1671120782L);
 
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-        buffer.begin(7, VertexFormats.POSITION);
+
+        buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION);
         for (int i = 0; i < 12000; ++i) {
             double j = random.nextFloat() * 2.0F - 1.0F;
             double k = random.nextFloat() * 2.0F - 1.0F;

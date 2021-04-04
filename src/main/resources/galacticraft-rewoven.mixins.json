@@ -5,11 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BaseFluidMixin",
-    "BiomeMixin",
     "BuiltinBiomesAccessor",
-    "ChunkGeneratorAccessor",
     "ChunkHolderMixin",
-    "ChunkMixin",
     "ChunkSectionMixin",
     "ChunkSerializerMixin",
     "DimensionTypeMixin",
@@ -31,7 +28,6 @@
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.ClientChunkSectionMixin",
-    "client.ClientWorldMixin",
     "client.HandledScreenHooks",
     "client.InGameHudMixin",
     "client.PauseMenuScreenMixin",
