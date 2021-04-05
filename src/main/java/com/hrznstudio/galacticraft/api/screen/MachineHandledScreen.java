@@ -77,7 +77,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -196,7 +199,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     protected final World world;
 
     private final List<AbstractWidget> widgets = new LinkedList<>();
-    private final Map<BlockFace, AutomationType> config = new EnumMap<>(BlockFace.class);
 
     private Identifier ownerSkin = null;
     private final MachineBakedModel.SpriteProvider spriteProvider;
@@ -205,10 +207,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         super(handler, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
-
-        for (BlockFace face : Constants.Misc.BLOCK_FACES) {
-            config.put(face, handler.machine.getSideConfiguration().get(face).getAutomationType());
-        }
 
         this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(world.getBlockState(pos).getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
@@ -457,7 +455,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     return true;
                 }
                 if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
-                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.BOTTOm, Screen.hasShiftDown(), Screen.hasControlDown());
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.BOTTOM, Screen.hasShiftDown(), Screen.hasControlDown());
                     this.playButtonSound();
                     return true;
                 }
@@ -857,6 +855,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private void playButtonSound() {
+        assert this.client != null;
         this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_BUTTON_CLICK, 1.0F));
     }
 
@@ -941,8 +940,8 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         drawTextureColor(matrices, x, x + width, y, y + height, z, width, height, u, v, textureWidth, textureHeight, red, green, blue);
     }
 
-    private static void drawTextureColor(MatrixStack matrices, int x0, int y0, int x1, int y1, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight, int red, int green, int blue) {
-        drawTexturedQuadColor(matrices.peek().getModel(), x0, y0, x1, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue);
+    private static void drawTextureColor(MatrixStack matrices, int x0, int x1, int y0, int y1, int z, int regionWidth, int regionHeight, float u, float v, int textureWidth, int textureHeight, int red, int green, int blue) {
+        drawTexturedQuadColor(matrices.peek().getModel(), x0, x1, y0, y1, z, (u + 0.0F) / (float)textureWidth, (u + (float)regionWidth) / (float)textureWidth, (v + 0.0F) / (float)textureHeight, (v + (float)regionHeight) / (float)textureHeight, red, green, blue);
     }
 
     private static void drawTexturedQuadColor(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float u1, float v0, float v1, int red, int green, int blue) {
