@@ -253,6 +253,7 @@ license {
 
 // inspired by https://github.com/TerraformersMC/GradleScripts/blob/2.0/ferry.gradle
 fun getVersionDecoration(): String {
+    if((System.getenv("DISABLE_VERSION_DECORATION") ?: "false") == "true") return ""
     if(project.hasProperty("release")) return ""
 
     var version = "+build"
