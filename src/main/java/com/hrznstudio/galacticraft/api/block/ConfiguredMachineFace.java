@@ -22,6 +22,8 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.google.common.collect.ImmutableList;
+import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.attribute.Automatable;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.mojang.datafixers.util.Either;
@@ -32,20 +34,32 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.stream.IntStream;
 
-public class ConfiguredSideOption {
-    private AutomationType automationType; //input, output, fluid
+public class ConfiguredMachineFace {
+    private AutomationType automationType;
     private @Nullable Either<Integer, SlotType> matching;
 
-    public ConfiguredSideOption(@NotNull AutomationType automationType) {
+    public ConfiguredMachineFace(@NotNull AutomationType automationType) {
         this.automationType = automationType;
         this.matching = null;
     }
 
-    public void setOption(@NotNull AutomationType option, @Nullable Either<Integer, SlotType> matching) {
+    public void setOption(@NotNull AutomationType option) {
         this.automationType = option;
-        this.matching = matching;
+        this.matching = null;
+    }
+
+
+    public static List<AutomationType> getValidTypes(MachineBlockEntity machine) {
+        ImmutableList.Builder<AutomationType> builder = ImmutableList.builder();
+        builder.add(AutomationType.NONE);
+        if (machine.canInsertEnergy()) builder.add(AutomationType.POWER_INPUT);
+        if (machine.canExtractEnergy()) builder.add(AutomationType.POWER_OUTPUT);
+        builder.addAll(machine.getInventory().getTypes().stream().map(SlotType::getType).distinct().iterator());
+        builder.addAll(machine.getFluidTank().getTypes().stream().map(SlotType::getType).distinct().iterator());
+        return builder.build();
     }
 
     public void setMatching(@Nullable Either<Integer, SlotType> matching) {
@@ -54,6 +68,10 @@ public class ConfiguredSideOption {
 
     public @NotNull AutomationType getAutomationType() {
         return automationType;
+    }
+
+    public Either<Integer, SlotType> getMatching() {
+        return matching;
     }
 
     public int[] getMatching(Automatable automatable) {

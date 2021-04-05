@@ -297,7 +297,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                             null,
                             stack,
                             SPRITE_PROVIDERS.getOrDefault(((BlockItem) stack.getItem()).getBlock(), SpriteProvider.DEFAULT),
-                            CONFIGURATION.getConfiguration().get(BlockFace.toFace(Direction.NORTH, quad.nominalFace())).getAutomationType()),
+                            CONFIGURATION.getSideConfiguration().get(BlockFace.toFace(Direction.NORTH, quad.nominalFace())).getAutomationType()),
                     MutableQuadView.BAKE_LOCK_UV);
         } else {
             quad.spriteBake(0, SPRITE_PROVIDERS.getOrDefault(((BlockItem) stack.getItem()).getBlock(), SpriteProvider.DEFAULT)

@@ -105,7 +105,7 @@ public class SecurityInfo {
     public void setOwner(@NotNull Teams teams, @NotNull GameProfile owner) {
         if (this.getOwner() == null) {
             this.owner = owner;
-            this.team = teams.getTeam(owner.getId()).id;
+            if (teams.getTeam(owner.getId()) != null) this.team = teams.getTeam(owner.getId()).id;
         }
     }
 

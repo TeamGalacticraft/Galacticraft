@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.api.screen;
 import alexiil.mc.lib.attributes.fluid.volume.FluidVolume;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.AutomationType;
+import com.hrznstudio.galacticraft.api.block.ConfiguredMachineFace;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.machine.RedstoneInteractionType;
@@ -34,17 +35,23 @@ import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
 import com.hrznstudio.galacticraft.client.model.MachineBakedModel;
 import com.hrznstudio.galacticraft.item.GalacticraftItems;
 import com.hrznstudio.galacticraft.screen.MachineScreenHandler;
+import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.screen.tank.Tank;
 import com.hrznstudio.galacticraft.util.ColorUtils;
 import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Either;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -54,6 +61,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
@@ -89,9 +97,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     public static final int PANEL_HEIGHT = 93;
     public static final int TAB_WIDTH = 22;
     public static final int TAB_HEIGHT = 22;
-    
-    public static final int PANEL_ICON_X = 3;
-    public static final int PANEL_ICON_Y = 3;
 
     private static final int SPACING = 4;
 
@@ -137,6 +142,55 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private static final int PANEL_SECURITY_U = 101;
     private static final int PANEL_SECURITY_V = 93;
+
+    public static final int PANEL_ICON_X = 3;
+    public static final int PANEL_ICON_Y = 3;
+
+    public static final int PANEL_TITLE_X = 19;
+    public static final int PANEL_TITLE_Y = 7;
+
+    private static final int REDSTONE_IGNORE_X = 18;
+    private static final int REDSTONE_IGNORE_Y = 30;
+    
+    private static final int REDSTONE_LOW_X = 43;
+    private static final int REDSTONE_LOW_Y = 30;
+
+    private static final int REDSTONE_HIGH_X = 68;
+    private static final int REDSTONE_HIGH_Y = 30;
+
+    private static final int SECURITY_PUBLIC_X = 18;
+    private static final int SECURITY_PUBLIC_Y = 30;
+
+    private static final int SECURITY_TEAM_X = 43;
+    private static final int SECURITY_TEAM_Y = 30;
+
+    private static final int SECURITY_PRIVATE_X = 68;
+    private static final int SECURITY_PRIVATE_Y = 30;
+
+    private static final int TOP_FACE_X = 33;
+    private static final int TOP_FACE_Y = 26;
+
+    private static final int LEFT_FACE_X = 14;
+    private static final int LEFT_FACE_Y = 45;
+
+    private static final int FRONT_FACE_X = 33;
+    private static final int FRONT_FACE_Y = 45;
+
+    private static final int RIGHT_FACE_X = 52;
+    private static final int RIGHT_FACE_Y = 45;
+
+    private static final int BACK_FACE_X = 71;
+    private static final int BACK_FACE_Y = 45;
+
+    private static final int BOTTOM_FACE_X = 33;
+    private static final int BOTTOM_FACE_Y = 64;
+
+    private static final int OWNER_FACE_X = 8;
+    private static final int OWNER_FACE_Y = 20;
+
+    private static final int OWNER_FACE_WIDTH = 24;
+    private static final int OWNER_FACE_HEIGHT = 24;
+    private static final int PANEL_UPPER_HEIGHT = 20;
 
     protected final BlockPos pos;
     protected final World world;
@@ -188,22 +242,22 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (Tab.REDSTONE.isOpen()) {
                 matrices.push();
                 matrices.translate(-PANEL_WIDTH, SPACING, 0);
-                this.drawButton(matrices, 18, 33, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.IGNORE);
-                this.drawButton(matrices, 43, 33, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.LOW);
-                this.drawButton(matrices, 68, 33, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.HIGH);
+                this.drawButton(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.IGNORE);
+                this.drawButton(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.LOW);
+                this.drawButton(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, mouseX + PANEL_WIDTH - this.x, mouseY - SPACING - this.y, delta, machine.getRedstoneInteraction() == RedstoneInteractionType.HIGH);
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, REDSTONE);
-                this.renderItemIcon(matrices, 18, 33, REDSTONE);
-                this.renderItemIcon(matrices, 43, 33 - 2, UNLIT_TORCH);
-                this.renderItemIcon(matrices, 68, 33 - 2, REDSTONE_TORCH);
+                this.renderItemIcon(matrices, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, REDSTONE);
+                this.renderItemIcon(matrices, REDSTONE_LOW_X, REDSTONE_LOW_Y - 2, UNLIT_TORCH);
+                this.renderItemIcon(matrices, REDSTONE_HIGH_X, REDSTONE_HIGH_Y - 2, REDSTONE_TORCH);
 
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone")
-                        .setStyle(Constants.Text.GRAY_STYLE), 19, 6, ColorUtils.WHITE);
-                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone.state",
-                        machine.getRedstoneInteraction().getName()).setStyle(Constants.Text.GRAY_STYLE), 11, 56, ColorUtils.WHITE);
-                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status",
-                        machine.disabled() ? new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status.enabled").setStyle(Constants.Text.GREEN_STYLE)
+                        .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone.state",
+                        machine.getRedstoneInteraction().getName()).setStyle(Constants.Text.DARK_GRAY_STYLE), 11, 56, ColorUtils.WHITE);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status",
+                        !machine.disabled() ? new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status.enabled").setStyle(Constants.Text.GREEN_STYLE)
                                 : new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status.disabled").setStyle(Constants.Text.DARK_RED_STYLE))
-                        .setStyle(Constants.Text.GRAY_STYLE), 11, 56 + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
+                        .setStyle(Constants.Text.DARK_GRAY_STYLE), 11, 56 + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
 
                 matrices.pop();
             }
@@ -212,15 +266,15 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 matrices.translate(-PANEL_WIDTH, TAB_HEIGHT + SPACING + SPACING, 0);
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, WRENCH);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.configuration")
-                        .setStyle(Constants.Text.GRAY_STYLE), 19, 6, ColorUtils.WHITE);
+                        .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
 
                 this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-                drawSprite(matrices, 33, 24, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.TOP, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.TOP).getAutomationType()));
-                drawSprite(matrices, 14, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.LEFT, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.LEFT).getAutomationType()));
-                drawSprite(matrices, 33, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.FRONT, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.FRONT).getAutomationType()));
-                drawSprite(matrices, 52, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.RIGHT, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.RIGHT).getAutomationType()));
-                drawSprite(matrices, 71, 43, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BACK, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.BACK).getAutomationType()));
-                drawSprite(matrices, 33, 62, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BOTTOM, machine, null, this.spriteProvider, machine.getConfiguration().getConfiguration().get(BlockFace.BOTTOM).getAutomationType()));
+                drawSprite(matrices, TOP_FACE_X, TOP_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.TOP, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.TOP).getAutomationType()));
+                drawSprite(matrices, LEFT_FACE_X, LEFT_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.LEFT, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.LEFT).getAutomationType()));
+                drawSprite(matrices, FRONT_FACE_X, FRONT_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.FRONT, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.FRONT).getAutomationType()));
+                drawSprite(matrices, RIGHT_FACE_X, RIGHT_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.RIGHT, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.RIGHT).getAutomationType()));
+                drawSprite(matrices, BACK_FACE_X, BACK_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BACK, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.BACK).getAutomationType()));
+                drawSprite(matrices, BOTTOM_FACE_X, BOTTOM_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BOTTOM, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.BOTTOM).getAutomationType()));
                 matrices.pop();
             }
             if (Tab.STATS.isOpen()) {
@@ -229,12 +283,12 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, ALUMINUM_WIRE);
                 if (this.ownerSkin != null) {
                     this.client.getTextureManager().bindTexture(this.ownerSkin);
-                    drawTexture(matrices, 11, 25, 24, 24, 8, 8, 8, 8, 64, 64);
+                    drawTexture(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT, 8, 8, 8, 8, 64, 64);
                 } else {
-                    fill(matrices, 11, 25, 35, 49, ColorUtils.WHITE);
+                    fill(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_X + OWNER_FACE_WIDTH, OWNER_FACE_Y + OWNER_FACE_HEIGHT, ColorUtils.WHITE);
                 }
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.stats")
-                        .setStyle(Constants.Text.GREEN_STYLE), 19, 6, ColorUtils.WHITE);
+                        .setStyle(Constants.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 matrices.push();
                 matrices.translate(40, 22, 0);
                 matrices.scale(0.6f, 0.6f, 0.6f);
@@ -253,24 +307,25 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 //                        .setStyle(Constants.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
                 matrices.pop();
             }
+
             if (Tab.SECURITY.isOpen()) {
                 matrices.push();
                 matrices.translate(this.backgroundWidth, TAB_HEIGHT + SPACING + SPACING, 0);
                 this.client.getTextureManager().bindTexture(TEXTURE);
                 this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
-                this.drawButton(matrices, 18, 33, mouseX, mouseY, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
-                this.drawButton(matrices, 43, 33, mouseX, mouseY, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(playerInventory.player));
-                this.drawButton(matrices, 68, 33, mouseX, mouseY, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.getSecurity().isOwner(playerInventory.player));
-                this.drawTexture(matrices, 18, 33, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
-                this.drawTexture(matrices, 43, 33, ICON_LOCK_PARTY_U, ICON_LOCK_PARTY_V, ICON_WIDTH, ICON_HEIGHT);
-                this.drawTexture(matrices, 68, 33, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
+                this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawButton(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.TEAM || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawButton(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PRIVATE || !machine.getSecurity().isOwner(playerInventory.player));
+                this.drawTexture(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
+                this.drawTexture(matrices, SECURITY_TEAM_X, SECURITY_TEAM_Y, ICON_LOCK_PARTY_U, ICON_LOCK_PARTY_V, ICON_WIDTH, ICON_HEIGHT);
+                this.drawTexture(matrices, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, ICON_LOCK_PUBLIC_U, ICON_LOCK_PUBLIC_V, ICON_WIDTH, ICON_HEIGHT);
 
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security")
-                        .setStyle(Constants.Text.GRAY_STYLE), 19, 6, ColorUtils.WHITE);
-                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.state",
+                        .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.state",
                         machine.getSecurity().getAccessibility().getName()).setStyle(Constants.Text.GRAY_STYLE), 11, 37, ColorUtils.WHITE);
-                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.owned_by", machine.getSecurity().getOwner().getName())
+                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.owned_by", machine.getSecurity().getOwner().getName())
                         .setStyle(Constants.Text.GRAY_STYLE), 11, 37 + this.textRenderer.fontHeight + 2, ColorUtils.WHITE);
 
                 matrices.pop();
@@ -324,157 +379,170 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     public boolean checkTabsClick(double mouseX, double mouseY, int button) {
-        final double mX = mouseX, mY = mouseY;
-        if (this.handler.machine != null) {
-            final MachineBlockEntity machine = this.handler.machine;
-            mouseX = mX - this.x;
-            mouseY = mY - this.y;
-            if (Tab.REDSTONE.isOpen()) {
-                mouseX += PANEL_WIDTH;
-                mouseY -= SPACING;
-                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, 20)) {
-                    Tab.REDSTONE.click();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 18, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                    machine.setRedstone(RedstoneInteractionType.IGNORE);
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 43, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                    machine.setRedstone(RedstoneInteractionType.LOW);
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 68, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                    machine.setRedstone(RedstoneInteractionType.HIGH);
-                    this.playButtonSound();
-                    return true;
-                }
-                if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                    if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
-                        return true;
-                    }
-                }
-            } else {
-                mouseX += TAB_WIDTH;
-                mouseY -= SPACING;
-                if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                    Tab.REDSTONE.click();
-                    return true;
-                }
-            }
-            mouseX = mX - this.x;
-            mouseY = mY - this.y;
-            if (Tab.CONFIGURATION.isOpen()) {
-                mouseX += PANEL_WIDTH;
-                mouseY -= TAB_HEIGHT + SPACING + SPACING;
-                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, 20)) {
-                    Tab.CONFIGURATION.click();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 33, 24, 16, 16)) { //todo side config
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 14, 43, 16, 16)) {
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 33, 43, 16, 16)) {
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 52, 43, 16, 16)) {
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 71, 43, 16, 16)) {
-                    this.playButtonSound();
-                    return true;
-                }
-                if (this.check(mouseX, mouseY, 33, 22, 16, 16)) {
-                    this.playButtonSound();
-                    return true;
-                }
-                if (button == 1) {
-                    if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
-                        return true;
-                    }
-                }
-            } else {
-                mouseX += TAB_WIDTH;
-                if (Tab.REDSTONE.isOpen()) {
-                    mouseY -= PANEL_HEIGHT + SPACING + SPACING;
-                } else {
-                    mouseY -= TAB_HEIGHT + SPACING + SPACING;
-                }
-                if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                    Tab.CONFIGURATION.click();
-                    return true;
-                }
-            }
-            mouseX = mX - this.x;
-            mouseY = mY - this.y;
-            mouseX -= this.backgroundWidth;
-            mouseY -= SPACING;
-            if (Tab.STATS.isOpen()) {
-                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, 20)) {
-                    Tab.STATS.click();
-                    return true;
-                }
-                if (button == 1) {
-                    if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
-                        Tab.STATS.click();
-                        return true;
-                    }
-                }
-            } else {
-                if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                    Tab.STATS.click();
-                    return true;
-                }
-            }
-            mouseX = mX - this.x;
-            mouseY = mY - this.y;
-            if (Tab.SECURITY.isOpen()) {
-                mouseX -= this.backgroundWidth;
-                mouseY -= TAB_HEIGHT + SPACING + SPACING;
-                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, 20)) {
-                    Tab.SECURITY.click();
-                    return true;
-                }
+        assert this.client != null;
+        assert this.handler.machine != null;
 
-                if (machine.getSecurity().isOwner(this.playerInventory.player)) {
-                    if (this.check(mouseX, mouseY, 18, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                        machine.getSecurity().setAccessibility(SecurityInfo.Accessibility.PRIVATE);
-                        this.playButtonSound();
-                        return true;
-                    }
-                    if (this.check(mouseX, mouseY, 43, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                        machine.getSecurity().setAccessibility(SecurityInfo.Accessibility.TEAM);
-                        this.playButtonSound();
-                        return true;
-                    }
-                    if (this.check(mouseX, mouseY, 68, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                        machine.getSecurity().setAccessibility(SecurityInfo.Accessibility.PUBLIC);
-                        this.playButtonSound();
-                        return true;
-                    }
+        final double mX = mouseX, mY = mouseY;
+        final MachineBlockEntity machine = this.handler.machine;
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.REDSTONE.isOpen()) {
+            mouseX += PANEL_WIDTH;
+            mouseY -= SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.REDSTONE.click();
+                return true;
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                machine.setRedstone(RedstoneInteractionType.IGNORE);
+                this.playButtonSound();
+                return true;
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                machine.setRedstone(RedstoneInteractionType.LOW);
+                this.playButtonSound();
+                return true;
+            }
+            if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                machine.setRedstone(RedstoneInteractionType.HIGH);
+                this.playButtonSound();
+                return true;
+            }
+            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
+                    return true;
                 }
+            }
+        } else {
+            mouseX += TAB_WIDTH;
+            mouseY -= SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.REDSTONE.click();
+                return true;
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        if (Tab.CONFIGURATION.isOpen()) {
+            mouseX += PANEL_WIDTH;
+            mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.CONFIGURATION.click();
+                return true;
+            }
+            if (button >= GLFW.GLFW_MOUSE_BUTTON_LEFT && button <= GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+                if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) { //todo side config
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.TOP, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.LEFT, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.FRONT, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.RIGHT, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.BACK, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
+                    SideConfigurationAction.VALUES[button].update(this.client.player, machine, BlockFace.BOTTOm, Screen.hasShiftDown(), Screen.hasControlDown());
+                    this.playButtonSound();
+                    return true;
+                }
+            }
+//                if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+//                    if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
+//                        return true;
+//                    }
+//                }
+        } else {
+            mouseX += TAB_WIDTH;
+            if (Tab.REDSTONE.isOpen()) {
+                mouseY -= PANEL_HEIGHT + SPACING + SPACING;
             } else {
-                mouseX -= this.backgroundWidth;
-                if (Tab.STATS.isOpen()) {
-                    mouseY -= PANEL_HEIGHT + SPACING + SPACING;
-                } else {
-                    mouseY -= TAB_HEIGHT + SPACING + SPACING;
+                mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            }
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.CONFIGURATION.click();
+                return true;
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        mouseX -= this.backgroundWidth;
+        mouseY -= SPACING;
+        if (Tab.STATS.isOpen()) {
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.STATS.click();
+                return true;
+            }
+            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
+                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
+                    Tab.STATS.click();
+                    return true;
                 }
-                if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
-                    Tab.SECURITY.click();
+            }
+        } else {
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.STATS.click();
+                return true;
+            }
+        }
+        mouseX = mX - this.x;
+        mouseY = mY - this.y;
+        mouseX -= this.backgroundWidth;
+        if (Tab.SECURITY.isOpen()) {
+            mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
+                Tab.SECURITY.click();
+                return true;
+            }
+
+            if (machine.getSecurity().isOwner(this.playerInventory.player)) {
+                if (this.check(mouseX, mouseY, SECURITY_PRIVATE_X, SECURITY_PRIVATE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.setAccessibility(SecurityInfo.Accessibility.PRIVATE);
+                    this.playButtonSound();
+                    return true;
                 }
+                if (this.check(mouseX, mouseY, SECURITY_TEAM_X, SECURITY_TEAM_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.setAccessibility(SecurityInfo.Accessibility.TEAM);
+                    this.playButtonSound();
+                    return true;
+                }
+                if (this.check(mouseX, mouseY, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                    this.setAccessibility(SecurityInfo.Accessibility.PUBLIC);
+                    this.playButtonSound();
+                    return true;
+                }
+            }
+        } else {
+            if (Tab.STATS.isOpen()) {
+                mouseY -= PANEL_HEIGHT + SPACING + SPACING;
+            } else {
+                mouseY -= TAB_HEIGHT + SPACING + SPACING;
+            }
+            if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
+                Tab.SECURITY.click();
             }
         }
         return false;
+    }
+
+    protected void setAccessibility(SecurityInfo.Accessibility accessibility) {
+        this.handler.machine.getSecurity().setAccessibility(accessibility);
+        //todo sync
     }
 
     protected void drawTabTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -485,13 +553,13 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (Tab.REDSTONE.isOpen()) {
             mouseX += PANEL_WIDTH;
             mouseY -= SPACING;
-            if (this.check(mouseX, mouseY, 18, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 this.renderTooltip(matrices, RedstoneInteractionType.IGNORE.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 43, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 this.renderTooltip(matrices, RedstoneInteractionType.LOW.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 68, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 this.renderTooltip(matrices, RedstoneInteractionType.HIGH.getName(), mX, mY);
             }
         } else {
@@ -506,22 +574,22 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (Tab.CONFIGURATION.isOpen()) {
             mouseX += PANEL_WIDTH;
             mouseY -= TAB_HEIGHT + SPACING + SPACING;
-            if (this.check(mouseX, mouseY, 33, 24, 16, 16)) {
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
                 this.renderTooltip(matrices, BlockFace.TOP.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 14, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
                 this.renderTooltip(matrices, BlockFace.LEFT.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 33, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
                 this.renderTooltip(matrices, BlockFace.FRONT.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 52, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
                 this.renderTooltip(matrices, BlockFace.RIGHT.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 71, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
                 this.renderTooltip(matrices, BlockFace.BACK.getName(), mX, mY);
             }
-            if (this.check(mouseX, mouseY, 33, 22, 16, 16)) {
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
                 this.renderTooltip(matrices, BlockFace.BOTTOM.getName(), mX, mY);
             }
         } else {
@@ -540,7 +608,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         mouseX -= this.backgroundWidth;
         mouseY -= SPACING;
         if (Tab.STATS.isOpen()) {
-            if (this.check(mouseX, mouseY, 11, 25, 24, 24)) {
+            if (this.check(mouseX, mouseY, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT)) {
                 this.renderTooltip(matrices, new LiteralText(machine.getSecurity().getOwner().getName()), mX, mY);
             }
         } else {
@@ -555,19 +623,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseY -= TAB_HEIGHT + SPACING + SPACING;
 
             if (machine.getSecurity().isOwner(this.playerInventory.player)) {
-                if (this.check(mouseX, mouseY, 18, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.renderTooltip(matrices, SecurityInfo.Accessibility.PRIVATE.getName(), mX, mY);
                 }
-                if (this.check(mouseX, mouseY, 43, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.renderTooltip(matrices, SecurityInfo.Accessibility.TEAM.getName(), mX, mY);
                 }
-                if (this.check(mouseX, mouseY, 68, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.renderTooltip(matrices, SecurityInfo.Accessibility.PUBLIC.getName(), mX, mY);
                 }
             } else {
-                if (this.check(mouseX, mouseY, 18, 33, BUTTON_WIDTH, BUTTON_HEIGHT)
-                    || check(mouseX, mouseY, 43, 33, BUTTON_WIDTH, BUTTON_HEIGHT)
-                    || check(mouseX, mouseY, 68, 33, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+                    || check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)
+                    || check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                     this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.access_denied"), mX, mY);
                 }
             }
@@ -632,27 +700,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX -= PANEL_WIDTH + this.x;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntMap out = new Int2IntArrayMap();
-            if (this.check(mouseX, mouseY, 33, 24, 16, 16)) {
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, 14, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, 33, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, 52, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, 71, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
-            if (this.check(mouseX, mouseY, 33, 22, 16, 16)) {
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
@@ -674,27 +742,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (Tab.CONFIGURATION.isOpen()) {
             mouseX -= PANEL_WIDTH + this.x;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
-            if (this.check(mouseX, mouseY, 33, 24, 16, 16)) {
+            if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
-            if (this.check(mouseX, mouseY, 14, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
-            if (this.check(mouseX, mouseY, 33, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
-            if (this.check(mouseX, mouseY, 52, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
-            if (this.check(mouseX, mouseY, 71, 43, 16, 16)) {
+            if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
-            if (this.check(mouseX, mouseY, 33, 22, 16, 16)) {
+            if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
                 IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
@@ -865,18 +933,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         return widget;
     }
 
-    private static void drawTexturedQuad(Matrix4f matrices, int x0, int x1, int y0, int y1, int z, float u0, float v0, float u1, float v1, float u2, float v2, float u3, float v3) {
-        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE);
-        bufferBuilder.vertex(matrices, (float)x0, (float)y1, (float)z).texture(u0, v0).next();
-        bufferBuilder.vertex(matrices, (float)x1, (float)y1, (float)z).texture(u1, v1).next();
-        bufferBuilder.vertex(matrices, (float)x1, (float)y0, (float)z).texture(u2, v2).next();
-        bufferBuilder.vertex(matrices, (float)x0, (float)y0, (float)z).texture(u3, v3).next();
-        bufferBuilder.end();
-        RenderSystem.enableAlphaTest();
-        BufferRenderer.draw(bufferBuilder);
-    }
-
     public void drawTextureColor(MatrixStack matrices, int x, int y, int u, int v, int width, int height, int red, int green, int blue) {
         drawTextureColor(matrices, x, y, this.getZOffset(), (float)u, (float)v, width, height, 256, 256, red, green, blue);
     }
@@ -943,6 +999,99 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (this.open) {
                 Tab.values()[this.ordinal() + 1 - this.ordinal() % 2 * 2].open = false;
             }
+        }
+    }
+
+    private enum SideConfigurationAction {
+        CHANGE_TYPE((player, machine, face, back, reset) -> {
+            ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            if (reset) {
+                sideOption.setOption(AutomationType.NONE);
+                return;
+            }
+            List<AutomationType> types = ConfiguredMachineFace.getValidTypes(machine);
+            int i = types.indexOf(sideOption.getAutomationType());
+            if (!back) {
+                if (++i == types.size()) i = 0;
+            } else {
+                if (i == 0) i = types.size();
+                i--;
+            }
+            sideOption.setOption(types.get(i));
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
+            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+
+        }), //LEFT
+        CHANGE_MATCH((player, machine, face, back, reset) -> {
+            ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            if (reset) {
+                sideOption.setMatching(null);
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(-1);
+                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+                return;
+            }
+            List<SlotType> list = sideOption.getAutomationType().getAutomatable(machine).getTypes();
+            int i = 0;
+            if (sideOption.getMatching() != null && !sideOption.getMatching().left().isPresent()) {
+                i = list.indexOf(sideOption.getMatching().right().orElseThrow(RuntimeException::new));
+            }
+            sideOption.setMatching(Either.right(list.get(i)));
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(list.get(i)));
+            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+        }), //RIGHT
+        CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
+            ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            if (reset) {
+                sideOption.setMatching(null);
+                PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+                buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(true).writeInt(-1);
+                ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+                return;
+            }
+            int i = 0;
+            IntList list = null;
+            if (sideOption.getMatching() != null && sideOption.getMatching().left().isPresent()) {
+                i = sideOption.getMatching().left().get();
+                sideOption.setMatching(null);
+                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getAutomatable(machine)));
+                i = list.indexOf(i);
+            }
+            if (list == null)
+                list = new IntArrayList(sideOption.getMatching(sideOption.getAutomationType().getAutomatable(machine)));
+
+            if (!back) {
+                if (++i == list.size()) i = 0;
+            } else {
+                if (i == 0) i = list.size();
+                i--;
+            }
+            sideOption.setMatching(Either.left(list.getInt(i)));
+
+            PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+            buf.writeBlockPos(machine.getPos());
+            buf.writeByte(face.ordinal());
+            buf.writeBoolean(true).writeBoolean(true);
+            buf.writeInt(i);
+            ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
+        }); //MID
+
+        static final SideConfigurationAction[] VALUES = SideConfigurationAction.values();
+        private final SecurityUpdater updater;
+
+        SideConfigurationAction(SecurityUpdater updater) {
+            this.updater = updater;
+        }
+
+        void update(ClientPlayerEntity player, MachineBlockEntity machine, BlockFace face, boolean back, boolean reset) {
+            updater.update(player, machine, face, back, reset);
+        }
+
+        @FunctionalInterface
+        interface SecurityUpdater {
+            void update(ClientPlayerEntity player, MachineBlockEntity machine, BlockFace face, boolean back, boolean reset);
         }
     }
 }

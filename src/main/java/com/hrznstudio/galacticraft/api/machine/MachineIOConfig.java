@@ -23,26 +23,26 @@
 package com.hrznstudio.galacticraft.api.machine;
 
 import com.hrznstudio.galacticraft.api.block.AutomationType;
-import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
+import com.hrznstudio.galacticraft.api.block.ConfiguredMachineFace;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.NotNull;
 
-public class SideConfiguration {
-    private final ConfiguredSideOption front;
-    private final ConfiguredSideOption back;
-    private final ConfiguredSideOption left;
-    private final ConfiguredSideOption right;
-    private final ConfiguredSideOption top;
-    private final ConfiguredSideOption bottom;
+public class MachineIOConfig {
+    private final ConfiguredMachineFace front;
+    private final ConfiguredMachineFace back;
+    private final ConfiguredMachineFace left;
+    private final ConfiguredMachineFace right;
+    private final ConfiguredMachineFace top;
+    private final ConfiguredMachineFace bottom;
 
-    public SideConfiguration() {
-        this.front = new ConfiguredSideOption(AutomationType.NONE);
-        this.back = new ConfiguredSideOption(AutomationType.NONE);
-        this.left = new ConfiguredSideOption(AutomationType.NONE);
-        this.right = new ConfiguredSideOption(AutomationType.NONE);
-        this.top = new ConfiguredSideOption(AutomationType.NONE);
-        this.bottom = new ConfiguredSideOption(AutomationType.NONE);
+    public MachineIOConfig() {
+        this.front = new ConfiguredMachineFace(AutomationType.NONE);
+        this.back = new ConfiguredMachineFace(AutomationType.NONE);
+        this.left = new ConfiguredMachineFace(AutomationType.NONE);
+        this.right = new ConfiguredMachineFace(AutomationType.NONE);
+        this.top = new ConfiguredMachineFace(AutomationType.NONE);
+        this.bottom = new ConfiguredMachineFace(AutomationType.NONE);
     }
 
     public CompoundTag toTag(CompoundTag tag) {
@@ -65,12 +65,12 @@ public class SideConfiguration {
     }
 
     /**
-     * Please do not modify the returned {@link ConfiguredSideOption}
+     * Please do not modify the returned {@link ConfiguredMachineFace}
      *
      * @param face the block face to pull the option from
-     * @return a {@link ConfiguredSideOption} assignd to the given face.
+     * @return a {@link ConfiguredMachineFace} assignd to the given face.
      */
-    public ConfiguredSideOption get(@NotNull BlockFace face) {
+    public ConfiguredMachineFace get(@NotNull BlockFace face) {
         switch (face) {
             case FRONT:
                 return this.front;

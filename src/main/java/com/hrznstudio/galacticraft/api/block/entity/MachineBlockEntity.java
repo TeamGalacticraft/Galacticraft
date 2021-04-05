@@ -38,7 +38,7 @@ import alexiil.mc.lib.attributes.misc.Reference;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldRendererAccessor;
-import com.hrznstudio.galacticraft.api.block.ConfiguredSideOption;
+import com.hrznstudio.galacticraft.api.block.ConfiguredMachineFace;
 import com.hrznstudio.galacticraft.api.block.MachineBlock;
 import com.hrznstudio.galacticraft.api.block.util.BlockFace;
 import com.hrznstudio.galacticraft.api.machine.*;
@@ -238,7 +238,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable EnergyExtractable getEnergyExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isEnergy()) {
                 if (cso.getAutomationType().isOutput()) {
                     return this.getCapacitor().getExtractable().asPureExtractable();
@@ -251,7 +251,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable EnergyInsertable getEnergyInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isEnergy()) {
                 if (cso.getAutomationType().isInput()) {
                     return this.getCapacitor().getInsertable().asPureInsertable();
@@ -264,7 +264,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable Capacitor getCapacitor(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isEnergy()) {
                 return this.getCapacitor();
             }
@@ -275,7 +275,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable FixedItemInv getInventory(@NotNull BlockState state, @Nullable Direction direction) { //DIRECTION IS POINTING AWAY FROM MACHINE TO THE SEARCHER
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isItem()) {
                 return this.getInventory().getMappedInv(cso.getMatching(this.getInventory()));
             }
@@ -286,7 +286,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable FixedFluidInv getFluidTank(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank()));
             }
@@ -297,7 +297,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable FluidInsertable getFluidInsertable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isInput()) {
                     return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank())).getInsertable().getPureInsertable();
@@ -310,7 +310,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
 
     public final @Nullable FluidExtractable getFluidExtractable(@NotNull BlockState state, @Nullable Direction direction) {
         if (direction != null) {
-            ConfiguredSideOption cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
+            ConfiguredMachineFace cso = this.getSideConfiguration().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isOutput()) {
                     return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank())).getExtractable().getPureExtractable();
@@ -329,8 +329,8 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return this.configuration.getRedstoneInteraction();
     }
 
-    public final @NotNull SideConfiguration getSideConfiguration() {
-        return this.configuration.getConfiguration();
+    public final @NotNull MachineIOConfig getSideConfiguration() {
+        return this.configuration.getSideConfiguration();
     }
 
     protected ItemStack decrement(int slot, int amount) {
@@ -484,7 +484,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public void trySpreadEnergy() {
         if (this.canExtractEnergy()) {
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
-                ConfiguredSideOption option = this.getSideConfiguration().get(face);
+                ConfiguredMachineFace option = this.getSideConfiguration().get(face);
                 if (option.getAutomationType().isEnergy() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
                     EnergyInsertable insertable = GalacticraftEnergy.INSERTABLE.getFirst(world, pos.offset(dir), SearchOptions.inDirection(dir.getOpposite()));
@@ -499,7 +499,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     public void trySpreadFluids(int tank) {
         if (this.canPipeExtractFluid(tank) && !this.getFluidTank().getInvFluid(tank).isEmpty()) {
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
-                ConfiguredSideOption option = this.getSideConfiguration().get(face);
+                ConfiguredMachineFace option = this.getSideConfiguration().get(face);
                 if (option.getAutomationType().isFluid() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);

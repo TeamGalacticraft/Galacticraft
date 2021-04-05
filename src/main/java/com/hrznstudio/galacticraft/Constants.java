@@ -608,12 +608,6 @@ public interface Constants {
         FluidFilter FUEL = new RawFluidTagFilter(GalacticraftTags.FUEL);
     }
 
-    interface Misc {
-        Identifier EMPTY = new Identifier("empty");
-        Direction[] DIRECTIONS = Direction.values();
-        BlockFace[] BLOCK_FACES = BlockFace.values();
-    }
-
     interface Text {
         Style DARK_GRAY_STYLE = Style.EMPTY.withColor(Formatting.DARK_GRAY);
         Style GOLD_STYLE = Style.EMPTY.withColor(Formatting.GOLD);
@@ -637,5 +631,12 @@ public interface Constants {
 
     interface Nbt {
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
+    }
+
+    interface Misc {
+        Identifier EMPTY = new Identifier("empty");
+        Direction[] DIRECTIONS = Direction.values();
+        BlockFace[] BLOCK_FACES = BlockFace.values();
+        boolean DEBUG = false;
     }
 }
