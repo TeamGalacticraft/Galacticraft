@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.api.block;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.attribute.Automatable;
+import com.hrznstudio.galacticraft.attribute.NullAutomatable;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -81,6 +82,10 @@ public enum AutomationType implements Comparable<AutomationType> {
         return output;
     }
 
+    public boolean isBidirectional() {
+        return this.isInput() && this.isOutput();
+    }
+
     public boolean canPassAs(AutomationType other) {
         if (other == this) return true;
         if (other.isEnergy()) if (!this.isEnergy()) return false;
@@ -94,8 +99,8 @@ public enum AutomationType implements Comparable<AutomationType> {
     public Automatable getAutomatable(MachineBlockEntity machine) {
         if (this.isItem()) return machine.getInventory();
         if (this.isFluid()) return machine.getFluidTank();
-        if (this.isEnergy()) throw new UnsupportedOperationException("NYI");
-        return null;
+        if (this.isEnergy()) return NullAutomatable.INSTANCE;
+        return NullAutomatable.INSTANCE;
     }
 
     public Text getFormattedName() {

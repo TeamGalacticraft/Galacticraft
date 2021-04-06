@@ -22,7 +22,6 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
-import com.google.common.collect.ImmutableList;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.attribute.Automatable;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
@@ -34,10 +33,14 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 public class ConfiguredMachineFace {
+    private static final Set<AutomationType> CACHED_AUTOMATION_TYPE_SET = new HashSet<>();
     private AutomationType automationType;
     private @Nullable Either<Integer, SlotType> matching;
 
@@ -51,15 +54,33 @@ public class ConfiguredMachineFace {
         this.matching = null;
     }
 
-
     public static List<AutomationType> getValidTypes(MachineBlockEntity machine) {
-        ImmutableList.Builder<AutomationType> builder = ImmutableList.builder();
-        builder.add(AutomationType.NONE);
-        if (machine.canInsertEnergy()) builder.add(AutomationType.POWER_INPUT);
-        if (machine.canExtractEnergy()) builder.add(AutomationType.POWER_OUTPUT);
-        builder.addAll(machine.getInventory().getTypes().stream().map(SlotType::getType).distinct().iterator());
-        builder.addAll(machine.getFluidTank().getTypes().stream().map(SlotType::getType).distinct().iterator());
-        return builder.build();
+        List<AutomationType> list = new ArrayList<>();
+        CACHED_AUTOMATION_TYPE_SET.clear();
+        CACHED_AUTOMATION_TYPE_SET.add(AutomationType.NONE);
+        list.add(AutomationType.NONE);
+
+        if (machine.canInsertEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_INPUT)) list.add(AutomationType.POWER_INPUT);
+        if (machine.canExtractEnergy()) if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.POWER_OUTPUT)) list.add(AutomationType.POWER_OUTPUT);
+
+        for (SlotType type : machine.getFluidTank().getTypes()) {
+            if (type.getType().isBidirectional()) {
+                if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_INPUT)) list.add(AutomationType.FLUID_INPUT);
+                if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.FLUID_OUTPUT)) list.add(AutomationType.FLUID_OUTPUT);
+            } else {
+                if (CACHED_AUTOMATION_TYPE_SET.add(type.getType())) list.add(type.getType());
+            }
+        }
+
+        for (SlotType type : machine.getInventory().getTypes()) {
+            if (type.getType().isBidirectional()) {
+                if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_INPUT)) list.add(AutomationType.ITEM_INPUT);
+                if (CACHED_AUTOMATION_TYPE_SET.add(AutomationType.ITEM_OUTPUT)) list.add(AutomationType.ITEM_OUTPUT);
+            } else {
+                if (CACHED_AUTOMATION_TYPE_SET.add(type.getType())) list.add(type.getType());
+            }
+        }
+        return list;
     }
 
     public void setMatching(@Nullable Either<Integer, SlotType> matching) {
@@ -70,7 +91,7 @@ public class ConfiguredMachineFace {
         return automationType;
     }
 
-    public Either<Integer, SlotType> getMatching() {
+    public @Nullable Either<Integer, SlotType> getMatching() {
         return matching;
     }
 

@@ -42,6 +42,7 @@ import com.hrznstudio.galacticraft.util.DrawableUtils;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Either;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.ints.*;
 import net.fabricmc.api.EnvType;
@@ -56,6 +57,7 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -224,6 +226,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public void drawConfigTabs(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         DiffuseLighting.disable();
+        assert this.client != null;
         if (this.handler.machine != null) {
             final MachineBlockEntity machine = this.handler.machine;
             boolean secondary = false;
@@ -296,6 +299,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 matrices.push();
                 matrices.translate(40, 22 + 8, 0);
                 matrices.scale(0.6f, 0.6f, 0.6f);
+                assert machine.getSecurity().getOwner() != null;
                 this.textRenderer.draw(matrices, new LiteralText(machine.getSecurity().getOwner().getName())
                         .setStyle(Constants.Text.GRAY_STYLE), 0, 0, ColorUtils.WHITE);
                 matrices.pop();
@@ -323,6 +327,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                         .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.state",
                         machine.getSecurity().getAccessibility().getName()).setStyle(Constants.Text.GRAY_STYLE), 11, 37, ColorUtils.WHITE);
+                assert machine.getSecurity().getOwner() != null;
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.owned_by", machine.getSecurity().getOwner().getName())
                         .setStyle(Constants.Text.GRAY_STYLE), 11, 37 + this.textRenderer.fontHeight + 2, ColorUtils.WHITE);
 
@@ -333,16 +338,13 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     private void renderItemIcon(MatrixStack matrices, int x, int y, ItemStack stack) {
+        assert this.client != null;
         BakedModel model = this.itemRenderer.getHeldItemModel(stack, this.world, this.playerInventory.player);
         matrices.push();
-        this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-        this.client.getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).setFilter(false, false);
-//        RenderSystem.enableRescaleNormal();
-//        RenderSystem.enableAlphaTest();
-//        RenderSystem.defaultAlphaFunc();
-//        RenderSystem.enableBlend();
-//        RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-//        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        AbstractTexture blockAtlasTexture = this.client.getTextureManager().getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        assert blockAtlasTexture != null;
+        blockAtlasTexture.setFilter(false, false);
+        blockAtlasTexture.bindTexture();
         matrices.translate(x + 8, y + 8, 100.0F + this.getZOffset());
         matrices.scale(16, -16, 16);
         VertexConsumerProvider.Immediate immediate = MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers();
@@ -353,17 +355,14 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
         this.itemRenderer.renderItem(stack, ModelTransformation.Mode.GUI, false, matrices, immediate, 15728880, OverlayTexture.DEFAULT_UV, model);
         immediate.draw();
-//        RenderSystem.enableDepthTest();
         if (bl) {
             DiffuseLighting.enableGuiDepthLighting();
         }
-//
-//        RenderSystem.disableAlphaTest();
-//        RenderSystem.disableRescaleNormal();
         matrices.pop();
     }
 
     public void drawButton(MatrixStack matrices, int x, int y, double mouseX, double mouseY, float delta, boolean pressed) {
+        assert this.client != null;
         this.client.getTextureManager().bindTexture(TEXTURE);
         if (pressed) {
             this.drawTexture(matrices, x, y, BUTTON_U, BUTTON_PRESSED_V, BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -392,17 +391,17 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 return true;
             }
             if (this.check(mouseX, mouseY, REDSTONE_IGNORE_X, REDSTONE_IGNORE_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                machine.setRedstone(RedstoneInteractionType.IGNORE);
+                this.setRedstone(RedstoneInteractionType.IGNORE);
                 this.playButtonSound();
                 return true;
             }
             if (this.check(mouseX, mouseY, REDSTONE_LOW_X, REDSTONE_LOW_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                machine.setRedstone(RedstoneInteractionType.LOW);
+                this.setRedstone(RedstoneInteractionType.LOW);
                 this.playButtonSound();
                 return true;
             }
             if (this.check(mouseX, mouseY, REDSTONE_HIGH_X, REDSTONE_HIGH_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
-                machine.setRedstone(RedstoneInteractionType.HIGH);
+                this.setRedstone(RedstoneInteractionType.HIGH);
                 this.playButtonSound();
                 return true;
             }
@@ -460,11 +459,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                     return true;
                 }
             }
-//                if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-//                    if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
-//                        return true;
-//                    }
-//                }
         } else {
             mouseX += TAB_WIDTH;
             if (Tab.REDSTONE.isOpen()) {
@@ -485,12 +479,6 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_UPPER_HEIGHT)) {
                 Tab.STATS.click();
                 return true;
-            }
-            if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-                if (this.check(mouseX, mouseY, 0, 0, PANEL_WIDTH, PANEL_HEIGHT)) {
-                    Tab.STATS.click();
-                    return true;
-                }
             }
         } else {
             if (this.check(mouseX, mouseY, 0, 0, TAB_WIDTH, TAB_HEIGHT)) {
@@ -540,7 +528,16 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     protected void setAccessibility(SecurityInfo.Accessibility accessibility) {
         this.handler.machine.getSecurity().setAccessibility(accessibility);
-        //todo sync
+        PacketByteBuf buf = new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1));
+        buf.writeBlockPos(this.pos).writeByte(accessibility.ordinal());
+        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "security_config"), buf);
+    }
+
+    protected void setRedstone(RedstoneInteractionType redstone) {
+        this.handler.machine.setRedstone(redstone);
+        PacketByteBuf buf = new PacketByteBuf(ByteBufAllocator.DEFAULT.buffer((Long.SIZE / Byte.SIZE) + 1));
+        buf.writeBlockPos(this.pos).writeByte(redstone.ordinal());
+        ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "redstone_config"), buf);
     }
 
     protected void drawTabTooltips(MatrixStack matrices, int mouseX, int mouseY) {
@@ -607,6 +604,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         mouseY -= SPACING;
         if (Tab.STATS.isOpen()) {
             if (this.check(mouseX, mouseY, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT)) {
+                assert machine.getSecurity().getOwner() != null;
                 this.renderTooltip(matrices, new LiteralText(machine.getSecurity().getOwner().getName()), mX, mY);
             }
         } else {
@@ -672,6 +670,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     }
 
     protected void drawTanks(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        assert this.client != null;
         Int2IntMap color = getColor(matrices, mouseX, mouseY);
         for (Tank tank : this.handler.tanks) {
             if (tank.scale == 0) continue;

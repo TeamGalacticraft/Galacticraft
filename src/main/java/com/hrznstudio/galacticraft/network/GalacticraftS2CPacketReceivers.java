@@ -92,7 +92,7 @@ public class GalacticraftS2CPacketReceivers {
             }
         });
 
-        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone_interaction_config"), (server, player, handler, buf, responseSender) -> {
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(Constants.MOD_ID, "redstone_config"), (server, player, handler, buf, responseSender) -> {
             BlockPos pos = buf.readBlockPos();
             RedstoneInteractionType redstoneInteractionType = RedstoneInteractionType.values()[buf.readByte()];
             server.execute(() -> {
