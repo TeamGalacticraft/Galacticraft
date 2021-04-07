@@ -33,16 +33,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScreenHandler> {
-
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.COAL_GENERATOR_SCREEN));
-
     public CoalGeneratorScreen(CoalGeneratorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 176;
@@ -52,7 +48,7 @@ public class CoalGeneratorScreen extends MachineHandledScreen<CoalGeneratorScree
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.COAL_GENERATOR_SCREEN);
 
         int leftPos = this.x;
         int topPos = this.y;

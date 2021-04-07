@@ -152,7 +152,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
                     }
             ));
         } else {
-            itemAttributeList.offer(new InfiniteOxygenTank());
+            itemAttributeList.offer(InfiniteOxygenTank.INSTANCE);
         }
     }
 }

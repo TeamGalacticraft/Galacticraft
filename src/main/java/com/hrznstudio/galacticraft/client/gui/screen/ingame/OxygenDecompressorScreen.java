@@ -34,15 +34,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompressorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN));
-
     public OxygenDecompressorScreen(OxygenDecompressorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
@@ -54,7 +51,7 @@ public class OxygenDecompressorScreen extends MachineHandledScreen<OxygenDecompr
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         if (handler.machine.getStatus().getType().isActive()) {

@@ -89,9 +89,6 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public abstract class MachineHandledScreen<C extends MachineScreenHandler<? extends MachineBlockEntity>> extends HandledScreen<C> implements DrawableUtils {
-    public static final Identifier TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.MACHINE_CONFIG_PANELS));
-    public static final Identifier OVERLAY = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OVERLAY));
-
     private static final ItemStack REDSTONE = new ItemStack(Items.REDSTONE);
     private static final ItemStack UNLIT_TORCH = new ItemStack(GalacticraftItems.UNLIT_TORCH);
     private static final ItemStack REDSTONE_TORCH = new ItemStack(Items.REDSTONE_TORCH);
@@ -230,7 +227,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         if (this.handler.machine != null) {
             final MachineBlockEntity machine = this.handler.machine;
             boolean secondary = false;
-            this.client.getTextureManager().bindTexture(TEXTURE);
+            this.client.getTextureManager().bindTexture(Constants.ScreenTexture.MACHINE_CONFIG_PANELS);
             for (Tab tab : Tab.values()) { // 0, 1, 2, 3
                 if (secondary) matrices.translate(0, SPACING, 0);
                 this.drawTexture(matrices, this.x + (tab.isLeft() ? tab.isOpen() ? -PANEL_WIDTH : -22 : this.backgroundWidth), this.y + (secondary ? Tab.values()[tab.ordinal() - 1].isOpen() ? PANEL_HEIGHT : TAB_HEIGHT : 0) + SPACING, tab.getU(), tab.getV(), tab.isOpen() ? PANEL_WIDTH : TAB_WIDTH, tab.isOpen() ? PANEL_HEIGHT : TAB_HEIGHT);
@@ -313,7 +310,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             if (Tab.SECURITY.isOpen()) {
                 matrices.push();
                 matrices.translate(this.backgroundWidth, TAB_HEIGHT + SPACING + SPACING, 0);
-                this.client.getTextureManager().bindTexture(TEXTURE);
+                this.client.getTextureManager().bindTexture(Constants.ScreenTexture.MACHINE_CONFIG_PANELS);
                 this.drawTexture(matrices, PANEL_ICON_X, PANEL_ICON_Y, ICON_LOCK_PRIVATE_U, ICON_LOCK_PRIVATE_V, ICON_WIDTH, ICON_HEIGHT);
 
                 this.drawButton(matrices, SECURITY_PUBLIC_X, SECURITY_PUBLIC_Y, mouseX - this.backgroundWidth - this.x, mouseY - (TAB_HEIGHT + SPACING + SPACING) - this.y, delta, machine.getSecurity().getAccessibility() == SecurityInfo.Accessibility.PUBLIC || !machine.getSecurity().isOwner(playerInventory.player));
@@ -363,7 +360,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     public void drawButton(MatrixStack matrices, int x, int y, double mouseX, double mouseY, float delta, boolean pressed) {
         assert this.client != null;
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.MACHINE_CONFIG_PANELS);
         if (pressed) {
             this.drawTexture(matrices, x, y, BUTTON_U, BUTTON_PRESSED_V, BUTTON_WIDTH, BUTTON_HEIGHT);
             return;
@@ -675,7 +672,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         for (Tank tank : this.handler.tanks) {
             if (tank.scale == 0) continue;
             int[] data = tank.getPositionData();
-            this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
+            this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
             int i = color.get(tank.index);
             this.drawTextureColor(matrices, this.x, this.y, data[0], data[1] + Constants.TextureCoordinate.FLUID_TANK_UNDERLAY_OFFSET, Constants.TextureCoordinate.FLUID_TANK_WIDTH, height,i >> 16 & 0xFF, i >> 8 & 0xFF, i & 0xFF);
 
@@ -687,7 +684,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             this.client.getTextureManager().bindTexture(sprite.getAtlas().getId());
             drawSprite(matrices, this.x + 1, this.y + 1 - (int)(data[2] * scale) + data[2], 0, Constants.TextureCoordinate.FLUID_TANK_WIDTH - 2, (int)(data[2] * scale) - 2, sprite);
             matrices.pop();
-            this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
+            this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
             this.drawTexture(matrices, this.x, this.y, data[0], data[1], Constants.TextureCoordinate.FLUID_TANK_WIDTH, data[2]);
         }
     }

@@ -24,7 +24,9 @@ package com.hrznstudio.galacticraft.attribute.oxygen;
 
 import java.util.function.Consumer;
 
-public class InfiniteOxygenTank implements OxygenTank {
+public enum InfiniteOxygenTank implements OxygenTank {
+    INSTANCE;
+
     @Override
     public int getCapacity() {
         return 1620 * 64;

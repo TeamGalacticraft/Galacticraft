@@ -33,7 +33,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
@@ -45,8 +44,6 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
 
-    protected final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.COMPRESSOR_SCREEN));
-
     public CompressorScreen(CompressorScreenHandler electricCompressorContainer, PlayerInventory inv, Text title) {
         super(electricCompressorContainer, inv, title);
         this.backgroundHeight = 192;
@@ -55,7 +52,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.COMPRESSOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
@@ -87,7 +84,7 @@ public class CompressorScreen extends HandledScreen<CompressorScreenHandler> {
     protected void drawCraftProgressBar(MatrixStack matrices) {
         float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x + 77, this.x + 28, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 

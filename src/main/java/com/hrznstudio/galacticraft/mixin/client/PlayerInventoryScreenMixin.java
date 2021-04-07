@@ -65,7 +65,7 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.PLAYER_INVENTORY_TABS)));
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.PLAYER_INVENTORY_TABS);
         this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 

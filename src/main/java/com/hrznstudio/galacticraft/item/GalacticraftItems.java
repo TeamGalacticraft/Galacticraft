@@ -187,8 +187,8 @@ public class GalacticraftItems {
     public static final Item GREEN_PARACHUTE = registerItem(Constants.Item.GREEN_PARACHUTE, new Item(PARACHUTE_SETTINGS));
     public static final Item RED_PARACHUTE = registerItem(Constants.Item.RED_PARACHUTE, new Item(PARACHUTE_SETTINGS));
     public static final Item BLACK_PARACHUTE = registerItem(Constants.Item.BLACK_PARACHUTE, new Item(PARACHUTE_SETTINGS));
-    public static final Item OXYGEN_MASK = registerItem(Constants.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP)));
-    public static final Item OXYGEN_GEAR = registerItem(Constants.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP)));
+    public static final Item OXYGEN_MASK = registerItem(Constants.Item.OXYGEN_MASK, new OxygenMaskItem(new Item.Settings().group(ITEMS_GROUP).maxCount(1)));
+    public static final Item OXYGEN_GEAR = registerItem(Constants.Item.OXYGEN_GEAR, new OxygenGearItem(new Item.Settings().group(ITEMS_GROUP).maxCount(1)));
     public static final Item SHIELD_CONTROLLER = registerItem(Constants.Item.SHIELD_CONTROLLER, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item FREQUENCY_MODULE = registerItem(Constants.Item.FREQUENCY_MODULE, new GCAccessories(new Item.Settings().group(ITEMS_GROUP)));
     public static final Item SMALL_OXYGEN_TANK = registerItem(Constants.Item.SMALL_OXYGEN_TANK, new OxygenTankItem(new Item.Settings().group(ITEMS_GROUP), 1620 * 10));

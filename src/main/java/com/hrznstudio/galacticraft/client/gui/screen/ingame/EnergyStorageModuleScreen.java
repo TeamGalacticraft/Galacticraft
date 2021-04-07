@@ -33,15 +33,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorageModuleScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN));
-
     public EnergyStorageModuleScreen(EnergyStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 54, 20, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
@@ -50,7 +47,7 @@ public class EnergyStorageModuleScreen extends MachineHandledScreen<EnergyStorag
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ENERGY_STORAGE_MODULE_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
     }

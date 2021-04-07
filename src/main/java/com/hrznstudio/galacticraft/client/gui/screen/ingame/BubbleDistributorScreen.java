@@ -44,8 +44,6 @@ import net.minecraft.util.Identifier;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistributorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN));
-
     private final TextFieldWidget textField;
 
     public BubbleDistributorScreen(BubbleDistributorScreenHandler handler, PlayerInventory inv, Text title) {
@@ -76,11 +74,11 @@ public class BubbleDistributorScreen extends MachineHandledScreen<BubbleDistribu
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-        this.client.getTextureManager().bindTexture(OVERLAY);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
 
         if (!handler.machine.bubbleVisible) {
             if (!check(mouseX, mouseY, this.x + 156, this.y + 16, 13, 13)) {

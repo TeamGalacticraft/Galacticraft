@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.client.gui.widget.machine;
 
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
-import com.hrznstudio.galacticraft.api.screen.MachineHandledScreen;
 import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
 import net.minecraft.client.util.math.MatrixStack;
@@ -75,7 +74,7 @@ public class CapacitorWidget extends AbstractWidget {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.client.getTextureManager().bindTexture(MachineHandledScreen.OVERLAY);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OVERLAY);
         double scale = ((double) this.getView().getEnergy()) / ((double) this.getView().getMaxCapacity());
 
         int height = this.height;

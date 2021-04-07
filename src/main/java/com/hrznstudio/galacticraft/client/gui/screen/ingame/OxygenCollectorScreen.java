@@ -35,15 +35,12 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OXYGEN_COLLECTOR_SCREEN));
-
     public OxygenCollectorScreen(OxygenCollectorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundHeight = 181;
@@ -55,7 +52,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_COLLECTOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
     }

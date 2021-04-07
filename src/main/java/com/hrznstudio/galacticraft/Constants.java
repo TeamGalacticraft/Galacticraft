@@ -424,38 +424,30 @@ public interface Constants {
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft-rewoven.energy.machines.oxygen_decompressor_energy_consumption_rate";
     }
 
-    interface Energy {
-        String GALACTICRAFT_JOULES = "galacticraft_joules";
-    }
-
     interface ScreenTexture {
-        String COAL_GENERATOR_SCREEN = "gui/coal_generator_screen";
-        String SOLAR_PANEL_SCREEN = "gui/solar_panel_screen";
-        String CIRCUIT_FABRICATOR_SCREEN = "gui/circuit_fabricator_screen";
-        String REFINERY_SCREEN = "gui/refinery_screen";
-        String ELECTRIC_FURNACE_SCREEN = "gui/electric_furnace_screen";
-        String ELECTRIC_ARC_FURNACE_SCREEN = "gui/electric_arc_furnace_screen";
-        String COMPRESSOR_SCREEN = "gui/compressor_screen";
-        String ELECTRIC_COMPRESSOR_SCREEN = "gui/electric_compressor_screen";
-        String ENERGY_STORAGE_MODULE_SCREEN = "gui/energy_storage_module_screen";
-        String OXYGEN_COLLECTOR_SCREEN = "gui/oxygen_collector_screen";
+        Identifier COAL_GENERATOR_SCREEN = new Identifier(MOD_ID, "textures/gui/coal_generator_screen.png");
+        Identifier SOLAR_PANEL_SCREEN = new Identifier(MOD_ID, "textures/gui/solar_panel_screen.png");
+        Identifier CIRCUIT_FABRICATOR_SCREEN = new Identifier(MOD_ID, "textures/gui/circuit_fabricator_screen.png");
+        Identifier REFINERY_SCREEN = new Identifier(MOD_ID, "textures/gui/refinery_screen.png");
+        Identifier ELECTRIC_FURNACE_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_furnace_screen.png");
+        Identifier ELECTRIC_ARC_FURNACE_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_arc_furnace_screen.png");
+        Identifier COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/compressor_screen.png");
+        Identifier ELECTRIC_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/electric_compressor_screen.png");
+        Identifier ENERGY_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/energy_storage_module_screen.png");
+        Identifier OXYGEN_COLLECTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_collector_screen.png");
 
-        String MACHINE_CONFIG_TABS = "gui/machine_config_tabs";
-        String MACHINE_CONFIG_PANELS = "gui/machine_config_panels";
-        String PLAYER_INVENTORY_SCREEN = "gui/player_inventory_screen";
-        String PLAYER_INVENTORY_TABS = "gui/player_inventory_switch_tabs";
-        String OVERLAY = "gui/overlay";
+        Identifier MACHINE_CONFIG_PANELS = new Identifier(MOD_ID, "textures/gui/machine_config_panels.png");
+        Identifier PLAYER_INVENTORY_SCREEN = new Identifier(MOD_ID, "textures/gui/player_inventory_screen.png");
+        Identifier PLAYER_INVENTORY_TABS = new Identifier(MOD_ID, "textures/gui/player_inventory_switch_tabs.png");
+        Identifier OVERLAY = new Identifier(MOD_ID, "textures/gui/overlay.png");
 
-        String MAP_SCREEN = "gui/map";
-        String PLANET_ICONS = "gui/planet_icons";
-        String BUBBLE_DISTRIBUTOR_SCREEN = "gui/oxygen_bubble_distributor_screen";
-        String OXYGEN_COMPRESSOR_SCREEN = "gui/oxygen_compressor_screen";
-        String OXYGEN_STORAGE_MODULE_SCREEN = "gui/oxygen_storage_module_screen";
-        String OXYGEN_SEALER_SCREEN = "gui/oxygen_sealer_screen";
+        Identifier MAP_SCREEN = new Identifier(MOD_ID, "textures/gui/map.png");
+        Identifier PLANET_ICONS = new Identifier(MOD_ID, "textures/gui/planet_icons.png");
+        Identifier BUBBLE_DISTRIBUTOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_bubble_distributor_screen.png");
+        Identifier OXYGEN_COMPRESSOR_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_compressor_screen.png");
+        Identifier OXYGEN_STORAGE_MODULE_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_storage_module_screen.png");
+        Identifier OXYGEN_SEALER_SCREEN = new Identifier(MOD_ID, "textures/gui/oxygen_sealer_screen.png");
 
-        static String getRaw(String path) {
-            return "textures/" + path + ".png";
-        }
     }
 
     interface SlotSprite {

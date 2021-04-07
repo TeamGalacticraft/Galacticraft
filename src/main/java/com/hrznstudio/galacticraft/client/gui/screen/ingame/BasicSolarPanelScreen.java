@@ -34,7 +34,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -46,9 +45,6 @@ import java.util.List;
  */
 @Environment(EnvType.CLIENT)
 public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelScreenHandler> {
-
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.SOLAR_PANEL_SCREEN));
-
     public BasicSolarPanelScreen(BasicSolarPanelScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
 
@@ -58,7 +54,7 @@ public class BasicSolarPanelScreen extends MachineHandledScreen<BasicSolarPanelS
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.SOLAR_PANEL_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
     }

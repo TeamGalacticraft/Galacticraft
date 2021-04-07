@@ -32,7 +32,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 import java.math.RoundingMode;
 
@@ -41,8 +40,6 @@ import java.math.RoundingMode;
  */
 @Environment(EnvType.CLIENT)
 public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorageModuleScreenHandler> {
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN));
-
     public OxygenStorageModuleScreen(OxygenStorageModuleScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
         this.backgroundWidth = 176;
@@ -52,7 +49,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         this.drawOxygenBufferBar(matrices);
@@ -71,7 +68,7 @@ public class OxygenStorageModuleScreen extends MachineHandledScreen<OxygenStorag
     private void drawOxygenBufferBar(MatrixStack matrices) {
         double oxygenScale = this.handler.machine.getFluidTank().getInvFluid(0).getAmount_F().div(this.handler.machine.getFluidTank().getMaxAmount_F(0)).asInexactDouble();
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.OXYGEN_STORAGE_MODULE_SCREEN);
         this.drawTexture(matrices, this.x + 52, this.y + 57, 176, 0, (int) (72.0D * oxygenScale), 3);
     }
 }

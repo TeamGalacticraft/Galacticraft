@@ -33,16 +33,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabricatorScreenHandler> {
-
-    private static final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN));
-
     private static final int PROGRESS_SIZE = 4;
     private static final int INITIAL_PROGRESS_U = 0;
     private static final int INITIAL_PROGRESS_V = 186;
@@ -89,7 +85,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.drawProgressBar(matrices);
@@ -106,7 +102,7 @@ public class CircuitFabricatorScreen extends MachineHandledScreen<CircuitFabrica
     //24 + 19 + 18 + 65 + 14 = 140
     private void drawProgressBar(MatrixStack matrices) {
         assert this.client != null;
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
         if (this.handler.machine.getProgress() > 0) {
             int progress = (int) ((((double) this.handler.machine.getProgress()) / ((double) this.handler.machine.getMaxProgress())) * 140.0);
             if (progress <= 24) {

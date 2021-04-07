@@ -32,19 +32,16 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
 
 /**
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 @Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompressorScreenHandler> {
-
     private static final int PROGRESS_X = 204;
     private static final int PROGRESS_Y = 0;
     private static final int PROGRESS_WIDTH = 52;
     private static final int PROGRESS_HEIGHT = 25;
-    private final Identifier BACKGROUND = new Identifier(Constants.MOD_ID, Constants.ScreenTexture.getRaw(Constants.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN));
 
     public ElectricCompressorScreen(ElectricCompressorScreenHandler handler, PlayerInventory inv, Text title) {
         super(handler, inv, inv.player.world, handler.machine.getPos(), title);
@@ -58,7 +55,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
 
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
@@ -75,7 +72,7 @@ public class ElectricCompressorScreen extends MachineHandledScreen<ElectricCompr
     protected void drawCraftProgressBar(MatrixStack matrices) {
         float progressScale = (((float)this.handler.machine.getProgress()) / ((float)this.handler.machine.getMaxProgress()));
 
-        this.client.getTextureManager().bindTexture(BACKGROUND);
+        this.client.getTextureManager().bindTexture(Constants.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
         this.drawTexture(matrices, this.x + 77, this.y + 29, PROGRESS_X, PROGRESS_Y, (int) (PROGRESS_WIDTH * progressScale), PROGRESS_HEIGHT);
     }
 }
