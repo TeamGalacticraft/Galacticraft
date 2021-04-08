@@ -69,12 +69,7 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public static final int INPUT_SLOT = 5;
     public static final int OUTPUT_SLOT = 6;
 
-    private final Inventory recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
-        @Override
-        public boolean canPlayerUse(PlayerEntity player) {
-            return getWrappedInventory().canPlayerUse(player);
-        }
-    };
+    private final Inventory recipeSlotInv;
 
     public Status status = Status.NOT_ENOUGH_RESOURCES;
     public int progress;
@@ -82,12 +77,18 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
         this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 70);
-        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(Items.DIAMOND), 31, 15);
-        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(GalacticraftItems.RAW_SILICON), 62, 45);
-        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(GalacticraftItems.RAW_SILICON), 62, 63);
-        this.getInventory().addSlot(SlotType.INPUT, new ExactItemFilter(Items.REDSTONE), 107, 70);
+        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(Items.DIAMOND), 31, 15);
+        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 45);
+        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 63);
+        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(Items.REDSTONE), 107, 70);
         this.getInventory().addSlot(SlotType.INPUT, stack -> this.getRecipe(new SimpleInventory(stack)).isPresent(), 134, 15);
         this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));
+        recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
+            @Override
+            public boolean canPlayerUse(PlayerEntity player) {
+                return getWrappedInventory().canPlayerUse(player);
+            }
+        };
     }
 
     @Override

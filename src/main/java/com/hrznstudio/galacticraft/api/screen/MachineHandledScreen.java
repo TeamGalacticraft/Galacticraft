@@ -68,6 +68,7 @@ import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -187,19 +188,28 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
     private static final int BOTTOM_FACE_X = 33;
     private static final int BOTTOM_FACE_Y = 64;
 
-    private static final int OWNER_FACE_X = 8;
+    private static final int OWNER_FACE_X = 6;
     private static final int OWNER_FACE_Y = 20;
 
-    private static final int OWNER_FACE_WIDTH = 24;
-    private static final int OWNER_FACE_HEIGHT = 24;
+    private static final int OWNER_FACE_WIDTH = 32;
+    private static final int OWNER_FACE_HEIGHT = 32;
     private static final int PANEL_UPPER_HEIGHT = 20;
+
+    private static final int REDSTONE_STATE_TEXT_X = 11;
+    private static final int REDSTONE_STATE_TEXT_Y = 53;
+
+    private static final int REDSTONE_STATUS_TEXT_X = 11;
+    private static final int REDSTONE_STATUS_TEXT_Y = 57; //add fontheight
+
+    private static final int SECURITY_STATE_TEXT_X = 11;
+    private static final int SECURITY_STATE_TEXT_Y = 53;
 
     protected final BlockPos pos;
     protected final World world;
 
     private final List<AbstractWidget> widgets = new LinkedList<>();
 
-    private Identifier ownerSkin = null;
+    private @NotNull Identifier ownerSkin = new Identifier("textures/entity/steve.png");
     private final MachineBakedModel.SpriteProvider spriteProvider;
 
     public MachineHandledScreen(C handler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
@@ -210,7 +220,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(world.getBlockState(pos).getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
         MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
-            if (type == MinecraftProfileTexture.Type.SKIN) {
+            if (type == MinecraftProfileTexture.Type.SKIN && identifier != null) {
                 MachineHandledScreen.this.ownerSkin = identifier;
             }
         }, true);
@@ -251,11 +261,11 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone")
                         .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone.state",
-                        machine.getRedstoneInteraction().getName()).setStyle(Constants.Text.DARK_GRAY_STYLE), 11, 56, ColorUtils.WHITE);
+                        machine.getRedstoneInteraction().getName()).setStyle(Constants.Text.DARK_GRAY_STYLE), REDSTONE_STATE_TEXT_X, REDSTONE_STATE_TEXT_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status",
                         !machine.disabled() ? new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status.enabled").setStyle(Constants.Text.GREEN_STYLE)
                                 : new TranslatableText("ui.galacticraft-rewoven.machine.redstone.status.disabled").setStyle(Constants.Text.DARK_RED_STYLE))
-                        .setStyle(Constants.Text.DARK_GRAY_STYLE), 11, 56 + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
+                        .setStyle(Constants.Text.DARK_GRAY_STYLE), REDSTONE_STATUS_TEXT_X, REDSTONE_STATUS_TEXT_Y + this.textRenderer.fontHeight, ColorUtils.WHITE);
 
                 matrices.pop();
             }
@@ -267,39 +277,29 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                         .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
 
                 this.client.getTextureManager().bindTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
-                drawSprite(matrices, TOP_FACE_X, TOP_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.TOP, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.TOP).getAutomationType()));
-                drawSprite(matrices, LEFT_FACE_X, LEFT_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.LEFT, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.LEFT).getAutomationType()));
-                drawSprite(matrices, FRONT_FACE_X, FRONT_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.FRONT, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.FRONT).getAutomationType()));
-                drawSprite(matrices, RIGHT_FACE_X, RIGHT_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.RIGHT, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.RIGHT).getAutomationType()));
-                drawSprite(matrices, BACK_FACE_X, BACK_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BACK, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.BACK).getAutomationType()));
-                drawSprite(matrices, BOTTOM_FACE_X, BOTTOM_FACE_Y, 0, 16, 16, MachineBakedModel.getSprite(BlockFace.BOTTOM, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(BlockFace.BOTTOM).getAutomationType()));
+                this.drawMachineFace(matrices, TOP_FACE_X, TOP_FACE_Y, machine, BlockFace.TOP);
+                this.drawMachineFace(matrices, LEFT_FACE_X, LEFT_FACE_Y, machine, BlockFace.LEFT);
+                this.drawMachineFace(matrices, FRONT_FACE_X, FRONT_FACE_Y, machine, BlockFace.FRONT);
+                this.drawMachineFace(matrices, RIGHT_FACE_X, RIGHT_FACE_Y, machine, BlockFace.RIGHT);
+                this.drawMachineFace(matrices, BACK_FACE_X, BACK_FACE_Y, machine, BlockFace.BACK);
+                this.drawMachineFace(matrices, BOTTOM_FACE_X, BOTTOM_FACE_Y, machine, BlockFace.BOTTOM);
                 matrices.pop();
             }
             if (Tab.STATS.isOpen()) {
                 matrices.push();
                 matrices.translate(this.backgroundWidth, SPACING, 0);
                 this.renderItemIcon(matrices, PANEL_ICON_X, PANEL_ICON_Y, ALUMINUM_WIRE);
-                if (this.ownerSkin != null) {
-                    this.client.getTextureManager().bindTexture(this.ownerSkin);
-                    drawTexture(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT, 8, 8, 8, 8, 64, 64);
-                } else {
-                    fill(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_X + OWNER_FACE_WIDTH, OWNER_FACE_Y + OWNER_FACE_HEIGHT, ColorUtils.WHITE);
-                }
+                this.client.getTextureManager().bindTexture(this.ownerSkin);
+                drawTexture(matrices, OWNER_FACE_X, OWNER_FACE_Y, OWNER_FACE_WIDTH, OWNER_FACE_HEIGHT, 8, 8, 8, 8, 64, 64);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.stats")
                         .setStyle(Constants.Text.GREEN_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
-                matrices.push();
-                matrices.translate(40, 22, 0);
-                matrices.scale(0.6f, 0.6f, 0.6f);
-                this.textRenderer.draw(matrices, new TranslatableText((machine.getCachedState() != null ? machine.getCachedState()
-                        : this.world.getBlockState(this.pos)).getBlock().getTranslationKey()), 0, 0, ColorUtils.WHITE);
-                matrices.pop();
-                matrices.push();
-                matrices.translate(40, 22 + 8, 0);
-                matrices.scale(0.6f, 0.6f, 0.6f);
-                assert machine.getSecurity().getOwner() != null;
-                this.textRenderer.draw(matrices, new LiteralText(machine.getSecurity().getOwner().getName())
-                        .setStyle(Constants.Text.GRAY_STYLE), 0, 0, ColorUtils.WHITE);
-                matrices.pop();
+                List<OrderedText> text = this.textRenderer.wrapLines(new TranslatableText((machine.getCachedState() != null ? machine.getCachedState()
+                        : this.world.getBlockState(this.pos)).getBlock().getTranslationKey()), 64);
+                int offsetY = 0;
+                for (OrderedText orderedText : text) {
+                    this.textRenderer.draw(matrices, orderedText, 40, 22 + offsetY, ColorUtils.WHITE);
+                    offsetY += this.textRenderer.fontHeight + 2;
+                }
                 this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.stats.gjt", "N/A")
                         .setStyle(Constants.Text.GRAY_STYLE), 11, 54, ColorUtils.WHITE);
                 //                this.textRenderer.draw(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.stats.todo", "N/A")
@@ -323,15 +323,19 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security")
                         .setStyle(Constants.Text.GRAY_STYLE), PANEL_TITLE_X, PANEL_TITLE_Y, ColorUtils.WHITE);
                 this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.state",
-                        machine.getSecurity().getAccessibility().getName()).setStyle(Constants.Text.GRAY_STYLE), 11, 37, ColorUtils.WHITE);
-                assert machine.getSecurity().getOwner() != null;
-                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.owned_by", machine.getSecurity().getOwner().getName())
-                        .setStyle(Constants.Text.GRAY_STYLE), 11, 37 + this.textRenderer.fontHeight + 2, ColorUtils.WHITE);
+                        machine.getSecurity().getAccessibility().getName()).setStyle(Constants.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y, ColorUtils.WHITE);
+//                assert machine.getSecurity().getOwner() != null;
+//                this.textRenderer.drawWithShadow(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security.owned_by", machine.getSecurity().getOwner().getName())
+//                        .setStyle(Constants.Text.GRAY_STYLE), SECURITY_STATE_TEXT_X, SECURITY_STATE_TEXT_Y + this.textRenderer.fontHeight + 4, ColorUtils.WHITE);
 
                 matrices.pop();
             }
             matrices.pop();
         }
+    }
+
+    private void drawMachineFace(MatrixStack matrices, int x, int y, MachineBlockEntity machine, BlockFace face) {
+        drawSprite(matrices, x, y, 0, 16, 16, MachineBakedModel.getSprite(face, machine, null, this.spriteProvider, machine.getConfiguration().getSideConfiguration().get(face).getAutomationType()));
     }
 
     private void renderItemIcon(MatrixStack matrices, int x, int y, ItemStack stack) {
