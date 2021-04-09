@@ -24,7 +24,6 @@ package com.hrznstudio.galacticraft.block.entity;
 
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
-import alexiil.mc.lib.attributes.item.filter.ItemFilter;
 import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.accessor.WorldOxygenAccessor;
@@ -36,7 +35,6 @@ import com.hrznstudio.galacticraft.entity.GalacticraftBlockEntities;
 import com.hrznstudio.galacticraft.screen.OxygenSealerScreenHandler;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
 import com.hrznstudio.galacticraft.util.EnergyUtils;
-import com.hrznstudio.galacticraft.util.FluidUtils;
 import com.hrznstudio.galacticraft.util.OxygenTankUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -64,22 +62,18 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int BATTERY_SLOT = 0;
     public static final int LOX_INPUT = 1;
-    public static final ItemFilter[] SLOT_FILTERS = new ItemFilter[2];
+    public static final int OXYGEN_TANK = 0;
     private final Set<BlockPos> set = new HashSet<>();
     public static final byte SEAL_CHECK_TIME = 5 * 20;
     private byte sealCheckTime;
     private CelestialBodyType type = null;
 
-    static {
-        SLOT_FILTERS[BATTERY_SLOT] = EnergyUtils.IS_EXTRACTABLE;
-        SLOT_FILTERS[LOX_INPUT] = stack -> FluidUtils.canExtractFluids(stack, Constants.Filter.LOX_ONLY);
-    }
 
     public OxygenSealerBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
-        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+        this.getInventory().addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
+        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -108,13 +102,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(0, Constants.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(OXYGEN_TANK, Constants.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(0).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.getFluidTank().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         return Status.SEALED;
     }
 
@@ -200,11 +194,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.area_too_large"), Formatting.GOLD, StatusType.OTHER),
-        ALREADY_SEALED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        SEALED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.sealed"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        AREA_TOO_LARGE(new TranslatableText("ui.galacticraft-rewoven.machine.status.area_too_large"), Formatting.GOLD, StatusType.OTHER),
+        ALREADY_SEALED(new TranslatableText("ui.galacticraft-rewoven.machine.status.already_sealed"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        SEALED(new TranslatableText("ui.galacticraft-rewoven.machine.status.sealed"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;

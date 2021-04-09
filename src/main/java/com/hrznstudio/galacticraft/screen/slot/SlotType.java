@@ -26,6 +26,8 @@ import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.AutomationType;
 import com.hrznstudio.galacticraft.util.ColorUtils;
 import com.mojang.serialization.Lifecycle;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -49,25 +51,24 @@ public class SlotType implements StringIdentifiable {
 
     public static final SlotType WILDCARD_ITEM = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_item"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_item"), AutomationType.ITEM_IO);
     public static final SlotType WILDCARD_FLUID = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_fluid"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_fluid"), AutomationType.ITEM_IO);
-    public static final SlotType WILDCARD_ENERGY = new SlotType(new Identifier(Constants.MOD_ID, "wildcard_energy"), TextColor.fromRgb(ColorUtils.rgb(141, 50, 199)), new TranslatableText("ui.galacticraft-rewoven.io_config.wildcard_energy"), AutomationType.ITEM_IO);
 
     public static final SlotType OIL = new SlotType(new Identifier(Constants.MOD_ID, "oil"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft-rewoven.io_config.oil"), AutomationType.FLUID_INPUT);
     public static final SlotType OXYGEN_IN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_in"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen_in"), AutomationType.FLUID_INPUT);
     public static final SlotType OXYGEN_OUT = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_out"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen_out"), AutomationType.FLUID_OUTPUT);
     public static final SlotType OXYGEN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen"), AutomationType.FLUID_IO);
     public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constants.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.fuel"), AutomationType.FLUID_OUTPUT);
-    public static final SlotType SOLID_FUEL = new SlotType(new Identifier(Constants.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(2, 2, 2)), new TranslatableText("ui.galacticraft-rewoven.io_config.coal"), AutomationType.ITEM_INPUT);
+    public static final SlotType COAL = new SlotType(new Identifier(Constants.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(2, 2, 2)), new TranslatableText("ui.galacticraft-rewoven.io_config.coal"), AutomationType.ITEM_INPUT);
     public static final SlotType NONE = new SlotType(new Identifier(Constants.MOD_ID, "none"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft-rewoven.io_config.none"), AutomationType.NONE);
 
     private final Identifier id;
     private final TextColor color;
-    private final TranslatableText name;
+    private final Text name;
     private final AutomationType type;
 
     public SlotType(Identifier id, TextColor color, TranslatableText name, AutomationType type) {
         this.id = id;
         this.color = color;
-        this.name = name;
+        this.name = name.setStyle(Style.EMPTY.withColor(color));
         this.type = type;
     }
 
@@ -79,7 +80,7 @@ public class SlotType implements StringIdentifiable {
         return color;
     }
 
-    public TranslatableText getName() {
+    public Text getName() {
         return name;
     }
 
@@ -117,7 +118,6 @@ public class SlotType implements StringIdentifiable {
 
     static {
         Registry.register(SLOT_TYPES, WILDCARD_ITEM.getId(), WILDCARD_ITEM);
-        Registry.register(SLOT_TYPES, WILDCARD_ENERGY.getId(), WILDCARD_ENERGY);
         Registry.register(SLOT_TYPES, WILDCARD_FLUID.getId(), WILDCARD_FLUID);
         Registry.register(SLOT_TYPES, INPUT.getId(), INPUT);
         Registry.register(SLOT_TYPES, FLUID_TANK_INPUT.getId(), FLUID_TANK_INPUT);

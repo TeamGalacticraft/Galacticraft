@@ -55,7 +55,7 @@ import java.util.Optional;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class ElectricCompressorBlockEntity extends MachineBlockEntity {
-    public static final int CHARGE_SLOT = 9;
+    public static final int CHARGE_SLOT = 0;
     public static final int OUTPUT_SLOT = 10;
     public static final int SECOND_OUTPUT_SLOT = OUTPUT_SLOT + 1;
     private static final int MAX_PROGRESS = 200; // In ticks, 100/20 = 10 seconds
@@ -72,15 +72,16 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     public ElectricCompressorBlockEntity() {
         super(GalacticraftBlockEntities.ELECTRIC_COMPRESSOR_TYPE);
 
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 3 * 18 + 1, 75);
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 3 * 18 + 1, 75);
+
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                this.getInventory().addSlot(SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+                this.getInventory().addSlot(y * 3 + x + 1, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
             }
         }
 
-        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 29));
-        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 47));
+        this.getInventory().addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 29));
+        this.getInventory().addSlot(SECOND_OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 47));
     }
 
     public int getProgress() {
@@ -138,7 +139,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
     protected void craftItem(ItemStack craftingResult) {
         boolean canCraftTwo = true;
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 1; i < 10; i++) {
             ItemStack stack = getInventory().getInvStack(i);
             if (!stack.isEmpty() && stack.getCount() < 2) {
                 canCraftTwo = false;
@@ -159,7 +160,7 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
             craftingResult.setCount(craftingResult.getCount() * 2);
         }
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 1; i < 10; i++) {
             this.decrement(i, canCraftTwo ? 2 : 1);
         }
         this.getInventory().insertStack(SECOND_OUTPUT_SLOT, this.getInventory().insertStack(OUTPUT_SLOT, craftingResult, Simulation.ACTION), Simulation.ACTION);
@@ -190,22 +191,22 @@ public class ElectricCompressorBlockEntity extends MachineBlockEntity {
         /**
          * Compressor is compressing items.
          */
-        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Compressor has no valid recipe.
          */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * Compressor has no valid recipe.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no items to process.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

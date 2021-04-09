@@ -59,13 +59,14 @@ import java.util.Optional;
 public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_TANK = 0;
 
     public int collectionAmount = 0;
 
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 13, 69);
-        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 13, 69);
+        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -159,7 +160,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.isTankFull(0)) return Status.FULL;
+        if (this.isTankFull(OXYGEN_TANK)) return Status.FULL;
         if (!canCollectOxygen()) return Status.NOT_ENOUGH_LEAVES;
         return Status.COLLECTING;
     }
@@ -169,7 +170,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.getFluidTank().insertFluid(0, FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+            this.getFluidTank().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
         }
     }
 
@@ -189,10 +190,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_LEAVES(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_leaves"), Formatting.RED, StatusType.MISSING_RESOURCE),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL);
 
         private final Text text;
         private final StatusType type;

@@ -37,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
  * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
  */
 public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
+    private static final int OXYGEN_TANK = 0;
     public static final FluidAmount MAX_CAPACITY = FluidAmount.ofWhole(50);
 
     public OxygenStorageModuleBlockEntity() {
@@ -56,7 +57,7 @@ public class OxygenStorageModuleBlockEntity extends MachineBlockEntity {
     @Override
     public void updateComponents() {
         super.updateComponents();
-        this.trySpreadFluids(0);
+        this.trySpreadFluids(OXYGEN_TANK);
     }
 
     @Override

@@ -46,8 +46,8 @@ public class EnergyStorageModuleBlockEntity extends MachineBlockEntity implement
     public EnergyStorageModuleBlockEntity() {
         super(GalacticraftBlockEntities.ENERGY_STORAGE_MODULE_TYPE);
         this.setStatus(MachineStatus.NULL);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 102, 24);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 102, 48);
+        this.getInventory().addSlot(CHARGE_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 102, 24);
+        this.getInventory().addSlot(DRAIN_BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 102, 48);
     }
 
     @Override

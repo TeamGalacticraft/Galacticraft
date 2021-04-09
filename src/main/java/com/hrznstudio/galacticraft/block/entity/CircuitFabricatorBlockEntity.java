@@ -76,13 +76,13 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
 
     public CircuitFabricatorBlockEntity() {
         super(GalacticraftBlockEntities.CIRCUIT_FABRICATOR_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 70);
-        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(Items.DIAMOND), 31, 15);
-        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 45);
-        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 63);
-        this.getInventory().addSlot(SlotType.INPUT, ExactItemFilter.createFilter(Items.REDSTONE), 107, 70);
-        this.getInventory().addSlot(SlotType.INPUT, stack -> this.getRecipe(new SimpleInventory(stack)).isPresent(), 134, 15);
-        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 70);
+        this.getInventory().addSlot(INPUT_SLOT_DIAMOND, SlotType.INPUT, ExactItemFilter.createFilter(Items.DIAMOND), 31, 15);
+        this.getInventory().addSlot(INPUT_SLOT_SILICON, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 45);
+        this.getInventory().addSlot(INPUT_SLOT_SILICON_2, SlotType.INPUT, ExactItemFilter.createFilter(GalacticraftItems.RAW_SILICON), 62, 63);
+        this.getInventory().addSlot(INPUT_SLOT_REDSTONE, SlotType.INPUT, ExactItemFilter.createFilter(Items.REDSTONE), 107, 70);
+        this.getInventory().addSlot(INPUT_SLOT, SlotType.INPUT, stack -> this.getRecipe(new SimpleInventory(stack)).isPresent(), 134, 15);
+        this.getInventory().addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(152, 70));
         recipeSlotInv = new InventoryFixedWrapper(this.getInventory().getMappedInv(INPUT_SLOT)) {
             @Override
             public boolean canPlayerUse(PlayerEntity player) {
@@ -183,22 +183,22 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
         /**
          * Fabricator is active and is processing.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.processing"), Formatting.GREEN, StatusType.WORKING),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machine.status.processing"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Fabricator output slot is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Fabricator does not have the required resources to function.
          */
-        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        NOT_ENOUGH_RESOURCES(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * The fabricator has no energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.GRAY, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

@@ -55,7 +55,7 @@ public class SecurityInfo {
     }
 
     @Contract(pure = true)
-    public boolean isOwner(PlayerEntity player) {
+    public boolean isOwner(@NotNull PlayerEntity player) {
         return isOwner(player.getGameProfile());
     }
 
@@ -70,7 +70,7 @@ public class SecurityInfo {
         if (accessibility == Accessibility.PUBLIC) {
             return true;
         } else if (accessibility == Accessibility.TEAM) {
-            if (this.owner == null || this.isOwner(player)) return false;
+            if (this.isOwner(player)) return true;
             Team team;
             if (!player.world.isClient()) {
                 team = ((MinecraftServerTeamsGetter) player.world.getServer()).getSpaceRaceTeams().getTeam(this.owner.getId());

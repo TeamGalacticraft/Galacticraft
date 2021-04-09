@@ -75,9 +75,9 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
 
     public BubbleDistributorBlockEntity() {
         super(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 31, 62);
-        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+        this.getInventory().addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 31, 62);
+        this.getFluidTank().addSlot(2, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -217,9 +217,9 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        DISTRIBUTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.distributing"), Formatting.GREEN, StatusType.WORKING),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        DISTRIBUTING(new TranslatableText("ui.galacticraft-rewoven.machine.status.distributing"), Formatting.GREEN, StatusType.WORKING),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_oxygen"), Formatting.AQUA, StatusType.MISSING_FLUIDS);
 
         private final Text text;
         private final StatusType type;

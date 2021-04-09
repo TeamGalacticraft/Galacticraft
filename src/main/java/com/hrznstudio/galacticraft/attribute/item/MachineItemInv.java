@@ -61,18 +61,20 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         return this.getFilterForSlot(slot).matches(item);
     }
 
-    public void addSlot(SlotType type, ItemFilter filter, int x, int y) {
-        this.positions.add(this.getSlotCount(), new DefaultSlotFunction(x, y));
-        this.slotTypes.add(this.getSlotCount(), type);
-        this.filters.add(this.getSlotCount(), filter);
-        this.slots.add(this.getSlotCount(), ItemStack.EMPTY);
+    public void addSlot(int index, SlotType type, ItemFilter filter, int x, int y) {
+        assert this.getSlotCount() == index;
+        this.positions.add(index, new DefaultSlotFunction(x, y));
+        this.slotTypes.add(index, type);
+        this.filters.add(index, filter);
+        this.slots.add(index, ItemStack.EMPTY);
     }
 
-    public void addSlot(SlotType type, ItemFilter filter, SlotFunction function) {
-        this.positions.add(this.getSlotCount(), function);
-        this.slotTypes.add(this.getSlotCount(), type);
-        this.filters.add(this.getSlotCount(), filter);
-        this.slots.add(this.getSlotCount(), ItemStack.EMPTY);
+    public void addSlot(int index, SlotType type, ItemFilter filter, SlotFunction function) {
+        assert this.getSlotCount() == index;
+        this.positions.add(index, function);
+        this.slotTypes.add(index, type);
+        this.filters.add(index, filter);
+        this.slots.add(index, ItemStack.EMPTY);
     }
 
     public void createSlots(MachineScreenHandler<?> screenHandler) {
@@ -104,14 +106,6 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
             this.y = y;
         }
 
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
         @Override
         public Slot create(MachineBlockEntity machineBlockEntity, int index, PlayerEntity player) {
             return new AutoFilteredSlot(machineBlockEntity, index, this.x, this.y);
@@ -125,14 +119,6 @@ public class MachineItemInv extends FullFixedItemInv implements Automatable {
         public OutputSlotFunction(int x, int y) {
             this.x = x;
             this.y = y;
-        }
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
         }
 
         @Override

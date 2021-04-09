@@ -76,15 +76,15 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                this.getInventory().addSlot(SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
+                this.getInventory().addSlot(y * 3 + x, SlotType.INPUT, ConstantItemFilter.ANYTHING, x * 18 + 19, y * 18 + 18);
             }
         }
 
         // Fuel slot
-        this.getInventory().addSlot(SlotType.FUEL_OUT, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 3 * 18 + 1, 75);
+        this.getInventory().addSlot(FUEL_INPUT_SLOT, SlotType.FUEL_OUT, stack -> FuelRegistry.INSTANCE.get(stack.getItem()) != null, 3 * 18 + 1, 75);
 
         // Output slot
-        this.getInventory().addSlot(SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
+        this.getInventory().addSlot(OUTPUT_SLOT, SlotType.OUTPUT, ConstantItemFilter.ANYTHING, new MachineItemInv.OutputSlotFunction(138, 38));
     }
 
     @Override
@@ -185,22 +185,22 @@ public class CompressorBlockEntity extends MachineBlockEntity {
         /**
          * Compressor is compressing items.
          */
-        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        PROCESSING(new TranslatableText("ui.galacticraft-rewoven.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Compressor has no valid recipe.
          */
-        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
+        INVALID_RECIPE(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS),
 
         /**
          * Compressor has no valid recipe.
          */
-        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        OUTPUT_FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.output_full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Compressor has no fuel.
          */
-        MISSING_FUEL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.missing_fuel"), Formatting.RED, StatusType.MISSING_ENERGY);
+        MISSING_FUEL(new TranslatableText("ui.galacticraft-rewoven.machine.status.missing_fuel"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

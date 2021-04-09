@@ -211,13 +211,14 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private @NotNull Identifier ownerSkin = new Identifier("textures/entity/steve.png");
     private final MachineBakedModel.SpriteProvider spriteProvider;
+    private final List<Text> tooltipCache = new LinkedList<>();
 
     public MachineHandledScreen(C handler, PlayerInventory playerInventory, World world, BlockPos pos, Text textComponent) {
         super(handler, playerInventory, textComponent);
         this.pos = pos;
         this.world = world;
 
-        this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(world.getBlockState(pos).getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
+        this.spriteProvider = MachineBakedModel.SPRITE_PROVIDERS.getOrDefault(handler.machine.getCachedState() == null ? world.getBlockState(pos).getBlock() : handler.machine.getCachedState().getBlock(), MachineBakedModel.SpriteProvider.DEFAULT);
 
         MinecraftClient.getInstance().getSkinProvider().loadSkin(handler.machine.getSecurity().getOwner(), (type, identifier, texture) -> {
             if (type == MinecraftProfileTexture.Type.SKIN && identifier != null) {
@@ -571,22 +572,22 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX += PANEL_WIDTH;
             mouseY -= TAB_HEIGHT + SPACING + SPACING;
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
-                this.renderTooltip(matrices, BlockFace.TOP.getName(), mX, mY);
+                this.renderFaceTooltip(matrices, BlockFace.TOP, mX, mY);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
-                this.renderTooltip(matrices, BlockFace.LEFT.getName(), mX, mY);
+                this.renderFaceTooltip(matrices, BlockFace.LEFT, mX, mY);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
-                this.renderTooltip(matrices, BlockFace.FRONT.getName(), mX, mY);
+                this.renderFaceTooltip(matrices, BlockFace.FRONT, mX, mY);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
-                this.renderTooltip(matrices, BlockFace.RIGHT.getName(), mX, mY);
+                this.renderFaceTooltip(matrices, BlockFace.RIGHT, mX, mY);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
-                this.renderTooltip(matrices, BlockFace.BACK.getName(), mX, mY);
+                this.renderFaceTooltip(matrices, BlockFace.BACK, mX, mY);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
-                this.renderTooltip(matrices, BlockFace.BOTTOM.getName(), mX, mY);
+                this.renderFaceTooltip(matrices, BlockFace.BOTTOM, mX, mY);
             }
         } else {
             mouseX += TAB_WIDTH;
@@ -647,6 +648,24 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 this.renderTooltip(matrices, new TranslatableText("ui.galacticraft-rewoven.machine.security").setStyle(Constants.Text.BLUE_STYLE), mX, mY);
             }
         }
+    }
+
+    protected void renderFaceTooltip(MatrixStack matrices, BlockFace face, int mouseX, int mouseY) {
+        tooltipCache.add(face.getName());
+        ConfiguredMachineFace configuredFace = this.handler.machine.getConfiguration().getSideConfiguration().get(face);
+        if (configuredFace.getAutomationType() != AutomationType.NONE) {
+            tooltipCache.add(configuredFace.getAutomationType().getFormattedName());
+        }
+        if (configuredFace.getMatching() != null) {
+            if (configuredFace.getMatching().left().isPresent()) {
+                tooltipCache.add(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.matches", new LiteralText(String.valueOf(configuredFace.getMatching().left().get())).setStyle(Constants.Text.AQUA_STYLE)).setStyle(Constants.Text.GRAY_STYLE));
+            } else {
+                tooltipCache.add(new TranslatableText("ui.galacticraft-rewoven.machine.configuration.matches", configuredFace.getMatching().right().get().getName()).setStyle(Constants.Text.GRAY_STYLE));
+            }
+        }
+        this.renderTooltip(matrices, tooltipCache, mouseX, mouseY);
+
+        tooltipCache.clear();
     }
 
     @Override
@@ -1017,6 +1036,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
                 i--;
             }
             sideOption.setOption(types.get(i));
+            sideOption.setMatching(null);
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(false).writeByte(sideOption.getAutomationType().ordinal());
             ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
@@ -1024,6 +1044,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }), //LEFT
         CHANGE_MATCH((player, machine, face, back, reset) -> {
             ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
             if (reset) {
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
@@ -1033,9 +1054,14 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             }
             List<SlotType> list = sideOption.getAutomationType().getAutomatable(machine).getTypes();
             int i = 0;
-            if (sideOption.getMatching() != null && !sideOption.getMatching().left().isPresent()) {
-                i = list.indexOf(sideOption.getMatching().right().orElseThrow(RuntimeException::new));
+            if (sideOption.getMatching() != null && sideOption.getMatching().right().isPresent()) {
+                i = list.indexOf(sideOption.getMatching().right().get());
+                if (back) i--;
+                else i++;
             }
+
+            if (i == list.size()) i = 0;
+            if (i == -1) i = list.size() - 1;
             sideOption.setMatching(Either.right(list.get(i)));
             PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
             buf.writeBlockPos(machine.getPos()).writeByte(face.ordinal()).writeBoolean(true).writeBoolean(false).writeInt(SlotType.SLOT_TYPES.getRawId(list.get(i)));
@@ -1043,6 +1069,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
         }), //RIGHT
         CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
             ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
             if (reset) {
                 sideOption.setMatching(null);
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());

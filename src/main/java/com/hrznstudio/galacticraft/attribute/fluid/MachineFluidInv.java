@@ -61,18 +61,20 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
         return this.getFilterForTank(tank).matches(fluid);
     }
 
-    public void addSlot(SlotType type, FluidFilter filter, int x, int y, int s) {
-        this.positions.add(this.getTankCount(), new Vec3i(x, y, s));
-        this.slotTypes.add(this.getTankCount(), type);
-        this.filters.add(this.getTankCount(), filter);
-        this.tanks.add(this.getTankCount(), FluidVolumeUtil.EMPTY);
+    public void addSlot(int index, SlotType type, FluidFilter filter, int x, int y, int s) {
+        assert this.getTankCount() == index;
+        this.positions.add(index, new Vec3i(x, y, s));
+        this.slotTypes.add(index, type);
+        this.filters.add(index, filter);
+        this.tanks.add(index, FluidVolumeUtil.EMPTY);
     }
 
-    public void addSlot(SlotType type, FluidFilter filter) {
-        this.positions.add(this.getTankCount(), null);
-        this.slotTypes.add(this.getTankCount(), type);
-        this.filters.add(this.getTankCount(), filter);
-        this.tanks.add(this.getTankCount(), FluidVolumeUtil.EMPTY);
+    public void addSlot(int index, SlotType type, FluidFilter filter) {
+        assert this.getTankCount() == index;
+        this.positions.add(index, null);
+        this.slotTypes.add(index, type);
+        this.filters.add(index, filter);
+        this.tanks.add(index, FluidVolumeUtil.EMPTY);
     }
 
     public void createTanks(MachineScreenHandler<?> screenHandler) {

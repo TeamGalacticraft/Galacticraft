@@ -53,12 +53,13 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
     public static final int TANK_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
 
     public OxygenDecompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_DECOMPRESSOR_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
-        this.getFluidTank().addSlot(SlotType.OXYGEN_OUT, Constants.Filter.LOX_ONLY); //80, 27
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
+        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_OUT, Constants.Filter.LOX_ONLY); //80, 27
     }
 
     @Override
@@ -117,12 +118,12 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        EMPTY_CANISTER(new TranslatableText("ui.galacticraft-rewoven.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.empty_canister"), Formatting.RED, StatusType.MISSING_ITEMS),
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        DECOMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.decompressing"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_items"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        EMPTY_CANISTER(new TranslatableText("ui.galacticraft-rewoven.machine.status.empty_canister"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machine.status.empty_canister"), Formatting.RED, StatusType.MISSING_ITEMS),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        DECOMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machine.status.decompressing"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;

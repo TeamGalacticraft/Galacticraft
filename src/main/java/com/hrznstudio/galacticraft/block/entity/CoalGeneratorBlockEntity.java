@@ -68,13 +68,13 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
     /*
      * Energy stats:
      * T1 machine: uses 30gj/t
-     * Coal Generator: generates 120gj/t
+     * Coal Generator: generates 120gj/t (max heat)
      */
 
     public CoalGeneratorBlockEntity() {
         super(GalacticraftBlockEntities.COAL_GENERATOR_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 74);
-        this.getInventory().addSlot(SlotType.SOLID_FUEL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 8);
+        this.getInventory().addSlot(FUEL_SLOT, SlotType.COAL, stack -> FUEL_MAP.containsKey(stack.getItem()), 8, 74);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
             }
 
             if (this.heat < 1) {
-                this.heat = Math.min(1, this.heat + 0.02d);
+                this.heat = Math.min(1, this.heat + 0.004);
             }
         }
     }
@@ -149,27 +149,27 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Tick
         /**
          * The generator is active and is generating energy.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.active"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machine.status.active"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * The generator is warming up.
          */
-        WARMING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
+        WARMING(new TranslatableText("ui.galacticraft-rewoven.machine.status.warming"), Formatting.GOLD, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is cooling down.
          */
-        COOLING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
+        COOLING(new TranslatableText("ui.galacticraft-rewoven.machine.status.cooling"), Formatting.AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * The generator is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The generator is out of fuel.
          */
-        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
+        NOT_ENOUGH_FUEL(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_items"), Formatting.GOLD, StatusType.MISSING_ITEMS);
 
         private final Text text;
         private final StatusType type;

@@ -52,7 +52,7 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
 
     public BasicSolarPanelBlockEntity() {
         super(GalacticraftBlockEntities.BASIC_SOLAR_PANEL_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 62);
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_INSERTABLE, 8, 62);
     }
 
     @Override
@@ -151,27 +151,27 @@ public class BasicSolarPanelBlockEntity extends MachineBlockEntity implements Ti
         /**
          * Solar panel is active and is generating energy.
          */
-        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.collecting"), Formatting.GREEN, StatusType.WORKING),
+        COLLECTING(new TranslatableText("ui.galacticraft-rewoven.machine.status.collecting"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Solar Panel can generate energy, but the buffer is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * Solar Panel is generating energy, but less efficiently as it is blocked or raining.
          */
-        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
+        PARTIALLY_BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machine.status.partially_blocked"), Formatting.DARK_AQUA, StatusType.PARTIALLY_WORKING),
 
         /**
          * Solar Panel is generating very little energy as it is night.
          */
-        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machinestatus.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
+        NIGHT(new TranslatableText("ui.galacticraft-rewoven.machine.status.night"), Formatting.BLUE, StatusType.PARTIALLY_WORKING),
 
         /**
          * The sun is not visible.
          */
-        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machinestatus.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
+        BLOCKED(new TranslatableText("ui.galacticraft-rewoven.machine.status.blocked"), Formatting.DARK_GRAY, StatusType.MISSING_RESOURCE);
 
         private final Text text;
         private final MachineStatus.StatusType type;

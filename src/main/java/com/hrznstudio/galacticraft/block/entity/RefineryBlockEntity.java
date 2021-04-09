@@ -61,12 +61,12 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
 
     public RefineryBlockEntity() {
         super(GalacticraftBlockEntities.REFINERY_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
-        this.getInventory().addSlot(SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
-        this.getInventory().addSlot(SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 7);
+        this.getInventory().addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
+        this.getInventory().addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
 
-        this.getFluidTank().addSlot(SlotType.OIL, Constants.Filter.OIL, 122, 28, 0);
-        this.getFluidTank().addSlot(SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 0);
+        this.getFluidTank().addSlot(OIL_TANK, SlotType.OIL, Constants.Filter.OIL, 122, 28, 0);
+        this.getFluidTank().addSlot(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 0);
     }
 
     @Override
@@ -130,22 +130,22 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
         /**
          * Refinery is active and is refining oil into fuel.
          */
-        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machinestatus.refining"), Formatting.GREEN, StatusType.WORKING),
+        ACTIVE(new TranslatableText("ui.galacticraft-rewoven.machine.status.refining"), Formatting.GREEN, StatusType.WORKING),
 
         /**
          * Refinery has oil but the fuel tank is full.
          */
-        FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.idle"), Formatting.GOLD, StatusType.OUTPUT_FULL),
 
         /**
          * The refinery is out of oil.
          */
-        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_FLUID(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_fluid"), Formatting.BLACK, StatusType.MISSING_FLUIDS),
 
         /**
          * The refinery is out of energy.
          */
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY);
 
         private final Text text;
         private final StatusType type;

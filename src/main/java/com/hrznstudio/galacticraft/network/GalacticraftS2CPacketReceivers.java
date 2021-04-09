@@ -87,6 +87,7 @@ public class GalacticraftS2CPacketReceivers {
                     MachineBlockEntity machine = doBasicChecksAndGrabEntity(pos, player, false);
                     if (machine != null) {
                         machine.getConfiguration().getSideConfiguration().get(face).setOption(AutomationType.values()[i]);
+                        machine.getConfiguration().getSideConfiguration().get(face).setMatching(null);
                     }
                 });
             }

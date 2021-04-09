@@ -52,13 +52,14 @@ import org.jetbrains.annotations.Nullable;
 public class OxygenCompressorBlockEntity extends MachineBlockEntity implements Tickable {
     public static final FluidAmount MAX_OXYGEN = FluidAmount.ofWhole(50);
     public static final int CHARGE_SLOT = 0;
+    public static final int OXYGEN_TANK_SLOT = 1;
+    public static final int OXYGEN_TANK = 0;
 
     public OxygenCompressorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
-        this.getInventory().addSlot(SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
-        this.getInventory().addSlot(SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
-        this.getFluidTank().addSlot(SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY); //80, 27
-
+        this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
+        this.getInventory().addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
+        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY); //80, 27
     }
 
     @Override
@@ -85,7 +86,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(0).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.getFluidTank().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
         if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
         if (tank.getCapacity() >= tank.getCapacity()) return Status.CONTAINER_FULL;
@@ -96,7 +97,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
-            this.getFluidTank().insertFluid(0, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
+            this.getFluidTank().insertFluid(OXYGEN_TANK, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 
@@ -116,11 +117,11 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
      * @author <a href="https://github.com/StellarHorizons">StellarHorizons</a>
      */
     private enum Status implements MachineStatus {
-        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
-        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machinestatus.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
-        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machinestatus.missing_tank"), Formatting.RED, StatusType.MISSING_ITEMS),
-        CONTAINER_FULL(new TranslatableText("ui.galacticraft-rewoven.machinestatus.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
-        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machinestatus.compressing"), Formatting.GREEN, StatusType.WORKING);
+        NOT_ENOUGH_ENERGY(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_energy"), Formatting.RED, StatusType.MISSING_ENERGY),
+        NOT_ENOUGH_OXYGEN(new TranslatableText("ui.galacticraft-rewoven.machine.status.not_enough_oxygen"), Formatting.RED, StatusType.MISSING_FLUIDS),
+        NOT_ENOUGH_ITEMS(new TranslatableText("ui.galacticraft-rewoven.machine.status.missing_tank"), Formatting.RED, StatusType.MISSING_ITEMS),
+        CONTAINER_FULL(new TranslatableText("ui.galacticraft-rewoven.machine.status.full"), Formatting.GOLD, StatusType.OUTPUT_FULL),
+        COMPRESSING(new TranslatableText("ui.galacticraft-rewoven.machine.status.compressing"), Formatting.GREEN, StatusType.WORKING);
 
         private final Text text;
         private final StatusType type;
