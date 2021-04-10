@@ -24,6 +24,7 @@ package com.hrznstudio.galacticraft.api.machine;
 
 import alexiil.mc.lib.attributes.misc.Saveable;
 import com.hrznstudio.galacticraft.Constants;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 
 public class MachineConfiguration implements Saveable {
@@ -68,10 +69,33 @@ public class MachineConfiguration implements Saveable {
         return tag;
     }
 
+    public CompoundTag toClientTag(CompoundTag tag, PlayerEntity player) {
+        if (security.hasAccess(player)) {
+            tag.put(Constants.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
+            tag.put(Constants.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
+            this.redstone.toTag(tag);
+        }
+        return tag;
+    }
+
     @Override
     public void fromTag(CompoundTag tag) {
         this.getSecurity().fromTag(tag.getCompound(Constants.Nbt.SECURITY));
         this.getSideConfiguration().fromTag(tag.getCompound(Constants.Nbt.CONFIGURATION));
         this.redstone = RedstoneInteractionType.fromTag(tag);
+    }
+
+    public static MachineConfiguration fromClientTag(CompoundTag tag) {
+        MachineConfiguration configuration = new MachineConfiguration();
+        if (tag.contains(Constants.Nbt.REDSTONE_INTERACTION_TYPE)) {
+            configuration.setRedstone(RedstoneInteractionType.fromTag(tag));
+        }
+        if (tag.contains(Constants.Nbt.CONFIGURATION)) {
+            configuration.getSideConfiguration().fromTag(tag.getCompound(Constants.Nbt.CONFIGURATION));
+        }
+        if (tag.contains(Constants.Nbt.SECURITY)) {
+            configuration.getSecurity().fromTag(tag.getCompound(Constants.Nbt.SECURITY));
+        }
+        return configuration;
     }
 }

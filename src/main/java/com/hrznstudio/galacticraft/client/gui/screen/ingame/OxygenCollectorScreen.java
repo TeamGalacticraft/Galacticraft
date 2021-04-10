@@ -46,7 +46,7 @@ public class OxygenCollectorScreen extends MachineHandledScreen<OxygenCollectorS
         this.backgroundHeight = 181;
 
         this.addWidget(new CapacitorWidget(handler.machine.getCapacitor(), 13, 13, 48, this::getEnergyTooltipLines, handler.machine::getStatus));
-        this.addWidget(new OxygenTankWidget(handler.machine.getFluidTank().getTank(0), 36, 13, 48));
+        this.addWidget(new OxygenTankWidget(handler.machine.getFluidInv().getTank(0), 36, 13, 48));
     }
 
     @Override

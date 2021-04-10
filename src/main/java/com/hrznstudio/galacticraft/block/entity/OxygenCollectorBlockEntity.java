@@ -66,7 +66,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
     public OxygenCollectorBlockEntity() {
         super(GalacticraftBlockEntities.OXYGEN_COLLECTOR_TYPE);
         this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 13, 69);
-        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+        this.getFluidInv().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -170,7 +170,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity implements Ti
         this.collectionAmount = 0;
         if (this.getStatus().getType().isActive()) {
             this.collectionAmount = collectOxygen();
-            this.getFluidTank().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, FluidKeys.get(GalacticraftFluids.LIQUID_OXYGEN).withAmount(FluidAmount.of(collectionAmount, 100)), Simulation.ACTION);
         }
     }
 

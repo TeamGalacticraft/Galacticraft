@@ -59,7 +59,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements
         super(GalacticraftBlockEntities.OXYGEN_DECOMPRESSOR_TYPE);
         this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
         this.getInventory().addSlot(TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
-        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_OUT, Constants.Filter.LOX_ONLY); //80, 27
+        this.getFluidInv().addSlot(OXYGEN_TANK, SlotType.OXYGEN_OUT, Constants.Filter.LOX_ONLY); //80, 27
     }
 
     @Override
@@ -98,7 +98,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity implements
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(TANK_SLOT));
-            OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().insertFluid(0, OxygenTankUtils.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
+            OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidInv().insertFluid(0, OxygenTankUtils.extractLiquidOxygen(tank, 1620 / (20 * 5)), Simulation.ACTION));
         }
     }
 

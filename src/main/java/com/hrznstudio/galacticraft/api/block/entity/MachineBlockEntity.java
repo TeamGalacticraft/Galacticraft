@@ -22,13 +22,17 @@
 
 package com.hrznstudio.galacticraft.api.block.entity;
 
+import alexiil.mc.lib.attributes.ListenerRemovalToken;
+import alexiil.mc.lib.attributes.ListenerToken;
 import alexiil.mc.lib.attributes.SearchOptions;
 import alexiil.mc.lib.attributes.Simulation;
+import alexiil.mc.lib.attributes.fluid.FixedFluidInvView;
 import alexiil.mc.lib.attributes.fluid.FluidAttributes;
 import alexiil.mc.lib.attributes.fluid.FluidExtractable;
 import alexiil.mc.lib.attributes.fluid.FluidInsertable;
 import alexiil.mc.lib.attributes.fluid.amount.FluidAmount;
 import alexiil.mc.lib.attributes.fluid.filter.ConstantFluidFilter;
+import alexiil.mc.lib.attributes.item.FixedItemInvView;
 import alexiil.mc.lib.attributes.item.ItemExtractable;
 import alexiil.mc.lib.attributes.item.ItemInsertable;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
@@ -45,8 +49,10 @@ import com.hrznstudio.galacticraft.api.machine.*;
 import com.hrznstudio.galacticraft.attribute.fluid.MachineFluidInv;
 import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
 import com.hrznstudio.galacticraft.energy.GalacticraftEnergy;
+import com.hrznstudio.galacticraft.energy.api.CapacitorView;
 import com.hrznstudio.galacticraft.energy.api.EnergyExtractable;
 import com.hrznstudio.galacticraft.energy.api.EnergyInsertable;
+import com.hrznstudio.galacticraft.energy.api.EnergyType;
 import com.hrznstudio.galacticraft.energy.impl.DefaultEnergyType;
 import com.hrznstudio.galacticraft.energy.impl.RejectingEnergyInsertable;
 import com.hrznstudio.galacticraft.energy.impl.SimpleCapacitor;
@@ -90,10 +96,33 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     private boolean loaded = false;
 
     private final @NotNull SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.getEnergyCapacity());
-
     private final @NotNull MachineItemInv inventory = new MachineItemInv();
+    private final @NotNull MachineFluidInv fluidInv = new MachineFluidInv(this.getFluidTankCapacity());
 
-    private final @NotNull MachineFluidInv tank = new MachineFluidInv(this.getFluidTankCapacity());
+    private final @NotNull CapacitorView capacitorView = new CapacitorView() {
+        @Override
+        public EnergyType getEnergyType() {
+            return MachineBlockEntity.this.getCapacitor().getEnergyType();
+        }
+
+        @Override
+        public int getEnergy() {
+            return MachineBlockEntity.this.getCapacitor().getEnergy();
+        }
+
+        @Override
+        public int getMaxCapacity() {
+            return MachineBlockEntity.this.getCapacitor().getMaxCapacity();
+        }
+
+        @Override
+        public @Nullable ListenerToken addListener(CapacitorListener listener, ListenerRemovalToken removalToken) {
+            return MachineBlockEntity.this.getCapacitor().addListener(listener, removalToken);
+        }
+    };
+
+    private final @NotNull FixedFluidInvView fluidInvView = this.getFluidInv().getFixedView();
+    private final @NotNull FixedItemInvView invView = this.getInventory().getFixedView();
 
     private final InventoryFixedWrapper wrappedInventory = new InventoryFixedWrapper(this.getInventory()) {
         @Override
@@ -210,8 +239,20 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         return this.inventory;
     }
 
-    public final @NotNull MachineFluidInv getFluidTank() {
-        return this.tank;
+    public final @NotNull MachineFluidInv getFluidInv() {
+        return this.fluidInv;
+    }
+
+    public CapacitorView getCapacitorView() {
+        return capacitorView;
+    }
+
+    public FixedFluidInvView getFluidInvView() {
+        return fluidInvView;
+    }
+
+    public FixedItemInvView getInvView() {
+        return invView;
     }
 
     public final @Nullable EnergyExtractable getEnergyExtractable(@NotNull BlockState state, @Nullable Direction direction) {
@@ -271,12 +312,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isInput()) {
-                    return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank())).getInsertable().getPureInsertable();
+                    return this.getFluidInv().getMappedInv(cso.getMatching(this.getFluidInv())).getInsertable().getPureInsertable();
                 }
             }
             return null;
         }
-        return this.getFluidTank().getInsertable().getPureInsertable();
+        return this.getFluidInv().getInsertable().getPureInsertable();
     }
 
     public final @Nullable FluidExtractable getFluidExtractable(@NotNull BlockState state, @Nullable Direction direction) {
@@ -284,12 +325,12 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
             ConfiguredMachineFace cso = this.getIOConfig().get(BlockFace.toFace(state.get(Properties.HORIZONTAL_FACING), direction.getOpposite()));
             if (cso.getAutomationType().isFluid()) {
                 if (cso.getAutomationType().isOutput()) {
-                    return this.getFluidTank().getMappedInv(cso.getMatching(this.getFluidTank())).getExtractable().getPureExtractable();
+                    return this.getFluidInv().getMappedInv(cso.getMatching(this.getFluidInv())).getExtractable().getPureExtractable();
                 }
             }
             return null;
         }
-        return this.getFluidTank().getExtractable();
+        return this.getFluidInv().getExtractable();
     }
 
     public final @NotNull SecurityInfo getSecurity() {
@@ -367,7 +408,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public boolean isTankFull(int tank) {
-        return this.getFluidTank().getInvFluid(tank).getAmount_F().isGreaterThanOrEqual(this.getFluidTank().getMaxAmount_F(tank));
+        return this.getFluidInv().getInvFluid(tank).getAmount_F().isGreaterThanOrEqual(this.getFluidInv().getMaxAmount_F(tank));
     }
 
     @NotNull
@@ -406,7 +447,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.toTag(tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().toTag(tag);
         if (this.getInventory().getSlotCount()> 0) this.getInventory().toTag(tag);
-        if (this.getFluidTank().getTankCount() > 0) this.getFluidTank().toTag(tag);
+        if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().toTag(tag);
         this.configuration.toTag(tag);
         tag.putBoolean(Constants.Nbt.NO_DROP, this.noDrop);
         return tag;
@@ -417,7 +458,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
         super.fromTag(state, tag);
         if (this.getEnergyCapacity() > 0) this.getCapacitor().fromTag(tag);
         if (this.getInventory().getSlotCount() > 0) this.getInventory().fromTag(tag);
-        if (this.getFluidTank().getTankCount() > 0) this.getFluidTank().fromTag(tag);
+        if (this.getFluidInv().getTankCount() > 0) this.getFluidInv().fromTag(tag);
         this.configuration.fromTag(tag);
         this.noDrop = tag.getBoolean(Constants.Nbt.NO_DROP);
         if (loaded && !world.isClient) {
@@ -468,13 +509,13 @@ public abstract class MachineBlockEntity extends BlockEntity implements BlockEnt
     }
 
     public void trySpreadFluids(int tank) {
-        if (this.getFluidTank().getTypes().get(tank).getType().isOutput() && !this.getFluidTank().getInvFluid(tank).isEmpty()) {
+        if (this.getFluidInv().getTypes().get(tank).getType().isOutput() && !this.getFluidInv().getInvFluid(tank).isEmpty()) {
             for (BlockFace face : Constants.Misc.BLOCK_FACES) {
                 ConfiguredMachineFace option = this.getIOConfig().get(face);
                 if (option.getAutomationType().isFluid() && option.getAutomationType().isOutput()) {
                     Direction dir = face.toDirection(this.world.getBlockState(pos).get(Properties.HORIZONTAL_FACING));
                     FluidInsertable insertable = FluidAttributes.INSERTABLE.getFromNeighbour(this, dir);
-                    this.getFluidTank().insertFluid(tank, insertable.attemptInsertion(this.getFluidTank().extractFluid(tank, ConstantFluidFilter.ANYTHING, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
+                    this.getFluidInv().insertFluid(tank, insertable.attemptInsertion(this.getFluidInv().extractFluid(tank, ConstantFluidFilter.ANYTHING, null, FluidAmount.ONE, Simulation.ACTION), Simulation.ACTION), Simulation.ACTION);
                 }
             }
         }

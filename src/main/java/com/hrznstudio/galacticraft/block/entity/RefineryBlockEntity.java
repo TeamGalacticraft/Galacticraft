@@ -65,8 +65,8 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
         this.getInventory().addSlot(FLUID_INPUT_SLOT, SlotType.FLUID_TANK_INPUT, stack -> FluidUtils.canExtractFluids(stack, GalacticraftTags.OIL), 123, 7);
         this.getInventory().addSlot(FLUID_OUTPUT_SLOT, SlotType.FLUID_TANK_OUTPUT, stack -> FluidUtils.canInsertFluids(stack, GalacticraftFluids.FUEL), 153, 7);
 
-        this.getFluidTank().addSlot(OIL_TANK, SlotType.OIL, Constants.Filter.OIL, 122, 28, 0);
-        this.getFluidTank().addSlot(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 0);
+        this.getFluidInv().addSlot(OIL_TANK, SlotType.OIL, Constants.Filter.OIL, 122, 28, 0);
+        this.getFluidInv().addSlot(FUEL_TANK, SlotType.FUEL_OUT, Constants.Filter.FUEL, 152, 28, 0);
     }
 
     @Override
@@ -94,20 +94,20 @@ public class RefineryBlockEntity extends MachineBlockEntity implements Tickable 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(OIL_TANK).getAmount_F().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
+        if (this.getFluidInv().getInvFluid(OIL_TANK).getAmount_F().compareTo(FluidAmount.ZERO) <= 0) return Status.NOT_ENOUGH_FLUID;
         if (this.isTankFull(FUEL_TANK)) return Status.FULL;
         return Status.ACTIVE;
     }
 
     @Override
     public void tickWork() {
-        this.getFluidTank().insertFluid(OIL_TANK, FluidUtils.extractFluid(this.getInventory().getSlot(FLUID_INPUT_SLOT), this.getFluidTank().getMaxAmount_F(OIL_TANK).sub(this.getFluidTank().getInvFluid(OIL_TANK).getAmount_F()), key -> GalacticraftTags.OIL.contains(key.getRawFluid())), Simulation.ACTION);
-        this.getFluidTank().insertFluid(FUEL_TANK, FluidUtils.insertFluid(this.getInventory().getSlot(FLUID_OUTPUT_SLOT), this.getFluidTank().extractFluid(FUEL_TANK, null, null, FluidAmount.ONE, Simulation.ACTION)), Simulation.ACTION);
+        this.getFluidInv().insertFluid(OIL_TANK, FluidUtils.extractFluid(this.getInventory().getSlot(FLUID_INPUT_SLOT), this.getFluidInv().getMaxAmount_F(OIL_TANK).sub(this.getFluidInv().getInvFluid(OIL_TANK).getAmount_F()), key -> GalacticraftTags.OIL.contains(key.getRawFluid())), Simulation.ACTION);
+        this.getFluidInv().insertFluid(FUEL_TANK, FluidUtils.insertFluid(this.getInventory().getSlot(FLUID_OUTPUT_SLOT), this.getFluidInv().extractFluid(FUEL_TANK, null, null, FluidAmount.ONE, Simulation.ACTION)), Simulation.ACTION);
 
         if (this.getStatus().getType().isActive()) {
-            FluidAmount amount = this.getFluidTank().extractFluid(OIL_TANK, key -> GalacticraftTags.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).getAmount_F();
-            amount = this.getFluidTank().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluids.FUEL).withAmount(amount), Simulation.ACTION).getAmount_F();
-            this.getFluidTank().insertFluid(OIL_TANK, this.getFluidTank().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
+            FluidAmount amount = this.getFluidInv().extractFluid(OIL_TANK, key -> GalacticraftTags.OIL.contains(key.getRawFluid()), null, FluidAmount.of(5, 1000), Simulation.ACTION).getAmount_F();
+            amount = this.getFluidInv().insertFluid(FUEL_TANK, FluidKeys.get(GalacticraftFluids.FUEL).withAmount(amount), Simulation.ACTION).getAmount_F();
+            this.getFluidInv().insertFluid(OIL_TANK, this.getFluidInv().getInvFluid(OIL_TANK).getFluidKey().withAmount(amount), Simulation.ACTION);
         }
     }
 

@@ -120,7 +120,13 @@
     "main": [ "com.hrznstudio.galacticraft.Galacticraft" ],
     "client": [ "com.hrznstudio.galacticraft.GalacticraftClient" ],
     "rei_plugins": [ "com.hrznstudio.galacticraft.recipe.rei.GalacticraftREIPlugin" ],
-    "modmenu": [ "com.hrznstudio.galacticraft.hooks.ModMenuApiImpl" ]
+    "modmenu": [ "com.hrznstudio.galacticraft.compat.hook.ModMenuApiImpl" ]
+  },
+  "custom": {
+    "waila:plugins": {
+      "id": "galacticraft-rewoven:plugin",
+      "initializer": "com.hrznstudio.galacticraft.compat.waila.GalacticraftWailaPlugin"
+    }
   },
   "mixins": [ "galacticraft-rewoven.mixins.json" ],
   "accessWidener": "galacticraft_rewoven.accesswidener",
@@ -158,6 +164,7 @@
     "fabric-tool-attribute-api-v1": "*"
   },
   "suggests": {
-    "modmenu": ">=1.16"
+    "modmenu": ">=1.16",
+    "waila": ">=2"
   }
 }

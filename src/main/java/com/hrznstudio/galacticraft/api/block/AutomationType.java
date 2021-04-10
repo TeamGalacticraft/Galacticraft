@@ -98,7 +98,7 @@ public enum AutomationType implements Comparable<AutomationType> {
 
     public Automatable getAutomatable(MachineBlockEntity machine) {
         if (this.isItem()) return machine.getInventory();
-        if (this.isFluid()) return machine.getFluidTank();
+        if (this.isFluid()) return machine.getFluidInv();
         if (this.isEnergy()) return NullAutomatable.INSTANCE;
         return NullAutomatable.INSTANCE;
     }

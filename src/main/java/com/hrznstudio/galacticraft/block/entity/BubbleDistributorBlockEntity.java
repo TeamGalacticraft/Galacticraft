@@ -77,7 +77,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
         super(GalacticraftBlockEntities.BUBBLE_DISTRIBUTOR_TYPE);
         this.getInventory().addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
         this.getInventory().addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 31, 62);
-        this.getFluidTank().addSlot(2, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+        this.getFluidInv().addSlot(2, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
         FluidAmount oxygenRequired = FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D) + 1);
-        if (!this.getFluidTank().extractFluid(0, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).getAmount_F().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
+        if (!this.getFluidInv().extractFluid(0, null, FluidVolumeUtil.EMPTY, oxygenRequired, Simulation.SIMULATE).getAmount_F().equals(oxygenRequired)) return Status.NOT_ENOUGH_OXYGEN;
         return Status.DISTRIBUTING;
     }
 
@@ -131,7 +131,7 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
             }
         }
         if (this.getStatus().getType().isActive()) {
-            this.getFluidTank().extractFluid(0, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
+            this.getFluidInv().extractFluid(0, null, FluidVolumeUtil.EMPTY, FluidAmount.ofWhole((int) ((1.3333333333D * Math.PI * (size * size * size)) / 2D)), Simulation.ACTION);
             if (!world.isClient()) {
                 if (size < targetSize) {
                     setSize(size + 0.05D);
@@ -197,12 +197,12 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     }
 
     protected void drainOxygenFromStack(int slot) {
-        if (this.getFluidTank().getInvFluid(0).getAmount_F().compareTo(this.getFluidTank().getMaxAmount_F(0)) >= 0) {
+        if (this.getFluidInv().getInvFluid(0).getAmount_F().compareTo(this.getFluidInv().getMaxAmount_F(0)) >= 0) {
             return;
         }
         if (FluidUtils.canExtractFluids(this.getInventory().getSlot(slot))) {
             FluidExtractable extractable = FluidAttributes.EXTRACTABLE.get(this.getInventory().getSlot(slot));
-            this.getFluidTank().insertFluid(0, extractable.attemptExtraction(Constants.Filter.LOX_ONLY, this.getFluidTank().getMaxAmount_F(0).sub(this.getFluidTank().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
+            this.getFluidInv().insertFluid(0, extractable.attemptExtraction(Constants.Filter.LOX_ONLY, this.getFluidInv().getMaxAmount_F(0).sub(this.getFluidInv().getInvFluid(0).getAmount_F()), Simulation.ACTION), Simulation.ACTION);
         }
     }
 

@@ -73,7 +73,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
         super(GalacticraftBlockEntities.OXYGEN_SEALER_TYPE);
         this.getInventory().addSlot(BATTERY_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
         this.getInventory().addSlot(LOX_INPUT, SlotType.OXYGEN_TANK, OxygenTankUtils.OXYGEN_TANK_EXTRACTABLE, 8, 62);
-        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
+        this.getFluidInv().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY);
     }
 
     @Override
@@ -102,13 +102,13 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Ticka
     public void updateComponents() {
         super.updateComponents();
         this.attemptChargeFromStack(BATTERY_SLOT);
-        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidTank().extractFluid(OXYGEN_TANK, Constants.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
+        if (!world.isClient && this.getStatus().getType().isActive()) this.getFluidInv().extractFluid(OXYGEN_TANK, Constants.Filter.LOX_ONLY, null, FluidAmount.of1620(set.size()), Simulation.ACTION);
     }
 
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.getFluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         return Status.SEALED;
     }
 

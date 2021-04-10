@@ -275,10 +275,13 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
         MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
         if (direction == null) {
-            attributes.offer(machine.getFluidTank());
+            attributes.offer(machine.getFluidInv());
             attributes.offer(machine.getInventory()); //expose everything if not given a direction
             attributes.offer(machine.getCapacitor());
         } else {
+            attributes.offer(machine.getFluidInvView());
+            attributes.offer(machine.getInvView());
+            attributes.offer(machine.getCapacitorView());
             attributes.offer(machine.getItemInsertable(blockState, direction));
             attributes.offer(machine.getItemExtractable(blockState, direction));
             attributes.offer(machine.getFluidInsertable(blockState, direction));

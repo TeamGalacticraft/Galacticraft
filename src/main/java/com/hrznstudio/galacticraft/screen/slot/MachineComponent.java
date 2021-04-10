@@ -24,8 +24,8 @@ package com.hrznstudio.galacticraft.screen.slot;
 
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.client.gui.widget.machine.AbstractWidget;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 public class MachineComponent<T> {

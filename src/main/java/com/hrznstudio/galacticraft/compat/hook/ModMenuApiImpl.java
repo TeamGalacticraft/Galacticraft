@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.hook;
+package com.hrznstudio.galacticraft.compat.hook;
 
 import com.hrznstudio.galacticraft.api.config.ConfigManager;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
@@ -33,7 +33,6 @@ import net.fabricmc.api.Environment;
  */
 @Environment(EnvType.CLIENT)
 public class ModMenuApiImpl implements ModMenuApi {
-
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         return parent -> ConfigManager.getInstance().getScreen(parent);

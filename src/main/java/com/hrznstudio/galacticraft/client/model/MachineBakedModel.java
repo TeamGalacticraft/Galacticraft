@@ -139,7 +139,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
             if (face == BlockFace.FRONT || face == BlockFace.BACK) {
                 FluidVolume volume;
                 if (machine != null) {
-                    volume = machine.getFluidTank().getInvFluid(0);
+                    volume = machine.getFluidInv().getInvFluid(0);
                 } else {
                     if (stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG, NbtType.COMPOUND)) {
                         if (stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG).contains("tanks", NbtType.LIST)) {

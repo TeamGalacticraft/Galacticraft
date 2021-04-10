@@ -59,7 +59,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
         super(GalacticraftBlockEntities.OXYGEN_COMPRESSOR_TYPE);
         this.getInventory().addSlot(CHARGE_SLOT, SlotType.CHARGE, EnergyUtils.IS_EXTRACTABLE, 8, 62);
         this.getInventory().addSlot(OXYGEN_TANK_SLOT, SlotType.OXYGEN_TANK, OxygenTankUtils::isOxygenTank, 80, 27);
-        this.getFluidTank().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY); //80, 27
+        this.getFluidInv().addSlot(OXYGEN_TANK, SlotType.OXYGEN_IN, Constants.Filter.LOX_ONLY); //80, 27
     }
 
     @Override
@@ -86,7 +86,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     @Override
     public @NotNull MachineStatus updateStatus() {
         if (!this.hasEnergyToWork()) return Status.NOT_ENOUGH_ENERGY;
-        if (this.getFluidTank().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
+        if (this.getFluidInv().getInvFluid(OXYGEN_TANK).isEmpty()) return Status.NOT_ENOUGH_OXYGEN;
         OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
         if (tank == EmptyOxygenTank.NULL) return Status.NOT_ENOUGH_ITEMS;
         if (tank.getCapacity() >= tank.getCapacity()) return Status.CONTAINER_FULL;
@@ -97,7 +97,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity implements T
     public void tickWork() {
         if (this.getStatus().getType().isActive()) {
             OxygenTank tank = OxygenTankUtils.getOxygenTank(this.getInventory().getSlot(1));
-            this.getFluidTank().insertFluid(OXYGEN_TANK, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidTank().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
+            this.getFluidInv().insertFluid(OXYGEN_TANK, OxygenTankUtils.insertLiquidOxygen(tank, this.getFluidInv().attemptExtraction(Constants.Filter.LOX_ONLY, FluidAmount.of1620(1620 / 60), Simulation.ACTION)), Simulation.ACTION);
         }
     }
 

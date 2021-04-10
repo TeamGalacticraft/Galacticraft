@@ -82,7 +82,7 @@ public class MachineFluidInv extends SimpleFixedFluidInv implements Automatable 
         for (int i = 0; i < getTankCount(); i++) {
             vec = positions.get(i);
             if (vec != null) {
-                screenHandler.addTank(new Tank(i, screenHandler.machine.getFluidTank(), vec.getX(), vec.getY(), vec.getZ()));
+                screenHandler.addTank(new Tank(i, screenHandler.machine.getFluidInv(), vec.getX(), vec.getY(), vec.getZ()));
             }
         }
     }
