@@ -108,16 +108,16 @@ public interface Pipe {
 
         public static FluidData fromTag(CompoundTag compoundTag) {
             if (compoundTag.getBoolean("empty")) return EMPTY;
-            long[] longs = compoundTag.getLongArray("path");
+            long[] longs = compoundTag.getLongArray(Constants.Nbt.PATH);
             Deque<BlockPos> queue = new ArrayDeque<>(longs.length);
             for (long l : longs) {
                 queue.add(BlockPos.fromLong(l));
             }
             Direction dir = null;
-            if (compoundTag.getBoolean("hasDir")) {
-                dir = Constants.Misc.DIRECTIONS[compoundTag.getInt("dir")];
+            if (compoundTag.getBoolean(Constants.Nbt.HAS_DIRECTION)) {
+                dir = Constants.Misc.DIRECTIONS[compoundTag.getByte(Constants.Nbt.DIRECTION)];
             }
-            return new FluidData(BlockPos.fromLong(compoundTag.getLong("source")), queue, FluidVolume.fromTag(compoundTag), dir);
+            return new FluidData(BlockPos.fromLong(compoundTag.getLong(Constants.Nbt.SOURCE)), queue, FluidVolume.fromTag(compoundTag), dir);
         }
 
         public CompoundTag toTag(CompoundTag compoundTag) {
@@ -128,16 +128,16 @@ public interface Pipe {
             compoundTag.putBoolean("empty", false);
 
             this.fluid.toTag(compoundTag);
-            compoundTag.putLong("source", this.source.asLong());
+            compoundTag.putLong(Constants.Nbt.SOURCE, this.source.asLong());
             long[] path = new long[this.path.size()];
             Iterator<BlockPos> iterator = this.path.iterator();
             for (int i = 0; i < this.path.size(); i++) {
                 path[i] = iterator.next().asLong();
             }
-            compoundTag.putLongArray("path", path);
-            compoundTag.putBoolean("hasDir", this.endDir != null);
+            compoundTag.putLongArray(Constants.Nbt.PATH, path);
+            compoundTag.putBoolean(Constants.Nbt.HAS_DIRECTION, this.endDir != null);
             if (this.endDir != null) {
-                compoundTag.putInt("dir", this.endDir.ordinal());
+                compoundTag.putByte(Constants.Nbt.DIRECTION, (byte) this.endDir.ordinal());
             }
             return compoundTag;
         }

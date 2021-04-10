@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.mixin;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.accessor.ChunkSectionOxygenAccessor;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -47,7 +48,7 @@ public abstract class ChunkSerializerMixin {
     @Inject(method = "serialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/PalettedContainer;write(Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;Ljava/lang/String;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void serializeGCR(ServerWorld world, Chunk chunk, CallbackInfoReturnable<CompoundTag> cir, ChunkPos chunkPos, CompoundTag compoundTag, CompoundTag compoundTag2, ChunkSection[] chunkSections, ListTag listTag, LightingProvider lightingProvider, boolean bl, int i, int j, ChunkSection chunkSection, ChunkNibbleArray chunkNibbleArray, ChunkNibbleArray chunkNibbleArray2, CompoundTag compoundTag3) {
         CompoundTag tag = new CompoundTag();
-        tag.putShort("TotalOxygen", ((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen());
+        tag.putShort(Constants.Nbt.TOTAL_OXYGEN, ((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen());
         if (((ChunkSectionOxygenAccessor) chunkSection).getTotalOxygen() > 0) {
             byte[] array = new byte[(16 * 16 * 16) / 8];
             boolean[] oxygenValues = ((ChunkSectionOxygenAccessor) chunkSection).getArray();
@@ -63,18 +64,18 @@ public abstract class ChunkSerializerMixin {
                 serialized += oxygenValues[p + 7] ? 128 : 0;
                 array[p / 8] = serialized;
             }
-            compoundTag3.putByteArray("Oxygen", array);
+            compoundTag3.putByteArray(Constants.Nbt.OXYGEN, array);
         }
-        compoundTag3.put("gcr_data", tag);
+        compoundTag3.put(Constants.Nbt.GCR_DATA, tag);
     }
 
     @Inject(method = "deserialize", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/ChunkSection;calculateCounts()V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private static void deserializeGCR(ServerWorld world, StructureManager structureManager, PointOfInterestStorage poiStorage, ChunkPos pos, CompoundTag tag, CallbackInfoReturnable<ProtoChunk> cir, ChunkGenerator chunkGenerator, BiomeSource biomeSource, CompoundTag compoundTag, BiomeArray biomeArray, UpgradeData upgradeData, ChunkTickScheduler chunkTickScheduler, ChunkTickScheduler chunkTickScheduler2, boolean bl, ListTag listTag, int i, ChunkSection[] chunkSections, boolean bl2, ChunkManager chunkManager, LightingProvider lightingProvider, int j, CompoundTag compoundTag2, int k, ChunkSection chunkSection) {
-        CompoundTag compound = compoundTag2.getCompound("gcr_data");
-        ((ChunkSectionOxygenAccessor) chunkSection).setTotalOxygen(compound.getShort("TotalOxygen"));
-        if (compound.getShort("TotalOxygen") > 0) {
+        CompoundTag compound = compoundTag2.getCompound(Constants.Nbt.GCR_DATA);
+        ((ChunkSectionOxygenAccessor) chunkSection).setTotalOxygen(compound.getShort(Constants.Nbt.TOTAL_OXYGEN));
+        if (compound.getShort(Constants.Nbt.TOTAL_OXYGEN) > 0) {
             boolean[] oxygen = ((ChunkSectionOxygenAccessor) chunkSection).getArray();
-            byte[] bytes = compound.getByteArray("Oxygen");
+            byte[] bytes = compound.getByteArray(Constants.Nbt.OXYGEN);
             for (int p = 0; p < 4096 / 8; p++) {
                 short b = (short) (bytes[i] + 128);
                 oxygen[(p * 8)] = (b & 1) != 0;

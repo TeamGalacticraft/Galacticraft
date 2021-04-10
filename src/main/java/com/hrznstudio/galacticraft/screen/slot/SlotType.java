@@ -57,7 +57,7 @@ public class SlotType implements StringIdentifiable {
     public static final SlotType OXYGEN_OUT = new SlotType(new Identifier(Constants.MOD_ID, "oxygen_out"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen_out"), AutomationType.FLUID_OUTPUT);
     public static final SlotType OXYGEN = new SlotType(new Identifier(Constants.MOD_ID, "oxygen"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.oxygen"), AutomationType.FLUID_IO);
     public static final SlotType FUEL_OUT = new SlotType(new Identifier(Constants.MOD_ID, "fuel"), TextColor.fromRgb(ColorUtils.rgb(57, 119, 207)), new TranslatableText("ui.galacticraft-rewoven.io_config.fuel"), AutomationType.FLUID_OUTPUT);
-    public static final SlotType COAL = new SlotType(new Identifier(Constants.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(2, 2, 2)), new TranslatableText("ui.galacticraft-rewoven.io_config.coal"), AutomationType.ITEM_INPUT);
+    public static final SlotType COAL = new SlotType(new Identifier(Constants.MOD_ID, "coal"), TextColor.fromRgb(ColorUtils.rgb(30, 30, 30)), new TranslatableText("ui.galacticraft-rewoven.io_config.coal"), AutomationType.ITEM_INPUT);
     public static final SlotType NONE = new SlotType(new Identifier(Constants.MOD_ID, "none"), TextColor.fromRgb(ColorUtils.rgb(0, 0, 0)), new TranslatableText("ui.galacticraft-rewoven.io_config.none"), AutomationType.NONE);
 
     private final Identifier id;

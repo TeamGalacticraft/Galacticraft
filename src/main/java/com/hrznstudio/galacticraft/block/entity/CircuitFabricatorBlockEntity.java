@@ -26,6 +26,7 @@ import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
 import alexiil.mc.lib.attributes.item.filter.ExactItemFilter;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.Galacticraft;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
@@ -154,14 +155,14 @@ public class CircuitFabricatorBlockEntity extends MachineBlockEntity {
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putInt("Progress", this.progress);
+        tag.putInt(Constants.Nbt.PROGRESS, this.progress);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        progress = tag.getInt("Progress");
+        progress = tag.getInt(Constants.Nbt.PROGRESS);
     }
 
     @Override

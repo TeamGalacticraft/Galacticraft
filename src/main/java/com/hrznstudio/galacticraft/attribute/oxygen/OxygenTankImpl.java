@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.attribute.oxygen;
 
 import alexiil.mc.lib.attributes.misc.Saveable;
+import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.nbt.CompoundTag;
 
 import java.util.ArrayList;
@@ -59,13 +60,13 @@ public class OxygenTankImpl implements OxygenTank, Saveable {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt("amount", amount);
+        tag.putInt(Constants.Nbt.AMOUNT, amount);
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
-        this.amount = tag.getInt("amount");
+        this.amount = tag.getInt(Constants.Nbt.AMOUNT);
     }
 
     @Override

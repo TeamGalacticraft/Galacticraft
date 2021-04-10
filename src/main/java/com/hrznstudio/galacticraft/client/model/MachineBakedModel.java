@@ -118,8 +118,8 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                 if (machine != null) {
                     energy = machine.getCapacitor().getEnergy();
                 } else {
-                    if (stack.getTag() != null && stack.getTag().contains("Energy", NbtType.COMPOUND)) {
-                        energy = stack.getTag().getInt("Energy");
+                    if (stack.getTag() != null && stack.getTag().contains(Constants.Nbt.ENERGY, NbtType.COMPOUND)) {
+                        energy = stack.getTag().getInt(Constants.Nbt.ENERGY);
                     } else {
                         energy = 0;
                     }
@@ -282,7 +282,7 @@ public class MachineBakedModel implements FabricBakedModel, BakedModel {
                         machine,
                         null,
                         SPRITE_PROVIDERS.getOrDefault(state.getBlock(), SpriteProvider.DEFAULT),
-                        machine.getSideConfiguration().get(face).getAutomationType()),
+                        machine.getIOConfig().get(face).getAutomationType()),
                 MutableQuadView.BAKE_LOCK_UV);
         quad.spriteColor(0, -1, -1, -1, -1);
         return true;

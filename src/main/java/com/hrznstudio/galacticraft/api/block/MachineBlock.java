@@ -167,17 +167,17 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
         if (stack != null && stack.getTag() != null && stack.getTag().contains(Constants.Nbt.BLOCK_ENTITY_TAG)) {
             CompoundTag tag = stack.getTag().getCompound(Constants.Nbt.BLOCK_ENTITY_TAG);
             tooltip.add(LiteralText.EMPTY);
-            if (tag.contains("Energy", NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new LiteralText(String.valueOf(tag.getInt("Energy"))).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
-            if (tag.contains("security", NbtType.COMPOUND)) {
-                CompoundTag security = tag.getCompound("security");
-                if (security.contains("owner", NbtType.COMPOUND)) {
-                    GameProfile profile = NbtHelper.toGameProfile(security.getCompound("owner"));
+            if (tag.contains(Constants.Nbt.ENERGY, NbtType.INT)) tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.current_energy", new LiteralText(String.valueOf(tag.getInt(Constants.Nbt.ENERGY))).setStyle(Constants.Text.BLUE_STYLE)).setStyle(Constants.Text.GOLD_STYLE));
+            if (tag.contains(Constants.Nbt.SECURITY, NbtType.COMPOUND)) {
+                CompoundTag security = tag.getCompound(Constants.Nbt.SECURITY);
+                if (security.contains(Constants.Nbt.OWNER, NbtType.COMPOUND)) {
+                    GameProfile profile = NbtHelper.toGameProfile(security.getCompound(Constants.Nbt.OWNER));
                     MutableText text1 = new TranslatableText("ui.galacticraft-rewoven.machine.security.owner", new LiteralText(profile.getName()).setStyle(Constants.Text.LIGHT_PURPLE_STYLE)).setStyle(Constants.Text.GRAY_STYLE);
                     if (Screen.hasControlDown()) {
                         text1.append(new LiteralText(" (" + profile.getId().toString() + ")").setStyle(Constants.Text.AQUA_STYLE));
                     }
                     tooltip.add(text1);
-                    tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility", SecurityInfo.Accessibility.valueOf(security.getString("accessibility")).getName()).setStyle(Constants.Text.GREEN_STYLE));
+                    tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.security.accessibility", SecurityInfo.Accessibility.valueOf(security.getString(Constants.Nbt.ACCESSIBILITY)).getName()).setStyle(Constants.Text.GREEN_STYLE));
                 }
             }
             tooltip.add(new TranslatableText("ui.galacticraft-rewoven.machine.redstone.redstone", RedstoneInteractionType.fromTag(tag).getName()).setStyle(Constants.Text.DARK_RED_STYLE));
@@ -236,7 +236,7 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
     @Override
     public List<ItemStack> getDroppedStacks(BlockState state, LootContext.Builder builder) {
         BlockEntity entity = builder.get(LootContextParameters.BLOCK_ENTITY);
-        if (entity.toTag(new CompoundTag()).getBoolean("NoDrop")) return Collections.emptyList();
+        if (entity.toTag(new CompoundTag()).getBoolean(Constants.Nbt.NO_DROP)) return Collections.emptyList();
         return super.getDroppedStacks(state, builder);
     }
 
@@ -271,13 +271,20 @@ public class MachineBlock extends BlockWithEntity implements AttributeProvider {
 
     @Override
     public void addAllAttributes(World world, BlockPos pos, BlockState blockState, AttributeList<?> attributes) {
-        Direction direction = attributes.getSearchDirection() == null ? null : attributes.getSearchDirection();
+        Direction direction = attributes.getSearchDirection();
         MachineBlockEntity machine = (MachineBlockEntity) world.getBlockEntity(pos);
         assert machine != null;
-        attributes.offer(machine.getInventory(blockState, direction));
-        attributes.offer(machine.getFluidInsertable(blockState, direction));
-        attributes.offer(machine.getFluidExtractable(blockState, direction));
-        attributes.offer(machine.getEnergyExtractable(blockState, direction));
-        attributes.offer(machine.getEnergyInsertable(blockState, direction));
+        if (direction == null) {
+            attributes.offer(machine.getFluidTank());
+            attributes.offer(machine.getInventory()); //expose everything if not given a direction
+            attributes.offer(machine.getCapacitor());
+        } else {
+            attributes.offer(machine.getItemInsertable(blockState, direction));
+            attributes.offer(machine.getItemExtractable(blockState, direction));
+            attributes.offer(machine.getFluidInsertable(blockState, direction));
+            attributes.offer(machine.getFluidExtractable(blockState, direction));
+            attributes.offer(machine.getEnergyExtractable(blockState, direction));
+            attributes.offer(machine.getEnergyInsertable(blockState, direction));
+        }
     }
 }

@@ -23,6 +23,7 @@
 package com.hrznstudio.galacticraft.api.machine;
 
 import alexiil.mc.lib.attributes.misc.Saveable;
+import com.hrznstudio.galacticraft.Constants;
 import net.minecraft.nbt.CompoundTag;
 
 public class MachineConfiguration implements Saveable {
@@ -61,16 +62,16 @@ public class MachineConfiguration implements Saveable {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.put("security", this.getSecurity().toTag(new CompoundTag()));
-        tag.put("configuration", this.getSideConfiguration().toTag(new CompoundTag()));
+        tag.put(Constants.Nbt.SECURITY, this.getSecurity().toTag(new CompoundTag()));
+        tag.put(Constants.Nbt.CONFIGURATION, this.getSideConfiguration().toTag(new CompoundTag()));
         this.redstone.toTag(tag);
         return tag;
     }
 
     @Override
     public void fromTag(CompoundTag tag) {
-        this.getSecurity().fromTag(tag.getCompound("security"));
-        this.getSideConfiguration().fromTag(tag.getCompound("configuration"));
+        this.getSecurity().fromTag(tag.getCompound(Constants.Nbt.SECURITY));
+        this.getSideConfiguration().fromTag(tag.getCompound(Constants.Nbt.CONFIGURATION));
         this.redstone = RedstoneInteractionType.fromTag(tag);
     }
 }

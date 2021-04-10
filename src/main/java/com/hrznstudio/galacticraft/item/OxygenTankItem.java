@@ -113,7 +113,7 @@ public class OxygenTankItem extends Item implements AttributeProviderItem {
     public void appendTooltip(ItemStack stack, World world, List<net.minecraft.text.Text> lines, TooltipContext context) {
         if (this.size > 0){
             OxygenTank tank = GalacticraftAttributes.OXYGEN_TANK_ATTRIBUTE.getFirst(stack);
-            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()));
+            lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", tank.getAmount() + "/" + tank.getCapacity()).setStyle(Constants.Text.getStorageLevelColor((double)tank.getAmount() / (double)tank.getCapacity())));
         } else {
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.oxygen_remaining", new TranslatableText("tooltip.galacticraft-rewoven.infinite").setStyle(Constants.Text.getRainbow(++ticks))));
             lines.add(new TranslatableText("tooltip.galacticraft-rewoven.creative_only").setStyle(Constants.Text.LIGHT_PURPLE_STYLE));

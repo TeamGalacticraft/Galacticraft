@@ -169,17 +169,17 @@ public class BubbleDistributorBlockEntity extends MachineBlockEntity implements 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        tag.putByte("MaxSize", targetSize);
-        tag.putDouble("Size", size);
+        tag.putByte(Constants.Nbt.MAX_SIZE, targetSize);
+        tag.putDouble(Constants.Nbt.SIZE, size);
         return tag;
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.size = tag.getDouble("Size");
+        this.size = tag.getDouble(Constants.Nbt.SIZE);
         if (size < 0) size = 0;
-        this.targetSize = tag.getByte("MaxSize");
+        this.targetSize = tag.getByte(Constants.Nbt.MAX_SIZE);
         if (targetSize < 1) targetSize = 1;
     }
 

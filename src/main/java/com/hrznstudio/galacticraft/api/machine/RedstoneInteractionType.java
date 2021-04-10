@@ -81,10 +81,10 @@ public enum RedstoneInteractionType implements StringIdentifiable {
     }
 
     public void toTag(CompoundTag tag) {
-        tag.putString("Redstone", this.asString());
+        tag.putString(Constants.Nbt.REDSTONE_INTERACTION_TYPE, this.asString());
     }
 
     public static RedstoneInteractionType fromTag(CompoundTag tag) {
-        return fromString(tag.getString("Redstone"));
+        return fromString(tag.getString(Constants.Nbt.REDSTONE_INTERACTION_TYPE));
     }
 }

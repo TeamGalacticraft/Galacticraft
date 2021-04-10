@@ -718,27 +718,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             Int2IntMap out = new Int2IntArrayMap();
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidTank()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidTank()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidTank()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidTank()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidTank()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidTank()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getFluidTank()));
                 group(out, list);
             }
             out.defaultReturnValue(ColorUtils.WHITE);
@@ -760,27 +760,27 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             mouseX -= PANEL_WIDTH + this.x;
             mouseY -= this.y + TAB_HEIGHT + SPACING;
             if (this.check(mouseX, mouseY, TOP_FACE_X, TOP_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.TOP).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, LEFT_FACE_X, LEFT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.LEFT).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, FRONT_FACE_X, FRONT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.FRONT).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, RIGHT_FACE_X, RIGHT_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.RIGHT).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, BACK_FACE_X, BACK_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BACK).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
             if (this.check(mouseX, mouseY, BOTTOM_FACE_X, BOTTOM_FACE_Y, 16, 16)) {
-                IntList list = new IntArrayList(this.handler.machine.getSideConfiguration().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
+                IntList list = new IntArrayList(this.handler.machine.getIOConfig().get(BlockFace.BOTTOM).getMatching(this.handler.machine.getInventory()));
                 groupStack(matrices, list);
             }
         }
@@ -1022,7 +1022,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
     private enum SideConfigurationAction {
         CHANGE_TYPE((player, machine, face, back, reset) -> {
-            ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
             if (reset) {
                 sideOption.setOption(AutomationType.NONE);
                 return;
@@ -1043,7 +1043,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
 
         }), //LEFT
         CHANGE_MATCH((player, machine, face, back, reset) -> {
-            ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
             if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
             if (reset) {
                 sideOption.setMatching(null);
@@ -1068,7 +1068,7 @@ public abstract class MachineHandledScreen<C extends MachineScreenHandler<? exte
             ClientPlayNetworking.send(new Identifier(Constants.MOD_ID, "side_config"), buf);
         }), //RIGHT
         CHANGE_MATCH_SLOT((player, machine, face, back, reset) -> {
-            ConfiguredMachineFace sideOption = machine.getSideConfiguration().get(face);
+            ConfiguredMachineFace sideOption = machine.getIOConfig().get(face);
             if (sideOption.getAutomationType().isEnergy() || sideOption.getAutomationType() == AutomationType.NONE) return;
             if (reset) {
                 sideOption.setMatching(null);

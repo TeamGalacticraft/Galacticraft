@@ -623,6 +623,31 @@ public interface Constants {
 
     interface Nbt {
         String BLOCK_ENTITY_TAG = "BlockEntityTag";
+        String NO_DROP = "NoDrop";
+        String TOTAL_OXYGEN = "TotalOxygen";
+        String OXYGEN = "Oxygen";
+        String OWNER = "Owner";
+        String PROGRESS = "Progress";
+        String SIZE = "Size";
+        String MAX_SIZE = "MaxSize";
+        String GCR_DATA = "GCR_DATA";
+        String FUEL_TIME = "FuelTime";
+        String TEAM = "Team";
+        String ACCESSIBILITY = "Accessibility";
+        String SECURITY = "Security";
+        String CONFIGURATION = "Configuration";
+        String AMOUNT = "Amount";
+        String PATH = "Path";
+        String HAS_DIRECTION = "HasDirection";
+        String VALUE = "Value";
+        String ENERGY = "Energy";
+        String AUTOMATION_TYPE = "AutomationType";
+        String BABY = "Baby";
+        String DIRECTION = "Direction";
+        String SOURCE = "Source";
+        String REDSTONE_INTERACTION_TYPE = "RedstoneInteraction";
+        String MATCH = "Match";
+        String INTEGER = "Integer";
     }
 
     interface Misc {

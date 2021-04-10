@@ -22,6 +22,7 @@
 
 package com.hrznstudio.galacticraft.api.block;
 
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.attribute.Automatable;
 import com.hrznstudio.galacticraft.screen.slot.SlotType;
@@ -120,26 +121,26 @@ public class ConfiguredMachineFace {
     }
 
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putString("option", automationType.name());
-        tag.putBoolean("match", this.matching != null);
+        tag.putString(Constants.Nbt.AUTOMATION_TYPE, automationType.name());
+        tag.putBoolean(Constants.Nbt.MATCH, this.matching != null);
         if (this.matching != null) {
-            tag.putBoolean("left", this.matching.left().isPresent());
+            tag.putBoolean(Constants.Nbt.INTEGER, this.matching.left().isPresent());
             if (this.matching.left().isPresent()) {
-                tag.putInt("value", this.matching.left().get());
+                tag.putInt(Constants.Nbt.VALUE, this.matching.left().get());
             } else {
-                tag.putString("value", this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
+                tag.putString(Constants.Nbt.VALUE, this.matching.right().orElseThrow(RuntimeException::new).getId().toString());
             }
         }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-        this.automationType = AutomationType.valueOf(tag.getString("option"));
-        if (tag.getBoolean("match")) {
-            if (tag.getBoolean("left")) {
-                this.matching = Either.left(tag.getInt("value"));
+        this.automationType = AutomationType.valueOf(tag.getString(Constants.Nbt.AUTOMATION_TYPE));
+        if (tag.getBoolean(Constants.Nbt.MATCH)) {
+            if (tag.getBoolean(Constants.Nbt.INTEGER)) {
+                this.matching = Either.left(tag.getInt(Constants.Nbt.VALUE));
             } else {
-                this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString("value"))));
+                this.matching = Either.right(SlotType.SLOT_TYPES.get(new Identifier(tag.getString(Constants.Nbt.VALUE))));
             }
         } else {
             this.matching = null;

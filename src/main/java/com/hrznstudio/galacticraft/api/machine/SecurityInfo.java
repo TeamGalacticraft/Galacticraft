@@ -115,25 +115,25 @@ public class SecurityInfo {
 
     public CompoundTag toTag(CompoundTag tag) {
         if (this.getOwner() != null) {
-            tag.put("owner", NbtHelper.fromGameProfile(new CompoundTag(), this.getOwner()));
+            tag.put(Constants.Nbt.OWNER, NbtHelper.fromGameProfile(new CompoundTag(), this.getOwner()));
         }
-        tag.putString("accessibility", this.accessibility.name());
+        tag.putString(Constants.Nbt.ACCESSIBILITY, this.accessibility.name());
         if (this.getTeam() != null) {
-            tag.putString("team", team.toString());
+            tag.putString(Constants.Nbt.TEAM, team.toString());
         }
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-        if (tag.contains("owner")) {
-            this.owner = NbtHelper.toGameProfile(tag.getCompound("owner"));
+        if (tag.contains(Constants.Nbt.OWNER)) {
+            this.owner = NbtHelper.toGameProfile(tag.getCompound(Constants.Nbt.OWNER));
         }
 
-        if (tag.contains("team")) {
-            this.team = new Identifier(tag.getString("team"));
+        if (tag.contains(Constants.Nbt.TEAM)) {
+            this.team = new Identifier(tag.getString(Constants.Nbt.TEAM));
         }
 
-        this.accessibility = Accessibility.valueOf(tag.getString("accessibility"));
+        this.accessibility = Accessibility.valueOf(tag.getString(Constants.Nbt.ACCESSIBILITY));
     }
 
     public void sendPacket(BlockPos pos, ServerPlayerEntity player) {

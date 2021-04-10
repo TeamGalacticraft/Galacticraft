@@ -46,22 +46,22 @@ public class MachineIOConfig {
     }
 
     public CompoundTag toTag(CompoundTag tag) {
-        tag.put("front", this.front.toTag(new CompoundTag()));
-        tag.put("back", this.back.toTag(new CompoundTag()));
-        tag.put("left", this.left.toTag(new CompoundTag()));
-        tag.put("right", this.right.toTag(new CompoundTag()));
-        tag.put("top", this.top.toTag(new CompoundTag()));
-        tag.put("bottom", this.bottom.toTag(new CompoundTag()));
+        tag.put("Front", this.front.toTag(new CompoundTag()));
+        tag.put("Back", this.back.toTag(new CompoundTag()));
+        tag.put("Left", this.left.toTag(new CompoundTag()));
+        tag.put("Right", this.right.toTag(new CompoundTag()));
+        tag.put("Top", this.top.toTag(new CompoundTag()));
+        tag.put("Bottom", this.bottom.toTag(new CompoundTag()));
         return tag;
     }
 
     public void fromTag(CompoundTag tag) {
-        this.front.fromTag(tag.getCompound("front"));
-        this.back.fromTag(tag.getCompound("back"));
-        this.left.fromTag(tag.getCompound("left"));
-        this.right.fromTag(tag.getCompound("right"));
-        this.top.fromTag(tag.getCompound("top"));
-        this.bottom.fromTag(tag.getCompound("bottom"));
+        this.front.fromTag(tag.getCompound("Front"));
+        this.back.fromTag(tag.getCompound("Back"));
+        this.left.fromTag(tag.getCompound("Left"));
+        this.right.fromTag(tag.getCompound("Right"));
+        this.top.fromTag(tag.getCompound("Top"));
+        this.bottom.fromTag(tag.getCompound("Bottom"));
     }
 
     /**

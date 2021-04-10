@@ -25,6 +25,7 @@ package com.hrznstudio.galacticraft.block.entity;
 import alexiil.mc.lib.attributes.Simulation;
 import alexiil.mc.lib.attributes.item.compat.InventoryFixedWrapper;
 import alexiil.mc.lib.attributes.item.filter.ConstantItemFilter;
+import com.hrznstudio.galacticraft.Constants;
 import com.hrznstudio.galacticraft.api.block.entity.MachineBlockEntity;
 import com.hrznstudio.galacticraft.api.machine.MachineStatus;
 import com.hrznstudio.galacticraft.attribute.item.MachineItemInv;
@@ -159,16 +160,16 @@ public class CompressorBlockEntity extends MachineBlockEntity {
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt("Progress", this.progress);
-        tag.putInt("FuelTime", this.fuelTime);
+        tag.putInt(Constants.Nbt.PROGRESS, this.progress);
+        tag.putInt(Constants.Nbt.FUEL_TIME, this.fuelTime);
         return super.toTag(tag);
     }
 
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        this.progress = tag.getInt("Progress");
-        this.fuelTime = tag.getInt("FuelTime");
+        this.progress = tag.getInt(Constants.Nbt.PROGRESS);
+        this.fuelTime = tag.getInt(Constants.Nbt.FUEL_TIME);
     }
 
     @Nullable
