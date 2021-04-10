@@ -121,17 +121,18 @@ public class BatteryItem extends Item implements AttributeProviderItem {
     public void addAllAttributes(Reference<ItemStack> reference, LimitedConsumer<ItemStack> limitedConsumer, ItemAttributeList<?> itemAttributeList) {
         ItemStack ref = reference.get().copy();
         if (this.capacity > 0) {
-            SimpleCapacitor tank = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.capacity);
-            tank.fromTag(ref.getOrCreateTag());
-            tank.toTag(ref.getOrCreateTag());
-            ref.setDamage(this.capacity - tank.getEnergy());
+            SimpleCapacitor capacitor = new SimpleCapacitor(DefaultEnergyType.INSTANCE, this.capacity);
+            if (ref.getTag() != null) capacitor.fromTag(ref.getTag());
+            capacitor.toTag(ref.getOrCreateTag());
+            ref.setDamage(this.capacity - capacitor.getEnergy());
             reference.set(ref);
-            itemAttributeList.offer(tank.addListener(view -> {
-                        ItemStack stack = reference.get().copy();
-                        stack.setDamage(this.capacity - view.getEnergy());
-                        tank.toTag(stack.getOrCreateTag());
-                        reference.set(stack);
-                    }, () -> {}));
+            capacitor.addListener(view -> {
+                ItemStack stack = reference.get().copy();
+                stack.setDamage(this.capacity - view.getEnergy());
+                capacitor.toTag(stack.getOrCreateTag());
+                reference.set(stack);
+            }, () -> {});
+            itemAttributeList.offer(capacitor);
         } else {
             itemAttributeList.offer(new InfiniteCapacitor());
         }
