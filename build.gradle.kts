@@ -44,6 +44,7 @@ val reiVersion             = project.property("rei.version").toString()
 val cottonResourcesVersion = project.property("cotton.resources.version").toString()
 val myronVersion           = project.property("myron.version").toString()
 val bannerppVersion        = project.property("bannerpp.version").toString()
+val wthitVersion           = project.property("wthit.version").toString()
 
 plugins {
     java
@@ -84,7 +85,7 @@ repositories {
             includeGroup("io.github.fablabsmc")
         }
     }
-    maven("https://alexiil.uk/maven") {
+    maven("https://alexiil.uk/maven/") {
         content {
             includeGroup("alexiil.mc.lib")
         }
@@ -94,13 +95,17 @@ repositories {
             includeGroup("com.terraformersmc")
         }
     }
-    maven("https://hephaestus.dev/release") {
+    maven("https://hephaestus.dev/release/") {
         content {
             includeGroup("dev.monarkhes")
         }
     }
-    maven {
-        setUrl("https://cdn.hrzn.studio/maven/")
+    maven("https://bai.jfrog.io/artifactory/maven/") {
+        content {
+            includeGroup("mcp.mobius.waila")
+        }
+    }
+    maven ("https://cdn.hrzn.studio/maven/") {
         content {
             includeGroup("com.hrznstudio")
         }
@@ -115,6 +120,11 @@ repositories {
 fun getFabricApiModule(moduleName: String, fabricApiVersion: String): String {
     return String.format("net.fabricmc.fabric-api:%s:%s", moduleName,
         fabricApi.moduleVersion(moduleName, fabricApiVersion))
+}
+
+fun optionalImplementation(dependencyNotation: String, dependencyConfiguration: Action<ExternalModuleDependency>) {
+    project.dependencies.modCompileOnly(dependencyNotation, dependencyConfiguration)
+    project.dependencies.modRuntime(dependencyNotation, dependencyConfiguration)
 }
 
 dependencies {
@@ -169,8 +179,9 @@ dependencies {
     include(modApi("alexiil.mc.lib:libblockattributes-all:$lbaVersion") { })
 
     // Optional Dependencies
-    modImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
-    modImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
+    optionalImplementation("com.terraformersmc:modmenu:$modMenuVersion") { isTransitive = false }
+    optionalImplementation("mcp.mobius.waila:wthit-fabric:$wthitVersion") { isTransitive = false }
+    optionalImplementation("me.shedaniel:RoughlyEnoughItems:$reiVersion") {
         exclude(group = "me.shedaniel.cloth")
         exclude(group = "net.fabricmc")
         exclude(group = "net.fabricmc.fabric-api")
@@ -179,7 +190,6 @@ dependencies {
 
     // Other Dependencies
     modRuntime("net.fabricmc.fabric-api:fabric-api:$fabricVersion")
-    modImplementationMapped("com.google.code.findbugs:jsr305:3.0.1") { isTransitive = false }
 }
 
 tasks.processResources {
