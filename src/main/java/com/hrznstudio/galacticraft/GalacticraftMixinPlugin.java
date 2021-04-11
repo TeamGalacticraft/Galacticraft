@@ -20,35 +20,52 @@
  * SOFTWARE.
  */
 
-package com.hrznstudio.galacticraft.mixin;
+package com.hrznstudio.galacticraft;
 
-import com.hrznstudio.galacticraft.accessor.ChunkOxygenAccessor;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
-import net.minecraft.world.chunk.EmptyChunk;
-import org.spongepowered.asm.mixin.Mixin;
+import net.fabricmc.loader.api.FabricLoader;
+import org.objectweb.asm.tree.ClassNode;
+import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
+import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-@Mixin(EmptyChunk.class)
-public abstract class EmptyChunkMixin implements ChunkOxygenAccessor {
+public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
     @Override
-    public boolean isBreathable(int x, int y, int z) {
+    public void onLoad(String mixinPackage) {
+
+    }
+
+    @Override
+    public String getRefMapperConfig() {
+        return null;
+    }
+
+    @Override
+    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            return !mixinClassName.equals("com.hrznstudio.galacticraft.mixin.StructurePoolGeneratorMixin");
+        }
         return true;
     }
 
     @Override
-    public void setBreathable(int x, int y, int z, boolean value) {
+    public void acceptTargets(Set<String> myTargets, Set<String> otherTargets) {
+
     }
 
     @Override
-    public List<CustomPayloadS2CPacket> syncToClient() {
-        return Collections.emptyList();
+    public List<String> getMixins() {
+        return null;
     }
 
     @Override
-    public void readOxygenUpdate(byte b, PacketByteBuf packetByteBuf) {
+    public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+
+    }
+
+    @Override
+    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
 
     }
 }

@@ -51,6 +51,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(InventoryScreen.class)
 @Environment(EnvType.CLIENT)
 public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen<PlayerScreenHandler> {
+    private static final Identifier TABS_TEXTURE = new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS));
+
     public PlayerInventoryScreenMixin(PlayerScreenHandler screenHandler, PlayerInventory playerInventory, Text textComponent) {
         super(screenHandler, playerInventory, textComponent);
     }
@@ -65,7 +67,7 @@ public abstract class PlayerInventoryScreenMixin extends AbstractInventoryScreen
 
     @Inject(method = "drawBackground", at = @At("TAIL"))
     public void drawBackground(MatrixStack matrices, float v, int i, int i1, CallbackInfo callbackInfo) {
-        this.client.getTextureManager().bindTexture(new Identifier(Constants.MOD_ID, Constants.ScreenTextures.getRaw(Constants.ScreenTextures.PLAYER_INVENTORY_TABS)));
+        this.client.getTextureManager().bindTexture(TABS_TEXTURE);
         this.drawTexture(matrices, this.x, this.y - 28, 0, 0, 57, 32);
     }
 
