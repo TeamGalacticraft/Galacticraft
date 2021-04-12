@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hrznstudio.galacticraft.api.capes.CapeListener;
 import com.hrznstudio.galacticraft.api.capes.models.CapesModel;
+import net.minecraft.Util;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -56,7 +57,7 @@ public class CapeLoader {
     }
 
     public void load() {
-        new Thread(() -> {
+        Util.backgroundExecutor().execute(() -> {
             CapesModel capesModel = null;
             try {
                 capesModel = this.gson.fromJson(IOUtils.toString(new URL("https://raw.githubusercontent.com/StellarHorizons/Galacticraft-Rewoven/master/capes.json"), Charset.defaultCharset()), CapesModel.class);
@@ -71,6 +72,6 @@ public class CapeLoader {
                     Thread.currentThread().interrupt();
                 }
             }
-        }, "capeLoader").start();
+        });
     }
 }
