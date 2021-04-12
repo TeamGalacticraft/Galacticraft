@@ -76,12 +76,8 @@ public class Walkway extends Block implements FluidLoggableBlock {
                 .with(FlowableFluid.LEVEL, 8));
     }
 
-    private static int getDirectionMask(Direction dir) {
-        return 1 << dir.getId();
-    }
-
     private static int getFacingMask(Direction dir) {
-        return 1 << (dir.getId() + 6);
+        return 1 << (dir.getId());
     }
 
     private static VoxelShape createShape(Direction facing) {

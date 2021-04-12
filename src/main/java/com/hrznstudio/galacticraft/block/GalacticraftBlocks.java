@@ -37,6 +37,7 @@ import com.hrznstudio.galacticraft.block.special.TinLadderBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.AluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
 import com.hrznstudio.galacticraft.block.special.fluidpipe.GlassFluidPipeBlock;
+import com.hrznstudio.galacticraft.block.special.walkway.PipeWalkway;
 import com.hrznstudio.galacticraft.block.special.walkway.Walkway;
 import com.hrznstudio.galacticraft.block.special.walkway.WireWalkway;
 import com.hrznstudio.galacticraft.fluids.GalacticraftFluids;
@@ -127,7 +128,7 @@ public class GalacticraftBlocks {
 
     // MISC DECOR
     public static final Block WALKWAY = registerBlock(new Walkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WALKWAY);
-    public static final Block PIPE_WALKWAY = registerBlock(new Block(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.PIPE_WALKWAY);
+    public static final Block PIPE_WALKWAY = registerBlock(new PipeWalkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.PIPE_WALKWAY);
     public static final Block WIRE_WALKWAY = registerBlock(new WireWalkway(FabricBlockSettings.of(Material.METAL).strength(5.0f, 5.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.WIRE_WALKWAY);
     public static final Block TIN_LADDER = registerBlock(new TinLadderBlock(FabricBlockSettings.of(Material.SUPPORTED).strength(1.0f, 1.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.TIN_LADDER);
     public static final Block GRATING = registerBlock(new GratingBlock(FabricBlockSettings.of(Material.METAL, MaterialColor.STONE).strength(2.5f, 6.0f).sounds(BlockSoundGroup.METAL)), Constants.Blocks.GRATING);
