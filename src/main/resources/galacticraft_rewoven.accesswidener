@@ -1,34 +1,38 @@
-accessWidener	v1	 named
+accessWidener v1 intermediary
 
-accessible      method   net/minecraft/world/dimension/DimensionType                          <init>            (Ljava/util/OptionalLong;ZZZZZZZZZZILnet/minecraft/world/biome/source/BiomeAccessType;Lnet/minecraft/util/Identifier;F)V
-accessible      method   net/minecraft/world/gen/stateprovider/BlockStateProviderType         <init>            (Lcom/mojang/serialization/Codec;)V
-accessible      method   net/minecraft/world/gen/chunk/ChunkGeneratorSettings                 <init>            (Lnet/minecraft/world/gen/chunk/StructuresConfig;Lnet/minecraft/world/gen/chunk/GenerationShapeConfig;Lnet/minecraft/block/BlockState;Lnet/minecraft/block/BlockState;IIIZ)V
-accessible      method   net/minecraft/structure/pool/LegacySinglePoolElement                 <init>            (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible      method   net/minecraft/structure/pool/FeaturePoolElement                      <init>            (Lnet/minecraft/world/gen/feature/ConfiguredFeature;Lnet/minecraft/structure/pool/StructurePool$Projection;)V
-accessible      method   net/minecraft/item/PickaxeItem                                       <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/item/AxeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;FFLnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/item/HoeItem                                           <init>            (Lnet/minecraft/item/ToolMaterial;IFLnet/minecraft/item/Item$Settings;)V
-accessible      method   net/minecraft/block/LadderBlock                                      <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      method   net/minecraft/block/StairsBlock                                      <init>            (Lnet/minecraft/block/BlockState;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      method   net/minecraft/block/CakeBlock                                        <init>            (Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      method   net/minecraft/block/FluidBlock                                       <init>            (Lnet/minecraft/fluid/FlowableFluid;Lnet/minecraft/block/AbstractBlock$Settings;)V
-accessible      field    net/minecraft/item/BucketItem                                        fluid             Lnet/minecraft/fluid/Fluid;
+# Constructors
+accessible  method  net/minecraft/class_2874             <init>        (Ljava/util/OptionalLong;ZZZZZZZZZZILnet/minecraft/class_4545;Lnet/minecraft/class_2960;F)V
+accessible  method  net/minecraft/class_4652             <init>        (Lcom/mojang/serialization/Codec;)V
+accessible  method  net/minecraft/class_5284             <init>        (Lnet/minecraft/class_5311;Lnet/minecraft/class_5309;Lnet/minecraft/class_2680;Lnet/minecraft/class_2680;IIIZ)V
+accessible  method  net/minecraft/class_5188             <init>        (Lcom/mojang/datafixers/util/Either;Ljava/util/List;Lnet/minecraft/class_3785$class_3786;)V
+accessible  method  net/minecraft/class_3776             <init>        (Lnet/minecraft/class_2975;Lnet/minecraft/class_3785$class_3786;)V
+accessible  method  net/minecraft/class_1810             <init>        (Lnet/minecraft/class_1832;IFLnet/minecraft/class_1792$class_1793;)V
+accessible  method  net/minecraft/class_1743             <init>        (Lnet/minecraft/class_1832;FFLnet/minecraft/class_1792$class_1793;)V
+accessible  method  net/minecraft/class_1794             <init>        (Lnet/minecraft/class_1832;IFLnet/minecraft/class_1792$class_1793;)V
+accessible  method  net/minecraft/class_2399             <init>        (Lnet/minecraft/class_4970$class_2251;)V
+accessible  method  net/minecraft/class_2510             <init>        (Lnet/minecraft/class_2680;Lnet/minecraft/class_4970$class_2251;)V
+accessible  method  net/minecraft/class_2272             <init>        (Lnet/minecraft/class_4970$class_2251;)V
+accessible  method  net/minecraft/class_2404             <init>        (Lnet/minecraft/class_3609;Lnet/minecraft/class_4970$class_2251;)V
+accessible  method  net/minecraft/class_4158             <init>        (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)V
+accessible  method  net/minecraft/class_4158             <init>        (Ljava/lang/String;Ljava/util/Set;II)V
+accessible  method  net/minecraft/class_3854             <init>        (Ljava/lang/String;)V
+accessible  method  net/minecraft/class_3852             <init>        (Ljava/lang/String;Lnet/minecraft/class_4158;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lnet/minecraft/class_3414;)V
+accessible  method  net/minecraft/class_1813             <init>        (ILnet/minecraft/class_3414;Lnet/minecraft/class_1792$class_1793;)V
 
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;ILjava/util/function/Predicate;I)V
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          <init>            (Ljava/lang/String;Ljava/util/Set;II)V
-accessible      method   net/minecraft/world/poi/PointOfInterestType                          setup             (Lnet/minecraft/world/poi/PointOfInterestType;)Lnet/minecraft/world/poi/PointOfInterestType;
-accessible      method   net/minecraft/village/VillagerType                                   <init>            (Ljava/lang/String;)V
-accessible      method   net/minecraft/village/VillagerProfession                             <init>            (Ljava/lang/String;Lnet/minecraft/world/poi/PointOfInterestType;Lcom/google/common/collect/ImmutableSet;Lcom/google/common/collect/ImmutableSet;Lnet/minecraft/sound/SoundEvent;)V
-accessible      method   net/minecraft/entity/LivingEntity                                    getEyeHeight      (Lnet/minecraft/entity/EntityPose;Lnet/minecraft/entity/EntityDimensions;)F
-accessible      class    net/minecraft/village/TradeOffers$BuyForOneEmeraldFactory
-accessible      class    net/minecraft/village/TradeOffers$SellItemFactory
-accessible      class    net/minecraft/village/TradeOffers$SellMapFactory
-accessible      class    net/minecraft/structure/pool/StructurePoolBasedGenerator$StructurePoolGenerator
+# Methods
+accessible  method  net/minecraft/class_4158             method_20354  (Lnet/minecraft/class_4158;)Lnet/minecraft/class_4158;
+accessible  method  net/minecraft/class_1309             method_18381  (Lnet/minecraft/entity/EntityPose;Lnet/minecraft/class_4048;)F
 
-accessible      field    net/minecraft/world/biome/BuiltinBiomes                              BY_RAW_ID         Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-mutable         field    net/minecraft/client/render/entity/model/VillagerResemblingModel     field_17142       Lnet/minecraft/client/model/ModelPart;
-accessible      field    net/minecraft/village/VillagerType                                   BIOME_TO_TYPE     Ljava/util/Map;
-accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    NOISE_WEIGHT_TABLE [F
-accessible      field    net/minecraft/world/gen/chunk/NoiseChunkGenerator                    BIOME_WEIGHT_TABLE [F
+# Fields
+accessible  field   net/minecraft/class_5504             field_26736   Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+mutable     field   net/minecraft/class_620              field_17142   Lnet/minecraft/class_630;
+accessible  field   net/minecraft/class_3854             field_17078   Ljava/util/Map;
+accessible  field   net/minecraft/class_3754             field_16649   [F
+accessible  field   net/minecraft/class_3754             field_24775   [F
+accessible  field   net/minecraft/class_1755             field_7905    Lnet/minecraft/class_3611;
 
-accessible      method  net/minecraft/item/MusicDiscItem                                      <init>            (ILnet/minecraft/sound/SoundEvent;Lnet/minecraft/item/Item$Settings;)V
+# Classes
+accessible  class   net/minecraft/class_3853$class_4161
+accessible  class   net/minecraft/class_3853$class_4165
+accessible  class   net/minecraft/class_3853$class_1654
+accessible  class   net/minecraft/class_3778$class_4182
