@@ -79,8 +79,8 @@ public class GlassFluidPipeBlock extends FluidPipe {
         BlockState state = this.getDefaultState();
         BlockPos pos = context.getBlockPos().toImmutable();
         for (Direction direction : Constants.Misc.DIRECTIONS) {
-            Block block = context.getWorld().getBlockState(pos.offset(direction)).getBlock();
-            if (block instanceof FluidPipe || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
+            BlockState block = context.getWorld().getBlockState(pos.offset(direction));
+            if ((block.getBlock() instanceof FluidPipe && block.get(COLOR) == DyeColor.WHITE) || FluidUtils.isExtractableOrInsertable(context.getWorld(), pos.offset(direction), direction)) state = state.with(propFromDirection(direction), true);
         }
         return state;
     }

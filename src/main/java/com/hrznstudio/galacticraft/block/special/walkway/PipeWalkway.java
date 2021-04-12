@@ -217,7 +217,7 @@ public class PipeWalkway extends FluidPipe {
         // TODO: I think the thing will still logically connect on the top face of this block (there's no wire there)
         if (FluidUtils.isExtractableOrInsertable((World) world, neighborPos, facing.getOpposite()))
             return true;
-        return neighborState.getBlock() instanceof FluidPipe /*&& neighborState.get(COLOR) == state.get(COLOR))*/;
+        return (neighborState.getBlock() instanceof FluidPipe) && (neighborState.get(COLOR) == state.get(COLOR));
     }
 
     @Override
