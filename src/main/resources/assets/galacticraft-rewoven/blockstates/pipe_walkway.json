@@ -2,12 +2,12 @@
   "multipart": [
     {"apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/none"}},
 
-    {"when": {"facing": "up"},    "apply": {"model": "galacticraft-rewoven:block/wire_walkway"}},
-    {"when": {"facing": "down"},  "apply": {"model": "galacticraft-rewoven:block/wire_walkway", "x": 180}},
-    {"when": {"facing": "north"}, "apply": {"model": "galacticraft-rewoven:block/wire_walkway", "x": 90}},
-    {"when": {"facing": "south"}, "apply": {"model": "galacticraft-rewoven:block/wire_walkway", "x": 270}},
-    {"when": {"facing": "east"},  "apply": {"model": "galacticraft-rewoven:block/wire_walkway", "x": 90, "y": 90}},
-    {"when": {"facing": "west"},  "apply": {"model": "galacticraft-rewoven:block/wire_walkway", "x": 90, "y": 270}},
+    {"when": {"facing": "up"},    "apply": {"model": "galacticraft-rewoven:block/pipe_walkway"}},
+    {"when": {"facing": "down"},  "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 180}},
+    {"when": {"facing": "north"}, "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 90}},
+    {"when": {"facing": "south"}, "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 270}},
+    {"when": {"facing": "east"},  "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 90, "y": 90}},
+    {"when": {"facing": "west"},  "apply": {"model": "galacticraft-rewoven:block/pipe_walkway", "x": 90, "y": 270}},
 
     {"when": {"north": "true"}, "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n"}},
     {"when": {"east": "true"},  "apply": {"model": "galacticraft-rewoven:block/glass_fluid_pipe/n", "y": 90}},
